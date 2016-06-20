@@ -7,18 +7,23 @@ import com.maxandnoah.avatar.common.network.IPacketHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 
 @SideOnly(Side.CLIENT)
 public class AvatarClientProxy implements AvatarCommonProxy {
 	
+	private Minecraft mc;
 	private AvatarKeybindings keybindings;
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	
 	@Override
 	public void preInit() {
+		mc = Minecraft.getMinecraft();
+		
 		keybindings = new AvatarKeybindings();
 		packetHandler = new PacketHandlerClient();
 		
@@ -36,6 +41,14 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public IPacketHandler getClientPacketHandler() {
 		return packetHandler;
+	}
+	
+	@Override
+	public double getPlayerReach() {
+		PlayerControllerMP pc = mc.playerController;
+		double reach = pc.getBlockReachDistance();
+		if (pc.extendedReach()) reach = 6;
+		return reach;
 	}
 
 }

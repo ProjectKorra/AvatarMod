@@ -31,4 +31,6 @@ public interface AvatarCommonProxy {
 	 */
 	public IPacketHandler getClientPacketHandler();
 	
+	double getPlayerReach();
+	
 }

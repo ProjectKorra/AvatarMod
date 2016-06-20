@@ -2,6 +2,7 @@ package com.maxandnoah.avatar.common.network.packets;
 
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
+import com.maxandnoah.avatar.common.util.BlockPos;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -12,27 +13,30 @@ import io.netty.buffer.ByteBuf;
 /**
  * Packet which tells the server that the client pressed a key.
  * The control is given to the player's active bending controller.
- * This is only used for controls that will be 
  *
  */
 public class PacketSKeypress implements IAvatarPacket<PacketSKeypress> {
 	
 	private String control;
+	private BlockPos target;
 	
 	public PacketSKeypress() {}
 	
-	public PacketSKeypress(String control) {
+	public PacketSKeypress(String control, BlockPos target) {
 		this.control = control;
+		this.target = target;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		control = GoreCoreByteBufUtil.readString(buf);
+		target = BlockPos.fromBytes(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeString(buf, control);
+		target.toBytes(buf);
 	}
 
 	@Override
@@ -47,6 +51,10 @@ public class PacketSKeypress implements IAvatarPacket<PacketSKeypress> {
 	
 	public String getControlPressed() {
 		return control;
+	}
+	
+	public BlockPos getTargetPos() {
+		return target;
 	}
 	
 }

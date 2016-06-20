@@ -7,6 +7,8 @@ import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
+import com.maxandnoah.avatar.common.util.BlockPos;
+import com.maxandnoah.avatar.common.util.Raytrace;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -16,6 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 import crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -76,7 +79,8 @@ public class ClientInput {
 		
 		if (keyHandler.isKeyPressed(CONTROL_USE_EARTHBENDING)) {
 			
-			AvatarMod.network.sendToServer(new PacketSKeypress(CONTROL_USE_EARTHBENDING));
+			AvatarMod.network.sendToServer(new PacketSKeypress(CONTROL_USE_EARTHBENDING,
+					Raytrace.getTargetBlock(Minecraft.getMinecraft().thePlayer, -1)));
 			
 			
 		}
