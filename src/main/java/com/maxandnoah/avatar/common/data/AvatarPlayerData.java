@@ -25,15 +25,13 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	private BendingController activeBending;
 	
-	/**
-	 * Last block target. Not saved
-	 */
-	private BlockPos lastTargetPos;
+	private PlayerState state;
 	
 	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID) {
 		super(dataSaver, playerID);
 		bendingControllers = new HashMap<Integer, BendingController>();
 		bendingControllerList = new ArrayList<BendingController>();
+		state = new PlayerState();
 	}
 	
 	@Override
@@ -142,12 +140,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		return bendingControllers.get(id);
 	}
 	
-	public BlockPos getTargetPos() {
-		return lastTargetPos;
-	}
-	
-	public void setTargetPos(BlockPos target) {
-		lastTargetPos = target;
+	public PlayerState getState() {
+		return state;
 	}
 	
 }

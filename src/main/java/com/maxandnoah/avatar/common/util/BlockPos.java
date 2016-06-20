@@ -22,4 +22,23 @@ public class BlockPos {
 		return new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 	}
 	
+	public double dist(BlockPos pos) {
+		return dist(this, pos);
+	}
+	
+	public double distSq(BlockPos pos) {
+		return distSq(this, pos);
+	}
+	
+	public static double dist(BlockPos pos1, BlockPos pos2) {
+		return Math.sqrt(distSq(pos1, pos2));
+	}
+	
+	public static double distSq(BlockPos pos1, BlockPos pos2) {
+		double dx = pos2.x - pos1.x;
+		double dy = pos2.y - pos1.y;
+		double dz = pos2.z - pos1.z;
+		return dx * dx + dy * dy + dz * dz;
+	}
+	
 }
