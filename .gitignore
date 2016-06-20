@@ -1,0 +1,12 @@
+.classpath
+.project
+AvatarMod.bat
+build.gradle
+gradlew
+gradlew.bat
+
+.gradle/
+.settings/
+bin/
+eclipse/
+gradle/

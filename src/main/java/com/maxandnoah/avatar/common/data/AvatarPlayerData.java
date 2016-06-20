@@ -28,19 +28,24 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID) {
 		super(dataSaver, playerID);
 		bendingControllers = new HashMap<Integer, BendingController>();
+		bendingControllerList = new ArrayList<BendingController>();
 	}
 	
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
 		bendingControllerList = AvatarUtils.readFromNBT(BendingController.creator, nbt, "BendingAbilities");
+		
+		bendingControllers.clear();
 		for (BendingController controller : bendingControllerList) {
 			bendingControllers.put(controller.getID(), controller);
 		}
+		
 		activeBending = getBendingController(nbt.getInteger("ActiveBending"));
 	}
 	
 	@Override
 	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
+		System.out.println(bendingControllerList);
 		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", BendingController.writer);
 		nbt.setInteger("ActiveBending", activeBending == null ? -1 : activeBending.getID());
 	}
