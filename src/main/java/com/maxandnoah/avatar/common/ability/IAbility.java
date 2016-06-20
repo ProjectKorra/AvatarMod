@@ -1,5 +1,9 @@
 package com.maxandnoah.avatar.common.ability;
 
+import com.maxandnoah.avatar.common.data.AvatarPlayerData;
+
+import net.minecraft.entity.player.EntityPlayer;
+
 /**
  * Base for an ability. Abilities provide a convenient
  * way for BendingControllers to share similar functionality.
@@ -12,6 +16,6 @@ package com.maxandnoah.avatar.common.ability;
  */
 public interface IAbility {
 	
-	
+	void onAbilityActive(EntityPlayer player, AvatarPlayerData data);
 	
 }

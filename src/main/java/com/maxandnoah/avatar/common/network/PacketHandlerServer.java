@@ -103,6 +103,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			BendingController controller = data.getActiveBendingController();
 			System.out.println("Active controller: " + controller);
 			if (controller != null) {
+				data.setTargetPos(packet.getTargetPos());
 				controller.onKeypress(packet.getControlPressed(), player, data);
 			}
 			

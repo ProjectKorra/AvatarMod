@@ -73,13 +73,13 @@ public class ClientInput {
 			AvatarMod.network.sendToServer(new PacketSCheatEarthbending());
 		}
 		
-		if (keyHandler.isKeyPressed(CONTROL_TOGGLE_BENDING)) {
-			AvatarMod.network.sendToServer(new PacketSToggleBending());
-		}
+//		if (keyHandler.isKeyPressed(CONTROL_TOGGLE_BENDING)) {
+//			AvatarMod.network.sendToServer(new PacketSToggleBending());
+//		}
 		
-		if (keyHandler.isKeyPressed(CONTROL_USE_EARTHBENDING)) {
+		if (keyHandler.isKeyPressed(CONTROL_TOGGLE_BENDING)) {
 			
-			AvatarMod.network.sendToServer(new PacketSKeypress(CONTROL_USE_EARTHBENDING,
+			AvatarMod.network.sendToServer(new PacketSKeypress(CONTROL_TOGGLE_BENDING,
 					Raytrace.getTargetBlock(Minecraft.getMinecraft().thePlayer, -1)));
 			
 			

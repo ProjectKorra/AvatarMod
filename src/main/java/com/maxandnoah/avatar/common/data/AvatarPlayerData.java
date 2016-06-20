@@ -10,10 +10,10 @@ import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.bending.BendingController;
 import com.maxandnoah.avatar.common.bending.BendingManager;
 import com.maxandnoah.avatar.common.util.AvatarUtils;
+import com.maxandnoah.avatar.common.util.BlockPos;
 
 import crowsofwar.gorecore.data.GoreCoreDataSaver;
 import crowsofwar.gorecore.data.GoreCorePlayerData;
-import crowsofwar.gorecore.util.GoreCoreNBTUtil;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class AvatarPlayerData extends GoreCorePlayerData {
@@ -24,6 +24,11 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Bending controller currently in use, null if no ability is activated
 	 */
 	private BendingController activeBending;
+	
+	/**
+	 * Last block target. Not saved
+	 */
+	private BlockPos lastTargetPos;
 	
 	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID) {
 		super(dataSaver, playerID);
@@ -135,6 +140,14 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public BendingController getBendingController(int id) {
 		return bendingControllers.get(id);
+	}
+	
+	public BlockPos getTargetPos() {
+		return lastTargetPos;
+	}
+	
+	public void setTargetPos(BlockPos target) {
+		lastTargetPos = target;
 	}
 	
 }

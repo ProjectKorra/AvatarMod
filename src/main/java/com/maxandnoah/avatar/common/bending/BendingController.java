@@ -1,14 +1,14 @@
 package com.maxandnoah.avatar.common.bending;
 
 import com.maxandnoah.avatar.AvatarLog;
+import com.maxandnoah.avatar.common.ability.IAbility;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
-import com.maxandnoah.avatar.common.util.Instantiator;
+import com.maxandnoah.avatar.common.util.BlockPos;
 
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -69,5 +69,14 @@ public interface BendingController extends ReadableWritable {
 	 * a control from the Avatar mod.
 	 */
 	void onKeypress(String key, EntityPlayer player, AvatarPlayerData data);
+	
+	/**
+	 * Get the ability which is currently in use. Null if there is none.
+	 * (If the bending controller is active, there should be an ability
+	 * in use)
+	 */
+	IAbility getCurrentAbility();
+	
+	
 	
 }

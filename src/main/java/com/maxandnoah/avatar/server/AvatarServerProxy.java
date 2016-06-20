@@ -23,5 +23,10 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	public IPacketHandler getClientPacketHandler() {
 		return null;
 	}
+
+	@Override
+	public double getPlayerReach() {
+		return 0;
+	}
 	
 }

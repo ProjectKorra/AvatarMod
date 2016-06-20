@@ -6,6 +6,7 @@ import com.maxandnoah.avatar.common.AvatarControlList;
 import com.maxandnoah.avatar.common.ability.AbilityPickupRock;
 import com.maxandnoah.avatar.common.ability.IAbility;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
+import com.maxandnoah.avatar.common.util.BlockPos;
 import com.maxandnoah.avatar.common.util.VectorUtils;
 
 import net.minecraft.client.Minecraft;
@@ -25,9 +26,11 @@ import static com.maxandnoah.avatar.common.util.VectorUtils.*;
 
 public class Earthbending implements BendingController {
 	
+	private IAbility currentAbility;
 	private IAbility abilityPickupRock;
 	
 	Earthbending() {
+		currentAbility = null;
 		abilityPickupRock = new AbilityPickupRock();
 	}
 	
@@ -53,38 +56,22 @@ public class Earthbending implements BendingController {
 
 	@Override
 	public void onKeypress(String key, EntityPlayer player, AvatarPlayerData data) {
-		System.out.println("Key pressed: " + key);
 		World world = player.worldObj;
 		
-		/**
-		 * 
-		 * 
-		 * XXX Please read on 6/20
-		 * XXX Please read on 6/20
-		 * XXX Please read on 6/20
-		 * 
-		 * The following code only works on CLIENT SIDE.
-		 * It works PERFECTLY on client side. It works LESS PERFECT here.
-		 * Paste the code into ClientInput.
-		 * 
-		 * For earthbending, create a new packet. Referred to as PacketSPickupBlock.
-		 * PickupBlock is containing the coordinates of the block to pickup.
-		 * On server side, to process
-		 * - make sure player is using earthbending
-		 * - make sure requested position is relatively close to the predicted position
-		 *   (just use the code below to get a predicted position. The client's position may be
-		 *   2-3 blocks off, but if it's close enough, accept it)
-		 * - Pick up block, or do something with it. That's for 6/20 max to decide.
-		 * 
-		 * P,s get noah to do something!!
-		 * 
-		 */
+		if (key.equals(AvatarControlList.CONTROL_TOGGLE_BENDING)) {
+			if (currentAbility == null) {
+				currentAbility = abilityPickupRock;
+				currentAbility.onAbilityActive(player, data);
+			} else {
+				currentAbility = null;
+			}
+		}
 		
-		
-		
-//		System.out.println(offset.toString());
-		//Minecraft Entity EntityArrow ItemBow
-		
+	}
+
+	@Override
+	public IAbility getCurrentAbility() {
+		return currentAbility;
 	}
 	
 }

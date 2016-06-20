@@ -8,9 +8,10 @@ import com.maxandnoah.avatar.common.network.IPacketHandler;
  * base class and side-specific subclasses. It can be referenced
  * via {@link AvatarMod#proxy}. All classes or values accessed
  * from here are safe to use on either side.
- * 
+ * <br /><br />
  * Is using Client proxy if running from a minecraft client. Uses
  * server proxy is running from server.
+ * <br /><br />
  *
  */
 public interface AvatarCommonProxy {
@@ -31,6 +32,9 @@ public interface AvatarCommonProxy {
 	 */
 	public IPacketHandler getClientPacketHandler();
 	
+	/**
+	 * Get client player's reach. Returns 0 on server.
+	 */
 	double getPlayerReach();
 	
 }
