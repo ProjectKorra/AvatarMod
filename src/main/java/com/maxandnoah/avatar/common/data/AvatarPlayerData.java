@@ -45,7 +45,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	@Override
 	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
-		System.out.println(bendingControllerList);
 		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", BendingController.writer);
 		nbt.setInteger("ActiveBending", activeBending == null ? -1 : activeBending.getID());
 	}
