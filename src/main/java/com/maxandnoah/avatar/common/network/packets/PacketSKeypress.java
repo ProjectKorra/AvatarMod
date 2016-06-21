@@ -30,13 +30,16 @@ public class PacketSKeypress implements IAvatarPacket<PacketSKeypress> {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		control = GoreCoreByteBufUtil.readString(buf);
-		target = BlockPos.fromBytes(buf);
+		target = buf.readBoolean() ? BlockPos.fromBytes(buf) : null;
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeString(buf, control);
-		target.toBytes(buf);
+		buf.writeBoolean(target != null);
+		if (target != null) {
+			target.toBytes(buf);
+		}
 	}
 
 	@Override

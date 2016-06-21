@@ -51,6 +51,7 @@ public class PlayerState {
 	 * @see Raytrace#getTargetBlock(EntityPlayer, double)
 	 */
 	public BlockPos verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
+		if (clientLookAtBlock == null) return null;
 		this.serverLookAtBlock = Raytrace.getTargetBlock(playerEntity, raycastDist);
 		double dist = serverLookAtBlock.dist(clientLookAtBlock);
 		if (dist <= maxDeviation) {

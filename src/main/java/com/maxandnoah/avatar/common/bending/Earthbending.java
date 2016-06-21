@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class Earthbending implements BendingController {
-	
+	//EntityFallingBlock
 	Earthbending() {
 	}
 	
@@ -44,9 +44,11 @@ public class Earthbending implements BendingController {
 		
 		if (key.equals(AvatarControlList.CONTROL_TOGGLE_BENDING)) {
 			BlockPos target = state.verifyClientLookAtBlock(-1, 5);
-			Block b = world.getBlock(target.x, target.y, target.z);
-			world.setBlock(target.x, target.y, target.z, Blocks.air);
-			world.setBlock(target.x, target.y + 3, target.z, b);
+			if (target != null) {
+				Block b = world.getBlock(target.x, target.y, target.z);
+				world.setBlock(target.x, target.y, target.z, Blocks.air);
+				world.setBlock(target.x, target.y + 3, target.z, b);
+			}
 		}
 		
 	}
