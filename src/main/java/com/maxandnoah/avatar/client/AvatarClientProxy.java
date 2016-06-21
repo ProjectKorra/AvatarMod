@@ -2,8 +2,10 @@ package com.maxandnoah.avatar.client;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
 import com.maxandnoah.avatar.common.IKeybindingManager;
+import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.network.IPacketHandler;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,6 +33,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		FMLCommonHandler.instance().bus().register(inputHandler);
 		MinecraftForge.EVENT_BUS.register(inputHandler);
 		
+		
 	}
 	
 	@Override
@@ -49,6 +52,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		double reach = pc.getBlockReachDistance();
 		if (pc.extendedReach()) reach = 6;
 		return reach;
+	}
+
+	@Override
+	public void init() {
+		RenderingRegistry.registerEntityRenderingHandler(EntityFloatingBlock.class, new RenderFloatingBlock());
 	}
 
 }

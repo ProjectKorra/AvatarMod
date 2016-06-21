@@ -36,5 +36,7 @@ public interface AvatarCommonProxy {
 	 * Get client player's reach. Returns 0 on server.
 	 */
 	double getPlayerReach();
+
+	void init();
 	
 }

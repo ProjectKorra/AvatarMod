@@ -28,5 +28,10 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	public double getPlayerReach() {
 		return 0;
 	}
+
+	@Override
+	public void init() {
+		
+	}
 	
 }

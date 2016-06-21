@@ -2,6 +2,7 @@ package com.maxandnoah.avatar;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
 import com.maxandnoah.avatar.common.bending.BendingManager;
+import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
@@ -19,7 +20,9 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.Entity;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION)
 public class AvatarMod {
@@ -43,11 +46,15 @@ public class AvatarMod {
 		
 		BendingManager.init();
 		
+		
+		
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
-		
+//		EntityRegistry.registerModEntity(EntityFloatingBlock.class, "FloatingBlock", 1, this, 256, 1, true);
+		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
+		proxy.init();
 	}
 	
 	@EventHandler
@@ -57,6 +64,11 @@ public class AvatarMod {
 	
 	private <REQ extends IAvatarPacket<REQ>> void registerPacket(Class<REQ> packet, Side side) {
 		network.registerMessage(packet, packet, nextMessageID++, side);
+	}
+	
+	private void registerEntity(Class<? extends Entity> entity, String name) {
+		EntityRegistry.registerGlobalEntityID(entity, name, EntityRegistry.findGlobalUniqueEntityId());
+		EntityRegistry.registerModEntity(entity, name, 1, this, 64, 20	, true);
 	}
 	
 }
