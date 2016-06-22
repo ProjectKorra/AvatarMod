@@ -5,6 +5,7 @@ import com.maxandnoah.avatar.common.bending.BendingManager;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
+import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
@@ -43,6 +44,7 @@ public class AvatarMod {
 		registerPacket(PacketSCheatEarthbending.class, Side.SERVER);
 		registerPacket(PacketSKeypress.class, Side.SERVER);
 		registerPacket(PacketSToggleBending.class, Side.SERVER);
+		registerPacket(PacketCThrownBlockVelocity.class, Side.CLIENT);
 		
 		BendingManager.init();
 		
@@ -68,7 +70,7 @@ public class AvatarMod {
 	
 	private void registerEntity(Class<? extends Entity> entity, String name) {
 		EntityRegistry.registerGlobalEntityID(entity, name, EntityRegistry.findGlobalUniqueEntityId());
-		EntityRegistry.registerModEntity(entity, name, 1, this, 64, 20	, true);
+		EntityRegistry.registerModEntity(entity, name, 1, this, 64, 20, true);
 	}
 	
 }

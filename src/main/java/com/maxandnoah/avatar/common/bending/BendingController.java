@@ -34,8 +34,6 @@ public interface BendingController extends ReadableWritable {
 			int id = nbt.getInteger("ControllerID");
 			try {
 				BendingController bc = BendingManager.getBending(id);
-				System.out.println("ID: " + id);
-				System.out.println("Found bendeing controller: " + bc);
 				return bc;
 			} catch (Exception e) {
 				AvatarLog.error("Could not find bending controller from ID '" + id + "' - please check NBT data");

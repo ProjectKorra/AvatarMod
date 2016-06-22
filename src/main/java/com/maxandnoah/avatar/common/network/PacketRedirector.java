@@ -22,7 +22,6 @@ public class PacketRedirector {
 	private PacketRedirector() {}
 	
 	public static IMessage redirectMessage(IMessage message, MessageContext ctx) {
-		System.out.println("Received a new packet!");
 		IPacketHandler packetHandler;
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		if (side == Side.CLIENT) {
@@ -30,7 +29,6 @@ public class PacketRedirector {
 		} else {
 			packetHandler = PacketHandlerServer.instance;
 		}
-		System.out.println("Sending to: " + packetHandler);
 		return packetHandler.onPacketReceived(message, ctx);
 	}
 	

@@ -85,13 +85,10 @@ public class PacketHandlerServer implements IPacketHandler {
 				getDataQuick(player, "Error while retrieving player data for Cheat Earthbending packet");
 		if (data != null) {
 			
-			System.out.println("Adding earthbending");
 			data.addBending(BendingManager.BENDINGID_EARTHBENDING);
-			System.out.println(data.getBendingControllers());
 			
 		}
 		
-		System.out.println("Done");
 		return null;
 	}
 	
@@ -101,7 +98,6 @@ public class PacketHandlerServer implements IPacketHandler {
 				getDataQuick(player, "Error while retrieving player data for Keypress packet");
 		if (data != null) {
 			BendingController controller = data.getActiveBendingController();
-			System.out.println("Active controller: " + controller);
 			if (controller != null) {
 				data.getState().update(player, packet.getTargetPos());
 				controller.onKeypress(packet.getControlPressed(), data);

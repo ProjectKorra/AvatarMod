@@ -5,6 +5,7 @@ import static java.lang.Math.sin;
 
 import javax.vecmath.Vector3d;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -40,6 +41,32 @@ public class VectorUtils {
 	}
 	
 	/**
+	 * Add vector a and b, returning a new vector. Unlike {{@link #add(Vec3, Vec3)},
+	 * the arguments are not modified.
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	public static Vec3 plus(Vec3 a, Vec3 b) {
+		Vec3 result = copy(a);
+		add(result, b);
+		return result;
+	}
+	
+	/**
+	 * Subtract vector a - b, returning a new vector. Unlike {{@link #subtract(Vec3, Vec3)},
+	 * the arguments are not modified.
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	public static Vec3 minus(Vec3 a, Vec3 b) {
+		Vec3 result = copy(a);
+		subtract(result, b);
+		return result;
+	}
+	
+	/**
 	 * Multiply the vector by the value
 	 * @param v
 	 * @param f
@@ -66,13 +93,14 @@ public class VectorUtils {
 	}
 	
 	/**
-	 * Perform a raytrace on blocks. Returns the hit position.
+	 * Use {@link Raytrace} instead.
 	 * @param world The world
 	 * @param start Vector to start at
 	 * @param direction Unit vector describing direction
 	 * @param interval Interval for checking
 	 * @return
 	 */
+	@Deprecated
 	public static Vec3 raytrace(World world, Vec3 start, Vec3 direction, double interval, double length) {
 		Vec3 current = copy(start);
 		Vec3 add = copy(direction);
@@ -92,6 +120,10 @@ public class VectorUtils {
 		
 		System.out.println("Ending position: " + current);
 		return null;
+	}
+	
+	public static Vec3 getEntityPos(Entity entity) {
+		return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 	}
 	
 }
