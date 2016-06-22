@@ -8,6 +8,7 @@ import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.MathHelper;
 
 public class AvatarUtils {
 	
@@ -55,6 +56,19 @@ public class AvatarUtils {
 		}
 		
 		return out;
+	}
+	
+	/**
+	 * Smoothstep function. Used for smoother interpolation.
+	 * @param y1 First y-position
+	 * @param y2 Second y-position
+	 * @param x Interpolation value, 0-1
+	 * @return Y position interpolated between y1 and y2 using x
+	 */
+	public static double smoothstep(double y1, double y2, double x) {
+		double y = x * x * (3 - 2 * x);
+		y = y < 0 ? 0 : (y > 1 ? 1 : y);
+		return y * (y2 - y1) + y1;
 	}
 	
 }

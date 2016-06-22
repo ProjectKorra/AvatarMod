@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
+import com.maxandnoah.avatar.common.util.AvatarUtils;
 import com.maxandnoah.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -24,7 +25,8 @@ public class EntityFloatingBlock extends Entity {
 	public static final int DATAWATCHER_FLOATINGBLOCKID = 4;
 	
 	public static final int DATAWATCHER_VELX = 5,
-			DATAWATCHER_VELY = 6, DATAWATCHER_VELZ = 7;
+			DATAWATCHER_VELY = 6, DATAWATCHER_VELZ = 7, DATAWATCHER_FRICTION = 8,
+			DATAWATCHER_LIFT = 9, DATAWATCHER_INITIAL_Y = 10;
 	
 	private static int nextBlockID = 0;
 	
@@ -60,6 +62,10 @@ public class EntityFloatingBlock extends Entity {
 		dataWatcher.addObject(DATAWATCHER_VELX, 0f);
 		dataWatcher.addObject(DATAWATCHER_VELY, 0f);
 		dataWatcher.addObject(DATAWATCHER_VELZ, 0f);
+		
+		dataWatcher.addObject(DATAWATCHER_FRICTION, 0f);
+		dataWatcher.addObject(DATAWATCHER_LIFT, -1f);
+		dataWatcher.addObject(DATAWATCHER_INITIAL_Y, -1f);
 		
 	}
 	
@@ -129,7 +135,21 @@ public class EntityFloatingBlock extends Entity {
 		if (isGravityEnabled()) {
 			addForce(Vec3.createVectorHelper(0, -0.01, 0));
 		}
-		if (onGround || worldObj.getBlock((int) posX, (int) posY, (int) posZ) != Blocks.air) {
+		if (isLifting()) {
+			
+			float percent = getLiftPercent();
+			System.out.println("Lifting " + percent + "% (" + AvatarUtils.smoothstep(getInitialY(), 2, percent) + ")");
+			posY = getInitialY() + AvatarUtils.smoothstep(0, 2, percent);
+			if (!worldObj.isRemote) setLiftPercent(percent + 1f/20);
+			if (getLiftPercent() >= 1) setNotLifting();
+			
+		} else {
+			posX += getVelocity().xCoord / 20;
+			posY += getVelocity().yCoord / 20;
+			posZ += getVelocity().zCoord / 20;
+			if (!worldObj.isRemote) setVelocity(VectorUtils.times(getVelocity(), getFriction()));
+		}
+		if (!isLifting() && (isCollided || worldObj.getBlock((int) posX, (int) posY, (int) posZ) != Blocks.air)) {
 			setDead();
 			
 			// Spawn particles
@@ -139,11 +159,8 @@ public class EntityFloatingBlock extends Entity {
 						posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 			}
 			
-		} else {
-			posX += getVelocity().xCoord / 20;
-			posY += getVelocity().yCoord / 20;
-			posZ += getVelocity().zCoord / 20;
-		}
+		} 
+		
 	}
 	
 	public void addForce(Vec3 force) {
@@ -170,6 +187,44 @@ public class EntityFloatingBlock extends Entity {
 //		AvatarMod.network.sendToAllAround(new PacketCThrownBlockVelocity(this),
 //				new TargetPoint(dimension, posX, posY, posZ, 150));
 		
+	}
+	
+	public float getFriction() {
+		return dataWatcher.getWatchableObjectFloat(DATAWATCHER_FRICTION);
+	}
+	
+	public void setFriction(float friction) {
+		dataWatcher.updateObject(DATAWATCHER_FRICTION, friction);
+	}
+	
+	/**
+	 * Get percent of block lift. -1 if not lifting
+	 * @return
+	 */
+	public float getLiftPercent() {
+		return dataWatcher.getWatchableObjectFloat(DATAWATCHER_LIFT);
+	}
+	
+	public void setLiftPercent(float percent) {
+		dataWatcher.updateObject(DATAWATCHER_LIFT, percent);
+	}
+	
+	public boolean isLifting() {
+		return getLiftPercent() != -1;
+	}
+	
+	public void setNotLifting() {
+		setLiftPercent(-1);
+	}
+	
+	public float getInitialY() {
+		return dataWatcher.getWatchableObjectFloat(DATAWATCHER_INITIAL_Y);
+	}
+	
+	public void lift() {
+		System.out.println("lifting start");
+		setLiftPercent(0);
+		if (!worldObj.isRemote) dataWatcher.updateObject(DATAWATCHER_INITIAL_Y, (float) posY);
 	}
 	
 }

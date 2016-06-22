@@ -77,6 +77,12 @@ public class VectorUtils {
 		v.zCoord *= f;
 	}
 	
+	public static Vec3 times(Vec3 v, double f) {
+		Vec3 result = copy(v);
+		mult(result, f);
+		return result;
+	}
+	
 	public static void inverse(Vec3 v) {
 		mult(v, -1);
 	}

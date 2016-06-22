@@ -52,17 +52,17 @@ public class Earthbending implements BendingController {
 				world.setBlock(target.x, target.y, target.z, Blocks.air);
 				
 				EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
-				floating.setPosition(target.x, target.y, target.z);
+				floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
 				
 				Vec3 playerPos = VectorUtils.getEntityPos(player);
 				Vec3 floatingPos = VectorUtils.getEntityPos(floating);
 				Vec3 force = VectorUtils.minus(floatingPos, playerPos);
 				force.normalize();
-				VectorUtils.mult(force, 4);
-				floating.addForce(force);
+				VectorUtils.mult(force, 2);
+//				floating.addForce(force);
+				floating.lift();
 				
-				floating.setGravityEnabled(true);
-				floating.setPosition(floating.posX, floating.posY + 3, floating.posZ);
+//				floating.setGravityEnabled(true);
 				world.spawnEntityInWorld(floating);
 			}
 		}
