@@ -1,5 +1,7 @@
 package com.maxandnoah.avatar.common.entity;
 
+import java.util.Random;
+
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
 import com.maxandnoah.avatar.common.util.VectorUtils;
@@ -128,8 +130,15 @@ public class EntityFloatingBlock extends Entity {
 			addForce(Vec3.createVectorHelper(0, -0.01, 0));
 		}
 		if (onGround || worldObj.getBlock((int) posX, (int) posY, (int) posZ) != Blocks.air) {
-			System.out.println("Hit ground");
 			setDead();
+			
+			// Spawn particles
+			Random random = new Random();
+			for (int i = 0; i < 7; i++) {
+				worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(),
+						posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
+			}
+			
 		} else {
 			posX += getVelocity().xCoord / 20;
 			posY += getVelocity().yCoord / 20;

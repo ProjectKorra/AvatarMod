@@ -30,24 +30,21 @@ public class RenderFloatingBlock extends Render
     }
 
     /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity) and this method has signature public void func_76986_a(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     * 
      */
-    public void doRender(EntityFloatingBlock p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
+    public void doRender(EntityFloatingBlock entity, double x, double y, double z, float interpolatedYaw, float p_76986_9_)
     {
-        World world = p_76986_1_.worldObj;
-        Block block = p_76986_1_.getBlock();
-        int i = MathHelper.floor_double(p_76986_1_.posX);
-        int j = MathHelper.floor_double(p_76986_1_.posY);
-        int k = MathHelper.floor_double(p_76986_1_.posZ);
+        World world = entity.worldObj;
+        Block block = entity.getBlock();
+        int i = MathHelper.floor_double(entity.posX);
+        int j = MathHelper.floor_double(entity.posY);
+        int k = MathHelper.floor_double(entity.posZ);
 
         if (block != null && block != world.getBlock(i, j, k))
         {
             GL11.glPushMatrix();
-            GL11.glTranslatef((float)p_76986_2_, (float)p_76986_4_, (float)p_76986_6_);
-            this.bindEntityTexture(p_76986_1_);
+            GL11.glTranslatef((float)x, (float)y, (float)z);
+            this.bindEntityTexture(entity);
             GL11.glDisable(GL11.GL_LIGHTING);
             Tessellator tessellator;
 
@@ -74,7 +71,7 @@ public class RenderFloatingBlock extends Render
 //            else
 //            {
                 this.field_147920_a.setRenderBoundsFromBlock(block);
-                this.field_147920_a.renderBlockSandFalling(block, world, i, j, k, p_76986_1_.getMetadata());
+                this.field_147920_a.renderBlockSandFalling(block, world, i, j, k, entity.getMetadata());
 //            }
 
             GL11.glEnable(GL11.GL_LIGHTING);
