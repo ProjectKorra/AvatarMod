@@ -8,7 +8,7 @@ import java.util.Map;
  * can be retrieved via {@link #getBending(int)}. Contains constants
  * which specify the IDs of bending.
  * <br /><br />
- * Third-party mods can use {@link #registerBending(BendingController)}
+ * Third-party mods can use {@link #registerBending(IBendingController)}
  * to enable custom bending controllers.
  *
  */
@@ -16,10 +16,10 @@ public class BendingManager {
 	
 	public static final int BENDINGID_EARTHBENDING = 1;
 	
-	private static Map<Integer, BendingController> bending;
+	private static Map<Integer, IBendingController> bending;
 	
 	public static void init() {
-		bending = new HashMap<Integer, BendingController>();
+		bending = new HashMap<Integer, IBendingController>();
 		registerBending(new Earthbending());
 	}
 	
@@ -28,11 +28,11 @@ public class BendingManager {
 	 * @param id
 	 * @return
 	 */
-	public static BendingController getBending(int id) {
+	public static IBendingController getBending(int id) {
 		return bending.get(id);
 	}
 	
-	public static void registerBending(BendingController controller) {
+	public static void registerBending(IBendingController controller) {
 		bending.put(controller.getID(), controller);
 	}
 	

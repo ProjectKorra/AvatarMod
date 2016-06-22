@@ -1,18 +1,19 @@
 package com.maxandnoah.avatar.common.entity;
 
+import java.util.List;
 import java.util.Random;
 
-import com.maxandnoah.avatar.AvatarMod;
-import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
 import com.maxandnoah.avatar.common.util.AvatarUtils;
 import com.maxandnoah.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -63,7 +64,7 @@ public class EntityFloatingBlock extends Entity {
 		dataWatcher.addObject(DATAWATCHER_VELY, 0f);
 		dataWatcher.addObject(DATAWATCHER_VELZ, 0f);
 		
-		dataWatcher.addObject(DATAWATCHER_FRICTION, 0f);
+		dataWatcher.addObject(DATAWATCHER_FRICTION, 1f);
 		dataWatcher.addObject(DATAWATCHER_LIFT, -1f);
 		dataWatcher.addObject(DATAWATCHER_INITIAL_Y, -1f);
 		
@@ -98,7 +99,8 @@ public class EntityFloatingBlock extends Entity {
 	}
 	
 	public void setGravityEnabled(boolean gravity) {
-		dataWatcher.updateObject(DATAWATCHER_GRAVITY, gravity ? 1 : 0);
+		if (!worldObj.isRemote)
+			dataWatcher.updateObject(DATAWATCHER_GRAVITY, gravity ? 1 : 0);
 	}
 	
 	/**
@@ -110,7 +112,8 @@ public class EntityFloatingBlock extends Entity {
 	}
 	
 	public void setID(int id) {
-		dataWatcher.updateObject(DATAWATCHER_FLOATINGBLOCKID, id);
+		if (!worldObj.isRemote)
+			dataWatcher.updateObject(DATAWATCHER_FLOATINGBLOCKID, id);
 	}
 	
 	public static EntityFloatingBlock getFromID(World world, int id) {
@@ -133,15 +136,14 @@ public class EntityFloatingBlock extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 		if (isGravityEnabled()) {
-			addForce(Vec3.createVectorHelper(0, -0.01, 0));
+			addForce(Vec3.createVectorHelper(0, -9.81 / 20, 0));
 		}
 		if (isLifting()) {
 			
 			float percent = getLiftPercent();
-			System.out.println("Lifting " + percent + "% (" + AvatarUtils.smoothstep(getInitialY(), 2, percent) + ")");
 			posY = getInitialY() + AvatarUtils.smoothstep(0, 2, percent);
 			if (!worldObj.isRemote) setLiftPercent(percent + 1f/20);
-			if (getLiftPercent() >= 1) setNotLifting();
+			if (getLiftPercent() >= 1) hover();
 			
 		} else {
 			posX += getVelocity().xCoord / 20;
@@ -157,6 +159,14 @@ public class EntityFloatingBlock extends Entity {
 			for (int i = 0; i < 7; i++) {
 				worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(),
 						posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
+			}
+			
+			if (!worldObj.isRemote) {
+				List<ItemStack> drops = getBlock().getDrops(worldObj, 0, 0, 0, getMetadata(), 0);
+				for (ItemStack is : drops) {
+					EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
+					worldObj.spawnEntityInWorld(ei);
+				}
 			}
 			
 		} 
@@ -194,7 +204,8 @@ public class EntityFloatingBlock extends Entity {
 	}
 	
 	public void setFriction(float friction) {
-		dataWatcher.updateObject(DATAWATCHER_FRICTION, friction);
+		if (!worldObj.isRemote)
+			dataWatcher.updateObject(DATAWATCHER_FRICTION, friction);
 	}
 	
 	/**
@@ -206,15 +217,42 @@ public class EntityFloatingBlock extends Entity {
 	}
 	
 	public void setLiftPercent(float percent) {
-		dataWatcher.updateObject(DATAWATCHER_LIFT, percent);
+		if (!worldObj.isRemote)
+			dataWatcher.updateObject(DATAWATCHER_LIFT, percent);
 	}
 	
 	public boolean isLifting() {
 		return getLiftPercent() != -1;
 	}
 	
-	public void setNotLifting() {
+	/**
+	 * Stop lifting the floating block, but don't enable gravity.
+	 */
+	public void hover() {
 		setLiftPercent(-1);
+	}
+	
+	/**
+	 * Drop the floating block. This also enables gravity.
+	 */
+	public void drop() {
+		setLiftPercent(-1);
+		setGravityEnabled(true);
+	}
+	
+	/**
+	 * Returns whether this block is currently hovering.
+	 * (Floating in mid-air, but not falling)
+	 */
+	public boolean isHovering() {
+		return !isLifting() && !isGravityEnabled();
+	}
+	
+	/**
+	 * Returns whether this block is currently falling.
+	 */
+	public boolean isFalling() {
+		return !isLifting() && isGravityEnabled();
 	}
 	
 	public float getInitialY() {
@@ -222,9 +260,9 @@ public class EntityFloatingBlock extends Entity {
 	}
 	
 	public void lift() {
-		System.out.println("lifting start");
 		setLiftPercent(0);
 		if (!worldObj.isRemote) dataWatcher.updateObject(DATAWATCHER_INITIAL_Y, (float) posY);
+		setGravityEnabled(false);
 	}
 	
 }

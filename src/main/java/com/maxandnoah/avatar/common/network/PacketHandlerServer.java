@@ -8,7 +8,7 @@ import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
-import com.maxandnoah.avatar.common.bending.BendingController;
+import com.maxandnoah.avatar.common.bending.IBendingController;
 import com.maxandnoah.avatar.common.bending.BendingManager;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 
@@ -97,7 +97,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerDataFetcherServer.instance.
 				getDataQuick(player, "Error while retrieving player data for Keypress packet");
 		if (data != null) {
-			BendingController controller = data.getActiveBendingController();
+			IBendingController controller = data.getActiveBendingController();
 			if (controller != null) {
 				data.getState().update(player, packet.getTargetPos());
 				controller.onKeypress(packet.getControlPressed(), data);

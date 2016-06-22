@@ -1,10 +1,12 @@
 package com.maxandnoah.avatar.common.bending;
 
 import com.maxandnoah.avatar.common.AvatarControlList;
+import static com.maxandnoah.avatar.common.util.VectorUtils.times;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.util.BlockPos;
+import com.maxandnoah.avatar.common.util.Raytrace;
 import com.maxandnoah.avatar.common.util.VectorUtils;
 
 import net.minecraft.block.Block;
@@ -14,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class Earthbending implements BendingController {
+public class Earthbending implements IBendingController {
 	//EntityFallingBlock
 	Earthbending() {
 	}
@@ -44,10 +46,13 @@ public class Earthbending implements BendingController {
 		PlayerState state = data.getState();
 		EntityPlayer player = state.getPlayerEntity();
 		World world = player.worldObj;
+		EarthbendingState ebs = (EarthbendingState) data.getBendingState();
 		
 		if (key.equals(AvatarControlList.CONTROL_TOGGLE_BENDING)) {
 			BlockPos target = state.verifyClientLookAtBlock(-1, 5);
 			if (target != null) {
+				if (ebs.getPickupBlock() != null) ebs.getPickupBlock().drop();
+				
 				Block block = world.getBlock(target.x, target.y, target.z);
 				world.setBlock(target.x, target.y, target.z, Blocks.air);
 				
@@ -59,14 +64,32 @@ public class Earthbending implements BendingController {
 				Vec3 force = VectorUtils.minus(floatingPos, playerPos);
 				force.normalize();
 				VectorUtils.mult(force, 2);
-//				floating.addForce(force);
 				floating.lift();
 				
-//				floating.setGravityEnabled(true);
 				world.spawnEntityInWorld(floating);
+				
+				ebs.setPickupBlock(floating);
+				
+			}
+		}
+		if (key.equals(AvatarControlList.CONTROL_THROW_BLOCK)) {
+			EntityFloatingBlock floating = ebs.getPickupBlock();
+//			if (floating != null) floating.drop();
+			if (floating != null) {
+				float yaw = (float) Math.toRadians(player.rotationYaw);
+				float pitch = (float) Math.toRadians(player.rotationPitch);
+				Vec3 lookDir = VectorUtils.fromYawPitch(yaw, pitch);
+				floating.addForce(times(lookDir, 10));
+				floating.addForce(times(VectorUtils.UP, 3));
+				floating.setGravityEnabled(true);
 			}
 		}
 		
+	}
+
+	@Override
+	public IBendingState createState(AvatarPlayerData data) {
+		return new EarthbendingState(data);
 	}
 	
 }

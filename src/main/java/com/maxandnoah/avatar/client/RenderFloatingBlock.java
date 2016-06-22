@@ -43,7 +43,7 @@ public class RenderFloatingBlock extends Render
         if (block != null && block != world.getBlock(i, j, k))
         {
             GL11.glPushMatrix();
-            GL11.glTranslatef((float)x, (float)y, (float)z);
+            GL11.glTranslatef((float)x, (float)y + 0.5f, (float)z);
             this.bindEntityTexture(entity);
             GL11.glDisable(GL11.GL_LIGHTING);
             Tessellator tessellator;

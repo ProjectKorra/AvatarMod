@@ -26,14 +26,14 @@ import net.minecraft.nbt.NBTTagCompound;
  * to put any code inside of it.
  *
  */
-public interface BendingController extends ReadableWritable {
+public interface IBendingController extends ReadableWritable {
 	
-	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
+	public static final CreateFromNBT<IBendingController> creator = new CreateFromNBT<IBendingController>() {
 		@Override
-		public BendingController create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
+		public IBendingController create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
 			int id = nbt.getInteger("ControllerID");
 			try {
-				BendingController bc = BendingManager.getBending(id);
+				IBendingController bc = BendingManager.getBending(id);
 				return bc;
 			} catch (Exception e) {
 				AvatarLog.error("Could not find bending controller from ID '" + id + "' - please check NBT data");
@@ -44,9 +44,9 @@ public interface BendingController extends ReadableWritable {
 	};
 	
 	
-	public static final WriteToNBT<BendingController> writer = new WriteToNBT<BendingController>() {
+	public static final WriteToNBT<IBendingController> writer = new WriteToNBT<IBendingController>() {
 		@Override
-		public void write(NBTTagCompound nbt, BendingController object, Object[] methodsExtraData, Object[] extraData) {
+		public void write(NBTTagCompound nbt, IBendingController object, Object[] methodsExtraData, Object[] extraData) {
 			nbt.setInteger("ControllerID", object.getID());
 		}
 	};
@@ -65,5 +65,17 @@ public interface BendingController extends ReadableWritable {
 	 */
 	void onKeypress(String key, AvatarPlayerData data);
 	
+	/**
+	 * Called to create an IBendingState for the player. This allows
+	 * the IBendingController to store specific metadata for each player,
+	 * making things much easier.
+	 * <br /><br />
+	 * Keep in mind - when loading
+	 * a saved state, it will be read from NBT. However, when creating
+	 * a new bending state when an ability is activated, it will NOT
+	 * read from NBT. So ensure that all values are initialized.
+	 * @return
+	 */
+	IBendingState createState(AvatarPlayerData data);
 	
 }

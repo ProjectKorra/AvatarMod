@@ -77,14 +77,16 @@ public class ClientInput {
 //			AvatarMod.network.sendToServer(new PacketSToggleBending());
 //		}
 		
-		if (keyHandler.isKeyPressed(CONTROL_TOGGLE_BENDING)) {
-			
-			AvatarMod.network.sendToServer(new PacketSKeypress(CONTROL_TOGGLE_BENDING,
-					Raytrace.getTargetBlock(Minecraft.getMinecraft().thePlayer, -1)));
-			
-			
-		}
+		checkKeypress(CONTROL_TOGGLE_BENDING);
+		checkKeypress(CONTROL_THROW_BLOCK);
 		
+	}
+	
+	private void checkKeypress(String control) {
+		if (keyHandler.isKeyPressed(control)) {
+			AvatarMod.network.sendToServer(new PacketSKeypress(control, Raytrace.getTargetBlock(
+					Minecraft.getMinecraft().thePlayer, -1)));
+		}
 	}
 	
 //	@SubscribeEvent

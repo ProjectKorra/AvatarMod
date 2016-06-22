@@ -18,6 +18,13 @@ import net.minecraft.world.WorldServer;
  */
 public class VectorUtils {
 	
+	public static final Vec3 UP = Vec3.createVectorHelper(0, 1, 0);
+	public static final Vec3 DOWN = Vec3.createVectorHelper(0, -1, 0);
+	public static final Vec3 EAST = Vec3.createVectorHelper(1, 0, 0);
+	public static final Vec3 WEST = Vec3.createVectorHelper(-1, 1, 0);
+	public static final Vec3 NORTH = Vec3.createVectorHelper(0, 0, -1);
+	public static final Vec3 SOUTH = Vec3.createVectorHelper(0, 0, 1);
+	
 	/**
 	 * Add vector b to a, modifying a in the process.
 	 * @param a Vector a (will be modified)

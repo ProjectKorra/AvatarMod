@@ -27,6 +27,7 @@ public class AvatarKeybindings implements IKeybindingManager {
 		addKeybinding(CONTROL_BENDING_LIST, Keyboard.KEY_Z, "main");
 		addKeybinding(CONTROL_CHEAT_EARTHBENDING, Keyboard.KEY_X, "main");
 		addKeybinding(CONTROL_TOGGLE_BENDING, Keyboard.KEY_B, "main");
+		addKeybinding(CONTROL_THROW_BLOCK, Keyboard.KEY_N, "main");
 		
 	}
 
