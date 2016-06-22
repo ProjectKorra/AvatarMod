@@ -74,13 +74,14 @@ public class Earthbending implements IBendingController {
 		}
 		if (key.equals(AvatarControlList.CONTROL_THROW_BLOCK)) {
 			EntityFloatingBlock floating = ebs.getPickupBlock();
-//			if (floating != null) floating.drop();
 			if (floating != null) {
 				float yaw = (float) Math.toRadians(player.rotationYaw);
 				float pitch = (float) Math.toRadians(player.rotationPitch);
+				
+				// Calculate force and everything
 				Vec3 lookDir = VectorUtils.fromYawPitch(yaw, pitch);
-				floating.addForce(times(lookDir, 10));
-				floating.addForce(times(VectorUtils.UP, 3));
+				floating.addForce(times(lookDir, 20));
+				
 				floating.setGravityEnabled(true);
 			}
 		}

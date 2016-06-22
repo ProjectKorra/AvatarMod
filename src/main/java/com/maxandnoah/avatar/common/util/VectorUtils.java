@@ -139,4 +139,16 @@ public class VectorUtils {
 		return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 	}
 	
+	/**
+	 * Get the pitch to lob a projectile in radians. Example:
+	 * pitch to target can be used in {@link #fromYawPitch(double, double)}
+	 * @param v Force of the projectile, going FORWARDS
+	 * @param g Gravity constant
+	 * @param x Horizontal distance to target
+	 * @param y Vertical distance to target
+	 */
+	public static double getProjectileAngle(double v, double g, double x, double y) {
+		return -Math.atan2((v*v+Math.sqrt(v*v*v*v - g*(g*x*x+2*y*v*v))),g*x); 
+	}
+	
 }
