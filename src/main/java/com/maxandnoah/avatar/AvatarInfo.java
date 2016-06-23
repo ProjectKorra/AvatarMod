@@ -2,7 +2,7 @@ package com.maxandnoah.avatar;
 
 public class AvatarInfo {
 	
-	public static final String MOD_ID = "AvatarMod";
+	public static final String MOD_ID = "avatarmod";
 	public static final String MOD_NAME = "Avatar Mod: Bringing Bending to Minecraft Players";
 	public static final boolean IS_DEV_BUILD = true;
 	public static final int VERSION_MAIN = 0;

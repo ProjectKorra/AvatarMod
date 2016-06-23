@@ -2,7 +2,12 @@ package com.maxandnoah.avatar.server;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
 import com.maxandnoah.avatar.common.IKeybindingManager;
+import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.PacketHandlerServer;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+
 import com.maxandnoah.avatar.common.network.IPacketHandler;
 
 public class AvatarServerProxy implements AvatarCommonProxy {
@@ -32,6 +37,11 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	@Override
 	public void init() {
 		
+	}
+
+	@Override
+	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
+		return null;
 	}
 	
 }

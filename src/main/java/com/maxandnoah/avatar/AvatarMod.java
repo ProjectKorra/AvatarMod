@@ -3,6 +3,7 @@ package com.maxandnoah.avatar;
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
 import com.maxandnoah.avatar.common.bending.BendingManager;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
+import com.maxandnoah.avatar.common.gui.AvatarGuiHandler;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
 import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
@@ -13,6 +14,7 @@ import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -32,6 +34,9 @@ public class AvatarMod {
 			clientSide = "com.maxandnoah.avatar.client.AvatarClientProxy")
 	public static AvatarCommonProxy proxy;
 	
+	@Instance(value=AvatarInfo.MOD_ID)
+	public static AvatarMod instance;
+	
 	public static SimpleNetworkWrapper network;
 	private int nextMessageID = 1;
 	
@@ -48,7 +53,7 @@ public class AvatarMod {
 		
 		BendingManager.init();
 		
-		
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
 	}
 	

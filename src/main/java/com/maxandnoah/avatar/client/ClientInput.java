@@ -3,6 +3,7 @@ package com.maxandnoah.avatar.client;
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.common.AvatarControlList;
 import com.maxandnoah.avatar.common.IKeybindingManager;
+import com.maxandnoah.avatar.common.gui.AvatarGuiIds;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
@@ -79,6 +80,11 @@ public class ClientInput {
 		
 		checkKeypress(CONTROL_TOGGLE_BENDING);
 		checkKeypress(CONTROL_THROW_BLOCK);
+		
+		if (keyHandler.isKeyPressed(CONTROL_RADIAL_MENU)) {
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			player.openGui(AvatarMod.instance, AvatarGuiIds.GUI_RADIAL_MENU, player.worldObj, 0, 0, 0);
+		}
 		
 	}
 	

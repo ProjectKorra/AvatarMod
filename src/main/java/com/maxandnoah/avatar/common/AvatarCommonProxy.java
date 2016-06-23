@@ -1,7 +1,11 @@
 package com.maxandnoah.avatar.common;
 
 import com.maxandnoah.avatar.AvatarMod;
+import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.IPacketHandler;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 /**
  * Allows calling of side-specific code by using a common
@@ -38,5 +42,7 @@ public interface AvatarCommonProxy {
 	double getPlayerReach();
 
 	void init();
+	
+	IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 	
 }
