@@ -37,7 +37,7 @@ public class RadialSegment {
 		}
 		if (addCurrentAngle) currentAngle += 360;
 		
-		return r >= 100 && currentAngle >= minAngle && currentAngle <= maxAngle;
+		return r >= 100 && r <= 200 && currentAngle >= minAngle && currentAngle <= maxAngle;
 	}
 	
 	public float getAngle() {
