@@ -3,6 +3,8 @@ package com.maxandnoah.avatar.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import com.maxandnoah.avatar.AvatarMod;
@@ -32,22 +34,25 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	public static final float menuScale = 0.4f;
 	
 	private RadialSegment[] segments;
+	private AvatarControl pressing;
 	private AvatarControl[] controls;
 	
 	/**
 	 * Create a new radial menu with the given controls.
+	 * @param pressing The key which must be pressed to keep the GUI open.
 	 * @param controls A 8-element array of controls. If the arguments passed
 	 * are less than 8, then the array is filled with {@link AvatarControl#NONE}.
 	 * The arguments can only be a maximum of 8.
 	 */
-	public RadialMenu(AvatarControl... controls) {
-		segments = new RadialSegment[8];
+	public RadialMenu(AvatarControl pressing, AvatarControl... controls) {
+		this.segments = new RadialSegment[8];
+		this.pressing = pressing;
+		
 		if (controls == null) throw new IllegalArgumentException("Controls is null");
 		if (controls.length > 8) throw new IllegalArgumentException("The length of controls can't be more than 8");
 		AvatarControl[] ctrl = new AvatarControl[8];
 		for (int i = 0; i < ctrl.length; i++) {
 			if (i < controls.length) ctrl[i] = controls[i]; else ctrl[i] = AvatarControl.NONE;
-			System.out.println("ctrl[" + i + "] == " + ctrl[i]);
 		}
 		this.controls = ctrl;
 	}
@@ -89,16 +94,26 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		System.out.println("clicked mouse button: " + mouseButton);
 		
-		for (int i = 0; i < segments.length; i++) {
-			if (segments[i].isMouseHover(mouseX, mouseY)) {
-				System.out.println("Clicked: " + controls[i].getName());
-				AvatarMod.network.sendToServer(new PacketSKeypress(controls[i].getName(),
-						Raytrace.getTargetBlock(mc.thePlayer, -1)));
+		
+	}
+	
+	@Override
+	public void updateScreen() {
+		boolean pressed = Keyboard.isKeyDown(Keyboard.KEY_LMENU);
+		if (!pressed) {
+			int mouseX = getMouseX();
+			int mouseY = getMouseY();
+			
+			for (int i = 0; i < segments.length; i++) {
+				if (segments[i].isMouseHover(mouseX, mouseY)) {
+					AvatarMod.network.sendToServer(new PacketSKeypress(controls[i].getName(),
+							Raytrace.getTargetBlock(mc.thePlayer, -1)));
+					break;
+				}
 			}
+			mc.thePlayer.closeScreen();
 		}
-		
 	}
 	
 	/**
@@ -128,6 +143,14 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		GL11.glColor3f(r / 255f, g / 255f, b / 255f);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GL11.glPopMatrix();
+	}
+	
+	private int getMouseX() {
+		return Mouse.getEventX() * this.width / this.mc.displayWidth;
+	}
+	
+	private int getMouseY() {
+		return this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 	}
 	
 }

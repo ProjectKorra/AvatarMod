@@ -62,14 +62,14 @@ public class ClientInput {
 	
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
-		if (keyHandler.isKeyPressed(CONTROL_BENDING_LIST.getName())) {
+		if (keyHandler.isKeyPressed(CONTROL_BENDING_LIST)) {
 			GetUUIDResult result = GoreCorePlayerUUIDs.getUUID(Minecraft.getMinecraft().thePlayer.getCommandSenderName());
 			if (result.isResultSuccessful()) {
 				AvatarMod.network.sendToServer(new PacketSCheckBendingList(result.getUUID()));
 			}
 		}
 		
-		if (keyHandler.isKeyPressed(CONTROL_CHEAT_EARTHBENDING.getName())) {
+		if (keyHandler.isKeyPressed(CONTROL_CHEAT_EARTHBENDING)) {
 			System.out.println("Sending cheat-earthbending packet to server");
 			AvatarMod.network.sendToServer(new PacketSCheatEarthbending());
 		}
@@ -81,7 +81,7 @@ public class ClientInput {
 		checkKeypress(CONTROL_TOGGLE_BENDING);
 		checkKeypress(CONTROL_THROW_BLOCK);
 		
-		if (keyHandler.isKeyPressed(CONTROL_RADIAL_MENU.getName())) {
+		if (keyHandler.isKeyPressed(CONTROL_RADIAL_MENU)) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			player.openGui(AvatarMod.instance, AvatarGuiIds.GUI_RADIAL_MENU, player.worldObj, 0, 0, 0);
 		}
@@ -90,7 +90,7 @@ public class ClientInput {
 	
 	private void checkKeypress(AvatarControl control) {
 		String name = control.getName();
-		if (keyHandler.isKeyPressed(name)) {
+		if (keyHandler.isKeyPressed(control)) {
 			AvatarMod.network.sendToServer(new PacketSKeypress(name, Raytrace.getTargetBlock(
 					Minecraft.getMinecraft().thePlayer, -1)));
 		}

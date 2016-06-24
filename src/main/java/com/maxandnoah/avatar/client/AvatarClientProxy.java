@@ -70,7 +70,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		if (id == GUI_RADIAL_MENU)
-			return new RadialMenu(CONTROL_TOGGLE_BENDING, CONTROL_THROW_BLOCK);
+			return new RadialMenu(CONTROL_RADIAL_MENU, CONTROL_TOGGLE_BENDING, CONTROL_THROW_BLOCK);
 		
 		return null;
 	}

@@ -43,10 +43,19 @@ public class AvatarKeybindings implements IKeybindingManager {
 	}
 	
 	@Override
-	public boolean isKeyPressed(String keyName) {
+	public boolean isKeyPressed(AvatarControl control) {
+		String keyName = control.getName();
 		KeyBinding kb = keybindings.get(keyName);
 		if (kb == null) AvatarLog.warn("Key control '" + keyName + "' is undefined");
 		return kb == null ? false : kb.isPressed();
+	}
+
+	@Override
+	public int getKeyCode(AvatarControl control) {
+		String keyName = control.getName();
+		KeyBinding kb = keybindings.get(keyName);
+		if (kb == null) AvatarLog.warn("Key control '" + keyName + "' is undefined");
+		return kb == null ? -1 : kb.getKeyCode();
 	}
 	
 }
