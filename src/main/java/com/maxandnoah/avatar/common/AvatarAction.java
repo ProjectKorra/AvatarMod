@@ -4,7 +4,7 @@ package com.maxandnoah.avatar.common;
  * A type of control which is not activated by a keybinding.
  *
  */
-public enum AvatarCommand implements AvatarControl {
+public enum AvatarAction implements AvatarControl {
 	
 	/** No control is pressed */
 	NONE(""),
@@ -13,7 +13,7 @@ public enum AvatarCommand implements AvatarControl {
 	
 	private String name;
 	
-	private AvatarCommand(String name) {
+	private AvatarAction(String name) {
 		this.name = name;
 	}
 	

@@ -1,7 +1,7 @@
 package com.maxandnoah.avatar.client;
 
 import java.util.HashMap;
-import static com.maxandnoah.avatar.common.AvatarCommand.*;
+import static com.maxandnoah.avatar.common.AvatarAction.*;
 import static com.maxandnoah.avatar.common.AvatarKeybinding.*;
 import java.util.Map;
 

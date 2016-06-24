@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.*;
 import static com.maxandnoah.avatar.common.AvatarKeybinding.*;
-import static com.maxandnoah.avatar.common.AvatarCommand.*;
+import static com.maxandnoah.avatar.common.AvatarAction.*;
 
 import com.maxandnoah.avatar.client.gui.RadialMenu;
 

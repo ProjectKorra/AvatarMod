@@ -8,7 +8,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import com.maxandnoah.avatar.AvatarMod;
-import com.maxandnoah.avatar.common.AvatarCommand;
+import com.maxandnoah.avatar.common.AvatarAction;
 import com.maxandnoah.avatar.common.AvatarKeybinding;
 import com.maxandnoah.avatar.common.IControlsHandler;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
@@ -37,24 +37,24 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	private RadialSegment[] segments;
 	private AvatarKeybinding pressing;
-	private AvatarCommand[] controls;
+	private AvatarAction[] controls;
 	
 	/**
 	 * Create a new radial menu with the given controls.
 	 * @param pressing The key which must be pressed to keep the GUI open.
 	 * @param controls A 8-element array of controls. If the arguments passed
-	 * are less than 8, then the array is filled with {@link AvatarCommand#NONE}.
+	 * are less than 8, then the array is filled with {@link AvatarAction#NONE}.
 	 * The arguments can only be a maximum of 8.
 	 */
-	public RadialMenu(AvatarKeybinding pressing, AvatarCommand... controls) {
+	public RadialMenu(AvatarKeybinding pressing, AvatarAction... controls) {
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
 		
 		if (controls == null) throw new IllegalArgumentException("Controls is null");
 		if (controls.length > 8) throw new IllegalArgumentException("The length of controls can't be more than 8");
-		AvatarCommand[] ctrl = new AvatarCommand[8];
+		AvatarAction[] ctrl = new AvatarAction[8];
 		for (int i = 0; i < ctrl.length; i++) {
-			if (i < controls.length) ctrl[i] = controls[i]; else ctrl[i] = AvatarCommand.NONE;
+			if (i < controls.length) ctrl[i] = controls[i]; else ctrl[i] = AvatarAction.NONE;
 		}
 		this.controls = ctrl;
 	}
