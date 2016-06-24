@@ -1,7 +1,7 @@
 package com.maxandnoah.avatar.server;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
-import com.maxandnoah.avatar.common.IKeybindingManager;
+import com.maxandnoah.avatar.common.IControlsHandler;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.PacketHandlerServer;
 
@@ -20,7 +20,7 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	}
 
 	@Override
-	public IKeybindingManager getKeyHandler() {
+	public IControlsHandler getKeyHandler() {
 		return keys;
 	}
 

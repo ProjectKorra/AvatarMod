@@ -1,14 +1,16 @@
 package com.maxandnoah.avatar.client;
 
 import java.util.HashMap;
-import static com.maxandnoah.avatar.common.AvatarControl.*;
+import static com.maxandnoah.avatar.common.AvatarCommand.*;
+import static com.maxandnoah.avatar.common.AvatarKeybinding.*;
 import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 
 import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.AvatarControl;
-import com.maxandnoah.avatar.common.IKeybindingManager;
+import com.maxandnoah.avatar.common.AvatarKeybinding;
+import com.maxandnoah.avatar.common.IControlsHandler;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -18,18 +20,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.settings.KeyBinding;
 
 @SideOnly(Side.CLIENT)
-public class AvatarKeybindings implements IKeybindingManager {
+public class AvatarKeybindingManager implements IControlsHandler {
 	
 	private Map<String, KeyBinding> keybindings;
 	
-	public AvatarKeybindings() {
+	public AvatarKeybindingManager() {
 		keybindings = new HashMap();
 		
-		addKeybinding(CONTROL_BENDING_LIST, Keyboard.KEY_Z, "main");
-		addKeybinding(CONTROL_CHEAT_EARTHBENDING, Keyboard.KEY_X, "main");
-		addKeybinding(CONTROL_TOGGLE_BENDING, Keyboard.KEY_B, "main");
-		addKeybinding(CONTROL_THROW_BLOCK, Keyboard.KEY_N, "main");
-		addKeybinding(CONTROL_RADIAL_MENU, Keyboard.KEY_LMENU, "main");
+		addKeybinding(KEY_BENDING_LIST, Keyboard.KEY_Z, "main");
+		addKeybinding(KEY_CHEAT_EARTHBENDING, Keyboard.KEY_X, "main");
+		addKeybinding(KEY_RADIAL_MENU, Keyboard.KEY_LMENU, "main");
 		
 	}
 
@@ -43,7 +43,7 @@ public class AvatarKeybindings implements IKeybindingManager {
 	}
 	
 	@Override
-	public boolean isKeyPressed(AvatarControl control) {
+	public boolean isControlPressed(AvatarControl control) {
 		String keyName = control.getName();
 		KeyBinding kb = keybindings.get(keyName);
 		if (kb == null) AvatarLog.warn("Key control '" + keyName + "' is undefined");
@@ -51,11 +51,11 @@ public class AvatarKeybindings implements IKeybindingManager {
 	}
 
 	@Override
-	public int getKeyCode(AvatarControl control) {
+	public int getKeyCode(AvatarKeybinding control) {
 		String keyName = control.getName();
 		KeyBinding kb = keybindings.get(keyName);
 		if (kb == null) AvatarLog.warn("Key control '" + keyName + "' is undefined");
 		return kb == null ? -1 : kb.getKeyCode();
 	}
-	
+
 }

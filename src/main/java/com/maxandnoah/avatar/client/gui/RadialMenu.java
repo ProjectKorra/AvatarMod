@@ -8,8 +8,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import com.maxandnoah.avatar.AvatarMod;
-import com.maxandnoah.avatar.common.AvatarControl;
-import com.maxandnoah.avatar.common.IKeybindingManager;
+import com.maxandnoah.avatar.common.AvatarCommand;
+import com.maxandnoah.avatar.common.AvatarKeybinding;
+import com.maxandnoah.avatar.common.IControlsHandler;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
 import com.maxandnoah.avatar.common.util.Raytrace;
@@ -35,25 +36,25 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	public static final float menuScale = 0.4f;
 	
 	private RadialSegment[] segments;
-	private AvatarControl pressing;
-	private AvatarControl[] controls;
+	private AvatarKeybinding pressing;
+	private AvatarCommand[] controls;
 	
 	/**
 	 * Create a new radial menu with the given controls.
 	 * @param pressing The key which must be pressed to keep the GUI open.
 	 * @param controls A 8-element array of controls. If the arguments passed
-	 * are less than 8, then the array is filled with {@link AvatarControl#NONE}.
+	 * are less than 8, then the array is filled with {@link AvatarCommand#NONE}.
 	 * The arguments can only be a maximum of 8.
 	 */
-	public RadialMenu(AvatarControl pressing, AvatarControl... controls) {
+	public RadialMenu(AvatarKeybinding pressing, AvatarCommand... controls) {
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
 		
 		if (controls == null) throw new IllegalArgumentException("Controls is null");
 		if (controls.length > 8) throw new IllegalArgumentException("The length of controls can't be more than 8");
-		AvatarControl[] ctrl = new AvatarControl[8];
+		AvatarCommand[] ctrl = new AvatarCommand[8];
 		for (int i = 0; i < ctrl.length; i++) {
-			if (i < controls.length) ctrl[i] = controls[i]; else ctrl[i] = AvatarControl.NONE;
+			if (i < controls.length) ctrl[i] = controls[i]; else ctrl[i] = AvatarCommand.NONE;
 		}
 		this.controls = ctrl;
 	}
@@ -101,7 +102,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	@Override
 	public void updateScreen() {
-		boolean pressed = Keyboard.isKeyDown(getKeyHandler().getKeyCode(AvatarControl.CONTROL_RADIAL_MENU));
+		boolean pressed = Keyboard.isKeyDown(getKeyHandler().getKeyCode(AvatarKeybinding.KEY_RADIAL_MENU));
 		if (!pressed) {
 			int mouseX = getMouseX();
 			int mouseY = getMouseY();
@@ -154,7 +155,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		return this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 	}
 	
-	private IKeybindingManager getKeyHandler() {
+	private IControlsHandler getKeyHandler() {
 		return AvatarMod.proxy.getKeyHandler();
 	}
 	

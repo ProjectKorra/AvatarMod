@@ -1,17 +1,18 @@
 package com.maxandnoah.avatar.server;
 
 import com.maxandnoah.avatar.common.AvatarControl;
-import com.maxandnoah.avatar.common.IKeybindingManager;
+import com.maxandnoah.avatar.common.AvatarKeybinding;
+import com.maxandnoah.avatar.common.IControlsHandler;
 
-public class AvatarKeybindingServer implements IKeybindingManager {
+public class AvatarKeybindingServer implements IControlsHandler {
 
 	@Override
-	public boolean isKeyPressed(AvatarControl control) {
+	public boolean isControlPressed(AvatarControl control) {
 		return false;
 	}
-
+	
 	@Override
-	public int getKeyCode(AvatarControl control) {
+	public int getKeyCode(AvatarKeybinding control) {
 		return -1;
 	}
 

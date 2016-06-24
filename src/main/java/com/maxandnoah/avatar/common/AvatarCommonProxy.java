@@ -25,7 +25,7 @@ public interface AvatarCommonProxy {
 	 */
 	public void preInit();
 	
-	public IKeybindingManager getKeyHandler();
+	public IControlsHandler getKeyHandler();
 	
 	/**
 	 * Get a client-side packet handler safely. When the machine

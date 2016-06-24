@@ -1,8 +1,8 @@
 package com.maxandnoah.avatar.client;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
-import com.maxandnoah.avatar.common.AvatarControl;
-import com.maxandnoah.avatar.common.IKeybindingManager;
+import com.maxandnoah.avatar.common.AvatarKeybinding;
+import com.maxandnoah.avatar.common.IControlsHandler;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.IPacketHandler;
@@ -18,7 +18,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.*;
-import static com.maxandnoah.avatar.common.AvatarControl.*;
+import static com.maxandnoah.avatar.common.AvatarKeybinding.*;
+import static com.maxandnoah.avatar.common.AvatarCommand.*;
 
 import com.maxandnoah.avatar.client.gui.RadialMenu;
 
@@ -26,7 +27,7 @@ import com.maxandnoah.avatar.client.gui.RadialMenu;
 public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	private Minecraft mc;
-	private AvatarKeybindings keybindings;
+	private AvatarKeybindingManager keybindings;
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	
@@ -34,7 +35,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	public void preInit() {
 		mc = Minecraft.getMinecraft();
 		
-		keybindings = new AvatarKeybindings();
+		keybindings = new AvatarKeybindingManager();
 		packetHandler = new PacketHandlerClient();
 		
 		inputHandler = new ClientInput();
@@ -45,7 +46,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 	
 	@Override
-	public IKeybindingManager getKeyHandler() {
+	public IControlsHandler getKeyHandler() {
 		return keybindings;
 	}
 	
@@ -70,7 +71,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		if (id == GUI_RADIAL_MENU)
-			return new RadialMenu(CONTROL_RADIAL_MENU, CONTROL_TOGGLE_BENDING, CONTROL_THROW_BLOCK);
+			return new RadialMenu(KEY_RADIAL_MENU, ACTION_TOGGLE_BENDING, ACTION_THROW_BLOCK);
 		
 		return null;
 	}
