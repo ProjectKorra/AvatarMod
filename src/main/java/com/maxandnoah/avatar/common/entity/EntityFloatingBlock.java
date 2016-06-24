@@ -151,7 +151,7 @@ public class EntityFloatingBlock extends Entity {
 			posZ += getVelocity().zCoord / 20;
 			if (!worldObj.isRemote) setVelocity(VectorUtils.times(getVelocity(), getFriction()));
 		}
-		if (!isLifting() && (isCollided || worldObj.getBlock((int) posX, (int) posY, (int) posZ) != Blocks.air)) {
+		if (!isLifting() && (isCollided || worldObj.getBlock((int) Math.floor(posX), (int) Math.floor(posY), (int) Math.floor(posZ)) != Blocks.air)) {
 			setDead();
 			
 			// Spawn particles
