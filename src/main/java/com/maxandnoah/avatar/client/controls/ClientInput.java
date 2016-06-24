@@ -1,12 +1,11 @@
-package com.maxandnoah.avatar.client;
+package com.maxandnoah.avatar.client.controls;
 
 import com.maxandnoah.avatar.AvatarMod;
-import com.maxandnoah.avatar.common.AvatarKeybinding;
 import com.maxandnoah.avatar.common.IControlsHandler;
 import com.maxandnoah.avatar.common.gui.AvatarGuiIds;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
-import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
+import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 import com.maxandnoah.avatar.common.util.BlockPos;
 import com.maxandnoah.avatar.common.util.Raytrace;
@@ -28,7 +27,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
-import static com.maxandnoah.avatar.common.AvatarKeybinding.*;
+import static com.maxandnoah.avatar.client.controls.AvatarKeybinding.*;
 import static com.maxandnoah.avatar.common.util.VectorUtils.add;
 import static com.maxandnoah.avatar.common.util.VectorUtils.copy;
 import static com.maxandnoah.avatar.common.util.VectorUtils.mult;
@@ -74,23 +73,11 @@ public class ClientInput {
 			AvatarMod.network.sendToServer(new PacketSCheatEarthbending());
 		}
 		
-//		if (keyHandler.isKeyPressed(CONTROL_TOGGLE_BENDING)) {
-//			AvatarMod.network.sendToServer(new PacketSToggleBending());
-//		}
-		
 		if (keyHandler.isControlPressed(KEY_RADIAL_MENU)) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			player.openGui(AvatarMod.instance, AvatarGuiIds.GUI_RADIAL_MENU, player.worldObj, 0, 0, 0);
 		}
 		
-	}
-	
-	private void checkKeypress(AvatarKeybinding control) {
-		String name = control.getName();
-		if (keyHandler.isControlPressed(control)) {
-			AvatarMod.network.sendToServer(new PacketSKeypress(name, Raytrace.getTargetBlock(
-					Minecraft.getMinecraft().thePlayer, -1)));
-		}
 	}
 	
 //	@SubscribeEvent

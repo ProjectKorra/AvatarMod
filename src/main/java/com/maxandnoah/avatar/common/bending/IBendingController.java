@@ -1,6 +1,8 @@
 package com.maxandnoah.avatar.common.bending;
 
 import com.maxandnoah.avatar.AvatarLog;
+import com.maxandnoah.avatar.common.AvatarAbility;
+import com.maxandnoah.avatar.common.AvatarControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
@@ -60,10 +62,10 @@ public interface IBendingController extends ReadableWritable {
 	void onUpdate();
 	
 	/**
-	 * Optional hook method that gets called when the player presses
-	 * a control from the Avatar mod.
+	 * Hook method that gets called when the player activates the
+	 * specified ability.
 	 */
-	void onKeypress(String key, AvatarPlayerData data);
+	void onAbility(AvatarAbility ability, AvatarPlayerData data);
 	
 	/**
 	 * Called to create an IBendingState for the player. This allows

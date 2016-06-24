@@ -1,9 +1,11 @@
 package com.maxandnoah.avatar.common.bending;
 
-import com.maxandnoah.avatar.common.AvatarKeybinding;
 import static com.maxandnoah.avatar.common.util.VectorUtils.times;
 
-import com.maxandnoah.avatar.common.AvatarAction;
+import com.maxandnoah.avatar.client.controls.AvatarKeybinding;
+import com.maxandnoah.avatar.client.controls.AvatarOtherControl;
+import com.maxandnoah.avatar.common.AvatarAbility;
+import com.maxandnoah.avatar.common.AvatarControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
@@ -44,13 +46,13 @@ public class Earthbending implements IBendingController {
 	}
 
 	@Override
-	public void onKeypress(String key, AvatarPlayerData data) {
+	public void onAbility(AvatarAbility ability, AvatarPlayerData data) {
 		PlayerState state = data.getState();
 		EntityPlayer player = state.getPlayerEntity();
 		World world = player.worldObj;
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState();
 		
-		if (key.equals(AvatarAction.ACTION_TOGGLE_BENDING.getName())) {
+		if (ability == AvatarAbility.ACTION_TOGGLE_BENDING) {
 			BlockPos target = state.verifyClientLookAtBlock(-1, 5);
 			if (target != null) {
 				if (ebs.getPickupBlock() != null) ebs.getPickupBlock().drop();
@@ -74,7 +76,7 @@ public class Earthbending implements IBendingController {
 				
 			}
 		}
-		if (key.equals(AvatarAction.ACTION_THROW_BLOCK.getName())) {
+		if (ability == AvatarAbility.ACTION_THROW_BLOCK) {
 			EntityFloatingBlock floating = ebs.getPickupBlock();
 			if (floating != null) {
 				float yaw = (float) Math.toRadians(player.rotationYaw);

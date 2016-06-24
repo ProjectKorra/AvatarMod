@@ -1,15 +1,16 @@
-package com.maxandnoah.avatar.client;
+package com.maxandnoah.avatar.client.controls;
 
 import java.util.HashMap;
-import static com.maxandnoah.avatar.common.AvatarAction.*;
-import static com.maxandnoah.avatar.common.AvatarKeybinding.*;
+
+import static com.maxandnoah.avatar.client.controls.AvatarKeybinding.*;
+import static com.maxandnoah.avatar.common.AvatarAbility.*;
+
 import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 
 import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.AvatarControl;
-import com.maxandnoah.avatar.common.AvatarKeybinding;
 import com.maxandnoah.avatar.common.IControlsHandler;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -51,7 +52,7 @@ public class AvatarKeybindingManager implements IControlsHandler {
 	}
 
 	@Override
-	public int getKeyCode(AvatarKeybinding control) {
+	public int getKeyCode(AvatarControl control) {
 		String keyName = control.getName();
 		KeyBinding kb = keybindings.get(keyName);
 		if (kb == null) AvatarLog.warn("Key control '" + keyName + "' is undefined");

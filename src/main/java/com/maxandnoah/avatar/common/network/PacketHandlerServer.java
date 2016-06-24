@@ -6,7 +6,7 @@ import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.data.AvatarPlayerDataFetcherServer;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
-import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
+import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 import com.maxandnoah.avatar.common.bending.IBendingController;
 import com.maxandnoah.avatar.common.bending.BendingManager;
@@ -46,8 +46,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSCheatEarthbending)
 			return handleCheatEarthbending((PacketSCheatEarthbending) packet, ctx);
 		
-		if (packet instanceof PacketSKeypress)
-			return handleKeypress((PacketSKeypress) packet, ctx);
+		if (packet instanceof PacketSUseAbility)
+			return handleKeypress((PacketSUseAbility) packet, ctx);
 		
 		if (packet instanceof PacketSToggleBending)
 			return handleToggleBending((PacketSToggleBending) packet, ctx);
@@ -92,7 +92,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		return null;
 	}
 	
-	private IMessage handleKeypress(PacketSKeypress packet, MessageContext ctx) {
+	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
 		AvatarPlayerData data = AvatarPlayerDataFetcherServer.instance.
 				getDataQuick(player, "Error while retrieving player data for Keypress packet");
@@ -100,7 +100,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			IBendingController controller = data.getActiveBendingController();
 			if (controller != null) {
 				data.getState().update(player, packet.getTargetPos());
-				controller.onKeypress(packet.getControlPressed(), data);
+				controller.onAbility(packet.getAbility(), data);
 			}
 			
 		}

@@ -9,7 +9,7 @@ import com.maxandnoah.avatar.common.network.PacketRedirector;
 import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
-import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
+import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 
 import cpw.mods.fml.common.Mod;
@@ -47,7 +47,7 @@ public class AvatarMod {
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
 		registerPacket(PacketSCheckBendingList.class, Side.SERVER);
 		registerPacket(PacketSCheatEarthbending.class, Side.SERVER);
-		registerPacket(PacketSKeypress.class, Side.SERVER);
+		registerPacket(PacketSUseAbility.class, Side.SERVER);
 		registerPacket(PacketSToggleBending.class, Side.SERVER);
 		registerPacket(PacketCThrownBlockVelocity.class, Side.CLIENT);
 		

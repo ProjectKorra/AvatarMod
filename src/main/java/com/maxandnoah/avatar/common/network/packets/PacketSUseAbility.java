@@ -1,5 +1,8 @@
 package com.maxandnoah.avatar.common.network.packets;
 
+import com.maxandnoah.avatar.client.controls.AvatarControlFinder;
+import com.maxandnoah.avatar.common.AvatarAbility;
+import com.maxandnoah.avatar.common.AvatarControl;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
 import com.maxandnoah.avatar.common.util.BlockPos;
@@ -11,31 +14,33 @@ import crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Packet which tells the server that the client pressed a key.
+ * Packet which tells the server that the client pressed a control.
  * The control is given to the player's active bending controller.
+ * 
+ * @see AvatarControl
  *
  */
-public class PacketSKeypress implements IAvatarPacket<PacketSKeypress> {
+public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	
-	private String control;
+	private AvatarAbility ability;
 	private BlockPos target;
 	
-	public PacketSKeypress() {}
+	public PacketSUseAbility() {}
 	
-	public PacketSKeypress(String control, BlockPos target) {
-		this.control = control;
+	public PacketSUseAbility(AvatarAbility ability, BlockPos target) {
+		this.ability = ability;
 		this.target = target;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		control = GoreCoreByteBufUtil.readString(buf);
+		ability = AvatarAbility.fromId(buf.readInt());
 		target = buf.readBoolean() ? BlockPos.fromBytes(buf) : null;
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		GoreCoreByteBufUtil.writeString(buf, control);
+		buf.writeInt(ability.getId());
 		buf.writeBoolean(target != null);
 		if (target != null) {
 			target.toBytes(buf);
@@ -43,7 +48,7 @@ public class PacketSKeypress implements IAvatarPacket<PacketSKeypress> {
 	}
 
 	@Override
-	public IMessage onMessage(PacketSKeypress message, MessageContext ctx) {
+	public IMessage onMessage(PacketSUseAbility message, MessageContext ctx) {
 		return PacketRedirector.redirectMessage(message, ctx);
 	}
 	
@@ -52,8 +57,8 @@ public class PacketSKeypress implements IAvatarPacket<PacketSKeypress> {
 		return Side.SERVER;
 	}
 	
-	public String getControlPressed() {
-		return control;
+	public AvatarAbility getAbility() {
+		return ability;
 	}
 	
 	public BlockPos getTargetPos() {

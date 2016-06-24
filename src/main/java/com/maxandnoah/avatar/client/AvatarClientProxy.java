@@ -1,7 +1,6 @@
 package com.maxandnoah.avatar.client;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
-import com.maxandnoah.avatar.common.AvatarKeybinding;
 import com.maxandnoah.avatar.common.IControlsHandler;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
@@ -18,9 +17,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.*;
-import static com.maxandnoah.avatar.common.AvatarKeybinding.*;
-import static com.maxandnoah.avatar.common.AvatarAction.*;
+import static com.maxandnoah.avatar.client.controls.AvatarKeybinding.*;
+import static com.maxandnoah.avatar.common.AvatarAbility.*;
 
+import com.maxandnoah.avatar.client.controls.AvatarKeybindingManager;
+import com.maxandnoah.avatar.client.controls.ClientInput;
 import com.maxandnoah.avatar.client.gui.RadialMenu;
 
 @SideOnly(Side.CLIENT)

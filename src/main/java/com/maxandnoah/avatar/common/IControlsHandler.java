@@ -13,8 +13,8 @@ public interface IControlsHandler {
 	boolean isControlPressed(AvatarControl control);
 	
 	/**
-	 * Get the key code for that keybinding
+	 * Get the key code for that control. It must be a keybinding.
 	 */
-	int getKeyCode(AvatarKeybinding control);
+	int getKeyCode(AvatarControl control);
 	
 }
