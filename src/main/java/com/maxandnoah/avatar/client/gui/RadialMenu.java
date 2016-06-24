@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.common.AvatarControl;
+import com.maxandnoah.avatar.common.IKeybindingManager;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
 import com.maxandnoah.avatar.common.util.Raytrace;
@@ -100,7 +101,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	@Override
 	public void updateScreen() {
-		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(AvatarControl.CONTROL_RADIAL_MENU));
+		boolean pressed = Keyboard.isKeyDown(getKeyHandler().getKeyCode(AvatarControl.CONTROL_RADIAL_MENU));
 		if (!pressed) {
 			int mouseX = getMouseX();
 			int mouseY = getMouseY();
@@ -151,6 +152,10 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	private int getMouseY() {
 		return this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+	}
+	
+	private IKeybindingManager getKeyHandler() {
+		return AvatarMod.proxy.getKeyHandler();
 	}
 	
 }
