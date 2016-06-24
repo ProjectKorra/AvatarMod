@@ -1,6 +1,7 @@
 package com.maxandnoah.avatar.client;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
+import com.maxandnoah.avatar.common.AvatarControl;
 import com.maxandnoah.avatar.common.IKeybindingManager;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
@@ -17,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.*;
+import static com.maxandnoah.avatar.common.AvatarControl.*;
 
 import com.maxandnoah.avatar.client.gui.RadialMenu;
 
@@ -68,7 +70,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		if (id == GUI_RADIAL_MENU)
-			return new RadialMenu();
+			return new RadialMenu(CONTROL_TOGGLE_BENDING, CONTROL_THROW_BLOCK);
 		
 		return null;
 	}

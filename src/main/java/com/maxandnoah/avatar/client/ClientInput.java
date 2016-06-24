@@ -1,7 +1,7 @@
 package com.maxandnoah.avatar.client;
 
 import com.maxandnoah.avatar.AvatarMod;
-import com.maxandnoah.avatar.common.AvatarControlList;
+import com.maxandnoah.avatar.common.AvatarControl;
 import com.maxandnoah.avatar.common.IKeybindingManager;
 import com.maxandnoah.avatar.common.gui.AvatarGuiIds;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
@@ -28,7 +28,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
-import static com.maxandnoah.avatar.common.AvatarControlList.*;
+import static com.maxandnoah.avatar.common.AvatarControl.*;
 import static com.maxandnoah.avatar.common.util.VectorUtils.add;
 import static com.maxandnoah.avatar.common.util.VectorUtils.copy;
 import static com.maxandnoah.avatar.common.util.VectorUtils.mult;
@@ -62,14 +62,14 @@ public class ClientInput {
 	
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
-		if (keyHandler.isKeyPressed(CONTROL_BENDING_LIST)) {
+		if (keyHandler.isKeyPressed(CONTROL_BENDING_LIST.getName())) {
 			GetUUIDResult result = GoreCorePlayerUUIDs.getUUID(Minecraft.getMinecraft().thePlayer.getCommandSenderName());
 			if (result.isResultSuccessful()) {
 				AvatarMod.network.sendToServer(new PacketSCheckBendingList(result.getUUID()));
 			}
 		}
 		
-		if (keyHandler.isKeyPressed(CONTROL_CHEAT_EARTHBENDING)) {
+		if (keyHandler.isKeyPressed(CONTROL_CHEAT_EARTHBENDING.getName())) {
 			System.out.println("Sending cheat-earthbending packet to server");
 			AvatarMod.network.sendToServer(new PacketSCheatEarthbending());
 		}
@@ -81,16 +81,17 @@ public class ClientInput {
 		checkKeypress(CONTROL_TOGGLE_BENDING);
 		checkKeypress(CONTROL_THROW_BLOCK);
 		
-		if (keyHandler.isKeyPressed(CONTROL_RADIAL_MENU)) {
+		if (keyHandler.isKeyPressed(CONTROL_RADIAL_MENU.getName())) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			player.openGui(AvatarMod.instance, AvatarGuiIds.GUI_RADIAL_MENU, player.worldObj, 0, 0, 0);
 		}
 		
 	}
 	
-	private void checkKeypress(String control) {
-		if (keyHandler.isKeyPressed(control)) {
-			AvatarMod.network.sendToServer(new PacketSKeypress(control, Raytrace.getTargetBlock(
+	private void checkKeypress(AvatarControl control) {
+		String name = control.getName();
+		if (keyHandler.isKeyPressed(name)) {
+			AvatarMod.network.sendToServer(new PacketSKeypress(name, Raytrace.getTargetBlock(
 					Minecraft.getMinecraft().thePlayer, -1)));
 		}
 	}

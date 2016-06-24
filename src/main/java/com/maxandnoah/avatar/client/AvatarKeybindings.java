@@ -1,12 +1,13 @@
 package com.maxandnoah.avatar.client;
 
 import java.util.HashMap;
-import static com.maxandnoah.avatar.common.AvatarControlList.*;
+import static com.maxandnoah.avatar.common.AvatarControl.*;
 import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 
 import com.maxandnoah.avatar.AvatarLog;
+import com.maxandnoah.avatar.common.AvatarControl;
 import com.maxandnoah.avatar.common.IKeybindingManager;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -32,10 +33,10 @@ public class AvatarKeybindings implements IKeybindingManager {
 		
 	}
 
-	private KeyBinding addKeybinding(String langRef, int key, String cat) {
-		KeyBinding kb = new KeyBinding("avatar." + langRef, key,
+	private KeyBinding addKeybinding(AvatarControl control, int key, String cat) {
+		KeyBinding kb = new KeyBinding("avatar." + control.getName(), key,
 				"avatar.category." + cat);
-		keybindings.put(langRef, kb);
+		keybindings.put(control.getName(), kb);
 		ClientRegistry.registerKeyBinding(kb);
 		return kb;
 		

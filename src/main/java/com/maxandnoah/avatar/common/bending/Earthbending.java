@@ -1,6 +1,6 @@
 package com.maxandnoah.avatar.common.bending;
 
-import com.maxandnoah.avatar.common.AvatarControlList;
+import com.maxandnoah.avatar.common.AvatarControl;
 import static com.maxandnoah.avatar.common.util.VectorUtils.times;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
@@ -48,7 +48,7 @@ public class Earthbending implements IBendingController {
 		World world = player.worldObj;
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState();
 		
-		if (key.equals(AvatarControlList.CONTROL_TOGGLE_BENDING)) {
+		if (key.equals(AvatarControl.CONTROL_TOGGLE_BENDING.getName())) {
 			BlockPos target = state.verifyClientLookAtBlock(-1, 5);
 			if (target != null) {
 				if (ebs.getPickupBlock() != null) ebs.getPickupBlock().drop();
@@ -72,7 +72,7 @@ public class Earthbending implements IBendingController {
 				
 			}
 		}
-		if (key.equals(AvatarControlList.CONTROL_THROW_BLOCK)) {
+		if (key.equals(AvatarControl.CONTROL_THROW_BLOCK.getName())) {
 			EntityFloatingBlock floating = ebs.getPickupBlock();
 			if (floating != null) {
 				float yaw = (float) Math.toRadians(player.rotationYaw);

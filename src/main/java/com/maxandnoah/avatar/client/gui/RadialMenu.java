@@ -5,7 +5,11 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import com.maxandnoah.avatar.AvatarMod;
+import com.maxandnoah.avatar.common.AvatarControl;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
+import com.maxandnoah.avatar.common.network.packets.PacketSKeypress;
+import com.maxandnoah.avatar.common.util.Raytrace;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -28,9 +32,24 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	public static final float menuScale = 0.4f;
 	
 	private RadialSegment[] segments;
+	private AvatarControl[] controls;
 	
-	public RadialMenu() {
+	/**
+	 * Create a new radial menu with the given controls.
+	 * @param controls A 8-element array of controls. If the arguments passed
+	 * are less than 8, then the array is filled with {@link AvatarControl#NONE}.
+	 * The arguments can only be a maximum of 8.
+	 */
+	public RadialMenu(AvatarControl... controls) {
 		segments = new RadialSegment[8];
+		if (controls == null) throw new IllegalArgumentException("Controls is null");
+		if (controls.length > 8) throw new IllegalArgumentException("The length of controls can't be more than 8");
+		AvatarControl[] ctrl = new AvatarControl[8];
+		for (int i = 0; i < ctrl.length; i++) {
+			if (i < controls.length) ctrl[i] = controls[i]; else ctrl[i] = AvatarControl.NONE;
+			System.out.println("ctrl[" + i + "] == " + ctrl[i]);
+		}
+		this.controls = ctrl;
 	}
 	
 	@Override
@@ -74,7 +93,9 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i].isMouseHover(mouseX, mouseY)) {
-				System.out.println("Clicked: " + i);
+				System.out.println("Clicked: " + controls[i].getName());
+				AvatarMod.network.sendToServer(new PacketSKeypress(controls[i].getName(),
+						Raytrace.getTargetBlock(mc.thePlayer, -1)));
 			}
 		}
 		
