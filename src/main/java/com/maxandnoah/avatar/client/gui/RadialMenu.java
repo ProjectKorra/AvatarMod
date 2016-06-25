@@ -141,7 +141,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		// Draw edge
 		GL11.glColor3f(edge.getRed() / 255f, edge.getGreen() / 255f, edge.getBlue() / 255f);
-		mc.getTextureManager().bindTexture(tex);
+		mc.getTextureManager().bindTexture(this.edge);
 		GL11.glTranslatef(0, 0, 1);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GL11.glPopMatrix();
