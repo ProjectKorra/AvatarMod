@@ -1,5 +1,6 @@
 package com.maxandnoah.avatar.client.gui;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +21,11 @@ import net.minecraft.util.ResourceLocation;
 
 public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
-	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod", "textures/gui/radial_segment.png");
+	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
+			"textures/gui/radial_segment_cut.png");
 	private static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
+	private static final ResourceLocation edge = new ResourceLocation("avatarmod",
+			"textures/gui/radial_segment_edge_thicker.png");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png
@@ -35,6 +39,13 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 * Scaling factor for the radial menu
 	 */
 	public static final float menuScale = 0.4f;
+	
+	private static final Color backgroundColor = new Color(225, 225, 225);
+	private static final Color edgeColor = new Color(133, 194, 214);
+	private static final Color iconColor = new Color(90, 90, 90);
+	private static final Color backgroundHover = edgeColor;
+	private static final Color edgeHover = edgeColor;
+	private static final Color iconHover = new Color(255, 255, 255);
 	
 	private RadialSegment[] segments;
 	private AvatarKeybinding pressing;
@@ -75,18 +86,9 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 		
 		for (int i = 0; i < segments.length; i++) {
-			int br = 225, bg = 225, bb = 225;
-			int ir = 110, ig = 110, ib = 110;
-			
-			if (segments[i].isMouseHover(mouseX, mouseY)) {
-				br = 133;
-				bg = 194;
-				bb = 214;
-				ir = ig = ib = 255;
-			}
-			
-			drawRadialSegment(segments[i], br, bg, bb, ir, ig, ib);
-			
+			boolean hover = segments[i].isMouseHover(mouseX, mouseY);
+			drawRadialSegment(segments[i], hover ? backgroundHover : backgroundColor,
+					hover ? edgeHover : edgeColor, hover ? iconHover : iconColor);
 		}
 		
 	}
@@ -123,25 +125,28 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	/**
 	 * Draw the radial segment at that angle and with the specified color.
 	 * @param segment Radial segment to draw
-	 * @param r Red component of the color, 0-255
-	 * @param g Green component of the color, 0-255
-	 * @param b Blue component of the color, 0-255
+	 * @param background 
 	 */
-	private void drawRadialSegment(RadialSegment segment, int r, int g, int b,
-			int iconR, int iconG, int iconB) {
-		ResourceLocation rm = new ResourceLocation("avatarmod", "textures/gui/radial_segment_cut.png");
+	private void drawRadialSegment(RadialSegment segment, Color background, Color edge, Color icon) {
 		
-		mc.getTextureManager().bindTexture(rm);
+		// Draw background & edge
 		GL11.glPushMatrix();
 		GL11.glTranslatef(width / 2f, height / 2f, 0);	// Re-center origin
 		GL11.glScalef(menuScale, menuScale, menuScale);	// Scale all following arguments
 		GL11.glRotatef(segment.getAngle(), 0, 0, 1);	// All transform operations and the image are rotated
 		GL11.glTranslatef(-segmentX, -segmentY, 0);		// Offset the image to the correct center point
-		GL11.glColor3f(r / 255f, g / 255f, b / 255f);
+		// Draw background
+		GL11.glColor3f(background.getRed() / 255f, background.getGreen() / 255f, background.getBlue() / 255f);
+		mc.getTextureManager().bindTexture(radialMenu);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-		
+		// Draw edge
+		GL11.glColor3f(edge.getRed() / 255f, edge.getGreen() / 255f, edge.getBlue() / 255f);
+		mc.getTextureManager().bindTexture(tex);
+		GL11.glTranslatef(0, 0, 1);
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GL11.glPopMatrix();
 		
+		// Draw icon
 		GL11.glPushMatrix();
 		float iconScale = 1.5f;
 		float angle = segment.getAngle() + 45f;
@@ -152,8 +157,8 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		GL11.glTranslatef(-59 / iconScale, -27 / iconScale, 0);		// Translate into correct position
 		GL11.glRotatef(-angle, 0, 0, 1);	// Icon is now at desired position, rotate the image back to regular
 		GL11.glTranslatef(-8, -8, 0);		// Re-center the icon.
-		GL11.glColor3f(iconR / 255f, iconG / 255f, iconB / 255f);			// Set color icon
-		GL11.glTranslatef(0, 0, 1); 		// Ensure icon is not overlapped by the radial segment picture
+		GL11.glColor3f(icon.getRed() / 255f, icon.getGreen() / 255f, icon.getBlue() / 255f);
+		GL11.glTranslatef(0, 0, 2); 		// Ensure icon is not overlapped by the radial segment picture
 		mc.getTextureManager().bindTexture(icons);
 		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 16, 16);
 		
