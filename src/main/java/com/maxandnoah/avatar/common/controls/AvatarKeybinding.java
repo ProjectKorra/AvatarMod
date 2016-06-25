@@ -1,15 +1,9 @@
-package com.maxandnoah.avatar.client.controls;
-
-import com.maxandnoah.avatar.common.AvatarControl;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+package com.maxandnoah.avatar.common.controls;
 
 /**
  * A list of all of the control names.
  *
  */
-@SideOnly(Side.CLIENT)
 public enum AvatarKeybinding implements AvatarControl {
 	
 	/** No control is pressed */

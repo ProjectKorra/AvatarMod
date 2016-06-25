@@ -1,4 +1,4 @@
-package com.maxandnoah.avatar.common;
+package com.maxandnoah.avatar.common.controls;
 
 /**
  * Describes any control which can be activated. Such as

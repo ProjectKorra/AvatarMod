@@ -1,7 +1,7 @@
 package com.maxandnoah.avatar.server;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
-import com.maxandnoah.avatar.common.IControlsHandler;
+import com.maxandnoah.avatar.common.controls.IControlsHandler;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.PacketHandlerServer;
 

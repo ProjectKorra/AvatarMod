@@ -2,7 +2,7 @@ package com.maxandnoah.avatar.common.network.packets;
 
 import com.maxandnoah.avatar.client.controls.AvatarControlFinder;
 import com.maxandnoah.avatar.common.AvatarAbility;
-import com.maxandnoah.avatar.common.AvatarControl;
+import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
 import com.maxandnoah.avatar.common.util.BlockPos;

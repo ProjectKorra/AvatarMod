@@ -1,6 +1,8 @@
 package com.maxandnoah.avatar.client.controls;
 
-import com.maxandnoah.avatar.common.AvatarControl;
+import com.maxandnoah.avatar.common.controls.AvatarControl;
+import com.maxandnoah.avatar.common.controls.AvatarKeybinding;
+import com.maxandnoah.avatar.common.controls.AvatarOtherControl;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

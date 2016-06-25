@@ -1,6 +1,7 @@
 package com.maxandnoah.avatar.common;
 
 import com.maxandnoah.avatar.AvatarMod;
+import com.maxandnoah.avatar.common.controls.IControlsHandler;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.IPacketHandler;
 

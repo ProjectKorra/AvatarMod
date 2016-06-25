@@ -2,7 +2,7 @@ package com.maxandnoah.avatar.common.bending;
 
 import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.AvatarAbility;
-import com.maxandnoah.avatar.common.AvatarControl;
+import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
@@ -84,5 +84,12 @@ public interface IBendingController extends ReadableWritable {
 	 * calculated.
 	 */
 	void onUpdate(AvatarPlayerData data);
+	
+	/**
+	 * Get the ability for the client input, only called on client side.
+	 * Return {@link AvatarAbility#NONE} for no ability.
+	 * @return
+	 */
+	AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input);
 	
 }

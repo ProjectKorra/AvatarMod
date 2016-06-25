@@ -1,4 +1,6 @@
-package com.maxandnoah.avatar.common;
+package com.maxandnoah.avatar.common.controls;
+
+import java.util.List;
 
 /**
  * Manages what controls are pressed. This is designed for the
@@ -16,5 +18,10 @@ public interface IControlsHandler {
 	 * Get the key code for that control. It must be a keybinding.
 	 */
 	int getKeyCode(AvatarControl control);
+	
+	/**
+	 * Get all controls pressed.
+	 */
+	List<AvatarControl> getAllPressed();
 	
 }

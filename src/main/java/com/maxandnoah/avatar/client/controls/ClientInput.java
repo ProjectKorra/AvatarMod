@@ -1,21 +1,32 @@
 package com.maxandnoah.avatar.client.controls;
 
-import static com.maxandnoah.avatar.client.controls.AvatarKeybinding.*;
-import static com.maxandnoah.avatar.client.controls.AvatarOtherControl.*;
+import static com.maxandnoah.avatar.common.controls.AvatarKeybinding.*;
+import static com.maxandnoah.avatar.common.controls.AvatarOtherControl.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.google.common.eventbus.Subscribe;
 import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.AvatarMod;
-import com.maxandnoah.avatar.common.AvatarControl;
-import com.maxandnoah.avatar.common.IControlsHandler;
+import com.maxandnoah.avatar.client.AvatarPlayerDataFetcherClient;
+import com.maxandnoah.avatar.common.AvatarAbility;
+import com.maxandnoah.avatar.common.controls.AvatarControl;
+import com.maxandnoah.avatar.common.controls.AvatarKeybinding;
+import com.maxandnoah.avatar.common.controls.AvatarOtherControl;
+import com.maxandnoah.avatar.common.controls.IControlsHandler;
+import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.gui.AvatarGuiIds;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
+import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
+import com.maxandnoah.avatar.common.util.BlockPos;
+import com.maxandnoah.avatar.common.util.Raytrace;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -41,12 +52,13 @@ public class ClientInput implements IControlsHandler {
 	private GameSettings gameSettings;
 	private Map<String, KeyBinding> keybindings;
 	private boolean mouseLeft, mouseRight, mouseMiddle;
+	private boolean wasLeft, wasRight, wasMiddle;
 	
 	private boolean press;
 	
 	public ClientInput() {
 		gameSettings = Minecraft.getMinecraft().gameSettings;
-		mouseLeft = mouseRight = mouseMiddle = false;
+		mouseLeft = mouseRight = mouseMiddle = wasLeft = wasRight = wasMiddle = false;
 		
 		keybindings = new HashMap();
 		
@@ -68,6 +80,8 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
 		
+		if (control == AvatarKeybinding.NONE || control == AvatarOtherControl.NONE) return false;
+		
 		if (control.isKeybinding()) {
 			String keyName = control.getName();
 			KeyBinding kb = keybindings.get(keyName);
@@ -77,6 +91,9 @@ public class ClientInput implements IControlsHandler {
 			if (control == CONTROL_LEFT_CLICK) return mouseLeft;
 			if (control == CONTROL_RIGHT_CLICK) return mouseRight;
 			if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
+			if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;
+			if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
+			if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
 			AvatarLog.warn("ClientInput- Unknown control: " + control);
 			return false;
 		}
@@ -114,10 +131,56 @@ public class ClientInput implements IControlsHandler {
 	
 	@SubscribeEvent
 	public void onTick(TickEvent.ClientTickEvent e) {
+		wasLeft = mouseLeft;
+		wasRight = mouseRight;
+		wasMiddle = mouseMiddle;
+		
 		mouseLeft = Mouse.isButtonDown(0);
 		mouseRight = Mouse.isButtonDown(1);
 		mouseMiddle = Mouse.isButtonDown(2);
 		
+		if (Minecraft.getMinecraft().thePlayer != null && true) {
+			// Send any input to the server
+			AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
+					Minecraft.getMinecraft().thePlayer);
+			
+			if (data != null && data.getActiveBendingController() != null) {
+				List<AvatarControl> pressed = getAllPressed();
+				for (AvatarControl control : pressed) {
+					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
+					if (ability != AvatarAbility.NONE) {
+						BlockPos target = ability.needsRaytrace() ? Raytrace.getTargetBlock(Minecraft.getMinecraft().thePlayer,
+								ability.getRaytraceDistance()) : null;
+						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, target));
+					}
+				}
+			}
+		}
+		
+	}
+	
+	@SubscribeEvent
+	public void onIngameTick(TickEvent.WorldTickEvent e) {
+		
+		if (e.side == Side.CLIENT) {
+			
+		}
+	}
+
+	@Override
+	public List<AvatarControl> getAllPressed() {
+		List<AvatarControl> list = new ArrayList<AvatarControl>();
+		
+		for (int i = 0; i < AvatarKeybinding.values().length; i++) {
+			AvatarKeybinding control = AvatarKeybinding.values()[i];
+			if (isControlPressed(control)) list.add(control);
+		}
+		for (int i = 0; i < AvatarOtherControl.values().length; i++) {
+			AvatarOtherControl control = AvatarOtherControl.values()[i];
+			if (isControlPressed(control)) list.add(control);
+		}
+		
+		return list;
 	}
 	
 }

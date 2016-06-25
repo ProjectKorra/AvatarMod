@@ -12,16 +12,21 @@ import com.maxandnoah.avatar.common.bending.IBendingController;
 public enum AvatarAbility {
 	
 	/** No control is pressed */
-	NONE("", -1),
-	ACTION_TOGGLE_BENDING("ToggleBending", BENDINGID_EARTHBENDING),
-	ACTION_THROW_BLOCK("ThrowBlock", BENDINGID_EARTHBENDING);
+	NONE("", -1, -2),
+	ACTION_TOGGLE_BENDING("ToggleBending", BENDINGID_EARTHBENDING, -1),
+	ACTION_THROW_BLOCK("ThrowBlock", BENDINGID_EARTHBENDING, -2);
 	
 	private String name;
 	private IBendingController controller;
+	/**
+	 * Raytrace distance. -1 = Player's reach, -2 = No raytrace.
+	 */
+	private double raytrace;
 	
-	private AvatarAbility(String name, int compatibleBendingID) {
+	private AvatarAbility(String name, int compatibleBendingID, double raytrace) {
 		this.name = name;
 		this.controller = BendingManager.getBending(compatibleBendingID);
+		this.raytrace = raytrace;
 	}
 	
 	public String getName() {
@@ -38,6 +43,14 @@ public enum AvatarAbility {
 	
 	public boolean isCompatible(IBendingController controller) {
 		return this.controller == controller;
+	}
+	
+	public boolean needsRaytrace() {
+		return raytrace != -2;
+	}
+	
+	public double getRaytraceDistance() {
+		return raytrace;
 	}
 	
 	/**

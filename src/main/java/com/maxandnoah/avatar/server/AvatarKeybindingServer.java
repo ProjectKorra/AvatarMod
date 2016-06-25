@@ -1,8 +1,10 @@
 package com.maxandnoah.avatar.server;
 
-import com.maxandnoah.avatar.client.controls.AvatarKeybinding;
-import com.maxandnoah.avatar.common.AvatarControl;
-import com.maxandnoah.avatar.common.IControlsHandler;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.maxandnoah.avatar.common.controls.AvatarControl;
+import com.maxandnoah.avatar.common.controls.IControlsHandler;
 
 public class AvatarKeybindingServer implements IControlsHandler {
 
@@ -14,6 +16,11 @@ public class AvatarKeybindingServer implements IControlsHandler {
 	@Override
 	public int getKeyCode(AvatarControl control) {
 		return -1;
+	}
+
+	@Override
+	public List<AvatarControl> getAllPressed() {
+		return new ArrayList<AvatarControl>();
 	}
 
 }

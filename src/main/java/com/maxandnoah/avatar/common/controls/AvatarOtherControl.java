@@ -1,20 +1,25 @@
-package com.maxandnoah.avatar.client.controls;
+package com.maxandnoah.avatar.common.controls;
 
-import com.maxandnoah.avatar.common.AvatarControl;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import com.maxandnoah.avatar.client.controls.AvatarControlFinder;
 
 /**
  * Controls other than keybindings.
  *
  */
-@SideOnly(Side.CLIENT)
 public enum AvatarOtherControl implements AvatarControl {
 	NONE("None"),
+	/** Left mouse button is held down */
 	CONTROL_LEFT_CLICK("LeftClick"),
+	/** Right mouse button is held down */
 	CONTROL_RIGHT_CLICK("RightClick"),
-	CONTROL_MIDDLE_CLICK("MiddleClick");
+	/** Middle mouse button is held down */
+	CONTROL_MIDDLE_CLICK("MiddleClick"),
+	/** Left mouse button just got pressed */
+	CONTROL_LEFT_CLICK_DOWN("LeftClickDown"),
+	/** Right mouse button just got pressed */
+	CONTROL_RIGHT_CLICK_DOWN("RightClickDown"),
+	/** Middle mouse button just got pressed */
+	CONTROL_MIDDLE_CLICK_DOWN("MiddleClickDown");
 
 	private final String name;
 	

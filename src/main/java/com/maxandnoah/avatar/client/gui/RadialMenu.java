@@ -9,11 +9,12 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import com.maxandnoah.avatar.AvatarMod;
-import com.maxandnoah.avatar.client.controls.AvatarKeybinding;
 import com.maxandnoah.avatar.common.AvatarAbility;
-import com.maxandnoah.avatar.common.IControlsHandler;
+import com.maxandnoah.avatar.common.controls.AvatarKeybinding;
+import com.maxandnoah.avatar.common.controls.IControlsHandler;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
+import com.maxandnoah.avatar.common.util.BlockPos;
 import com.maxandnoah.avatar.common.util.Raytrace;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -113,8 +114,9 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 			
 			for (int i = 0; i < segments.length; i++) {
 				if (segments[i].isMouseHover(mouseX, mouseY)) {
-					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i],
-							Raytrace.getTargetBlock(mc.thePlayer, -1)));
+					BlockPos target = controls[i].needsRaytrace() ? Raytrace.getTargetBlock(mc.thePlayer,
+							controls[i].getRaytraceDistance()) : null;
+					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], target));
 					break;
 				}
 			}

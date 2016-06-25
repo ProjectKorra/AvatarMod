@@ -1,14 +1,14 @@
 package com.maxandnoah.avatar.client;
 
-import static com.maxandnoah.avatar.client.controls.AvatarKeybinding.KEY_RADIAL_MENU;
 import static com.maxandnoah.avatar.common.AvatarAbility.ACTION_THROW_BLOCK;
 import static com.maxandnoah.avatar.common.AvatarAbility.ACTION_TOGGLE_BENDING;
+import static com.maxandnoah.avatar.common.controls.AvatarKeybinding.KEY_RADIAL_MENU;
 import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.GUI_RADIAL_MENU;
 
 import com.maxandnoah.avatar.client.controls.ClientInput;
 import com.maxandnoah.avatar.client.gui.RadialMenu;
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
-import com.maxandnoah.avatar.common.IControlsHandler;
+import com.maxandnoah.avatar.common.controls.IControlsHandler;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.IPacketHandler;

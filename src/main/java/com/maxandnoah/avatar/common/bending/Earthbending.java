@@ -3,17 +3,14 @@ package com.maxandnoah.avatar.common.bending;
 import static com.maxandnoah.avatar.common.util.VectorUtils.times;
 
 import com.maxandnoah.avatar.AvatarMod;
-import com.maxandnoah.avatar.client.controls.AvatarKeybinding;
-import com.maxandnoah.avatar.client.controls.AvatarOtherControl;
 import com.maxandnoah.avatar.common.AvatarAbility;
-import com.maxandnoah.avatar.common.AvatarControl;
+import com.maxandnoah.avatar.common.controls.AvatarControl;
+import com.maxandnoah.avatar.common.controls.AvatarOtherControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
-import com.maxandnoah.avatar.common.network.packets.PacketCControllingBlock;
 import com.maxandnoah.avatar.common.network.packets.PacketCPlayerData;
 import com.maxandnoah.avatar.common.util.BlockPos;
-import com.maxandnoah.avatar.common.util.Raytrace;
 import com.maxandnoah.avatar.common.util.VectorUtils;
 
 import net.minecraft.block.Block;
@@ -124,6 +121,18 @@ public class Earthbending implements IBendingController {
 			}
 			
 		}
+	}
+
+	@Override
+	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
+		PlayerState state = data.getState();
+		EarthbendingState ebs = (EarthbendingState) data.getBendingState();
+		
+		if (ebs.getPickupBlock() != null) {
+			if (input == AvatarOtherControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_THROW_BLOCK;
+		}
+		
+		return AvatarAbility.NONE;
 	}
 	
 }
