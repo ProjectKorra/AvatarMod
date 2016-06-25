@@ -97,12 +97,6 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		for (int i = 0; i < segments.length; i++) {
-			if (segments[i].isMouseHover(mouseX, mouseY)) {
-				System.out.println("U/V: " + segments[i].getTextureU() + "/" + segments[i].getTextureV());
-				break;
-			}
-		}
 		
 	}
 	
@@ -129,7 +123,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 * @param segment Radial segment to draw
 	 */
 	private void drawRadialSegment(RadialSegment segment) {
-		drawRadialSegment(segment, 80, 80, 80);
+		drawRadialSegment(segment, 80, 80, 80, 0, 0, 0);
 	}
 	
 	/**
@@ -139,9 +133,9 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 * @param g Green component of the color, 0-255
 	 * @param b Blue component of the color, 0-255
 	 */
-	private void drawRadialSegment(RadialSegment segment, int r, int g, int b) {
+	private void drawRadialSegment(RadialSegment segment, int r, int g, int b,
+			int iconR, int iconG, int iconB) {
 		ResourceLocation rm = new ResourceLocation("avatarmod", "textures/gui/radial_segment_cut.png");
-ResourceLocation debug = new ResourceLocation("avatarmod", "textures/gui/debug.png");
 		
 		mc.getTextureManager().bindTexture(rm);
 		GL11.glPushMatrix();
@@ -155,33 +149,17 @@ ResourceLocation debug = new ResourceLocation("avatarmod", "textures/gui/debug.p
 		GL11.glPopMatrix();
 		
 		GL11.glPushMatrix();
-		float iconScale = 1;
-		float angle = segment.getAngle();
+		float iconScale = 1.5f;
+		float angle = segment.getAngle() + 45f;
 		angle %= 360;
-//		if (angle < 0) angle += 360;
 		GL11.glTranslatef(width / 2f, height / 2f, 0);	// Re-center origin
 		GL11.glScalef(iconScale, iconScale, iconScale);
-		GL11.glRotatef(angle, 0, 0, 1);
-//		GL11.glTranslatef(0, -70, 0);
-		GL11.glTranslatef(-59, -27, 0);
-		
-//		GL11.glTranslatef(-8, -1, 0);
-//		GL11.glRotatef(-angle, 0, 0, 1);
-		int t = getMouseX();
-		float pct = (float) ((float) t / width)*1;
-
-		GL11.glTranslatef(0, 0, 1);
-		GL11.glRotatef(-angle, 0, 0, 1);
-		mc.getTextureManager().bindTexture(debug);
-		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-		GL11.glRotatef(angle, 0, 0, 1);
-		
-//		if (Keyboard.isKeyDown(Keyboard.KEY_F))
-//		{GL11.glTranslatef(0, -8, 0);}
-		GL11.glRotatef(-angle, 0, 0, 1);
-		
-		GL11.glTranslatef(-8, -8, 0);
-		GL11.glColor3f(1, 1, 1);
+		GL11.glRotatef(angle, 0, 0, 1);		// Rotation for next translation
+		GL11.glTranslatef(-59 / iconScale, -27 / iconScale, 0);		// Translate into correct position
+		GL11.glRotatef(-angle, 0, 0, 1);	// Icon is now at desired position, rotate the image back to regular
+		GL11.glTranslatef(-8, -8 + 3, 0);	// Re-center the icon. Also move it down a bit by 3
+		GL11.glColor3f(1, 1, 1);			// Set color icon
+		GL11.glTranslatef(0, 0, 1); 		// Ensure icon is not overlapped by the radial segment picture
 		mc.getTextureManager().bindTexture(icons);
 		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 16, 16);
 		
