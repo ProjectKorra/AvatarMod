@@ -75,15 +75,17 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 		
 		for (int i = 0; i < segments.length; i++) {
-			int r = 115, g = 115,b = 115;
+			int br = 225, bg = 225, bb = 225;
+			int ir = 110, ig = 110, ib = 110;
 			
 			if (segments[i].isMouseHover(mouseX, mouseY)) {
-				r = 133;
-				g = 194;
-				b = 214;
+				br = 133;
+				bg = 194;
+				bb = 214;
+				ir = ig = ib = 255;
 			}
 			
-			drawRadialSegment(segments[i], r, g, b);
+			drawRadialSegment(segments[i], br, bg, bb, ir, ig, ib);
 			
 		}
 		
@@ -119,14 +121,6 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	}
 	
 	/**
-	 * Draw the radial segment at that angle and with gray as the color.
-	 * @param segment Radial segment to draw
-	 */
-	private void drawRadialSegment(RadialSegment segment) {
-		drawRadialSegment(segment, 80, 80, 80, 0, 0, 0);
-	}
-	
-	/**
 	 * Draw the radial segment at that angle and with the specified color.
 	 * @param segment Radial segment to draw
 	 * @param r Red component of the color, 0-255
@@ -157,8 +151,8 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		GL11.glRotatef(angle, 0, 0, 1);		// Rotation for next translation
 		GL11.glTranslatef(-59 / iconScale, -27 / iconScale, 0);		// Translate into correct position
 		GL11.glRotatef(-angle, 0, 0, 1);	// Icon is now at desired position, rotate the image back to regular
-		GL11.glTranslatef(-8, -8 + 3, 0);	// Re-center the icon. Also move it down a bit by 3
-		GL11.glColor3f(1, 1, 1);			// Set color icon
+		GL11.glTranslatef(-8, -8, 0);		// Re-center the icon.
+		GL11.glColor3f(iconR / 255f, iconG / 255f, iconB / 255f);			// Set color icon
 		GL11.glTranslatef(0, 0, 1); 		// Ensure icon is not overlapped by the radial segment picture
 		mc.getTextureManager().bindTexture(icons);
 		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 16, 16);
