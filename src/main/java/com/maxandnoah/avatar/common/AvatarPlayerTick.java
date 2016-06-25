@@ -1,5 +1,6 @@
 package com.maxandnoah.avatar.common;
 
+import com.maxandnoah.avatar.client.AvatarPlayerDataFetcherClient;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.AvatarPlayerDataFetcherServer;
 
@@ -12,7 +13,8 @@ public class AvatarPlayerTick {
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
 		if (e.side == Side.SERVER || true) {
-			AvatarPlayerData data = AvatarPlayerDataFetcherServer.instance.getDataPerformance(e.player);
+			AvatarPlayerData data = (e.side == Side.SERVER ? AvatarPlayerDataFetcherServer.instance
+					: AvatarPlayerDataFetcherClient.instance) .getDataPerformance(e.player);
 			if (data != null) {
 				if (data.getActiveBendingController() != null) {
 					data.getState().update(e.player, null);

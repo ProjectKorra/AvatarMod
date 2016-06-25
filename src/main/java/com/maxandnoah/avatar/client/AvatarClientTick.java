@@ -1,6 +1,7 @@
 package com.maxandnoah.avatar.client;
 
 import com.google.common.eventbus.Subscribe;
+import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.util.VectorUtils;
 
@@ -23,17 +24,21 @@ public class AvatarClientTick {
 	
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
+		/*
 		if (e.side == Side.CLIENT) {
 			if (floating != null && !floating.isLifting()) {
 				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-				double yaw = Math.toRadians(player.rotationYaw);
-				double pitch = Math.toRadians(player.rotationPitch);
-				Vec3 forward = VectorUtils.fromYawPitch(yaw, pitch);
-				Vec3 target = VectorUtils.plus(VectorUtils.times(forward, 2), VectorUtils.getEntityPos(player));
-				
-				floating.setPosition(target.xCoord, target.yCoord, target.zCoord);
+				AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(player);
+				if (data != null) {
+					double yaw = Math.toRadians(player.rotationYaw);
+					double pitch = Math.toRadians(player.rotationPitch);
+					Vec3 forward = VectorUtils.fromYawPitch(yaw, pitch);
+					Vec3 target = VectorUtils.plus(VectorUtils.times(forward, 2), VectorUtils.getEntityPos(player));
+					
+					floating.setPosition(target.xCoord, target.yCoord, target.zCoord);
+				}
 			}
-		}
+		}*/
 	}
 	
 }

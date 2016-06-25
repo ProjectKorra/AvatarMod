@@ -8,9 +8,11 @@ import com.maxandnoah.avatar.common.gui.AvatarGuiHandler;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
 import com.maxandnoah.avatar.common.network.packets.PacketCControllingBlock;
+import com.maxandnoah.avatar.common.network.packets.PacketCPlayerData;
 import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
+import com.maxandnoah.avatar.common.network.packets.PacketSRequestData;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 
@@ -54,6 +56,8 @@ public class AvatarMod {
 		registerPacket(PacketSToggleBending.class, Side.SERVER);
 		registerPacket(PacketCThrownBlockVelocity.class, Side.CLIENT);
 		registerPacket(PacketCControllingBlock.class, Side.CLIENT);
+		registerPacket(PacketSRequestData.class, Side.SERVER);
+		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		
 		BendingManager.init();
 		

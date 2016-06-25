@@ -4,8 +4,10 @@ import java.util.UUID;
 
 import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.data.AvatarPlayerDataFetcherServer;
+import com.maxandnoah.avatar.common.network.packets.PacketCPlayerData;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
+import com.maxandnoah.avatar.common.network.packets.PacketSRequestData;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 import com.maxandnoah.avatar.common.bending.IBendingController;
@@ -51,6 +53,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (packet instanceof PacketSToggleBending)
 			return handleToggleBending((PacketSToggleBending) packet, ctx);
+		
+		if (packet instanceof PacketSRequestData)
+			return handleRequestData((PacketSRequestData) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -125,6 +130,18 @@ public class PacketHandlerServer implements IPacketHandler {
 		}
 		
 		return null;
+	}
+	
+	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
+		FetchDataResult result = AvatarPlayerDataFetcherServer.instance.getData(ctx.getServerHandler().playerEntity);
+		if (result.hadError()) {
+			AvatarLog.warn("Couldn't handle player data request packet because player data fetch had error");
+			result.logError();
+			return null;
+		} else {
+			return new PacketCPlayerData((AvatarPlayerData) result.getData());
+		}
+		
 	}
 	
 }

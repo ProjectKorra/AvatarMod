@@ -110,7 +110,9 @@ public class Earthbending implements IBendingController {
 				double yaw = Math.toRadians(player.rotationYaw);
 				double pitch = Math.toRadians(player.rotationPitch);
 				Vec3 forward = VectorUtils.fromYawPitch(yaw, pitch);
-				Vec3 target = VectorUtils.plus(VectorUtils.times(forward, 2), VectorUtils.getEntityPos(player));
+				Vec3 eye = VectorUtils.getEntityPos(player);
+				eye.yCoord += 1.2;
+				Vec3 target = VectorUtils.plus(VectorUtils.times(forward, 2), eye);
 				
 				floating.setPosition(target.xCoord, target.yCoord, target.zCoord);
 			}

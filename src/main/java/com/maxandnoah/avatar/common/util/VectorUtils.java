@@ -5,6 +5,8 @@ import static java.lang.Math.sin;
 
 import javax.vecmath.Vector3d;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.Vec3;
@@ -136,7 +138,9 @@ public class VectorUtils {
 	}
 	
 	public static Vec3 getEntityPos(Entity entity) {
-		return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
+		Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) pos.yCoord -= 1.65;
+		return pos;
 	}
 	
 	/**
