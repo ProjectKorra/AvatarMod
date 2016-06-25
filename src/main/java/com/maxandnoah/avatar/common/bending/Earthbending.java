@@ -53,27 +53,29 @@ public class Earthbending implements IBendingController {
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState();
 		
 		if (ability == AvatarAbility.ACTION_TOGGLE_BENDING) {
-			BlockPos target = state.verifyClientLookAtBlock(-1, 5);
-			if (target != null) {
-				if (ebs.getPickupBlock() != null) ebs.getPickupBlock().drop();
-				
-				Block block = world.getBlock(target.x, target.y, target.z);
-				world.setBlock(target.x, target.y, target.z, Blocks.air);
-				
-				EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
-				floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
-				
-				Vec3 playerPos = VectorUtils.getEntityPos(player);
-				Vec3 floatingPos = VectorUtils.getEntityPos(floating);
-				Vec3 force = VectorUtils.minus(floatingPos, playerPos);
-				force.normalize();
-				VectorUtils.mult(force, 2);
-				floating.lift();
-				
-				world.spawnEntityInWorld(floating);
-				
-				ebs.setPickupBlock(floating);
-				
+			if (ebs.getPickupBlock() != null) {
+				ebs.getPickupBlock().drop();
+			} else {
+				BlockPos target = state.verifyClientLookAtBlock(-1, 5);
+				if (target != null) {
+					Block block = world.getBlock(target.x, target.y, target.z);
+					world.setBlock(target.x, target.y, target.z, Blocks.air);
+					
+					EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
+					floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
+					
+					Vec3 playerPos = VectorUtils.getEntityPos(player);
+					Vec3 floatingPos = VectorUtils.getEntityPos(floating);
+					Vec3 force = VectorUtils.minus(floatingPos, playerPos);
+					force.normalize();
+					VectorUtils.mult(force, 2);
+					floating.lift();
+					
+					world.spawnEntityInWorld(floating);
+					
+					ebs.setPickupBlock(floating);
+					
+				}
 			}
 		}
 		if (ability == AvatarAbility.ACTION_THROW_BLOCK) {
