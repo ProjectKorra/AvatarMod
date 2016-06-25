@@ -117,6 +117,7 @@ public class ClientInput implements IControlsHandler {
 		mouseLeft = Mouse.isButtonDown(0);
 		mouseRight = Mouse.isButtonDown(1);
 		mouseMiddle = Mouse.isButtonDown(2);
+		
 	}
 	
 }

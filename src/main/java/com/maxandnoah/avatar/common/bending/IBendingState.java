@@ -1,6 +1,7 @@
 package com.maxandnoah.avatar.common.bending;
 
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
+import io.netty.buffer.ByteBuf;
 
 /**
  * Allows an IBendingController to store additional information
@@ -16,6 +17,9 @@ import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
  */
 public interface IBendingState extends ReadableWritable {
 
+	void toBytes(ByteBuf buf);
+	
+	void fromBytes(ByteBuf buf);
 	
 	
 }

@@ -4,17 +4,20 @@ import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.bending.BendingManager;
 import com.maxandnoah.avatar.common.bending.Earthbending;
 import com.maxandnoah.avatar.common.bending.EarthbendingState;
+import com.maxandnoah.avatar.common.bending.IBendingState;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.network.IPacketHandler;
 import com.maxandnoah.avatar.common.network.packets.PacketCControllingBlock;
 import com.maxandnoah.avatar.common.network.packets.PacketCPlayerData;
 import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
+import com.maxandnoah.avatar.common.util.Raytrace;
 import com.maxandnoah.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import crowsofwar.gorecore.data.GoreCorePlayerDataFetcher.FetchDataResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +30,7 @@ import net.minecraft.world.World;
  * this have a C in their name.
  *
  */
+@SideOnly(Side.CLIENT)
 public class PacketHandlerClient implements IPacketHandler {
 
 	@Override
@@ -90,6 +94,11 @@ public class PacketHandlerClient implements IPacketHandler {
 				data.addBending(packet.getAllControllersID()[i]);
 			}
 			data.setActiveBendingController(BendingManager.getBending(packet.getCurrentBendingControllerID()));
+			if (data.getBendingState() != null) {
+				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+				data.getState().update(player, Raytrace.getTargetBlock(player, -1));
+				data.getBendingState().fromBytes(packet.getBuf());
+			}
 		}
 		return null;
 	}

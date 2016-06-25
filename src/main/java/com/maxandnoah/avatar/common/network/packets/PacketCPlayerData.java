@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.maxandnoah.avatar.common.bending.IBendingController;
+import com.maxandnoah.avatar.common.bending.IBendingState;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
@@ -26,6 +27,8 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 	private UUID player;
 	private int[] allControllers;
 	private int controllerID;
+	private IBendingState state;
+	private ByteBuf buffer;
 	
 	public PacketCPlayerData() {}
 	
@@ -36,6 +39,7 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 			allControllers[i] = data.getBendingControllers().get(i).getID();
 		}
 		controllerID = data.isBending() ? data.getActiveBendingController().getID() : -1;
+		state = data.getBendingState();
 		
 	}
 	
@@ -46,6 +50,8 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 		allControllers = new int[length];
 		for (int i = 0; i < length; i++) allControllers[i] = buf.readInt();
 		controllerID = buf.readInt();
+		buffer = buf;
+//		state.fromBytes(buf);
 	}
 	
 	@Override
@@ -54,6 +60,7 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 		buf.writeInt(allControllers.length);
 		for (int i = 0; i < allControllers.length; i++) buf.writeInt(allControllers[i]);
 		buf.writeInt(controllerID);
+		state.toBytes(buf);
 	}
 
 	@Override
@@ -76,6 +83,14 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 	
 	public int getCurrentBendingControllerID() {
 		return controllerID;
+	}
+	
+	public ByteBuf getBuf() {
+		return buffer;
+	}
+	
+	public int getIndex() {
+		return buffer.readerIndex();
 	}
 	
 }

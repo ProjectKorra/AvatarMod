@@ -11,6 +11,7 @@ import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.network.packets.PacketCControllingBlock;
+import com.maxandnoah.avatar.common.network.packets.PacketCPlayerData;
 import com.maxandnoah.avatar.common.util.BlockPos;
 import com.maxandnoah.avatar.common.util.Raytrace;
 import com.maxandnoah.avatar.common.util.VectorUtils;
@@ -53,7 +54,8 @@ public class Earthbending implements IBendingController {
 		if (ability == AvatarAbility.ACTION_TOGGLE_BENDING) {
 			if (ebs.getPickupBlock() != null) {
 				ebs.getPickupBlock().drop();
-				ebs.setPickupBlock(null);//TODO sync this to the client
+				ebs.setPickupBlock(null);
+				AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
 			} else {
 				BlockPos target = state.verifyClientLookAtBlock(-1, 5);
 				if (target != null) {
@@ -74,7 +76,7 @@ public class Earthbending implements IBendingController {
 					
 					ebs.setPickupBlock(floating);
 					
-					AvatarMod.network.sendTo(new PacketCControllingBlock(floating.getID()), (EntityPlayerMP) player);
+					AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
 					
 				}
 			}
@@ -90,7 +92,8 @@ public class Earthbending implements IBendingController {
 				floating.addForce(times(lookDir, 20));
 				
 				floating.drop();
-				ebs.setPickupBlock(null); // TODO Tell the client that the block has been dropped
+				ebs.setPickupBlock(null);
+				AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
 				
 			}
 		}
