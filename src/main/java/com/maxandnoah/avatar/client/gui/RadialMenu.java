@@ -21,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod", "textures/gui/radial_segment.png");
+	private static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png
@@ -64,7 +65,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		super.initGui();
 		
 		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new RadialSegment(this, 20 + i * 45);
+			segments[i] = new RadialSegment(this, i);
 		}
 		
 	}
@@ -82,7 +83,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 				b = 214;
 			}
 			
-			drawRadialSegment(segments[i].getAngle(), r, g, b);
+			drawRadialSegment(segments[i], r, g, b);
 			
 		}
 		
@@ -96,7 +97,12 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		
+		for (int i = 0; i < segments.length; i++) {
+			if (segments[i].isMouseHover(mouseX, mouseY)) {
+				System.out.println("U/V: " + segments[i].getTextureU() + "/" + segments[i].getTextureV());
+				break;
+			}
+		}
 		
 	}
 	
@@ -120,30 +126,65 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	/**
 	 * Draw the radial segment at that angle and with gray as the color.
-	 * @param angle Angle in degrees
+	 * @param segment Radial segment to draw
 	 */
-	private void drawRadialSegment(float angle) {
-		drawRadialSegment(angle, 80, 80, 80);
+	private void drawRadialSegment(RadialSegment segment) {
+		drawRadialSegment(segment, 80, 80, 80);
 	}
 	
 	/**
 	 * Draw the radial segment at that angle and with the specified color.
-	 * @param angle Angle in degrees
+	 * @param segment Radial segment to draw
 	 * @param r Red component of the color, 0-255
 	 * @param g Green component of the color, 0-255
 	 * @param b Blue component of the color, 0-255
 	 */
-	private void drawRadialSegment(float angle, int r, int g, int b) {
+	private void drawRadialSegment(RadialSegment segment, int r, int g, int b) {
 		ResourceLocation rm = new ResourceLocation("avatarmod", "textures/gui/radial_segment_cut.png");
-
+ResourceLocation debug = new ResourceLocation("avatarmod", "textures/gui/debug.png");
+		
 		mc.getTextureManager().bindTexture(rm);
 		GL11.glPushMatrix();
 		GL11.glTranslatef(width / 2f, height / 2f, 0);	// Re-center origin
 		GL11.glScalef(menuScale, menuScale, menuScale);	// Scale all following arguments
-		GL11.glRotatef(angle, 0, 0, 1);					// All transform operations and the image are rotated
+		GL11.glRotatef(segment.getAngle(), 0, 0, 1);	// All transform operations and the image are rotated
 		GL11.glTranslatef(-segmentX, -segmentY, 0);		// Offset the image to the correct center point
 		GL11.glColor3f(r / 255f, g / 255f, b / 255f);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		
+		GL11.glPopMatrix();
+		
+		GL11.glPushMatrix();
+		float iconScale = 1;
+		float angle = segment.getAngle();
+		angle %= 360;
+//		if (angle < 0) angle += 360;
+		GL11.glTranslatef(width / 2f, height / 2f, 0);	// Re-center origin
+		GL11.glScalef(iconScale, iconScale, iconScale);
+		GL11.glRotatef(angle, 0, 0, 1);
+//		GL11.glTranslatef(0, -70, 0);
+		GL11.glTranslatef(-59, -27, 0);
+		
+//		GL11.glTranslatef(-8, -1, 0);
+//		GL11.glRotatef(-angle, 0, 0, 1);
+		int t = getMouseX();
+		float pct = (float) ((float) t / width)*1;
+
+		GL11.glTranslatef(0, 0, 1);
+		GL11.glRotatef(-angle, 0, 0, 1);
+		mc.getTextureManager().bindTexture(debug);
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		GL11.glRotatef(angle, 0, 0, 1);
+		
+//		if (Keyboard.isKeyDown(Keyboard.KEY_F))
+//		{GL11.glTranslatef(0, -8, 0);}
+		GL11.glRotatef(-angle, 0, 0, 1);
+		
+		GL11.glTranslatef(-8, -8, 0);
+		GL11.glColor3f(1, 1, 1);
+		mc.getTextureManager().bindTexture(icons);
+		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 16, 16);
+		
 		GL11.glPopMatrix();
 	}
 	

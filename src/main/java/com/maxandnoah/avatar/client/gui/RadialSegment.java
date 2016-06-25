@@ -9,10 +9,12 @@ public class RadialSegment {
 	
 	private final RadialMenu gui;
 	private final float angle;
-
-	public RadialSegment(RadialMenu gui, float angle) {
+	private final int index;
+	
+	public RadialSegment(RadialMenu gui, int index) {
 		this.gui = gui;
-		this.angle = angle;
+		this.angle = 22.5f + index * 45;
+		this.index = index;
 	}
 	
 	/**
@@ -42,6 +44,14 @@ public class RadialSegment {
 	
 	public float getAngle() {
 		return angle;
+	}
+	
+	public int getTextureU() {
+		return (index * 16) % 256;
+	}
+	
+	public int getTextureV() {
+		return index / 256;
 	}
 	
 }
