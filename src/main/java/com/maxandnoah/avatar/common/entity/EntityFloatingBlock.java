@@ -22,12 +22,14 @@ public class EntityFloatingBlock extends Entity {
 	
 	public static final Block DEFAULT_BLOCK = Blocks.stone;
 	public static final int DATAWATCHER_BLOCKID = 2;
+	/** Whether gravity can affect the block's velocity. */
 	public static final int DATAWATCHER_GRAVITY = 3;
 	public static final int DATAWATCHER_FLOATINGBLOCKID = 4;
 	
 	public static final int DATAWATCHER_VELX = 5,
-			DATAWATCHER_VELY = 6, DATAWATCHER_VELZ = 7, DATAWATCHER_FRICTION = 8,
-			DATAWATCHER_LIFT = 9, DATAWATCHER_INITIAL_Y = 10;
+			DATAWATCHER_VELY = 6, DATAWATCHER_VELZ = 7, DATAWATCHER_FRICTION = 8;
+	/** Whether gravity can cause the block to have negative Y velocity (gravity will still affect it). */
+	public static final int DATAWATCHER_CAN_FALL = 9;
 	
 	private static int nextBlockID = 0;
 	
@@ -66,8 +68,7 @@ public class EntityFloatingBlock extends Entity {
 		dataWatcher.addObject(DATAWATCHER_VELZ, 0f);
 		
 		dataWatcher.addObject(DATAWATCHER_FRICTION, 1f);
-		dataWatcher.addObject(DATAWATCHER_LIFT, -1f);
-		dataWatcher.addObject(DATAWATCHER_INITIAL_Y, -1f);
+		dataWatcher.addObject(DATAWATCHER_CAN_FALL, (byte) 0);
 		
 	}
 	
@@ -138,21 +139,17 @@ public class EntityFloatingBlock extends Entity {
 		super.onUpdate();
 		if (isGravityEnabled()) {
 			addForce(Vec3.createVectorHelper(0, -9.81 / 20, 0));
+			Vec3 vel = getVelocity();
+			if (!canFall() && vel.yCoord < 0) {
+				vel.yCoord = 0;
+				setVelocity(vel);
+			}
 		}
-		if (isLifting()) {
-			
-			float percent = getLiftPercent();
-			posY = getInitialY() + AvatarUtils.smoothstep(0, 2, percent);
-			if (!worldObj.isRemote) setLiftPercent(percent + 1f/20);
-			if (getLiftPercent() >= 1) hover();
-			
-		} else {
-			posX += getVelocity().xCoord / 20;
-			posY += getVelocity().yCoord / 20;
-			posZ += getVelocity().zCoord / 20;
-			if (!worldObj.isRemote) setVelocity(VectorUtils.times(getVelocity(), getFriction()));
-		}
-		if (!isLifting() && (isCollided || worldObj.getBlock((int) Math.floor(posX), (int) Math.floor(posY), (int) Math.floor(posZ)) != Blocks.air)) {
+		
+		if (!worldObj.isRemote) setVelocity(VectorUtils.times(getVelocity(), getFriction()));
+		
+		moveEntity(getVelocity().xCoord / 20, getVelocity().yCoord / 20, getVelocity().zCoord / 20);
+		if (ticksExisted > 60 && (isCollided || worldObj.getBlock((int) Math.floor(posX), (int) Math.floor(posY), (int) Math.floor(posZ)) != Blocks.air)) {
 			setDead();
 			
 			// Spawn particles
@@ -194,12 +191,6 @@ public class EntityFloatingBlock extends Entity {
 		}
 	}
 	
-	public void syncVelocity() {
-//		AvatarMod.network.sendToAllAround(new PacketCThrownBlockVelocity(this),
-//				new TargetPoint(dimension, posX, posY, posZ, 150));
-		
-	}
-	
 	public float getFriction() {
 		return dataWatcher.getWatchableObjectFloat(DATAWATCHER_FRICTION);
 	}
@@ -209,61 +200,20 @@ public class EntityFloatingBlock extends Entity {
 			dataWatcher.updateObject(DATAWATCHER_FRICTION, friction);
 	}
 	
-	/**
-	 * Get percent of block lift. -1 if not lifting
-	 * @return
-	 */
-	public float getLiftPercent() {
-		return dataWatcher.getWatchableObjectFloat(DATAWATCHER_LIFT);
+	public boolean canFall() {
+		return dataWatcher.getWatchableObjectByte(DATAWATCHER_CAN_FALL) == 1;
 	}
 	
-	public void setLiftPercent(float percent) {
-		if (!worldObj.isRemote)
-			dataWatcher.updateObject(DATAWATCHER_LIFT, percent);
-	}
-	
-	public boolean isLifting() {
-		return getLiftPercent() != -1;
+	public void setCanFall(boolean falls) {
+		dataWatcher.updateObject(DATAWATCHER_CAN_FALL, (byte) (falls ? 1 : 0));
 	}
 	
 	/**
-	 * Stop lifting the floating block, but don't enable gravity.
-	 */
-	public void hover() {
-		setLiftPercent(-1);
-	}
-	
-	/**
-	 * Drop the floating block. This also enables gravity.
+	 * Drop the block - enable gravity and fall.
 	 */
 	public void drop() {
-		setLiftPercent(-1);
 		setGravityEnabled(true);
-	}
-	
-	/**
-	 * Returns whether this block is currently hovering.
-	 * (Floating in mid-air, but not falling)
-	 */
-	public boolean isHovering() {
-		return !isLifting() && !isGravityEnabled();
-	}
-	
-	/**
-	 * Returns whether this block is currently falling.
-	 */
-	public boolean isFalling() {
-		return !isLifting() && isGravityEnabled();
-	}
-	
-	public float getInitialY() {
-		return dataWatcher.getWatchableObjectFloat(DATAWATCHER_INITIAL_Y);
-	}
-	
-	public void lift() {
-		setLiftPercent(0);
-		if (!worldObj.isRemote) dataWatcher.updateObject(DATAWATCHER_INITIAL_Y, (float) posY);
-		setGravityEnabled(false);
+		setCanFall(true);
 	}
 	
 }

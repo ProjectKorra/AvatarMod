@@ -53,6 +53,7 @@ public class Earthbending implements IBendingController {
 		if (ability == AvatarAbility.ACTION_TOGGLE_BENDING) {
 			if (ebs.getPickupBlock() != null) {
 				ebs.getPickupBlock().drop();
+				ebs.setPickupBlock(null);//TODO sync this to the client
 			} else {
 				BlockPos target = state.verifyClientLookAtBlock(-1, 5);
 				if (target != null) {
@@ -62,12 +63,12 @@ public class Earthbending implements IBendingController {
 					EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
 					floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
 					
-					Vec3 playerPos = VectorUtils.getEntityPos(player);
-					Vec3 floatingPos = VectorUtils.getEntityPos(floating);
-					Vec3 force = VectorUtils.minus(floatingPos, playerPos);
-					force.normalize();
-					VectorUtils.mult(force, 2);
-					floating.lift();
+					double dist = 2.5;
+					Vec3 force = Vec3.createVectorHelper(0, Math.sqrt(19.62*dist), 0);
+					floating.addForce(force);
+					floating.setGravityEnabled(true);
+					floating.setCanFall(false);
+//					floating.posY += 2;
 					
 					world.spawnEntityInWorld(floating);
 					
@@ -88,7 +89,9 @@ public class Earthbending implements IBendingController {
 				Vec3 lookDir = VectorUtils.fromYawPitch(yaw, pitch);
 				floating.addForce(times(lookDir, 20));
 				
-				floating.setGravityEnabled(true);
+				floating.drop();
+				ebs.setPickupBlock(null); // TODO Tell the client that the block has been dropped
+				
 			}
 		}
 		
@@ -106,7 +109,7 @@ public class Earthbending implements IBendingController {
 			EntityPlayer player = data.getState().getPlayerEntity();
 			EntityFloatingBlock floating = state.getPickupBlock();
 			
-			if (floating != null && !floating.isLifting()) {
+			if (floating != null && floating.ticksExisted > 60) {
 				double yaw = Math.toRadians(player.rotationYaw);
 				double pitch = Math.toRadians(player.rotationPitch);
 				Vec3 forward = VectorUtils.fromYawPitch(yaw, pitch);
