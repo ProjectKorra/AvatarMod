@@ -12,4 +12,6 @@ public interface AvatarControl {
 	
 	int getId();
 	
+	boolean isKeybinding();
+	
 }

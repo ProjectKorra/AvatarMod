@@ -1,5 +1,12 @@
 package com.maxandnoah.avatar.client;
 
+import static com.maxandnoah.avatar.client.controls.AvatarKeybinding.KEY_RADIAL_MENU;
+import static com.maxandnoah.avatar.common.AvatarAbility.ACTION_THROW_BLOCK;
+import static com.maxandnoah.avatar.common.AvatarAbility.ACTION_TOGGLE_BENDING;
+import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.GUI_RADIAL_MENU;
+
+import com.maxandnoah.avatar.client.controls.ClientInput;
+import com.maxandnoah.avatar.client.gui.RadialMenu;
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
 import com.maxandnoah.avatar.common.IControlsHandler;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
@@ -12,23 +19,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.*;
-import static com.maxandnoah.avatar.client.controls.AvatarKeybinding.*;
-import static com.maxandnoah.avatar.common.AvatarAbility.*;
-
-import com.maxandnoah.avatar.client.controls.AvatarKeybindingManager;
-import com.maxandnoah.avatar.client.controls.ClientInput;
-import com.maxandnoah.avatar.client.gui.RadialMenu;
 
 @SideOnly(Side.CLIENT)
 public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	private Minecraft mc;
-	private AvatarKeybindingManager keybindings;
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	
@@ -36,7 +34,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	public void preInit() {
 		mc = Minecraft.getMinecraft();
 		
-		keybindings = new AvatarKeybindingManager();
 		packetHandler = new PacketHandlerClient();
 		
 		inputHandler = new ClientInput();
@@ -48,7 +45,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@Override
 	public IControlsHandler getKeyHandler() {
-		return keybindings;
+		return inputHandler;
 	}
 	
 	@Override

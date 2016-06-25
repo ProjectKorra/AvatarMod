@@ -33,5 +33,10 @@ public enum AvatarKeybinding implements AvatarControl {
 	public int getId() {
 		return ordinal();
 	}
+
+	@Override
+	public boolean isKeybinding() {
+		return true;
+	}
 	
 }

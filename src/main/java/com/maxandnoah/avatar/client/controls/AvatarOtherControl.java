@@ -11,17 +11,34 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public enum AvatarOtherControl implements AvatarControl {
-	NONE,
-	CONTROL_LEFT_CLICK;
+	NONE("None"),
+	CONTROL_LEFT_CLICK("LeftClick"),
+	CONTROL_RIGHT_CLICK("RightClick"),
+	CONTROL_MIDDLE_CLICK("MiddleClick");
 
+	private final String name;
+	
+	private AvatarOtherControl(String name) {
+		this.name = name;
+	}
+	
 	@Override
 	public String getName() {
-		return null;
+		return name;
 	}
 
 	@Override
 	public int getId() {
-		return 0;
+		return AvatarControlFinder.getID(this);
+	}
+	
+	@Override
+	public boolean isKeybinding() {
+		return false;
+	}
+	
+	public static AvatarOtherControl findFromId(int id) {
+		return (AvatarOtherControl) AvatarControlFinder.fromID(id);
 	}
 
 }
