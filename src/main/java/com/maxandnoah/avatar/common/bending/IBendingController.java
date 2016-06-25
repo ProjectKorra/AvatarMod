@@ -59,8 +59,6 @@ public interface IBendingController extends ReadableWritable {
 	 */
 	int getID();
 	
-	void onUpdate();
-	
 	/**
 	 * Hook method that gets called when the player activates the
 	 * specified ability.
@@ -79,5 +77,12 @@ public interface IBendingController extends ReadableWritable {
 	 * @return
 	 */
 	IBendingState createState(AvatarPlayerData data);
+	
+	/**
+	 * Called when this bending controller is activated on each tick.
+	 * @param data The data for the player. Target block has not been
+	 * calculated.
+	 */
+	void onUpdate(AvatarPlayerData data);
 	
 }

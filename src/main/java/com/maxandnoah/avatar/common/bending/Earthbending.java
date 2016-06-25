@@ -2,6 +2,7 @@ package com.maxandnoah.avatar.common.bending;
 
 import static com.maxandnoah.avatar.common.util.VectorUtils.times;
 
+import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.client.controls.AvatarKeybinding;
 import com.maxandnoah.avatar.client.controls.AvatarOtherControl;
 import com.maxandnoah.avatar.common.AvatarAbility;
@@ -9,19 +10,21 @@ import com.maxandnoah.avatar.common.AvatarControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
+import com.maxandnoah.avatar.common.network.packets.PacketCControllingBlock;
 import com.maxandnoah.avatar.common.util.BlockPos;
 import com.maxandnoah.avatar.common.util.Raytrace;
 import com.maxandnoah.avatar.common.util.VectorUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class Earthbending implements IBendingController {
-	//EntityFallingBlock
+	
 	Earthbending() {
 	}
 	
@@ -29,22 +32,17 @@ public class Earthbending implements IBendingController {
 	public void readFromNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	@Override
 	public int getID() {
 		return BendingManager.BENDINGID_EARTHBENDING;
 	}
-
-	@Override
-	public void onUpdate() {
-		
-	}
-
+	
 	@Override
 	public void onAbility(AvatarAbility ability, AvatarPlayerData data) {
 		PlayerState state = data.getState();
@@ -75,6 +73,8 @@ public class Earthbending implements IBendingController {
 					
 					ebs.setPickupBlock(floating);
 					
+					AvatarMod.network.sendTo(new PacketCControllingBlock(floating.getID()), (EntityPlayerMP) player);
+					
 				}
 			}
 		}
@@ -93,10 +93,29 @@ public class Earthbending implements IBendingController {
 		}
 		
 	}
-
+	
 	@Override
 	public IBendingState createState(AvatarPlayerData data) {
 		return new EarthbendingState(data);
+	}
+	
+	@Override
+	public void onUpdate(AvatarPlayerData data) {
+		EarthbendingState state = (EarthbendingState) data.getBendingState();
+		if (state != null) {
+			EntityPlayer player = data.getState().getPlayerEntity();
+			EntityFloatingBlock floating = state.getPickupBlock();
+			
+			if (floating != null && !floating.isLifting()) {
+				double yaw = Math.toRadians(player.rotationYaw);
+				double pitch = Math.toRadians(player.rotationPitch);
+				Vec3 forward = VectorUtils.fromYawPitch(yaw, pitch);
+				Vec3 target = VectorUtils.plus(VectorUtils.times(forward, 2), VectorUtils.getEntityPos(player));
+				
+				floating.setPosition(target.xCoord, target.yCoord, target.zCoord);
+			}
+			
+		}
 	}
 	
 }

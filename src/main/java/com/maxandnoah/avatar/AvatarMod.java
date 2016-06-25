@@ -1,17 +1,20 @@
 package com.maxandnoah.avatar;
 
 import com.maxandnoah.avatar.common.AvatarCommonProxy;
+import com.maxandnoah.avatar.common.AvatarPlayerTick;
 import com.maxandnoah.avatar.common.bending.BendingManager;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 import com.maxandnoah.avatar.common.gui.AvatarGuiHandler;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
 import com.maxandnoah.avatar.common.network.PacketRedirector;
+import com.maxandnoah.avatar.common.network.packets.PacketCControllingBlock;
 import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -50,10 +53,13 @@ public class AvatarMod {
 		registerPacket(PacketSUseAbility.class, Side.SERVER);
 		registerPacket(PacketSToggleBending.class, Side.SERVER);
 		registerPacket(PacketCThrownBlockVelocity.class, Side.CLIENT);
+		registerPacket(PacketCControllingBlock.class, Side.CLIENT);
 		
 		BendingManager.init();
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
+		
+		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
 		
 	}
 	

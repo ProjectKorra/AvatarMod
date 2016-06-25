@@ -45,6 +45,7 @@ public class EntityFloatingBlock extends Entity {
 		setGravityEnabled(false);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			System.out.println("Constructed with ID " + nextBlockID);setID(nextBlockID++);
+			System.out.println(getFromID(worldObj, getID()));
 		}
 	}
 	
