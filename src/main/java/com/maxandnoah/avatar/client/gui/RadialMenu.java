@@ -10,8 +10,11 @@ import org.lwjgl.opengl.GL11;
 
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.common.AvatarAbility;
+import com.maxandnoah.avatar.common.bending.BendingManager;
+import com.maxandnoah.avatar.common.bending.IBendingController;
 import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.controls.IControlsHandler;
+import com.maxandnoah.avatar.common.gui.BendingMenuInfo;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
 import com.maxandnoah.avatar.common.util.BlockPos;
@@ -52,6 +55,16 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	private AvatarControl pressing;
 	private AvatarAbility[] controls;
 	
+	public RadialMenu(int controllerId) {
+		IBendingController controller = BendingManager.getBending(controllerId);
+		if (controller == null) throw new IllegalArgumentException("Can't make radial menu gui for controller id "
+				+ controllerId + " because there is no controller for that Id");
+		
+		BendingMenuInfo menu = controller.getRadialMenu();
+		construct(menu.getKey(), menu.getButtons());
+		
+	}
+	
 	/**
 	 * Create a new radial menu with the given controls.
 	 * @param pressing The key which must be pressed to keep the GUI open.
@@ -60,6 +73,10 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 * The arguments can only be a maximum of 8.
 	 */
 	public RadialMenu(AvatarControl pressing, AvatarAbility... controls) {
+		construct(pressing, controls);
+	}
+	
+	private void construct(AvatarControl pressing, AvatarAbility[] controls) {
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
 		

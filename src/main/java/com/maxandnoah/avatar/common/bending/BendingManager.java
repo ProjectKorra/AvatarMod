@@ -26,7 +26,8 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController with that ID.
+	 * Get the BendingController with that ID. Returns null if the
+	 * given Id is invalid.
 	 * @param id
 	 * @return
 	 */
