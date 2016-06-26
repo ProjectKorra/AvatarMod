@@ -8,12 +8,9 @@ public enum AvatarControl {
 	
 	/** No control is pressed */
 	NONE(""),
-	/** Default Z (will be removed) */
-	KEY_BENDING_LIST("BendingList"),
-	/** Default X (will be removed) */
-	KEY_CHEAT_EARTHBENDING("CheatEarthbending"),
 	/** Default LeftAlt (will be changed) */
-	KEY_RADIAL_MENU("RadialMenu"),
+	KEY_EARTHBENDING("RadialMenu"),
+	KEY_FIREBENDING("Firebend"),
 	/** Left mouse button is held down */
 	CONTROL_LEFT_CLICK("LeftClick"),
 	/** Right mouse button is held down */

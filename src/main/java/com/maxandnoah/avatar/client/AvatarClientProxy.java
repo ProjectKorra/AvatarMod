@@ -1,9 +1,8 @@
 package com.maxandnoah.avatar.client;
 
-import static com.maxandnoah.avatar.common.AvatarAbility.ACTION_THROW_BLOCK;
-import static com.maxandnoah.avatar.common.AvatarAbility.ACTION_TOGGLE_BENDING;
-import static com.maxandnoah.avatar.common.controls.AvatarControl.KEY_RADIAL_MENU;
-import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.GUI_RADIAL_MENU;
+import static com.maxandnoah.avatar.common.AvatarAbility.*;
+import static com.maxandnoah.avatar.common.controls.AvatarControl.*;
+import static com.maxandnoah.avatar.common.gui.AvatarGuiIds.*;
 
 import com.maxandnoah.avatar.client.controls.ClientInput;
 import com.maxandnoah.avatar.client.gui.RadialMenu;
@@ -68,8 +67,10 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 	@Override
 	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
-		if (id == GUI_RADIAL_MENU)
-			return new RadialMenu(KEY_RADIAL_MENU, ACTION_TOGGLE_BENDING, ACTION_THROW_BLOCK);
+		if (id == GUI_RADIAL_MENU_EARTH)
+			return new RadialMenu(KEY_EARTHBENDING, ACTION_TOGGLE_BENDING, ACTION_THROW_BLOCK);
+		if (id == GUI_RADIAL_MENU_FIRE)
+			return new RadialMenu(KEY_FIREBENDING, ACTION_LIGHT_FIRE);
 		
 		return null;
 	}

@@ -107,7 +107,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	@Override
 	public void updateScreen() {
-		boolean pressed = Keyboard.isKeyDown(getKeyHandler().getKeyCode(AvatarControl.KEY_RADIAL_MENU));
+		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing));
 		if (!pressed) {
 			int mouseX = getMouseX();
 			int mouseY = getMouseY();

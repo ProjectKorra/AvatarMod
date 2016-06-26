@@ -58,9 +58,8 @@ public class ClientInput implements IControlsHandler {
 		
 		keybindings = new HashMap();
 		
-		addKeybinding(KEY_BENDING_LIST, Keyboard.KEY_Z, "main");
-		addKeybinding(KEY_CHEAT_EARTHBENDING, Keyboard.KEY_X, "main");
-		addKeybinding(KEY_RADIAL_MENU, Keyboard.KEY_LMENU, "main");
+		addKeybinding(KEY_EARTHBENDING, Keyboard.KEY_Z, "main");
+		addKeybinding(KEY_FIREBENDING, Keyboard.KEY_X, "main");
 		
 	}
 	
@@ -75,13 +74,12 @@ public class ClientInput implements IControlsHandler {
 	
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
-		
 		if (control == NONE) return false;
 		
 		if (control.isKeybinding()) {
 			String keyName = control.getName();
 			KeyBinding kb = keybindings.get(keyName);
-			if (kb == null) AvatarLog.warn("Avatar control '" + keyName + "' is undefined");
+			if (kb == null) AvatarLog.warn("Avatar key '" + keyName + "' is undefined");
 			return kb == null ? false : kb.isPressed();
 		} else {
 			if (control == CONTROL_LEFT_CLICK) return mouseLeft;
@@ -106,23 +104,17 @@ public class ClientInput implements IControlsHandler {
 	
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
-		if (isControlPressed(KEY_BENDING_LIST)) {
-			GetUUIDResult result = GoreCorePlayerUUIDs.getUUID(Minecraft.getMinecraft().thePlayer.getCommandSenderName());
-			if (result.isResultSuccessful()) {
-				AvatarMod.network.sendToServer(new PacketSCheckBendingList(result.getUUID()));
-			}
-		}
 		
-		if (isControlPressed(KEY_CHEAT_EARTHBENDING)) {
-			System.out.println("Sending cheat-earthbending packet to server");
-			AvatarMod.network.sendToServer(new PacketSCheatEarthbending());
-		}
+		openBendingMenu(KEY_EARTHBENDING, AvatarGuiIds.GUI_RADIAL_MENU_EARTH);
+		openBendingMenu(KEY_FIREBENDING, AvatarGuiIds.GUI_RADIAL_MENU_FIRE);
 		
-		if (isControlPressed(KEY_RADIAL_MENU)) {
+	}
+	
+	private void openBendingMenu(AvatarControl key, int id) {
+		if (isControlPressed(key)) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			player.openGui(AvatarMod.instance, AvatarGuiIds.GUI_RADIAL_MENU, player.worldObj, 0, 0, 0);
+			player.openGui(AvatarMod.instance, id, player.worldObj, 0, 0, 0);
 		}
-		
 	}
 	
 	@SubscribeEvent

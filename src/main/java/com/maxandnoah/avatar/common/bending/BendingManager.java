@@ -15,6 +15,7 @@ import java.util.Map;
 public class BendingManager {
 	
 	public static final int BENDINGID_EARTHBENDING = 1;
+	public static final int BENDINGID_FIREBENDING = 2;
 	
 	private static Map<Integer, IBendingController> bending;
 	
