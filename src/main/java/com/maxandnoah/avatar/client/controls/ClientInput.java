@@ -14,10 +14,13 @@ import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.client.AvatarPlayerDataFetcherClient;
 import com.maxandnoah.avatar.common.AvatarAbility;
+import com.maxandnoah.avatar.common.bending.BendingManager;
+import com.maxandnoah.avatar.common.bending.IBendingController;
 import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.controls.IControlsHandler;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.gui.AvatarGuiIds;
+import com.maxandnoah.avatar.common.gui.BendingMenuInfo;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
@@ -105,15 +108,17 @@ public class ClientInput implements IControlsHandler {
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
 		
-		openBendingMenu(KEY_EARTHBENDING, AvatarGuiIds.GUI_RADIAL_MENU_EARTH);
-		openBendingMenu(KEY_FIREBENDING, AvatarGuiIds.GUI_RADIAL_MENU_FIRE);
+		openBendingMenu(BendingManager.BENDINGID_EARTHBENDING);
+		openBendingMenu(BendingManager.BENDINGID_FIREBENDING);
 		
 	}
 	
-	private void openBendingMenu(AvatarControl key, int id) {
-		if (isControlPressed(key)) {
+	private void openBendingMenu(int bendingId) {
+		IBendingController controller = BendingManager.getBending(bendingId);
+		BendingMenuInfo menu = controller.getRadialMenu();
+		if (isControlPressed(menu.getKey())) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			player.openGui(AvatarMod.instance, id, player.worldObj, 0, 0, 0);
+			player.openGui(AvatarMod.instance, menu.getGuiId(), player.worldObj, 0, 0, 0);
 		}
 	}
 	

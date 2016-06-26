@@ -1,9 +1,12 @@
 package com.maxandnoah.avatar.common.bending;
 
+import static com.maxandnoah.avatar.common.AvatarAbility.*;
 import com.maxandnoah.avatar.common.AvatarAbility;
 import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
+import com.maxandnoah.avatar.common.gui.AvatarGuiIds;
+import com.maxandnoah.avatar.common.gui.BendingMenuInfo;
 import com.maxandnoah.avatar.common.util.BlockPos;
 
 import static com.maxandnoah.avatar.common.controls.AvatarControl.*;
@@ -14,6 +17,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class Firebending implements IBendingController {
+	
+	private final BendingMenuInfo menu;
+	
+	public Firebending() {
+		menu = new BendingMenuInfo(KEY_FIREBENDING, AvatarGuiIds.GUI_RADIAL_MENU_FIRE, ACTION_LIGHT_FIRE);
+	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -36,7 +45,7 @@ public class Firebending implements IBendingController {
 		EntityPlayer player = ps.getPlayerEntity();
 		World world = player.worldObj;
 		
-		if (ability == AvatarAbility.ACTION_LIGHT_FIRE) {
+		if (ability == ACTION_LIGHT_FIRE) {
 			BlockPos looking = ps.verifyClientLookAtBlock(-1, 5);
 			if (world.getBlock(looking.x, looking.y + 1, looking.z) == Blocks.air)
 				world.setBlock(looking.x, looking.y + 1, looking.z, Blocks.fire);
@@ -56,6 +65,11 @@ public class Firebending implements IBendingController {
 	@Override
 	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
 		return AvatarAbility.NONE;
+	}
+
+	@Override
+	public BendingMenuInfo getRadialMenu() {
+		return menu;
 	}
 	
 }

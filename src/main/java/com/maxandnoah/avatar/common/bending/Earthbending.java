@@ -8,6 +8,8 @@ import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
+import com.maxandnoah.avatar.common.gui.AvatarGuiIds;
+import com.maxandnoah.avatar.common.gui.BendingMenuInfo;
 import com.maxandnoah.avatar.common.network.packets.PacketCPlayerData;
 import com.maxandnoah.avatar.common.util.BlockPos;
 import com.maxandnoah.avatar.common.util.VectorUtils;
@@ -22,7 +24,11 @@ import net.minecraft.world.World;
 
 public class Earthbending implements IBendingController {
 	
+	private final BendingMenuInfo menu;
+	
 	Earthbending() {
+		menu = new BendingMenuInfo(AvatarControl.KEY_EARTHBENDING, AvatarGuiIds.GUI_RADIAL_MENU_EARTH,
+				AvatarAbility.ACTION_TOGGLE_BENDING, AvatarAbility.ACTION_THROW_BLOCK);
 	}
 	
 	@Override
@@ -133,6 +139,11 @@ public class Earthbending implements IBendingController {
 		}
 		
 		return AvatarAbility.NONE;
+	}
+
+	@Override
+	public BendingMenuInfo getRadialMenu() {
+		return menu;
 	}
 	
 }

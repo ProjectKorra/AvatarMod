@@ -4,6 +4,7 @@ import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.AvatarAbility;
 import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
+import com.maxandnoah.avatar.common.gui.BendingMenuInfo;
 
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
@@ -91,5 +92,10 @@ public interface IBendingController extends ReadableWritable {
 	 * @return
 	 */
 	AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input);
+	
+	/**
+	 * Get information about this bending controller's radial menu.
+	 */
+	BendingMenuInfo getRadialMenu();
 	
 }
