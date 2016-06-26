@@ -66,7 +66,7 @@ public class Earthbending implements IBendingController {
 					floating.addForce(force);
 					floating.setGravityEnabled(true);
 					floating.setCanFall(false);
-//					floating.posY += 2;
+					floating.setDestroyable(false);
 					
 					world.spawnEntityInWorld(floating);
 					
@@ -108,7 +108,7 @@ public class Earthbending implements IBendingController {
 			EntityPlayer player = data.getState().getPlayerEntity();
 			EntityFloatingBlock floating = state.getPickupBlock();
 			
-			if (floating != null && floating.ticksExisted > 60) {
+			if (floating != null && floating.ticksExisted > 20) {
 				double yaw = Math.toRadians(player.rotationYaw);
 				double pitch = Math.toRadians(player.rotationPitch);
 				Vec3 forward = VectorUtils.fromYawPitch(yaw, pitch);
@@ -116,7 +116,8 @@ public class Earthbending implements IBendingController {
 				eye.yCoord += 1.2;
 				Vec3 target = VectorUtils.plus(VectorUtils.times(forward, 2), eye);
 				
-				floating.setPosition(target.xCoord, target.yCoord, target.zCoord);
+				floating.moveEntity(target.xCoord - floating.posX, target.yCoord - floating.posY, target.zCoord - floating.posZ);
+				
 			}
 			
 		}

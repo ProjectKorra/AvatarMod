@@ -30,6 +30,8 @@ public class EntityFloatingBlock extends Entity {
 			DATAWATCHER_VELY = 6, DATAWATCHER_VELZ = 7, DATAWATCHER_FRICTION = 8;
 	/** Whether gravity can cause the block to have negative Y velocity (gravity will still affect it). */
 	public static final int DATAWATCHER_CAN_FALL = 9;
+	/** Whether the floating block breaks on contact with other blocks. */
+	public static final int DATAWATCHER_IS_DESTROYABLE = 10;
 	
 	private static int nextBlockID = 0;
 	
@@ -69,6 +71,7 @@ public class EntityFloatingBlock extends Entity {
 		
 		dataWatcher.addObject(DATAWATCHER_FRICTION, 1f);
 		dataWatcher.addObject(DATAWATCHER_CAN_FALL, (byte) 0);
+		dataWatcher.addObject(DATAWATCHER_IS_DESTROYABLE, (byte) 0);
 		
 	}
 	
@@ -149,7 +152,7 @@ public class EntityFloatingBlock extends Entity {
 		if (!worldObj.isRemote) setVelocity(VectorUtils.times(getVelocity(), getFriction()));
 		
 		moveEntity(getVelocity().xCoord / 20, getVelocity().yCoord / 20, getVelocity().zCoord / 20);
-		if (ticksExisted > 60 && (isCollided || worldObj.getBlock((int) Math.floor(posX), (int) Math.floor(posY), (int) Math.floor(posZ)) != Blocks.air)) {
+		if (canBeDestroyed() && isCollided) {
 			setDead();
 			
 			// Spawn particles
@@ -208,12 +211,22 @@ public class EntityFloatingBlock extends Entity {
 		dataWatcher.updateObject(DATAWATCHER_CAN_FALL, (byte) (falls ? 1 : 0));
 	}
 	
+	public boolean canBeDestroyed() {
+		return dataWatcher.getWatchableObjectByte(DATAWATCHER_IS_DESTROYABLE) == 1;
+	}
+	
+	public void setDestroyable(boolean destroyable) {
+		if (!worldObj.isRemote)
+			dataWatcher.updateObject(DATAWATCHER_IS_DESTROYABLE, (byte) (destroyable ? 1 : 0));
+	}
+	
 	/**
-	 * Drop the block - enable gravity and fall.
+	 * Drop the block - enable gravity, can fall, and can be destroyed.
 	 */
 	public void drop() {
 		setGravityEnabled(true);
 		setCanFall(true);
+		setDestroyable(true);
 	}
 	
 }
