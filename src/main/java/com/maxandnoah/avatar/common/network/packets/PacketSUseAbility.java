@@ -1,6 +1,5 @@
 package com.maxandnoah.avatar.common.network.packets;
 
-import com.maxandnoah.avatar.client.controls.AvatarControlFinder;
 import com.maxandnoah.avatar.common.AvatarAbility;
 import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.network.IAvatarPacket;
@@ -10,7 +9,6 @@ import com.maxandnoah.avatar.common.util.BlockPos;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
-import crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 
 /**

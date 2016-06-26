@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.common.AvatarAbility;
-import com.maxandnoah.avatar.common.controls.AvatarKeybinding;
+import com.maxandnoah.avatar.common.controls.AvatarControl;
 import com.maxandnoah.avatar.common.controls.IControlsHandler;
 import com.maxandnoah.avatar.common.gui.IAvatarGui;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
@@ -49,7 +49,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	private static final Color iconHover = new Color(255, 255, 255);
 	
 	private RadialSegment[] segments;
-	private AvatarKeybinding pressing;
+	private AvatarControl pressing;
 	private AvatarAbility[] controls;
 	
 	/**
@@ -59,7 +59,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 * are less than 8, then the array is filled with {@link AvatarAbility#NONE}.
 	 * The arguments can only be a maximum of 8.
 	 */
-	public RadialMenu(AvatarKeybinding pressing, AvatarAbility... controls) {
+	public RadialMenu(AvatarControl pressing, AvatarAbility... controls) {
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
 		
@@ -107,7 +107,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	@Override
 	public void updateScreen() {
-		boolean pressed = Keyboard.isKeyDown(getKeyHandler().getKeyCode(AvatarKeybinding.KEY_RADIAL_MENU));
+		boolean pressed = Keyboard.isKeyDown(getKeyHandler().getKeyCode(AvatarControl.KEY_RADIAL_MENU));
 		if (!pressed) {
 			int mouseX = getMouseX();
 			int mouseY = getMouseY();

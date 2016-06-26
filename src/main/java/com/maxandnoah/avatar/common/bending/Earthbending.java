@@ -5,7 +5,6 @@ import static com.maxandnoah.avatar.common.util.VectorUtils.times;
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.common.AvatarAbility;
 import com.maxandnoah.avatar.common.controls.AvatarControl;
-import com.maxandnoah.avatar.common.controls.AvatarOtherControl;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.data.PlayerState;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
@@ -129,7 +128,7 @@ public class Earthbending implements IBendingController {
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState();
 		
 		if (ebs.getPickupBlock() != null) {
-			if (input == AvatarOtherControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_THROW_BLOCK;
+			if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_THROW_BLOCK;
 		}
 		
 		return AvatarAbility.NONE;

@@ -1,7 +1,6 @@
 package com.maxandnoah.avatar.client.controls;
 
-import static com.maxandnoah.avatar.common.controls.AvatarKeybinding.*;
-import static com.maxandnoah.avatar.common.controls.AvatarOtherControl.*;
+import static com.maxandnoah.avatar.common.controls.AvatarControl.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,14 +10,11 @@ import java.util.Map;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.google.common.eventbus.Subscribe;
 import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.AvatarMod;
 import com.maxandnoah.avatar.client.AvatarPlayerDataFetcherClient;
 import com.maxandnoah.avatar.common.AvatarAbility;
 import com.maxandnoah.avatar.common.controls.AvatarControl;
-import com.maxandnoah.avatar.common.controls.AvatarKeybinding;
-import com.maxandnoah.avatar.common.controls.AvatarOtherControl;
 import com.maxandnoah.avatar.common.controls.IControlsHandler;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.gui.AvatarGuiIds;
@@ -80,7 +76,7 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
 		
-		if (control == AvatarKeybinding.NONE || control == AvatarOtherControl.NONE) return false;
+		if (control == NONE) return false;
 		
 		if (control.isKeybinding()) {
 			String keyName = control.getName();
@@ -171,12 +167,8 @@ public class ClientInput implements IControlsHandler {
 	public List<AvatarControl> getAllPressed() {
 		List<AvatarControl> list = new ArrayList<AvatarControl>();
 		
-		for (int i = 0; i < AvatarKeybinding.values().length; i++) {
-			AvatarKeybinding control = AvatarKeybinding.values()[i];
-			if (isControlPressed(control)) list.add(control);
-		}
-		for (int i = 0; i < AvatarOtherControl.values().length; i++) {
-			AvatarOtherControl control = AvatarOtherControl.values()[i];
+		for (int i = 0; i < AvatarControl.values().length; i++) {
+			AvatarControl control = AvatarControl.values()[i];
 			if (isControlPressed(control)) list.add(control);
 		}
 		

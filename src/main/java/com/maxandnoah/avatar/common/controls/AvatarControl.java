@@ -1,17 +1,72 @@
 package com.maxandnoah.avatar.common.controls;
 
 /**
- * Describes any control which can be activated. Such as
- * keybindings, mouse presses, or commands. Only implemented
- * on the client side.
+ * A list of all of the control names.
  *
  */
-public interface AvatarControl {
+public enum AvatarControl {
 	
-	String getName();
+	/** No control is pressed */
+	NONE(""),
+	/** Default Z (will be removed) */
+	KEY_BENDING_LIST("BendingList"),
+	/** Default X (will be removed) */
+	KEY_CHEAT_EARTHBENDING("CheatEarthbending"),
+	/** Default LeftAlt (will be changed) */
+	KEY_RADIAL_MENU("RadialMenu"),
+	/** Left mouse button is held down */
+	CONTROL_LEFT_CLICK("LeftClick"),
+	/** Right mouse button is held down */
+	CONTROL_RIGHT_CLICK("RightClick"),
+	/** Middle mouse button is held down */
+	CONTROL_MIDDLE_CLICK("MiddleClick"),
+	/** Left mouse button just got pressed */
+	CONTROL_LEFT_CLICK_DOWN("LeftClickDown"),
+	/** Right mouse button just got pressed */
+	CONTROL_RIGHT_CLICK_DOWN("RightClickDown"),
+	/** Middle mouse button just got pressed */
+	CONTROL_MIDDLE_CLICK_DOWN("MiddleClickDown");
 	
-	int getId();
+	private String name;
+	private boolean isKey;
 	
-	boolean isKeybinding();
+	private AvatarControl(String name) {
+		this.name = name;
+		this.isKey = name().startsWith("KEY");
+	}
+	
+	/**
+	 * Get the name of this control. Can be used in localization.
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Get the Id of this control.
+	 * @see #findFromId(int)
+	 */
+	public int getId() {
+		return ordinal();
+	}
+
+	/**
+	 * Returns whether this control is a keybinding.
+	 */
+	public boolean isKeybinding() {
+		return isKey;
+	}
+	
+	/**
+	 * Find the Avatar control with that Id. If the Id is invalid,
+	 * throws an IllegalArgumentException.
+	 * @param id Id of the control, obtained with {@link #getId()}.
+	 * @return The control with that Id
+	 * @throws IllegalArgumentException If that Id refers to no control.
+	 */
+	public static AvatarControl findFromId(int id) {
+		if (id < 0 || id >= values().length) throw new IllegalArgumentException("AvatarControl Id '" + id + "' is invalid");
+		return values()[id];
+	}
 	
 }
