@@ -22,6 +22,7 @@ public class BendingManager {
 	public static void init() {
 		bending = new HashMap<Integer, IBendingController>();
 		registerBending(new Earthbending());
+		registerBending(new Firebending());
 	}
 	
 	/**
