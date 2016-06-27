@@ -44,7 +44,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
 		bendingControllerList = AvatarUtils.readFromNBT(IBendingController.creator, nbt, "BendingAbilities");
-		bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator, nbt, "BendingData");
+//		bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator, nbt, "BendingData");
+		bendingStateList = GoreCoreNBTUtil.readListFromNBT(nbt, "BendingData", IBendingState.creator, this);
 		
 		bendingControllers.clear();
 		for (IBendingController controller : bendingControllerList) {
@@ -86,6 +87,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (!hasBending(bending.getID())) {
 			bendingControllers.put(bending.getID(), bending);
 			bendingControllerList.add(bending);
+			IBendingState state = bending.createState(this);
+			bendingStates.put(bending.getID(), state);
+			bendingStateList.add(state);
 			saveChanges();
 		} else {
 			AvatarLog.warn("Cannot add BendingController " + bending + "' because player already has instance.");
@@ -180,22 +184,15 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	/**
 	 * Gets extra metadata for the given bending controller with that
-	 * ID. Creates it if necessary.
+	 * ID, or null if there is no bending controller.
 	 */
 	public IBendingState getBendingState(int id) {
-		if (hasBending(id)) {
-			if (!bendingStates.containsKey(id)) bendingStates.put(id, getBendingController(id).createState(this));
-			return bendingStates.get(id);
-		} else {
-			AvatarLog.warn("Cannot get bending state with Id " + id + " as player does not have it");
-			Thread.dumpStack();
-			return null;
-		}
-		
+		return hasBending(id) ? bendingStates.get(id) : null;
 	}
 	
 	/**
-	 * Get extra metadata for the given bending controller, creating if necessary.
+	 * Get extra metadata for the given bending controller, returns null
+	 * if no Bending controller.
 	 */
 	public IBendingState getBendingState(IBendingController controller) {
 		return getBendingState(controller.getID());

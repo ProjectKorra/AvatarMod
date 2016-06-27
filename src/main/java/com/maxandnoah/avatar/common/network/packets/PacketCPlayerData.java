@@ -51,8 +51,6 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 		for (int i = 0; i < length; i++) allControllers[i] = buf.readInt();
 		controllerID = buf.readInt();
 		buffer = buf;
-//		state.fromBytes(buf);
-		
 	}
 	
 	@Override

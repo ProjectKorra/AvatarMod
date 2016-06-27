@@ -28,7 +28,7 @@ public interface IBendingState extends ReadableWritable {
 		public IBendingState create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
 			IBendingController controller = BendingManager.getBending(nbt.getInteger("ControllerID"));
 			if (controller != null) {
-				IBendingState state = controller.createState((AvatarPlayerData) methodsExtraData[0]);
+				IBendingState state = controller.createState((AvatarPlayerData) extraData[0]);
 				state.readFromNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "StateData"));
 				return state;
 			}
