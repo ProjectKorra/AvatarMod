@@ -2,8 +2,6 @@ package com.maxandnoah.avatar.client;
 
 import com.maxandnoah.avatar.AvatarLog;
 import com.maxandnoah.avatar.common.bending.BendingManager;
-import com.maxandnoah.avatar.common.bending.Earthbending;
-import com.maxandnoah.avatar.common.bending.EarthbendingState;
 import com.maxandnoah.avatar.common.bending.IBendingState;
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
@@ -12,7 +10,6 @@ import com.maxandnoah.avatar.common.network.packets.PacketCControllingBlock;
 import com.maxandnoah.avatar.common.network.packets.PacketCPlayerData;
 import com.maxandnoah.avatar.common.network.packets.PacketCThrownBlockVelocity;
 import com.maxandnoah.avatar.common.util.Raytrace;
-import com.maxandnoah.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -21,8 +18,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import crowsofwar.gorecore.data.GoreCorePlayerDataFetcher.FetchDataResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /**
@@ -66,17 +61,18 @@ public class PacketHandlerClient implements IPacketHandler {
 		return null;
 	}
 	
+	// TODO remove this packet
 	private IMessage handlePacketControllingBlock(PacketCControllingBlock packet, MessageContext ctx) {
-		System.out.println("handlin pakit");
-		World world = Minecraft.getMinecraft().theWorld;
-		EntityFloatingBlock floating = EntityFloatingBlock.getFromID(world, packet.getFloatingBlockID());
-//		AvatarClientTick.instance.floating = floating;
-		AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataQuick(Minecraft.getMinecraft().thePlayer, "E");
-		if (data != null) {
-			if (data.getActiveBendingController() instanceof Earthbending) {
-				((EarthbendingState) data.getBendingState()).setPickupBlock(floating);
-			}
-		}
+//		System.out.println("handlin pakit");
+//		World world = Minecraft.getMinecraft().theWorld;
+//		EntityFloatingBlock floating = EntityFloatingBlock.getFromID(world, packet.getFloatingBlockID());
+////		AvatarClientTick.instance.floating = floating;
+//		AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataQuick(Minecraft.getMinecraft().thePlayer, "E");
+//		if (data != null) {
+//			if (data.getActiveBendingController() instanceof Earthbending) {
+//				((EarthbendingState) data.getBendingState()).setPickupBlock(floating);
+//			}
+//		}
 		
 		return null;
 	}
@@ -88,17 +84,17 @@ public class PacketHandlerClient implements IPacketHandler {
 			AvatarLog.warn("Couldn't handle player data info because player data fetch had error");
 			result.logError();
 		} else {
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			AvatarPlayerData data = (AvatarPlayerData) result.getData();
 			data.takeBending();
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {
 				data.addBending(packet.getAllControllersID()[i]);
-			}
-			data.setActiveBendingController(BendingManager.getBending(packet.getCurrentBendingControllerID()));
-			if (data.getBendingState() != null) {
-				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 				data.getState().update(player, Raytrace.getTargetBlock(player, -1));
-				data.getBendingState().fromBytes(packet.getBuf());
+				IBendingState state = data.getBendingController(packet.getAllControllersID()[i]).createState(data);
+				state.fromBytes(packet.getBuf());
 			}
+			
+			data.setActiveBendingController(BendingManager.getBending(packet.getCurrentBendingControllerID()));
 		}
 		return null;
 	}

@@ -27,7 +27,7 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 	private UUID player;
 	private int[] allControllers;
 	private int controllerID;
-	private IBendingState state;
+	private List<IBendingState> states;
 	private ByteBuf buffer;
 	
 	public PacketCPlayerData() {}
@@ -39,7 +39,7 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 			allControllers[i] = data.getBendingControllers().get(i).getID();
 		}
 		controllerID = data.isBending() ? data.getActiveBendingController().getID() : -1;
-		state = data.getBendingState();
+		states = data.getAllBendingStates();
 		
 	}
 	
@@ -52,6 +52,7 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 		controllerID = buf.readInt();
 		buffer = buf;
 //		state.fromBytes(buf);
+		
 	}
 	
 	@Override
@@ -60,7 +61,9 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 		buf.writeInt(allControllers.length);
 		for (int i = 0; i < allControllers.length; i++) buf.writeInt(allControllers[i]);
 		buf.writeInt(controllerID);
-		state.toBytes(buf);
+		for (IBendingState state : states) {
+			state.toBytes(buf);
+		}
 	}
 
 	@Override
@@ -77,6 +80,9 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 		return player;
 	}
 	
+	/**
+	 * Get an array of the Ids of all the player's bending controllers.
+	 */
 	public int[] getAllControllersID() {
 		return allControllers;
 	}

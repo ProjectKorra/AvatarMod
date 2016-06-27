@@ -51,7 +51,7 @@ public class Earthbending implements IBendingController {
 		PlayerState state = data.getState();
 		EntityPlayer player = state.getPlayerEntity();
 		World world = player.worldObj;
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState();
+		EarthbendingState ebs = (EarthbendingState) data.getBendingState(this);
 		
 		if (ability == AvatarAbility.ACTION_TOGGLE_BENDING) {
 			if (ebs.getPickupBlock() != null) {
@@ -109,7 +109,7 @@ public class Earthbending implements IBendingController {
 	
 	@Override
 	public void onUpdate(AvatarPlayerData data) {
-		EarthbendingState state = (EarthbendingState) data.getBendingState();
+		EarthbendingState state = (EarthbendingState) data.getBendingState(this);
 		if (state != null) {
 			EntityPlayer player = data.getState().getPlayerEntity();
 			EntityFloatingBlock floating = state.getPickupBlock();
@@ -132,7 +132,7 @@ public class Earthbending implements IBendingController {
 	@Override
 	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
 		PlayerState state = data.getState();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState();
+		EarthbendingState ebs = (EarthbendingState) data.getBendingState(this);
 		
 		if (ebs.getPickupBlock() != null) {
 			if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_THROW_BLOCK;

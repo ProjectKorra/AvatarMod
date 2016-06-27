@@ -25,4 +25,9 @@ public class FirebendingState implements IBendingState {
 		
 	}
 
+	@Override
+	public int getId() {
+		return BendingManager.BENDINGID_FIREBENDING;
+	}
+
 }

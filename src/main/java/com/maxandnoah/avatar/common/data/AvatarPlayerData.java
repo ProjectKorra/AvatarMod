@@ -179,14 +179,35 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Gets extra metadata for the given bending controller.
+	 * Gets extra metadata for the given bending controller with that
+	 * ID. Creates it if necessary.
 	 */
 	public IBendingState getBendingState(int id) {
-		return bendingStates.get(id);
+		if (hasBending(id)) {
+			if (!bendingStates.containsKey(id)) bendingStates.put(id, getBendingController(id).createState(this));
+			return bendingStates.get(id);
+		} else {
+			AvatarLog.warn("Cannot get bending state with Id " + id + " as player does not have it");
+			Thread.dumpStack();
+			return null;
+		}
+		
 	}
 	
-	public IBendingState getBendingState(IBendingState state) {
-		return getBendingState(state.getId());
+	/**
+	 * Get extra metadata for the given bending controller, creating if necessary.
+	 */
+	public IBendingState getBendingState(IBendingController controller) {
+		return getBendingState(controller.getID());
+	}
+	
+	public List<IBendingState> getAllBendingStates() {
+		return bendingStateList;
+	}
+	
+	public void setBendingState(IBendingState state) {
+		bendingStates.put(state.getId(), state);
+		bendingStateList.add(state);
 	}
 	
 }

@@ -1,7 +1,5 @@
 package com.maxandnoah.avatar.common.bending;
 
-import java.util.Random;
-
 import com.maxandnoah.avatar.common.data.AvatarPlayerData;
 import com.maxandnoah.avatar.common.entity.EntityFloatingBlock;
 
@@ -61,6 +59,11 @@ public class EarthbendingState implements IBendingState {
 //		System.out.println("EBS- Read int: " + buf.readInt());
 		int id = buf.readInt();
 		pickupBlock = id == -1 ? null : EntityFloatingBlock.getFromID(data.getState().getPlayerEntity().worldObj, id);
+	}
+
+	@Override
+	public int getId() {
+		return BendingManager.BENDINGID_EARTHBENDING;
 	}
 
 }
