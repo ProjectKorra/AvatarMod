@@ -26,11 +26,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Bending controller currently in use, null if no ability is activated
 	 */
 	private IBendingController activeBending;
-	/**
-	 * Additional information used by the active IBendingController. Null
-	 * if activeBending is null.
-	 */
-	private IBendingState bendingState;
+	
+	private Map<Integer, IBendingState> bendingStates;
+	private List<IBendingState> bendingStateList;
 	
 	private PlayerState state;
 	
@@ -38,33 +36,35 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		super(dataSaver, playerID);
 		bendingControllers = new HashMap<Integer, IBendingController>();
 		bendingControllerList = new ArrayList<IBendingController>();
+		bendingStates = new HashMap<Integer, IBendingState>();
+		bendingStateList = new ArrayList<IBendingState>();
 		state = new PlayerState();
 	}
 	
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
 		bendingControllerList = AvatarUtils.readFromNBT(IBendingController.creator, nbt, "BendingAbilities");
+		bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator, nbt, "BendingData");
 		
 		bendingControllers.clear();
 		for (IBendingController controller : bendingControllerList) {
 			bendingControllers.put(controller.getID(), controller);
 		}
 		
-		activeBending = getBendingController(nbt.getInteger("ActiveBending"));
-		if (activeBending != null) {
-			bendingState = activeBending.createState(this);
-			bendingState.readFromNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "BendingState"));
+		bendingStates.clear();
+		for (IBendingState state : bendingStateList) {
+			bendingStates.put(state.getId(), state);
 		}
+		
+		activeBending = getBendingController(nbt.getInteger("ActiveBending"));
 		
 	}
 	
 	@Override
 	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
 		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", IBendingController.writer);
+		AvatarUtils.writeToNBT(bendingStateList, nbt, "BendingData", IBendingState.writer);
 		nbt.setInteger("ActiveBending", activeBending == null ? -1 : activeBending.getID());
-		if (activeBending != null) {
-			bendingState.writeToNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "BendingState"));
-		}
 	}
 	
 	public boolean isBender() {
@@ -146,7 +146,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public void setActiveBendingController(IBendingController controller) {
 		activeBending = controller;
-		bendingState = controller == null ? null : controller.createState(this);
 		saveChanges();
 	}
 	
@@ -180,10 +179,14 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Gets extra metadata for the current bending state.
+	 * Gets extra metadata for the given bending controller.
 	 */
-	public IBendingState getBendingState() {
-		return bendingState;
+	public IBendingState getBendingState(int id) {
+		return bendingStates.get(id);
+	}
+	
+	public IBendingState getBendingState(IBendingState state) {
+		return getBendingState(state.getId());
 	}
 	
 }

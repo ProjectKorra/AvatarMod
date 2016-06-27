@@ -1,7 +1,13 @@
 package com.maxandnoah.avatar.common.bending;
 
+import com.maxandnoah.avatar.common.data.AvatarPlayerData;
+
+import crowsofwar.gorecore.util.GoreCoreNBTUtil;
+import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
+import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Allows an IBendingController to store additional information
@@ -17,9 +23,37 @@ import io.netty.buffer.ByteBuf;
  */
 public interface IBendingState extends ReadableWritable {
 
+	public static CreateFromNBT<IBendingState> creator = new CreateFromNBT<IBendingState>() {
+		@Override
+		public IBendingState create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
+			IBendingController controller = BendingManager.getBending(nbt.getInteger("ControllerID"));
+			if (controller != null) {
+				IBendingState state = controller.createState((AvatarPlayerData) methodsExtraData[0]);
+				state.readFromNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "StateData"));
+				return state;
+			}
+			
+			return null;
+		}
+		
+	};
+	public static WriteToNBT<IBendingState> writer = new WriteToNBT<IBendingState>() {
+		@Override
+		public void write(NBTTagCompound nbt, IBendingState object, Object[] methodsExtraData, Object[] extraData) {
+			nbt.setInteger("ControllerID", object.getId());
+			object.writeToNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "StateData"));
+		}
+	};
+	
 	void toBytes(ByteBuf buf);
 	
 	void fromBytes(ByteBuf buf);
 	
+	/**
+	 * Get the Id of the bending state's IBendingController. Should be
+	 * unique per-class (not per-instance).
+	 * @see IBendingController#getID()
+	 */
+	int getId();
 	
 }
