@@ -14,6 +14,7 @@ import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSRequestData;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
+import com.maxandnoah.avatar.common.network.packets.PacketSUseBendingController;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -58,6 +59,7 @@ public class AvatarMod {
 		registerPacket(PacketCControllingBlock.class, Side.CLIENT);
 		registerPacket(PacketSRequestData.class, Side.SERVER);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
+		registerPacket(PacketSUseBendingController.class, Side.SERVER);
 		
 		BendingManager.init();
 		

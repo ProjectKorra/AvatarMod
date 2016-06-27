@@ -9,6 +9,7 @@ import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSRequestData;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
+import com.maxandnoah.avatar.common.network.packets.PacketSUseBendingController;
 import com.maxandnoah.avatar.common.network.packets.PacketSToggleBending;
 import com.maxandnoah.avatar.common.bending.IBendingController;
 import com.maxandnoah.avatar.common.bending.BendingManager;
@@ -19,8 +20,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import crowsofwar.gorecore.data.GoreCorePlayerDataFetcher.FetchDataResult;
 import crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
+import net.java.games.input.Controller;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
 
 /**
  * Implements IPacketHandler. Acts as a packet handler for
@@ -56,6 +60,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (packet instanceof PacketSRequestData)
 			return handleRequestData((PacketSRequestData) packet, ctx);
+		
+		if (packet instanceof PacketSUseBendingController)
+			return handleUseBendingController((PacketSUseBendingController) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -142,6 +149,32 @@ public class PacketHandlerServer implements IPacketHandler {
 			return new PacketCPlayerData((AvatarPlayerData) result.getData());
 		}
 		
+	}
+	
+	private IMessage handleUseBendingController(PacketSUseBendingController packet, MessageContext ctx) {
+		
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		World world = player.worldObj;
+		FetchDataResult result = AvatarPlayerDataFetcherServer.instance.getData(player);
+		
+		if (result.hadError()) {
+			AvatarLog.warn("Couldn't get " + player.getCommandSenderName() + "'s player data while handling "
+					+ "UseBendingController packet");
+			result.logError();
+		} else {
+			AvatarPlayerData data = (AvatarPlayerData) result.getData();
+			
+			if (data.hasBending(packet.getBendingControllerId())) {
+				data.setActiveBendingController(packet.getBendingControllerId());
+			} else {
+				AvatarLog.warn("Player '" + player.getCommandSenderName() + "' attempted to activate a BendingController "
+						+ "they don't have; hacking?");
+			}
+		
+			
+		}
+		
+		return null;
 	}
 	
 }

@@ -24,6 +24,7 @@ import com.maxandnoah.avatar.common.gui.BendingMenuInfo;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.maxandnoah.avatar.common.network.packets.PacketSCheckBendingList;
 import com.maxandnoah.avatar.common.network.packets.PacketSUseAbility;
+import com.maxandnoah.avatar.common.network.packets.PacketSUseBendingController;
 import com.maxandnoah.avatar.common.util.BlockPos;
 import com.maxandnoah.avatar.common.util.Raytrace;
 
@@ -113,11 +114,15 @@ public class ClientInput implements IControlsHandler {
 		
 	}
 	
+	/**
+	 * Open the bending controller with that Id if its key is pressed.
+	 */
 	private void openBendingMenu(int bendingId) {
 		IBendingController controller = BendingManager.getBending(bendingId);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		if (isControlPressed(menu.getKey())) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			AvatarMod.network.sendToServer(new PacketSUseBendingController(bendingId));
 			player.openGui(AvatarMod.instance, menu.getGuiId(), player.worldObj, 0, 0, 0);
 		}
 	}
@@ -152,14 +157,6 @@ public class ClientInput implements IControlsHandler {
 		
 	}
 	
-	@SubscribeEvent
-	public void onIngameTick(TickEvent.WorldTickEvent e) {
-		
-		if (e.side == Side.CLIENT) {
-			
-		}
-	}
-
 	@Override
 	public List<AvatarControl> getAllPressed() {
 		List<AvatarControl> list = new ArrayList<AvatarControl>();

@@ -133,6 +133,14 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
+	 * Set the active bending controller to the one with that Id.
+	 * Pass -1 to deactivate bending.
+	 */
+	public void setActiveBendingController(int controllerId) {
+		setActiveBendingController(controllerId == -1 ? null : BendingManager.getBending(controllerId));
+	}
+	
+	/**
 	 * Set the active bending controller. Pass null as the argument
 	 * to deactivate bending.
 	 */
