@@ -73,7 +73,7 @@ public class Firebending implements IBendingController {
 		if (ability == ACTION_FIRE_PUNCH) {
 			Vec3 look = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 			Vec3 motion = VectorUtils.times(look, 6);
-			EntityFlame flame = new EntityFlame(world, player.posX, player.posY, player.posZ,
+			EntityFlame flame = new EntityFlame(world, player.posX, player.posY + 1.6, player.posZ,
 					motion.xCoord, motion.yCoord, motion.zCoord);
 			
 			world.spawnEntityInWorld(flame);
