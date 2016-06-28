@@ -3,12 +3,16 @@ package com.crowsofwar.avatar.common.bending;
 import static com.crowsofwar.avatar.common.AvatarAbility.*;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
+import java.awt.Color;
+
 import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
+import com.crowsofwar.avatar.common.gui.MenuTheme;
+import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.common.util.BlockPos;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +25,14 @@ public class Firebending implements IBendingController {
 	private final BendingMenuInfo menu;
 	
 	public Firebending() {
-		menu = new BendingMenuInfo(KEY_FIREBENDING, AvatarGuiIds.GUI_RADIAL_MENU_FIRE, ACTION_LIGHT_FIRE);
+		Color light = new Color(245, 245, 245);
+		Color red = new Color(240, 68, 0);
+		Color gray = new Color(40, 40, 40);
+		ThemeColor background = new ThemeColor(light, red);
+		ThemeColor edge = new ThemeColor(red, red);
+		ThemeColor icon = new ThemeColor(gray, light);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_FIREBENDING,
+				AvatarGuiIds.GUI_RADIAL_MENU_FIRE, ACTION_LIGHT_FIRE);
 	}
 	
 	@Override

@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.common.bending;
 
 import static com.crowsofwar.avatar.common.util.VectorUtils.times;
 
+import java.awt.Color;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -10,6 +12,8 @@ import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
+import com.crowsofwar.avatar.common.gui.MenuTheme;
+import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.BlockPos;
 import com.crowsofwar.avatar.common.util.VectorUtils;
@@ -27,8 +31,15 @@ public class Earthbending implements IBendingController {
 	private final BendingMenuInfo menu;
 	
 	Earthbending() {
-		menu = new BendingMenuInfo(AvatarControl.KEY_EARTHBENDING, AvatarGuiIds.GUI_RADIAL_MENU_EARTH,
-				AvatarAbility.ACTION_TOGGLE_BENDING, AvatarAbility.ACTION_THROW_BLOCK);
+		Color light = new Color(225, 225, 225);
+		Color brown = new Color(107, 76, 47);
+		Color gray = new Color(90, 90, 90);
+		Color lightBrown = new Color(219, 201, 182);
+		ThemeColor background = new ThemeColor(lightBrown, brown);
+		ThemeColor edge = new ThemeColor(brown, brown);
+		ThemeColor icon = new ThemeColor(gray, light);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_EARTHBENDING,
+				AvatarGuiIds.GUI_RADIAL_MENU_EARTH, AvatarAbility.ACTION_TOGGLE_BENDING, AvatarAbility.ACTION_THROW_BLOCK);
 	}
 	
 	@Override

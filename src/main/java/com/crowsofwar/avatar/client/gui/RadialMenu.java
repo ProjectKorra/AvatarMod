@@ -16,6 +16,7 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.IAvatarGui;
+import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.BlockPos;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -44,16 +45,10 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 */
 	public static final float menuScale = 0.4f;
 	
-	private static final Color backgroundColor = new Color(225, 225, 225);
-	private static final Color edgeColor = new Color(133, 194, 214);
-	private static final Color iconColor = new Color(90, 90, 90);
-	private static final Color backgroundHover = edgeColor;
-	private static final Color edgeHover = edgeColor;
-	private static final Color iconHover = new Color(255, 255, 255);
-	
 	private RadialSegment[] segments;
 	private AvatarControl pressing;
 	private AvatarAbility[] controls;
+	private MenuTheme theme;
 	
 	public RadialMenu(int controllerId) {
 		IBendingController controller = BendingManager.getBending(controllerId);
@@ -61,7 +56,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 				+ controllerId + " because there is no controller for that Id");
 		
 		BendingMenuInfo menu = controller.getRadialMenu();
-		construct(menu.getKey(), menu.getButtons());
+		construct(menu.getTheme(), menu.getKey(), menu.getButtons());
 		
 	}
 	
@@ -72,11 +67,12 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 * are less than 8, then the array is filled with {@link AvatarAbility#NONE}.
 	 * The arguments can only be a maximum of 8.
 	 */
-	public RadialMenu(AvatarControl pressing, AvatarAbility... controls) {
-		construct(pressing, controls);
+	public RadialMenu(MenuTheme theme, AvatarControl pressing, AvatarAbility... controls) {
+		construct(theme, pressing, controls);
 	}
 	
-	private void construct(AvatarControl pressing, AvatarAbility[] controls) {
+	private void construct(MenuTheme theme, AvatarControl pressing, AvatarAbility[] controls) {
+		this.theme = theme;
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
 		
@@ -105,8 +101,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		
 		for (int i = 0; i < segments.length; i++) {
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY);
-			drawRadialSegment(segments[i], hover ? backgroundHover : backgroundColor,
-					hover ? edgeHover : edgeColor, hover ? iconHover : iconColor);
+			drawRadialSegment(segments[i], hover);
 		}
 		
 	}
@@ -146,7 +141,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 * @param segment Radial segment to draw
 	 * @param background 
 	 */
-	private void drawRadialSegment(RadialSegment segment, Color background, Color edge, Color icon) {
+	private void drawRadialSegment(RadialSegment segment, boolean hover) {
 		
 		// Draw background & edge
 		GL11.glPushMatrix();
@@ -155,11 +150,13 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		GL11.glRotatef(segment.getAngle(), 0, 0, 1);	// All transform operations and the image are rotated
 		GL11.glTranslatef(-segmentX, -segmentY, 0);		// Offset the image to the correct center point
 		// Draw background
-		GL11.glColor3f(background.getRed() / 255f, background.getGreen() / 255f, background.getBlue() / 255f);
+		GL11.glColor3f(theme.getBackground().getRed(hover) / 255f, theme.getBackground().getGreen(hover) / 255f,
+				theme.getBackground().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(radialMenu);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		// Draw edge
-		GL11.glColor3f(edge.getRed() / 255f, edge.getGreen() / 255f, edge.getBlue() / 255f);
+		GL11.glColor3f(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
+				theme.getEdge().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(this.edge);
 		GL11.glTranslatef(0, 0, 1);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
@@ -176,7 +173,8 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		GL11.glTranslatef(-59 / iconScale, -27 / iconScale, 0);		// Translate into correct position
 		GL11.glRotatef(-angle, 0, 0, 1);	// Icon is now at desired position, rotate the image back to regular
 		GL11.glTranslatef(-8, -8, 0);		// Re-center the icon.
-		GL11.glColor3f(icon.getRed() / 255f, icon.getGreen() / 255f, icon.getBlue() / 255f);
+		GL11.glColor3f(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
+				theme.getIcon().getBlue(hover) / 255f);
 		GL11.glTranslatef(0, 0, 2); 		// Ensure icon is not overlapped by the radial segment picture
 		mc.getTextureManager().bindTexture(icons);
 		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 16, 16);
