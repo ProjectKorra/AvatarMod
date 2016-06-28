@@ -9,15 +9,18 @@ import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
+import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.common.util.BlockPos;
+import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -33,7 +36,7 @@ public class Firebending implements IBendingController {
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_FIREBENDING,
-				AvatarGuiIds.GUI_RADIAL_MENU_FIRE, ACTION_LIGHT_FIRE);
+				AvatarGuiIds.GUI_RADIAL_MENU_FIRE, ACTION_LIGHT_FIRE, ACTION_FIRE_PUNCH);
 	}
 	
 	@Override
@@ -67,6 +70,15 @@ public class Firebending implements IBendingController {
 					world.setBlock(setAt.x, setAt.y, setAt.z, Blocks.fire);
 			}
 		}
+		if (ability == ACTION_FIRE_PUNCH) {
+			Vec3 look = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+			Vec3 motion = VectorUtils.times(look, 3);
+			EntityFlame flame = new EntityFlame(world, player.posX, player.posY, player.posZ,
+					motion.xCoord, motion.yCoord, motion.zCoord);
+			
+			world.spawnEntityInWorld(flame);
+		}
+		
 	}
 	
 	@Override

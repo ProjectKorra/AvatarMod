@@ -3,6 +3,7 @@ package com.crowsofwar.avatar;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IAvatarPacket;
@@ -45,6 +46,7 @@ public class AvatarMod {
 	
 	public static SimpleNetworkWrapper network;
 	private int nextMessageID = 1;
+	private int nextEntityID = 1;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
@@ -73,6 +75,7 @@ public class AvatarMod {
 	public void init(FMLInitializationEvent e) {
 //		EntityRegistry.registerModEntity(EntityFloatingBlock.class, "FloatingBlock", 1, this, 256, 1, true);
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
+		registerEntity(EntityFlame.class, "Flame");
 		proxy.init();
 	}
 	
@@ -87,7 +90,7 @@ public class AvatarMod {
 	
 	private void registerEntity(Class<? extends Entity> entity, String name) {
 		EntityRegistry.registerGlobalEntityID(entity, name, EntityRegistry.findGlobalUniqueEntityId());
-		EntityRegistry.registerModEntity(entity, name, 1, this, 64, 20, true);
+		EntityRegistry.registerModEntity(entity, name, nextEntityID++, this, 64, 20, true);
 	}
 	
 }
