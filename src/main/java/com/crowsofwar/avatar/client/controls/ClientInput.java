@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.util.BlockPos;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -147,9 +148,11 @@ public class ClientInput implements IControlsHandler {
 				for (AvatarControl control : pressed) {
 					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
 					if (ability != AvatarAbility.NONE) {
-						BlockPos target = ability.needsRaytrace() ? Raytrace.getTargetBlock(Minecraft.getMinecraft().thePlayer,
-								ability.getRaytraceDistance()) : null;
-						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, target));
+						RaytraceResult raytrace = ability.needsRaytrace() ? Raytrace.getTargetBlock(
+								Minecraft.getMinecraft().thePlayer, ability.getRaytraceDistance()) : null;
+						AvatarMod.network.sendToServer(new PacketSUseAbility(ability,
+								raytrace != null ? raytrace.getPos() : null,
+										raytrace != null ? raytrace.getDirection() : null));
 					}
 				}
 			}

@@ -3,8 +3,10 @@ package com.crowsofwar.avatar.common.data;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.util.BlockPos;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Used by AvatarPlayerData. Holds information about
@@ -17,20 +19,24 @@ public class PlayerState {
 	private EntityPlayer playerEntity;
 	private BlockPos clientLookAtBlock;
 	private BlockPos serverLookAtBlock;
-	private boolean isFresh;
+	private ForgeDirection lookAtSide;
 	
 	public PlayerState() {
-		isFresh = false;
+		
 	}
 	
-	public PlayerState(EntityPlayer playerEntity, BlockPos clientLookAtBlock) {
-		update(playerEntity, clientLookAtBlock);
+	public PlayerState(EntityPlayer playerEntity, BlockPos clientLookAtBlock, ForgeDirection lookAtSide) {
+		update(playerEntity, clientLookAtBlock, lookAtSide);
 	}
 	
-	public void update(EntityPlayer playerEntity, BlockPos clientLookAtBlock) {
+	public void update(EntityPlayer playerEntity, RaytraceResult raytrace) {
+		update(playerEntity, raytrace.getPos(), raytrace.getDirection());
+	}
+	
+	public void update(EntityPlayer playerEntity, BlockPos clientLookAtBlock, ForgeDirection lookAtSide) {
 		this.playerEntity = playerEntity;
 		this.clientLookAtBlock = clientLookAtBlock;
-		this.isFresh = true;
+		this.lookAtSide = lookAtSide;
 	}
 	
 	public EntityPlayer getPlayerEntity() {
@@ -39,6 +45,15 @@ public class PlayerState {
 
 	public BlockPos getClientLookAtBlock() {
 		return clientLookAtBlock;
+	}
+	
+	/**
+	 * Get the side of the block the player is looking
+	 * at
+	 * @return
+	 */
+	public ForgeDirection getLookAtSide() {
+		return lookAtSide;
 	}
 	
 	/**
@@ -52,7 +67,7 @@ public class PlayerState {
 	 */
 	public BlockPos verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
 		if (clientLookAtBlock == null) return null;
-		this.serverLookAtBlock = Raytrace.getTargetBlock(playerEntity, raycastDist);
+		this.serverLookAtBlock = Raytrace.getTargetBlock(playerEntity, raycastDist).getPos();
 		double dist = serverLookAtBlock.dist(clientLookAtBlock);
 		if (dist <= maxDeviation) {
 			return clientLookAtBlock;
@@ -62,18 +77,6 @@ public class PlayerState {
 			Thread.dumpStack();
 			return serverLookAtBlock;
 		}
-	}
-	
-	/**
-	 * Returns whether the player state is 'fresh'. If this is
-	 * true, player state can be used and was updated recently.
-	 */
-	public boolean isFresh() {
-		return isFresh;
-	}
-	
-	public void setNotFresh() {
-		this.isFresh = false;
 	}
 	
 }

@@ -111,7 +111,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			IBendingController controller = data.getActiveBendingController();
 			if (controller != null) {
-				data.getState().update(player, packet.getTargetPos());
+				data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
 				controller.onAbility(packet.getAbility(), data);
 			}
 			

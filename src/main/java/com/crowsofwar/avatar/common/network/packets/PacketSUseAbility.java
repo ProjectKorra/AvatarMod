@@ -10,6 +10,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Packet which tells the server that the client pressed a control.
@@ -22,18 +23,22 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	
 	private AvatarAbility ability;
 	private BlockPos target;
+	/** ID of ForgeDirection of the side of the block player is looking at */
+	private ForgeDirection side;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(AvatarAbility ability, BlockPos target) {
+	public PacketSUseAbility(AvatarAbility ability, BlockPos target, ForgeDirection side) {
 		this.ability = ability;
 		this.target = target;
+		this.side = side;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		ability = AvatarAbility.fromId(buf.readInt());
 		target = buf.readBoolean() ? BlockPos.fromBytes(buf) : null;
+		side = ForgeDirection.getOrientation(buf.readInt());
 	}
 
 	@Override
@@ -43,6 +48,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 		if (target != null) {
 			target.toBytes(buf);
 		}
+		buf.writeInt(side.ordinal());
 	}
 
 	@Override
@@ -61,6 +67,10 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	
 	public BlockPos getTargetPos() {
 		return target;
+	}
+	
+	public ForgeDirection getSideHit() {
+		return side;
 	}
 	
 }

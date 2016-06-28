@@ -8,7 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraft.util.Vec3;
+import static net.minecraftforge.common.util.ForgeDirection.*;
 
 public class Raytrace {
 	
@@ -22,7 +24,7 @@ public class Raytrace {
 	 * @return The position of the block that the player is looking
 	 * at. May differ between server and client.
 	 */
-	public static BlockPos getTargetBlock(EntityPlayer player, double range) {
+	public static RaytraceResult getTargetBlock(EntityPlayer player, double range) {
 		
 		double yaw = toRadians(player.rotationYaw);
 		double pitch = toRadians(player.rotationPitch);
@@ -37,7 +39,7 @@ public class Raytrace {
         		false, true);
         
 		if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
-			return new BlockPos(mop.blockX, mop.blockY, mop.blockZ);
+			return new RaytraceResult(new BlockPos(mop.blockX, mop.blockY, mop.blockZ), mop.sideHit);
 		} else {
 			return null;
 		}
@@ -55,6 +57,38 @@ public class Raytrace {
 		} else {
 			return AvatarMod.proxy.getPlayerReach();
 		}
+	}
+	
+	public static class RaytraceResult {
+		
+		private final BlockPos pos;
+		private final int side;
+		
+		public RaytraceResult(BlockPos pos, int side) {
+			this.pos = pos;
+			this.side = side;
+		}
+
+		public BlockPos getPos() {
+			return pos;
+		}
+
+		public int getSide() {
+			return side;
+		}
+		
+		public ForgeDirection getDirection() {
+			switch (side) {
+				case 0: return DOWN;
+				case 1: return UP;
+				case 2: return EAST;
+				case 3: return WEST;
+				case 4: return NORTH;
+				case 5: return SOUTH;
+			}
+			return null;
+		}
+		
 	}
 	
 }
