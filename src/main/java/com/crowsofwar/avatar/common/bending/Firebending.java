@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class Firebending implements IBendingController {
 	
@@ -58,8 +59,13 @@ public class Firebending implements IBendingController {
 		
 		if (ability == ACTION_LIGHT_FIRE) {
 			BlockPos looking = ps.verifyClientLookAtBlock(-1, 5);
-			if (world.getBlock(looking.x, looking.y + 1, looking.z) == Blocks.air)
-				world.setBlock(looking.x, looking.y + 1, looking.z, Blocks.fire);
+			ForgeDirection side = ps.getLookAtSide();
+			if (ps.isLookingAtBlock(-1, 5)) {
+				BlockPos setAt = new BlockPos(looking.x, looking.y, looking.z);
+				setAt.offset(side);
+				if (world.getBlock(setAt.x, setAt.y, setAt.z) == Blocks.air)
+					world.setBlock(setAt.x, setAt.y, setAt.z, Blocks.fire);
+			}
 		}
 	}
 	

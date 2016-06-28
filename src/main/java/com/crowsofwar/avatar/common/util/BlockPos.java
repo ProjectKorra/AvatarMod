@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.util;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockPos {
 	
@@ -39,6 +40,15 @@ public class BlockPos {
 		double dy = pos2.y - pos1.y;
 		double dz = pos2.z - pos1.z;
 		return dx * dx + dy * dy + dz * dz;
+	}
+	
+	/**
+	 * Move this BlockPos in the specified direction by 1 meter.
+	 */
+	public void offset(ForgeDirection direction) {
+		x += direction.offsetX;
+		y += direction.offsetY;
+		z += direction.offsetZ;
 	}
 	
 }

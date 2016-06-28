@@ -39,6 +39,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 		ability = AvatarAbility.fromId(buf.readInt());
 		target = buf.readBoolean() ? BlockPos.fromBytes(buf) : null;
 		side = ForgeDirection.getOrientation(buf.readInt());
+		if (side == ForgeDirection.UNKNOWN) side = null;
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 		if (target != null) {
 			target.toBytes(buf);
 		}
-		buf.writeInt(side.ordinal());
+		buf.writeInt(side == null ? -1 : side.ordinal());
 	}
 
 	@Override
