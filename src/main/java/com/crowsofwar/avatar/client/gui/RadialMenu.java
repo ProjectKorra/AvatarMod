@@ -90,7 +90,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		super.initGui();
 		
 		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new RadialSegment(this, i);
+			segments[i] = new RadialSegment(this, i, controls[i].getId() - 1);
 		}
 		
 	}
