@@ -13,7 +13,7 @@ public class RenderFlame extends Render {
 		
 		EntityFlame flame = (EntityFlame) entity;
 		if (flame.ticksExisted % 5 == 0)
-			flame.worldObj.spawnParticle("flame", x, y, z, 0, 0, 0);
+			flame.worldObj.spawnParticle("smoke", flame.posX, flame.posY, flame.posZ, 0, 0.1, 0);
 		
 	}
 

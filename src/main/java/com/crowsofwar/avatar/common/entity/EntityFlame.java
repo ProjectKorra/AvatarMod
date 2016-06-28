@@ -21,6 +21,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	
 	public EntityFlame(World world) {
 		super(world);
+		setSize(0.25f, 0.25f);
 		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
 	}
 	
@@ -31,7 +32,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	
 	public EntityFlame(World world, double posX, double posY, double posZ, double mx, double my, double mz) {
 		this(world, posX, posY, posZ);
-		setVelocity(mx, my, mz);
+		setVelocity(Vec3.createVectorHelper(mx, my, mz));
 	}
 	
 	@Override
