@@ -81,10 +81,10 @@ public class Raytrace {
 			switch (side) {
 				case 0: return DOWN;
 				case 1: return UP;
-				case 2: return EAST;
-				case 3: return WEST;
-				case 4: return NORTH;
-				case 5: return SOUTH;
+				case 2: return NORTH;
+				case 3: return SOUTH;
+				case 4: return WEST;
+				case 5: return EAST;
 			}
 			return null;
 		}

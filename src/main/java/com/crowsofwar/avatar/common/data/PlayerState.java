@@ -92,7 +92,9 @@ public class PlayerState {
 	public BlockPos verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
 		if (clientLookAtBlock == null) return null;
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookAtBlock;
-		this.serverLookAtBlock = Raytrace.getTargetBlock(playerEntity, raycastDist).getPos();
+		RaytraceResult res = Raytrace.getTargetBlock(playerEntity, raycastDist);
+		if (res == null) return null;
+		this.serverLookAtBlock = res.getPos();
 		double dist = serverLookAtBlock.dist(clientLookAtBlock);
 		if (dist <= maxDeviation) {
 			return clientLookAtBlock;
