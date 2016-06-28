@@ -5,6 +5,7 @@ import javax.vecmath.Vector3d;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -58,6 +59,13 @@ public class EntityFlame extends Entity implements IPhysics {
 		super.onUpdate();
 		Vec3 velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
+		if (isCollided) {
+			int x = (int) Math.floor(posX);
+			int y = (int) Math.floor(posY);
+			int z = (int) Math.floor(posZ);
+			if (worldObj.getBlock(x, y, z) == Blocks.air)
+				worldObj.setBlock(x, y, z, Blocks.fire);
+		}
 		if (isCollided || ticksExisted >= 100) setDead();
 	}
 
