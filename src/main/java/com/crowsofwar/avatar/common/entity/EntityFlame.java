@@ -15,10 +15,14 @@ public class EntityFlame extends Entity implements IPhysics {
 	private static final int DATAWATCHER_VELX = 2,
 			DATAWATCHER_VELY = 3, DATAWATCHER_VELZ = 4;
 	
+	private static final int MAX_DIST_TRAVELLED = 10;
+	
 	/**
 	 * Don't access this- used internally by {@link #getVelocity()}
 	 */
 	private Vec3 internalVelocity;
+	
+	private Vec3 source;
 	
 	public EntityFlame(World world) {
 		super(world);
@@ -59,6 +63,9 @@ public class EntityFlame extends Entity implements IPhysics {
 		super.onUpdate();
 		Vec3 velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
+		float size = (float) (Math.pow(getDistanceTravelled() / MAX_DIST_TRAVELLED, 1.7) * 3);
+		System.out.println((worldObj.isRemote ? "CLIENT " : "SERVER ") + getDistanceTravelled());
+		setSize(size, size);
 		if (isCollided) {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
@@ -66,9 +73,23 @@ public class EntityFlame extends Entity implements IPhysics {
 			if (worldObj.getBlock(x, y, z) == Blocks.air)
 				worldObj.setBlock(x, y, z, Blocks.fire);
 		}
-		if (isCollided || ticksExisted >= 100) setDead();
+		if (isCollided || getDistanceTravelled() > 10) setDead();
 	}
 
+	@Override
+	public void setPosition(double x, double y, double z) {
+		super.setPosition(x, y, z);
+		source = Vec3.createVectorHelper(x, y, z);
+	}
+	
+	/**
+	 * Get the distance from where the flame originated.
+	 */
+	public double getDistanceTravelled() {
+		return Vec3.createVectorHelper(posX, posY, posZ).distanceTo(source);
+	}
+	
+	
 	@Override
 	public Vec3 getVelocity() {
 		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
