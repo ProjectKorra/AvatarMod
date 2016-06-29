@@ -18,9 +18,10 @@ public class RenderFireArc extends Render {
 	private static final ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire.png");
 	
 	@Override
-	public void doRender(Entity p_76986_1_, double x, double y, double z, float p_76986_8_,
+	public void doRender(Entity p_76986_1_, double xx, double yy, double zz, float p_76986_8_,
 			float p_76986_9_) {
 		ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire.png");
+		
 		EntityFireArc flame = (EntityFireArc) p_76986_1_;
 		{
 			ControlPoint cp = flame.getControlPoint(0);
@@ -29,11 +30,16 @@ public class RenderFireArc extends Render {
 		
 		for (int i = 1; i < flame.getControlPoints().length; i++) {
 			ControlPoint cp = flame.getControlPoint(i);
+			ControlPoint leader = flame.getControlPoint(i - 1);
+			
+			double x = leader.getXPos() - renderManager.renderPosX;
+			double y = leader.getYPos() - renderManager.renderPosY;
+			double z = leader.getZPos() - renderManager.renderPosZ;
 			
 			String particleName = i == 0 ? "flame" : (i == 1 ? "smoke" : "reddust");
 			flame.worldObj.spawnParticle(particleName, cp.getXPos(), cp.getYPos(), cp.getZPos(), 0, 0.05, 0);
 			
-			if (i != 1) continue;
+//			if (i != 1) continue;
 			
 			Vec3 from = flame.getControlPoint(i - 1).getPos();
 			Vec3 to = cp.getPos();
