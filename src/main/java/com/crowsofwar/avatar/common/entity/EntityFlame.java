@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public class EntityFlame extends Entity implements IPhysics {
 
 	private static final int DATAWATCHER_VELX = 2,
-			DATAWATCHER_VELY = 3, DATAWATCHER_VELZ = 4;
+			DATAWATCHER_VELY = 3, DATAWATCHER_VELZ = 4, DATAWATCHER_DIST_TRAVELLED = 5;
 	
 	private static final int MAX_DIST_TRAVELLED = 10;
 	
@@ -45,6 +45,7 @@ public class EntityFlame extends Entity implements IPhysics {
 		dataWatcher.addObject(DATAWATCHER_VELX, 0f);
 		dataWatcher.addObject(DATAWATCHER_VELY, 0f);
 		dataWatcher.addObject(DATAWATCHER_VELZ, 0f);
+		dataWatcher.addObject(DATAWATCHER_DIST_TRAVELLED, 0f);
 	}
 
 	@Override
@@ -63,14 +64,15 @@ public class EntityFlame extends Entity implements IPhysics {
 		super.onUpdate();
 		Vec3 velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
-		float size = (float) (Math.pow(getDistanceTravelled() / MAX_DIST_TRAVELLED, 1.7) * 3);
-		System.out.println((worldObj.isRemote ? "CLIENT " : "SERVER ") + getDistanceTravelled());
+		float size = (float) (Math.pow(getDistanceTravelled() / MAX_DIST_TRAVELLED, 1.7) * 1.5);
+//		System.out.println((worldObj.isRemote ? "CLIENT " : "SERVER ") + getDistanceTravelled());
 		setSize(size, size);
+		setDistanceTravelled();
 		if (isCollided) {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
-			if (worldObj.getBlock(x, y, z) == Blocks.air)
+			if (!worldObj.isRemote && worldObj.getBlock(x, y, z) == Blocks.air)
 				worldObj.setBlock(x, y, z, Blocks.fire);
 		}
 		if (isCollided || getDistanceTravelled() > 10) setDead();
@@ -85,10 +87,16 @@ public class EntityFlame extends Entity implements IPhysics {
 	/**
 	 * Get the distance from where the flame originated.
 	 */
-	public double getDistanceTravelled() {
-		return Vec3.createVectorHelper(posX, posY, posZ).distanceTo(source);
+	public float getDistanceTravelled() {
+		return dataWatcher.getWatchableObjectFloat(DATAWATCHER_DIST_TRAVELLED);
 	}
 	
+	public void setDistanceTravelled() {
+		if (!worldObj.isRemote) {
+			float dist = (float) Vec3.createVectorHelper(posX, posY, posZ).distanceTo(source);
+			dataWatcher.updateObject(DATAWATCHER_DIST_TRAVELLED, dist);
+		}
+	}
 	
 	@Override
 	public Vec3 getVelocity() {
