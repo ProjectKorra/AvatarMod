@@ -85,6 +85,8 @@ public class Firebending implements IBendingController {
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
 			
+			((FirebendingState) data.getBendingState(this)).setFireArcId(fire.getId());
+			
 			world.spawnEntityInWorld(fire);
 			
 		}
@@ -98,7 +100,20 @@ public class Firebending implements IBendingController {
 	
 	@Override
 	public void onUpdate(AvatarPlayerData data) {
-		
+		PlayerState state = data.getState();
+		EntityPlayer player = state.getPlayerEntity();
+		World world = player.worldObj;
+		FirebendingState fs = (FirebendingState) data.getBendingState(this);
+		if (fs.isManipulatingFire()) {
+			EntityFireArc fire = EntityFireArc.findFromId(world, fs.getFireArcId());
+			if (fire != null) {
+				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vec3 lookPos = plus(getEntityPos(player), times(look, 3));
+				fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
+			} else {
+				if (!world.isRemote) fs.setFireArcId(-1);
+			}
+		}
 	}
 	
 	@Override

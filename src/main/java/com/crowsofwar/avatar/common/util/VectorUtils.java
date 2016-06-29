@@ -139,7 +139,7 @@ public class VectorUtils {
 	
 	public static Vec3 getEntityPos(Entity entity) {
 		Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) pos.yCoord -= 1.65;
+		pos.yCoord += 1.65;
 		return pos;
 	}
 	

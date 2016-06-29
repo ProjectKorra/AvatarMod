@@ -9,6 +9,9 @@ import net.minecraft.world.World;
 
 public class EntityFireArc extends Entity {
 	
+	private static final int DATAWATCHER_ID = 3;
+	
+	private static int nextId = 1;
 	private ControlPoint[] points;
 	
 	public EntityFireArc(World world) {
@@ -19,16 +22,18 @@ public class EntityFireArc extends Entity {
 			new ControlPoint(0, 0, 0),
 			new ControlPoint(0, 0, 0)
 		};
+		if (!worldObj.isRemote) setId(nextId++);
 	}
 	
 	@Override
 	protected void entityInit() {
-		
+		dataWatcher.addObject(DATAWATCHER_ID, 0);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+//		setDead();
 		ControlPoint leader = getControlPoint(0);
 		for (int i = 1; i < points.length; i++) {
 			ControlPoint p = points[i];
@@ -67,6 +72,21 @@ public class EntityFireArc extends Entity {
 	
 	public ControlPoint getControlPoint(int index) {
 		return points[index];
+	}
+	
+	public int getId() {
+		return dataWatcher.getWatchableObjectInt(DATAWATCHER_ID);
+	}
+	
+	public void setId(int id) {
+		dataWatcher.updateObject(DATAWATCHER_ID, id);
+	}
+	
+	public static EntityFireArc findFromId(World world, int id) {
+		for (Object obj : world.loadedEntityList) {
+			if (obj instanceof EntityFireArc && ((EntityFireArc) obj).getId() == id) return (EntityFireArc) obj;
+		}
+		return null;
 	}
 	
 	public class ControlPoint {
