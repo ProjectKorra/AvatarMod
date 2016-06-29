@@ -41,23 +41,26 @@ public class RenderFireArc extends Render {
 			Vec3 diff = VectorUtils.minus(from, to);
 			
 			double ySize = 1;
+			int textureRepeat = 2;
 			
 			Minecraft.getMinecraft().renderEngine.bindTexture(fire);
 			GL11.glPushMatrix();
 			GL11.glTranslated(x, y, z);
+			GL11.glDisable(GL11.GL_LIGHTING);
 			Tessellator t = Tessellator.instance;
 			t.startDrawingQuads();
-			t.addVertex(0, 0, 0);
-			t.addVertex(0, -1, 0);
-			t.addVertex(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord);
-			t.addVertex(-diff.xCoord, ySize * .5, -diff.zCoord);
+			t.addVertexWithUV(0, 0, 0, textureRepeat, 0); // 1
+			t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat); // 2
+			t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat); // 3
+			t.addVertexWithUV(-diff.xCoord, ySize * .5, -diff.zCoord, 0, 0); // 4
 			t.draw();
 			t.startDrawingQuads();
-			t.addVertex(0, 0, 0);//1
-			t.addVertex(-diff.xCoord, ySize * .5, -diff.zCoord);//4
-			t.addVertex(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord);//3
-			t.addVertex(0, -1, 0);//2
+			t.addVertexWithUV(0, 0, 0, textureRepeat, 0);//1
+			t.addVertexWithUV(-diff.xCoord, ySize * .5, -diff.zCoord, 0, 0);//4
+			t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat);//3
+			t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat);//2
 			t.draw();
+			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glPopMatrix();
 			
 			
