@@ -34,14 +34,14 @@ public class EntityFireArc extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 //		setDead();
-		ControlPoint leader = getControlPoint(0);
 		for (int i = 1; i < points.length; i++) {
+			ControlPoint leader = points[i - 1];
 			ControlPoint p = points[i];
 			double dist = p.getDistance(leader);
-			if (dist > 6) {
+			if (dist > 20) {
 				p.setPosition(leader.getXPos(), leader.getYPos(), leader.getZPos());
 			} else if (dist > 2) {
-				Vec3 diff = VectorUtils.minus(p.getPos(), leader.getPos());
+				Vec3 diff = VectorUtils.minus(leader.getPos(), p.getPos());
 				diff.normalize();
 				VectorUtils.mult(diff, 0.05*3);
 				p.move(diff);
