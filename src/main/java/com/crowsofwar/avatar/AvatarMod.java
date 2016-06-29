@@ -3,6 +3,7 @@ package com.crowsofwar.avatar;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -76,6 +77,7 @@ public class AvatarMod {
 //		EntityRegistry.registerModEntity(EntityFloatingBlock.class, "FloatingBlock", 1, this, 256, 1, true);
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
 		registerEntity(EntityFlame.class, "Flame");
+		registerEntity(EntityFireArc.class, "FireArc");
 		proxy.init();
 	}
 	

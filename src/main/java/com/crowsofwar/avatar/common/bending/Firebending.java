@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending;
 
 import static com.crowsofwar.avatar.common.AvatarAbility.*;
+import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 import java.awt.Color;
@@ -9,6 +10,7 @@ import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
+import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -71,12 +73,20 @@ public class Firebending implements IBendingController {
 			}
 		}
 		if (ability == ACTION_FIRE_PUNCH) {
-			Vec3 look = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-			Vec3 motion = VectorUtils.times(look, 10);
-			EntityFlame flame = new EntityFlame(world, player.posX, player.posY + 1.6, player.posZ,
-					motion.xCoord, motion.yCoord, motion.zCoord);
+//			Vec3 look = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+//			Vec3 motion = VectorUtils.times(look, 10);
+//			EntityFlame flame = new EntityFlame(world, player.posX, player.posY + 1.6, player.posZ,
+//					motion.xCoord, motion.yCoord, motion.zCoord);
+//			
+//			world.spawnEntityInWorld(flame);
 			
-			world.spawnEntityInWorld(flame);
+			Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+			Vec3 lookPos = plus(getEntityPos(player), times(look, 3));
+			EntityFireArc fire = new EntityFireArc(world);
+			fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
+			
+			world.spawnEntityInWorld(fire);
+			
 		}
 		
 	}

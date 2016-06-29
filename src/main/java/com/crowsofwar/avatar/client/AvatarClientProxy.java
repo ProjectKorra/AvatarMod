@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.client.controls.ClientInput;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
+import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.gui.IAvatarGui;
@@ -65,6 +66,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	public void init() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityFloatingBlock.class, new RenderFloatingBlock());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlame.class, new RenderFlame());
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireArc.class, new RenderFireArc());
 	}
 
 	@Override
