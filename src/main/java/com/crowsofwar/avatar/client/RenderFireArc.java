@@ -41,8 +41,8 @@ public class RenderFireArc extends Render {
 			
 //			if (i != 1) continue;
 			
-			Vec3 from = flame.getControlPoint(i - 1).getPos();
-			Vec3 to = cp.getPos();
+			Vec3 from = vec3(0, 0, 0);
+			Vec3 to = VectorUtils.minus(cp.getPos(), leader.getPos());
 			
 			Vec3 diff = VectorUtils.minus(from, to);
 			
@@ -53,19 +53,28 @@ public class RenderFireArc extends Render {
 			GL11.glPushMatrix();
 			GL11.glTranslated(x, y, z);
 			GL11.glDisable(GL11.GL_LIGHTING);
-			Tessellator t = Tessellator.instance;
-			t.startDrawingQuads();
-			t.addVertexWithUV(0, 0, 0, textureRepeat, 0); // 1
-			t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat); // 2
-			t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat); // 3
-			t.addVertexWithUV(-diff.xCoord, ySize * .5, -diff.zCoord, 0, 0); // 4
-			t.draw();
-			t.startDrawingQuads();
-			t.addVertexWithUV(0, 0, 0, textureRepeat, 0);//1
-			t.addVertexWithUV(-diff.xCoord, ySize * .5, -diff.zCoord, 0, 0);//4
-			t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat);//3
-			t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat);//2
-			t.draw();
+			
+			double size = 0.3; // Width/2 of he fire
+			// +x side (EAST)
+			drawQuad(vec3(from, size, size, 0), vec3(from, size, -size, 0), vec3(to, size, -size, 0), vec3(to, size, size, 0), 0, 0, 1, 1);
+			// -x side (WEST)
+			drawQuad(vec3(from, -size, size, 0), vec3(from, -size, -size, 0), vec3(to, -size, -size, 0), vec3(to, -size, size, 0), 0, 0, 1, 1);
+			// +z side (SOUTH)
+//			drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
+			
+//			Tessellator t = Tessellator.instance;
+//			t.startDrawingQuads();
+//			t.addVertexWithUV(0, 0, 0, textureRepeat, 0); // 1
+//			t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat); // 2
+//			t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat); // 3
+//			t.addVertexWithUV(-diff.xCoord, ySize * .5, -diff.zCoord, 0, 0); // 4
+//			t.draw();
+//			t.startDrawingQuads();
+//			t.addVertexWithUV(0, 0, 0, textureRepeat, 0);//1
+//			t.addVertexWithUV(-diff.xCoord, ySize * .5, -diff.zCoord, 0, 0);//4
+//			t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat);//3
+//			t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat);//2
+//			t.draw();
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glPopMatrix();
 			
@@ -78,6 +87,30 @@ public class RenderFireArc extends Render {
 	protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private void drawQuad(Vec3 pos1, Vec3 pos2, Vec3 pos3, Vec3 pos4, int u1, int v1, int u2, int v2) {
+		Tessellator t = Tessellator.instance;
+		t.startDrawingQuads();
+		t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
+		t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
+		t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2); // 3
+		t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, u1); // 4
+		t.draw();
+		t.startDrawingQuads();
+		t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
+		t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, u1); // 4
+		t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2); // 3
+		t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
+		t.draw();
+	}
+	
+	private Vec3 vec3(double x, double y, double z) {
+		return Vec3.createVectorHelper(x, y, z);
+	}
+	
+	private Vec3 vec3(Vec3 vec, double x, double y, double z) {
+		return VectorUtils.copy(vec).addVector(x, y, z);
 	}
 
 }
