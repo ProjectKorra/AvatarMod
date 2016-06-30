@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -227,6 +228,12 @@ public class EntityFloatingBlock extends Entity {
 		setGravityEnabled(true);
 		setCanFall(true);
 		setDestroyable(true);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean isInRangeToRenderDist(double d) {
+		return true;
 	}
 	
 }
