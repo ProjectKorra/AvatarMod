@@ -7,15 +7,20 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.BlockPos;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import crowsofwar.gorecore.data.GoreCoreDataSaver;
 import crowsofwar.gorecore.data.GoreCorePlayerData;
 import crowsofwar.gorecore.util.GoreCoreNBTUtil;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class AvatarPlayerData extends GoreCorePlayerData {
@@ -205,6 +210,22 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public void setBendingState(IBendingState state) {
 		bendingStates.put(state.getId(), state);
 		bendingStateList.add(state);
+	}
+	
+	/**
+	 * Sends a packet to update the client with information
+	 * about this player data.
+	 */
+	public void updateClient() {
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getState().getPlayerEntity());
+	}
+	
+	/**
+	 * Send the given bending state to the client.
+	 */
+	public void sendBendingState(IBendingState state) {
+		updateClient(); // TODO send optimized packet only about bending state
 	}
 	
 }

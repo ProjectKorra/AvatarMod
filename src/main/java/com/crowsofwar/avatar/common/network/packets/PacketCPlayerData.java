@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -46,21 +47,30 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		player = GoreCoreByteBufUtil.readUUID(buf);
-		int length = buf.readInt();
-		allControllers = new int[length];
-		for (int i = 0; i < length; i++) allControllers[i] = buf.readInt();
 		controllerID = buf.readInt();
+		// Read bending controllers
+		allControllers = new int[buf.readInt()];
+		for (int i = 0; i < allControllers.length; i++) {
+			allControllers[i] = buf.readInt();
+		}
+		
+		// Reading bending states is done elsewhere
 		buffer = buf;
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeUUID(buf, player);
-		buf.writeInt(allControllers.length);
-		for (int i = 0; i < allControllers.length; i++) buf.writeInt(allControllers[i]);
 		buf.writeInt(controllerID);
-		for (IBendingState state : states) {
-			state.toBytes(buf);
+		buf.writeInt(allControllers.length);
+		// Write bending controllers
+		for (int i = 0; i < allControllers.length; i++) {
+			buf.writeInt(allControllers[i]);
+		}
+		// Write bending states
+		for (int i = 0; i < states.size(); i++) {
+			buf.writeInt(states.get(i).getId());
+			states.get(i).toBytes(buf);
 		}
 	}
 

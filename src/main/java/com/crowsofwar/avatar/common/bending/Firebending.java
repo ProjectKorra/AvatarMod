@@ -86,6 +86,7 @@ public class Firebending implements IBendingController {
 			fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
 			
 			((FirebendingState) data.getBendingState(this)).setFireArcId(fire.getId());
+			data.sendBendingState(data.getBendingState(this));
 			
 			world.spawnEntityInWorld(fire);
 			

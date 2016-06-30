@@ -88,8 +88,7 @@ public class Earthbending implements IBendingController {
 					world.spawnEntityInWorld(floating);
 					
 					ebs.setPickupBlock(floating);
-					
-					AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
+					data.sendBendingState(ebs);
 					
 				}
 			}

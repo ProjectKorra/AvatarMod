@@ -86,11 +86,14 @@ public class PacketHandlerClient implements IPacketHandler {
 		} else {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			AvatarPlayerData data = (AvatarPlayerData) result.getData();
+			// Add bending controllers & bending states
 			data.takeBending();
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {
 				data.addBending(packet.getAllControllersID()[i]);
 				data.getState().update(player, Raytrace.getTargetBlock(player, -1));
-				IBendingState state = data.getBendingController(packet.getAllControllersID()[i]).createState(data);
+			}
+			for (int i = 0; i < packet.getAllControllersID().length; i++) {
+				IBendingState state = data.getBendingController(packet.getBuf().readInt()).createState(data);
 				state.fromBytes(packet.getBuf());
 			}
 			

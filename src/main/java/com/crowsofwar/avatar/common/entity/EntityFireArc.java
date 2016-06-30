@@ -51,7 +51,7 @@ public class EntityFireArc extends Entity {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		
+		setDead();
 	}
 
 	@Override
