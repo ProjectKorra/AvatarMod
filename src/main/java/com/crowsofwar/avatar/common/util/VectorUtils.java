@@ -108,6 +108,33 @@ public class VectorUtils {
 	}
 	
 	/**
+	 * Create a unit vector from the given euler angles. Measurements
+	 * should be in radians.
+	 */
+	public static Vec3 fromDirection(Vec3 euler) {
+		return fromYawPitch(euler.yCoord, euler.xCoord);
+	}
+	
+	/**
+	 * Get a euler angle from point A to point B. Y axis is yaw, and x axis
+	 * is pitch. Z axis is roll, which isn't in minecraft (so it's 0).
+	 * Measurements are in radians.
+	 * @param pos1
+	 * @param pos2
+	 * @return
+	 */
+	public static Vec3 getRotations(Vec3 pos1, Vec3 pos2) {
+		Vec3 diff = minus(pos2, pos1);
+		double x = diff.xCoord;
+		double y = diff.yCoord;
+		double z = diff.zCoord;
+		double rotX = Math.atan2(y, z);
+		double rotY = Math.atan2(x * Math.cos(rotX), z);
+		double rotZ = 0;
+		return Vec3.createVectorHelper(rotX, rotY, rotZ);
+	}
+	
+	/**
 	 * Use {@link Raytrace} instead.
 	 * @param world The world
 	 * @param start Vector to start at

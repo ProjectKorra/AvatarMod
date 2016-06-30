@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 
 public class RenderFireArc extends Render {
 
@@ -42,9 +43,9 @@ public class RenderFireArc extends Render {
 //			if (i != 1) continue;
 			
 			Vec3 from = vec3(0, 0, 0);
-			Vec3 to = VectorUtils.minus(cp.getPos(), leader.getPos());
+			Vec3 to = minus(cp.getPos(), leader.getPos());
 			
-			Vec3 diff = VectorUtils.minus(from, to);
+			Vec3 diff = minus(to, from);
 			
 			double ySize = 1;
 			int textureRepeat = 2;
@@ -54,11 +55,15 @@ public class RenderFireArc extends Render {
 			GL11.glTranslated(x, y, z);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			
+			Vec3 lookingEuler = getRotations(to, from);
+			// Offset for rotated positive X
+			Vec3 offX = times(fromYawPitch(lookingEuler.yCoord + Math.toRadians(90), lookingEuler.xCoord), 0);
+			
 			double size = 0.3; // Width/2 of he fire
 			// +x side (EAST)
-			drawQuad(vec3(from, size, size, 0), vec3(from, size, -size, 0), vec3(to, size, -size, 0), vec3(to, size, size, 0), 0, 0, 1, 1);
+			drawQuad(plus(vec3(from, size, size, 0), offX), plus(vec3(from, size, -size, 0), offX), plus(vec3(to, size, -size, 0), offX), plus(vec3(to, size, size, 0), offX), 0, 0, 1, 1);
 			// -x side (WEST)
-			drawQuad(vec3(from, -size, size, 0), vec3(from, -size, -size, 0), vec3(to, -size, -size, 0), vec3(to, -size, size, 0), 0, 0, 1, 1);
+//			drawQuad(vec3(from, -size, size, 0), vec3(from, -size, -size, 0), vec3(to, -size, -size, 0), vec3(to, -size, size, 0), 0, 0, 1, 1);
 			// +z side (SOUTH)
 //			drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
 			
@@ -110,7 +115,7 @@ public class RenderFireArc extends Render {
 	}
 	
 	private Vec3 vec3(Vec3 vec, double x, double y, double z) {
-		return VectorUtils.copy(vec).addVector(x, y, z);
+		return copy(vec).addVector(x, y, z);
 	}
 
 }
