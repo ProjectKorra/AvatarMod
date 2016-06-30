@@ -110,7 +110,7 @@ public class Firebending implements IBendingController {
 			if (fire != null) {
 				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 				Vec3 lookPos = plus(getEntityPos(player), times(look, 3));
-				fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
+				fire.setPosition(lookPos.xCoord, lookPos.yCoord - 1.65, lookPos.zCoord);
 			} else {
 				if (!world.isRemote) fs.setFireArcId(-1);
 			}
