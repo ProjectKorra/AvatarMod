@@ -11,5 +11,6 @@ public interface IPhysics {
 	Vec3 getPosition();
 	Vec3 getVelocity();
 	void setVelocity(Vec3 vel);
+	void addVelocity(Vec3 vel);
 	
 }

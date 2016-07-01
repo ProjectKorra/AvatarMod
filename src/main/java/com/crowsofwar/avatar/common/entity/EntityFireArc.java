@@ -9,12 +9,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EntityFireArc extends Entity {
+public class EntityFireArc extends Entity implements IPhysics {
 	
-	private static final int DATAWATCHER_ID = 3;
+	public static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81, 0);
+	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELX = 4, DATAWATCHER_VELY = 5, DATAWATCHER_VELZ = 6,
+			DATAWATCHER_GRAVITY = 7;
 	
 	private static int nextId = 1;
 	private ControlPoint[] points;
+	
+	private Vec3 internalPos;
+	private Vec3 internalVelocity;
 	
 	public EntityFireArc(World world) {
 		super(world);
@@ -24,18 +29,26 @@ public class EntityFireArc extends Entity {
 			new ControlPoint(0, 0, 0),
 			new ControlPoint(0, 0, 0)
 		};
+		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
+		this.internalVelocity = Vec3.createVectorHelper(0, 0, 0);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
 	
 	@Override
 	protected void entityInit() {
 		dataWatcher.addObject(DATAWATCHER_ID, 0);
+		dataWatcher.addObject(DATAWATCHER_VELX, 0f);
+		dataWatcher.addObject(DATAWATCHER_VELY, 0f);
+		dataWatcher.addObject(DATAWATCHER_VELZ, 0f);
+		dataWatcher.addObject(DATAWATCHER_GRAVITY, (byte) 0);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-//		setDead();
+		if (isGravityEnabled()) {
+			addVelocity(GRAVITY);
+		}
 		for (int i = 1; i < points.length; i++) {
 			ControlPoint leader = points[i - 1];
 			ControlPoint p = points[i];
@@ -97,6 +110,44 @@ public class EntityFireArc extends Entity {
 		return true;
 	}
 	
+	@Override
+	public Vec3 getPosition() {
+		internalPos.xCoord = posX;
+		internalPos.yCoord = posY;
+		internalPos.zCoord = posZ;
+		return internalPos;
+	}
+
+	@Override
+	public Vec3 getVelocity() {
+		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
+		internalVelocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELY);
+		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELZ);
+		return internalVelocity;
+	}
+
+	@Override
+	public void setVelocity(Vec3 vel) {
+		if (!worldObj.isRemote) {
+			dataWatcher.updateObject(DATAWATCHER_VELX, vel.xCoord);
+			dataWatcher.updateObject(DATAWATCHER_VELY, vel.yCoord);
+			dataWatcher.updateObject(DATAWATCHER_VELZ, vel.zCoord);
+		}
+	}
+	
+	@Override
+	public void addVelocity(Vec3 vel) {
+		setVelocity(VectorUtils.plus(getVelocity(), vel));
+	}
+	
+	public boolean isGravityEnabled() {
+		return dataWatcher.getWatchableObjectByte(DATAWATCHER_GRAVITY) == 1;
+	}
+	
+	public void setGravityEnabled(boolean enabled) {
+		dataWatcher.updateObject(DATAWATCHER_GRAVITY, (byte) (enabled ? 1 : 0));
+	}
+	
 	public class ControlPoint {
 		
 		private Vec3 position;
@@ -146,5 +197,5 @@ public class EntityFireArc extends Entity {
 		}
 		
 	}
-	
+
 }

@@ -119,5 +119,10 @@ public class EntityFlame extends Entity implements IPhysics {
 			dataWatcher.updateObject(DATAWATCHER_VELZ, (float) vel.zCoord);
 		}
 	}
+
+	@Override
+	public void addVelocity(Vec3 vel) {
+		setVelocity(VectorUtils.plus(getVelocity(), vel));
+	}
 	
 }
