@@ -26,8 +26,8 @@ public class RenderFireArc extends Render {
 		
 		EntityFireArc flame = (EntityFireArc) p_76986_1_;
 		{
-			ControlPoint cp = flame.getControlPoint(0);
-			flame.worldObj.spawnParticle("flame", cp.getXPos(), cp.getYPos(), cp.getZPos(), 0, 0.05, 0);
+//			ControlPoint cp = flame.getControlPoint(0);
+//			flame.worldObj.spawnParticle("flame", cp.getXPos(), cp.getYPos(), cp.getZPos(), 0, 0.05, 0);
 		}
 		
 		for (int i = 1; i < flame.getControlPoints().length; i++) {
@@ -38,8 +38,8 @@ public class RenderFireArc extends Render {
 			double y = leader.getYPos() - renderManager.renderPosY;
 			double z = leader.getZPos() - renderManager.renderPosZ;
 			
-			String particleName = i == 0 ? "flame" : (i == 1 ? "smoke" : "reddust");
-			flame.worldObj.spawnParticle(particleName, cp.getXPos(), cp.getYPos(), cp.getZPos(), 0, 0.05, 0);
+//			String particleName = i == 0 ? "flame" : (i == 1 ? "smoke" : "reddust");
+//			flame.worldObj.spawnParticle(particleName, cp.getXPos(), cp.getYPos(), cp.getZPos(), 0, 0.05, 0);
 			
 //			if (i != 1) continue;
 			
