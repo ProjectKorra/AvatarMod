@@ -56,19 +56,23 @@ public class RenderFireArc extends Render {
 			GL11.glTranslated(x, y, z);
 			GL11.glDisable(GL11.GL_LIGHTING);
 
-			double size = 0.3; // Width/2 of he fire
+			double size = 0.15; // Width/2 of he fire
 			
 			Vec3 lookingEuler = getRotations(from, to);
 			// Offset for rotated positive X
 			Vec3 offX = times(fromYawPitch(lookingEuler.yCoord + Math.toRadians(90), lookingEuler.xCoord), size);
-			inverse(offX);
+			Vec3 invX = times(offX, -1);
 			
 			// +x side (EAST)
 			drawQuad(plus(vec3(from, 0, size, 0), offX), plus(vec3(from, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, size, 0), offX), 0, 0, 1, 1);
 			// -x side (WEST)
-//			drawQuad(vec3(from, -size, size, 0), vec3(from, -size, -size, 0), vec3(to, -size, -size, 0), vec3(to, -size, size, 0), 0, 0, 1, 1);
+			drawQuad(plus(vec3(from, 0, size, 0), invX), plus(vec3(from, 0, -size, 0), invX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(to, 0, size, 0), invX), 0, 0, 1, 1);
 			// +z side (SOUTH)
 //			drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
+			// +y
+			drawQuad(plus(vec3(from, 0, size, 0), offX), plus(vec3(to, 0, size, 0), offX), plus(vec3(to, 0, size, 0), invX), plus(vec3(from, 0, size, 0), invX), 0, 0, 1, 1);
+			// -y
+			drawQuad(plus(vec3(from, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), invX), 0, 0, 1, 1);
 			
 //			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 //			Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
