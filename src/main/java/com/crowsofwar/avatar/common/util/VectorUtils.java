@@ -9,6 +9,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -125,11 +126,27 @@ public class VectorUtils {
 	 */
 	public static Vec3 getRotations(Vec3 pos1, Vec3 pos2) {
 		Vec3 diff = minus(pos2, pos1);
+		diff.normalize();
 		double x = diff.xCoord;
 		double y = diff.yCoord;
 		double z = diff.zCoord;
-		double rotX = Math.atan2(y, z);
-		double rotY = Math.atan2(x * Math.cos(rotX), z);
+//		double r = 1;
+//		double rotY = Math.atan2(z, x);
+//		double rotX = Math.atan2(Math.sqrt(z * z + x * x), y) + Math.PI;
+		double d0 = x;
+        double d1 = y;
+        double d2 = z;
+        double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+		double rotY = Math.toRadians((Math.atan2(d2, d0) * 180 / Math.PI) - 90);
+		double rotX = Math.toRadians(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
+		
+//		double rotY = Math.atan2(y, x);
+//		double rotX = Math.acos(z / r);
+		
+//		double rotX = Math.asin(diff.yCoord / 1);
+//		double rotY = Math.asin(diff.xCoord / (cos(rotX)*1));
+//		double rotX = Math.atan2(y, x);
+//		double rotY = Math.atan2(z, Math.sqrt(x * x + y * y));
 		double rotZ = 0;
 		return Vec3.createVectorHelper(rotX, rotY, rotZ);
 	}
