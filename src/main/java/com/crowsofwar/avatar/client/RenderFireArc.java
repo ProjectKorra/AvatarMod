@@ -70,10 +70,10 @@ public class RenderFireArc extends Render {
 			// +z side (SOUTH)
 //			drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
 			
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
-			player.rotationYaw = (float) Math.toDegrees(playerLook.yCoord);
-			player.rotationPitch = (float) Math.toDegrees(playerLook.xCoord);
+//			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+//			Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
+//			player.rotationYaw = (float) Math.toDegrees(playerLook.yCoord);
+//			player.rotationPitch = (float) Math.toDegrees(playerLook.xCoord);
 			
 //			Tessellator t = Tessellator.instance;
 //			t.startDrawingQuads();

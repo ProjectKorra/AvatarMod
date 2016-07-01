@@ -137,8 +137,8 @@ public class VectorUtils {
         double d1 = y;
         double d2 = z;
         double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d2 * d2);
-		double rotY = Math.toRadians((Math.atan2(d2, d0) * 180 / Math.PI) - 90);
-		double rotX = Math.toRadians(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
+		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
+		double rotX = -Math.atan2(d1, d3);
 		
 //		double rotY = Math.atan2(y, x);
 //		double rotX = Math.acos(z / r);
