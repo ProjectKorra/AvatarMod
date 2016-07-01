@@ -64,15 +64,15 @@ public class RenderFireArc extends Render {
 			Vec3 invX = times(offX, -1);
 			
 			// +x side (EAST)
-			drawQuad(plus(vec3(from, 0, size, 0), offX), plus(vec3(from, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, size, 0), offX), 0, 0, 1, 1);
+			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, size, 0), offX), plus(vec3(from, 0, size, 0), offX), plus(vec3(from, 0, -size, 0), offX), 0, 0, 1, 1);
 			// -x side (WEST)
-			drawQuad(plus(vec3(from, 0, size, 0), invX), plus(vec3(from, 0, -size, 0), invX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(to, 0, size, 0), invX), 0, 0, 1, 1);
+			drawQuad(plus(vec3(to, 0, -size, 0), invX), plus(vec3(to, 0, size, 0), invX), plus(vec3(from, 0, size, 0), invX), plus(vec3(from, 0, -size, 0), invX), 0, 0, 1, 1);
 			// +z side (SOUTH)
 //			drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
 			// +y
-			drawQuad(plus(vec3(from, 0, size, 0), offX), plus(vec3(to, 0, size, 0), offX), plus(vec3(to, 0, size, 0), invX), plus(vec3(from, 0, size, 0), invX), 0, 0, 1, 1);
+			drawQuad(plus(vec3(to, 0, size, 0), offX), plus(vec3(to, 0, size, 0), invX), plus(vec3(from, 0, size, 0), invX), plus(vec3(from, 0, size, 0), offX), 0, 0, 1, 1);
 			// -y
-			drawQuad(plus(vec3(from, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), invX), 0, 0, 1, 1);
+			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), offX), 0, 0, 1, 1);
 			
 //			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 //			Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
