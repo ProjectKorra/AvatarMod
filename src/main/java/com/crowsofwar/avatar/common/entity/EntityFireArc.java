@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class EntityFireArc extends Entity implements IPhysics {
 	
-	public static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81, 0);
+	public static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 20, 0);
 	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELX = 4, DATAWATCHER_VELY = 5, DATAWATCHER_VELZ = 6,
 			DATAWATCHER_GRAVITY = 7;
 	
@@ -49,6 +49,13 @@ public class EntityFireArc extends Entity implements IPhysics {
 		if (isGravityEnabled()) {
 			addVelocity(GRAVITY);
 		}
+		Vec3 velocity = getVelocity();
+		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
+		points[0].setPosition(posX, posY, posZ);
+		if (isCollided) {
+			setDead();
+		}
+		
 		for (int i = 1; i < points.length; i++) {
 			ControlPoint leader = points[i - 1];
 			ControlPoint p = points[i];
@@ -129,9 +136,9 @@ public class EntityFireArc extends Entity implements IPhysics {
 	@Override
 	public void setVelocity(Vec3 vel) {
 		if (!worldObj.isRemote) {
-			dataWatcher.updateObject(DATAWATCHER_VELX, vel.xCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELY, vel.yCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELZ, vel.zCoord);
+			dataWatcher.updateObject(DATAWATCHER_VELX, (float) vel.xCoord);
+			dataWatcher.updateObject(DATAWATCHER_VELY, (float) vel.yCoord);
+			dataWatcher.updateObject(DATAWATCHER_VELZ, (float) vel.zCoord);
 		}
 	}
 	

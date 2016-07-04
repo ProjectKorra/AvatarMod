@@ -38,7 +38,7 @@ public class Firebending implements IBendingController {
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_FIREBENDING,
-				AvatarGuiIds.GUI_RADIAL_MENU_FIRE, ACTION_LIGHT_FIRE, ACTION_FIRE_PUNCH);
+				AvatarGuiIds.GUI_RADIAL_MENU_FIRE, ACTION_LIGHT_FIRE, ACTION_FIRE_PUNCH, ACTION_FIREARC_THROW);
 	}
 	
 	@Override
@@ -61,6 +61,7 @@ public class Firebending implements IBendingController {
 		PlayerState ps = data.getState();
 		EntityPlayer player = ps.getPlayerEntity();
 		World world = player.worldObj;
+		FirebendingState fs = (FirebendingState) data.getBendingState(this);
 		
 		if (ability == ACTION_LIGHT_FIRE) {
 			BlockPos looking = ps.verifyClientLookAtBlock(-1, 5);
@@ -92,6 +93,21 @@ public class Firebending implements IBendingController {
 			
 		}
 		
+		if (ability == ACTION_FIREARC_THROW) {
+			
+			EntityFireArc fire = EntityFireArc.findFromId(world, fs.getFireArcId());
+			System.out.println(fire);
+			if (fire != null) {
+				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				fire.addVelocity(times(look, 5));
+				fire.setGravityEnabled(true);
+//				fire.setFire(10000);
+				fs.setFireArcId(-1);
+				data.sendBendingState(fs);
+			}
+			
+		}
+		
 	}
 	
 	@Override
@@ -119,6 +135,11 @@ public class Firebending implements IBendingController {
 	
 	@Override
 	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
+		if (input == CONTROL_LEFT_CLICK_DOWN) {
+			FirebendingState state = (FirebendingState) data.getBendingState(this);
+			if (state != null && state.isManipulatingFire()) return ACTION_FIREARC_THROW;
+		}
+		
 		return AvatarAbility.NONE;
 	}
 
