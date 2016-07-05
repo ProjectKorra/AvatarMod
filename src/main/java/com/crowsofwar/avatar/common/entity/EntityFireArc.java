@@ -27,6 +27,8 @@ public class EntityFireArc extends Entity implements IPhysics {
 		this.points = new ControlPoint[] {
 			new ControlPoint(0, 0, 0),
 			new ControlPoint(0, 0, 0),
+			new ControlPoint(0, 0, 0),
+			new ControlPoint(0, 0, 0),
 			new ControlPoint(0, 0, 0)
 		};
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
@@ -51,7 +53,8 @@ public class EntityFireArc extends Entity implements IPhysics {
 		}
 		Vec3 velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
-		points[0].setPosition(posX, posY, posZ);
+		getLeader().setPosition(posX, posY, posZ);
+		getLeader().setVelocity(getVelocity());
 		if (isCollided) {
 			setDead();
 		}
@@ -62,13 +65,20 @@ public class EntityFireArc extends Entity implements IPhysics {
 			double dist = p.getDistance(leader);
 			if (dist > 20) {
 				p.setPosition(leader.getXPos(), leader.getYPos(), leader.getZPos());
-			} else if (dist > 2) {
-				Vec3 diff = VectorUtils.minus(leader.getPos(), p.getPos());
+			} else if (dist > 1) {
+				Vec3 diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
 				diff.normalize();
-				VectorUtils.mult(diff, 0.05*3);
-				p.move(diff);
+				VectorUtils.mult(diff, 0.15);
+				p.addVelocity(diff);
 			}
 		}
+		
+		for (int i = 0; i < points.length; i++) {
+			ControlPoint point = getControlPoint(i);
+			point.move(point.getVelocity());
+			point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
+		}
+		
 	}
 	
 	@Override
@@ -94,6 +104,20 @@ public class EntityFireArc extends Entity implements IPhysics {
 	
 	public ControlPoint getControlPoint(int index) {
 		return points[index];
+	}
+	
+	/**
+	 * Get the first control point in this arc.
+	 */
+	public ControlPoint getLeader() {
+		return points[0];
+	}
+	
+	/**
+	 * Get the leader of the specified control point.
+	 */
+	public ControlPoint getLeader(int index) {
+		return points[index == 0 ? index : index - 1];
 	}
 	
 	public int getId() {
@@ -155,12 +179,14 @@ public class EntityFireArc extends Entity implements IPhysics {
 		dataWatcher.updateObject(DATAWATCHER_GRAVITY, (byte) (enabled ? 1 : 0));
 	}
 	
-	public class ControlPoint {
+	public class ControlPoint implements IPhysics {
 		
 		private Vec3 position;
+		private Vec3 velocity;
 		
 		public ControlPoint(double x, double y, double z) {
 			position = Vec3.createVectorHelper(x, y, z);
+			velocity = Vec3.createVectorHelper(0, 0, 0);
 		}
 		
 		public void setPosition(double x, double y, double z) {
@@ -195,12 +221,28 @@ public class EntityFireArc extends Entity implements IPhysics {
 			return position.zCoord;
 		}
 		
-		public Vec3 getPos() {
+		public double getDistance(ControlPoint point) {
+			return position.distanceTo(point.getPosition());
+		}
+
+		@Override
+		public Vec3 getPosition() {
 			return position;
 		}
-		
-		public double getDistance(ControlPoint point) {
-			return position.distanceTo(point.getPos());
+
+		@Override
+		public Vec3 getVelocity() {
+			return velocity;
+		}
+
+		@Override
+		public void setVelocity(Vec3 vel) {
+			velocity = vel;
+		}
+
+		@Override
+		public void addVelocity(Vec3 vel) {
+			VectorUtils.add(velocity, vel);
 		}
 		
 	}

@@ -44,7 +44,7 @@ public class RenderFireArc extends Render {
 //			if (i != 1) continue;
 			
 			Vec3 from = vec3(0, 0, 0);
-			Vec3 to = minus(cp.getPos(), leader.getPos());
+			Vec3 to = minus(cp.getPosition(), leader.getPosition());
 			
 			Vec3 diff = minus(to, from);
 			
