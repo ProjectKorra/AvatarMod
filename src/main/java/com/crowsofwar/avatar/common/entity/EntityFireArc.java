@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class EntityFireArc extends Entity implements IPhysics {
 	
-	public static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 20, 0);
+	public static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 60, 0);
 	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELX = 4, DATAWATCHER_VELY = 5, DATAWATCHER_VELZ = 6,
 			DATAWATCHER_GRAVITY = 7;
 	
@@ -63,7 +63,7 @@ public class EntityFireArc extends Entity implements IPhysics {
 			ControlPoint leader = points[i - 1];
 			ControlPoint p = points[i];
 			double dist = p.getDistance(leader);
-			if (dist > 20) {
+			if (dist > 6) {
 				p.setPosition(leader.getXPos(), leader.getYPos(), leader.getZPos());
 			} else if (dist > 1) {
 				Vec3 diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
@@ -75,8 +75,12 @@ public class EntityFireArc extends Entity implements IPhysics {
 		
 		for (int i = 0; i < points.length; i++) {
 			ControlPoint point = getControlPoint(i);
-			point.move(point.getVelocity());
-			point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
+//			double dist = point.getDistance(getLeader(i));
+			double sqrDist = point.getPosition().squareDistanceTo(getLeader(i).getPosition());
+//			if (sqrDist < 3*3) {
+				point.move(point.getVelocity());
+				point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
+//			}
 		}
 		
 	}

@@ -99,7 +99,7 @@ public class Firebending implements IBendingController {
 			System.out.println(fire);
 			if (fire != null) {
 				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-				fire.addVelocity(times(look, 5));
+				fire.addVelocity(times(look, 15));
 				fire.setGravityEnabled(true);
 //				fire.setFire(10000);
 				fs.setFireArcId(-1);
