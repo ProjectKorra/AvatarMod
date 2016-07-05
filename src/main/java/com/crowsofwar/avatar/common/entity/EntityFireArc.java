@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.util.VectorUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -57,15 +58,23 @@ public class EntityFireArc extends Entity implements IPhysics {
 		getLeader().setVelocity(getVelocity());
 		if (isCollided) {
 			setDead();
+			if (!worldObj.isRemote) {
+				int x = (int) Math.floor(posX);
+				int y = (int) Math.floor(posY);
+				int z = (int) Math.floor(posZ);
+				if (worldObj.getBlock(x, y, z) == Blocks.air)
+					worldObj.setBlock(x, y, z, Blocks.fire);
+			}
 		}
 		
 		for (int i = 1; i < points.length; i++) {
 			ControlPoint leader = points[i - 1];
 			ControlPoint p = points[i];
-			double dist = p.getDistance(leader);
-			if (dist > 6) {
+			Vec3 leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
+			double sqrDist = p.getPosition().squareDistanceTo(leadPos);
+			if (sqrDist > 6*6) {
 				p.setPosition(leader.getXPos(), leader.getYPos(), leader.getZPos());
-			} else if (dist > 1) {
+			} else if (sqrDist > 1*1) {
 				Vec3 diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
 				diff.normalize();
 				VectorUtils.mult(diff, 0.15);
@@ -75,12 +84,8 @@ public class EntityFireArc extends Entity implements IPhysics {
 		
 		for (int i = 0; i < points.length; i++) {
 			ControlPoint point = getControlPoint(i);
-//			double dist = point.getDistance(getLeader(i));
-			double sqrDist = point.getPosition().squareDistanceTo(getLeader(i).getPosition());
-//			if (sqrDist < 3*3) {
-				point.move(point.getVelocity());
-				point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
-//			}
+			point.move(point.getVelocity());
+			point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
 		}
 		
 	}
