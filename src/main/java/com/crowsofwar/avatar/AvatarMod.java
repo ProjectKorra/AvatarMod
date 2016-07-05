@@ -3,6 +3,8 @@ package com.crowsofwar.avatar;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
@@ -33,7 +35,12 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;
+import crowsofwar.gorecore.data.PlayerDataFetcher;
+import crowsofwar.gorecore.data.PlayerDataFetcherServer;
+import crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
+import crowsofwar.gorecore.data.PlayerDataFetcherSided;
 import net.minecraft.entity.Entity;
+import net.minecraft.world.World;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION)
 public class AvatarMod {
@@ -46,12 +53,17 @@ public class AvatarMod {
 	public static AvatarMod instance;
 	
 	public static SimpleNetworkWrapper network;
+	
+	public static PlayerDataFetcher<AvatarPlayerData> dataFetcher;
+	
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		proxy.preInit();
+		dataFetcher = new PlayerDataFetcherSided<AvatarPlayerData>(proxy.getClientDataFetcher(),
+				new PlayerDataFetcherServer(AvatarWorldData.FETCHER));
 		
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
 		registerPacket(PacketSCheckBendingList.class, Side.SERVER);

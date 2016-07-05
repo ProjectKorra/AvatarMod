@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.network;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -106,8 +107,9 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
-		AvatarPlayerData data = AvatarPlayerDataFetcherServer.instance.
-				getDataQuick(player, "Error while retrieving player data for Keypress packet");
+//		AvatarPlayerData data = AvatarPlayerDataFetcherServer.instance.
+//				getDataQuick(player, "Error while retrieving player data for Keypress packet");
+		AvatarPlayerData data = AvatarMod.dataFetcher.fetch(player, "Error while retrieving playerdata for Ability packet");
 		if (data != null) {
 			IBendingController controller = data.getActiveBendingController();
 			if (controller != null) {

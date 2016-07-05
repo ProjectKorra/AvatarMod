@@ -2,9 +2,11 @@ package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.IAvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 
+import crowsofwar.gorecore.data.PlayerDataFetcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -45,5 +47,7 @@ public interface AvatarCommonProxy {
 	void init();
 	
 	IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
+	
+	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
 	
 }

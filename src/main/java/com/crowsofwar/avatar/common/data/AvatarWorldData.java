@@ -2,10 +2,18 @@ package com.crowsofwar.avatar.common.data;
 
 import crowsofwar.gorecore.data.GoreCorePlayerData;
 import crowsofwar.gorecore.data.GoreCoreWorldDataPlayers;
+import crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
 import net.minecraft.world.World;
 
 public class AvatarWorldData extends GoreCoreWorldDataPlayers {
 
+	public static final WorldDataFetcher<AvatarWorldData> FETCHER = new WorldDataFetcher<AvatarWorldData>() {
+		@Override
+		public AvatarWorldData fetch(World world) {
+			return getDataFromWorld(world);
+		}
+	};
+	
 	public static final String WORLD_DATA_KEY = "Avatar";
 	
 	public AvatarWorldData() {

@@ -140,8 +140,9 @@ public class ClientInput implements IControlsHandler {
 		
 		if (Minecraft.getMinecraft().thePlayer != null && true) {
 			// Send any input to the server
-			AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
-					Minecraft.getMinecraft().thePlayer);
+//			AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
+//					Minecraft.getMinecraft().thePlayer);
+			AvatarPlayerData data = AvatarMod.dataFetcher.fetchPerformance(Minecraft.getMinecraft().thePlayer);
 			
 			if (data != null && data.getActiveBendingController() != null) {
 				List<AvatarControl> pressed = getAllPressed();
