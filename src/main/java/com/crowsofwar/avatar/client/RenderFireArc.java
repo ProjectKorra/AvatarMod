@@ -75,6 +75,15 @@ public class RenderFireArc extends Render {
 			// -y
 			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), offX), 0, 0, 1, 1);
 			
+			// Parametric equation
+			Vec3 offset = leader.getPosition();
+			Vec3 direction = copy(diff);
+			direction.normalize();
+			Vec3 spawnAt = plus(offset, times(direction, Math.random()));
+			Vec3 velocity = leader.getVelocity();
+			flame.worldObj.spawnParticle("flame", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord, 0.05,
+					velocity.zCoord);
+			
 //			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 //			Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
 //			player.rotationYaw = (float) Math.toDegrees(playerLook.yCoord);
