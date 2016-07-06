@@ -64,10 +64,15 @@ public class RenderFireArc extends Render {
 			Vec3 offX = times(fromYawPitch(lookingEuler.yCoord + Math.toRadians(90), lookingEuler.xCoord), size);
 			Vec3 invX = times(offX, -1);
 			
+//			double u1 = flame.ticksExisted / 20.0;
+//			double u2 = (u1 + 1) % 1;
+			double u1 = (flame.ticksExisted / 20.0) % 1;
+			double u2 = (u1 + 1);
+			
 			// +x side (EAST)
-			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, size, 0), offX), plus(vec3(from, 0, size, 0), offX), plus(vec3(from, 0, -size, 0), offX), 0, 0, 1, 1);
+			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, size, 0), offX), plus(vec3(from, 0, size, 0), offX), plus(vec3(from, 0, -size, 0), offX), u1, 0, u2, 1);
 			// -x side (WEST)
-			drawQuad(plus(vec3(to, 0, -size, 0), invX), plus(vec3(to, 0, size, 0), invX), plus(vec3(from, 0, size, 0), invX), plus(vec3(from, 0, -size, 0), invX), 0, 0, 1, 1);
+			drawQuad(plus(vec3(to, 0, -size, 0), invX), plus(vec3(to, 0, size, 0), invX), plus(vec3(from, 0, size, 0), invX), plus(vec3(from, 0, -size, 0), invX), u1, 0, u2, 1);
 			// +z side (SOUTH)
 //			drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
 			// +y
@@ -116,7 +121,7 @@ public class RenderFireArc extends Render {
 		return null;
 	}
 	
-	private void drawQuad(Vec3 pos1, Vec3 pos2, Vec3 pos3, Vec3 pos4, int u1, int v1, int u2, int v2) {
+	private void drawQuad(Vec3 pos1, Vec3 pos2, Vec3 pos3, Vec3 pos4, double u1, double v1, double u2, double v2) {
 		Tessellator t = Tessellator.instance;
 		t.startDrawingQuads();
 		t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
