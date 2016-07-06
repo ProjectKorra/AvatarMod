@@ -8,7 +8,6 @@ import com.crowsofwar.avatar.common.network.PacketRedirector;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
-import crowsofwar.gorecore.data.GoreCorePlayerDataFetcher.FetchDataResult;
 import crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 import crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;

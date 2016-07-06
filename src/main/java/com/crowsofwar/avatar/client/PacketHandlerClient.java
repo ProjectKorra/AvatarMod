@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -15,7 +16,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import crowsofwar.gorecore.data.GoreCorePlayerDataFetcher.FetchDataResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -27,6 +27,12 @@ import net.minecraft.world.World;
  */
 @SideOnly(Side.CLIENT)
 public class PacketHandlerClient implements IPacketHandler {
+	
+	private final Minecraft mc;
+	
+	public PacketHandlerClient() {
+		this.mc = Minecraft.getMinecraft();
+	}
 
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
@@ -78,14 +84,9 @@ public class PacketHandlerClient implements IPacketHandler {
 	}
 	
 	private IMessage handlePacketPlayerData(PacketCPlayerData packet, MessageContext ctx) {
-		System.out.println("recieved player data information for " + packet.getPlayer());
-		FetchDataResult result = AvatarPlayerDataFetcherClient.instance.getData(Minecraft.getMinecraft().thePlayer);
-		if (result.hadError()) {
-			AvatarLog.warn("Couldn't handle player data info because player data fetch had error");
-			result.logError();
-		} else {
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			AvatarPlayerData data = (AvatarPlayerData) result.getData();
+		EntityPlayer player = mc.thePlayer;
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing player data packet");
+		if (data != null) {
 			// Add bending controllers & bending states
 			data.takeBending();
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {

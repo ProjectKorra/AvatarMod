@@ -12,7 +12,6 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.AvatarPlayerDataFetcherClient;
 import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
@@ -50,6 +49,7 @@ import net.minecraft.entity.player.EntityPlayer;
 @SideOnly(Side.CLIENT)
 public class ClientInput implements IControlsHandler {
 	
+	private final Minecraft mc;
 	private GameSettings gameSettings;
 	private Map<String, KeyBinding> keybindings;
 	private boolean mouseLeft, mouseRight, mouseMiddle;
@@ -60,6 +60,7 @@ public class ClientInput implements IControlsHandler {
 	public ClientInput() {
 		gameSettings = Minecraft.getMinecraft().gameSettings;
 		mouseLeft = mouseRight = mouseMiddle = wasLeft = wasRight = wasMiddle = false;
+		mc = Minecraft.getMinecraft();
 		
 		keybindings = new HashMap();
 		
@@ -138,22 +139,24 @@ public class ClientInput implements IControlsHandler {
 		mouseRight = Mouse.isButtonDown(1);
 		mouseMiddle = Mouse.isButtonDown(2);
 		
-		if (Minecraft.getMinecraft().thePlayer != null && true) {
+		EntityPlayer player = mc.thePlayer;
+		
+		if (player != null && true) {
 			// Send any input to the server
 //			AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
 //					Minecraft.getMinecraft().thePlayer);
-			AvatarPlayerData data = AvatarMod.dataFetcher.fetchPerformance(Minecraft.getMinecraft().thePlayer);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
 			
 			if (data != null && data.getActiveBendingController() != null) {
 				List<AvatarControl> pressed = getAllPressed();
 				for (AvatarControl control : pressed) {
 					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
 					if (ability != AvatarAbility.NONE) {
-						RaytraceResult raytrace = ability.needsRaytrace() ? Raytrace.getTargetBlock(
-								Minecraft.getMinecraft().thePlayer, ability.getRaytraceDistance()) : null;
+						RaytraceResult raytrace = ability.needsRaytrace() ? Raytrace.getTargetBlock(player,
+								ability.getRaytraceDistance()) : null;
 						AvatarMod.network.sendToServer(new PacketSUseAbility(ability,
 								raytrace != null ? raytrace.getPos() : null,
-										raytrace != null ? raytrace.getDirection() : null));
+								raytrace != null ? raytrace.getDirection() : null));
 					}
 				}
 			}

@@ -1,13 +1,9 @@
 package com.crowsofwar.avatar.common.network;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerDataFetcherServer;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSCheatEarthbending;
 import com.crowsofwar.avatar.common.network.packets.PacketSCheckBendingList;
@@ -19,9 +15,6 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
-import crowsofwar.gorecore.data.GoreCorePlayerDataFetcher.FetchDataResult;
-import crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
-import net.java.games.input.Controller;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
@@ -76,17 +69,13 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleCheckBendingList(PacketSCheckBendingList packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
-		FetchDataResult result = AvatarPlayerDataFetcherServer.instance.getData(player);
-		if (!result.hadError()) {
-			AvatarPlayerData data = (AvatarPlayerData) result.getData();
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while handling CheckBendingList packet");
+		if (data != null) {
 			String display = "";
 			for (int i = 0; i < data.getBendingControllers().size(); i++) {
 				display += data.getBendingControllers().get(i) + ", ";
 			}
 			player.addChatMessage(new ChatComponentText("All bending abilities: " + display));
-			
-		} else {
-			result.logError();
 		}
 		
 		return null;
@@ -94,22 +83,16 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleCheatEarthbending(PacketSCheatEarthbending packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
-		AvatarPlayerData data = AvatarPlayerDataFetcherServer.instance.
-				getDataQuick(player, "Error while retrieving player data for Cheat Earthbending packet");
-		if (data != null) {
-			
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
+		if (data != null)
 			data.addBending(BendingManager.BENDINGID_EARTHBENDING);
-			
-		}
 		
 		return null;
 	}
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
-//		AvatarPlayerData data = AvatarPlayerDataFetcherServer.instance.
-//				getDataQuick(player, "Error while retrieving player data for Keypress packet");
-		AvatarPlayerData data = AvatarMod.dataFetcher.fetch(player, "Error while retrieving playerdata for Ability packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing UseAbility packet");
 		if (data != null) {
 			IBendingController controller = data.getActiveBendingController();
 			if (controller != null) {
@@ -124,8 +107,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleToggleBending(PacketSToggleBending packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
-		AvatarPlayerData data = AvatarPlayerDataFetcherServer.instance.
-				getDataQuick(player, "Error while retrieving player data for Keypress packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing ToggleBending packet");
 		if (data != null) {
 			
 			if (data.isBending()) {
@@ -142,14 +124,10 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
-		FetchDataResult result = AvatarPlayerDataFetcherServer.instance.getData(ctx.getServerHandler().playerEntity);
-		if (result.hadError()) {
-			AvatarLog.warn("Couldn't handle player data request packet because player data fetch had error");
-			result.logError();
-			return null;
-		} else {
-			return new PacketCPlayerData((AvatarPlayerData) result.getData());
-		}
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(ctx.getServerHandler().playerEntity, "Error while"
+				+ " processing RequestData packet");
+		
+		return data == null ? null : new PacketCPlayerData(data);
 		
 	}
 	
@@ -157,14 +135,10 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		World world = player.worldObj;
-		FetchDataResult result = AvatarPlayerDataFetcherServer.instance.getData(player);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing"
+				+ " UseBendingController packet");
 		
-		if (result.hadError()) {
-			AvatarLog.warn("Couldn't get " + player.getCommandSenderName() + "'s player data while handling "
-					+ "UseBendingController packet");
-			result.logError();
-		} else {
-			AvatarPlayerData data = (AvatarPlayerData) result.getData();
+		if (data != null) {
 			
 			if (data.hasBending(packet.getBendingControllerId())) {
 				data.setActiveBendingController(packet.getBendingControllerId());

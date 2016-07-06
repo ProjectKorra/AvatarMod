@@ -19,11 +19,16 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import crowsofwar.gorecore.data.GoreCoreDataSaver;
 import crowsofwar.gorecore.data.GoreCorePlayerData;
+import crowsofwar.gorecore.data.PlayerDataFetcher;
+import crowsofwar.gorecore.data.PlayerDataFetcherServer;
+import crowsofwar.gorecore.data.PlayerDataFetcherSided;
 import crowsofwar.gorecore.util.GoreCoreNBTUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class AvatarPlayerData extends GoreCorePlayerData {
+	
+	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
 	private Map<Integer, IBendingController> bendingControllers;
 	private List<IBendingController> bendingControllerList;
@@ -226,6 +231,15 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public void sendBendingState(IBendingState state) {
 		updateClient(); // TODO send optimized packet only about bending state
+	}
+	
+	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
+		fetcher = new PlayerDataFetcherSided<AvatarPlayerData>(clientFetcher,
+				new PlayerDataFetcherServer<AvatarPlayerData>(AvatarWorldData.FETCHER));
+	}
+	
+	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
+		return fetcher;
 	}
 	
 }

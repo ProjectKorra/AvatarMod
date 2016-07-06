@@ -5,7 +5,7 @@ import crowsofwar.gorecore.data.GoreCoreWorldDataPlayers;
 import crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
 import net.minecraft.world.World;
 
-public class AvatarWorldData extends GoreCoreWorldDataPlayers {
+public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> {
 
 	public static final WorldDataFetcher<AvatarWorldData> FETCHER = new WorldDataFetcher<AvatarWorldData>() {
 		@Override

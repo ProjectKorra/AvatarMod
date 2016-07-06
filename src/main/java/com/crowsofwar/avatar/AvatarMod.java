@@ -54,16 +54,13 @@ public class AvatarMod {
 	
 	public static SimpleNetworkWrapper network;
 	
-	public static PlayerDataFetcher<AvatarPlayerData> dataFetcher;
-	
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		proxy.preInit();
-		dataFetcher = new PlayerDataFetcherSided<AvatarPlayerData>(proxy.getClientDataFetcher(),
-				new PlayerDataFetcherServer(AvatarWorldData.FETCHER));
+		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 		
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
 		registerPacket(PacketSCheckBendingList.class, Side.SERVER);
