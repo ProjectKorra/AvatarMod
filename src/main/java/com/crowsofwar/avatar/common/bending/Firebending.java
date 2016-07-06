@@ -125,7 +125,7 @@ public class Firebending implements IBendingController {
 			EntityFireArc fire = EntityFireArc.findFromId(world, fs.getFireArcId());
 			if (fire != null) {
 				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-				Vec3 lookPos = plus(getEntityPos(player), times(look, 3));
+				Vec3 lookPos = plus(getEyePos(player), times(look, 3));
 //				fire.setPosition(lookPos.xCoord, lookPos.yCoord - 1.65, lookPos.zCoord);
 				Vec3 motion = minus(lookPos, getEntityPos(fire));
 				motion.normalize();

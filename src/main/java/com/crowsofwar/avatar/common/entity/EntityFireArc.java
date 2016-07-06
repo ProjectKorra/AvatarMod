@@ -49,6 +49,9 @@ public class EntityFireArc extends Entity implements IPhysics {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		
+		ignoreFrustumCheck = true;
+		
 		if (isGravityEnabled()) {
 			addVelocity(GRAVITY);
 		}
