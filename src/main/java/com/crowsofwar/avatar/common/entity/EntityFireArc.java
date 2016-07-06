@@ -151,6 +151,13 @@ public class EntityFireArc extends Entity implements IPhysics {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
+    public int getBrightnessForRender(float p_70070_1_)
+    {
+        return 15728880;
+    }
+	
+	@Override
 	public Vec3 getPosition() {
 		internalPos.xCoord = posX;
 		internalPos.yCoord = posY;
