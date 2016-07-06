@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -53,11 +52,9 @@ public class RenderFireArc extends Render {
 			int textureRepeat = 2;
 			
 			Minecraft.getMinecraft().renderEngine.bindTexture(fire);
-			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glPushMatrix();
 			GL11.glTranslated(x, y, z);
-//GL11.glColor4f(2, 1, 1, 1);
-			//RenderZombie RenderBlaze RenderBlocks
+			GL11.glDisable(GL11.GL_LIGHTING);
 
 			double size = 0.15; // Width/2 of he fire
 			
@@ -77,13 +74,6 @@ public class RenderFireArc extends Render {
 			// -y
 			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), offX), 0, 0, 1, 1);
 			
-			// Parametric equation
-			Vec3 offset = leader.getPosition();
-			Vec3 direction = copy(diff);
-			direction.normalize();
-			Vec3 spawnAt = plus(offset, times(direction, Math.random()));
-			flame.worldObj.spawnParticle("flame", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, 0, 0.05, 0);
-			
 //			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 //			Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
 //			player.rotationYaw = (float) Math.toDegrees(playerLook.yCoord);
@@ -102,8 +92,8 @@ public class RenderFireArc extends Render {
 //			t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat);//3
 //			t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat);//2
 //			t.draw();
-			GL11.glPopMatrix();
 			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glPopMatrix();
 			
 			
 		}
@@ -119,7 +109,6 @@ public class RenderFireArc extends Render {
 	private void drawQuad(Vec3 pos1, Vec3 pos2, Vec3 pos3, Vec3 pos4, int u1, int v1, int u2, int v2) {
 		Tessellator t = Tessellator.instance;
 		t.startDrawingQuads();
-		t.setColorRGBA(255, 255, 255, 255);
 		t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
 		t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
 		t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2); // 3
