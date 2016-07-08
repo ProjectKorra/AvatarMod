@@ -30,7 +30,10 @@ public class EarthbendingState implements IBendingState {
 	}
 	
 	public EntityFloatingBlock getPickupBlock() {
-		if (pickupBlock != null && pickupBlock.isDead) pickupBlock = null;
+		if (pickupBlock != null && pickupBlock.isDead) {
+			pickupBlock = null;
+			System.out.println("deded");
+		}
 		return pickupBlock;
 	}
 
@@ -59,6 +62,7 @@ public class EarthbendingState implements IBendingState {
 //		System.out.println("EBS- Read int: " + buf.readInt());
 		int id = buf.readInt();
 		pickupBlock = id == -1 ? null : EntityFloatingBlock.getFromID(data.getState().getPlayerEntity().worldObj, id);
+		System.out.println("frombytes- " + pickupBlock);
 	}
 
 	@Override

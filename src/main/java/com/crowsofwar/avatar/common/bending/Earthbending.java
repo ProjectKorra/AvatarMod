@@ -123,6 +123,7 @@ public class Earthbending implements IBendingController {
 		if (state != null) {
 			EntityPlayer player = data.getState().getPlayerEntity();
 			EntityFloatingBlock floating = state.getPickupBlock();
+//			System.out.println(floating.ticksExisted);
 			
 			if (floating != null && floating.ticksExisted > 20) {
 				double yaw = Math.toRadians(player.rotationYaw);
@@ -130,8 +131,29 @@ public class Earthbending implements IBendingController {
 				Vec3 forward = VectorUtils.fromYawPitch(yaw, pitch);
 				Vec3 eye = VectorUtils.getEyePos(player);
 				Vec3 target = VectorUtils.plus(VectorUtils.times(forward, 2), eye);
+				Vec3 motion = VectorUtils.minus(target, VectorUtils.getEntityPos(floating));
+//				System.out.println(VectorUtils.getEntityPos(floating));
+//				motion.normalize();
+				VectorUtils.mult(motion, 5);
+//				System.out.println(VectorUtils.getEyePos(player).toString());
+//				if (motion.squareDistanceTo(0, 0, 0) > 3) {
+//					motion.normalize();
+//					VectorUtils.mult(motion, 3);
+//				}
 				
-				floating.moveEntity(target.xCoord - floating.posX, target.yCoord - floating.posY, target.zCoord - floating.posZ);
+//				motion = Vec3.createVectorHelper(-1, 0, 0);
+				
+//				floating.setVelocity(motion);
+				
+//				if (floating.isGravityEnabled() || floating.canFall()) {
+//					floating.setGravityEnabled(false);
+//					floating.setCanFall(true);
+//				}
+				
+//				floating.moveEntity(target.xCoord - floating.posX, target.yCoord - floating.posY, target.zCoord - floating.posZ);
+//				floating.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);
+				floating.setVelocity(motion);
+//				floating.setPositionAndRotation(target.xCoord, target.yCoord, target.zCoord, 0, 0);
 				
 			}
 			

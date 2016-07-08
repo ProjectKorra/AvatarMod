@@ -18,7 +18,7 @@ import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 
 public class RenderFireArc extends Render {
 
-	private static final ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire.png");
+	private static final ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire-ribbon.png");
 	
 	@Override
 	public void doRender(Entity p_76986_1_, double xx, double yy, double zz, float p_76986_8_,
@@ -66,8 +66,8 @@ public class RenderFireArc extends Render {
 			
 //			double u1 = flame.ticksExisted / 20.0;
 //			double u2 = (u1 + 1) % 1;
-			double u1 = (flame.ticksExisted / 20.0) % 1;
-			double u2 = (u1 + 1);
+			double u1 = ((flame.ticksExisted / 20.0) % 1);
+			double u2 = (u1 + 0.5);
 			
 			// +x side (EAST)
 			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, size, 0), offX), plus(vec3(from, 0, size, 0), offX), plus(vec3(from, 0, -size, 0), offX), u1, 0, u2, 1);
@@ -76,9 +76,9 @@ public class RenderFireArc extends Render {
 			// +z side (SOUTH)
 //			drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
 			// +y
-			drawQuad(plus(vec3(to, 0, size, 0), offX), plus(vec3(to, 0, size, 0), invX), plus(vec3(from, 0, size, 0), invX), plus(vec3(from, 0, size, 0), offX), 0, 0, 1, 1);
+			drawQuad(plus(vec3(to, 0, size, 0), offX), plus(vec3(to, 0, size, 0), invX), plus(vec3(from, 0, size, 0), invX), plus(vec3(from, 0, size, 0), offX), u1, 0, u2, 1);
 			// -y
-			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), offX), 0, 0, 1, 1);
+			drawQuad(plus(vec3(to, 0, -size, 0), offX), plus(vec3(to, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), invX), plus(vec3(from, 0, -size, 0), offX), u1, 0, u2, 1);
 			
 			// Parametric equation
 			Vec3 offset = leader.getPosition();
@@ -127,11 +127,11 @@ public class RenderFireArc extends Render {
 		t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
 		t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
 		t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2); // 3
-		t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, u1); // 4
+		t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, v1); // 4
 		t.draw();
 		t.startDrawingQuads();
 		t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
-		t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, u1); // 4
+		t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, v1); // 4
 		t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2); // 3
 		t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
 		t.draw();

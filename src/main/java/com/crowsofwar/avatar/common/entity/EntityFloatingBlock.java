@@ -140,7 +140,7 @@ public class EntityFloatingBlock extends Entity {
 	
 	@Override
 	public void onUpdate() {
-		super.onUpdate();
+//		super.onUpdate();
 		if (isGravityEnabled()) {
 			addForce(Vec3.createVectorHelper(0, -9.81 / 20, 0));
 			Vec3 vel = getVelocity();
@@ -152,7 +152,22 @@ public class EntityFloatingBlock extends Entity {
 		
 		if (!worldObj.isRemote) setVelocity(VectorUtils.times(getVelocity(), getFriction()));
 		
-		moveEntity(getVelocity().xCoord / 20, getVelocity().yCoord / 20, getVelocity().zCoord / 20);
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
+		lastTickPosX = posX;
+		lastTickPosY = posY;
+		lastTickPosZ = posZ;
+		Vec3 velocity = getVelocity();
+		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
+//		System.out.println(velocity);
+		motionX = velocity.xCoord / 20;
+		motionY = velocity.yCoord / 20;
+		motionZ = velocity.zCoord / 20;
+//		posX += getVelocity().xCoord / 20;
+//		posY += getVelocity().yCoord / 20;
+//		posZ += getVelocity().zCoord / 20;
+//		if (worldObj.isRemote || true) System.out.println(getVelocity() + "");
 		if (canBeDestroyed() && isCollided) {
 			setDead();
 			
@@ -172,6 +187,8 @@ public class EntityFloatingBlock extends Entity {
 			}
 			
 		} 
+		
+		
 		
 	}
 	

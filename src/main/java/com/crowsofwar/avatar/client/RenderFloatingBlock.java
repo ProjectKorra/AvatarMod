@@ -10,8 +10,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDragonEgg;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -32,7 +34,7 @@ public class RenderFloatingBlock extends Render
     /**
      * 
      */
-    public void doRender(EntityFloatingBlock entity, double x, double y, double z, float interpolatedYaw, float p_76986_9_)
+    public void doRender(EntityFloatingBlock entity, double x, double y, double z, float interpolatedYaw, float lerp)
     {
         World world = entity.worldObj;
         Block block = entity.getBlock();
@@ -40,6 +42,10 @@ public class RenderFloatingBlock extends Render
         int j = MathHelper.floor_double(entity.posY);
         int k = MathHelper.floor_double(entity.posZ);
 
+        
+//        x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * ((lerp - entity.lastTickPosX) / (entity.posX - entity.lastTickPosX)) - RenderManager.renderPosX;
+//        z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * ((lerp - entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) - RenderManager.renderPosZ;
+        
         if (block != null && block != world.getBlock(i, j, k))
         {
             GL11.glPushMatrix();
