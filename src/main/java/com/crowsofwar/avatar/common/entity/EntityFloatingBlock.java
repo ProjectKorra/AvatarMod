@@ -198,10 +198,20 @@ public class EntityFloatingBlock extends Entity {
 			
 		} 
 		
+		List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
+		if (!collidedList.isEmpty()) {
+			Entity collided = collidedList.get(0);
+			System.out.println("Collide with: " + collided);
+		}
 		
 		
 	}
 	
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		super.applyEntityCollision(entity);
+	}
+
 	public void addForce(Vec3 force) {
 //		VectorUtils.add(velocity, force);
 		setVelocity(VectorUtils.plus(getVelocity(), force));
