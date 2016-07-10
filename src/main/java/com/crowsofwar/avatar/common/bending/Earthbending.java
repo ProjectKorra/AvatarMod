@@ -116,12 +116,14 @@ public class Earthbending implements IBendingController {
 				// TODO Verify look at block
 				BlockPos looking = state.getClientLookAtBlock();
 				ForgeDirection lookingSide = state.getLookAtSide();
-				int x = looking.x + lookingSide.offsetX;
-				int y = looking.y + lookingSide.offsetY;
-				int z = looking.z + lookingSide.offsetZ;
-				if (looking != null && world.getBlock(x, y, z) == Blocks.air) {
-					world.setBlock(x, y, z, floating.getBlock());
-					floating.setDead();
+				if (looking != null && lookingSide != null) {
+					int x = looking.x + lookingSide.offsetX;
+					int y = looking.y + lookingSide.offsetY;
+					int z = looking.z + lookingSide.offsetZ;
+					if (world.getBlock(x, y, z) == Blocks.air) {
+						world.setBlock(x, y, z, floating.getBlock());
+						floating.setDead();
+					}
 				}
 			}
 		}
