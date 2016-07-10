@@ -126,6 +126,10 @@ public class Earthbending implements IBendingController {
 //			System.out.println(floating.ticksExisted);
 			
 			if (floating != null && floating.ticksExisted > 20) {
+				if (floating.isGravityEnabled()) {
+					floating.setGravityEnabled(false);
+				}
+				
 				double yaw = Math.toRadians(player.rotationYaw);
 				double pitch = Math.toRadians(player.rotationPitch);
 				Vec3 forward = VectorUtils.fromYawPitch(yaw, pitch);
