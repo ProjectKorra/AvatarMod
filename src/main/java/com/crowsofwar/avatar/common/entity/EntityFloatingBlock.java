@@ -80,13 +80,23 @@ public class EntityFloatingBlock extends Entity {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setBlock(Block.getBlockFromName(nbt.getString("Block")));
 		setGravityEnabled(nbt.getBoolean("Gravity"));
-		setDead();
+		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
+		setFriction(nbt.getFloat("Friction"));
+		setCanFall(nbt.getBoolean("CanFall"));
+		setDestroyable(nbt.getBoolean("Destroyable"));
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setString("Block", getNameForBlock(getBlock()));
 		nbt.setBoolean("Gravity", isGravityEnabled());
+		Vec3 velocity = getVelocity();
+		nbt.setDouble("VelocityX", velocity.xCoord);
+		nbt.setDouble("VelocityY", velocity.yCoord);
+		nbt.setDouble("VelocityZ", velocity.zCoord);
+		nbt.setFloat("Friction", getFriction());
+		nbt.setBoolean("CanFall", canFall());
+		nbt.setBoolean("Destroyable", canBeDestroyed());
 	}
 
 	public Block getBlock() {
