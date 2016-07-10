@@ -25,6 +25,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class Earthbending implements IBendingController {
 	
@@ -109,6 +110,21 @@ public class Earthbending implements IBendingController {
 				
 			}
 		}
+		if (ability == AvatarAbility.ACTION_PUT_BLOCK) {
+			EntityFloatingBlock floating = ebs.getPickupBlock();
+			if (floating != null) {
+				// TODO Verify look at block
+				BlockPos looking = state.getClientLookAtBlock();
+				ForgeDirection lookingSide = state.getLookAtSide();
+				int x = looking.x + lookingSide.offsetX;
+				int y = looking.y + lookingSide.offsetY;
+				int z = looking.z + lookingSide.offsetZ;
+				if (looking != null && world.getBlock(x, y, z) == Blocks.air) {
+					world.setBlock(x, y, z, floating.getBlock());
+					floating.setDead();
+				}
+			}
+		}
 		
 	}
 	
@@ -171,6 +187,7 @@ public class Earthbending implements IBendingController {
 		
 		if (ebs.getPickupBlock() != null) {
 			if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_THROW_BLOCK;
+			if (input == AvatarControl.CONTROL_RIGHT_CLICK_DOWN) return AvatarAbility.ACTION_PUT_BLOCK;
 		}
 		
 		return AvatarAbility.NONE;
