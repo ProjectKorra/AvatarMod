@@ -11,11 +11,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -198,12 +200,36 @@ public class EntityFloatingBlock extends Entity {
 			
 		} 
 		
-		List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
-		if (!collidedList.isEmpty()) {
-			Entity collided = collidedList.get(0);
-			System.out.println("Collide with: " + collided);
+		if (!isDead) {
+			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
+			if (!collidedList.isEmpty()) {
+				Entity collided = collidedList.get(0);
+				if (collided instanceof EntityLivingBase) {
+					double speed = getVelocity().lengthVector();
+					double multiplier = 0.25;
+					collided.attackEntityFrom(DamageSource.anvil, (float) (speed * multiplier));
+					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
+					motion.yCoord = 0.03;
+					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
+					setDead();
+					
+					// Spawn particles
+					Random random = new Random();
+					for (int i = 0; i < 7; i++) {
+						worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(),
+								posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
+					}
+					
+					if (!worldObj.isRemote) {
+						List<ItemStack> drops = getBlock().getDrops(worldObj, 0, 0, 0, getMetadata(), 0);
+						for (ItemStack is : drops) {
+							EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
+							worldObj.spawnEntityInWorld(ei);
+						}
+					}
+				}
+			}
 		}
-		
 		
 	}
 	
