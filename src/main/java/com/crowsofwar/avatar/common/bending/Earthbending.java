@@ -102,6 +102,7 @@ public class Earthbending implements IBendingController {
 						floating.setGravityEnabled(true);
 						floating.setCanFall(false);
 						floating.setDestroyable(false);
+						floating.setOwner(player);
 						
 						world.spawnEntityInWorld(floating);
 						
@@ -165,6 +166,8 @@ public class Earthbending implements IBendingController {
 //			System.out.println(floating.ticksExisted);
 			
 			if (floating != null && floating.ticksExisted > 20) {
+				floating.setOwner(player);
+				
 				if (floating.isGravityEnabled()) {
 					floating.setGravityEnabled(false);
 				}

@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -45,6 +46,8 @@ public class EntityFloatingBlock extends Entity {
 	 */
 	private final Vec3 velocity;
 	
+	private EntityPlayer owner;
+	
 	public EntityFloatingBlock(World world) {
 		super(world);
 		setSize(1, 1);
@@ -59,6 +62,11 @@ public class EntityFloatingBlock extends Entity {
 	public EntityFloatingBlock(World world, Block block) {
 		this(world);
 		setBlock(block);
+	}
+	
+	public EntityFloatingBlock(World world, Block block, EntityPlayer owner) {
+		this(world, block);
+		setOwner(owner);
 	}
 	
 	// Called from constructor of Entity class
@@ -152,7 +160,6 @@ public class EntityFloatingBlock extends Entity {
 	
 	@Override
 	public void onUpdate() {
-//		super.onUpdate();
 		if (isGravityEnabled()) {
 			addForce(Vec3.createVectorHelper(0, -9.81 / 20, 0));
 			Vec3 vel = getVelocity();
@@ -172,74 +179,59 @@ public class EntityFloatingBlock extends Entity {
 		lastTickPosZ = posZ;
 		Vec3 velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
-//		System.out.println(velocity);
 		motionX = velocity.xCoord / 20;
 		motionY = velocity.yCoord / 20;
 		motionZ = velocity.zCoord / 20;
-//		posX += getVelocity().xCoord / 20;
-//		posY += getVelocity().yCoord / 20;
-//		posZ += getVelocity().zCoord / 20;
-//		if (worldObj.isRemote || true) System.out.println(getVelocity() + "");
 		if (canBeDestroyed() && isCollided) {
 			setDead();
-			
-			// Spawn particles
-			Random random = new Random();
-			for (int i = 0; i < 7; i++) {
-				worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(),
-						posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
-			}
-			
-			if (!worldObj.isRemote) {
-				List<ItemStack> drops = getBlock().getDrops(worldObj, 0, 0, 0, getMetadata(), 0);
-				for (ItemStack is : drops) {
-					EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
-					worldObj.spawnEntityInWorld(ei);
-				}
-			}
-			
+			onCollision();
 		} 
 		
 		if (!isDead) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
 			if (!collidedList.isEmpty()) {
 				Entity collided = collidedList.get(0);
-				if (collided instanceof EntityLivingBase) {
+				if (collided instanceof EntityLivingBase && collided != getOwner()) {
 					double speed = getVelocity().lengthVector();
 					double multiplier = 0.25;
 					collided.attackEntityFrom(DamageSource.anvil, (float) (speed * multiplier));
 					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
-					motion.yCoord = 0.03;
+					motion.yCoord = 0.08;
 					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
 					setDead();
-					
-					// Spawn particles
-					Random random = new Random();
-					for (int i = 0; i < 7; i++) {
-						worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(),
-								posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
-					}
-					
-					if (!worldObj.isRemote) {
-						List<ItemStack> drops = getBlock().getDrops(worldObj, 0, 0, 0, getMetadata(), 0);
-						for (ItemStack is : drops) {
-							EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
-							worldObj.spawnEntityInWorld(ei);
-						}
-					}
+					onCollision();
+				} else if (collided != getOwner()) {
+					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
+					VectorUtils.mult(motion, 0.3);
+					motion.yCoord = 0.08;
+					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
 				}
 			}
 		}
 		
 	}
 	
-	@Override
-	public void applyEntityCollision(Entity entity) {
-		super.applyEntityCollision(entity);
+	/**
+	 * Called when the block collides with another block or an entity
+	 */
+	private void onCollision() {
+		// Spawn particles
+		Random random = new Random();
+		for (int i = 0; i < 7; i++) {
+			worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(),
+					posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
+		}
+		
+		if (!worldObj.isRemote) {
+			List<ItemStack> drops = getBlock().getDrops(worldObj, 0, 0, 0, getMetadata(), 0);
+			for (ItemStack is : drops) {
+				EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
+				worldObj.spawnEntityInWorld(ei);
+			}
+		}
 	}
 
 	public void addForce(Vec3 force) {
-//		VectorUtils.add(velocity, force);
 		setVelocity(VectorUtils.plus(getVelocity(), force));
 	}
 	
@@ -291,6 +283,14 @@ public class EntityFloatingBlock extends Entity {
 		setGravityEnabled(true);
 		setCanFall(true);
 		setDestroyable(true);
+	}
+	
+	public EntityPlayer getOwner() {
+		return owner;
+	}
+	
+	public void setOwner(EntityPlayer owner) {
+		this.owner = owner;
 	}
 	
 	@Override
