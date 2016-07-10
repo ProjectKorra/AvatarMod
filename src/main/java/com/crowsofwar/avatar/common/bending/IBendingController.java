@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.bending;
 
+import java.util.Random;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -53,6 +55,11 @@ public interface IBendingController extends ReadableWritable {
 			nbt.setInteger("ControllerID", object.getID());
 		}
 	};
+	
+	/**
+	 * RNG available for convenient use.
+	 */
+	public static final Random random = new Random();
 	
 	/**
 	 * Get an identifier for this bending ability.

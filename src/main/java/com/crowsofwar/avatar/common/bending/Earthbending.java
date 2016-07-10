@@ -3,6 +3,8 @@ package com.crowsofwar.avatar.common.bending;
 import static com.crowsofwar.avatar.common.util.VectorUtils.times;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarAbility;
@@ -30,6 +32,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class Earthbending implements IBendingController {
 	
 	private final BendingMenuInfo menu;
+	private final List<Block> bendableBlocks;
 	
 	Earthbending() {
 		Color light = new Color(225, 225, 225);
@@ -41,6 +44,19 @@ public class Earthbending implements IBendingController {
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_EARTHBENDING,
 				AvatarGuiIds.GUI_RADIAL_MENU_EARTH, AvatarAbility.ACTION_TOGGLE_BENDING, AvatarAbility.ACTION_THROW_BLOCK);
+		
+		bendableBlocks = new ArrayList<Block>();
+		bendableBlocks.add(Blocks.stone);
+		bendableBlocks.add(Blocks.sand);
+		bendableBlocks.add(Blocks.sandstone);
+		bendableBlocks.add(Blocks.cobblestone);
+		bendableBlocks.add(Blocks.dirt);
+		bendableBlocks.add(Blocks.gravel);
+		bendableBlocks.add(Blocks.brick_block);
+		bendableBlocks.add(Blocks.mossy_cobblestone);
+		bendableBlocks.add(Blocks.nether_brick);
+		bendableBlocks.add(Blocks.stonebrick);
+		
 	}
 	
 	@Override
@@ -74,22 +90,27 @@ public class Earthbending implements IBendingController {
 				BlockPos target = state.verifyClientLookAtBlock(-1, 5);
 				if (target != null) {
 					Block block = world.getBlock(target.x, target.y, target.z);
-					world.setBlock(target.x, target.y, target.z, Blocks.air);
-					
-					EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
-					floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
-					
-					double dist = 2.5;
-					Vec3 force = Vec3.createVectorHelper(0, Math.sqrt(19.62*dist), 0);
-					floating.addForce(force);
-					floating.setGravityEnabled(true);
-					floating.setCanFall(false);
-					floating.setDestroyable(false);
-					
-					world.spawnEntityInWorld(floating);
-					
-					ebs.setPickupBlock(floating);
-					data.sendBendingState(ebs);
+					if (bendableBlocks.contains(block)) {
+						world.setBlock(target.x, target.y, target.z, Blocks.air);
+						
+						EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
+						floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
+						
+						double dist = 2.5;
+						Vec3 force = Vec3.createVectorHelper(0, Math.sqrt(19.62*dist), 0);
+						floating.addForce(force);
+						floating.setGravityEnabled(true);
+						floating.setCanFall(false);
+						floating.setDestroyable(false);
+						
+						world.spawnEntityInWorld(floating);
+						
+						ebs.setPickupBlock(floating);
+						data.sendBendingState(ebs);
+					} else {
+						world.playSoundAtEntity(player, "random.click", 1.0f,
+								(float) (random.nextGaussian() / 0.25 + 0.375));
+					}
 					
 				}
 			}
