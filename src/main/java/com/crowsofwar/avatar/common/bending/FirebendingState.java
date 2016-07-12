@@ -1,26 +1,40 @@
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class FirebendingState implements IBendingState {
 
-	private int fireArcId;
+	private EntityFireArc fireArc;
+	private AvatarPlayerData data;
 	
-	public FirebendingState() {
-		fireArcId = -1;
+	public FirebendingState(AvatarPlayerData data) {
+		fireArc = null;
+		this.data = data;
 	}
 	
 	public int getFireArcId() {
-		return fireArcId;
+		return fireArc.getId();
+	}
+	
+	public EntityFireArc getFireArc() {
+		return fireArc;
 	}
 	
 	public boolean isManipulatingFire() {
-		return fireArcId != -1;
+		return fireArc != null;
 	}
 	
-	public void setFireArcId(int id) {
-		fireArcId = id;
+	public void setFireArc(EntityFireArc arc) {
+		fireArc = arc;
+	}
+	
+	public void setNoFireArc() {
+		setFireArc(null);
 	}
 	
 	@Override
@@ -35,12 +49,12 @@ public class FirebendingState implements IBendingState {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(fireArcId);
+		buf.writeInt(getFireArcId());
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		fireArcId = buf.readInt();
+		fireArc = EntityFireArc.findFromId(data.getState().getPlayerEntity().worldObj, buf.readInt());
 	}
 
 	@Override

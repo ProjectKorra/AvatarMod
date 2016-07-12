@@ -86,7 +86,7 @@ public class Firebending implements IBendingController {
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
 			
-			((FirebendingState) data.getBendingState(this)).setFireArcId(fire.getId());
+			((FirebendingState) data.getBendingState(this)).setFireArc(fire);
 			data.sendBendingState(data.getBendingState(this));
 			
 			world.spawnEntityInWorld(fire);
@@ -102,7 +102,7 @@ public class Firebending implements IBendingController {
 				fire.addVelocity(times(look, 15));
 				fire.setGravityEnabled(true);
 //				fire.setFire(10000);
-				fs.setFireArcId(-1);
+				fs.setNoFireArc();
 				data.sendBendingState(fs);
 			}
 			
@@ -112,7 +112,7 @@ public class Firebending implements IBendingController {
 	
 	@Override
 	public IBendingState createState(AvatarPlayerData data) {
-		return new FirebendingState();
+		return new FirebendingState(data);
 	}
 	
 	@Override
@@ -132,7 +132,7 @@ public class Firebending implements IBendingController {
 				mult(motion, .05*3);
 				fire.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);
 			} else {
-				if (!world.isRemote) fs.setFireArcId(-1);
+				if (!world.isRemote) fs.setNoFireArc();
 			}
 		}
 	}
