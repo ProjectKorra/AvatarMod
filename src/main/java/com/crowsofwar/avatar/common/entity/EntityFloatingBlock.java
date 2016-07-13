@@ -185,12 +185,12 @@ public class EntityFloatingBlock extends Entity {
 		if (isCollided) {
 			switch (getOnLandBehavior()) {
 				case BREAK:
-					setDead();
+					if (!worldObj.isRemote) setDead();
 					onCollision();
 					break;
 				case PLACE:
-					setDead();
 					if (!worldObj.isRemote) {
+						setDead();
 						int x = (int) Math.floor(posX);
 						int y = (int) Math.floor(posY);
 						int z = (int) Math.floor(posZ);
