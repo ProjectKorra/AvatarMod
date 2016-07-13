@@ -86,22 +86,20 @@ public class Firebending implements IBendingController {
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
 			
-			((FirebendingState) data.getBendingState(this)).setFireArc(fire);
-			data.sendBendingState(data.getBendingState(this));
-			
 			world.spawnEntityInWorld(fire);
+			
+			fs.setFireArc(fire);
+			data.sendBendingState(fs);
 			
 		}
 		
 		if (ability == ACTION_FIREARC_THROW) {
 			
-			EntityFireArc fire = EntityFireArc.findFromId(world, fs.getFireArcId());
-			System.out.println(fire);
+			EntityFireArc fire = fs.getFireArc();
 			if (fire != null) {
 				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 				fire.addVelocity(times(look, 15));
 				fire.setGravityEnabled(true);
-//				fire.setFire(10000);
 				fs.setNoFireArc();
 				data.sendBendingState(fs);
 			}
@@ -122,11 +120,10 @@ public class Firebending implements IBendingController {
 		World world = player.worldObj;
 		FirebendingState fs = (FirebendingState) data.getBendingState(this);
 		if (fs.isManipulatingFire()) {
-			EntityFireArc fire = EntityFireArc.findFromId(world, fs.getFireArcId());
+			EntityFireArc fire = fs.getFireArc();
 			if (fire != null) {
 				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 				Vec3 lookPos = plus(getEyePos(player), times(look, 3));
-//				fire.setPosition(lookPos.xCoord, lookPos.yCoord - 1.65, lookPos.zCoord);
 				Vec3 motion = minus(lookPos, getEntityPos(fire));
 				motion.normalize();
 				mult(motion, .05*3);

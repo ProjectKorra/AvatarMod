@@ -54,6 +54,7 @@ public class FirebendingState implements IBendingState {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
+		System.out.println(data.getState().getPlayerEntity().worldObj.loadedEntityList);
 		fireArc = EntityFireArc.findFromId(data.getState().getPlayerEntity().worldObj, buf.readInt());
 	}
 
