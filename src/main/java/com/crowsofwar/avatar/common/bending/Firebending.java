@@ -128,6 +128,7 @@ public class Firebending implements IBendingController {
 				motion.normalize();
 				mult(motion, .05*3);
 				fire.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);
+				fire.setOwner(player);
 			} else {
 				if (!world.isRemote) fs.setNoFireArc();
 			}

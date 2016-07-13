@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.util.VectorUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
@@ -24,6 +25,8 @@ public class EntityFireArc extends Entity implements IPhysics {
 	
 	private Vec3 internalPos;
 	private Vec3 internalVelocity;
+	
+	private EntityPlayer owner;
 	
 	public EntityFireArc(World world) {
 		super(world);
@@ -107,7 +110,8 @@ public class EntityFireArc extends Entity implements IPhysics {
 	}
 	
 	private void onCollision(Entity entity) {
-		entity.setFire(3);
+		if (entity != owner)
+			entity.setFire(3);
 	}
 	
 	@Override
@@ -213,6 +217,14 @@ public class EntityFireArc extends Entity implements IPhysics {
 	
 	public void setGravityEnabled(boolean enabled) {
 		dataWatcher.updateObject(DATAWATCHER_GRAVITY, (byte) (enabled ? 1 : 0));
+	}
+	
+	public EntityPlayer getOwner() {
+		return owner;
+	}
+	
+	public void setOwner(EntityPlayer owner) {
+		this.owner = owner;
 	}
 	
 	public class ControlPoint implements IPhysics {
