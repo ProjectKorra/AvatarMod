@@ -213,7 +213,7 @@ public class EntityFloatingBlock extends Entity {
 					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
 					motion.yCoord = 0.08;
 					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
-					setDead();
+					if (!worldObj.isRemote) setDead();
 					onCollision();
 				} else if (collided != getOwner()) {
 					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
