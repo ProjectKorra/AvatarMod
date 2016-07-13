@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock.OnBlockLand;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -101,7 +102,7 @@ public class Earthbending implements IBendingController {
 						floating.addForce(force);
 						floating.setGravityEnabled(true);
 						floating.setCanFall(false);
-						floating.setDestroyable(false);
+						floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
 						floating.setOwner(player);
 						
 						world.spawnEntityInWorld(floating);
@@ -142,10 +143,16 @@ public class Earthbending implements IBendingController {
 					int x = looking.x + lookingSide.offsetX;
 					int y = looking.y + lookingSide.offsetY;
 					int z = looking.z + lookingSide.offsetZ;
-					if (world.getBlock(x, y, z) == Blocks.air) {
-						world.setBlock(x, y, z, floating.getBlock());
-						floating.setDead();
-					}
+//					if (world.getBlock(x, y, z) == Blocks.air) {
+//						world.setBlock(x, y, z, floating.getBlock());
+//						floating.setDead();
+//					}
+					floating.setOnLandBehavior(OnBlockLand.PLACE);
+					floating.setGravityEnabled(false);
+					Vec3 force = VectorUtils.minus(Vec3.createVectorHelper(x, y, z), VectorUtils.getEntityPos(floating));
+					force.normalize();
+					floating.addForce(force);
+					ebs.dropBlock();
 				}
 			}
 		}

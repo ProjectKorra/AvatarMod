@@ -35,7 +35,7 @@ public class EntityFloatingBlock extends Entity {
 	/** Whether gravity can cause the block to have negative Y velocity (gravity will still affect it). */
 	public static final int DATAWATCHER_CAN_FALL = 9;
 	/** Whether the floating block breaks on contact with other blocks. */
-	public static final int DATAWATCHER_IS_DESTROYABLE = 10;
+	public static final int DATAWATCHER_ON_LAND = 10;
 	
 	private static int nextBlockID = 0;
 	
@@ -82,7 +82,7 @@ public class EntityFloatingBlock extends Entity {
 		
 		dataWatcher.addObject(DATAWATCHER_FRICTION, 1f);
 		dataWatcher.addObject(DATAWATCHER_CAN_FALL, (byte) 0);
-		dataWatcher.addObject(DATAWATCHER_IS_DESTROYABLE, (byte) 0);
+		dataWatcher.addObject(DATAWATCHER_ON_LAND, (byte) 0);
 		
 	}
 	
@@ -93,7 +93,7 @@ public class EntityFloatingBlock extends Entity {
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
 		setFriction(nbt.getFloat("Friction"));
 		setCanFall(nbt.getBoolean("CanFall"));
-		setDestroyable(nbt.getBoolean("Destroyable"));
+		setOnLandBehavior(nbt.getByte("OnLand"));
 	}
 	
 	@Override
@@ -106,7 +106,7 @@ public class EntityFloatingBlock extends Entity {
 		nbt.setDouble("VelocityZ", velocity.zCoord);
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("CanFall", canFall());
-		nbt.setBoolean("Destroyable", canBeDestroyed());
+		nbt.setByte("OnLand", getOnLandBehaviorId());
 	}
 
 	public Block getBlock() {
@@ -182,10 +182,25 @@ public class EntityFloatingBlock extends Entity {
 		motionX = velocity.xCoord / 20;
 		motionY = velocity.yCoord / 20;
 		motionZ = velocity.zCoord / 20;
-		if (canBeDestroyed() && isCollided) {
-			setDead();
-			onCollision();
-		} 
+		if (isCollided) {
+			switch (getOnLandBehavior()) {
+				case BREAK:
+					setDead();
+					onCollision();
+					break;
+				case PLACE:
+					setDead();
+					if (!worldObj.isRemote) {
+						int x = (int) Math.floor(posX);
+						int y = (int) Math.floor(posY);
+						int z = (int) Math.floor(posZ);
+						worldObj.setBlock(x, y, z, getBlock());
+						worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(), 3);
+					}
+					break;
+				default: break;
+			}
+		}
 		
 		if (!isDead) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
@@ -267,13 +282,24 @@ public class EntityFloatingBlock extends Entity {
 		dataWatcher.updateObject(DATAWATCHER_CAN_FALL, (byte) (falls ? 1 : 0));
 	}
 	
-	public boolean canBeDestroyed() {
-		return dataWatcher.getWatchableObjectByte(DATAWATCHER_IS_DESTROYABLE) == 1;
+	public byte getOnLandBehaviorId() {
+		return dataWatcher.getWatchableObjectByte(DATAWATCHER_ON_LAND);
 	}
 	
-	public void setDestroyable(boolean destroyable) {
-		if (!worldObj.isRemote)
-			dataWatcher.updateObject(DATAWATCHER_IS_DESTROYABLE, (byte) (destroyable ? 1 : 0));
+	public OnBlockLand getOnLandBehavior() {
+		return OnBlockLand.getFromId(getOnLandBehaviorId());
+	}
+	
+	public void setOnLandBehavior(byte id) {
+		dataWatcher.updateObject(DATAWATCHER_ON_LAND, id);
+	}
+	
+	public void setOnLandBehavior(OnBlockLand onLand) {
+		setOnLandBehavior(onLand.getId());
+	}
+	
+	public boolean canBeDestroyed() {
+		return getOnLandBehavior() == OnBlockLand.BREAK;
 	}
 	
 	/**
@@ -282,7 +308,7 @@ public class EntityFloatingBlock extends Entity {
 	public void drop() {
 		setGravityEnabled(true);
 		setCanFall(true);
-		setDestroyable(true);
+		setOnLandBehavior(OnBlockLand.BREAK);
 	}
 	
 	public EntityPlayer getOwner() {
@@ -297,6 +323,30 @@ public class EntityFloatingBlock extends Entity {
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double d) {
 		return true;
+	}
+	
+	/**
+	 * Determines what the block will do when
+	 * it touches a solid (non floating) block.
+	 *
+	 */
+	public static enum OnBlockLand {
+		
+		/** Do nothing */
+		DO_NOTHING,
+		/** Break the floating block and drop its item */
+		BREAK,
+		/** Place the floating block into the world */
+		PLACE;
+		
+		public byte getId() {
+			return (byte) ordinal();
+		}
+		
+		public static OnBlockLand getFromId(byte id) {
+			return values()[id];
+		}
+		
 	}
 	
 }
