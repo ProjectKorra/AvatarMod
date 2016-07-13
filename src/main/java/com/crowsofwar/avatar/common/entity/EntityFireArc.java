@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+import java.util.Random;
+
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.relauncher.Side;
@@ -67,6 +70,13 @@ public class EntityFireArc extends Entity implements IPhysics {
 				int z = (int) Math.floor(posZ);
 				if (worldObj.getBlock(x, y, z) == Blocks.air)
 					worldObj.setBlock(x, y, z, Blocks.fire);
+			} else {
+				Random random = new Random();
+				int particles = random.nextInt(3) + 4;
+				for (int i = 0; i < particles; i++) {
+					worldObj.spawnParticle("smoke", posX, posY, posZ, (random.nextGaussian() - 0.5) * 0.1,
+							random.nextDouble() * 0.15, (random.nextGaussian() - 0.5) * 0.1);
+				}
 			}
 		}
 		
@@ -91,6 +101,13 @@ public class EntityFireArc extends Entity implements IPhysics {
 			point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
 		}
 		
+		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
+		if (!collisions.isEmpty()) onCollision(collisions.get(0));
+		
+	}
+	
+	private void onCollision(Entity entity) {
+		entity.setFire(3);
 	}
 	
 	@Override
