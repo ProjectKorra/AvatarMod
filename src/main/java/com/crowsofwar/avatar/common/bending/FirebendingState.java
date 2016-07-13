@@ -18,7 +18,7 @@ public class FirebendingState implements IBendingState {
 	}
 	
 	public int getFireArcId() {
-		return fireArc.getId();
+		return fireArc == null ? -1 : fireArc.getId();
 	}
 	
 	public EntityFireArc getFireArc() {
