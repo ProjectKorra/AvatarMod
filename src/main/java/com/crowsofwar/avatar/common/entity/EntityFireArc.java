@@ -101,7 +101,7 @@ public class EntityFireArc extends Entity implements IPhysics {
 			}
 		}
 		
-		for (int i = 0; i < points.length; i++) {
+		for (int i = 1; i < points.length; i++) {
 			ControlPoint point = getControlPoint(i);
 			point.move(point.getVelocity());
 			point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
