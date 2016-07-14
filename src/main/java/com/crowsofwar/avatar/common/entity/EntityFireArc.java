@@ -47,7 +47,6 @@ public class EntityFireArc extends Entity implements IPhysics {
 	@Override
 	protected void entityInit() {
 		dataWatcher.addObject(DATAWATCHER_ID, 0);
-		propVelocity.addToDataWatcher();
 		dataWatcher.addObject(DATAWATCHER_GRAVITY, (byte) 0);
 	}
 

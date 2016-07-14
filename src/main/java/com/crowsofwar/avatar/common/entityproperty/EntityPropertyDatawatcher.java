@@ -11,6 +11,7 @@ public abstract class EntityPropertyDatawatcher<T> implements IEntityProperty<T>
 	public EntityPropertyDatawatcher(DataWatcher dataWatcher, int dataWatcherIndex) {
 		this.dataWatcher = dataWatcher;
 		this.index = dataWatcherIndex;
+		this.addToDataWatcher();
 	}
 	
 	@Override
@@ -28,7 +29,7 @@ public abstract class EntityPropertyDatawatcher<T> implements IEntityProperty<T>
 		sendToDataWatcher(internalValue);
 	}
 	
-	public abstract void addToDataWatcher();
+	protected abstract void addToDataWatcher();
 	protected abstract void sendToDataWatcher(T value);
 	protected abstract T retrieveFromDataWatcher();
 	
