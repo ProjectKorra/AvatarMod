@@ -1,14 +1,13 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
-import com.sun.org.apache.xml.internal.security.Init;
-
 import net.minecraft.entity.DataWatcher;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Vec3;
 
 public class EntityPropertyVector extends EntityPropertyDatawatcher<Vec3> {
 	
-	public EntityPropertyVector(DataWatcher dataWatcher, int dataWatcherIndex) {
-		super(dataWatcher, dataWatcherIndex);
+	public EntityPropertyVector(Entity entity, DataWatcher dataWatcher, int dataWatcherIndex) {
+		super(entity, dataWatcher, dataWatcherIndex);
 	}
 	
 	@Override
@@ -29,6 +28,11 @@ public class EntityPropertyVector extends EntityPropertyDatawatcher<Vec3> {
 	protected Vec3 retrieveFromDataWatcher() {
 		return Vec3.createVectorHelper(dataWatcher.getWatchableObjectFloat(index),
 				dataWatcher.getWatchableObjectFloat(index + 1), dataWatcher.getWatchableObjectFloat(index + 2));
+	}
+
+	@Override
+	protected Vec3 createValue() {
+		return Vec3.createVectorHelper(0, 0, 0);
 	}
 
 }

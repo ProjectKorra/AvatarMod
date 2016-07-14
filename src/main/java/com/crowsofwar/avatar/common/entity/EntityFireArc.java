@@ -25,7 +25,7 @@ public class EntityFireArc extends Entity implements IPhysics {
 	private ControlPoint[] points;
 	
 	private Vec3 internalPos;
-	private EntityPropertyVector propVelocity;
+	private EntityPropertyVector velocity;
 	
 	private EntityPlayer owner;
 	
@@ -40,7 +40,7 @@ public class EntityFireArc extends Entity implements IPhysics {
 			new ControlPoint(0, 0, 0)
 		};
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
-		this.propVelocity = new EntityPropertyVector(dataWatcher, DATAWATCHER_VELOCITY);
+		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
 	
@@ -56,11 +56,16 @@ public class EntityFireArc extends Entity implements IPhysics {
 		
 		ignoreFrustumCheck = true;
 		
+		Vec3 vel = getVelocity();
+		if (ticksExisted % 5 == 0) {
+			velocity.sync();
+		}
+		
 		if (isGravityEnabled()) {
 			addVelocity(GRAVITY);
 		}
-		Vec3 velocity = getVelocity();
-		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
+		
+		moveEntity(vel.xCoord / 20, vel.yCoord / 20, vel.zCoord / 20);
 		getLeader().setPosition(posX, posY, posZ);
 		getLeader().setVelocity(getVelocity());
 		if (isCollided) {
@@ -202,12 +207,12 @@ public class EntityFireArc extends Entity implements IPhysics {
 
 	@Override
 	public Vec3 getVelocity() {
-		return propVelocity.getValue();
+		return velocity.getValue();
 	}
 
 	@Override
 	public void setVelocity(Vec3 vel) {
-		propVelocity.setValue(vel);
+		velocity.setValue(vel);
 	}
 	
 	@Override
