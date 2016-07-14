@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.relauncher.Side;
@@ -17,14 +18,14 @@ import net.minecraft.world.World;
 public class EntityFireArc extends Entity implements IPhysics {
 	
 	public static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 60, 0);
-	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELX = 4, DATAWATCHER_VELY = 5, DATAWATCHER_VELZ = 6,
+	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELOCITY = 4,//4,5,6
 			DATAWATCHER_GRAVITY = 7;
 	
 	private static int nextId = 1;
 	private ControlPoint[] points;
 	
 	private Vec3 internalPos;
-	private Vec3 internalVelocity;
+	private EntityPropertyVector propVelocity;
 	
 	private EntityPlayer owner;
 	
@@ -39,16 +40,14 @@ public class EntityFireArc extends Entity implements IPhysics {
 			new ControlPoint(0, 0, 0)
 		};
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
-		this.internalVelocity = Vec3.createVectorHelper(0, 0, 0);
+		this.propVelocity = new EntityPropertyVector(dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
 	
 	@Override
 	protected void entityInit() {
 		dataWatcher.addObject(DATAWATCHER_ID, 0);
-		dataWatcher.addObject(DATAWATCHER_VELX, 0f);
-		dataWatcher.addObject(DATAWATCHER_VELY, 0f);
-		dataWatcher.addObject(DATAWATCHER_VELZ, 0f);
+		propVelocity.addToDataWatcher();
 		dataWatcher.addObject(DATAWATCHER_GRAVITY, (byte) 0);
 	}
 
@@ -204,19 +203,12 @@ public class EntityFireArc extends Entity implements IPhysics {
 
 	@Override
 	public Vec3 getVelocity() {
-		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
-		internalVelocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELY);
-		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELZ);
-		return internalVelocity;
+		return propVelocity.getValue();
 	}
 
 	@Override
 	public void setVelocity(Vec3 vel) {
-		if (!worldObj.isRemote) {
-			dataWatcher.updateObject(DATAWATCHER_VELX, (float) vel.xCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELY, (float) vel.yCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELZ, (float) vel.zCoord);
-		}
+		propVelocity.setValue(vel);
 	}
 	
 	@Override
