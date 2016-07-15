@@ -1,0 +1,39 @@
+package com.crowsofwar.avatar.common.entityproperty;
+
+import com.crowsofwar.avatar.common.util.BlockPos;
+
+import net.minecraft.entity.DataWatcher;
+import net.minecraft.entity.Entity;
+
+public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<BlockPos> {
+	
+	public EntityPropertyBlockPos(Entity entity, DataWatcher dataWatcher, int dataWatcherIndex) {
+		super(entity, dataWatcher, dataWatcherIndex);
+	}
+	
+	@Override
+	protected void addToDataWatcher() {
+		dataWatcher.addObject(index, 0);
+		dataWatcher.addObject(index + 1, 0);
+		dataWatcher.addObject(index + 2, 0);
+	}
+	
+	@Override
+	protected void sendToDataWatcher(BlockPos value) {
+		dataWatcher.updateObject(index, value.x);
+		dataWatcher.updateObject(index + 1, value.y);
+		dataWatcher.updateObject(index + 2, value.z);
+	}
+	
+	@Override
+	protected BlockPos retrieveFromDataWatcher() {
+		return new BlockPos(dataWatcher.getWatchableObjectInt(index),
+				dataWatcher.getWatchableObjectInt(index + 1), dataWatcher.getWatchableObjectInt(index + 2));
+	}
+	
+	@Override
+	protected BlockPos createValue() {
+		return new BlockPos(0, 0, 0);
+	}
+	
+}
