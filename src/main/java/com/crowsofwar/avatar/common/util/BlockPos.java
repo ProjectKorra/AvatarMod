@@ -51,4 +51,14 @@ public class BlockPos {
 		z += direction.offsetZ;
 	}
 	
+	/**
+	 * Returns true if the object is a BlockPos and it has the same coordinates.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof BlockPos)) return false;
+		BlockPos pos = (BlockPos) obj;
+		return x == pos.x && y == pos.y && z == pos.z;
+	}
+	
 }
