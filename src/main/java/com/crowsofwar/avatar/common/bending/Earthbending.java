@@ -147,7 +147,8 @@ public class Earthbending implements IBendingController {
 //						world.setBlock(x, y, z, floating.getBlock());
 //						floating.setDead();
 //					}
-					floating.setOnLandBehavior(OnBlockLand.PLACE);
+					floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
+					floating.setMovingToBlock(new BlockPos(x, y, z));
 					floating.setGravityEnabled(false);
 					Vec3 force = VectorUtils.minus(Vec3.createVectorHelper(x, y, z), VectorUtils.getEntityPos(floating));
 					force.normalize();

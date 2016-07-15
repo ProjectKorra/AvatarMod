@@ -207,6 +207,27 @@ public class EntityFloatingBlock extends Entity {
 			}
 		}
 		
+		int x = (int) Math.floor(posX);
+		int y = (int) Math.floor(posY);
+		int z = (int) Math.floor(posZ);
+//		setDead();
+		if (isMovingToBlock()) {
+			BlockPos target = getMovingToBlock();
+			System.out.println("MOve to: " + target.x + "/" + target.y + "/" + target.z);
+			Vec3 force = VectorUtils.minus(Vec3.createVectorHelper(target.x, target.y, target.z), VectorUtils.getEntityPos(this));
+			force.normalize();
+			setVelocity(force);
+//			System.out.println("move towards block " + VectorUtils.getEntityPos(this).distanceTo(Vec3.createVectorHelper(x, y, z)));
+			if (!worldObj.isRemote && new BlockPos(x, y, z).equals(getMovingToBlock())) {
+				
+				setDead();
+				worldObj.setBlock(x, y, z, getBlock());
+				worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(), 3);
+				
+			}
+		}
+		
+		
 		if (!isDead) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
 			if (!collidedList.isEmpty()) {
@@ -228,6 +249,8 @@ public class EntityFloatingBlock extends Entity {
 				}
 			}
 		}
+//		setDead();
+		if (ticksExisted % 5 == 0) propBlockPos.sync();
 		
 	}
 	

@@ -43,7 +43,7 @@ public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<BlockPos> 
 	
 	@Override
 	protected BlockPos createValue() {
-		return new BlockPos(0, 0, 0);
+		return null;
 	}
 	
 }
