@@ -213,13 +213,13 @@ public class EntityFloatingBlock extends Entity {
 		
 		if (isMovingToBlock()) {
 			BlockPos target = getMovingToBlock();
-			Vec3 targetVec = Vec3.createVectorHelper(target.x + 0.5, target.y, target.z + 0.5);
+			Vec3 targetVec = Vec3.createVectorHelper(target.x + 0.5, target.y + 0.5, target.z + 0.5);
 			Vec3 thisPos = Vec3.createVectorHelper(posX, posY, posZ);
 			Vec3 force = VectorUtils.minus(targetVec, thisPos);
 			force.normalize();
 			VectorUtils.mult(force, 3);
 			setVelocity(force);
-			if (targetVec.squareDistanceTo(thisPos) < 0.05) {
+			if (!worldObj.isRemote && targetVec.squareDistanceTo(thisPos) < 0.05) {
 				
 				setDead();
 				worldObj.setBlock(x, y, z, getBlock());
