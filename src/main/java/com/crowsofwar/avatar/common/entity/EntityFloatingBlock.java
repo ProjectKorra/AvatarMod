@@ -210,18 +210,16 @@ public class EntityFloatingBlock extends Entity {
 		int x = (int) Math.floor(posX);
 		int y = (int) Math.floor(posY);
 		int z = (int) Math.floor(posZ);
-//		setDead();
+		
 		if (isMovingToBlock()) {
 			BlockPos target = getMovingToBlock();
-			Vec3 targetVec = Vec3.createVectorHelper(target.x, target.y, target.z);
+			Vec3 targetVec = Vec3.createVectorHelper(target.x + 0.5, target.y, target.z + 0.5);
 			Vec3 thisPos = Vec3.createVectorHelper(posX, posY, posZ);
-//			System.out.println("Move to: " + targetVec);
-			System.out.println("distance: " + targetVec.squareDistanceTo(thisPos));
 			Vec3 force = VectorUtils.minus(targetVec, thisPos);
 			force.normalize();
+			VectorUtils.mult(force, 3);
 			setVelocity(force);
-//			System.out.println("move towards block " + VectorUtils.getEntityPos(this).distanceTo(Vec3.createVectorHelper(x, y, z)));
-			if (!worldObj.isRemote && targetVec.squareDistanceTo(thisPos) < 0.1) {
+			if (targetVec.squareDistanceTo(thisPos) < 0.05) {
 				
 				setDead();
 				worldObj.setBlock(x, y, z, getBlock());
