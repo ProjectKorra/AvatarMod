@@ -3,7 +3,9 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.entityproperty.EntityPropertyBlockPos;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.BlockPos;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -36,6 +38,7 @@ public class EntityFloatingBlock extends Entity {
 	public static final int DATAWATCHER_CAN_FALL = 9;
 	/** Whether the floating block breaks on contact with other blocks. */
 	public static final int DATAWATCHER_ON_LAND = 10;
+	public static final int DATAWATCHER_TARGET_BLOCK = 11;
 	
 	private static int nextBlockID = 0;
 	
@@ -45,6 +48,7 @@ public class EntityFloatingBlock extends Entity {
 	 * and {@link #setVelocity(Vec3)}.
 	 */
 	private final Vec3 velocity;
+	private final EntityPropertyBlockPos propBlockPos;
 	
 	private EntityPlayer owner;
 	
@@ -57,6 +61,7 @@ public class EntityFloatingBlock extends Entity {
 			System.out.println("Constructed with ID " + nextBlockID);setID(nextBlockID++);
 			System.out.println(getFromID(worldObj, getID()));
 		}
+		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
 	}
 	
 	public EntityFloatingBlock(World world, Block block) {
@@ -317,6 +322,18 @@ public class EntityFloatingBlock extends Entity {
 	
 	public void setOwner(EntityPlayer owner) {
 		this.owner = owner;
+	}
+	
+	public BlockPos getMovingToBlock() {
+		return propBlockPos.getValue();
+	}
+	
+	public void setMovingToBlock(BlockPos pos) {
+		propBlockPos.setValue(pos);
+	}
+	
+	public boolean isMovingToBlock() {
+		return getMovingToBlock() != null;
 	}
 	
 	@Override
