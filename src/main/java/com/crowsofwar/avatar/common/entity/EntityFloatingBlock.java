@@ -24,7 +24,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EntityFloatingBlock extends Entity {
+public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public static final Block DEFAULT_BLOCK = Blocks.stone;
 	public static final int DATAWATCHER_BLOCKID = 2;
@@ -49,6 +49,7 @@ public class EntityFloatingBlock extends Entity {
 	 */
 	private final Vec3 velocity;
 	private final EntityPropertyBlockPos propBlockPos;
+	private final Vec3 internalPosition;
 	
 	private EntityPlayer owner;
 	
@@ -62,6 +63,7 @@ public class EntityFloatingBlock extends Entity {
 			System.out.println(getFromID(worldObj, getID()));
 		}
 		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
+		this.internalPosition = Vec3.createVectorHelper(0, 0, 0);
 	}
 	
 	public EntityFloatingBlock(World world, Block block) {
@@ -166,7 +168,7 @@ public class EntityFloatingBlock extends Entity {
 	@Override
 	public void onUpdate() {
 		if (isGravityEnabled()) {
-			addForce(Vec3.createVectorHelper(0, -9.81 / 20, 0));
+			addVelocity(Vec3.createVectorHelper(0, -9.81 / 20, 0));
 			Vec3 vel = getVelocity();
 			if (!canFall() && vel.yCoord < 0) {
 				vel.yCoord = 0;
@@ -274,11 +276,13 @@ public class EntityFloatingBlock extends Entity {
 			}
 		}
 	}
-
-	public void addForce(Vec3 force) {
+	
+	@Override
+	public void addVelocity(Vec3 force) {
 		setVelocity(VectorUtils.plus(getVelocity(), force));
 	}
 	
+	@Override
 	public Vec3 getVelocity() {
 		velocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
 		velocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELY);
@@ -286,12 +290,21 @@ public class EntityFloatingBlock extends Entity {
 		return velocity;
 	}
 	
+	@Override
 	public void setVelocity(Vec3 velocity) {
 		if (!worldObj.isRemote) {
 			dataWatcher.updateObject(DATAWATCHER_VELX, (float) velocity.xCoord);
 			dataWatcher.updateObject(DATAWATCHER_VELY, (float) velocity.yCoord);
 			dataWatcher.updateObject(DATAWATCHER_VELZ, (float) velocity.zCoord);
 		}
+	}
+	
+	@Override
+	public Vec3 getPosition() {
+		internalPosition.xCoord = posX;
+		internalPosition.yCoord = posY;
+		internalPosition.zCoord = posZ;
+		return internalPosition;
 	}
 	
 	public float getFriction() {

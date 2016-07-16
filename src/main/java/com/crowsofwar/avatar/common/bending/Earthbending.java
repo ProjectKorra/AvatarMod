@@ -99,7 +99,7 @@ public class Earthbending implements IBendingController {
 						
 						double dist = 2.5;
 						Vec3 force = Vec3.createVectorHelper(0, Math.sqrt(19.62*dist), 0);
-						floating.addForce(force);
+						floating.addVelocity(force);
 						floating.setGravityEnabled(true);
 						floating.setCanFall(false);
 						floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
@@ -127,7 +127,7 @@ public class Earthbending implements IBendingController {
 				
 				// Calculate force and everything
 				Vec3 lookDir = VectorUtils.fromYawPitch(yaw, pitch);
-				floating.addForce(times(lookDir, 20));
+				floating.addVelocity(times(lookDir, 20));
 				
 				floating.drop();
 				ebs.setPickupBlock(null);
@@ -154,7 +154,7 @@ public class Earthbending implements IBendingController {
 					floating.setGravityEnabled(false);
 					Vec3 force = VectorUtils.minus(Vec3.createVectorHelper(x, y, z), VectorUtils.getEntityPos(floating));
 					force.normalize();
-					floating.addForce(force);
+					floating.addVelocity(force);
 					ebs.dropBlock();
 				}
 			}
