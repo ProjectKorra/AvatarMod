@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.client;
 
 import org.lwjgl.opengl.GL11;
 
+import com.crowsofwar.avatar.client.particles.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFireArc.ControlPoint;
 import com.crowsofwar.avatar.common.util.VectorUtils;
@@ -85,8 +86,10 @@ public class RenderFireArc extends Render {
 		direction.normalize();
 		Vec3 spawnAt = plus(offset, times(direction, Math.random()));
 		Vec3 velocity = leader.getVelocity();
-		flame.worldObj.spawnParticle("flame", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord, 0.05,
-				velocity.zCoord);
+//		flame.worldObj.spawnParticle("flame", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord, 0.05,
+//				velocity.zCoord);
+		AvatarParticles.createParticle(flame.worldObj, spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord,
+				0.05, velocity.zCoord);
 		
 //		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 //		Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
