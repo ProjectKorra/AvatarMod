@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.client.particles;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -26,7 +28,7 @@ public class ParticleTest extends EntityFX
         this.particleRed = 1.0F;
         this.particleGreen = 1.0F;
         this.particleBlue = 1.0F;
-        this.setParticleTextureIndex(32);
+        this.setParticleTextureIndex(0);
         this.setSize(0.02F, 0.02F);
         this.particleScale *= this.rand.nextFloat() * 0.6F + 0.2F;
         this.motionX = p_i1198_8_ * 0.20000000298023224D + (double)((float)(Math.random() * 2.0D - 1.0D) * 0.02F);
@@ -57,12 +59,25 @@ public class ParticleTest extends EntityFX
     public void renderParticle(Tessellator t, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
     	t.draw();
-    	Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+    	
+//    	GL11.glPushMatrix();
+//    	
+//    	GL11.glEnable(GL11.GL_BLEND);
+//    	GL11.glDisable(GL11.GL_LIGHTING);;
+//    	GL11.glColor4f(1, 1, 1, 1);
+    	
+    	Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("avatarmod", "textures/particles/test.png"));
+//    	t.setBrightness(255);
     	t.startDrawingQuads();
     	super.renderParticle(t, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
     	t.draw();
-    	Minecraft.getMinecraft().renderEngine.bindTexture(VANILLA_PARTICLES);
     	t.startDrawingQuads();
+    	
+//		GL11.glDisable(GL11.GL_BLEND);
+//    	GL11.glEnable(GL11.GL_LIGHTING);;
+//		GL11.glPopMatrix();
+//    	Minecraft.getMinecraft().renderEngine.bindTexture(VANILLA_PARTICLES);
+//    	t.startDrawingQuads();
     	
 //        float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge * 32.0F;
 //
