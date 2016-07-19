@@ -10,13 +10,17 @@ public class IconParticle implements IIcon {
 	private final int width, height;
 	private final int u, v;
 	private final String name;
+	private int currentAnimation;
+	private final int animOffU;
 	
-	public IconParticle(String name, int width, int height, int u, int v) {
+	public IconParticle(String name, int width, int height, int u, int v, int animationUOffset) {
 		this.width = width;
 		this.height = height;
 		this.u = u;
 		this.v = v;
+		this.animOffU = animationUOffset;
 		this.name = name;
+		this.currentAnimation = 0;
 	}
 
 	@Override
@@ -31,12 +35,12 @@ public class IconParticle implements IIcon {
 
 	@Override
 	public float getMinU() {
-		return u;
+		return u + animOffU * currentAnimation;
 	}
 
 	@Override
 	public float getMaxU() {
-		return u + width;
+		return u + width + animOffU * currentAnimation;
 	}
 
 	@Override
@@ -62,6 +66,14 @@ public class IconParticle implements IIcon {
 	@Override
 	public String getIconName() {
 		return name;
+	}
+	
+	public int getAnimation() {
+		return currentAnimation;
+	}
+	
+	public void setAnimation(int animation) {
+		this.currentAnimation = animation;
 	}
 
 }
