@@ -17,11 +17,10 @@ import net.minecraft.world.World;
 public class ParticleTest extends EntityFX
 {
 	
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/particles/test.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/particles/test2.png");
 	private static final ResourceLocation VANILLA_PARTICLES = new ResourceLocation("textures/particle/particles.png");
 	
     float smokeParticleScale;
-    private static final String __OBFID = "CL_00000924";
 
     public ParticleTest(World p_i1198_1_, double p_i1198_2_, double p_i1198_4_, double p_i1198_6_, double p_i1198_8_, double p_i1198_10_, double p_i1198_12_)
     {
@@ -36,7 +35,7 @@ public class ParticleTest extends EntityFX
         this.motionY = p_i1198_10_ * 0.20000000298023224D + (double)((float)(Math.random() * 2.0D - 1.0D) * 0.02F);
         this.motionZ = p_i1198_12_ * 0.20000000298023224D + (double)((float)(Math.random() * 2.0D - 1.0D) * 0.02F);
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
-        this.particleIcon = new IconParticle("TestParticle", 1, 1, 0, 0);
+        this.particleIcon = new IconParticle("ParticleTest", 8, 8, 0, 0, 32, 32, 8);
     }
 
 //    public ParticleTest(World world, double xe, double y, double z, double motionX, double motionY, double motionZ, float ageScale)
@@ -62,9 +61,12 @@ public class ParticleTest extends EntityFX
     public void renderParticle(Tessellator t, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
     	t.draw();
-    	Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("avatarmod", "textures/particles/test.png"));
+    	Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
     	t.setBrightness(200);
     	t.startDrawingQuads();
+//    	System.out.println((int) ((1.0 * this.particleAge / this.particleMaxAge) * 4));
+//    	System.out.println(1.0 * this.particleAge / this.particleMaxAge);
+    	getIcon().setAnimation((int) ((1.0 * this.particleAge / this.particleMaxAge) * 4));
     	super.renderParticle(t, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
     	t.draw();
     	Minecraft.getMinecraft().renderEngine.bindTexture(VANILLA_PARTICLES);
@@ -76,6 +78,8 @@ public class ParticleTest extends EntityFX
      */
     public void onUpdate()
     {
+    	super.onUpdate();
+    	if(1==0){
     	this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
@@ -84,6 +88,7 @@ public class ParticleTest extends EntityFX
         this.motionX *= 0.8500000238418579D;
         this.motionY *= 0.8500000238418579D;
         this.motionZ *= 0.8500000238418579D;
+//        particleAge++;
 //        motionX = motionY = motionZ = 0;
 
         if (this.worldObj.getBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ)).getMaterial() != Material.water)
@@ -123,5 +128,11 @@ public class ParticleTest extends EntityFX
 //            this.motionX *= 0.699999988079071D;
 //            this.motionZ *= 0.699999988079071D;
 //        }
+    	}
     }
+    
+    private IconParticle getIcon() {
+    	return (IconParticle) particleIcon;
+    }
+    
 }

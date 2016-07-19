@@ -7,30 +7,34 @@ import net.minecraft.util.IIcon;
 @SideOnly(Side.CLIENT)
 public class IconParticle implements IIcon {
 	
-	private final int width, height;
-	private final int u, v;
+	private final float width, height;
+	private final float u, v;
+	private final int widthPx, heightPx;
 	private final String name;
 	private int currentAnimation;
-	private final int animOffU;
+	private final float animOffU;
 	
-	public IconParticle(String name, int width, int height, int u, int v, int animationUOffset) {
-		this.width = width;
-		this.height = height;
-		this.u = u;
-		this.v = v;
-		this.animOffU = animationUOffset;
+	public IconParticle(String name, int width, int height, int u, int v, int textureWidth, int textureHeight,
+			int animationUOffset) {
+		this.width = 1f * width / textureWidth;
+		this.height = 1f * height / textureHeight;
+		this.widthPx = width;
+		this.heightPx = height;
+		this.u = 1f * u / textureWidth;
+		this.v = 1f * v / textureHeight;
+		this.animOffU = 1f * animationUOffset / textureWidth;
 		this.name = name;
 		this.currentAnimation = 0;
 	}
 
 	@Override
 	public int getIconWidth() {
-		return width;
+		return widthPx;
 	}
 	
 	@Override
 	public int getIconHeight() {
-		return height;
+		return heightPx;
 	}
 
 	@Override
@@ -45,7 +49,7 @@ public class IconParticle implements IIcon {
 
 	@Override
 	public float getInterpolatedU(double lerp) {
-		return (float) (u + (1.0 * width * lerp / 16));
+		return (float) (getMinU() + (1.0 * width * lerp / 16));
 	}
 
 	@Override
@@ -60,7 +64,7 @@ public class IconParticle implements IIcon {
 
 	@Override
 	public float getInterpolatedV(double lerp) {
-		return (float) (v + (1.0 * height * lerp / 16));
+		return (float) (getMinV() + (1.0 * height * lerp / 16));
 	}
 
 	@Override
