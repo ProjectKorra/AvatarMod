@@ -7,8 +7,17 @@ import net.minecraft.util.IIcon;
 @SideOnly(Side.CLIENT)
 public class IconParticle implements IIcon {
 	
+	/**
+	 * The dimensions of the icon as a percentage of the texture size.
+	 */
 	private final float width, height;
+	/**
+	 * The coordinates of the icon as a percentage of the texture size.
+	 */
 	private final float u, v;
+	/**
+	 * The dimensions of the icon in pixels.
+	 */
 	private final int widthPx, heightPx;
 	private final String name;
 	private int currentAnimation;
