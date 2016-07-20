@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class ParticleTest extends EntityFX
 {
 	
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/particles/test2.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/particles/flame.png");
 	private static final ResourceLocation VANILLA_PARTICLES = new ResourceLocation("textures/particle/particles.png");
 	
     float smokeParticleScale;
@@ -35,7 +35,7 @@ public class ParticleTest extends EntityFX
         this.motionY = p_i1198_10_ * 0.20000000298023224D + (double)((float)(Math.random() * 2.0D - 1.0D) * 0.02F);
         this.motionZ = p_i1198_12_ * 0.20000000298023224D + (double)((float)(Math.random() * 2.0D - 1.0D) * 0.02F);
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
-        this.particleIcon = new IconParticle("ParticleTest", 8, 8, 0, 0, 32, 32, 8);
+        this.particleIcon = new IconParticle("ParticleTest", 32, 32, 0, 0, 256, 256, 32);
     }
 
 //    public ParticleTest(World world, double xe, double y, double z, double motionX, double motionY, double motionZ, float ageScale)
@@ -66,7 +66,7 @@ public class ParticleTest extends EntityFX
     	t.startDrawingQuads();
 //    	System.out.println((int) ((1.0 * this.particleAge / this.particleMaxAge) * 4));
 //    	System.out.println(1.0 * this.particleAge / this.particleMaxAge);
-    	getIcon().setAnimation((int) ((1.0 * this.particleAge / this.particleMaxAge) * 4));
+    	getIcon().setAnimation((int) ((1.0 * this.particleAge / this.particleMaxAge) * 7));
     	super.renderParticle(t, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
     	t.draw();
     	Minecraft.getMinecraft().renderEngine.bindTexture(VANILLA_PARTICLES);
