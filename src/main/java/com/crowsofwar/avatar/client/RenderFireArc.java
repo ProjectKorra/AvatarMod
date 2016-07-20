@@ -88,8 +88,8 @@ public class RenderFireArc extends Render {
 		Vec3 velocity = leader.getVelocity();
 //		flame.worldObj.spawnParticle("flame", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord, 0.05,
 //				velocity.zCoord);
-		AvatarParticles.createParticle(flame.worldObj, spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord,
-				0.05, velocity.zCoord);
+		AvatarParticles.createParticle(flame.worldObj, spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord / 20,
+				0.05, velocity.zCoord / 20);
 		
 //		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 //		Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
