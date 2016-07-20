@@ -61,15 +61,18 @@ public class ParticleTest extends EntityFX
     public void renderParticle(Tessellator t, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
     {
     	t.draw();
+    	GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
     	Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
     	t.setBrightness(200);
     	t.startDrawingQuads();
 //    	System.out.println((int) ((1.0 * this.particleAge / this.particleMaxAge) * 4));
 //    	System.out.println(1.0 * this.particleAge / this.particleMaxAge);
     	getIcon().setAnimation((int) ((1.0 * this.particleAge / this.particleMaxAge) * 7));
+    	this.particleScale = 4;
     	super.renderParticle(t, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
     	t.draw();
     	Minecraft.getMinecraft().renderEngine.bindTexture(VANILLA_PARTICLES);
+    	GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     	t.startDrawingQuads();
     }
 
