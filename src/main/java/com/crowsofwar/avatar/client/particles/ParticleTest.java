@@ -82,56 +82,7 @@ public class ParticleTest extends EntityFX
     public void onUpdate()
     {
     	super.onUpdate();
-    	if(1==0){
-    	this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
-        this.motionY += 0.002D;
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        this.motionX *= 0.8500000238418579D;
-        this.motionY *= 0.8500000238418579D;
-        this.motionZ *= 0.8500000238418579D;
-//        particleAge++;
-//        motionX = motionY = motionZ = 0;
-
-        if (this.worldObj.getBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ)).getMaterial() != Material.water)
-        {
-//            this.setDead();
-        }
-
-        if (this.particleMaxAge-- <= 0)
-        {
-            this.setDead();
-        }
-//        this.prevPosX = this.posX;
-//        this.prevPosY = this.posY;
-//        this.prevPosZ = this.posZ;
-//
-//        if (this.particleAge++ >= this.particleMaxAge)
-//        {
-//            this.setDead();
-//        }
-//
-//        this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
-//        this.motionY += 0.004D;
-//        this.moveEntity(this.motionX, this.motionY, this.motionZ);
-//
-//        if (this.posY == this.prevPosY)
-//        {
-//            this.motionX *= 1.1D;
-//            this.motionZ *= 1.1D;
-//        }
-//
-//        this.motionX *= 0.9599999785423279D;
-//        this.motionY *= 0.9599999785423279D;
-//        this.motionZ *= 0.9599999785423279D;
-//
-//        if (this.onGround)
-//        {
-//            this.motionX *= 0.699999988079071D;
-//            this.motionZ *= 0.699999988079071D;
-//        }
-    	}
+    	this.motionY += 0.002;
     }
     
     private IconParticle getIcon() {
