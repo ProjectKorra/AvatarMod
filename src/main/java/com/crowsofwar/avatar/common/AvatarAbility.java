@@ -13,25 +13,34 @@ public enum AvatarAbility {
 	
 	/** No control is pressed */
 	NONE("", -1, -2),
-	ACTION_TOGGLE_BENDING("ToggleBending", BENDINGID_EARTHBENDING, -1),
-	ACTION_THROW_BLOCK("ThrowBlock", BENDINGID_EARTHBENDING, -2),
-	ACTION_LIGHT_FIRE("LightFire", BENDINGID_FIREBENDING, -1),
-	ACTION_FIRE_PUNCH("FirePunch", BENDINGID_FIREBENDING, -2),
-	ACTION_FIREARC_THROW("FireThrow", BENDINGID_FIREBENDING, -2),
-	ACTION_PUT_BLOCK("PutBlock", BENDINGID_EARTHBENDING, -1),
-	ACTION_PEE("Pee", BENDINGID_WATERBENDING, -2);
+	ACTION_TOGGLE_BENDING(	"ToggleBending",BENDINGID_EARTHBENDING,	-1, 0),
+	ACTION_THROW_BLOCK(		"ThrowBlock",	BENDINGID_EARTHBENDING,	-2, 1),
+	ACTION_LIGHT_FIRE(		"LightFire",	BENDINGID_FIREBENDING,	-1, 2),
+	ACTION_FIRE_PUNCH(		"FirePunch",	BENDINGID_FIREBENDING,	-2, 3),
+	ACTION_FIREARC_THROW(	"FireThrow",	BENDINGID_FIREBENDING,	-2),
+	ACTION_PUT_BLOCK(		"PutBlock",		BENDINGID_EARTHBENDING,	-1),
+	ACTION_PEE(				"Pee",			BENDINGID_WATERBENDING,	-2, 4);
 	
-	private String name;
-	private IBendingController controller;
+	private final String name;
+	private final IBendingController controller;
 	/**
 	 * Raytrace distance. -1 = Player's reach, -2 = No raytrace.
 	 */
-	private double raytrace;
+	private final double raytrace;
+	/**
+	 * The index of the icon found in the ability_icons spritemap. -1 if there is no index
+	 */
+	private final int iconIndex;
 	
-	private AvatarAbility(String name, int compatibleBendingID, double raytrace) {
+	private AvatarAbility(String name, int compatibleBendingId, double raytrace) {
+		this(name, compatibleBendingId, raytrace, -1);
+	}
+	
+	private AvatarAbility(String name, int compatibleBendingId, double raytrace, int iconIndex) {
 		this.name = name;
-		this.controller = BendingManager.getBending(compatibleBendingID);
+		this.controller = BendingManager.getBending(compatibleBendingId);
 		this.raytrace = raytrace;
+		this.iconIndex = iconIndex;
 	}
 	
 	public String getName() {
@@ -56,6 +65,14 @@ public enum AvatarAbility {
 	
 	public double getRaytraceDistance() {
 		return raytrace;
+	}
+	
+	public int getIconIndex() {
+		return iconIndex;
+	}
+	
+	public boolean hasIcon() {
+		return iconIndex != -1;
 	}
 	
 	/**

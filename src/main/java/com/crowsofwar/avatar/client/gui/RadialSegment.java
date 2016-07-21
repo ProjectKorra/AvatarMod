@@ -16,6 +16,7 @@ public class RadialSegment {
 		this.gui = gui;
 		this.angle = 22.5f + index * 45;
 		this.index = index;
+		if (icon == -1) icon = 255;
 		this.icon = icon;
 	}
 	
@@ -53,7 +54,7 @@ public class RadialSegment {
 	}
 	
 	public int getTextureV() {
-		return icon / 256;
+		return (icon / 16) * 16;
 	}
 	
 }
