@@ -128,7 +128,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 			for (int i = 0; i < segments.length; i++) {
 				if (segments[i].isMouseHover(mouseX, mouseY)) {
 					RaytraceResult raytrace = controls[i].needsRaytrace() ? Raytrace.getTargetBlock(mc.thePlayer,
-							controls[i].getRaytraceDistance()) : null;
+							controls[i].getRaytraceDistance(), controls[i].isRaycastLiquids()) : null;
 					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i],
 							raytrace != null ? raytrace.getPos() : null,
 							raytrace != null ? raytrace.getDirection() : null));

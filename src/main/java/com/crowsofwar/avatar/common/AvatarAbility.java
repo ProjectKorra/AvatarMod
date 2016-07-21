@@ -12,14 +12,14 @@ import com.crowsofwar.avatar.common.bending.IBendingController;
 public enum AvatarAbility {
 	
 	/** No control is pressed */
-	NONE("", -1, -2),
-	ACTION_TOGGLE_BENDING(	"ToggleBending",BENDINGID_EARTHBENDING,	-1, 0),
-	ACTION_THROW_BLOCK(		"ThrowBlock",	BENDINGID_EARTHBENDING,	-2, 1),
-	ACTION_LIGHT_FIRE(		"LightFire",	BENDINGID_FIREBENDING,	-1, 2),
-	ACTION_FIRE_PUNCH(		"FirePunch",	BENDINGID_FIREBENDING,	-2, 3),
-	ACTION_FIREARC_THROW(	"FireThrow",	BENDINGID_FIREBENDING,	-2),
-	ACTION_PUT_BLOCK(		"PutBlock",		BENDINGID_EARTHBENDING,	-1),
-	ACTION_WATER_ARC(		"WaterArc",		BENDINGID_WATERBENDING,	-1, 4);
+	NONE("", -1, -2, false),
+	ACTION_TOGGLE_BENDING(	"ToggleBending",BENDINGID_EARTHBENDING,	-1, false, 0),
+	ACTION_THROW_BLOCK(		"ThrowBlock",	BENDINGID_EARTHBENDING,	-2, false, 1),
+	ACTION_LIGHT_FIRE(		"LightFire",	BENDINGID_FIREBENDING,	-1, false, 2),
+	ACTION_FIRE_PUNCH(		"FirePunch",	BENDINGID_FIREBENDING,	-2, false, 3),
+	ACTION_FIREARC_THROW(	"FireThrow",	BENDINGID_FIREBENDING,	-2, false),
+	ACTION_PUT_BLOCK(		"PutBlock",		BENDINGID_EARTHBENDING,	-1, false),
+	ACTION_WATER_ARC(		"WaterArc",		BENDINGID_WATERBENDING,	-1, true,  4);
 	
 	private final String name;
 	private final IBendingController controller;
@@ -27,19 +27,22 @@ public enum AvatarAbility {
 	 * Raytrace distance. -1 = Player's reach, -2 = No raytrace.
 	 */
 	private final double raytrace;
+	
+	private final boolean raytraceLiquids;
 	/**
 	 * The index of the icon found in the ability_icons spritemap. -1 if there is no index
 	 */
 	private final int iconIndex;
 	
-	private AvatarAbility(String name, int compatibleBendingId, double raytrace) {
-		this(name, compatibleBendingId, raytrace, -1);
+	private AvatarAbility(String name, int compatibleBendingId, double raytrace, boolean raytraceLiquids) {
+		this(name, compatibleBendingId, raytrace, raytraceLiquids, -1);
 	}
 	
-	private AvatarAbility(String name, int compatibleBendingId, double raytrace, int iconIndex) {
+	private AvatarAbility(String name, int compatibleBendingId, double raytrace, boolean raytraceLiquids, int iconIndex) {
 		this.name = name;
 		this.controller = BendingManager.getBending(compatibleBendingId);
 		this.raytrace = raytrace;
+		this.raytraceLiquids = raytraceLiquids;
 		this.iconIndex = iconIndex;
 	}
 	
@@ -65,6 +68,10 @@ public enum AvatarAbility {
 	
 	public double getRaytraceDistance() {
 		return raytrace;
+	}
+	
+	public boolean isRaycastLiquids() {
+		return raytraceLiquids;
 	}
 	
 	public int getIconIndex() {

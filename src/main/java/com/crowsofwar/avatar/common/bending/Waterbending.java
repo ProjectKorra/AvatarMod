@@ -70,7 +70,6 @@ public class Waterbending implements IBendingController {
 			BlockPos targetPos = state.getClientLookAtBlock();
 			if (targetPos != null) {
 				Block lookAt = world.getBlock(targetPos.x, targetPos.y, targetPos.z);
-				System.out.println("target: " + lookAt);
 				if (lookAt == Blocks.water || lookAt == Blocks.flowing_water) {
 					
 					EntityWaterArc water = new EntityWaterArc(world);

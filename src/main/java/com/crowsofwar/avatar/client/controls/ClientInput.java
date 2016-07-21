@@ -155,7 +155,7 @@ public class ClientInput implements IControlsHandler {
 					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
 					if (ability != AvatarAbility.NONE) {
 						RaytraceResult raytrace = ability.needsRaytrace() ? Raytrace.getTargetBlock(player,
-								ability.getRaytraceDistance()) : null;
+								ability.getRaytraceDistance(), ability.isRaycastLiquids()) : null;
 						AvatarMod.network.sendToServer(new PacketSUseAbility(ability,
 								raytrace != null ? raytrace.getPos() : null,
 								raytrace != null ? raytrace.getDirection() : null));
