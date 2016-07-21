@@ -61,10 +61,13 @@ public class Waterbending implements IBendingController {
 		
 		if (ability == ACTION_WATER_ARC) {
 			
+			boolean needsSync = false;
+			
 			if (bendingState.isBendingWater()) {
 				EntityWaterArc water = bendingState.getWaterArc();
 				water.setGravityEnabled(true);
 				bendingState.setWaterArc(null);
+				needsSync = true;
 			}
 			
 			BlockPos targetPos = state.getClientLookAtBlock();
@@ -80,8 +83,12 @@ public class Waterbending implements IBendingController {
 					
 					world.spawnEntityInWorld(water);
 					
+					needsSync = true;
+					
 				}
 			}
+			
+			if (needsSync) data.sendBendingState(bendingState);
 			
 		}
 		
