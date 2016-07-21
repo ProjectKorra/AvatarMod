@@ -15,32 +15,27 @@ public class WaterbendingState implements IBendingState {
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return BendingManager.BENDINGID_WATERBENDING;
 	}
 
 }

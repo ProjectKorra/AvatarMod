@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import crowsofwar.gorecore.util.GoreCoreNBTUtil;
@@ -31,6 +32,9 @@ public interface IBendingState extends ReadableWritable {
 				IBendingState state = controller.createState((AvatarPlayerData) extraData[0]);
 				state.readFromNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "StateData"));
 				return state;
+			} else {
+				AvatarLog.error("Could not create new bending state with using ControllerID " 
+						+ nbt.getInteger("ControllerID"));
 			}
 			
 			return null;
