@@ -27,4 +27,11 @@ public class EntityWaterArc extends EntityArc {
 		return GRAVITY;
 	}
 	
+	public static EntityWaterArc findFromId(World world, int id) {
+		for (Object obj : world.loadedEntityList) {
+			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id) return (EntityWaterArc) obj;
+		}
+		return null;
+	}
+	
 }
