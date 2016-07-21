@@ -24,11 +24,15 @@ public class WaterbendingState implements IBendingState {
 	}
 	
 	public int getWaterArcId() {
-		return waterArc.getId();
+		return waterArc == null ? -1 : waterArc.getId();
 	}
 	
 	public void setWaterArc(EntityWaterArc waterArc) {
 		this.waterArc = waterArc;
+	}
+	
+	public boolean isBendingWater() {
+		return waterArc != null;
 	}
 	
 	@Override
@@ -50,8 +54,11 @@ public class WaterbendingState implements IBendingState {
 	public void fromBytes(ByteBuf buf) {
 		World world = data.getState().getPlayerEntity().worldObj;
 		int id = buf.readInt();
-		EntityWaterArc waterArc = EntityWaterArc.findFromId(world, id);
-		if (waterArc == null) AvatarLog.warn("WaterbendingState- Couldn't find water arc with ID " + id);
+		EntityWaterArc waterArc = null;
+		if (id > -1) {
+			waterArc = EntityWaterArc.findFromId(world, id);
+			if (waterArc == null) AvatarLog.warn("WaterbendingState- Couldn't find water arc with ID " + id);
+		}
 		setWaterArc(waterArc);
 	}
 

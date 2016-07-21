@@ -19,7 +19,7 @@ public enum AvatarAbility {
 	ACTION_FIRE_PUNCH(		"FirePunch",	BENDINGID_FIREBENDING,	-2, 3),
 	ACTION_FIREARC_THROW(	"FireThrow",	BENDINGID_FIREBENDING,	-2),
 	ACTION_PUT_BLOCK(		"PutBlock",		BENDINGID_EARTHBENDING,	-1),
-	ACTION_PEE(				"Pee",			BENDINGID_WATERBENDING,	-2, 4);
+	ACTION_WATER_ARC(		"WaterArc",		BENDINGID_WATERBENDING,	-1, 4);
 	
 	private final String name;
 	private final IBendingController controller;
