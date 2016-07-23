@@ -11,11 +11,11 @@ import net.minecraft.util.Vec3;
 
 public class RenderWaterArc extends RenderArc {
 
-	private static final ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire-ribbon.png");
+	private static final ResourceLocation water = new ResourceLocation("avatarmod", "textures/entity/water-ribbon.png");
 	
 	@Override
 	protected ResourceLocation getTexture() {
-		return fire;
+		return water;
 	}
 
 	@Override
