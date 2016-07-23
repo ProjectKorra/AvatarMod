@@ -35,6 +35,10 @@ public class WaterbendingState implements IBendingState {
 		return waterArc != null;
 	}
 	
+	public void releaseWater() {
+		this.waterArc = null;
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		

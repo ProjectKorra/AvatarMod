@@ -16,6 +16,7 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.common.util.BlockPos;
+import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,7 +67,7 @@ public class Waterbending implements IBendingController {
 			if (bendingState.isBendingWater()) {
 				EntityWaterArc water = bendingState.getWaterArc();
 				water.setGravityEnabled(true);
-				bendingState.setWaterArc(null);
+				bendingState.releaseWater();
 				needsSync = true;
 			}
 			
@@ -89,6 +90,24 @@ public class Waterbending implements IBendingController {
 			}
 			
 			if (needsSync) data.sendBendingState(bendingState);
+			
+		}
+		
+		if (ability == AvatarAbility.ACTION_WATERARC_THROW) {
+			
+			if (bendingState.isBendingWater()) {
+				
+				EntityWaterArc water = bendingState.getWaterArc();
+				
+				Vec3 force = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				VectorUtils.mult(force, 10);
+				water.addVelocity(force);
+				water.setGravityEnabled(true);
+				
+				bendingState.releaseWater();
+				data.sendBendingState(bendingState);
+				
+			}
 			
 		}
 		
@@ -128,6 +147,10 @@ public class Waterbending implements IBendingController {
 
 	@Override
 	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
+		
+		if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN)
+			return AvatarAbility.ACTION_WATERARC_THROW;
+		
 		return AvatarAbility.NONE;
 	}
 
