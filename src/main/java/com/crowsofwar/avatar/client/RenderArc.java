@@ -52,6 +52,8 @@ public abstract class RenderArc extends Render {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
 		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		double size = arc.width / 2;
 		
@@ -97,6 +99,7 @@ public abstract class RenderArc extends Render {
 //		t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat);//3
 //		t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat);//2
 //		t.draw();
+		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}
