@@ -23,6 +23,7 @@ public class NodeBendingList extends NodeFunctional {
 	public NodeBendingList() {
 		super("list", true);
 		this.argPlayerName = new ArgumentDirect<String>("player", ITypeConverter.CONVERTER_STRING);
+		addArguments(argPlayerName);
 	}
 	
 	@Override
