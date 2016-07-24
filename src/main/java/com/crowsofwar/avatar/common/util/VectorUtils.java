@@ -184,13 +184,13 @@ public class VectorUtils {
 	
 	public static Vec3 getEntityPos(Entity entity) {
 		Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
-		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) pos.yCoord -= 1.65;
+		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) pos.yCoord -= 1.62;
 		return pos;
 	}
 	
 	public static Vec3 getEyePos(Entity entity) {
 		Vec3 pos = getEntityPos(entity);
-		pos.yCoord += 1.65;
+		pos.yCoord += 1.62;
 		return pos;
 	}
 	
