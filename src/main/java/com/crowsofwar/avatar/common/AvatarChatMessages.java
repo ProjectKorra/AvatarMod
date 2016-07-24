@@ -4,10 +4,14 @@ import static crowsofwar.gorecore.chat.ChatSender.newChatMessage;
 
 import crowsofwar.gorecore.chat.ChatMessage;
 import crowsofwar.gorecore.chat.MessageConfiguration;
+import net.minecraft.util.EnumChatFormatting;
 
 public class AvatarChatMessages {
 	
-	public static final MessageConfiguration CFG = new MessageConfiguration();
+	public static final MessageConfiguration CFG = new MessageConfiguration()
+			.addColor("value", EnumChatFormatting.AQUA)
+			.addColor("error", EnumChatFormatting.RED)
+			.addColor("error_value", EnumChatFormatting.DARK_RED);
 	public static final ChatMessage MSG_BENDING_BRANCH_INFO = newChatMessage(CFG, "avatar.cmd.bending");
 	public static final ChatMessage MSG_BENDING_LIST_NO_DATA = newChatMessage(CFG, "avatar.cmd.bending.list.noData",
 			"player");

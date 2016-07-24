@@ -15,7 +15,7 @@ avatar.firebending=Firebending
 avatar.waterbending=Waterbending
 
 avatar.cmd.bending=Manage a player's bending controllers.
-avatar.cmd.bending.list.noData=[color=red]There is no data for player ${player}.[/color]
-avatar.cmd.bending.list.nonbender=[italic]${player} is a non-bender.[/italic]
-avatar.cmd.bending.list.item=[translate=avatar.${bending}]
-avatar.cmd.bending.list.top=Listing ${amount} bending controllers for ${player}:
+avatar.cmd.bending.list.noData=[color=error_value]${player}[/color][color=error] is not a registered account.[/color]
+avatar.cmd.bending.list.nonbender=[italic][color=value]${player}[/color] is a non-bender.[/italic]
+avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
+avatar.cmd.bending.list.top=[bold]Listing [color=value]${amount}[/color] bending controllers for [color=value]${player}[/color]:
