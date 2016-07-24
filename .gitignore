@@ -11,5 +11,5 @@ bin/
 eclipse/
 gradle/
 
-src/main/resources/assets/gorecore/lang/en_US.lang
+#src/main/resources/assets/gorecore/lang/en_US.lang
 

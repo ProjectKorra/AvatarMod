@@ -1,0 +1,58 @@
+
+gc.tree.node.defaultInfo=A functional node.
+gc.tree.branch.defaultInfo=Yet another branch node.
+
+gc.tree.help=Help for %2$s: %1$s
+gc.tree.error.missingArgs=Missing argument: %1$s
+gc.tree.error.noBranchNode=No subcommand "%1$s". Usage: %2$s
+gc.tree.error.cantConvert=Cannot convert "%1$s" to a %2$s.
+gc.tree.error.needsOp=You need to be an operator to use that subcommand.
+gc.tree.error.notOption=The value %1$s for argument %2$s is not an option.
+
+gc.tree.cmdhelp.top=     ---- [bold]Help for [color=green]${name}[/color][/bold] ----
+gc.tree.cmdhelp.desc=[bold]Description:[/bold] ${descr}
+gc.tree.cmdhelp.nodes.item=[color=green]${node}[/color]
+gc.tree.cmdhelp.nodes.separator=, 
+gc.tree.cmdhelp.nodes.separatorLast=, and 
+gc.tree.cmdhelp.nodes=[bold]Valid sub-nodes: [/bold]
+gc.tree.cmdhelp.showCmdInfo=[bold]Command overview: [/bold]
+
+gc.tree.branchHelp.top=    ---- [bold]Help for [color=green]${name}[/color][/bold] ----
+gc.tree.branchHelp.notice=[bold]Note:[/bold] This is a [bold]branch node[/bold]. It does not perform anything on its own, you specify a sub-command below to execute.\n
+gc.tree.branchHelp.info=[bold]Description: [/bold]
+gc.tree.branchHelp.options=[bold]Options: [/bold]
+gc.tree.branchHelp.options.item=[color=green]${node}[/color]
+gc.tree.branchHelp.options.separator=, 
+gc.tree.branchHelp.options.separatorLast=, or 
+gc.tree.branchHelp.example=[bold]Example:[/bold] ${path} [color=green]${node-name}[/color] --help
+
+gc.tree.nodeHelp.top=    ---- [bold]Help for [color=green]${name}[/color][/bold] ----
+gc.tree.nodeHelp.desc=[bold]Description: [/bold]
+gc.tree.nodeHelp.args=[bold]Arguments:[/bold]
+gc.tree.nodeHelp.args.item= ${argument}
+gc.tree.nodeHelp.args.none=[bold]Arguments: [/bold][italic]There are no arguments.[/italic]
+gc.tree.nodeHelp.accepted=[bold]Accepted input:[/bold]
+gc.tree.nodeHelp.accepted.item= ${input}
+
+gc.tree.branchHelp.root=The root branch for ${command}.
+
+test.frostCake=You frost the cake.
+test.frostCake.fancy=You frost the cake with small swirls.
+test.frostCake.help=Frost the cake.
+
+test.lickCake=You lick %1$s gallons of frosting off the cake. I don't think you can get diabetes as a kid...
+test.lickCake.help=Lick frosting off the cake. That's naughty!!
+
+test.videogames.none=You are sad. You have no video games.
+test.videogames=You play %1$s.
+test.videogames.help=Play some video games.
+
+test.buyVideogames=You buy %1$s video game(s).
+test.buyVideogames.help=Buy video games.
+
+test.videogamesBranch.help=Manage and play your video games.
+
+test.chatSender=[format-exp][bold]YOU[/bold] picked out a [color=aqua]${fruit}[/color] from the store. And you [italic]ATE IT[/italic]...
+test.chatSender.help=A test to see if the new ChatSender works.
+
+test.commandInfo=A test to make sure that tree commands work.
