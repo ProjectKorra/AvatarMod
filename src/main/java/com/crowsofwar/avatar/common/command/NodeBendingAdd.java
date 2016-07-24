@@ -8,7 +8,7 @@ import crowsofwar.gorecore.tree.NodeFunctional;
 
 public class NodeBendingAdd extends NodeFunctional {
 	
-	public NodeBendingAdd(String name, boolean op) {
+	public NodeBendingAdd() {
 		super("add", true);
 	}
 	

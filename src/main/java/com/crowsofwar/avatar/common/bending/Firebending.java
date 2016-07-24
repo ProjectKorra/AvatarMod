@@ -150,4 +150,9 @@ public class Firebending implements IBendingController {
 		return menu;
 	}
 	
+	@Override
+	public String getControllerName() {
+		return "firebending";
+	}
+	
 }

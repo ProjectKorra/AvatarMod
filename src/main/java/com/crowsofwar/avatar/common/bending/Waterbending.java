@@ -159,4 +159,9 @@ public class Waterbending implements IBendingController {
 		return menu;
 	}
 
+	@Override
+	public String getControllerName() {
+		return "waterbending";
+	}
+
 }

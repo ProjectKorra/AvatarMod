@@ -9,3 +9,13 @@ avatar.ToggleBending=Pick up block
 avatar.RadialMenu=Earthbending
 avatar.Firebend=Firebending
 avatar.Waterbend=Waterbending
+
+avatar.earthbending=Earthbending
+avatar.firebending=Firebending
+avatar.waterbending=Waterbending
+
+avatar.cmd.bending=Manage a player's bending controllers.
+avatar.cmd.bending.list.noData=[color=red]There is no data for player ${player}.[/color]
+avatar.cmd.bending.list.nonbender=[italic]${player} is a non-bender.[/italic]
+avatar.cmd.bending.list.item=[translate=avatar.${bending}]
+avatar.cmd.bending.list.top=Listing ${amount} bending controllers for ${name}:

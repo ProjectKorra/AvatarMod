@@ -105,4 +105,10 @@ public interface IBendingController extends ReadableWritable {
 	 */
 	BendingMenuInfo getRadialMenu();
 	
+	/**
+	 * Get the name of this bending controller in lowercase.
+	 * e.g. "earthbending"
+	 */
+	String getControllerName();
+	
 }

@@ -234,4 +234,9 @@ public class Earthbending implements IBendingController {
 		return menu;
 	}
 	
+	@Override
+	public String getControllerName() {
+		return "earthbending";
+	}
+	
 }
