@@ -1,10 +1,12 @@
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.util.VectorUtils.*;
+import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
+import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
+import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
+import static com.crowsofwar.avatar.common.util.VectorUtils.times;
 
-import com.crowsofwar.avatar.client.particles.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityArc.ControlPoint;
+import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -19,7 +21,7 @@ public class RenderWaterArc extends RenderArc {
 	}
 
 	@Override
-	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
+	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		// Parametric equation
 		Vec3 from = Vec3.createVectorHelper(0, 0, 0);
 		Vec3 to = minus(second.getPosition(), first.getPosition());

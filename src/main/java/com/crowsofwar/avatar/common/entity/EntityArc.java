@@ -21,7 +21,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			DATAWATCHER_GRAVITY = 7;
 	
 	private static int nextId = 1;
-	private ControlPoint[] points;
+	private EntityControlPoint[] points;
 	
 	private Vec3 internalPos;
 	private EntityPropertyVector velocity;
@@ -31,12 +31,12 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	public EntityArc(World world) {
 		super(world);
 		setSize(0.2f, 0.2f);
-		this.points = new ControlPoint[] {
-			new ControlPoint(0, 0, 0),
-			new ControlPoint(0, 0, 0),
-			new ControlPoint(0, 0, 0),
-			new ControlPoint(0, 0, 0),
-			new ControlPoint(0, 0, 0)
+		this.points = new EntityControlPoint[] {
+			new EntityControlPoint(world, 0, 0, 0),
+			new EntityControlPoint(world, 0, 0, 0),
+			new EntityControlPoint(world, 0, 0, 0),
+			new EntityControlPoint(world, 0, 0, 0),
+			new EntityControlPoint(world, 0, 0, 0)
 		};
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
@@ -73,8 +73,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		}
 		
 		for (int i = 1; i < points.length; i++) {
-			ControlPoint leader = points[i - 1];
-			ControlPoint p = points[i];
+			EntityControlPoint leader = points[i - 1];
+			EntityControlPoint p = points[i];
 			Vec3 leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
 			double sqrDist = p.getPosition().squareDistanceTo(leadPos);
 			if (sqrDist > 6*6) {
@@ -88,7 +88,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		}
 		
 		for (int i = 1; i < points.length; i++) {
-			ControlPoint point = getControlPoint(i);
+			EntityControlPoint point = getControlPoint(i);
 			point.move(point.getVelocity());
 			point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
 		}
@@ -121,25 +121,25 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		if (points != null) points[0].setPosition(x, y, z);
 	}
 	
-	public ControlPoint[] getControlPoints() {
+	public EntityControlPoint[] getControlPoints() {
 		return points;
 	}
 	
-	public ControlPoint getControlPoint(int index) {
+	public EntityControlPoint getControlPoint(int index) {
 		return points[index];
 	}
 	
 	/**
 	 * Get the first control point in this arc.
 	 */
-	public ControlPoint getLeader() {
+	public EntityControlPoint getLeader() {
 		return points[0];
 	}
 	
 	/**
 	 * Get the leader of the specified control point.
 	 */
-	public ControlPoint getLeader(int index) {
+	public EntityControlPoint getLeader(int index) {
 		return points[index == 0 ? index : index - 1];
 	}
 	

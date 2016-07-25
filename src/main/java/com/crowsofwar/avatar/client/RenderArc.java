@@ -1,21 +1,23 @@
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
+import static com.crowsofwar.avatar.common.util.VectorUtils.fromYawPitch;
+import static com.crowsofwar.avatar.common.util.VectorUtils.getRotations;
+import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
+import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
+import static com.crowsofwar.avatar.common.util.VectorUtils.times;
+
 import org.lwjgl.opengl.GL11;
 
-import com.crowsofwar.avatar.client.particles.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityArc.ControlPoint;
-import com.crowsofwar.avatar.common.util.VectorUtils;
+import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.culling.Frustrum;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
-import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 
 public abstract class RenderArc extends Render {
 
@@ -35,7 +37,7 @@ public abstract class RenderArc extends Render {
 		
 	}
 
-	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point) {
+	private void renderSegment(EntityArc arc, EntityControlPoint leader, EntityControlPoint point) {
 		double x = leader.getXPos() - renderManager.renderPosX;
 		double y = leader.getYPos() - renderManager.renderPosY;
 		double z = leader.getZPos() - renderManager.renderPosZ;
@@ -138,7 +140,7 @@ public abstract class RenderArc extends Render {
 	
 	protected abstract ResourceLocation getTexture();
 
-	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
+	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		
 	}
 	
