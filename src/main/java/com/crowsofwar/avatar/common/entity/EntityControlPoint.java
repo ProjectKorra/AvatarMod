@@ -22,12 +22,14 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	
 	@Override
 	protected void entityInit() {
-		
+		dataWatcher.addObject(DATAWATCHER_VELOCITY, 0f);
+		dataWatcher.addObject(DATAWATCHER_VELOCITY + 1, 0f);
+		dataWatcher.addObject(DATAWATCHER_VELOCITY + 2, 0f);
 	}
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		
+		setDead();
 	}
 	
 	@Override
@@ -75,18 +77,18 @@ public class EntityControlPoint extends Entity implements IPhysics {
 
 	@Override
 	public Vec3 getVelocity() {
-		internalVelocity.xCoord = dataWatcher.getWatchableObjectInt(DATAWATCHER_VELOCITY);
-		internalVelocity.yCoord = dataWatcher.getWatchableObjectInt(DATAWATCHER_VELOCITY + 1);
-		internalVelocity.zCoord = dataWatcher.getWatchableObjectInt(DATAWATCHER_VELOCITY + 2);
+		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY);
+		internalVelocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY + 1);
+		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY + 2);
 		return internalVelocity;
 	}
 
 	@Override
 	public void setVelocity(Vec3 vel) {
 		if (!worldObj.isRemote) {
-			dataWatcher.updateObject(DATAWATCHER_VELOCITY, vel.xCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 1, vel.yCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 2, vel.zCoord);
+			dataWatcher.updateObject(DATAWATCHER_VELOCITY, (float) vel.xCoord);
+			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 1, (float) vel.yCoord);
+			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 2, (float) vel.zCoord);
 		}
 	}
 
