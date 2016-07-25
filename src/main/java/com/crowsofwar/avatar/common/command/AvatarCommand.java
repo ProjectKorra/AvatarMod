@@ -23,6 +23,11 @@ public class AvatarCommand extends TreeCommand {
 			return obj.getControllerName();
 		}
 		
+		@Override
+		public String getTypeName() {
+			return "Bending";
+		}
+		
 	};
 	
 	@Override
