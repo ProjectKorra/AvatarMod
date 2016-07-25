@@ -14,8 +14,9 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	private Vec3 internalPosition;
 	private Vec3 internalVelocity;
 	
-	public EntityControlPoint(World world, double x, double y, double z) {
+	public EntityControlPoint(World world, float size, double x, double y, double z) {
 		super(world);
+		setSize(size, size);
 		internalPosition = Vec3.createVectorHelper(x, y, z);
 		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
 	}

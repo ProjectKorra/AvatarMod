@@ -30,14 +30,16 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	public EntityArc(World world) {
 		super(world);
-		setSize(0.2f, 0.2f);
+		float size = .2f;
+		setSize(size, size);
 		this.points = new EntityControlPoint[] {
-			new EntityControlPoint(world, 0, 0, 0),
-			new EntityControlPoint(world, 0, 0, 0),
-			new EntityControlPoint(world, 0, 0, 0),
-			new EntityControlPoint(world, 0, 0, 0),
-			new EntityControlPoint(world, 0, 0, 0)
+			new EntityControlPoint(world, size, 0, 0, 0),
+			new EntityControlPoint(world, size, 0, 0, 0),
+			new EntityControlPoint(world, size, 0, 0, 0),
+			new EntityControlPoint(world, size, 0, 0, 0),
+			new EntityControlPoint(world, size, 0, 0, 0)
 		};
+		for (EntityControlPoint point : points) worldObj.spawnEntityInWorld(point);
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) setId(nextId++);
@@ -119,6 +121,12 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		super.setPosition(x, y, z);
 		// Set position called in entity constructor
 		if (points != null) points[0].setPosition(x, y, z);
+	}
+	
+	@Override
+	public void setDead() {
+		super.setDead();
+		for (EntityControlPoint point : points) point.setDead();
 	}
 	
 	public EntityControlPoint[] getControlPoints() {
