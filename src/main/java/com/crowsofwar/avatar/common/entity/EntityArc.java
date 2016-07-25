@@ -89,12 +89,6 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			}
 		}
 		
-		for (int i = 1; i < points.length; i++) {
-			EntityControlPoint point = getControlPoint(i);
-			point.move(point.getVelocity());
-			point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
-		}
-		
 		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
 		if (!collisions.isEmpty()) onCollision(collisions.get(0));
 		
