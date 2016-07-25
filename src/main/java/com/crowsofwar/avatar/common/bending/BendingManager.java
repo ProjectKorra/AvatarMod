@@ -1,7 +1,12 @@
 package com.crowsofwar.avatar.common.bending;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Manages instances of bending controllers. Bending controllers
@@ -20,10 +25,12 @@ public class BendingManager {
 	
 	private static Map<Integer, IBendingController> bending;
 	private static Map<String, IBendingController> bendingByName;
+	private static List<IBendingController> allBending;
 	
 	public static void init() {
 		bending = new HashMap<Integer, IBendingController>();
 		bendingByName = new HashMap<String, IBendingController>();
+		allBending = new ArrayList<IBendingController>();
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
 		registerBending(new Waterbending());
@@ -42,16 +49,25 @@ public class BendingManager {
 	/**
 	 * Get the BendingController with the given name. Returns null
 	 * if the name is invalid.
-	 * @param name
+	 * @param name The name of the bending controller
 	 * @return
 	 */
 	public static IBendingController getBending(String name) {
 		return bendingByName.get(name);
 	}
 	
+	/**
+	 * Get a list of all bending controllers. This cannot be modified.
+	 * @return
+	 */
+	public static List<IBendingController> allBending() {
+		return Collections.unmodifiableList(allBending);
+	}
+	
 	public static void registerBending(IBendingController controller) {
 		bending.put(controller.getID(), controller);
 		bendingByName.put(controller.getControllerName(), controller);
+		allBending.add(controller);
 	}
 	
 }
