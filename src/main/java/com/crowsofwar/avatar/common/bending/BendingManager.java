@@ -19,9 +19,11 @@ public class BendingManager {
 	public static final int BENDINGID_WATERBENDING = 3;
 	
 	private static Map<Integer, IBendingController> bending;
+	private static Map<String, IBendingController> bendingByName;
 	
 	public static void init() {
 		bending = new HashMap<Integer, IBendingController>();
+		bendingByName = new HashMap<String, IBendingController>();
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
 		registerBending(new Waterbending());
@@ -39,6 +41,7 @@ public class BendingManager {
 	
 	public static void registerBending(IBendingController controller) {
 		bending.put(controller.getID(), controller);
+		bendingByName.put(controller.getControllerName(), controller);
 	}
 	
 }
