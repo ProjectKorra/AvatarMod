@@ -24,6 +24,9 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_BENDING_ADD_ALREADY_HAS = newChatMessage(CFG, "avatar.cmd.bending.add.alreadyHas", "player", "bending");
 	public static final ChatMessage MSG_BENDING_ADD_SUCCESS = newChatMessage(CFG, "avatar.cmd.bending.add.success", "player", "bending");
 	
+	public static final ChatMessage MSG_BENDING_REMOVE_DOESNT_HAVE = newChatMessage(CFG, "avatar.cmd.bending.remove.doesntHave", "player", "bending");
+	public static final ChatMessage MSG_BENDING_REMOVE_SUCCESS = newChatMessage(CFG, "avatar.cmd.bending.remove.success", "player", "bending");
+	
 	public static final ChatMessage MSG_EARTHBENDING = newChatMessage(CFG, "avatar.earthbending");
 	public static final ChatMessage MSG_FIREBENDING = newChatMessage(CFG, "avatar.firebending");
 	public static final ChatMessage MSG_WATERBENDING = newChatMessage(CFG, "avatar.waterbending");
