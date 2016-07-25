@@ -119,6 +119,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (hasBending(bending.getID())) {
 			bendingControllers.remove(bending);
 			bendingControllerList.remove(bending);
+			IBendingState state = getBendingState(bending);
+			bendingStates.remove(bending.getID());
+			bendingStateList.remove(state);
 			saveChanges();
 		} else {
 			AvatarLog.warn("Cannot remove BendingController '" + bending + "' because player does not have that instance.");
