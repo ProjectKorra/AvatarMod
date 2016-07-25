@@ -39,6 +39,16 @@ public class BendingManager {
 		return bending.get(id);
 	}
 	
+	/**
+	 * Get the BendingController with the given name. Returns null
+	 * if the name is invalid.
+	 * @param name
+	 * @return
+	 */
+	public static IBendingController getBending(String name) {
+		return bendingByName.get(name);
+	}
+	
 	public static void registerBending(IBendingController controller) {
 		bending.put(controller.getID(), controller);
 		bendingByName.put(controller.getControllerName(), controller);
