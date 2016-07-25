@@ -18,6 +18,11 @@ public class AvatarCommand extends TreeCommand {
 			return BendingManager.getBending(str);
 		}
 		
+		@Override
+		public String toString(IBendingController obj) {
+			return obj.getControllerName();
+		}
+		
 	};
 	
 	@Override
