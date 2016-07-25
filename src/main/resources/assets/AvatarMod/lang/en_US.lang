@@ -11,11 +11,17 @@ avatar.Firebend=Firebending
 avatar.Waterbend=Waterbending
 
 avatar.earthbending=Earthbending
+avatar.earthbending.demonym=Earthbender
 avatar.firebending=Firebending
+avatar.firebending.demonym=Firebender
 avatar.waterbending=Waterbending
+avatar.waterbending.demonym=Waterbender
 
 avatar.cmd.bending=Manage a player's bending controllers.
 avatar.cmd.bending.list.noData=[color=error_value]${player}[/color][color=error] is not a registered account.[/color]
 avatar.cmd.bending.list.nonbender=[italic][color=value]${player}[/color] is a non-bender.[/italic]
 avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
 avatar.cmd.bending.list.top=[bold]Listing [color=value]${amount}[/color] bending controllers for [color=value]${player}[/color]:
+
+avatar.cmd.bending.add.alreadyHas=[italic][color=value]${player}[/color] is already a(n) [color=value][translate=avatar.${bending}.demonym][/color].[/italic]
+avatar.cmd.bending.add.success=[bold][color=value]${player}[/color] is now a(n) [color=value][translate=avatar.${bending}.demonym][/color]![/bold]

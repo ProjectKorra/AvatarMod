@@ -38,7 +38,7 @@ public class NodeBendingList extends NodeFunctional {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName, "Retrieving for /avatar bending list");
 		if (data == null) {
 			
-			AvatarChatMessages.MSG_BENDING_LIST_NO_DATA.send(sender, playerName);
+			AvatarChatMessages.MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
 			
 		} else {
 			
