@@ -41,9 +41,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		move(getVelocity());
-//		System.out.println("move by " + getVelocity());
-//		System.out.println("X-velocity: " + dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY));
+		setPosition(VectorUtils.plus(getPosition(), getVelocity()));
 		setVelocity(VectorUtils.times(getVelocity(), 0.4));
 	}
 	
