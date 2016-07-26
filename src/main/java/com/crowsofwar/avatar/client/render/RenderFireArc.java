@@ -8,6 +8,7 @@ import static com.crowsofwar.avatar.common.util.VectorUtils.times;
 import com.crowsofwar.avatar.client.particles.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
+import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -24,14 +25,13 @@ public class RenderFireArc extends RenderArc {
 	@Override
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		// Parametric equation
-		Vec3 from = Vec3.createVectorHelper(0, 0, 0);
-		Vec3 to = minus(second.getPosition(), first.getPosition());
-		Vec3 diff = minus(to, from);
-		Vec3 offset = first.getPosition();
-		Vec3 direction = copy(diff);
-		direction.normalize();
-		Vec3 spawnAt = plus(offset, times(direction, Math.random()));
-		Vec3 velocity = first.getVelocity();
+		// For parameters, they will be same as linear equation: y = mx+b
+		Vec3 m = VectorUtils.minus(second.getPosition(), first.getPosition());
+		Vec3 b = first.getPosition();
+		double x = Math.random(); // 0-1
+		Vec3 spawnAt = VectorUtils.plus(VectorUtils.times(m, x), b);
+		Vec3 velocity= Vec3.createVectorHelper(0, 0, 0);
+		
 		AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord / 20,
 				0.05, velocity.zCoord / 20);
 	}
