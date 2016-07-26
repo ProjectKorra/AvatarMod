@@ -93,11 +93,11 @@ public class EntityControlPoint extends Entity implements IPhysics {
 
 	@Override
 	public void setVelocity(Vec3 vel) {
-//		if (!worldObj.isRemote) {
+		if (!worldObj.isRemote) {
 			dataWatcher.updateObject(DATAWATCHER_VELOCITY, (float) vel.xCoord);
 			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 1, (float) vel.yCoord);
 			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 2, (float) vel.zCoord);
-//		}
+		}
 	}
 
 	@Override
