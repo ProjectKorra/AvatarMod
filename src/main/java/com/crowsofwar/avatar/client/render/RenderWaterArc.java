@@ -1,24 +1,23 @@
-package com.crowsofwar.avatar.client;
+package com.crowsofwar.avatar.client.render;
 
 import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
 import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
 import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
 import static com.crowsofwar.avatar.common.util.VectorUtils.times;
 
-import com.crowsofwar.avatar.client.particles.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
-public class RenderFireArc extends RenderArc {
+public class RenderWaterArc extends RenderArc {
 
-	private static final ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire-ribbon.png");
+	private static final ResourceLocation water = new ResourceLocation("avatarmod", "textures/entity/water-ribbon.png");
 	
 	@Override
 	protected ResourceLocation getTexture() {
-		return fire;
+		return water;
 	}
 
 	@Override
@@ -32,8 +31,8 @@ public class RenderFireArc extends RenderArc {
 		direction.normalize();
 		Vec3 spawnAt = plus(offset, times(direction, Math.random()));
 		Vec3 velocity = first.getVelocity();
-		AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord / 20,
-				0.05, velocity.zCoord / 20);
+		arc.worldObj.spawnParticle("splash", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord,
+				velocity.yCoord, velocity.zCoord);
 	}
 
 }

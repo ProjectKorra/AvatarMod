@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.client;
+package com.crowsofwar.avatar.client.render;
 
 import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
 import static com.crowsofwar.avatar.common.util.VectorUtils.fromYawPitch;

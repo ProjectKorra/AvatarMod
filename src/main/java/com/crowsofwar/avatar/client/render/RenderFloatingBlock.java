@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.client;
+package com.crowsofwar.avatar.client.render;
 
 import org.lwjgl.opengl.GL11;
 
