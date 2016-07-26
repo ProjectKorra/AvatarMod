@@ -55,6 +55,12 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	public void onUpdate() {
 		super.onUpdate();
 		
+		if (this.ticksExisted == 1) {
+			for (int i = 0; i < points.length; i++) {
+				points[i].setPosition(getPosition());
+			}
+		}
+		
 		ignoreFrustumCheck = true;
 		
 		Vec3 vel = getVelocity();
@@ -74,20 +80,23 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			onCollideWithBlock();
 		}
 		
-//		for (int i = 1; i < points.length; i++) {
-//			EntityControlPoint leader = points[i - 1];
-//			EntityControlPoint p = points[i];
-//			Vec3 leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
-//			double sqrDist = p.getPosition().squareDistanceTo(leadPos);
-//			if (sqrDist > 6*6) {
-//				p.setPosition(leader.getXPos(), leader.getYPos(), leader.getZPos());
-//			} else if (sqrDist > 1*1) {
-//				Vec3 diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
-//				diff.normalize();
-//				VectorUtils.mult(diff, 0.15);
-//				p.addVelocity(diff);
-//			}
-//		}
+		for (int i = 1; i < points.length; i++) {
+			EntityControlPoint leader = points[i - 1];
+			EntityControlPoint p = points[i];
+			Vec3 leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
+			double sqrDist = p.getPosition().squareDistanceTo(leadPos);
+			if (sqrDist > 6*6) {
+				p.setPosition(leader.getXPos(), leader.getYPos(), leader.getZPos());
+			} else if (sqrDist > 1*1) {
+				Vec3 diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
+				diff.normalize();
+				VectorUtils.mult(diff, 0.15);
+				p.addVelocity(diff);
+			}
+		}
+		for (int i = 1; i < points.length; i++) {
+//			getControlPoint(i).setVelocity(Vec3.createVectorHelper(1, 0, 0));
+		}
 		
 		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
 		if (!collisions.isEmpty()) onCollision(collisions.get(0));

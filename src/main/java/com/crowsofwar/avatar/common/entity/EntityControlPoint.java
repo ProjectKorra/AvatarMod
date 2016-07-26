@@ -42,6 +42,8 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	public void onUpdate() {
 		super.onUpdate();
 		move(getVelocity());
+//		System.out.println("move by " + getVelocity());
+//		System.out.println("X-velocity: " + dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY));
 		setVelocity(VectorUtils.times(getVelocity(), 0.4));
 	}
 	
@@ -85,19 +87,25 @@ public class EntityControlPoint extends Entity implements IPhysics {
 
 	@Override
 	public Vec3 getVelocity() {
-		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY);
-		internalVelocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY + 1);
-		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY + 2);
+//		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY);
+//		internalVelocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY + 1);
+//		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY + 2);
+		internalVelocity.xCoord = motionX;
+		internalVelocity.yCoord = motionY;
+		internalVelocity.zCoord = motionZ;
 		return internalVelocity;
 	}
 
 	@Override
 	public void setVelocity(Vec3 vel) {
-		if (!worldObj.isRemote) {
-			dataWatcher.updateObject(DATAWATCHER_VELOCITY, (float) vel.xCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 1, (float) vel.yCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 2, (float) vel.zCoord);
-		}
+//		if (!worldObj.isRemote) {
+////			System.out.println("update velocity to " + vel.xCoord);
+////			if (vel.xCoord == 0) Thread.dumpStack();
+//			dataWatcher.updateObject(DATAWATCHER_VELOCITY, (float) vel.xCoord);
+//			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 1, (float) vel.yCoord);
+//			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 2, (float) vel.zCoord);
+//		}
+		setVelocity(vel.xCoord, vel.yCoord, vel.zCoord); // TODO - temporary solution, @SideOnly Client.
 	}
 
 	@Override
