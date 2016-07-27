@@ -197,6 +197,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 					break;
 				case PLACE:
 					if (!worldObj.isRemote) {
+						// TODO Fix duplicate placing code (Weird!) - I don't believe this part ever gets called.
 						setDead();
 						int x = (int) Math.floor(posX);
 						int y = (int) Math.floor(posY);
@@ -226,6 +227,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				setDead();
 				worldObj.setBlock(x, y, z, getBlock());
 				worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(), 3);
+				Block.SoundType sound = getBlock().stepSound;
+				if (sound != null) worldObj.playSoundAtEntity(this, sound.getBreakSound(), sound.getVolume(), sound.getPitch());
 				
 			}
 		}
