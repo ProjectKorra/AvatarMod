@@ -109,6 +109,10 @@ public class Earthbending implements IBendingController {
 						
 						ebs.setPickupBlock(floating);
 						data.sendBendingState(ebs);
+						
+						Block.SoundType sound = block.stepSound;
+						if (sound != null) world.playSoundEffect(target.x + 0.5, target.y + 0.5, target.z + 0.5, sound.getBreakSound(), 1, sound.getPitch());
+						
 					} else {
 						world.playSoundAtEntity(player, "random.click", 1.0f,
 								(float) (random.nextGaussian() / 0.25 + 0.375));
@@ -156,6 +160,7 @@ public class Earthbending implements IBendingController {
 					force.normalize();
 					floating.addVelocity(force);
 					ebs.dropBlock();
+					
 				}
 			}
 		}
