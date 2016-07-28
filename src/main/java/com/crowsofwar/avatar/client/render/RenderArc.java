@@ -133,14 +133,15 @@ public abstract class RenderArc extends Render {
 	
 	private void drawQuad(int normal, Vec3 pos1, Vec3 pos2, Vec3 pos3, Vec3 pos4, double u1, double v1, double u2, double v2) {
 		Tessellator t = Tessellator.instance;
-		if (normal == 0) {
+		if (normal == 0 || normal == 2) {
 			t.startDrawingQuads();
 			t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
 			t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
 			t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2); // 3
 			t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, v1); // 4
 			t.draw();
-		} else {
+		}
+		if (normal == 1 || normal == 2) {
 			t.startDrawingQuads();
 			t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
 			t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, v1); // 4
