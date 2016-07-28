@@ -86,18 +86,18 @@ public abstract class RenderArc extends Render {
 		GL11.glColor3f(1, 1, 1);
 		
 		Matrix4d back = new Matrix4d();
-		back.translate(leader.getXPos(), leader.getYPos(), leader.getZPos());
-		back.rotate(lookingEuler.yCoord, 0, 1, 0);
+		back.translate(point.getXPos(), point.getYPos(), point.getZPos());
+		back.rotate(-lookingEuler.yCoord, 0, 1, 0);
 		Matrix4d front = new Matrix4d(back);
 		double dist = leader.getDistance(point);
-		front.translate(0, 0, dist);
+		front.translate(0, 0, -dist);
 //		Matrix4d mat1 = new Matrix4d();
 //		mat1.translate(offset)
 		if (arc.getControlPoint(0) == leader) {
-			Vector4d backPos = new Vector4d(0, 0, 0, 0).mul(back);
-			arc.worldObj.spawnParticle("dripLava", backPos.x, backPos.y, backPos.z, 0, 0, 0);
-			Vector4d frontPos = new Vector4d(0, 0, 0, 0).mul(front);
-			arc.worldObj.spawnParticle("dripWater", frontPos.x, frontPos.y, frontPos.z, 0, 0, 0);
+			Vector4d backPos = new Vector4d(0, 0, 0, 1).mul(back);
+			arc.worldObj.spawnParticle("fireworksSpark", backPos.x, backPos.y, backPos.z, 0, 0, 0);
+			Vector4d frontPos = new Vector4d(0, 0, 0, 1).mul(front);
+			arc.worldObj.spawnParticle("spell", frontPos.x, frontPos.y, frontPos.z, 0, 0, 0);
 		}
 		
 		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
