@@ -90,8 +90,9 @@ public abstract class RenderArc extends Render {
 		mat.rotate(-lookingEuler.yCoord, 0, 1, 0);
 		double dist = leader.getDistance(point);
 		
-		Vector4d vert1 = new Vector4d(-0.5, 0, -dist, 1).mul(mat);
-		Vector4d vert2 = new Vector4d(0.5, 0, -dist, 1).mul(mat);
+		
+		Vector4d vert1 = new Vector4d(-0.5, 0, dist, 1).mul(mat);
+		Vector4d vert2 = new Vector4d(0.5, 0, dist, 1).mul(mat);
 		Vector4d vert3 = new Vector4d(0.5, 0, 0, 1).mul(mat);
 		Vector4d vert4 = new Vector4d(-0.5, 0, 0, 1).mul(mat);
 		
