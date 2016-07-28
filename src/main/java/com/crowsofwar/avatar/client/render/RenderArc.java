@@ -89,21 +89,17 @@ public abstract class RenderArc extends Render {
 		Matrix4d back = new Matrix4d();
 		back.translate(point.getXPos(), point.getYPos(), point.getZPos());
 		back.rotate(-lookingEuler.yCoord, 0, 1, 0);
-		
-		// Create 'front' matrix based off 'back' matrix, move it forwards
-		Matrix4d front = new Matrix4d(back);
-		double dist = leader.getDistance(point);
-		
-		// Create matrix for vertices 3 and 4- Rotate it sideways
-		Matrix4d mat34 = new Matrix4d(back);
-		mat34.rotate(Math.PI / 2, 0, 1, 0);
-		
-		front.translate(0, 0, -dist);
+//		
+//		// Create 'front' matrix based off 'back' matrix, move it forwards
+//		Matrix4d front = new Matrix4d(back);
+		double dist = leader.getDistance(point)*1;
+//		
+//		front.translate(0, 0, -dist);
 		if (arc.getControlPoint(0) == leader) {
-			Vector4d vert3 = new Vector4d(0.5, 0, 0, 1).mul(back);
-			arc.worldObj.spawnParticle("fireworksSpark", vert3.x, vert3.y, vert3.z, 0, 0, 0);
-			Vector4d vert4 = new Vector4d(-0.5, 0, 0, 1).mul(back);
-			arc.worldObj.spawnParticle("spell", vert4.x, vert4.y, vert4.z, 0, 0, 0);
+			Vector4d vert1 = new Vector4d(0.5, 0, -dist, 1).mul(back);
+			arc.worldObj.spawnParticle("fireworksSpark", vert1.x, vert1.y, vert1.z, 0, 0, 0);
+			Vector4d vert2 = new Vector4d(-0.5, 0, -dist, 1).mul(back);
+			arc.worldObj.spawnParticle("spell", vert2.x, vert2.y, vert2.z, 0, 0, 0);
 		}
 		
 		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
