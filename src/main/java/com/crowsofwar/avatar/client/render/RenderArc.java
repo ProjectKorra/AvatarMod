@@ -91,20 +91,13 @@ public abstract class RenderArc extends Render {
 		double dist = leader.getDistance(point);
 		
 		
-		Vector4d vert1 = new Vector4d(-0.5, 0, dist, 1).mul(mat);
-		Vector4d vert2 = new Vector4d(0.5, 0, dist, 1).mul(mat);
-		Vector4d vert3 = new Vector4d(0.5, 0, 0, 1).mul(mat);
-		Vector4d vert4 = new Vector4d(-0.5, 0, 0, 1).mul(mat);
+		Vector4d vert1 = new Vector4d(-sizeLeader, 0, dist, 1).mul(mat);
+		Vector4d vert2 = new Vector4d(sizeLeader, 0, dist, 1).mul(mat);
+		Vector4d vert3 = new Vector4d(sizePoint, 0, 0, 1).mul(mat);
+		Vector4d vert4 = new Vector4d(-sizePoint, 0, 0, 1).mul(mat);
 		
 		Vector4d debug = vert4;
 		arc.worldObj.spawnParticle("spell", debug.x, debug.y, debug.z, 0, 0, 0);
-		
-//		if (arc.getControlPoint(0) == leader) {
-//			Vector4d vert1 = new Vector4d(0.5, 0, -dist, 1).mul(mat);
-//			arc.worldObj.spawnParticle("fireworksSpark", vert1.x, vert1.y, vert1.z, 0, 0, 0);
-//			Vector4d vert2 = new Vector4d(-0.5, 0, -dist, 1).mul(mat);
-//			arc.worldObj.spawnParticle("spell", vert2.x, vert2.y, vert2.z, 0, 0, 0);
-//		}
 		
 		drawQuad(2, vert1, vert2, vert3, vert4, u1, 0, u2, 1);
 		
