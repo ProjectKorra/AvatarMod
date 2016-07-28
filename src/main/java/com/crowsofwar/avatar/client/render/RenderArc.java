@@ -7,6 +7,11 @@ import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
 import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
 import static com.crowsofwar.avatar.common.util.VectorUtils.times;
 
+import org.joml.Matrix4d;
+import org.joml.Matrix4f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector4d;
 import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.entity.EntityArc;
@@ -67,42 +72,55 @@ public abstract class RenderArc extends Render {
 		offX.yCoord = 0;
 		Vec3 invX = times(offX, -1);
 		
+//		Matrix4d mat = new Matrix4d();
+//		mat.translate(leader.getXPos(), leader.getYPos(), leader.getZPos());
+//		mat.rotate(Math.toRadians(110), new Vector3f(0, 1, 0));
+//		mat.rotate(Math.toRadians(-45), new Vector3f(1, 0, 0));
+//		Vector4d dest = new Vector4d(0, 0, 1, 1).mul(mat);
+//		if (arc.getControlPoint(0) == leader)
+//			leader.worldObj.spawnParticle("cloud", dest.x, dest.y, dest.z, 0, 0, 0);
+		
 		double u1 = ((arc.ticksExisted / 20.0) % 1);
 		double u2 = (u1 + 0.5);
 		
 		GL11.glColor3f(1, 1, 1);
 		
-		// +x side (EAST)
-		drawQuad(0, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
+		Matrix4d back = new Matrix4d();
+		back.translate(leader.getXPos(), leader.getYPos(), leader.getZPos());
+		back.rotate(lookingEuler.yCoord, 0, 1, 0);
+		Matrix4d front = new Matrix4d(back);
+		double dist = leader.getDistance(point);
+		front.translate(0, 0, dist);
+//		Matrix4d mat1 = new Matrix4d();
+//		mat1.translate(offset)
+		if (arc.getControlPoint(0) == leader) {
+			Vector4d backPos = new Vector4d(0, 0, 0, 0).mul(back);
+			arc.worldObj.spawnParticle("dripLava", backPos.x, backPos.y, backPos.z, 0, 0, 0);
+			Vector4d frontPos = new Vector4d(0, 0, 0, 0).mul(front);
+			arc.worldObj.spawnParticle("dripWater", frontPos.x, frontPos.y, frontPos.z, 0, 0, 0);
+		}
+		
+		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
 		// -x side (WEST)
-		drawQuad(1, plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), u1, 0, u2, 1);
-		// +z side (SOUTH)
-//		drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
+		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), u1, 0, u2, 1);
 		// +y
-		drawQuad(0, plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, sizePoint, 0), offX), u1, 0, u2, 1);
+		drawQuad(2, plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, sizePoint, 0), offX), u1, 0, u2, 1);
 		// -y
-		drawQuad(1, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
+		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
+		
+		// +x side (EAST)
+//		drawQuad(0, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
+//		// -x side (WEST)
+//		drawQuad(1, plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), u1, 0, u2, 1);
+//		// +z side (SOUTH)
+////		drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
+//		// +y
+//		drawQuad(0, plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, sizePoint, 0), offX), u1, 0, u2, 1);
+//		// -y
+//		drawQuad(1, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
 		
 		onDrawSegment(arc, leader, point);
 		
-//		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-//		Vec3 playerLook = getRotations(getEntityPos(player), vec3(-801, 67, 143));
-//		player.rotationYaw = (float) Math.toDegrees(playerLook.yCoord);
-//		player.rotationPitch = (float) Math.toDegrees(playerLook.xCoord);
-		
-//		Tessellator t = Tessellator.instance;
-//		t.startDrawingQuads();
-//		t.addVertexWithUV(0, 0, 0, textureRepeat, 0); // 1
-//		t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat); // 2
-//		t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat); // 3
-//		t.addVertexWithUV(-diff.xCoord, ySize * .5, -diff.zCoord, 0, 0); // 4
-//		t.draw();
-//		t.startDrawingQuads();
-//		t.addVertexWithUV(0, 0, 0, textureRepeat, 0);//1
-//		t.addVertexWithUV(-diff.xCoord, ySize * .5, -diff.zCoord, 0, 0);//4
-//		t.addVertexWithUV(-diff.xCoord, -diff.yCoord - ySize * .5, -diff.zCoord, 0, textureRepeat);//3
-//		t.addVertexWithUV(0, -1, 0, textureRepeat, textureRepeat);//2
-//		t.draw();
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
