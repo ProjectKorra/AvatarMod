@@ -86,29 +86,34 @@ public abstract class RenderArc extends Render {
 		GL11.glColor3f(1, 1, 1);
 		
 		// Make 'back' matrix, face it forward
-		Matrix4d back = new Matrix4d();
-		back.translate(point.getXPos(), point.getYPos(), point.getZPos());
-		back.rotate(-lookingEuler.yCoord, 0, 1, 0);
-//		
-//		// Create 'front' matrix based off 'back' matrix, move it forwards
-//		Matrix4d front = new Matrix4d(back);
-		double dist = leader.getDistance(point)*1;
-//		
-//		front.translate(0, 0, -dist);
-		if (arc.getControlPoint(0) == leader) {
-			Vector4d vert1 = new Vector4d(0.5, 0, -dist, 1).mul(back);
-			arc.worldObj.spawnParticle("fireworksSpark", vert1.x, vert1.y, vert1.z, 0, 0, 0);
-			Vector4d vert2 = new Vector4d(-0.5, 0, -dist, 1).mul(back);
-			arc.worldObj.spawnParticle("spell", vert2.x, vert2.y, vert2.z, 0, 0, 0);
-		}
+		Matrix4d mat = new Matrix4d();
+		mat.rotate(-lookingEuler.yCoord, 0, 1, 0);
+		double dist = leader.getDistance(point);
 		
-		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
-		// -x side (WEST)
-		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), u1, 0, u2, 1);
-		// +y
-		drawQuad(2, plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, sizePoint, 0), offX), u1, 0, u2, 1);
-		// -y
-		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
+		Vector4d vert1 = new Vector4d(-0.5, 0, -dist, 1).mul(mat);
+		Vector4d vert2 = new Vector4d(0.5, 0, -dist, 1).mul(mat);
+		Vector4d vert3 = new Vector4d(0.5, 0, 0, 1).mul(mat);
+		Vector4d vert4 = new Vector4d(-0.5, 0, 0, 1).mul(mat);
+		
+		Vector4d debug = vert4;
+		arc.worldObj.spawnParticle("spell", debug.x, debug.y, debug.z, 0, 0, 0);
+		
+//		if (arc.getControlPoint(0) == leader) {
+//			Vector4d vert1 = new Vector4d(0.5, 0, -dist, 1).mul(mat);
+//			arc.worldObj.spawnParticle("fireworksSpark", vert1.x, vert1.y, vert1.z, 0, 0, 0);
+//			Vector4d vert2 = new Vector4d(-0.5, 0, -dist, 1).mul(mat);
+//			arc.worldObj.spawnParticle("spell", vert2.x, vert2.y, vert2.z, 0, 0, 0);
+//		}
+		
+		drawQuad(2, vert1, vert2, vert3, vert4, u1, 0, u2, 1);
+		
+//		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
+//		// -x side (WEST)
+//		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), u1, 0, u2, 1);
+//		// +y
+//		drawQuad(2, plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, sizePoint, 0), offX), u1, 0, u2, 1);
+//		// -y
+//		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
 		
 		// +x side (EAST)
 //		drawQuad(0, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
@@ -151,6 +156,15 @@ public abstract class RenderArc extends Render {
 			t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
 			t.draw();
 		}
+	}
+	
+	private void drawQuad(int normal, Vector4d pos1, Vector4d pos2, Vector4d pos3, Vector4d pos4, double u1, double v1, double u2, double v2) {
+		drawQuad(normal,
+				Vec3.createVectorHelper(pos1.x, pos1.y, pos1.z),
+				Vec3.createVectorHelper(pos2.x, pos2.y, pos2.z),
+				Vec3.createVectorHelper(pos3.x, pos3.y, pos3.z),
+				Vec3.createVectorHelper(pos4.x, pos4.y, pos4.z),
+				u1, v1, u2, v2);
 	}
 	
 	private Vec3 vec3(double x, double y, double z) {
