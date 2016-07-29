@@ -119,28 +119,6 @@ public abstract class RenderArc extends Render {
 		// Draw left segment(-x)
 		drawQuad(2, t_v1, b_v1, b_v4, t_v4, u1, 0, u2, 1);
 		
-		
-//		drawQuad(2, vert1, vert2, vert3, vert4, u1, 0, u2, 1);
-		
-//		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
-//		// -x side (WEST)
-//		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), u1, 0, u2, 1);
-//		// +y
-//		drawQuad(2, plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, sizePoint, 0), offX), u1, 0, u2, 1);
-//		// -y
-//		drawQuad(2, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
-		
-		// +x side (EAST)
-//		drawQuad(0, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(from, 0, sizePoint, 0), offX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
-//		// -x side (WEST)
-//		drawQuad(1, plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), u1, 0, u2, 1);
-//		// +z side (SOUTH)
-////		drawQuad(vec3(from, 0, size, size), vec3(from, 0, -size, size), vec3(to, 0, -size, size), vec3(to, 0, size, size), 0, 0, 1, 1);
-//		// +y
-//		drawQuad(0, plus(vec3(to, 0, sizeLeader, 0), offX), plus(vec3(to, 0, sizeLeader, 0), invX), plus(vec3(from, 0, sizePoint, 0), invX), plus(vec3(from, 0, sizePoint, 0), offX), u1, 0, u2, 1);
-//		// -y
-//		drawQuad(1, plus(vec3(to, 0, -sizeLeader, 0), offX), plus(vec3(to, 0, -sizeLeader, 0), invX), plus(vec3(from, 0, -sizePoint, 0), invX), plus(vec3(from, 0, -sizePoint, 0), offX), u1, 0, u2, 1);
-		
 		onDrawSegment(arc, leader, point);
 		
 		GL11.glDisable(GL11.GL_BLEND);
@@ -180,14 +158,6 @@ public abstract class RenderArc extends Render {
 				Vec3.createVectorHelper(pos3.x, pos3.y, pos3.z),
 				Vec3.createVectorHelper(pos4.x, pos4.y, pos4.z),
 				u1, v1, u2, v2);
-	}
-	
-	private void drawQuad(int normal, double u1, double v1, double u2, double v2, Matrix4d forwardMat,
-			Vector4d off1, Vector4d off2, Vector4d off3, Vector4d off4) {
-		
-		drawQuad(normal, off1.mul(forwardMat), off2.mul(forwardMat), off3.mul(forwardMat), off4.mul(forwardMat),
-				u1, v1, u2, v2);
-		
 	}
 	
 	private Vec3 vec3(double x, double y, double z) {
