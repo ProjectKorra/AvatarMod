@@ -104,9 +104,19 @@ public abstract class RenderArc extends Render {
 		drawQuad(2, u1, 0, u2, 1, mat,
 				new Vector4d(-sizeLeader, sizeLeader, dist, 1), new Vector4d(sizeLeader, sizeLeader, dist, 1),
 				new Vector4d(sizePoint, sizePoint, 0, 1), new Vector4d(-sizePoint, sizePoint, 0, 1));
+		// Draw bottom segment
 		drawQuad(2, u1, 0, u2, 1, mat,
 				new Vector4d(-sizeLeader, -sizeLeader, dist, 1), new Vector4d(sizeLeader, -sizeLeader, dist, 1),
 				new Vector4d(sizePoint, -sizePoint, 0, 1), new Vector4d(-sizePoint, -sizePoint, 0, 1));
+		// Draw right segment(+x)
+		drawQuad(2, u1, 0, u2, 1, mat,
+				new Vector4d(sizeLeader, sizeLeader, dist, 1), new Vector4d(sizeLeader, -sizeLeader, dist, 1),
+				new Vector4d(sizePoint, -sizePoint, 0, 1), new Vector4d(sizePoint, sizePoint, 0, 1));
+		// Draw left segment(-x)
+		drawQuad(2, u2, 0, u1, 1, mat,
+				new Vector4d(-sizePoint, sizePoint, 0, 1), new Vector4d(-sizePoint, -sizePoint, 0, 1),
+				new Vector4d(-sizeLeader, -sizeLeader, dist, 1), new Vector4d(-sizeLeader, sizeLeader, dist, 1));
+		
 		
 //		drawQuad(2, vert1, vert2, vert3, vert4, u1, 0, u2, 1);
 		
