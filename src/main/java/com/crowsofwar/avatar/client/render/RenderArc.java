@@ -92,30 +92,32 @@ public abstract class RenderArc extends Render {
 		double dist = leader.getDistance(point);
 		
 		
-		Vector4d vert1 = new Vector4d(-sizeLeader, 0, dist, 1).mul(mat);
-		Vector4d vert2 = new Vector4d(sizeLeader, 0, dist, 1).mul(mat);
-		Vector4d vert3 = new Vector4d(sizePoint, 0, 0, 1).mul(mat);
-		Vector4d vert4 = new Vector4d(-sizePoint, 0, 0, 1).mul(mat);
+//		Vector4d vert1 = new Vector4d(-sizeLeader, 0, dist, 1).mul(mat);
+//		Vector4d vert2 = new Vector4d(sizeLeader, 0, dist, 1).mul(mat);
+//		Vector4d vert3 = new Vector4d(sizePoint, 0, 0, 1).mul(mat);
+//		Vector4d vert4 = new Vector4d(-sizePoint, 0, 0, 1).mul(mat);
 		
-		Vector4d debug = vert4;
-		arc.worldObj.spawnParticle("spell", debug.x, debug.y, debug.z, 0, 0, 0);
+//		Vector4d debug = vert4;
+//		arc.worldObj.spawnParticle("spell", debug.x, debug.y, debug.z, 0, 0, 0);
+		
+		Vector4d t_v1 = new Vector4d(-sizeLeader, sizeLeader, dist, 1).mul(mat);
+		Vector4d t_v2 = new Vector4d(sizeLeader, sizeLeader, dist, 1).mul(mat);
+		Vector4d t_v3 = new Vector4d(sizePoint, sizePoint, 0, 1).mul(mat);
+		Vector4d t_v4 = new Vector4d(-sizePoint, sizePoint, 0, 1).mul(mat);
+		
+		Vector4d b_v1 = new Vector4d(-sizeLeader, -sizeLeader, dist, 1).mul(mat);
+		Vector4d b_v2 = new Vector4d(sizeLeader, -sizeLeader, dist, 1).mul(mat);
+		Vector4d b_v3 = new Vector4d(sizePoint, -sizePoint, 0, 1).mul(mat);
+		Vector4d b_v4 = new Vector4d(-sizePoint, -sizePoint, 0, 1).mul(mat);
 		
 		// Draw top segment
-		drawQuad(2, u1, 0, u2, 1, mat,
-				new Vector4d(-sizeLeader, sizeLeader, dist, 1), new Vector4d(sizeLeader, sizeLeader, dist, 1),
-				new Vector4d(sizePoint, sizePoint, 0, 1), new Vector4d(-sizePoint, sizePoint, 0, 1));
+		drawQuad(2, t_v1, t_v2, t_v3, t_v4, u1, 0, u2, 1);
 		// Draw bottom segment
-		drawQuad(2, u1, 0, u2, 1, mat,
-				new Vector4d(-sizeLeader, -sizeLeader, dist, 1), new Vector4d(sizeLeader, -sizeLeader, dist, 1),
-				new Vector4d(sizePoint, -sizePoint, 0, 1), new Vector4d(-sizePoint, -sizePoint, 0, 1));
+		drawQuad(2, b_v1, b_v2, b_v3, b_v4, u1, 0, u2, 1);
 		// Draw right segment(+x)
-		drawQuad(2, u1, 0, u2, 1, mat,
-				new Vector4d(sizeLeader, sizeLeader, dist, 1), new Vector4d(sizeLeader, -sizeLeader, dist, 1),
-				new Vector4d(sizePoint, -sizePoint, 0, 1), new Vector4d(sizePoint, sizePoint, 0, 1));
+		drawQuad(2, t_v2, b_v2, b_v3, t_v3, u1, 0, u2, 1);
 		// Draw left segment(-x)
-		drawQuad(2, u2, 0, u1, 1, mat,
-				new Vector4d(-sizePoint, sizePoint, 0, 1), new Vector4d(-sizePoint, -sizePoint, 0, 1),
-				new Vector4d(-sizeLeader, -sizeLeader, dist, 1), new Vector4d(-sizeLeader, sizeLeader, dist, 1));
+		drawQuad(2, t_v4, b_v4, b_v1, t_v1, u2, 0, u1, 1);
 		
 		
 //		drawQuad(2, vert1, vert2, vert3, vert4, u1, 0, u2, 1);
