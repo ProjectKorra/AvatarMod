@@ -37,9 +37,9 @@ public class Earthbending implements IBendingController {
 	
 	Earthbending() {
 		Color light = new Color(225, 225, 225);
-		Color brown = new Color(107, 76, 47);
+		Color brown = new Color(79, 57, 45);
 		Color gray = new Color(90, 90, 90);
-		Color lightBrown = new Color(219, 201, 182);
+		Color lightBrown = new Color(255, 235, 224);
 		ThemeColor background = new ThemeColor(lightBrown, brown);
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
