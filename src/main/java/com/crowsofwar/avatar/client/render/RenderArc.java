@@ -88,6 +88,7 @@ public abstract class RenderArc extends Render {
 		// Make 'back' matrix, face it forward
 		Matrix4d mat = new Matrix4d();
 		mat.rotate(-lookingEuler.yCoord, 0, 1, 0);
+		mat.rotate(lookingEuler.xCoord, 1, 0, 0);
 		double dist = leader.getDistance(point);
 		
 		
