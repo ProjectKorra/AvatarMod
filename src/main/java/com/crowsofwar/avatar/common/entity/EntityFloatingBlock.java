@@ -38,7 +38,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	public static final int DATAWATCHER_CAN_FALL = 9;
 	/** Whether the floating block breaks on contact with other blocks. */
 	public static final int DATAWATCHER_ON_LAND = 10;
-	public static final int DATAWATCHER_TARGET_BLOCK = 11;
+	public static final int DATAWATCHER_TARGET_BLOCK = 11; // 11,12,13,14
+	public static final int DATAWATCHER_METADATA = 15;
 	
 	private static int nextBlockID = 0;
 	
@@ -90,12 +91,15 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		dataWatcher.addObject(DATAWATCHER_FRICTION, 1f);
 		dataWatcher.addObject(DATAWATCHER_CAN_FALL, (byte) 0);
 		dataWatcher.addObject(DATAWATCHER_ON_LAND, (byte) 0);
+		System.out.println("adding"+ DATAWATCHER_METADATA);
+		dataWatcher.addObject(DATAWATCHER_METADATA, 0);
 		
 	}
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setBlock(Block.getBlockFromName(nbt.getString("Block")));
+		setMetadata(nbt.getInteger("Metadata"));
 		setGravityEnabled(nbt.getBoolean("Gravity"));
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
 		setFriction(nbt.getFloat("Friction"));
@@ -106,6 +110,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setString("Block", getNameForBlock(getBlock()));
+		nbt.setInteger("Metadata", getMetadata());
 		nbt.setBoolean("Gravity", isGravityEnabled());
 		Vec3 velocity = getVelocity();
 		nbt.setDouble("VelocityX", velocity.xCoord);
@@ -125,6 +130,14 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	public void setBlock(Block block) {
 		if (block == null) block = DEFAULT_BLOCK;
 		dataWatcher.updateObject(DATAWATCHER_BLOCKID, getNameForBlock(block));
+	}
+	
+	public int getMetadata() {
+		return dataWatcher.getWatchableObjectInt(DATAWATCHER_METADATA);
+	}
+	
+	public void setMetadata(int metadata) {
+		dataWatcher.updateObject(DATAWATCHER_METADATA, metadata);
 	}
 	
 	public boolean isGravityEnabled() {
@@ -159,10 +172,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	private String getNameForBlock(Block block) {
 		return Block.blockRegistry.getNameForObject(block);
-	}
-	
-	public int getMetadata() {
-		return 0; // TODO Implement metadata tracking into DataWatcher
 	}
 	
 	@Override

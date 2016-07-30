@@ -92,9 +92,9 @@ public class Earthbending implements IBendingController {
 				if (target != null) {
 					Block block = world.getBlock(target.x, target.y, target.z);
 					if (bendableBlocks.contains(block)) {
-						world.setBlock(target.x, target.y, target.z, Blocks.air);
 						
 						EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
+						floating.setMetadata(world.getBlockMetadata(target.x, target.y, target.z));
 						floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
 						
 						double dist = 2.5;
@@ -112,6 +112,8 @@ public class Earthbending implements IBendingController {
 						
 						Block.SoundType sound = block.stepSound;
 						if (sound != null) world.playSoundEffect(target.x + 0.5, target.y + 0.5, target.z + 0.5, sound.getBreakSound(), 1, sound.getPitch());
+						
+						world.setBlock(target.x, target.y, target.z, Blocks.air);
 						
 					} else {
 						world.playSoundAtEntity(player, "random.click", 1.0f,
