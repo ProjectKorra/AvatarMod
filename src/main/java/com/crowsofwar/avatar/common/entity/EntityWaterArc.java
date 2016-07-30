@@ -15,11 +15,6 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected void onCollision(Entity entity) {
-		entity.setVelocity(0, 0.1, 0);
-	}
-	
-	@Override
 	protected void onCollideWithBlock() {
 		
 		if (worldObj.isRemote) {

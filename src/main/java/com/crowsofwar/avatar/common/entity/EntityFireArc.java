@@ -42,12 +42,6 @@ public class EntityFireArc extends EntityArc {
 		}
 	}
 	
-	@Override
-	protected void onCollision(Entity entity) {
-		if (entity != owner)
-			entity.setFire(3);
-	}
-	
 	public static EntityFireArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
 			if (obj instanceof EntityFireArc && ((EntityFireArc) obj).getId() == id) return (EntityFireArc) obj;

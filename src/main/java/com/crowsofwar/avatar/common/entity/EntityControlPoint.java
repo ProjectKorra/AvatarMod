@@ -1,5 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
+
+
+import java.util.List;
+
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.entity.Entity;
@@ -46,7 +50,16 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		super.onUpdate();
 		setPosition(VectorUtils.plus(getPosition(), getVelocity()));
 		setVelocity(VectorUtils.times(getVelocity(), 0.4));
+		
+		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
+		if (!collisions.isEmpty() && collisions.get(0) != this.arc) onCollision(collisions.get(0));
+		
 	}
+	
+	/**
+	 * Called whenever the control point is in contact with this entity.
+	 */
+	protected void onCollision(Entity entity) {}
 	
 	public void setPosition(Vec3 pos) {
 		setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
@@ -88,9 +101,6 @@ public class EntityControlPoint extends Entity implements IPhysics {
 
 	@Override
 	public Vec3 getVelocity() {
-//		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY);
-//		internalVelocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY + 1);
-//		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELOCITY + 2);
 		internalVelocity.xCoord = motionX;
 		internalVelocity.yCoord = motionY;
 		internalVelocity.zCoord = motionZ;
@@ -99,13 +109,6 @@ public class EntityControlPoint extends Entity implements IPhysics {
 
 	@Override
 	public void setVelocity(Vec3 vel) {
-//		if (!worldObj.isRemote) {
-////			System.out.println("update velocity to " + vel.xCoord);
-////			if (vel.xCoord == 0) Thread.dumpStack();
-//			dataWatcher.updateObject(DATAWATCHER_VELOCITY, (float) vel.xCoord);
-//			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 1, (float) vel.yCoord);
-//			dataWatcher.updateObject(DATAWATCHER_VELOCITY + 2, (float) vel.zCoord);
-//		}
 		setVelocity(vel.xCoord, vel.yCoord, vel.zCoord); // TODO - temporary solution, @SideOnly Client.
 	}
 

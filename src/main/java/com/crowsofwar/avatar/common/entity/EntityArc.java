@@ -108,12 +108,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 //			getControlPoint(i).setVelocity(Vec3.createVectorHelper(1, 0, 0));
 		}
 		
-		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
-		if (!collisions.isEmpty()) onCollision(collisions.get(0));
-		
 	}
-	
-	protected abstract void onCollision(Entity entity);
 	
 	protected abstract void onCollideWithBlock();
 	
