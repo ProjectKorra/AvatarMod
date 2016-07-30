@@ -2,7 +2,11 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
 
+import org.joml.Vector3d;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -74,6 +78,27 @@ public class EntityWaterArc extends EntityArc {
 			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id) return (EntityWaterArc) obj;
 		}
 		return null;
+	}
+	
+	@Override
+	protected EntityControlPoint createControlPoint(float size) {
+		return new WaterControlPoint(this, size, 0, 0, 0);
+	}
+	
+	public class WaterControlPoint extends EntityControlPoint {
+
+		public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
+			super(arc, size, x, y, z);
+		}
+
+		@Override
+		protected void onCollision(Entity entity) {
+			entity.addVelocity(this.posX - entity.posX, 0.2, this.posZ - entity.posZ);
+			if (entity instanceof EntityLivingBase) {
+				((EntityLivingBase) entity).attackEntityFrom(DamageSource.drown, 6); // TODO Water DamageSource
+			}
+		}
+		
 	}
 	
 }
