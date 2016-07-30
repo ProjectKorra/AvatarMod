@@ -33,16 +33,26 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		float size = .2f;
 		setSize(size, size);
 		this.points = new EntityControlPoint[] {
-			new EntityControlPoint(this, size, 0, 0, 0),
-			new EntityControlPoint(this, size, 0, 0, 0),
-			new EntityControlPoint(this, size, 0, 0, 0),
-			new EntityControlPoint(this, size, 0, 0, 0),
-			new EntityControlPoint(this, size, 0, 0, 0)
+			createControlPoint(size),
+			createControlPoint(size),
+			createControlPoint(size),
+			createControlPoint(size),
+			createControlPoint(size)
 		};
 		for (EntityControlPoint point : points) worldObj.spawnEntityInWorld(point);
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) setId(nextId++);
+	}
+	
+	/**
+	 * Called from the EntityArc constructor to create a new control point
+	 * entity.
+	 * @param size
+	 * @return
+	 */
+	protected EntityControlPoint createControlPoint(float size) {
+		return new EntityControlPoint(this, size, 0, 0, 0);
 	}
 	
 	@Override
