@@ -34,7 +34,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		setSize(size, size);
 		this.points = new EntityControlPoint[] {
 			new EntityControlPoint(world, size, 0, 0, 0),
-			new EntityControlPoint(world, size * 2f, 0, 0, 0),
+			new EntityControlPoint(world, size, 0, 0, 0),
 			new EntityControlPoint(world, size, 0, 0, 0),
 			new EntityControlPoint(world, size, 0, 0, 0),
 			new EntityControlPoint(world, size, 0, 0, 0)
