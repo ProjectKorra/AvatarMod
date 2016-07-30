@@ -137,10 +137,10 @@ public class Waterbending implements IBendingController {
 				mult(motion, .05*3);
 				water.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);
 				water.setOwner(player);
-				double sqrDistance = motion.squareDistanceTo(0, 0, 0);
-				if (sqrDistance >= 0.008) {
-					world.playSoundAtEntity(water, "game.neutral.swim.splash", 0.3f, 1);
-					System.out.println("SPLEEESH");
+				
+				if (water.worldObj.isRemote && water.canPlaySplash()) {
+					double sqrDistance = motion.squareDistanceTo(0, 0, 0);
+					if (sqrDistance >= 0.004) water.playSplash();
 				}
 			} else {
 				if (!world.isRemote) bendingState.setWaterArc(null);

@@ -14,8 +14,14 @@ public class EntityWaterArc extends EntityArc {
 	
 	private static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 20, 0);
 	
+	/**
+	 * The amount of ticks since last played splash sound. -1 for splashable.
+	 */
+	private int lastPlayedSplash;
+	
 	public EntityWaterArc(World world) {
 		super(world);
+		this.lastPlayedSplash = -1;
 	}
 	
 	@Override
@@ -73,6 +79,15 @@ public class EntityWaterArc extends EntityArc {
 		return GRAVITY;
 	}
 	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if (lastPlayedSplash > -1) {
+			lastPlayedSplash++;
+			if (lastPlayedSplash > 20) lastPlayedSplash = -1;
+		}
+	}
+	
 	public static EntityWaterArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
 			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id) return (EntityWaterArc) obj;
@@ -83,6 +98,15 @@ public class EntityWaterArc extends EntityArc {
 	@Override
 	protected EntityControlPoint createControlPoint(float size) {
 		return new WaterControlPoint(this, size, 0, 0, 0);
+	}
+	
+	public boolean canPlaySplash() {
+		return lastPlayedSplash == -1;
+	}
+	
+	public void playSplash() {
+		worldObj.playSoundAtEntity(this, "game.neutral.swim.splash", 0.3f, 1.5f);
+		lastPlayedSplash = 0;
 	}
 	
 	public class WaterControlPoint extends EntityControlPoint {
