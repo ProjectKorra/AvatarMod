@@ -55,7 +55,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public EntityFloatingBlock(World world) {
 		super(world);
-		setSize(1, 1);
+		setSize(0.95f, 0.95f);
 		velocity = Vec3.createVectorHelper(0, 0, 0);
 		setGravityEnabled(false);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
@@ -222,7 +222,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			force.normalize();
 			VectorUtils.mult(force, 3);
 			setVelocity(force);
-			if (!worldObj.isRemote && targetVec.squareDistanceTo(thisPos) < 0.05) {
+			if (!worldObj.isRemote && targetVec.squareDistanceTo(thisPos) < 0.0003) {
 				
 				setDead();
 				worldObj.setBlock(x, y, z, getBlock());
@@ -241,7 +241,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				if (collided instanceof EntityLivingBase && collided != getOwner()) {
 					double speed = getVelocity().lengthVector();
 					double multiplier = 0.25;
-					collided.attackEntityFrom(DamageSource.anvil, (float) (speed * multiplier));
+					collided.attackEntityFrom(DamageSource.anvil, (float) (speed * multiplier)); // TODO custom damagesource
 					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
 					motion.yCoord = 0.08;
 					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
