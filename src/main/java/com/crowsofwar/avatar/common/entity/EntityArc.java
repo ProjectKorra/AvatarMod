@@ -21,7 +21,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			DATAWATCHER_GRAVITY = 7;
 	
 	private static int nextId = 1;
-	private ControlPoint[] points;
+	private EntityControlPoint[] points;
 	
 	private Vec3 internalPos;
 	private EntityPropertyVector velocity;
@@ -30,14 +30,16 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	public EntityArc(World world) {
 		super(world);
-		setSize(0.2f, 0.2f);
-		this.points = new ControlPoint[] {
-			new ControlPoint(0, 0, 0),
-			new ControlPoint(0, 0, 0),
-			new ControlPoint(0, 0, 0),
-			new ControlPoint(0, 0, 0),
-			new ControlPoint(0, 0, 0)
+		float size = .2f;
+		setSize(size, size);
+		this.points = new EntityControlPoint[] {
+			new EntityControlPoint(world, size, 0, 0, 0),
+			new EntityControlPoint(world, size * 2f, 0, 0, 0),
+			new EntityControlPoint(world, size, 0, 0, 0),
+			new EntityControlPoint(world, size, 0, 0, 0),
+			new EntityControlPoint(world, size, 0, 0, 0)
 		};
+		for (EntityControlPoint point : points) worldObj.spawnEntityInWorld(point);
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) setId(nextId++);
@@ -52,6 +54,12 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		
+		if (this.ticksExisted == 1) {
+			for (int i = 0; i < points.length; i++) {
+				points[i].setPosition(getPosition());
+			}
+		}
 		
 		ignoreFrustumCheck = true;
 		
@@ -73,8 +81,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		}
 		
 		for (int i = 1; i < points.length; i++) {
-			ControlPoint leader = points[i - 1];
-			ControlPoint p = points[i];
+			EntityControlPoint leader = points[i - 1];
+			EntityControlPoint p = points[i];
 			Vec3 leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
 			double sqrDist = p.getPosition().squareDistanceTo(leadPos);
 			if (sqrDist > 6*6) {
@@ -86,11 +94,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 				p.addVelocity(diff);
 			}
 		}
-		
 		for (int i = 1; i < points.length; i++) {
-			ControlPoint point = getControlPoint(i);
-			point.move(point.getVelocity());
-			point.setVelocity(VectorUtils.times(point.getVelocity(), 0.5));
+//			getControlPoint(i).setVelocity(Vec3.createVectorHelper(1, 0, 0));
 		}
 		
 		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
@@ -121,25 +126,31 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		if (points != null) points[0].setPosition(x, y, z);
 	}
 	
-	public ControlPoint[] getControlPoints() {
+	@Override
+	public void setDead() {
+		super.setDead();
+		for (EntityControlPoint point : points) point.setDead();
+	}
+	
+	public EntityControlPoint[] getControlPoints() {
 		return points;
 	}
 	
-	public ControlPoint getControlPoint(int index) {
+	public EntityControlPoint getControlPoint(int index) {
 		return points[index];
 	}
 	
 	/**
 	 * Get the first control point in this arc.
 	 */
-	public ControlPoint getLeader() {
+	public EntityControlPoint getLeader() {
 		return points[0];
 	}
 	
 	/**
 	 * Get the leader of the specified control point.
 	 */
-	public ControlPoint getLeader(int index) {
+	public EntityControlPoint getLeader(int index) {
 		return points[index == 0 ? index : index - 1];
 	}
 	
@@ -203,72 +214,4 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		this.owner = owner;
 	}
 	
-	public class ControlPoint implements IPhysics {
-		
-		private Vec3 position;
-		private Vec3 velocity;
-		
-		public ControlPoint(double x, double y, double z) {
-			position = Vec3.createVectorHelper(x, y, z);
-			velocity = Vec3.createVectorHelper(0, 0, 0);
-		}
-		
-		public void setPosition(double x, double y, double z) {
-			position.xCoord = x;
-			position.yCoord = y;
-			position.zCoord = z;
-		}
-		
-		public void setPosition(Vec3 pos) {
-			setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
-		}
-		
-		public void move(double x, double y, double z) {
-			position.xCoord += x;
-			position.yCoord += y;
-			position.zCoord += z;
-		}
-		
-		public void move(Vec3 offset) {
-			move(offset.xCoord, offset.yCoord, offset.zCoord);
-		}
-		
-		public double getXPos() {
-			return position.xCoord;
-		}
-		
-		public double getYPos() {
-			return position.yCoord;
-		}
-		
-		public double getZPos() {
-			return position.zCoord;
-		}
-		
-		public double getDistance(ControlPoint point) {
-			return position.distanceTo(point.getPosition());
-		}
-
-		@Override
-		public Vec3 getPosition() {
-			return position;
-		}
-
-		@Override
-		public Vec3 getVelocity() {
-			return velocity;
-		}
-
-		@Override
-		public void setVelocity(Vec3 vel) {
-			velocity = vel;
-		}
-
-		@Override
-		public void addVelocity(Vec3 vel) {
-			VectorUtils.add(velocity, vel);
-		}
-		
-	}
-
 }

@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.client;
+package com.crowsofwar.avatar.client.render;
 
 import java.util.Random;
 

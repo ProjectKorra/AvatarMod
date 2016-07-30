@@ -8,10 +8,16 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.controls.ClientInput;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
+import com.crowsofwar.avatar.client.render.RenderControlPoint;
+import com.crowsofwar.avatar.client.render.RenderFireArc;
+import com.crowsofwar.avatar.client.render.RenderFlame;
+import com.crowsofwar.avatar.client.render.RenderFloatingBlock;
+import com.crowsofwar.avatar.client.render.RenderWaterArc;
 import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
@@ -86,6 +92,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlame.class, new RenderFlame());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFireArc.class, new RenderFireArc());
 		RenderingRegistry.registerEntityRenderingHandler(EntityWaterArc.class, new RenderWaterArc());
+		RenderingRegistry.registerEntityRenderingHandler(EntityControlPoint.class, new RenderControlPoint());
 	}
 
 	@Override

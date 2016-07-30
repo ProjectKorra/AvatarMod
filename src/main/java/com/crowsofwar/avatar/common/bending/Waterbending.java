@@ -30,8 +30,8 @@ public class Waterbending implements IBendingController {
 	private BendingMenuInfo menu;
 	
 	public Waterbending() {
-		Color base = new Color(246, 250, 250);
-		Color edge = new Color(52, 224, 211);
+		Color base = new Color(228, 255, 225);
+		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
 		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),

@@ -31,8 +31,8 @@ public class Firebending implements IBendingController {
 	private final BendingMenuInfo menu;
 	
 	public Firebending() {
-		Color light = new Color(245, 245, 245);
-		Color red = new Color(240, 68, 0);
+		Color light = new Color(244, 240, 187);
+		Color red = new Color(173, 64, 31);
 		Color gray = new Color(40, 40, 40);
 		ThemeColor background = new ThemeColor(light, red);
 		ThemeColor edge = new ThemeColor(red, red);
