@@ -11,11 +11,14 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	
 	private static final int DATAWATCHER_VELOCITY = 3;
 	
+	protected final EntityArc arc;
+	
 	private Vec3 internalPosition;
 	private Vec3 internalVelocity;
 	
-	public EntityControlPoint(World world, float size, double x, double y, double z) {
-		super(world);
+	public EntityControlPoint(EntityArc arc, float size, double x, double y, double z) {
+		super(arc.worldObj);
+		this.arc = arc;
 		setSize(size, size);
 		internalPosition = Vec3.createVectorHelper(x, y, z);
 		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
@@ -109,6 +112,14 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	@Override
 	public void addVelocity(Vec3 vel) {
 		setVelocity(VectorUtils.plus(getVelocity(), vel));
+	}
+	
+	/**
+	 * Get the arc that this control point belongs to.
+	 * @return
+	 */
+	public EntityArc getArc() {
+		return arc;
 	}
 
 }
