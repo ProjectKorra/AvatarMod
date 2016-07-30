@@ -17,6 +17,10 @@ public class RenderFireArc extends RenderArc {
 
 	private static final ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire-ribbon.png");
 	
+	public RenderFireArc() {
+		enableFullBrightness();
+	}
+	
 	@Override
 	protected ResourceLocation getTexture() {
 		return fire;

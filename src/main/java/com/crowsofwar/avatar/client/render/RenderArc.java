@@ -26,6 +26,11 @@ import net.minecraft.util.Vec3;
 
 public abstract class RenderArc extends Render {
 
+	/**
+	 * Whether to render with full brightness.
+	 */
+	private boolean renderBright;
+	
 	@Override
 	public final void doRender(Entity p_76986_1_, double xx, double yy, double zz, float p_76986_8_,
 			float p_76986_9_) {
@@ -58,10 +63,10 @@ public abstract class RenderArc extends Render {
 		Minecraft.getMinecraft().renderEngine.bindTexture(getTexture());
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
-		GL11.glDisable(GL11.GL_LIGHTING);
+		if (renderBright) GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
+		
 //		double size = arc.width / 2;
 		double sizeLeader = point.width / 2;
 		double sizePoint = leader.width / 2;
@@ -91,15 +96,6 @@ public abstract class RenderArc extends Render {
 		mat.rotate(lookingEuler.xCoord, 1, 0, 0);
 		double dist = leader.getDistance(point);
 		
-		
-//		Vector4d vert1 = new Vector4d(-sizeLeader, 0, dist, 1).mul(mat);
-//		Vector4d vert2 = new Vector4d(sizeLeader, 0, dist, 1).mul(mat);
-//		Vector4d vert3 = new Vector4d(sizePoint, 0, 0, 1).mul(mat);
-//		Vector4d vert4 = new Vector4d(-sizePoint, 0, 0, 1).mul(mat);
-		
-//		Vector4d debug = vert4;
-//		arc.worldObj.spawnParticle("spell", debug.x, debug.y, debug.z, 0, 0, 0);
-		
 		Vector4d t_v1 = new Vector4d(-sizeLeader, sizeLeader, dist, 1).mul(mat);
 		Vector4d t_v2 = new Vector4d(sizeLeader, sizeLeader, dist, 1).mul(mat);
 		Vector4d t_v3 = new Vector4d(sizePoint, sizePoint, 0, 1).mul(mat);
@@ -122,7 +118,7 @@ public abstract class RenderArc extends Render {
 		onDrawSegment(arc, leader, point);
 		
 		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_LIGHTING);
+		if (renderBright) GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}
 	
@@ -172,6 +168,13 @@ public abstract class RenderArc extends Render {
 
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		
+	}
+	
+	/**
+	 * Render this arc to disregard the actual lighting and instead render with full brightness
+	 */
+	protected void enableFullBrightness() {
+		renderBright = true;
 	}
 	
 }
