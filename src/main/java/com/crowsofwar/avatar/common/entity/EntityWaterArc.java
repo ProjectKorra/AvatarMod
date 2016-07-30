@@ -93,6 +93,7 @@ public class EntityWaterArc extends EntityArc {
 
 		@Override
 		protected void onCollision(Entity entity) {
+			if (entity == owner) return;
 			entity.addVelocity(this.posX - entity.posX, 0.2, this.posZ - entity.posZ);
 			if (entity instanceof EntityLivingBase) {
 				((EntityLivingBase) entity).attackEntityFrom(DamageSource.drown, 6); // TODO Water DamageSource

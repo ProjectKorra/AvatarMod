@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.bending.FirebendingState;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	private static final int DATAWATCHER_VELOCITY = 3;
 	
 	protected final EntityArc arc;
+	protected EntityPlayer owner;
 	
 	private Vec3 internalPosition;
 	private Vec3 internalVelocity;
@@ -129,6 +131,14 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	 */
 	public EntityArc getArc() {
 		return arc;
+	}
+	
+	public EntityPlayer getOwner() {
+		return owner;
+	}
+	
+	public void setOwner(EntityPlayer owner) {
+		this.owner = owner;
 	}
 
 }

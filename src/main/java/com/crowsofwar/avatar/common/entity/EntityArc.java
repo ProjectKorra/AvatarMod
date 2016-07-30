@@ -217,6 +217,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	public void setOwner(EntityPlayer owner) {
 		this.owner = owner;
+		for (EntityControlPoint cp : points) cp.setOwner(owner);
 	}
 	
 }
