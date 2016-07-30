@@ -64,4 +64,23 @@ public class EntityFireArc extends EntityArc {
 		return GRAVITY;
 	}
 
+	@Override
+	protected EntityControlPoint createControlPoint(float size) {
+		return new FireControlPoint(this, size, 0, 0, 0);
+	}
+	
+	public class FireControlPoint extends EntityControlPoint {
+
+		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
+			super(arc, size, x, y, z);
+		}
+
+		@Override
+		protected void onCollision(Entity entity) {
+			entity.setFire(3);
+			arc.setDead();
+		}
+		
+	}
+	
 }

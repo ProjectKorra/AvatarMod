@@ -4,6 +4,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.bending.FirebendingState;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.entity.Entity;
@@ -52,7 +53,12 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		setVelocity(VectorUtils.times(getVelocity(), 0.4));
 		
 		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
-		if (!collisions.isEmpty() && collisions.get(0) != this.arc) onCollision(collisions.get(0));
+		if (!collisions.isEmpty()) {
+			Entity collidedWith = collisions.get(0);
+			if (!(collidedWith instanceof EntityControlPoint) && collidedWith != this.arc) {
+				onCollision(collisions.get(0));
+			}
+		}
 		
 	}
 	
