@@ -220,4 +220,9 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		for (EntityControlPoint cp : points) cp.setOwner(owner);
 	}
 	
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+	
 }
