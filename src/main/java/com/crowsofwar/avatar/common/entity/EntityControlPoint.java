@@ -117,7 +117,9 @@ public class EntityControlPoint extends Entity implements IPhysics {
 
 	@Override
 	public void setVelocity(Vec3 vel) {
-		setVelocity(vel.xCoord, vel.yCoord, vel.zCoord); // TODO - temporary solution, @SideOnly Client.
+		motionX = vel.xCoord;
+		motionY = vel.yCoord;
+		motionZ = vel.zCoord;
 	}
 
 	@Override
