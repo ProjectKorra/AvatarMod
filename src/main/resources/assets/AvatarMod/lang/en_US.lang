@@ -26,8 +26,8 @@ avatar.cmd.bending.list.nonbender=[italic][color=value]${player}[/color] is a no
 avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
 avatar.cmd.bending.list.top=[bold]Listing [color=value]${amount}[/color] bending controllers for [color=value]${player}[/color]:
 
-avatar.cmd.bending.add.alreadyHas=[italic][color=value]${player}[/color] is already a(n) [color=value][translate=avatar.${bending}.demonym][/color].[/italic]
+avatar.cmd.bending.add.alreadyHas=[color=error_value]${player}[/color][color=error] is already a(n) [/color][color=error_value][translate=avatar.${bending}.demonym][/color].
 avatar.cmd.bending.add.success=[bold][color=value]${player}[/color] is now a(n) [color=value][translate=avatar.${bending}.demonym][/color]![/bold]
 
-avatar.cmd.bending.remove.doesntHave=[italic][color=value]${player}[/color] isn't a(n) [color=value][translate=avatar.${bending}.demonym][/color].[/italic]
+avatar.cmd.bending.remove.doesntHave=[color=error_value]${player}[/color][color=error] isn't a(n) [/color][color=error_value][translate=avatar.${bending}.demonym][/color].
 avatar.cmd.bending.remove.success=[bold]Took [color=value][translate=avatar.${bending}][/color] from [color=value]${player}[/color]![/bold]
