@@ -12,7 +12,10 @@ import static com.crowsofwar.avatar.common.AvatarAbility.*;
 
 import java.awt.Color;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
 
 public class Airbending implements IBendingController {
 	
@@ -46,6 +49,16 @@ public class Airbending implements IBendingController {
 	
 	@Override
 	public void onAbility(AvatarAbility ability, AvatarPlayerData data) {
+		
+		if (ability == ACTION_AIRBEND_TEST) {
+			
+			EntityPlayer player = data.getState().getPlayerEntity();
+			player.addVelocity(0, 1, 0);
+			
+			// Note: This always is called on server-side
+			((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(player));
+			
+		}
 		
 	}
 	
