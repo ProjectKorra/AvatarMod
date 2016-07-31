@@ -22,6 +22,7 @@ public class BendingManager {
 	public static final int BENDINGID_EARTHBENDING = 1;
 	public static final int BENDINGID_FIREBENDING = 2;
 	public static final int BENDINGID_WATERBENDING = 3;
+	public static final int BENDINGID_AIRBENDING = 4;
 	
 	private static Map<Integer, IBendingController> bending;
 	private static Map<String, IBendingController> bendingByName;
@@ -34,6 +35,7 @@ public class BendingManager {
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
 		registerBending(new Waterbending());
+		registerBending(new Airbending());
 	}
 	
 	/**
