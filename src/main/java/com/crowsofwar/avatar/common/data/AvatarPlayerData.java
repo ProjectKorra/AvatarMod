@@ -117,7 +117,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public void removeBending(IBendingController bending) {
 		if (hasBending(bending.getID())) {
-			bendingControllers.remove(bending);
+			bendingControllers.remove(bending.getID());
 			bendingControllerList.remove(bending);
 			IBendingState state = getBendingState(bending);
 			bendingStates.remove(bending.getID());
