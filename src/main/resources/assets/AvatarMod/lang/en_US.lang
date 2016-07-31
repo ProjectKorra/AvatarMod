@@ -9,6 +9,7 @@ avatar.ToggleBending=Pick up block
 avatar.RadialMenu=Earthbending
 avatar.Firebend=Firebending
 avatar.Waterbend=Waterbending
+avatar.Airbend=Airbending
 
 avatar.earthbending=Earthbending
 avatar.earthbending.demonym=Earthbender
@@ -16,6 +17,8 @@ avatar.firebending=Firebending
 avatar.firebending.demonym=Firebender
 avatar.waterbending=Waterbending
 avatar.waterbending.demonym=Waterbender
+avatar.airbending=Airbending
+avatar.airbending.demonym=Airbender
 
 avatar.cmd.bending=Manage a player's bending controllers.
 avatar.cmd.bending.list.noData=[color=error_value]${player}[/color][color=error] is not a registered account.[/color]
