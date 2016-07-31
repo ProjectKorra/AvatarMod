@@ -66,12 +66,7 @@ public class AvatarMod {
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 		
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
-		registerPacket(PacketSCheckBendingList.class, Side.SERVER);
-		registerPacket(PacketSCheatEarthbending.class, Side.SERVER);
 		registerPacket(PacketSUseAbility.class, Side.SERVER);
-		registerPacket(PacketSToggleBending.class, Side.SERVER);
-		registerPacket(PacketCThrownBlockVelocity.class, Side.CLIENT);
-		registerPacket(PacketCControllingBlock.class, Side.CLIENT);
 		registerPacket(PacketSRequestData.class, Side.SERVER);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		registerPacket(PacketSUseBendingController.class, Side.SERVER);

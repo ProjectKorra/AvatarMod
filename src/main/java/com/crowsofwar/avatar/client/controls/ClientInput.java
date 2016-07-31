@@ -1,6 +1,16 @@
 package com.crowsofwar.avatar.client.controls;
 
-import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_MIDDLE_CLICK;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_MIDDLE_CLICK_DOWN;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_AIRBENDING;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_EARTHBENDING;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_FIREBENDING;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_WATERBENDING;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.NONE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,13 +28,9 @@ import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-import com.crowsofwar.avatar.common.network.packets.PacketSCheatEarthbending;
-import com.crowsofwar.avatar.common.network.packets.PacketSCheckBendingList;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
-import com.crowsofwar.avatar.common.util.BlockPos;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
 
@@ -34,8 +40,6 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
-import crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
