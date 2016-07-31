@@ -5,21 +5,14 @@ import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IAvatarPacket;
-import com.crowsofwar.avatar.common.network.PacketRedirector;
-import com.crowsofwar.avatar.common.network.packets.PacketCControllingBlock;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCThrownBlockVelocity;
-import com.crowsofwar.avatar.common.network.packets.PacketSCheatEarthbending;
-import com.crowsofwar.avatar.common.network.packets.PacketSCheckBendingList;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
-import com.crowsofwar.avatar.common.network.packets.PacketSToggleBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 
@@ -33,17 +26,10 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;
-import crowsofwar.gorecore.data.PlayerDataFetcher;
-import crowsofwar.gorecore.data.PlayerDataFetcherServer;
-import crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
-import crowsofwar.gorecore.data.PlayerDataFetcherSided;
 import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION)
 public class AvatarMod {
