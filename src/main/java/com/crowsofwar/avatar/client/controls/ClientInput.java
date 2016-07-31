@@ -67,6 +67,7 @@ public class ClientInput implements IControlsHandler {
 		addKeybinding(KEY_EARTHBENDING, Keyboard.KEY_Z, "main");
 		addKeybinding(KEY_FIREBENDING, Keyboard.KEY_X, "main");
 		addKeybinding(KEY_WATERBENDING, Keyboard.KEY_C, "main");
+		addKeybinding(KEY_AIRBENDING, Keyboard.KEY_F, "main");
 		
 	}
 	
@@ -115,6 +116,7 @@ public class ClientInput implements IControlsHandler {
 		openBendingMenu(BendingManager.BENDINGID_EARTHBENDING);
 		openBendingMenu(BendingManager.BENDINGID_FIREBENDING);
 		openBendingMenu(BendingManager.BENDINGID_WATERBENDING);
+		openBendingMenu(BendingManager.BENDINGID_AIRBENDING);
 		
 	}
 	
