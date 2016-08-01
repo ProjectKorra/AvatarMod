@@ -1,7 +1,10 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDatawatcher;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
+import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
+import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,14 +13,25 @@ import net.minecraft.world.World;
 
 public class EntityAirGust extends Entity implements IPhysics {
 	
+	public static int DATAWATCHER_MOTION = 2;
+	
 	private final Vec3 internalPosition;
-	private final IEntityProperty<Vec3> internalVelocity;
+	private final EntityPropertyDatawatcher<Vec3> internalVelocity;
 	
 	public EntityAirGust(World world) {
 		super(world);
 		setSize(0.5f, 0.5f);
 		this.internalPosition = Vec3.createVectorHelper(0, 0, 0);
-		this.internalVelocity = new EntityPropertyMotion(this);
+		this.internalVelocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_MOTION);
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if (ticksExisted % 5 == 0) internalVelocity.sync();
+		Vec3 velocity = getVelocity();
+		moveEntity(velocity.xCoord, velocity.yCoord, velocity.zCoord);
+		if (isCollided || ticksExisted > 30) setDead();
 	}
 	
 	@Override
@@ -30,7 +44,7 @@ public class EntityAirGust extends Entity implements IPhysics {
 	
 	@Override
 	public Vec3 getVelocity() {
-		return internalVelocity.getValue();
+		return VectorUtils.times(internalVelocity.getValue(), 0.05);
 	}
 	
 	@Override

@@ -16,7 +16,7 @@ public class RenderAirGust extends Render {
 	public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
 		
 		World world = entity.worldObj;
-		AxisAlignedBB boundingBox = entity.getBoundingBox();
+		AxisAlignedBB boundingBox = entity.boundingBox;
 		double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
