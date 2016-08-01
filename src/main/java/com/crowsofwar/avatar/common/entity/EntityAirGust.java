@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDatawatcher;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
@@ -32,6 +34,13 @@ public class EntityAirGust extends Entity implements IPhysics {
 		Vec3 velocity = getVelocity();
 		moveEntity(velocity.xCoord, velocity.yCoord, velocity.zCoord);
 		if (isCollided || ticksExisted > 30) setDead();
+		
+		List<Entity> collidedWith = worldObj.getEntitiesWithinAABB(Entity.class, boundingBox);
+		if (!collidedWith.isEmpty()) {
+			Entity collided = collidedWith.get(0); // Only bother collision-checking 1 entity
+			collided.addVelocity(velocity.xCoord * 3, 0.3, velocity.zCoord * 3);
+		}
+		
 	}
 	
 	@Override
