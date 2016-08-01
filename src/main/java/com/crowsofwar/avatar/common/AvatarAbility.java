@@ -21,7 +21,8 @@ public enum AvatarAbility {
 	ACTION_PUT_BLOCK(		"PutBlock",		BENDINGID_EARTHBENDING,	-1, false),
 	ACTION_WATER_ARC(		"WaterArc",		BENDINGID_WATERBENDING,	-1, true,  4),
 	ACTION_WATERARC_THROW(	"WaterThrow",	BENDINGID_WATERBENDING,	-2, false, 5),
-	ACTION_AIRBEND_TEST(	"AirbendTest",	BENDINGID_AIRBENDING,	-2,	false, 6);
+	ACTION_AIRBEND_TEST(	"AirbendTest",	BENDINGID_AIRBENDING,	-2,	false, 6),
+	ACTION_AIR_GUST(		"AirGust",		BENDINGID_AIRBENDING,	-2,	false, 7);
 	
 	private final String name;
 	private final IBendingController controller;
