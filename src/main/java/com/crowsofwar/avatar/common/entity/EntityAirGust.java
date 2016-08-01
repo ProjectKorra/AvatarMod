@@ -15,6 +15,7 @@ public class EntityAirGust extends Entity implements IPhysics {
 	
 	public EntityAirGust(World world) {
 		super(world);
+		setSize(0.5f, 0.5f);
 		this.internalPosition = Vec3.createVectorHelper(0, 0, 0);
 		this.internalVelocity = new EntityPropertyMotion(this);
 	}
@@ -49,7 +50,7 @@ public class EntityAirGust extends Entity implements IPhysics {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		
+		setDead();
 	}
 	
 	@Override
