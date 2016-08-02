@@ -2,31 +2,36 @@ package com.crowsofwar.avatar.client.render;
 
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.entity.EntityArc;
+import com.crowsofwar.avatar.common.entity.EntityControlPoint;
+
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class RenderAirGust extends Render {
+public class RenderAirGust extends RenderArc {
+	
+	public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/entity/air-ribbon.png");
 	
 	private static final Random random = new Random();
 	
 	@Override
-	public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
+	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		
-		World world = entity.worldObj;
-		AxisAlignedBB boundingBox = entity.boundingBox;
+		World world = arc.worldObj;
+		AxisAlignedBB boundingBox = first.boundingBox;
 		double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 		world.spawnParticle("cloud", spawnX, spawnY, spawnZ, 0, 0, 0);
 		
 	}
-
+	
 	@Override
-	protected ResourceLocation getEntityTexture(Entity entity) {
-		return null;
+	protected ResourceLocation getTexture() {
+		return TEXTURE;
 	}
-
+	
 }
