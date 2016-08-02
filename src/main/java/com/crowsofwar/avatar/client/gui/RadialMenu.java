@@ -167,20 +167,24 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		
 		// Draw icon
 		GL11.glPushMatrix();
-		float iconScale = .9f;
+		float iconScale = .8f;
 		float angle = segment.getAngle() + 45f;
 		angle %= 360;
 		GL11.glTranslatef(width / 2f, height / 2f, 0);	// Re-center origin
-		GL11.glScalef(iconScale, iconScale, iconScale);
-		GL11.glRotatef(angle, 0, 0, 1);		// Rotation for next translation
-		GL11.glTranslatef(-59 / iconScale, -27 / iconScale, 0);		// Translate into correct position
-		GL11.glRotatef(-angle, 0, 0, 1);	// Icon is now at desired position, rotate the image back to regular
-		GL11.glTranslatef(-8, -8, 0);		// Re-center the icon.
+		GL11.glRotatef(angle, 0, 0, 1);					// Rotation for next translation
+		GL11.glTranslatef(-59, -27, 0);					// Translate into correct position
+		GL11.glRotatef(-angle, 0, 0, 1);				// Icon is now at desired position, rotate the image back to regular
+		
+		// Color to icon RGB
 		GL11.glColor3f(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
 				theme.getIcon().getBlue(hover) / 255f);
-		GL11.glTranslatef(0, 0, 2); 		// Ensure icon is not overlapped by the radial segment picture
+		
+		GL11.glTranslatef(0, 0, 2); 							// Ensure icon is not overlapped
+		GL11.glScalef(iconScale, iconScale, iconScale);			// Scale the icon's recentering and actual image
+		GL11.glTranslatef(-16 * iconScale, -16 * iconScale, 0);	// Re-center the icon.
 		mc.getTextureManager().bindTexture(icons);
 		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
+		
 		
 		GL11.glPopMatrix();
 	}
