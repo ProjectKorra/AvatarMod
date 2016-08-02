@@ -25,6 +25,12 @@ public class EntityAirGust extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		EntityControlPoint first = getControlPoint(0);
+		EntityControlPoint second = getControlPoint(1);
+		if (first.getPosition().squareDistanceTo(second.getPosition()) >= getControlPointMaxDistanceSq()) {
+			setDead();
+		}
+		if (ticksExisted > 80) setDead();
 	}
 	
 	@Override
@@ -64,12 +70,14 @@ public class EntityAirGust extends EntityArc {
 	
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return 16; // 4 * 4
+		return 64; // 8
 	}
 	
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
-		return 64; // 8 * 8
+		// Note: Is not actually called.
+		// Set dead as soon as reached 64 sq-distance
+		return 200;
 	}
 	
 	public class AirGustControlPoint extends EntityControlPoint {
