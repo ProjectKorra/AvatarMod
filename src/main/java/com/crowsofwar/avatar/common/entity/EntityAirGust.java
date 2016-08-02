@@ -28,29 +28,6 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	public Vec3 getPosition() {
-		internalPosition.xCoord = posX;
-		internalPosition.yCoord = posY;
-		internalPosition.zCoord = posZ;
-		return internalPosition;
-	}
-	
-	@Override
-	public Vec3 getVelocity() {
-		return VectorUtils.times(internalVelocity.getValue(), 0.05);
-	}
-	
-	@Override
-	public void setVelocity(Vec3 vel) {
-		internalVelocity.setValue(vel);
-	}
-	
-	@Override
-	public void addVelocity(Vec3 vel) {
-		internalVelocity.setValue(getVelocity().addVector(vel.xCoord, vel.yCoord, vel.zCoord));
-	}
-	
-	@Override
 	protected void entityInit() {
 		
 	}
@@ -64,16 +41,48 @@ public class EntityAirGust extends EntityArc {
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	@Override
 	protected void onCollideWithBlock() {
-		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	protected Vec3 getGravityVector() {
 		return ZERO;
+	}
+	
+	@Override
+	protected EntityControlPoint createControlPoint(float size) {
+		return new AirGustControlPoint(this, size, 0, 0, 0);
+	}
+	
+	@Override
+	protected int getAmountOfControlPoints() {
+		return 2;
+	}
+	
+	@Override
+	protected double getControlPointMaxDistanceSq() {
+		return 16; // 4 * 4
+	}
+	
+	@Override
+	protected double getControlPointTeleportDistanceSq() {
+		return 64; // 8 * 8
+	}
+	
+	public class AirGustControlPoint extends EntityControlPoint {
+		
+		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
+			super(arc, size, x, y, z);
+		}
+		
+		@Override
+		protected void onCollision(Entity entity) {
+			entity.addVelocity(entity.posX - this.posX, 0.2, entity.posZ - this.posZ);
+		}
+		
 	}
 	
 }
