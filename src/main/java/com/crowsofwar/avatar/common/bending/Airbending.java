@@ -78,6 +78,7 @@ public class Airbending implements IBendingController {
 			EntityAirGust gust = new EntityAirGust(world);
 			gust.setVelocity(times(look, 10));
 			gust.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+			gust.setOwner(player);
 			
 			world.spawnEntityInWorld(gust);
 			

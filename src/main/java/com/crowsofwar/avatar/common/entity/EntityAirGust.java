@@ -88,7 +88,8 @@ public class EntityAirGust extends EntityArc {
 		
 		@Override
 		protected void onCollision(Entity entity) {
-			entity.addVelocity(entity.posX - this.posX, 0.2, entity.posZ - this.posZ);
+			if (!worldObj.isRemote && entity != owner)
+				entity.addVelocity(entity.posX - this.posX, 0.2, entity.posZ - this.posZ);
 		}
 		
 	}
