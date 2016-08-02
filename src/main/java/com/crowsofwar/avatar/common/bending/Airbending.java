@@ -36,7 +36,7 @@ public class Airbending implements IBendingController {
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
 		MenuTheme theme = new MenuTheme(background, edge, icon);
 		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, AvatarGuiIds.GUI_RADIAL_MENU_AIR,
-				ACTION_AIRBEND_TEST, ACTION_AIR_GUST);
+				ACTION_AIR_GUST);
 	}
 	
 	@Override

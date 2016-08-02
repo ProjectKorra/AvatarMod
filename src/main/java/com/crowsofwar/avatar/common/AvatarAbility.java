@@ -14,7 +14,7 @@ public enum AvatarAbility {
 	/** No control is pressed */
 	NONE("", -1, -2, false),
 	ACTION_TOGGLE_BENDING(	"ToggleBending",BENDINGID_EARTHBENDING,	-1, false, 0),
-	ACTION_THROW_BLOCK(		"ThrowBlock",	BENDINGID_EARTHBENDING,	-2, false, 1),
+	ACTION_THROW_BLOCK(		"ThrowBlock",	BENDINGID_EARTHBENDING,	-2, false),
 	ACTION_LIGHT_FIRE(		"LightFire",	BENDINGID_FIREBENDING,	-1, false, 2),
 	ACTION_FIRE_PUNCH(		"FirePunch",	BENDINGID_FIREBENDING,	-2, false, 3),
 	ACTION_FIREARC_THROW(	"FireThrow",	BENDINGID_FIREBENDING,	-2, false),
