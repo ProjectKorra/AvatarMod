@@ -32,13 +32,10 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		super(world);
 		float size = .2f;
 		setSize(size, size);
-		this.points = new EntityControlPoint[] {
-			createControlPoint(size),
-			createControlPoint(size),
-			createControlPoint(size),
-			createControlPoint(size),
-			createControlPoint(size)
-		};
+		this.points = new EntityControlPoint[getAmountOfControlPoints()];
+		for (int i = 0; i < points.length; i++) {
+			points[i] = createControlPoint(size);
+		}
 		for (EntityControlPoint point : points) worldObj.spawnEntityInWorld(point);
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
@@ -85,27 +82,32 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		moveEntity(vel.xCoord / 20, vel.yCoord / 20, vel.zCoord / 20);
 		getLeader().setPosition(posX, posY, posZ);
 		getLeader().setVelocity(getVelocity());
+		
 		if (isCollided) {
 			setDead();
 			onCollideWithBlock();
 		}
 		
 		for (int i = 1; i < points.length; i++) {
+			
 			EntityControlPoint leader = points[i - 1];
 			EntityControlPoint p = points[i];
 			Vec3 leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
 			double sqrDist = p.getPosition().squareDistanceTo(leadPos);
-			if (sqrDist > 6*6) {
+			
+			if (sqrDist > getControlPointTeleportDistanceSq()) {
+				
 				p.setPosition(leader.getXPos(), leader.getYPos(), leader.getZPos());
-			} else if (sqrDist > 1*1) {
+				
+			} else if (sqrDist > getControlPointMaxDistanceSq()) {
+				
 				Vec3 diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
 				diff.normalize();
 				VectorUtils.mult(diff, 0.15);
 				p.addVelocity(diff);
+				
 			}
-		}
-		for (int i = 1; i < points.length; i++) {
-//			getControlPoint(i).setVelocity(Vec3.createVectorHelper(1, 0, 0));
+			
 		}
 		
 	}
@@ -223,6 +225,31 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
+	}
+	
+	/**
+	 * Returns the amount of control points which will be created.
+	 */
+	protected int getAmountOfControlPoints() {
+		return 5;
+	}
+	
+	/**
+	 * Returns the maximum distance between control points, squared.
+	 * Any control points beyond this distance will follow their leader
+	 * to get closer.
+	 */
+	protected double getControlPointMaxDistanceSq() {
+		return 1;
+	}
+	
+	/**
+	 * Returns the distance between control points to be teleported
+	 * to their leader, squared. If any control point is more than this
+	 * distance from its leader, then it is teleported to the leader.
+	 */
+	protected double getControlPointTeleportDistanceSq() {
+		return 36;
 	}
 	
 }
