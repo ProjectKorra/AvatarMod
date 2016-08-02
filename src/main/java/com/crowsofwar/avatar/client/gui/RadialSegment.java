@@ -50,11 +50,11 @@ public class RadialSegment {
 	}
 	
 	public int getTextureU() {
-		return (icon * 16) % 256;
+		return (icon * 32) % 256;
 	}
 	
 	public int getTextureV() {
-		return (icon / 16) * 16;
+		return (icon / 32) * 32;
 	}
 	
 }

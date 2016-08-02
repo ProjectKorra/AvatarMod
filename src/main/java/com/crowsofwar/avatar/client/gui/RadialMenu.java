@@ -167,7 +167,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		
 		// Draw icon
 		GL11.glPushMatrix();
-		float iconScale = 1.5f;
+		float iconScale = .9f;
 		float angle = segment.getAngle() + 45f;
 		angle %= 360;
 		GL11.glTranslatef(width / 2f, height / 2f, 0);	// Re-center origin
@@ -180,7 +180,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 				theme.getIcon().getBlue(hover) / 255f);
 		GL11.glTranslatef(0, 0, 2); 		// Ensure icon is not overlapped by the radial segment picture
 		mc.getTextureManager().bindTexture(icons);
-		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 16, 16);
+		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
 		
 		GL11.glPopMatrix();
 	}
