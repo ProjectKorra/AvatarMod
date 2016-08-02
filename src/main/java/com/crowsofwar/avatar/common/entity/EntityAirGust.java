@@ -29,7 +29,7 @@ public class EntityAirGust extends EntityArc {
 	
 	@Override
 	protected void entityInit() {
-		
+		super.entityInit();
 	}
 	
 	@Override
