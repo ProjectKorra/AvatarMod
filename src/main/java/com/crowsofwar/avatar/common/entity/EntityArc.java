@@ -36,7 +36,6 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		for (int i = 0; i < points.length; i++) {
 			points[i] = createControlPoint(size);
 		}
-		for (EntityControlPoint point : points) worldObj.spawnEntityInWorld(point);
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) setId(nextId++);
@@ -62,8 +61,9 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		if (this.ticksExisted == 1) {
+		if (this.ticksExisted == 1 && !worldObj.isRemote) {
 			for (int i = 0; i < points.length; i++) {
+				worldObj.spawnEntityInWorld(points[i]);
 				points[i].setPosition(getPosition());
 			}
 		}
