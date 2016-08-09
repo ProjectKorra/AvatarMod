@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
+import com.crowsofwar.avatar.common.network.packets.PacketCControlPoints;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
@@ -35,6 +36,9 @@ public class PacketHandlerClient implements IPacketHandler {
 		if (packet instanceof PacketCPlayerData)
 			return handlePacketPlayerData((PacketCPlayerData) packet, ctx);
 		
+		if (packet instanceof PacketCControlPoints)
+			return handlePacketControlPoints((PacketCControlPoints) packet, ctx);
+		
 		AvatarLog.warn("Client recieved unknown packet from server:" + packet);
 		
 		return null;
@@ -62,6 +66,10 @@ public class PacketHandlerClient implements IPacketHandler {
 			
 			data.setActiveBendingController(BendingManager.getBending(packet.getCurrentBendingControllerID()));
 		}
+		return null;
+	}
+	
+	private IMessage handlePacketControlPoints(PacketCControlPoints packet, MessageContext ctx) {
 		return null;
 	}
 	
