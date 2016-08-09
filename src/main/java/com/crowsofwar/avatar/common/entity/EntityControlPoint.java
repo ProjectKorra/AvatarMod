@@ -175,6 +175,14 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		dataWatcher.updateObject(DATAWATCHER_ID, id);
 	}
 	
+	/**
+	 * "Attach" the arc to this control point, meaning that the control
+	 * point now has a reference to the given arc.
+	 */
+	public void setArc(EntityArc arc) {
+		this.arc = arc;
+	}
+	
 	public static EntityControlPoint findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
 			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id) return (EntityControlPoint) obj;

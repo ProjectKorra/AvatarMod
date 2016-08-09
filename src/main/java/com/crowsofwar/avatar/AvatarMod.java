@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IAvatarPacket;
+import com.crowsofwar.avatar.common.network.packets.PacketCControlPoints;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -57,6 +58,7 @@ public class AvatarMod {
 		registerPacket(PacketSRequestData.class, Side.SERVER);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		registerPacket(PacketSUseBendingController.class, Side.SERVER);
+		registerPacket(PacketCControlPoints.class, Side.CLIENT);
 		
 		BendingManager.init();
 		

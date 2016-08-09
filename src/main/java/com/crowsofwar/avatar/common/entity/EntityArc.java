@@ -3,7 +3,9 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
+import com.crowsofwar.avatar.common.network.packets.PacketCControlPoints;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.relauncher.Side;
@@ -32,13 +34,17 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		super(world);
 		float size = .2f;
 		setSize(size, size);
-		this.points = new EntityControlPoint[getAmountOfControlPoints()];
+		this.points = new EntityControlPoint[worldObj.isRemote ? 0 : getAmountOfControlPoints()];
 		for (int i = 0; i < points.length; i++) {
 			points[i] = createControlPoint(size);
 		}
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
-		if (!worldObj.isRemote) setId(nextId++);
+		if (!worldObj.isRemote) {
+			setId(nextId++);
+			// TODO Send to only necessary players
+			AvatarMod.network.sendToAll(new PacketCControlPoints(this));
+		}
 	}
 	
 	/**

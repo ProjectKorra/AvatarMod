@@ -4,6 +4,8 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityArc;
+import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketCControlPoints;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -15,6 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 /**
  * Handles packets addressed to the client. Packets like
@@ -70,6 +73,33 @@ public class PacketHandlerClient implements IPacketHandler {
 	}
 	
 	private IMessage handlePacketControlPoints(PacketCControlPoints packet, MessageContext ctx) {
+		EntityPlayer player = mc.thePlayer;
+		World world = mc.theWorld;
+		
+		int[] cpIds = packet.getControlPointIds();
+		
+		boolean allLoaded = true;
+		
+		EntityArc arc = EntityArc.findFromId(world, packet.getArcId());
+		allLoaded = arc != null;
+		EntityControlPoint[] controlPoints = new EntityControlPoint[cpIds.length];
+		for (int i = 0; i < controlPoints.length; i++) {
+			controlPoints[i] = EntityControlPoint.findFromId(world, cpIds[i]);
+			if (controlPoints[i] == null) allLoaded = false;
+		}
+		
+		if (allLoaded) {
+			
+			arc.setControlPoints(controlPoints);
+			
+			for (EntityControlPoint point : controlPoints) {
+				point.setArc(arc);
+			}
+			
+		} else {
+			AvatarLog.warn("PacketCControlPoints processing- not all arcs/control points are loaded on the client.");
+		}
+		
 		return null;
 	}
 	

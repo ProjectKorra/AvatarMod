@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.network.packets;
 
+import com.crowsofwar.avatar.common.entity.EntityArc;
+import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 
@@ -30,6 +32,15 @@ public class PacketCControlPoints implements IAvatarPacket<PacketCControlPoints>
 	public PacketCControlPoints(int arcId, int[] controlPointIds) {
 		this.arcId = arcId;
 		this.controlPointIds = controlPointIds;
+	}
+	
+	public PacketCControlPoints(EntityArc arc) {
+		this.arcId = arc.getId();
+		EntityControlPoint[] cps = arc.getControlPoints();
+		this.controlPointIds = new int[cps.length];
+		for (int i = 0; i < controlPointIds.length; i++) {
+			controlPointIds[i] = cps[i].getId();
+		}
 	}
 	
 	@Override
