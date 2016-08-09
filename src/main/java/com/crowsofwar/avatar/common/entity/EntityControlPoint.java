@@ -31,8 +31,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		internalPosition = Vec3.createVectorHelper(0, 0, 0);
 		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
 		if (!worldObj.isRemote) setId(nextId++);
-		System.out.println("Spawned CP via vanilla");
-		Thread.dumpStack();
+		System.out.println("Spawned CP via vanilla with Id " + getId());
 	}
 	
 	public EntityControlPoint(EntityArc arc, float size, double x, double y, double z) {
@@ -42,8 +41,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		internalPosition = Vec3.createVectorHelper(x, y, z);
 		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
 		if (!worldObj.isRemote) setId(nextId++);
-		System.out.println("Spawned CP via custom");
-		Thread.dumpStack();
+		System.out.println("Spawned CP via custom with Id " + getId());
 	}
 	
 	@Override

@@ -106,7 +106,7 @@ public class EntityAirGust extends EntityArc {
 				if (arc == null) {
 					System.out.println("No arc yet...");
 				} else {
-					System.out.println("Found arc : " + arc);
+					System.out.println("Found arc");
 				}
 			}
 		}

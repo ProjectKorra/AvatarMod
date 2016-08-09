@@ -46,8 +46,10 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		}
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
+		System.out.println("Spawned arc");
 		if (!worldObj.isRemote) {
 			setId(nextId++);
+			System.out.println("Created Arc with Id " + getId());
 			// TODO Send to only necessary players
 			AvatarMod.network.sendToAll(new PacketCControlPoints(this));
 		}
@@ -261,13 +263,15 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	 * Set the arc's control point references to the specified ones.
 	 * Avoid using unless necessary, this can be dangerous.
 	 */
-	public void syncControlPoints(EntityControlPoint[] points) {
-		System.out.println("===== SYNCED POINTS TO " + points + " =====");
+	public void syncControlPoints(EntityControlPoint[] setPoints) {
+		System.out.println("===== SYNCED POINTS TO " + setPoints + " =====");
 		// Remove existing control points from world
-		for (EntityControlPoint cp : points) {
+		for (EntityControlPoint cp : this.points) {
+			System.out.println("Deleted CP " + cp.getId());
 			cp.setDead();
 		}
-		this.points = points;
+		for (EntityControlPoint cp : setPoints) System.out.println("Using CP " + cp.getId());
+		this.points = setPoints;
 	}
 	
 	@Override

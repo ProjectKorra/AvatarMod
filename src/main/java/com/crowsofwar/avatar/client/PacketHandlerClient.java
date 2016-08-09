@@ -98,6 +98,7 @@ public class PacketHandlerClient implements IPacketHandler {
 			
 		} else {
 			AvatarLog.warn("PacketCControlPoints processing- not all arcs/control points are loaded on the client.");
+			System.out.println(packet.getArcId());
 		}
 		
 		return null;
