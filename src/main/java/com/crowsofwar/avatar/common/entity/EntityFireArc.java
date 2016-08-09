@@ -68,6 +68,10 @@ public class EntityFireArc extends EntityArc {
 	
 	public class FireControlPoint extends EntityControlPoint {
 
+		public FireControlPoint(World world) {
+			super(world);
+		}
+		
 		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
