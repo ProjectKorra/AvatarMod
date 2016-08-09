@@ -73,35 +73,10 @@ public class PacketHandlerClient implements IPacketHandler {
 	}
 	
 	private IMessage handlePacketControlPoints(PacketCControlPoints packet, MessageContext ctx) {
-		EntityPlayer player = mc.thePlayer;
-		World world = mc.theWorld;
 		
-		int[] cpIds = packet.getControlPointIds();
-		
-		boolean allLoaded = true;
-		
-		EntityArc arc = EntityArc.findFromId(world, packet.getArcId());
-		allLoaded = arc != null;
-		EntityControlPoint[] controlPoints = new EntityControlPoint[cpIds.length];
-		for (int i = 0; i < controlPoints.length; i++) {
-			controlPoints[i] = EntityControlPoint.findFromId(world, cpIds[i]);
-			if (controlPoints[i] == null) allLoaded = false;
-		}
-		
-		if (allLoaded) {
-			
-			arc.syncControlPoints(controlPoints);
-			
-			for (EntityControlPoint point : controlPoints) {
-				point.setArc(arc);
-			}
-			
-		} else {
-			AvatarLog.warn("PacketCControlPoints processing- not all arcs/control points are loaded on the client.");
-			System.out.println(packet.getArcId());
-		}
-		
+		ArcControlPointLinker.link(packet.getArcId(), packet.getControlPointIds());
 		return null;
+		
 	}
 	
 }

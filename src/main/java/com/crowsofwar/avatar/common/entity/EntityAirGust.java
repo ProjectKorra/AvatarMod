@@ -102,19 +102,12 @@ public class EntityAirGust extends EntityArc {
 		@Override
 		public void onUpdate() {
 			super.onUpdate();
-			if (!worldObj.isRemote) {
-				if (arc == null) {
-					System.out.println("No arc yet...");
-				} else {
-					System.out.println("Found arc");
-				}
-			}
 		}
 		
 		@Override
 		public void setDead() {
 			super.setDead();
-			System.out.println("Setting airgust cp dead");
+//			System.out.println("removed");
 		}
 		
 	}
