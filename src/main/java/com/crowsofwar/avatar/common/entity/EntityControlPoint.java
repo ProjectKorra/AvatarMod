@@ -15,7 +15,10 @@ import net.minecraft.world.World;
 
 public class EntityControlPoint extends Entity implements IPhysics {
 	
-	private static final int DATAWATCHER_VELOCITY = 3;
+	private static final int DATAWATCHER_VELOCITY = 3; // 3,4,5
+	private static final int DATAWATCHER_ID = 6;
+	
+	private static int nextId = 1;
 	
 	protected EntityArc arc;
 	protected EntityPlayer owner;
@@ -27,6 +30,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		super(world);
 		internalPosition = Vec3.createVectorHelper(0, 0, 0);
 		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
+		if (!worldObj.isRemote) setId(nextId++);
 		System.out.println("Spawned CP via vanilla");
 		Thread.dumpStack();
 	}
@@ -37,6 +41,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		setSize(size, size);
 		internalPosition = Vec3.createVectorHelper(x, y, z);
 		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
+		if (!worldObj.isRemote) setId(nextId++);
 		System.out.println("Spawned CP via custom");
 		Thread.dumpStack();
 	}
@@ -46,6 +51,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		dataWatcher.addObject(DATAWATCHER_VELOCITY, 0f);
 		dataWatcher.addObject(DATAWATCHER_VELOCITY + 1, 0f);
 		dataWatcher.addObject(DATAWATCHER_VELOCITY + 2, 0f);
+		dataWatcher.addObject(DATAWATCHER_ID, 0);
 	}
 	
 	@Override
@@ -153,5 +159,27 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	public void setOwner(EntityPlayer owner) {
 		this.owner = owner;
 	}
-
+	
+	/**
+	 * Get the Id of this control point. It is unique until the ControlPoint despawns.
+	 * The Id is synced between server and client.
+	 */
+	public int getId() {
+		return dataWatcher.getWatchableObjectInt(DATAWATCHER_ID);
+	}
+	
+	/**
+	 * Synchronize the Id between server and client.
+	 */
+	public void setId(int id) {
+		dataWatcher.updateObject(DATAWATCHER_ID, id);
+	}
+	
+	public static EntityControlPoint findFromId(World world, int id) {
+		for (Object obj : world.loadedEntityList) {
+			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id) return (EntityControlPoint) obj;
+		}
+		return null;
+	}
+	
 }

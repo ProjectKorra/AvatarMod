@@ -169,6 +169,13 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		dataWatcher.updateObject(DATAWATCHER_ID, id);
 	}
 	
+	public static EntityArc findFromId(World world, int id) {
+		for (Object obj : world.loadedEntityList) {
+			if (obj instanceof EntityArc && ((EntityArc) obj).getId() == id) return (EntityArc) obj;
+		}
+		return null;
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double d) {
@@ -220,6 +227,14 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	public void setOwner(EntityPlayer owner) {
 		this.owner = owner;
 		for (EntityControlPoint cp : points) cp.setOwner(owner);
+	}
+	
+	/**
+	 * Set the arc's control point references to the specified ones.
+	 * Avoid using unless necessary, this can be dangerous.
+	 */
+	public void setControlPoints(EntityControlPoint[] points) {
+		this.points = points;
 	}
 	
 	@Override

@@ -43,10 +43,7 @@ public class EntityFireArc extends EntityArc {
 	}
 	
 	public static EntityFireArc findFromId(World world, int id) {
-		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityFireArc && ((EntityFireArc) obj).getId() == id) return (EntityFireArc) obj;
-		}
-		return null;
+		return (EntityFireArc) EntityArc.findFromId(world, id);
 	}
 
 	@Override
