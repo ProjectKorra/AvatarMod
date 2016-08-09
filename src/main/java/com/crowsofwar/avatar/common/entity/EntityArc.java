@@ -30,11 +30,17 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	protected EntityPlayer owner;
 	
+	/**
+	 * Set to true once the PacketCControlPoints has reached this arc,
+	 * notifying it of the true control points. Only used on client side.
+	 */
+	private boolean recievedControlPointSync;
+	
 	public EntityArc(World world) {
 		super(world);
 		float size = .2f;
 		setSize(size, size);
-		this.points = new EntityControlPoint[worldObj.isRemote ? 0 : getAmountOfControlPoints()];
+		this.points = new EntityControlPoint[getAmountOfControlPoints()];
 		for (int i = 0; i < points.length; i++) {
 			points[i] = createControlPoint(size);
 		}
@@ -45,6 +51,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			// TODO Send to only necessary players
 			AvatarMod.network.sendToAll(new PacketCControlPoints(this));
 		}
+		this.recievedControlPointSync = false;
 	}
 	
 	/**
@@ -86,8 +93,10 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		}
 		
 		moveEntity(vel.xCoord / 20, vel.yCoord / 20, vel.zCoord / 20);
-		getLeader().setPosition(posX, posY, posZ);
-		getLeader().setVelocity(getVelocity());
+		if (arePointsInitialized()) {
+			getLeader().setPosition(posX, posY, posZ);
+			getLeader().setVelocity(getVelocity());
+		}
 		
 		if (isCollided) {
 			setDead();
@@ -135,8 +144,10 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
-		// Set position called in entity constructor
-		if (points != null) points[0].setPosition(x, y, z);
+		// Set position - called from entity constructor, so points might be null
+		if (points != null) {
+			points[0].setPosition(x, y, z);
+		}
 	}
 	
 	@Override
@@ -173,6 +184,17 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	public void setId(int id) {
 		dataWatcher.updateObject(DATAWATCHER_ID, id);
+	}
+	
+	/**
+	 * Returns whether the control point array is fully ready.
+	 * <p>
+	 * This is used especially on client-side to check whether
+	 * the ControlPoint sync packets are reached.
+	 * </p>
+	 */
+	public boolean arePointsInitialized() {
+		return recievedControlPointSync;
 	}
 	
 	public static EntityArc findFromId(World world, int id) {
@@ -239,7 +261,12 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	 * Set the arc's control point references to the specified ones.
 	 * Avoid using unless necessary, this can be dangerous.
 	 */
-	public void setControlPoints(EntityControlPoint[] points) {
+	public void syncControlPoints(EntityControlPoint[] points) {
+		System.out.println("===== SYNCED POINTS TO " + points + " =====");
+		// Remove existing control points from world
+		for (EntityControlPoint cp : points) {
+			cp.setDead();
+		}
 		this.points = points;
 	}
 	

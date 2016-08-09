@@ -90,7 +90,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		
 		if (allLoaded) {
 			
-			arc.setControlPoints(controlPoints);
+			arc.syncControlPoints(controlPoints);
 			
 			for (EntityControlPoint point : controlPoints) {
 				point.setArc(arc);

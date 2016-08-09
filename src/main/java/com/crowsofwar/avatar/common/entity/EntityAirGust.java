@@ -102,7 +102,13 @@ public class EntityAirGust extends EntityArc {
 		@Override
 		public void onUpdate() {
 			super.onUpdate();
-			if (super.arc.getControlPoint(1) == this)System.out.println(System.identityHashCode(this) + "");
+			if (!worldObj.isRemote) {
+				if (arc == null) {
+					System.out.println("No arc yet...");
+				} else {
+					System.out.println("Found arc : " + arc);
+				}
+			}
 		}
 		
 		@Override
