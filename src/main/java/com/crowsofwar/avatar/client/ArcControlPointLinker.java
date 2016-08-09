@@ -92,7 +92,7 @@ public class ArcControlPointLinker {
 					int id = controlPointIds[i];
 					if (point.getId() == id) {
 						foundControlPoints[i] = point;
-						System.out.println("====Found another point");
+						System.out.println("====Found another point:" + point.getId());
 						return;
 					}
 				}

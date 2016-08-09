@@ -58,6 +58,12 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	}
 	
 	@Override
+	public void setDead() {
+		super.setDead();
+		System.out.println("Setdead " + getId());
+	}
+	
+	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		
 	}
