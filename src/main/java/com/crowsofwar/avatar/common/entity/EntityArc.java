@@ -61,10 +61,10 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		if (this.ticksExisted == 1) {
+		if (this.ticksExisted == 1 && !worldObj.isRemote) {
 			for (int i = 0; i < points.length; i++) {
-				worldObj.spawnEntityInWorld(points[i]);
 				points[i].setPosition(getPosition());
+				worldObj.spawnEntityInWorld(points[i]);
 			}
 		}
 		

@@ -74,6 +74,7 @@ public class AvatarMod {
 		registerEntity(EntityFireArc.class, "FireArc");
 		registerEntity(EntityWaterArc.class, "WaterArc");
 		registerEntity(EntityAirGust.class, "AirGust");
+		registerEntity(EntityAirGust.AirGustControlPoint.class, "AirGustCP");
 		proxy.init();
 	}
 	

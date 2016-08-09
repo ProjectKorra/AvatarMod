@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
+import crowsofwar.gorecore.GoreCore;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
@@ -80,7 +81,11 @@ public class EntityAirGust extends EntityArc {
 		return 200;
 	}
 	
-	public class AirGustControlPoint extends EntityControlPoint {
+	public static class AirGustControlPoint extends EntityControlPoint {
+		
+		public AirGustControlPoint(World world) {
+			super(world);
+		}
 		
 		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
@@ -88,8 +93,22 @@ public class EntityAirGust extends EntityArc {
 		
 		@Override
 		protected void onCollision(Entity entity) {
-			if (!worldObj.isRemote && entity != owner)
+			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
+				System.out.println(entity);
 				entity.addVelocity(entity.posX - this.posX, 0.2, entity.posZ - this.posZ);
+			}
+		}
+		
+		@Override
+		public void onUpdate() {
+			super.onUpdate();
+			if (super.arc.getControlPoint(1) == this)System.out.println(System.identityHashCode(this) + "");
+		}
+		
+		@Override
+		public void setDead() {
+			super.setDead();
+			System.out.println("Setting airgust cp dead");
 		}
 		
 	}

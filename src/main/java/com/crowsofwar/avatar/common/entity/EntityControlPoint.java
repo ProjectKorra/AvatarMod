@@ -17,11 +17,19 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	
 	private static final int DATAWATCHER_VELOCITY = 3;
 	
-	protected final EntityArc arc;
+	protected EntityArc arc;
 	protected EntityPlayer owner;
 	
 	private Vec3 internalPosition;
 	private Vec3 internalVelocity;
+	
+	public EntityControlPoint(World world) {
+		super(world);
+		internalPosition = Vec3.createVectorHelper(0, 0, 0);
+		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
+		System.out.println("Spawned CP via vanilla");
+		Thread.dumpStack();
+	}
 	
 	public EntityControlPoint(EntityArc arc, float size, double x, double y, double z) {
 		super(arc.worldObj);
@@ -29,6 +37,8 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		setSize(size, size);
 		internalPosition = Vec3.createVectorHelper(x, y, z);
 		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
+		System.out.println("Spawned CP via custom");
+		Thread.dumpStack();
 	}
 	
 	@Override
@@ -58,6 +68,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 		if (!collisions.isEmpty()) {
 			Entity collidedWith = collisions.get(0);
 			if (!(collidedWith instanceof EntityControlPoint) && collidedWith != this.arc) {
+//				System.out.println(collisions.get(0));
 				onCollision(collisions.get(0));
 			}
 		}
