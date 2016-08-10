@@ -26,7 +26,6 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	public EntityArc(World world) {
 		super(world);
-		System.out.println("===Spawned arc===");
 		float size = .2f;
 		setSize(size, size);
 		
@@ -40,7 +39,6 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		if (!worldObj.isRemote) {
 			setId(nextId++);
 		}
-		System.out.println("========");
 	}
 	
 	/**
@@ -131,11 +129,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
-		// System.out.println("Setpos to " + x + "," + y+","+z);
-		// System.out.println(points!=null&&points[0]!=null? points[0].getPosition() : "{points[0]
-		// null}");
 		// Set position - called from entity constructor, so points might be null
-		if (points != null && points.length > 0) {
+		if (points != null) {
 			points[0].setPosition(x, y, z);
 		}
 	}
@@ -241,15 +236,12 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	 * Set the arc's control point references to the specified ones. Avoid using unless necessary,
 	 * this can be dangerous.
 	 */
+	// TODO remove
 	public void syncControlPoints(EntityControlPoint[] setPoints) {
-		System.out.println("===== SYNCED POINTS TO " + setPoints + " =====");
 		// Remove existing control points from world
 		for (EntityControlPoint cp : this.points) {
-			System.out.println("Deleted CP " + cp.getId());
 			cp.setDead();
 		}
-		for (EntityControlPoint cp : setPoints)
-			System.out.println("Using CP " + cp.getId());
 		this.points = setPoints;
 	}
 	

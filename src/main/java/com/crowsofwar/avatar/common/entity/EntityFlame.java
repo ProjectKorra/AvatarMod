@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.entity;
 
-import javax.vecmath.Vector3d;
-
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.entity.Entity;
@@ -11,9 +9,9 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityFlame extends Entity implements IPhysics {
-
-	private static final int DATAWATCHER_VELX = 2,
-			DATAWATCHER_VELY = 3, DATAWATCHER_VELZ = 4, DATAWATCHER_DIST_TRAVELLED = 5;
+	
+	private static final int DATAWATCHER_VELX = 2, DATAWATCHER_VELY = 3, DATAWATCHER_VELZ = 4,
+			DATAWATCHER_DIST_TRAVELLED = 5;
 	
 	private static final int MAX_DIST_TRAVELLED = 10;
 	
@@ -47,7 +45,7 @@ public class EntityFlame extends Entity implements IPhysics {
 		dataWatcher.addObject(DATAWATCHER_VELZ, 0f);
 		dataWatcher.addObject(DATAWATCHER_DIST_TRAVELLED, 0f);
 	}
-
+	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound p_70037_1_) {
 		setDead();
@@ -65,19 +63,17 @@ public class EntityFlame extends Entity implements IPhysics {
 		Vec3 velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
 		float size = (float) (Math.pow(getDistanceTravelled() / MAX_DIST_TRAVELLED, 1.7) * 1.5);
-//		System.out.println((worldObj.isRemote ? "CLIENT " : "SERVER ") + getDistanceTravelled());
 		setSize(size, size);
 		setDistanceTravelled();
 		if (isCollided) {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
-			if (!worldObj.isRemote && worldObj.getBlock(x, y, z) == Blocks.air)
-				worldObj.setBlock(x, y, z, Blocks.fire);
+			if (!worldObj.isRemote && worldObj.getBlock(x, y, z) == Blocks.air) worldObj.setBlock(x, y, z, Blocks.fire);
 		}
 		if (isCollided || getDistanceTravelled() > 10) setDead();
 	}
-
+	
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
@@ -105,12 +101,12 @@ public class EntityFlame extends Entity implements IPhysics {
 		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELZ);
 		return internalVelocity;
 	}
-
+	
 	@Override
 	public Vec3 getPosition() {
 		return VectorUtils.getEntityPos(this);
 	}
-
+	
 	@Override
 	public void setVelocity(Vec3 vel) {
 		if (!worldObj.isRemote) {
@@ -119,7 +115,7 @@ public class EntityFlame extends Entity implements IPhysics {
 			dataWatcher.updateObject(DATAWATCHER_VELZ, (float) vel.zCoord);
 		}
 	}
-
+	
 	@Override
 	public void addVelocity(Vec3 vel) {
 		setVelocity(VectorUtils.plus(getVelocity(), vel));

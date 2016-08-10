@@ -1,13 +1,5 @@
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDatawatcher;
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
-import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
-import com.crowsofwar.avatar.common.util.VectorUtils;
-
 import crowsofwar.gorecore.GoreCore;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -107,7 +99,6 @@ public class EntityAirGust extends EntityArc {
 		@Override
 		public void setDead() {
 			super.setDead();
-//			System.out.println("removed");
 		}
 		
 	}
