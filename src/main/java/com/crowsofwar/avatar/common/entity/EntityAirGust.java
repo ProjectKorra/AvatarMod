@@ -65,7 +65,7 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	protected int getAmountOfControlPoints() {
+	public int getAmountOfControlPoints() {
 		return 2;
 	}
 	

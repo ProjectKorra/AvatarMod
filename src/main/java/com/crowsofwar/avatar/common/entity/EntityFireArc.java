@@ -62,7 +62,7 @@ public class EntityFireArc extends EntityArc {
 	}
 
 	@Override
-	protected EntityControlPoint createControlPoint(float size) {
+	public EntityControlPoint createControlPoint(float size) {
 		return new FireControlPoint(this, size, 0, 0, 0);
 	}
 	
@@ -80,6 +80,7 @@ public class EntityFireArc extends EntityArc {
 		protected void onCollision(Entity entity) {
 			entity.setFire(3);
 			arc.setDead();
+			System.out.println("-------COLLIDE----------");
 		}
 		
 	}

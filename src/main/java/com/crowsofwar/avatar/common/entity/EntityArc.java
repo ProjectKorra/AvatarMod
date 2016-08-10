@@ -32,21 +32,28 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	public EntityArc(World world) {
 		super(world);
+		System.out.println("===Spawned arc===");
 		float size = .2f;
 		setSize(size, size);
-		this.points = new EntityControlPoint[getAmountOfControlPoints()];
-		for (int i = 0; i < points.length; i++) {
-			points[i] = createControlPoint(size);
+		
+		if(!worldObj.isRemote || true) {
+			
+			this.points = new EntityControlPoint[getAmountOfControlPoints()];
+			for (int i = 0; i < points.length; i++) {
+				points[i] = createControlPoint(size);
+			}
+		} else {
+			this.points = new EntityControlPoint[0];
 		}
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
-		System.out.println("Spawned arc");
 		if (!worldObj.isRemote) {
 			setId(nextId++);
-			System.out.println("Created Arc with Id " + getId());
+			System.out.println("[server-only]Arc ID is: " + getId());
 			// TODO Send to only necessary players
 			AvatarMod.network.sendToAll(new PacketCControlPoints(this));
 		}
+		System.out.println("========");
 	}
 	
 	/**
@@ -69,7 +76,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		if (this.ticksExisted == 1 && !worldObj.isRemote) {
+		if (this.ticksExisted == 1) {
 			for (int i = 0; i < points.length; i++) {
 				points[i].setPosition(getPosition());
 				worldObj.spawnEntityInWorld(points[i]);
@@ -131,7 +138,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		
+		setDead();//IEntityMultiPart
 	}
 	
 	@Override
@@ -140,7 +147,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 //		System.out.println("Setpos to " + x + "," + y+","+z);
 //		System.out.println(points!=null&&points[0]!=null? points[0].getPosition() : "{points[0] null}");
 		// Set position - called from entity constructor, so points might be null
-		if (points != null) {
+		if (points != null && points.length > 0) {
 			points[0].setPosition(x, y, z);
 		}
 	}
@@ -163,7 +170,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	 * Get the first control point in this arc.
 	 */
 	public EntityControlPoint getLeader() {
-		return points[0];
+		return points[0];//EntityDragon
 	}
 	
 	/**
@@ -264,7 +271,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	/**
 	 * Returns the amount of control points which will be created.
 	 */
-	protected int getAmountOfControlPoints() {
+	public int getAmountOfControlPoints() {
 		return 5;
 	}
 	

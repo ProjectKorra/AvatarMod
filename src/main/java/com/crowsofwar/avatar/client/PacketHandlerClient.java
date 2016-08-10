@@ -74,7 +74,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	
 	private IMessage handlePacketControlPoints(PacketCControlPoints packet, MessageContext ctx) {
 		
-		ArcControlPointLinker.link(packet.getArcId(), packet.getControlPointIds());
+//		ArcControlPointLinker.link(packet.getArcId(), packet.getControlPointIds());
 		return null;
 		
 	}

@@ -7,13 +7,15 @@ import java.util.List;
 import com.crowsofwar.avatar.common.bending.FirebendingState;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EntityControlPoint extends Entity implements IPhysics {
+public class EntityControlPoint extends Entity implements IPhysics, IEntityAdditionalSpawnData {
 	
 	private static final int DATAWATCHER_VELOCITY = 3; // 3,4,5
 	private static final int DATAWATCHER_ID = 6;
@@ -65,7 +67,7 @@ public class EntityControlPoint extends Entity implements IPhysics {
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		
+		setDead();
 	}
 	
 	@Override
@@ -192,6 +194,28 @@ public class EntityControlPoint extends Entity implements IPhysics {
 			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id) return (EntityControlPoint) obj;
 		}
 		return null;
+	}
+	
+	@Override
+	public void writeSpawnData(ByteBuf buf) {
+		// Spawn data is used to allow server-spawned CPs to kill themselves.
+		// This is so that client-side CPs are only from client-side instantiation.
+	}
+	
+	@Override
+	public void readSpawnData(ByteBuf buf) {
+		System.out.println("CP ignore server");
+		setDead();
+		if (true) return;
+		int id = buf.readInt();
+		arc = EntityArc.findFromId(worldObj, id);
+		if (arc == null) {
+			System.out.println("WARNING");
+			System.out.println("COULDNT FIND ARC FROM SPAWN DATA ID: " + id);
+			setDead();
+		} else {
+			System.out.println("SUccessfuly found arc from spawn data");
+		}
 	}
 	
 }
