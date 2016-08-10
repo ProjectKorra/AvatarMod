@@ -232,19 +232,6 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			cp.setOwner(owner);
 	}
 	
-	/**
-	 * Set the arc's control point references to the specified ones. Avoid using unless necessary,
-	 * this can be dangerous.
-	 */
-	// TODO remove
-	public void syncControlPoints(EntityControlPoint[] setPoints) {
-		// Remove existing control points from world
-		for (EntityControlPoint cp : this.points) {
-			cp.setDead();
-		}
-		this.points = setPoints;
-	}
-	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
