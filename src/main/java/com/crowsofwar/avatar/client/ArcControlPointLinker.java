@@ -45,12 +45,17 @@ public class ArcControlPointLinker {
 	 * The control points which have been discovered.
 	 */
 	private EntityControlPoint[] foundControlPoints;
+	/**
+	 * Time when this was created.
+	 */
+	private final long startTime;
 	
 	private ArcControlPointLinker(int arcId, int[] controlPointIds) {
 		this.arcId = arcId;
 		this.controlPointIds = controlPointIds;
 		this.foundArc = null;
 		this.foundControlPoints = new EntityControlPoint[controlPointIds.length];
+		this.startTime = System.currentTimeMillis();
 		MinecraftForge.EVENT_BUS.register(this);
 		tryLink(); // Try to link right now
 	}
@@ -71,6 +76,11 @@ public class ArcControlPointLinker {
 	public void onEntitySpawn(EntityJoinWorldEvent e) {
 		Entity entity = e.entity;
 		System.out.println("Joined " + entity);
+		
+		if (System.currentTimeMillis() - startTime > 2000) {
+			System.out.println("Destroying, took too long");
+			MinecraftForge.EVENT_BUS.unregister(this);
+		}
 		
 		// Search for arc
 		if (!didFindArc()) {
@@ -137,6 +147,11 @@ public class ArcControlPointLinker {
 			if (point == null) return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public void finalize() {
+		System.out.println("{Garbage collected}");
 	}
 	
 }
