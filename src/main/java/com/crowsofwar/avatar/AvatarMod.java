@@ -74,7 +74,7 @@ public class AvatarMod {
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
 		registerEntity(EntityFlame.class, "Flame");
 		registerEntity(EntityFireArc.class, "FireArc");
-		registerEntity(EntityWaterArc.WaterControlPoint.class, "FireArcCP");
+		registerEntity(EntityFireArc.FireControlPoint.class, "FireArcCP");
 		registerEntity(EntityWaterArc.class, "WaterArc");
 		registerEntity(EntityWaterArc.WaterControlPoint.class, "WaterArcCP");
 		registerEntity(EntityAirGust.class, "AirGust");
