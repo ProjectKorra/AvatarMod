@@ -4,10 +4,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
-import com.crowsofwar.avatar.common.network.packets.PacketCControlPoints;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
@@ -17,11 +14,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 /**
- * Handles packets addressed to the client. Packets like
- * this have a C in their name.
+ * Handles packets addressed to the client. Packets like this have a C in their name.
  *
  */
 @SideOnly(Side.CLIENT)
@@ -32,21 +27,17 @@ public class PacketHandlerClient implements IPacketHandler {
 	public PacketHandlerClient() {
 		this.mc = Minecraft.getMinecraft();
 	}
-
+	
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		
-		if (packet instanceof PacketCPlayerData)
-			return handlePacketPlayerData((PacketCPlayerData) packet, ctx);
-		
-		if (packet instanceof PacketCControlPoints)
-			return handlePacketControlPoints((PacketCControlPoints) packet, ctx);
+		if (packet instanceof PacketCPlayerData) return handlePacketPlayerData((PacketCPlayerData) packet, ctx);
 		
 		AvatarLog.warn("Client recieved unknown packet from server:" + packet);
 		
 		return null;
 	}
-
+	
 	@Override
 	public Side getSide() {
 		return Side.CLIENT;
@@ -70,13 +61,6 @@ public class PacketHandlerClient implements IPacketHandler {
 			data.setActiveBendingController(BendingManager.getBending(packet.getCurrentBendingControllerID()));
 		}
 		return null;
-	}
-	
-	private IMessage handlePacketControlPoints(PacketCControlPoints packet, MessageContext ctx) {
-		
-//		ArcControlPointLinker.link(packet.getArcId(), packet.getControlPointIds());
-		return null;
-		
 	}
 	
 }

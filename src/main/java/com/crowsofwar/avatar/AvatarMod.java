@@ -1,21 +1,17 @@
 package com.crowsofwar.avatar;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
-import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IAvatarPacket;
-import com.crowsofwar.avatar.common.network.packets.PacketCControlPoints;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -34,15 +30,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.CrowsOfWar_PacketHack;
-import cpw.mods.fml.common.network.internal.EntitySpawnHandler;
 import cpw.mods.fml.common.network.internal.FMLMessage.EntitySpawnMessage;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
-import cpw.mods.fml.common.registry.IThrowableEntity;
 import cpw.mods.fml.common.registry.EntityRegistry.EntityRegistration;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -51,11 +43,10 @@ import net.minecraft.world.World;
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION)
 public class AvatarMod {
 	
-	@SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy",
-			clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
+	@SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
 	public static AvatarCommonProxy proxy;
 	
-	@Instance(value=AvatarInfo.MOD_ID)
+	@Instance(value = AvatarInfo.MOD_ID)
 	public static AvatarMod instance;
 	
 	public static SimpleNetworkWrapper network;
@@ -73,7 +64,6 @@ public class AvatarMod {
 		registerPacket(PacketSRequestData.class, Side.SERVER);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		registerPacket(PacketSUseBendingController.class, Side.SERVER);
-		registerPacket(PacketCControlPoints.class, Side.CLIENT);
 		
 		BendingManager.init();
 		
@@ -97,68 +87,66 @@ public class AvatarMod {
 			final float scaledHeadYaw = CrowsOfWar_PacketHack.getScaledHeadYaw(msg);
 			final float scaledYaw = CrowsOfWar_PacketHack.getScaledYaw(msg);
 			
-	        int offset = entityId - entity.getEntityId();
-	        entity.setEntityId(entityId);
-	        entity.setLocationAndAngles(scaledX, scaledY, scaledZ, scaledYaw, scaledPitch);
-	        if (entity instanceof EntityLiving)
-	        {
-	            ((EntityLiving) entity).rotationYawHead = scaledHeadYaw;
-	        }
-
-	        Entity parts[] = entity.getParts();
-	        if (parts != null)
-	        {
-	            for (int j = 0; j < parts.length; j++)
-	            {
-	                parts[j].setEntityId(parts[j].getEntityId() + offset);
-	            }
-	        }
-	        
-            return entity;
-	        
+			int offset = entityId - entity.getEntityId();
+			entity.setEntityId(entityId);
+			entity.setLocationAndAngles(scaledX, scaledY, scaledZ, scaledYaw, scaledPitch);
+			if (entity instanceof EntityLiving) {
+				((EntityLiving) entity).rotationYawHead = scaledHeadYaw;
+			}
+			
+			Entity parts[] = entity.getParts();
+			if (parts != null) {
+				for (int j = 0; j < parts.length; j++) {
+					parts[j].setEntityId(parts[j].getEntityId() + offset);
+				}
+			}
+			
+			return entity;
+			
 		} catch (Exception e) {
 			System.out.println("Couldn't spawn entity into world");
 			e.printStackTrace();
 			return null;
 		}
-
 		
 	}
-//	
-//	private void addToWorld(Entity entity, EntitySpawnMessage msg) {
-//		entity.serverPosX = CrowsOfWar_PacketHack.getRawX(msg);
-//        entity.serverPosY = CrowsOfWar_PacketHack.getRawY(msg);
-//        entity.serverPosZ = CrowsOfWar_PacketHack.getRawZ(msg);
-//
-//        final int throwerId = CrowsOfWar_PacketHack.getThrowerId(msg);
-//        
-//        EntityClientPlayerMP clientPlayer = FMLClientHandler.instance().getClientPlayerEntity();
-//
-//        if (entity instanceof IEntityAdditionalSpawnData)
-//        {
-//            ((IEntityAdditionalSpawnData) entity).readSpawnData(CrowsOfWar_PacketHack.getDataStream(msg));
-//        }
-//        wc.addEntityToWorld(entityId, entity);
-//	}
+	//
+	// private void addToWorld(Entity entity, EntitySpawnMessage msg) {
+	// entity.serverPosX = CrowsOfWar_PacketHack.getRawX(msg);
+	// entity.serverPosY = CrowsOfWar_PacketHack.getRawY(msg);
+	// entity.serverPosZ = CrowsOfWar_PacketHack.getRawZ(msg);
+	//
+	// final int throwerId = CrowsOfWar_PacketHack.getThrowerId(msg);
+	//
+	// EntityClientPlayerMP clientPlayer = FMLClientHandler.instance().getClientPlayerEntity();
+	//
+	// if (entity instanceof IEntityAdditionalSpawnData)
+	// {
+	// ((IEntityAdditionalSpawnData)
+	// entity).readSpawnData(CrowsOfWar_PacketHack.getDataStream(msg));
+	// }
+	// wc.addEntityToWorld(entityId, entity);
+	// }
 	
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
-//		EntityRegistry.registerModEntity(EntityFloatingBlock.class, "FloatingBlock", 1, this, 256, 1, true);
+		// EntityRegistry.registerModEntity(EntityFloatingBlock.class, "FloatingBlock", 1, this,
+		// 256, 1, true);
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
 		registerEntity(EntityFlame.class, "Flame");
 		
 		// Fire spawn function: Create Control Points
 		Function<EntitySpawnMessage, Entity> fireSpawnFunc = (spawnMsg) -> {
 			System.out.println("Fire spawn func");
-//			
-//			EntityFireArc arc = doSpawn(spawnMsg, EntityFireArc.class, false);
-//			
-//			EntityControlPoint[] points = new EntityControlPoint[arc.getAmountOfControlPoints()];
-//			for (int i = 0; i < points.length; i++) {
-//				points[i] = arc.createControlPoint(0.2f);
-//				
-//			}
-//			
+			//
+			// EntityFireArc arc = doSpawn(spawnMsg, EntityFireArc.class, false);
+			//
+			// EntityControlPoint[] points = new EntityControlPoint[arc.getAmountOfControlPoints()];
+			// for (int i = 0; i < points.length; i++) {
+			// points[i] = arc.createControlPoint(0.2f);
+			//
+			// }
+			//
 			
 			return makeEntity(spawnMsg, EntityFireArc.class);
 		};
@@ -168,11 +156,8 @@ public class AvatarMod {
 			return null;
 		};
 		
-		
 		registerEntity(EntityFireArc.class, "FireArc");
 		registerEntity(EntityFireArc.FireControlPoint.class, "FireArcCP");
-		
-		
 		
 		registerEntity(EntityWaterArc.class, "WaterArc");
 		registerEntity(EntityWaterArc.WaterControlPoint.class, "WaterArcCP");
@@ -200,7 +185,8 @@ public class AvatarMod {
 		EntityRegistry.registerModEntity(entity, name, nextEntityID++, this, 64, 20, true);
 	}
 	
-	private void registerEntity(Class<? extends Entity> entity, String name, Function<EntitySpawnMessage, Entity> customSpawn, boolean useVanillaSpawning) {
+	private void registerEntity(Class<? extends Entity> entity, String name,
+			Function<EntitySpawnMessage, Entity> customSpawn, boolean useVanillaSpawning) {
 		registerEntity(entity, name);
 		EntityRegistration er = EntityRegistry.instance().lookupModSpawn(entity, false);
 		er.setCustomSpawning(customSpawn, useVanillaSpawning);

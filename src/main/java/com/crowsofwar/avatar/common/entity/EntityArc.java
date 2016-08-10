@@ -1,25 +1,19 @@
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-import java.util.Random;
-
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
-import com.crowsofwar.avatar.common.network.packets.PacketCControlPoints;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public abstract class EntityArc extends Entity implements IPhysics {
 	
-	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELOCITY = 4,//4,5,6
+	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELOCITY = 4, // 4,5,6
 			DATAWATCHER_GRAVITY = 7;
 	
 	private static int nextId = 1;
@@ -36,29 +30,22 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		float size = .2f;
 		setSize(size, size);
 		
-		if(!worldObj.isRemote || true) {
-			
-			this.points = new EntityControlPoint[getAmountOfControlPoints()];
-			for (int i = 0; i < points.length; i++) {
-				points[i] = createControlPoint(size);
-			}
-		} else {
-			this.points = new EntityControlPoint[0];
+		this.points = new EntityControlPoint[getAmountOfControlPoints()];
+		for (int i = 0; i < points.length; i++) {
+			points[i] = createControlPoint(size);
 		}
+		
 		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) {
 			setId(nextId++);
-			System.out.println("[server-only]Arc ID is: " + getId());
-			// TODO Send to only necessary players
-			AvatarMod.network.sendToAll(new PacketCControlPoints(this));
 		}
 		System.out.println("========");
 	}
 	
 	/**
-	 * Called from the EntityArc constructor to create a new control point
-	 * entity.
+	 * Called from the EntityArc constructor to create a new control point entity.
+	 * 
 	 * @param size
 	 * @return
 	 */
@@ -71,7 +58,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		dataWatcher.addObject(DATAWATCHER_ID, 0);
 		dataWatcher.addObject(DATAWATCHER_GRAVITY, (byte) 0);
 	}
-
+	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -135,17 +122,18 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setDead();
 	}
-
+	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		setDead();//IEntityMultiPart
+		setDead();// IEntityMultiPart
 	}
 	
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
-//		System.out.println("Setpos to " + x + "," + y+","+z);
-//		System.out.println(points!=null&&points[0]!=null? points[0].getPosition() : "{points[0] null}");
+		// System.out.println("Setpos to " + x + "," + y+","+z);
+		// System.out.println(points!=null&&points[0]!=null? points[0].getPosition() : "{points[0]
+		// null}");
 		// Set position - called from entity constructor, so points might be null
 		if (points != null && points.length > 0) {
 			points[0].setPosition(x, y, z);
@@ -155,7 +143,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	@Override
 	public void setDead() {
 		super.setDead();
-		for (EntityControlPoint point : points) point.setDead();
+		for (EntityControlPoint point : points)
+			point.setDead();
 	}
 	
 	public EntityControlPoint[] getControlPoints() {
@@ -170,7 +159,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	 * Get the first control point in this arc.
 	 */
 	public EntityControlPoint getLeader() {
-		return points[0];//EntityDragon
+		return points[0];// EntityDragon
 	}
 	
 	/**
@@ -203,10 +192,9 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-    public int getBrightnessForRender(float p_70070_1_)
-    {
-        return 15728880;
-    }
+	public int getBrightnessForRender(float p_70070_1_) {
+		return 15728880;
+	}
 	
 	@Override
 	public Vec3 getPosition() {
@@ -215,12 +203,12 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		internalPos.zCoord = posZ;
 		return internalPos;
 	}
-
+	
 	@Override
 	public Vec3 getVelocity() {
 		return velocity.getValue();
 	}
-
+	
 	@Override
 	public void setVelocity(Vec3 vel) {
 		velocity.setValue(vel);
@@ -245,12 +233,13 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	public void setOwner(EntityPlayer owner) {
 		this.owner = owner;
-		for (EntityControlPoint cp : points) cp.setOwner(owner);
+		for (EntityControlPoint cp : points)
+			cp.setOwner(owner);
 	}
 	
 	/**
-	 * Set the arc's control point references to the specified ones.
-	 * Avoid using unless necessary, this can be dangerous.
+	 * Set the arc's control point references to the specified ones. Avoid using unless necessary,
+	 * this can be dangerous.
 	 */
 	public void syncControlPoints(EntityControlPoint[] setPoints) {
 		System.out.println("===== SYNCED POINTS TO " + setPoints + " =====");
@@ -259,7 +248,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			System.out.println("Deleted CP " + cp.getId());
 			cp.setDead();
 		}
-		for (EntityControlPoint cp : setPoints) System.out.println("Using CP " + cp.getId());
+		for (EntityControlPoint cp : setPoints)
+			System.out.println("Using CP " + cp.getId());
 		this.points = setPoints;
 	}
 	
@@ -276,18 +266,17 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	}
 	
 	/**
-	 * Returns the maximum distance between control points, squared.
-	 * Any control points beyond this distance will follow their leader
-	 * to get closer.
+	 * Returns the maximum distance between control points, squared. Any control points beyond this
+	 * distance will follow their leader to get closer.
 	 */
 	protected double getControlPointMaxDistanceSq() {
 		return 1;
 	}
 	
 	/**
-	 * Returns the distance between control points to be teleported
-	 * to their leader, squared. If any control point is more than this
-	 * distance from its leader, then it is teleported to the leader.
+	 * Returns the distance between control points to be teleported to their leader, squared. If any
+	 * control point is more than this distance from its leader, then it is teleported to the
+	 * leader.
 	 */
 	protected double getControlPointTeleportDistanceSq() {
 		return 36;
