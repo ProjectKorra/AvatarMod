@@ -66,7 +66,7 @@ public class EntityFireArc extends EntityArc {
 		return new FireControlPoint(this, size, 0, 0, 0);
 	}
 	
-	public class FireControlPoint extends EntityControlPoint {
+	public static class FireControlPoint extends EntityControlPoint {
 
 		public FireControlPoint(World world) {
 			super(world);

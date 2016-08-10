@@ -109,7 +109,7 @@ public class EntityWaterArc extends EntityArc {
 		lastPlayedSplash = 0;
 	}
 	
-	public class WaterControlPoint extends EntityControlPoint {
+	public static class WaterControlPoint extends EntityControlPoint {
 
 		public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);

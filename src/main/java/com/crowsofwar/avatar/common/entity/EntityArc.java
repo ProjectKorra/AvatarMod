@@ -137,8 +137,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
-		System.out.println("Setpos to " + x + "," + y+","+z);
-		System.out.println(points!=null&&points[0]!=null? points[0].getPosition() : "{points[0] null}");
+//		System.out.println("Setpos to " + x + "," + y+","+z);
+//		System.out.println(points!=null&&points[0]!=null? points[0].getPosition() : "{points[0] null}");
 		// Set position - called from entity constructor, so points might be null
 		if (points != null) {
 			points[0].setPosition(x, y, z);
