@@ -1,10 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
-
-
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.FirebendingState;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
@@ -15,6 +12,27 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+/**
+ * A control point in an arc.
+ * <p>
+ * An arc is made up of multiple control points. This allows the arc to twist and turn. Segments are
+ * drawn in-between control points, which creates a blocky arc.
+ * <p>
+ * CPs exist on both client and server. However, they exist using a different method than normal.
+ * The client and server BOTH create arcs and spawn them into the world. (this is required in order
+ * to have important CP field - like reference to the arc - not null)
+ * <p>
+ * This would create duplicate CPs on the client-side. (CPs would be instantiated both from the arc
+ * constructor and vanilla spawn packets sent from server). So, CPs will actually ignore the
+ * server's spawn packets!
+ * <p>
+ * They do so by implementing IEntityAdditionalSpawnData. The readSpawnData method, provided by this
+ * interface, is called whenever the spawn packet is received. The CP kills itself (via
+ * {@link #setDead()}) which effectively ignores the spawn packet.
+ * 
+ * 
+ * @author CrowsOfWar
+ */
 public class EntityControlPoint extends Entity implements IPhysics, IEntityAdditionalSpawnData {
 	
 	private static final int DATAWATCHER_VELOCITY = 3; // 3,4,5
@@ -80,7 +98,6 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		if (!collisions.isEmpty()) {
 			Entity collidedWith = collisions.get(0);
 			if (!(collidedWith instanceof EntityControlPoint) && collidedWith != this.arc) {
-//				System.out.println(collisions.get(0));
 				onCollision(collisions.get(0));
 			}
 		}
@@ -121,7 +138,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	public double getDistance(EntityControlPoint point) {
 		return getPosition().distanceTo(point.getPosition());
 	}
-
+	
 	@Override
 	public Vec3 getPosition() {
 		internalPosition.xCoord = posX;
@@ -129,7 +146,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		internalPosition.zCoord = posZ;
 		return internalPosition;
 	}
-
+	
 	@Override
 	public Vec3 getVelocity() {
 		internalVelocity.xCoord = motionX;
@@ -137,14 +154,14 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		internalVelocity.zCoord = motionZ;
 		return internalVelocity;
 	}
-
+	
 	@Override
 	public void setVelocity(Vec3 vel) {
 		motionX = vel.xCoord;
 		motionY = vel.yCoord;
 		motionZ = vel.zCoord;
 	}
-
+	
 	@Override
 	public void addVelocity(Vec3 vel) {
 		setVelocity(VectorUtils.plus(getVelocity(), vel));
@@ -152,6 +169,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	
 	/**
 	 * Get the arc that this control point belongs to.
+	 * 
 	 * @return
 	 */
 	public EntityArc getArc() {
@@ -167,8 +185,8 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	/**
-	 * Get the Id of this control point. It is unique until the ControlPoint despawns.
-	 * The Id is synced between server and client.
+	 * Get the Id of this control point. It is unique until the ControlPoint despawns. The Id is
+	 * synced between server and client.
 	 */
 	public int getId() {
 		return dataWatcher.getWatchableObjectInt(DATAWATCHER_ID);
@@ -182,8 +200,8 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	/**
-	 * "Attach" the arc to this control point, meaning that the control
-	 * point now has a reference to the given arc.
+	 * "Attach" the arc to this control point, meaning that the control point now has a reference to
+	 * the given arc.
 	 */
 	public void setArc(EntityArc arc) {
 		this.arc = arc;
@@ -191,7 +209,8 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	
 	public static EntityControlPoint findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id) return (EntityControlPoint) obj;
+			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id)
+				return (EntityControlPoint) obj;
 		}
 		return null;
 	}
@@ -199,23 +218,14 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	@Override
 	public void writeSpawnData(ByteBuf buf) {
 		// Spawn data is used to allow server-spawned CPs to kill themselves.
-		// This is so that client-side CPs are only from client-side instantiation.
+		// This is so that client-side CPs are only from client-side
+		// instantiation.
 	}
 	
 	@Override
 	public void readSpawnData(ByteBuf buf) {
-		System.out.println("CP ignore server");
+		// Ignore server spawn packet
 		setDead();
-		if (true) return;
-		int id = buf.readInt();
-		arc = EntityArc.findFromId(worldObj, id);
-		if (arc == null) {
-			System.out.println("WARNING");
-			System.out.println("COULDNT FIND ARC FROM SPAWN DATA ID: " + id);
-			setDead();
-		} else {
-			System.out.println("SUccessfuly found arc from spawn data");
-		}
 	}
 	
 }
