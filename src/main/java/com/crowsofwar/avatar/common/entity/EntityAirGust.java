@@ -53,7 +53,7 @@ public class EntityAirGust extends EntityArc {
 	
 	@Override
 	protected EntityControlPoint createControlPoint(float size) {
-		return new AirGustControlPoint(this, size, 0, 0, 0);
+		return new AirGustControlPoint(this, 0.1f, 0, 0, 0);
 	}
 	
 	@Override
@@ -63,13 +63,13 @@ public class EntityAirGust extends EntityArc {
 	
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return 64; // 8
+		return 100; // 10
 	}
 	
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
 		// Note: Is not actually called.
-		// Set dead as soon as reached 64 sq-distance
+		// Set dead as soon as reached sq-distance
 		return 200;
 	}
 	
@@ -89,6 +89,14 @@ public class EntityAirGust extends EntityArc {
 				double multiplier = 10;
 				entity.addVelocity((entity.posX - this.posX) * multiplier, 0.4, (entity.posZ - this.posZ) * multiplier);
 				setDead();
+			}
+		}
+		
+		@Override
+		public void onUpdate() {
+			if (arc.getControlPoint(0) == this) {
+				float expansionRate = 1f / 20;
+				setSize(width + expansionRate, width + expansionRate);
 			}
 		}
 		
