@@ -86,8 +86,9 @@ public class EntityAirGust extends EntityArc {
 		@Override
 		protected void onCollision(Entity entity) {
 			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
-				System.out.println(entity);
-				entity.addVelocity(entity.posX - this.posX, 0.2, entity.posZ - this.posZ);
+				double multiplier = 10;
+				entity.addVelocity((entity.posX - this.posX) * multiplier, 0.4, (entity.posZ - this.posZ) * multiplier);
+				setDead();
 			}
 		}
 		
