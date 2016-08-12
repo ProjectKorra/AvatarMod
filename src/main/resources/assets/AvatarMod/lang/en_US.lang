@@ -31,3 +31,6 @@ avatar.cmd.bending.add.success=[bold][color=value]${player}[/color] is now a(n) 
 
 avatar.cmd.bending.remove.doesntHave=[color=error_value]${player}[/color][color=error] isn't a(n) [/color][color=error_value][translate=avatar.${bending}.demonym][/color].
 avatar.cmd.bending.remove.success=[bold]Took [color=value][translate=avatar.${bending}][/color] from [color=value]${player}[/color]![/bold]
+
+death.attack.avatar_earthbendBlock=%1$s smashed %2$s with earthbending
+death.attack.avatar_waterArc=%2$s used waterbending to bring down %1$s
