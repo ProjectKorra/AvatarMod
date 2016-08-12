@@ -1,7 +1,12 @@
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
+import static com.crowsofwar.avatar.common.util.VectorUtils.times;
+
 import java.util.List;
 
+import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
+import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
@@ -44,29 +49,27 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	protected EntityPlayer owner;
 	
 	private Vec3 internalPosition;
-	private Vec3 internalVelocity;
+	private IEntityProperty<Vec3> internalVelocity;
 	
 	public EntityControlPoint(World world) {
 		super(world);
 		internalPosition = Vec3.createVectorHelper(0, 0, 0);
-		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
+		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
 	
 	public EntityControlPoint(EntityArc arc, float size, double x, double y, double z) {
 		super(arc.worldObj);
+		setPosition(x, y, z);
 		this.arc = arc;
 		setSize(size, size);
 		internalPosition = Vec3.createVectorHelper(x, y, z);
-		internalVelocity = Vec3.createVectorHelper(0, 0, 0);
+		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
 	
 	@Override
 	protected void entityInit() {
-		dataWatcher.addObject(DATAWATCHER_VELOCITY, 0f);
-		dataWatcher.addObject(DATAWATCHER_VELOCITY + 1, 0f);
-		dataWatcher.addObject(DATAWATCHER_VELOCITY + 2, 0f);
 		dataWatcher.addObject(DATAWATCHER_ID, 0);
 	}
 	
@@ -88,8 +91,8 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		setPosition(VectorUtils.plus(getPosition(), getVelocity()));
-		setVelocity(VectorUtils.times(getVelocity(), 0.4));
+		setPosition(plus(getPosition(), times(getVelocity(), .05)));
+		setVelocity(times(getVelocity(), 0.4));
 		
 		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
 		if (!collisions.isEmpty()) {
@@ -146,17 +149,12 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	
 	@Override
 	public Vec3 getVelocity() {
-		internalVelocity.xCoord = motionX;
-		internalVelocity.yCoord = motionY;
-		internalVelocity.zCoord = motionZ;
-		return internalVelocity;
+		return internalVelocity.getValue();
 	}
 	
 	@Override
 	public void setVelocity(Vec3 vel) {
-		motionX = vel.xCoord;
-		motionY = vel.yCoord;
-		motionZ = vel.zCoord;
+		internalVelocity.setValue(vel);
 	}
 	
 	@Override

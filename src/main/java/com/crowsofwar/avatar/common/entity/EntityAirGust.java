@@ -91,16 +91,6 @@ public class EntityAirGust extends EntityArc {
 			}
 		}
 		
-		@Override
-		public void onUpdate() {
-			super.onUpdate();
-		}
-		
-		@Override
-		public void setDead() {
-			super.setDead();
-		}
-		
 	}
 	
 }

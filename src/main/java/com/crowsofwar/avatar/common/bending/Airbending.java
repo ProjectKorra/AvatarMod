@@ -1,5 +1,14 @@
 package com.crowsofwar.avatar.common.bending;
 
+import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_AIRBEND_TEST;
+import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_AIR_GUST;
+import static com.crowsofwar.avatar.common.AvatarAbility.NONE;
+import static com.crowsofwar.avatar.common.util.VectorUtils.fromYawPitch;
+import static com.crowsofwar.avatar.common.util.VectorUtils.getEyePos;
+import static com.crowsofwar.avatar.common.util.VectorUtils.times;
+
+import java.awt.Color;
+
 import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -9,11 +18,6 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-import com.crowsofwar.avatar.common.util.VectorUtils;
-
-import static com.crowsofwar.avatar.common.AvatarAbility.*;
-
-import java.awt.Color;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,7 +25,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 
 public class Airbending implements IBendingController {
 	
