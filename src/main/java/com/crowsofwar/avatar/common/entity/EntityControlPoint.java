@@ -204,8 +204,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	
 	public static EntityControlPoint findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id)
-				return (EntityControlPoint) obj;
+			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id) return (EntityControlPoint) obj;
 		}
 		return null;
 	}

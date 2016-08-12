@@ -103,7 +103,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 				
 				Vec3 diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
 				diff.normalize();
-				VectorUtils.mult(diff, 0.15);
+				VectorUtils.mult(diff, 0.15 * 20);
 				p.addVelocity(diff);
 				
 			}
