@@ -2,9 +2,10 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -58,9 +59,7 @@ public class EntityWaterArc extends EntityArc {
 			int particles = random.nextInt(3) + 4;
 			for (int i = 0; i < particles; i++) {
 				
-				worldObj.spawnParticle("splash", posX + random.nextGaussian() * offX,
-						posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
-						random.nextGaussian() * xVel, random.nextGaussian() * yVel, random.nextGaussian() * zVel);
+				worldObj.spawnParticle("splash", posX + random.nextGaussian() * offX, posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ, random.nextGaussian() * xVel, random.nextGaussian() * yVel, random.nextGaussian() * zVel);
 				
 			}
 			
@@ -118,8 +117,7 @@ public class EntityWaterArc extends EntityArc {
 			if (entity == owner) return;
 			entity.addVelocity(this.posX - entity.posX, 0.2, this.posZ - entity.posZ);
 			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase) entity).attackEntityFrom(DamageSource.drown, 6); // TODO Water
-																						// DamageSource
+				((EntityLivingBase) entity).attackEntityFrom(AvatarDamageSource.causeWaterDamage((EntityWaterArc) arc, entity), 6);
 			}
 		}
 		
