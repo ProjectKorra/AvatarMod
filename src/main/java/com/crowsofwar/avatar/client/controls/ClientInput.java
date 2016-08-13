@@ -138,8 +138,9 @@ public class ClientInput implements IControlsHandler {
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void openBendingMenu(IBendingController controller) {
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer, "Error while getting player data for open-bending-menu checks");
 		BendingMenuInfo menu = controller.getRadialMenu();
-		if (isControlPressed(menu.getKey())) {
+		if (data.hasBending(controller.getID()) && isControlPressed(menu.getKey())) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			AvatarMod.network.sendToServer(new PacketSUseBendingController(controller.getID()));
 			player.openGui(AvatarMod.instance, menu.getGuiId(), player.worldObj, 0, 0, 0);
