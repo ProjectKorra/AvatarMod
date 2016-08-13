@@ -151,9 +151,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * hashtag aman. Will be saved.
 	 */
 	public void takeBending() {
-		bendingControllers.clear();
-		bendingControllerList.clear();
-		saveChanges();
+		for (IBendingController controller : bendingControllerList) {
+			removeBending(controller);
+		}
 	}
 	
 	/**
@@ -229,8 +229,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Sends a packet to update the client with information about this player data.
 	 */
 	public void updateClient() {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getState().getPlayerEntity());
+			System.out.println("pentity: " + getState().getPlayerEntity());
+		}
 	}
 	
 	/**
