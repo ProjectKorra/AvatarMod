@@ -48,6 +48,8 @@ public class AvatarMod {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+		BendingManager.init();
+		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 		
@@ -56,8 +58,6 @@ public class AvatarMod {
 		registerPacket(PacketSRequestData.class, Side.SERVER);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		registerPacket(PacketSUseBendingController.class, Side.SERVER);
-		
-		BendingManager.init();
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
