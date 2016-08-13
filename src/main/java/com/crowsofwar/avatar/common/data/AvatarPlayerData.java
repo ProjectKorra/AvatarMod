@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -151,9 +152,19 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * hashtag aman. Will be saved.
 	 */
 	public void takeBending() {
-		for (IBendingController controller : bendingControllerList) {
-			removeBending(controller);
+		
+		Iterator<IBendingController> iterator = bendingControllerList.iterator();
+		while (iterator.hasNext()) {
+			IBendingController bending = iterator.next();
+			bendingControllers.remove(bending.getID());
+			iterator.remove();
+			IBendingState state = getBendingState(bending);
+			bendingStates.remove(bending.getID());
+			bendingStateList.remove(state);
+			if (activeBending == bending) activeBending = null;
 		}
+		saveChanges();
+		
 	}
 	
 	/**
@@ -230,8 +241,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public void updateClient() {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getState().getPlayerEntity());
-			System.out.println("pentity: " + getState().getPlayerEntity());
+			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getPlayerEntity());
+			System.out.println("pentity: " + getPlayerEntity());
 		}
 	}
 	

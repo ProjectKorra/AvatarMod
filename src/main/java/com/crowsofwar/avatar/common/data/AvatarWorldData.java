@@ -6,7 +6,7 @@ import crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
 import net.minecraft.world.World;
 
 public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> {
-
+	
 	public static final WorldDataFetcher<AvatarWorldData> FETCHER = new WorldDataFetcher<AvatarWorldData>() {
 		@Override
 		public AvatarWorldData fetch(World world) {
@@ -21,14 +21,6 @@ public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> 
 		// TODO Auto-generated constructor stub
 	}
 	
-	public AvatarWorldData(World world) {
-		super(world, WORLD_DATA_KEY);
-	}
-	
-	public AvatarWorldData(World world, String key) {
-		this(world);
-	}
-
 	public AvatarWorldData(String key) {
 		super(WORLD_DATA_KEY);
 	}
@@ -41,5 +33,5 @@ public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> 
 	public static AvatarWorldData getDataFromWorld(World world) {
 		return getDataForWorld(AvatarWorldData.class, WORLD_DATA_KEY, world, false);
 	}
-
+	
 }

@@ -11,9 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * Used by AvatarPlayerData. Holds information about
- * the player right now, such as its position, entity,
- * and looking at block.
+ * Used by AvatarPlayerData. Holds information about the player right now, such as its position,
+ * entity, and looking at block.
  *
  */
 public class PlayerState {
@@ -32,8 +31,7 @@ public class PlayerState {
 	}
 	
 	public void update(EntityPlayer playerEntity, RaytraceResult raytrace) {
-		update(playerEntity, raytrace == null ? null : raytrace.getPos(),
-				raytrace == null ? null : raytrace.getDirection());
+		update(playerEntity, raytrace == null ? null : raytrace.getPos(), raytrace == null ? null : raytrace.getDirection());
 	}
 	
 	public void update(EntityPlayer playerEntity, BlockPos clientLookAtBlock, ForgeDirection lookAtSide) {
@@ -42,17 +40,23 @@ public class PlayerState {
 		this.lookAtSide = lookAtSide;
 	}
 	
+	/**
+	 * Use PlayerData.getPlayerEntity instead.
+	 * 
+	 * @return
+	 */
+	@Deprecated
 	public EntityPlayer getPlayerEntity() {
 		return playerEntity;
 	}
-
+	
 	public BlockPos getClientLookAtBlock() {
 		return clientLookAtBlock;
 	}
 	
 	/**
-	 * Get the side of the block the player is looking
-	 * at
+	 * Get the side of the block the player is looking at
+	 * 
 	 * @return
 	 */
 	public ForgeDirection getLookAtSide() {
@@ -60,17 +64,16 @@ public class PlayerState {
 	}
 	
 	/**
-	 * Returns whether the player is looking at a block right now
-	 * without verifying if the client is correct.
+	 * Returns whether the player is looking at a block right now without verifying if the client is
+	 * correct.
 	 */
 	public boolean isLookingAtBlock() {
 		return lookAtSide != null && clientLookAtBlock != null;
 	}
 	
 	/**
-	 * Returns whether the player is looking at a block right now.
-	 * Checks for hacking on the server. If on client side, then
-	 * no checks are made.
+	 * Returns whether the player is looking at a block right now. Checks for hacking on the server.
+	 * If on client side, then no checks are made.
 	 * 
 	 * @see #verifyClientLookAtBlock(double, double)
 	 */
@@ -80,12 +83,13 @@ public class PlayerState {
 	}
 	
 	/**
-	 * Ensure that the client's targeted block is within range
-	 * of the server's targeted block. (To avoid hacking) On client side,
-	 * simply returns the client's targeted block.
+	 * Ensure that the client's targeted block is within range of the server's targeted block. (To
+	 * avoid hacking) On client side, simply returns the client's targeted block.
 	 * 
-	 * @param raycastDist How far away can the block be?
-	 * @param maxDeviation How far away can server and client's target positions be?
+	 * @param raycastDist
+	 *            How far away can the block be?
+	 * @param maxDeviation
+	 *            How far away can server and client's target positions be?
 	 * 
 	 * @see Raytrace#getTargetBlock(EntityPlayer, double)
 	 */
@@ -99,8 +103,7 @@ public class PlayerState {
 		if (dist <= maxDeviation) {
 			return clientLookAtBlock;
 		} else {
-			AvatarLog.warn("Warning: PlayerState- Client sent too far location "
-					+ "to look at block. (" + dist + ") Hacking?");
+			AvatarLog.warn("Warning: PlayerState- Client sent too far location " + "to look at block. (" + dist + ") Hacking?");
 			Thread.dumpStack();
 			return serverLookAtBlock;
 		}
