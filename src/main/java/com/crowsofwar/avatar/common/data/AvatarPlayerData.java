@@ -123,11 +123,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public void removeBending(IBendingController bending) {
 		if (hasBending(bending.getID())) {
-			bendingControllers.remove(bending.getID());
-			bendingControllerList.remove(bending);
+			// remove state before controller- getBendingState only works with controller present
 			IBendingState state = getBendingState(bending);
 			bendingStates.remove(bending.getID());
 			bendingStateList.remove(state);
+			bendingControllers.remove(bending.getID());
+			bendingControllerList.remove(bending);
 			if (activeBending == bending) activeBending = null;
 			saveChanges();
 		} else {
@@ -156,9 +157,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		Iterator<IBendingController> iterator = bendingControllerList.iterator();
 		while (iterator.hasNext()) {
 			IBendingController bending = iterator.next();
+			
+			IBendingState state = getBendingState(bending);
 			bendingControllers.remove(bending.getID());
 			iterator.remove();
-			IBendingState state = getBendingState(bending);
 			bendingStates.remove(bending.getID());
 			bendingStateList.remove(state);
 			if (activeBending == bending) activeBending = null;
@@ -217,6 +219,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * bending controller.
 	 */
 	public IBendingState getBendingState(int id) {
+		if (!hasBending(id)) {
+			AvatarLog.warn("Tried to access BendingState with Id " + id + ", but player does not have the BendingController");
+		}
 		return hasBending(id) ? bendingStates.get(id) : null;
 	}
 	
