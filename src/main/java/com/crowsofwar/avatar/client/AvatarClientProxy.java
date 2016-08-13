@@ -1,9 +1,5 @@
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.AvatarAbility.*;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
-import static com.crowsofwar.avatar.common.gui.AvatarGuiIds.*;
-
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.controls.ClientInput;
@@ -14,7 +10,6 @@ import com.crowsofwar.avatar.client.render.RenderFireArc;
 import com.crowsofwar.avatar.client.render.RenderFlame;
 import com.crowsofwar.avatar.client.render.RenderFloatingBlock;
 import com.crowsofwar.avatar.client.render.RenderWaterArc;
-import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -33,7 +28,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crowsofwar.gorecore.data.GoreCorePlayerData;
-import crowsofwar.gorecore.data.GoreCorePlayerDataCreationHandler;
+import crowsofwar.gorecore.data.PlayerDataCreationHandler;
 import crowsofwar.gorecore.data.PlayerDataFetcher;
 import crowsofwar.gorecore.data.PlayerDataFetcherClient;
 import net.minecraft.client.Minecraft;
@@ -60,10 +55,10 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		FMLCommonHandler.instance().bus().register(inputHandler);
 		MinecraftForge.EVENT_BUS.register(inputHandler);
 		
-		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, AvatarInfo.MOD_ID,
-				new GoreCorePlayerDataCreationHandler() {
+		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, AvatarInfo.MOD_ID, new PlayerDataCreationHandler() {
 			@Override
 			public void onClientPlayerDataCreated(GoreCorePlayerData data) {
+				System.out.println("Requesting data...");
 				AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 			}
 		});
@@ -87,7 +82,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		if (pc.extendedReach()) reach = 6;
 		return reach;
 	}
-
+	
 	@Override
 	public void init() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityFloatingBlock.class, new RenderFloatingBlock());
@@ -97,15 +92,15 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityControlPoint.class, new RenderControlPoint());
 		RenderingRegistry.registerEntityRenderingHandler(EntityAirGust.class, new RenderAirGust());
 	}
-
+	
 	@Override
 	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		return new RadialMenu(id);
 	}
-
+	
 	@Override
 	public PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher() {
 		return clientFetcher;
 	}
-
+	
 }

@@ -13,7 +13,6 @@ import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.BlockPos;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -23,6 +22,7 @@ import crowsofwar.gorecore.data.PlayerDataFetcher;
 import crowsofwar.gorecore.data.PlayerDataFetcherServer;
 import crowsofwar.gorecore.data.PlayerDataFetcherSided;
 import crowsofwar.gorecore.util.GoreCoreNBTUtil;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -42,8 +42,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	private PlayerState state;
 	
-	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID) {
-		super(dataSaver, playerID);
+	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer player) {
+		super(dataSaver, playerID, player);
 		bendingControllers = new HashMap<Integer, IBendingController>();
 		bendingControllerList = new ArrayList<IBendingController>();
 		bendingStates = new HashMap<Integer, IBendingState>();
@@ -54,7 +54,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
 		bendingControllerList = AvatarUtils.readFromNBT(IBendingController.creator, nbt, "BendingAbilities");
-//		bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator, nbt, "BendingData");
+		// bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator, nbt, "BendingData");
 		bendingStateList = GoreCoreNBTUtil.readListFromNBT(nbt, "BendingData", IBendingState.creator, this);
 		
 		bendingControllers.clear();
@@ -111,9 +111,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Remove the specified bending controller. Please note, this
-	 * will be saved, so is permanent (unless another bending controller
-	 * is added).
+	 * Remove the specified bending controller. Please note, this will be saved, so is permanent
+	 * (unless another bending controller is added).
 	 */
 	public void removeBending(IBendingController bending) {
 		if (hasBending(bending.getID())) {
@@ -131,6 +130,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	/**
 	 * Remove the bending controller with that ID. This will be saved.
+	 * 
 	 * @param id
 	 */
 	public void removeBending(int id) {
@@ -151,16 +151,14 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Set the active bending controller to the one with that Id.
-	 * Pass -1 to deactivate bending.
+	 * Set the active bending controller to the one with that Id. Pass -1 to deactivate bending.
 	 */
 	public void setActiveBendingController(int controllerId) {
 		setActiveBendingController(controllerId == -1 ? null : BendingManager.getBending(controllerId));
 	}
 	
 	/**
-	 * Set the active bending controller. Pass null as the argument
-	 * to deactivate bending.
+	 * Set the active bending controller. Pass null as the argument to deactivate bending.
 	 */
 	public void setActiveBendingController(IBendingController controller) {
 		activeBending = controller;
@@ -183,8 +181,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Get the BendingController with that ID. Returns null if there is no
-	 * bending controller for that ID.
+	 * Get the BendingController with that ID. Returns null if there is no bending controller for
+	 * that ID.
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -197,16 +196,15 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Gets extra metadata for the given bending controller with that
-	 * ID, or null if there is no bending controller.
+	 * Gets extra metadata for the given bending controller with that ID, or null if there is no
+	 * bending controller.
 	 */
 	public IBendingState getBendingState(int id) {
 		return hasBending(id) ? bendingStates.get(id) : null;
 	}
 	
 	/**
-	 * Get extra metadata for the given bending controller, returns null
-	 * if no Bending controller.
+	 * Get extra metadata for the given bending controller, returns null if no Bending controller.
 	 */
 	public IBendingState getBendingState(IBendingController controller) {
 		return getBendingState(controller.getID());
@@ -222,12 +220,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Sends a packet to update the client with information
-	 * about this player data.
+	 * Sends a packet to update the client with information about this player data.
 	 */
 	public void updateClient() {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getState().getPlayerEntity());
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getState().getPlayerEntity());
 	}
 	
 	/**
@@ -238,8 +234,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
-		fetcher = new PlayerDataFetcherSided<AvatarPlayerData>(clientFetcher,
-				new PlayerDataFetcherServer<AvatarPlayerData>(AvatarWorldData.FETCHER));
+		fetcher = new PlayerDataFetcherSided<AvatarPlayerData>(clientFetcher, new PlayerDataFetcherServer<AvatarPlayerData>(AvatarWorldData.FETCHER));
 	}
 	
 	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {

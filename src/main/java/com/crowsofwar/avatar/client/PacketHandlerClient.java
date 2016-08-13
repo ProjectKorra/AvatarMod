@@ -47,6 +47,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		EntityPlayer player = mc.thePlayer;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing player data packet");
 		if (data != null) {
+			System.out.println("recieved info about player");
 			// Add bending controllers & bending states
 			data.takeBending();
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {
