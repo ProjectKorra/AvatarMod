@@ -11,8 +11,8 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 
 /**
- * Provides utilities for getting the time passed since
- * the last tick, for both client and server thread.
+ * Provides utilities for getting the time passed since the last tick, for both client and server
+ * thread.
  *
  */
 public class DeltaTime {
@@ -35,9 +35,9 @@ public class DeltaTime {
 		Side runningSide = FMLCommonHandler.instance().getEffectiveSide();
 		if (side != runningSide) return;
 		if (runningSide == Side.CLIENT && e.type == Type.CLIENT && Minecraft.getMinecraft().thePlayer != null) {
-			//nothing
+			// nothing
 		} else if (e.type == Type.WORLD) {
-			//nothing
+			// nothing
 		} else {
 			isValid = false;
 		}

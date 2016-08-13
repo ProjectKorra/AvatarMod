@@ -14,13 +14,14 @@ public class AvatarUtils {
 	
 	/**
 	 * Write list to NBT
+	 * 
 	 * @param list
 	 * @param parent
 	 * @param listName
-	 * @param writer Passed arguments are both empty arrays
+	 * @param writer
+	 *            Passed arguments are both empty arrays
 	 */
-	public static <T extends ReadableWritable> void writeToNBT(List<T> list, NBTTagCompound parent, String listName,
-			WriteToNBT<T> writer) {
+	public static <T extends ReadableWritable> void writeToNBT(List<T> list, NBTTagCompound parent, String listName, WriteToNBT<T> writer) {
 		NBTTagList listTag = new NBTTagList();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -35,16 +36,19 @@ public class AvatarUtils {
 	}
 	
 	/**
-	 * Info parameter for the instantiator will be length of 1, containing a string.
-	 * String is the full class name of what to create
-	 * @param instantiator Methodsextradata is an empty array. Extradata is passed in args
+	 * Info parameter for the instantiator will be length of 1, containing a string. String is the
+	 * full class name of what to create
+	 * 
+	 * @param instantiator
+	 *            Methodsextradata is an empty array. Extradata is passed in args
 	 * @param parent
 	 * @param listName
-	 * @param args Any extra parameters you want to pass to your CreateFromNBT
+	 * @param args
+	 *            Any extra parameters you want to pass to your CreateFromNBT
 	 * @return
 	 */
-	public static <T extends ReadableWritable> List<T> readFromNBT(CreateFromNBT<T> instantiator,
-			NBTTagCompound parent, String listName, Object... args) {
+	public static <T extends ReadableWritable> List<T> readFromNBT(CreateFromNBT<T> instantiator, NBTTagCompound parent, String listName,
+			Object... args) {
 		List<T> out = new ArrayList<T>();
 		NBTTagList listTag = parent.getTagList(listName, parent.getId());
 		
@@ -60,9 +64,13 @@ public class AvatarUtils {
 	
 	/**
 	 * Smoothstep function. Used for smoother interpolation.
-	 * @param y1 First y-position
-	 * @param y2 Second y-position
-	 * @param x Interpolation value, 0-1
+	 * 
+	 * @param y1
+	 *            First y-position
+	 * @param y2
+	 *            Second y-position
+	 * @param x
+	 *            Interpolation value, 0-1
 	 * @return Y position interpolated between y1 and y2 using x
 	 */
 	public static double smoothstep(double y1, double y2, double x) {

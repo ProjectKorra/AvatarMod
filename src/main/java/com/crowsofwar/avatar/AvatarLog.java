@@ -3,8 +3,7 @@ package com.crowsofwar.avatar;
 public class AvatarLog {
 	
 	public static void debug(String s) {
-		if (AvatarInfo.IS_DEV_BUILD)
-			System.out.println("[Debug] " + s);
+		if (AvatarInfo.IS_DEV_BUILD) System.out.println("[Debug] " + s);
 	}
 	
 	public static void info(String s) {

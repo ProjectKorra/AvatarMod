@@ -25,20 +25,20 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 public abstract class RenderArc extends Render {
-
+	
 	/**
 	 * Whether to render with full brightness.
 	 */
 	private boolean renderBright;
 	
 	@Override
-	public final void doRender(Entity p_76986_1_, double xx, double yy, double zz, float p_76986_8_,
-			float p_76986_9_) {
+	public final void doRender(Entity p_76986_1_, double xx, double yy, double zz, float p_76986_8_, float p_76986_9_) {
 		
 		EntityArc arc = (EntityArc) p_76986_1_;
 		{
-//			ControlPoint cp = flame.getControlPoint(0);
-//			flame.worldObj.spawnParticle("flame", cp.getXPos(), cp.getYPos(), cp.getZPos(), 0, 0.05, 0);
+			// ControlPoint cp = flame.getControlPoint(0);
+			// flame.worldObj.spawnParticle("flame", cp.getXPos(), cp.getYPos(), cp.getZPos(), 0,
+			// 0.05, 0);
 		}
 		
 		for (int i = 1; i < arc.getControlPoints().length; i++) {
@@ -46,7 +46,7 @@ public abstract class RenderArc extends Render {
 		}
 		
 	}
-
+	
 	private void renderSegment(EntityArc arc, EntityControlPoint leader, EntityControlPoint point) {
 		double x = leader.getXPos() - renderManager.renderPosX;
 		double y = leader.getYPos() - renderManager.renderPosY;
@@ -67,7 +67,7 @@ public abstract class RenderArc extends Render {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-//		double size = arc.width / 2;
+		// double size = arc.width / 2;
 		double sizeLeader = point.width / 2;
 		double sizePoint = leader.width / 2;
 		
@@ -77,13 +77,13 @@ public abstract class RenderArc extends Render {
 		offX.yCoord = 0;
 		Vec3 invX = times(offX, -1);
 		
-//		Matrix4d mat = new Matrix4d();
-//		mat.translate(leader.getXPos(), leader.getYPos(), leader.getZPos());
-//		mat.rotate(Math.toRadians(110), new Vector3f(0, 1, 0));
-//		mat.rotate(Math.toRadians(-45), new Vector3f(1, 0, 0));
-//		Vector4d dest = new Vector4d(0, 0, 1, 1).mul(mat);
-//		if (arc.getControlPoint(0) == leader)
-//			leader.worldObj.spawnParticle("cloud", dest.x, dest.y, dest.z, 0, 0, 0);
+		// Matrix4d mat = new Matrix4d();
+		// mat.translate(leader.getXPos(), leader.getYPos(), leader.getZPos());
+		// mat.rotate(Math.toRadians(110), new Vector3f(0, 1, 0));
+		// mat.rotate(Math.toRadians(-45), new Vector3f(1, 0, 0));
+		// Vector4d dest = new Vector4d(0, 0, 1, 1).mul(mat);
+		// if (arc.getControlPoint(0) == leader)
+		// leader.worldObj.spawnParticle("cloud", dest.x, dest.y, dest.z, 0, 0, 0);
 		
 		double u1 = ((arc.ticksExisted / 20.0) % 1);
 		double u2 = (u1 + 0.5);
@@ -147,13 +147,10 @@ public abstract class RenderArc extends Render {
 		}
 	}
 	
-	private void drawQuad(int normal, Vector4d pos1, Vector4d pos2, Vector4d pos3, Vector4d pos4, double u1, double v1, double u2, double v2) {
-		drawQuad(normal,
-				Vec3.createVectorHelper(pos1.x, pos1.y, pos1.z),
-				Vec3.createVectorHelper(pos2.x, pos2.y, pos2.z),
-				Vec3.createVectorHelper(pos3.x, pos3.y, pos3.z),
-				Vec3.createVectorHelper(pos4.x, pos4.y, pos4.z),
-				u1, v1, u2, v2);
+	private void drawQuad(int normal, Vector4d pos1, Vector4d pos2, Vector4d pos3, Vector4d pos4, double u1, double v1, double u2,
+			double v2) {
+		drawQuad(normal, Vec3.createVectorHelper(pos1.x, pos1.y, pos1.z), Vec3.createVectorHelper(pos2.x, pos2.y, pos2.z),
+				Vec3.createVectorHelper(pos3.x, pos3.y, pos3.z), Vec3.createVectorHelper(pos4.x, pos4.y, pos4.z), u1, v1, u2, v2);
 	}
 	
 	private Vec3 vec3(double x, double y, double z) {
@@ -165,7 +162,7 @@ public abstract class RenderArc extends Render {
 	}
 	
 	protected abstract ResourceLocation getTexture();
-
+	
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		
 	}

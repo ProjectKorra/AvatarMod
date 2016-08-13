@@ -19,32 +19,32 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	public void preInit() {
 		keys = new AvatarKeybindingServer();
 	}
-
+	
 	@Override
 	public IControlsHandler getKeyHandler() {
 		return keys;
 	}
-
+	
 	@Override
 	public IPacketHandler getClientPacketHandler() {
 		return null;
 	}
-
+	
 	@Override
 	public double getPlayerReach() {
 		return 0;
 	}
-
+	
 	@Override
 	public void init() {
 		
 	}
-
+	
 	@Override
 	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		return null;
 	}
-
+	
 	@Override
 	public PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher() {
 		return null;

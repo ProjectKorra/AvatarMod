@@ -9,12 +9,11 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Manages instances of bending controllers. Bending controllers
- * can be retrieved via {@link #getBending(int)}. Contains constants
- * which specify the IDs of bending.
- * <br /><br />
- * Third-party mods can use {@link #registerBending(IBendingController)}
- * to enable custom bending controllers.
+ * Manages instances of bending controllers. Bending controllers can be retrieved via
+ * {@link #getBending(int)}. Contains constants which specify the IDs of bending. <br />
+ * <br />
+ * Third-party mods can use {@link #registerBending(IBendingController)} to enable custom bending
+ * controllers.
  *
  */
 public class BendingManager {
@@ -39,8 +38,8 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController with that ID. Returns null if the
-	 * given Id is invalid.
+	 * Get the BendingController with that ID. Returns null if the given Id is invalid.
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -49,9 +48,10 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController with the given name. Returns null
-	 * if the name is invalid.
-	 * @param name The name of the bending controller
+	 * Get the BendingController with the given name. Returns null if the name is invalid.
+	 * 
+	 * @param name
+	 *            The name of the bending controller
 	 * @return
 	 */
 	public static IBendingController getBending(String name) {
@@ -60,6 +60,7 @@ public class BendingManager {
 	
 	/**
 	 * Get a list of all bending controllers. This cannot be modified.
+	 * 
 	 * @return
 	 */
 	public static List<IBendingController> allBending() {

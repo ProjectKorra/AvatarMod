@@ -3,8 +3,7 @@ package com.crowsofwar.avatar.common.controls;
 import java.util.List;
 
 /**
- * Manages what controls are pressed. This is designed for the
- * client.
+ * Manages what controls are pressed. This is designed for the client.
  *
  */
 public interface IControlsHandler {

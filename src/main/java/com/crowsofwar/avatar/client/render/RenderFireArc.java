@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 public class RenderFireArc extends RenderArc {
-
+	
 	private static final ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire-ribbon.png");
 	
 	public RenderFireArc() {
@@ -25,7 +25,7 @@ public class RenderFireArc extends RenderArc {
 	protected ResourceLocation getTexture() {
 		return fire;
 	}
-
+	
 	@Override
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		// Parametric equation
@@ -36,8 +36,8 @@ public class RenderFireArc extends RenderArc {
 		Vec3 spawnAt = VectorUtils.plus(VectorUtils.times(m, x), b);
 		Vec3 velocity = Vec3.createVectorHelper(0, 0, 0);
 		
-		AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord / 20,
-				0.05, velocity.zCoord / 20);
+		AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord / 20, 0.05,
+				velocity.zCoord / 20);
 	}
-
+	
 }

@@ -27,11 +27,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
-	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
-			"textures/gui/radial_segment_cut.png");
+	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod", "textures/gui/radial_segment_cut.png");
 	private static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
-	private static final ResourceLocation edge = new ResourceLocation("avatarmod",
-			"textures/gui/radial_segment_edge_thicker.png");
+	private static final ResourceLocation edge = new ResourceLocation("avatarmod", "textures/gui/radial_segment_edge_thicker.png");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png
@@ -53,8 +51,8 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	public RadialMenu(int controllerId) {
 		IBendingController controller = BendingManager.getBending(controllerId);
-		if (controller == null) throw new IllegalArgumentException("Can't make radial menu gui for controller id "
-				+ controllerId + " because there is no controller for that Id");
+		if (controller == null) throw new IllegalArgumentException(
+				"Can't make radial menu gui for controller id " + controllerId + " because there is no controller for that Id");
 		
 		BendingMenuInfo menu = controller.getRadialMenu();
 		construct(menu.getTheme(), menu.getKey(), menu.getButtons());
@@ -63,10 +61,13 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	/**
 	 * Create a new radial menu with the given controls.
-	 * @param pressing The key which must be pressed to keep the GUI open.
-	 * @param controls A 8-element array of controls. If the arguments passed
-	 * are less than 8, then the array is filled with {@link AvatarAbility#NONE}.
-	 * The arguments can only be a maximum of 8.
+	 * 
+	 * @param pressing
+	 *            The key which must be pressed to keep the GUI open.
+	 * @param controls
+	 *            A 8-element array of controls. If the arguments passed are less than 8, then the
+	 *            array is filled with {@link AvatarAbility#NONE}. The arguments can only be a
+	 *            maximum of 8.
 	 */
 	public RadialMenu(MenuTheme theme, AvatarControl pressing, AvatarAbility... controls) {
 		construct(theme, pressing, controls);
@@ -81,7 +82,10 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		if (controls.length > 8) throw new IllegalArgumentException("The length of controls can't be more than 8");
 		AvatarAbility[] ctrl = new AvatarAbility[8];
 		for (int i = 0; i < ctrl.length; i++) {
-			if (i < controls.length) ctrl[i] = controls[i]; else ctrl[i] = AvatarAbility.NONE;
+			if (i < controls.length)
+				ctrl[i] = controls[i];
+			else
+				ctrl[i] = AvatarAbility.NONE;
 		}
 		this.controls = ctrl;
 	}
@@ -127,10 +131,10 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 			
 			for (int i = 0; i < segments.length; i++) {
 				if (segments[i].isMouseHover(mouseX, mouseY)) {
-					RaytraceResult raytrace = controls[i].needsRaytrace() ? Raytrace.getTargetBlock(mc.thePlayer,
-							controls[i].getRaytraceDistance(), controls[i].isRaycastLiquids()) : null;
-					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i],
-							raytrace != null ? raytrace.getPos() : null,
+					RaytraceResult raytrace = controls[i].needsRaytrace()
+							? Raytrace.getTargetBlock(mc.thePlayer, controls[i].getRaytraceDistance(), controls[i].isRaycastLiquids())
+							: null;
+					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], raytrace != null ? raytrace.getPos() : null,
 							raytrace != null ? raytrace.getDirection() : null));
 					break;
 				}
@@ -141,25 +145,27 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	/**
 	 * Draw the radial segment at that angle and with the specified color.
-	 * @param segment Radial segment to draw
-	 * @param background 
+	 * 
+	 * @param segment
+	 *            Radial segment to draw
+	 * @param background
 	 */
 	private void drawRadialSegment(RadialSegment segment, boolean hover) {
 		
 		// Draw background & edge
 		GL11.glPushMatrix();
-		GL11.glTranslatef(width / 2f, height / 2f, 0);	// Re-center origin
-		GL11.glScalef(menuScale, menuScale, menuScale);	// Scale all following arguments
-		GL11.glRotatef(segment.getAngle(), 0, 0, 1);	// All transform operations and the image are rotated
-		GL11.glTranslatef(-segmentX, -segmentY, 0);		// Offset the image to the correct center point
+		GL11.glTranslatef(width / 2f, height / 2f, 0); // Re-center origin
+		GL11.glScalef(menuScale, menuScale, menuScale); // Scale all following arguments
+		GL11.glRotatef(segment.getAngle(), 0, 0, 1); // All transform operations and the image are
+														// rotated
+		GL11.glTranslatef(-segmentX, -segmentY, 0); // Offset the image to the correct center point
 		// Draw background
 		GL11.glColor3f(theme.getBackground().getRed(hover) / 255f, theme.getBackground().getGreen(hover) / 255f,
 				theme.getBackground().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(radialMenu);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		// Draw edge
-		GL11.glColor3f(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
-				theme.getEdge().getBlue(hover) / 255f);
+		GL11.glColor3f(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f, theme.getEdge().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(this.edge);
 		GL11.glTranslatef(0, 0, 1);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
@@ -170,21 +176,21 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		float iconScale = .8f;
 		float angle = segment.getAngle() + 45f;
 		angle %= 360;
-		GL11.glTranslatef(width / 2f, height / 2f, 0);	// Re-center origin
-		GL11.glRotatef(angle, 0, 0, 1);					// Rotation for next translation
-		GL11.glTranslatef(-59, -27, 0);					// Translate into correct position
-		GL11.glRotatef(-angle, 0, 0, 1);				// Icon is now at desired position, rotate the image back to regular
+		GL11.glTranslatef(width / 2f, height / 2f, 0); // Re-center origin
+		GL11.glRotatef(angle, 0, 0, 1); // Rotation for next translation
+		GL11.glTranslatef(-59, -27, 0); // Translate into correct position
+		GL11.glRotatef(-angle, 0, 0, 1); // Icon is now at desired position, rotate the image back
+											// to regular
 		
 		// Color to icon RGB
-		GL11.glColor3f(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
-				theme.getIcon().getBlue(hover) / 255f);
+		GL11.glColor3f(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f, theme.getIcon().getBlue(hover) / 255f);
 		
-		GL11.glTranslatef(0, 0, 2); 							// Ensure icon is not overlapped
-		GL11.glScalef(iconScale, iconScale, iconScale);			// Scale the icon's recentering and actual image
-		GL11.glTranslatef(-16 * iconScale, -16 * iconScale, 0);	// Re-center the icon.
+		GL11.glTranslatef(0, 0, 2); // Ensure icon is not overlapped
+		GL11.glScalef(iconScale, iconScale, iconScale); // Scale the icon's recentering and actual
+														// image
+		GL11.glTranslatef(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
 		mc.getTextureManager().bindTexture(icons);
 		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
-		
 		
 		GL11.glPopMatrix();
 	}

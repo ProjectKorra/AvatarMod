@@ -16,9 +16,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 /**
- * Implements IPacketHandler. Acts as a packet handler for
- * integrated and dedicated servers. Is a singleton and
- * is accessible via {@link #instance}.
+ * Implements IPacketHandler. Acts as a packet handler for integrated and dedicated servers. Is a
+ * singleton and is accessible via {@link #instance}.
  *
  */
 public class PacketHandlerServer implements IPacketHandler {
@@ -35,19 +34,16 @@ public class PacketHandlerServer implements IPacketHandler {
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		AvatarLog.debug("Recieved packet");
 		
-		if (packet instanceof PacketSUseAbility)
-			return handleKeypress((PacketSUseAbility) packet, ctx);
+		if (packet instanceof PacketSUseAbility) return handleKeypress((PacketSUseAbility) packet, ctx);
 		
-		if (packet instanceof PacketSRequestData)
-			return handleRequestData((PacketSRequestData) packet, ctx);
+		if (packet instanceof PacketSRequestData) return handleRequestData((PacketSRequestData) packet, ctx);
 		
-		if (packet instanceof PacketSUseBendingController)
-			return handleUseBendingController((PacketSUseBendingController) packet, ctx);
+		if (packet instanceof PacketSUseBendingController) return handleUseBendingController((PacketSUseBendingController) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
 	}
-
+	
 	@Override
 	public Side getSide() {
 		return Side.SERVER;
@@ -69,8 +65,8 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(ctx.getServerHandler().playerEntity, "Error while"
-				+ " processing RequestData packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(ctx.getServerHandler().playerEntity,
+				"Error while" + " processing RequestData packet");
 		
 		return data == null ? null : new PacketCPlayerData(data);
 		
@@ -80,8 +76,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		World world = player.worldObj;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing"
-				+ " UseBendingController packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing" + " UseBendingController packet");
 		
 		if (data != null) {
 			
@@ -91,7 +86,6 @@ public class PacketHandlerServer implements IPacketHandler {
 				AvatarLog.warn("Player '" + player.getCommandSenderName() + "' attempted to activate a BendingController "
 						+ "they don't have; hacking?");
 			}
-		
 			
 		}
 		

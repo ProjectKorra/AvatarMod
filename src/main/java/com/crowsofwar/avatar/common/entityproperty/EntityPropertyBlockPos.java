@@ -34,8 +34,8 @@ public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<BlockPos> 
 	@Override
 	protected BlockPos retrieveFromDataWatcher() {
 		if (dataWatcher.getWatchableObjectByte(index + 3) == 1) {
-			return new BlockPos(dataWatcher.getWatchableObjectInt(index),
-					dataWatcher.getWatchableObjectInt(index + 1), dataWatcher.getWatchableObjectInt(index + 2));
+			return new BlockPos(dataWatcher.getWatchableObjectInt(index), dataWatcher.getWatchableObjectInt(index + 1),
+					dataWatcher.getWatchableObjectInt(index + 2));
 		} else {
 			return null;
 		}

@@ -12,14 +12,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 public class RenderWaterArc extends RenderArc {
-
+	
 	private static final ResourceLocation water = new ResourceLocation("avatarmod", "textures/entity/water-ribbon.png");
 	
 	@Override
 	protected ResourceLocation getTexture() {
 		return water;
 	}
-
+	
 	@Override
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		// Parametric equation
@@ -31,8 +31,8 @@ public class RenderWaterArc extends RenderArc {
 		direction.normalize();
 		Vec3 spawnAt = plus(offset, times(direction, Math.random()));
 		Vec3 velocity = first.getVelocity();
-		arc.worldObj.spawnParticle("splash", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord,
-				velocity.yCoord, velocity.zCoord);
+		arc.worldObj.spawnParticle("splash", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord, velocity.yCoord,
+				velocity.zCoord);
 	}
-
+	
 }

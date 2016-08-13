@@ -37,8 +37,8 @@ public class Firebending implements IBendingController {
 		ThemeColor background = new ThemeColor(light, red);
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
-		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_FIREBENDING,
-				AvatarGuiIds.GUI_RADIAL_MENU_FIRE, ACTION_LIGHT_FIRE, ACTION_FIRE_PUNCH, ACTION_FIREARC_THROW);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_FIREBENDING, AvatarGuiIds.GUI_RADIAL_MENU_FIRE,
+				ACTION_LIGHT_FIRE, ACTION_FIRE_PUNCH, ACTION_FIREARC_THROW);
 	}
 	
 	@Override
@@ -69,17 +69,18 @@ public class Firebending implements IBendingController {
 			if (ps.isLookingAtBlock(-1, 5)) {
 				BlockPos setAt = new BlockPos(looking.x, looking.y, looking.z);
 				setAt.offset(side);
-				if (world.getBlock(setAt.x, setAt.y, setAt.z) == Blocks.air)
-					world.setBlock(setAt.x, setAt.y, setAt.z, Blocks.fire);
+				if (world.getBlock(setAt.x, setAt.y, setAt.z) == Blocks.air) world.setBlock(setAt.x, setAt.y, setAt.z, Blocks.fire);
 			}
 		}
 		if (ability == ACTION_FIRE_PUNCH) {
-//			Vec3 look = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-//			Vec3 motion = VectorUtils.times(look, 10);
-//			EntityFlame flame = new EntityFlame(world, player.posX, player.posY + 1.6, player.posZ,
-//					motion.xCoord, motion.yCoord, motion.zCoord);
-//			
-//			world.spawnEntityInWorld(flame);
+			// Vec3 look = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw),
+			// Math.toRadians(player.rotationPitch));
+			// Vec3 motion = VectorUtils.times(look, 10);
+			// EntityFlame flame = new EntityFlame(world, player.posX, player.posY + 1.6,
+			// player.posZ,
+			// motion.xCoord, motion.yCoord, motion.zCoord);
+			//
+			// world.spawnEntityInWorld(flame);
 			
 			Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 			Vec3 lookPos = plus(getEntityPos(player), times(look, 3));
@@ -126,7 +127,7 @@ public class Firebending implements IBendingController {
 				Vec3 lookPos = plus(getEyePos(player), times(look, 3));
 				Vec3 motion = minus(lookPos, getEntityPos(fire));
 				motion.normalize();
-				mult(motion, .05*3);
+				mult(motion, .05 * 3);
 				fire.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);
 				fire.setOwner(player);
 			} else {
@@ -144,7 +145,7 @@ public class Firebending implements IBendingController {
 		
 		return AvatarAbility.NONE;
 	}
-
+	
 	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;

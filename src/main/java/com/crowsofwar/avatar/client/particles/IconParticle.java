@@ -23,8 +23,7 @@ public class IconParticle implements IIcon {
 	private int currentAnimation;
 	private final float animOffU;
 	
-	public IconParticle(String name, int width, int height, int u, int v, int textureWidth, int textureHeight,
-			int animationUOffset) {
+	public IconParticle(String name, int width, int height, int u, int v, int textureWidth, int textureHeight, int animationUOffset) {
 		this.width = 1f * width / textureWidth;
 		this.height = 1f * height / textureHeight;
 		this.widthPx = width;
@@ -35,7 +34,7 @@ public class IconParticle implements IIcon {
 		this.name = name;
 		this.currentAnimation = 0;
 	}
-
+	
 	@Override
 	public int getIconWidth() {
 		return widthPx;
@@ -45,37 +44,37 @@ public class IconParticle implements IIcon {
 	public int getIconHeight() {
 		return heightPx;
 	}
-
+	
 	@Override
 	public float getMinU() {
 		return u + animOffU * currentAnimation;
 	}
-
+	
 	@Override
 	public float getMaxU() {
 		return u + width + animOffU * currentAnimation;
 	}
-
+	
 	@Override
 	public float getInterpolatedU(double lerp) {
 		return (float) (getMinU() + (1.0 * width * lerp / 16));
 	}
-
+	
 	@Override
 	public float getMinV() {
 		return v;
 	}
-
+	
 	@Override
 	public float getMaxV() {
 		return v + height;
 	}
-
+	
 	@Override
 	public float getInterpolatedV(double lerp) {
 		return (float) (getMinV() + (1.0 * height * lerp / 16));
 	}
-
+	
 	@Override
 	public String getIconName() {
 		return name;
@@ -88,5 +87,5 @@ public class IconParticle implements IIcon {
 	public void setAnimation(int animation) {
 		this.currentAnimation = animation;
 	}
-
+	
 }

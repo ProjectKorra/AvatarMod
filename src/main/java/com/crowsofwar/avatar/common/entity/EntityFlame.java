@@ -10,8 +10,7 @@ import net.minecraft.world.World;
 
 public class EntityFlame extends Entity implements IPhysics {
 	
-	private static final int DATAWATCHER_VELX = 2, DATAWATCHER_VELY = 3, DATAWATCHER_VELZ = 4,
-			DATAWATCHER_DIST_TRAVELLED = 5;
+	private static final int DATAWATCHER_VELX = 2, DATAWATCHER_VELY = 3, DATAWATCHER_VELZ = 4, DATAWATCHER_DIST_TRAVELLED = 5;
 	
 	private static final int MAX_DIST_TRAVELLED = 10;
 	

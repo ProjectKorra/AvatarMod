@@ -19,8 +19,7 @@ import crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Sent from server to client to notify the client of
- * a player's current bending controller.
+ * Sent from server to client to notify the client of a player's current bending controller.
  *
  */
 public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
@@ -73,12 +72,12 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 			states.get(i).toBytes(buf);
 		}
 	}
-
+	
 	@Override
 	public IMessage onMessage(PacketCPlayerData message, MessageContext ctx) {
 		return PacketRedirector.redirectMessage(message, ctx);
 	}
-
+	
 	@Override
 	public Side getRecievedSide() {
 		return Side.CLIENT;

@@ -26,13 +26,13 @@ public class EntityPropertyVector extends EntityPropertyDatawatcher<Vec3> {
 	
 	@Override
 	protected Vec3 retrieveFromDataWatcher() {
-		return Vec3.createVectorHelper(dataWatcher.getWatchableObjectFloat(index),
-				dataWatcher.getWatchableObjectFloat(index + 1), dataWatcher.getWatchableObjectFloat(index + 2));
+		return Vec3.createVectorHelper(dataWatcher.getWatchableObjectFloat(index), dataWatcher.getWatchableObjectFloat(index + 1),
+				dataWatcher.getWatchableObjectFloat(index + 2));
 	}
-
+	
 	@Override
 	protected Vec3 createValue() {
 		return Vec3.createVectorHelper(0, 0, 0);
 	}
-
+	
 }

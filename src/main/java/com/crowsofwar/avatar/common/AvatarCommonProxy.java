@@ -11,14 +11,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
- * Allows calling of side-specific code by using a common
- * base class and side-specific subclasses. It can be referenced
- * via {@link AvatarMod#proxy}. All classes or values accessed
- * from here are safe to use on either side.
- * <br /><br />
- * Is using Client proxy if running from a minecraft client. Uses
- * server proxy is running from server.
- * <br /><br />
+ * Allows calling of side-specific code by using a common base class and side-specific subclasses.
+ * It can be referenced via {@link AvatarMod#proxy}. All classes or values accessed from here are
+ * safe to use on either side. <br />
+ * <br />
+ * Is using Client proxy if running from a minecraft client. Uses server proxy is running from
+ * server. <br />
+ * <br />
  *
  */
 public interface AvatarCommonProxy {
@@ -31,11 +30,9 @@ public interface AvatarCommonProxy {
 	public IControlsHandler getKeyHandler();
 	
 	/**
-	 * Get a client-side packet handler safely. When the machine
-	 * is running a minecraft client (even if in the integrated
-	 * server thread), returns the packet handler for the client.
-	 * Otherwise (this only happens on dedicated servers), returns
-	 * null.
+	 * Get a client-side packet handler safely. When the machine is running a minecraft client (even
+	 * if in the integrated server thread), returns the packet handler for the client. Otherwise
+	 * (this only happens on dedicated servers), returns null.
 	 */
 	public IPacketHandler getClientPacketHandler();
 	
@@ -43,7 +40,7 @@ public interface AvatarCommonProxy {
 	 * Get client player's reach. Returns 0 on server.
 	 */
 	double getPlayerReach();
-
+	
 	void init();
 	
 	IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);

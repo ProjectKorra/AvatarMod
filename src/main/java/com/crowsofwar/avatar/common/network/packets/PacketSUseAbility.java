@@ -13,8 +13,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * Packet which tells the server that the client pressed a control.
- * The control is given to the player's active bending controller.
+ * Packet which tells the server that the client pressed a control. The control is given to the
+ * player's active bending controller.
  * 
  * @see AvatarControl
  *
@@ -41,7 +41,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 		side = ForgeDirection.getOrientation(buf.readInt());
 		if (side == ForgeDirection.UNKNOWN) side = null;
 	}
-
+	
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(ability.getId());
@@ -51,7 +51,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 		}
 		buf.writeInt(side == null ? -1 : side.ordinal());
 	}
-
+	
 	@Override
 	public IMessage onMessage(PacketSUseAbility message, MessageContext ctx) {
 		return PacketRedirector.redirectMessage(message, ctx);

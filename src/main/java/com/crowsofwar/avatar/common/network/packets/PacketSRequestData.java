@@ -42,17 +42,17 @@ public class PacketSRequestData implements IAvatarPacket<PacketSRequestData> {
 	public void fromBytes(ByteBuf buf) {
 		asking = GoreCoreByteBufUtil.readUUID(buf);
 	}
-
+	
 	@Override
 	public void toBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeUUID(buf, asking);
 	}
-
+	
 	@Override
 	public IMessage onMessage(PacketSRequestData message, MessageContext ctx) {
 		return PacketRedirector.redirectMessage(message, ctx);
 	}
-
+	
 	@Override
 	public Side getRecievedSide() {
 		return Side.SERVER;

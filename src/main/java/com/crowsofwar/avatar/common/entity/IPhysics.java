@@ -20,13 +20,17 @@ public interface IPhysics {
 	
 	/**
 	 * Set the velocity
-	 * @param vel Velocity in m/s
+	 * 
+	 * @param vel
+	 *            Velocity in m/s
 	 */
 	void setVelocity(Vec3 vel);
 	
 	/**
 	 * Add velocity to the object, ignoring mass.
-	 * @param vel Velocity in m/s
+	 * 
+	 * @param vel
+	 *            Velocity in m/s
 	 */
 	void addVelocity(Vec3 vel);
 	

@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class WaterbendingState implements IBendingState {
-
+	
 	private final AvatarPlayerData data;
 	
 	private EntityWaterArc waterArc;
@@ -43,17 +43,17 @@ public class WaterbendingState implements IBendingState {
 	public void readFromNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(getWaterArcId());
 	}
-
+	
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		World world = data.getState().getPlayerEntity().worldObj;
@@ -65,10 +65,10 @@ public class WaterbendingState implements IBendingState {
 		}
 		setWaterArc(waterArc);
 	}
-
+	
 	@Override
 	public int getId() {
 		return BendingManager.BENDINGID_WATERBENDING;
 	}
-
+	
 }

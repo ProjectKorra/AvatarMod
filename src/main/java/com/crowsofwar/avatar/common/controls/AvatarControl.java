@@ -9,10 +9,7 @@ public enum AvatarControl {
 	/** No control is pressed */
 	NONE(""),
 	/** Default LeftAlt (will be changed) */
-	KEY_EARTHBENDING("RadialMenu"),
-	KEY_FIREBENDING("Firebend"),
-	KEY_WATERBENDING("Waterbend"),
-	KEY_AIRBENDING("Airbend"),
+	KEY_EARTHBENDING("RadialMenu"), KEY_FIREBENDING("Firebend"), KEY_WATERBENDING("Waterbend"), KEY_AIRBENDING("Airbend"),
 	/** Left mouse button is held down */
 	CONTROL_LEFT_CLICK("LeftClick"),
 	/** Right mouse button is held down */
@@ -43,12 +40,13 @@ public enum AvatarControl {
 	
 	/**
 	 * Get the Id of this control.
+	 * 
 	 * @see #findFromId(int)
 	 */
 	public int getId() {
 		return ordinal();
 	}
-
+	
 	/**
 	 * Returns whether this control is a keybinding.
 	 */
@@ -57,11 +55,14 @@ public enum AvatarControl {
 	}
 	
 	/**
-	 * Find the Avatar control with that Id. If the Id is invalid,
-	 * throws an IllegalArgumentException.
-	 * @param id Id of the control, obtained with {@link #getId()}.
+	 * Find the Avatar control with that Id. If the Id is invalid, throws an
+	 * IllegalArgumentException.
+	 * 
+	 * @param id
+	 *            Id of the control, obtained with {@link #getId()}.
 	 * @return The control with that Id
-	 * @throws IllegalArgumentException If that Id refers to no control.
+	 * @throws IllegalArgumentException
+	 *             If that Id refers to no control.
 	 */
 	public static AvatarControl findFromId(int id) {
 		if (id < 0 || id >= values().length) throw new IllegalArgumentException("AvatarControl Id '" + id + "' is invalid");

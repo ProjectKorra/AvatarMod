@@ -14,9 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
-public class ParticleFlame extends AvatarParticle
-{
-
+public class ParticleFlame extends AvatarParticle {
+	
 	public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/particles/flame.png");
 	
 	public ParticleFlame(World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
@@ -34,5 +33,4 @@ public class ParticleFlame extends AvatarParticle
 		return new IconParticle("Flame", 32, 32, 0, 0, 256, 256, 32);
 	}
 	
-    
 }

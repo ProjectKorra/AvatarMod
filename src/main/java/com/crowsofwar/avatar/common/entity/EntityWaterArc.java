@@ -59,7 +59,9 @@ public class EntityWaterArc extends EntityArc {
 			int particles = random.nextInt(3) + 4;
 			for (int i = 0; i < particles; i++) {
 				
-				worldObj.spawnParticle("splash", posX + random.nextGaussian() * offX, posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ, random.nextGaussian() * xVel, random.nextGaussian() * yVel, random.nextGaussian() * zVel);
+				worldObj.spawnParticle("splash", posX + random.nextGaussian() * offX, posY + random.nextGaussian() * offY + 0.2,
+						posZ + random.nextGaussian() * offZ, random.nextGaussian() * xVel, random.nextGaussian() * yVel,
+						random.nextGaussian() * zVel);
 				
 			}
 			

@@ -12,17 +12,7 @@ import com.crowsofwar.avatar.common.bending.IBendingController;
 public enum AvatarAbility {
 	
 	/** No control is pressed */
-	NONE("", -1, -2, false),
-	ACTION_TOGGLE_BENDING(	"ToggleBending",BENDINGID_EARTHBENDING,	-1, false, 0),
-	ACTION_THROW_BLOCK(		"ThrowBlock",	BENDINGID_EARTHBENDING,	-2, false),
-	ACTION_LIGHT_FIRE(		"LightFire",	BENDINGID_FIREBENDING,	-1, false, 2),
-	ACTION_FIRE_PUNCH(		"FirePunch",	BENDINGID_FIREBENDING,	-2, false, 3),
-	ACTION_FIREARC_THROW(	"FireThrow",	BENDINGID_FIREBENDING,	-2, false),
-	ACTION_PUT_BLOCK(		"PutBlock",		BENDINGID_EARTHBENDING,	-1, false),
-	ACTION_WATER_ARC(		"WaterArc",		BENDINGID_WATERBENDING,	-1, true,  4),
-	ACTION_WATERARC_THROW(	"WaterThrow",	BENDINGID_WATERBENDING,	-2, false, 5),
-	ACTION_AIRBEND_TEST(	"AirbendTest",	BENDINGID_AIRBENDING,	-2,	false, 6),
-	ACTION_AIR_GUST(		"AirGust",		BENDINGID_AIRBENDING,	-2,	false, 7);
+	NONE("", -1, -2, false), ACTION_TOGGLE_BENDING("ToggleBending", BENDINGID_EARTHBENDING, -1, false, 0), ACTION_THROW_BLOCK("ThrowBlock", BENDINGID_EARTHBENDING, -2, false), ACTION_LIGHT_FIRE("LightFire", BENDINGID_FIREBENDING, -1, false, 2), ACTION_FIRE_PUNCH("FirePunch", BENDINGID_FIREBENDING, -2, false, 3), ACTION_FIREARC_THROW("FireThrow", BENDINGID_FIREBENDING, -2, false), ACTION_PUT_BLOCK("PutBlock", BENDINGID_EARTHBENDING, -1, false), ACTION_WATER_ARC("WaterArc", BENDINGID_WATERBENDING, -1, true, 4), ACTION_WATERARC_THROW("WaterThrow", BENDINGID_WATERBENDING, -2, false, 5), ACTION_AIRBEND_TEST("AirbendTest", BENDINGID_AIRBENDING, -2, false, 6), ACTION_AIR_GUST("AirGust", BENDINGID_AIRBENDING, -2, false, 7);
 	
 	private final String name;
 	private final IBendingController controller;
@@ -87,8 +77,10 @@ public enum AvatarAbility {
 	
 	/**
 	 * Get the ability with the specified id.
+	 * 
 	 * @see #getId()
-	 * @throws IllegalArgumentException ID must be from getId. If not referring to an ability, exception is thrown.
+	 * @throws IllegalArgumentException
+	 *             ID must be from getId. If not referring to an ability, exception is thrown.
 	 */
 	public static AvatarAbility fromId(int id) {
 		if (id < 0 || id >= values().length) throw new IllegalArgumentException("Invalid ID for avatar ability: " + id);

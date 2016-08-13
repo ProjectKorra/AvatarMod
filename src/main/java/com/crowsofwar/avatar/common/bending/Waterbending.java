@@ -26,7 +26,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class Waterbending implements IBendingController {
-
+	
 	private BendingMenuInfo menu;
 	
 	public Waterbending() {
@@ -34,25 +34,25 @@ public class Waterbending implements IBendingController {
 		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
-		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
-				new ThemeColor(icon, base)), KEY_WATERBENDING, GUI_RADIAL_MENU_WATER, ACTION_WATER_ARC);
+		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge), new ThemeColor(icon, base)),
+				KEY_WATERBENDING, GUI_RADIAL_MENU_WATER, ACTION_WATER_ARC);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	@Override
 	public int getID() {
 		return BendingManager.BENDINGID_WATERBENDING;
 	}
-
+	
 	@Override
 	public void onAbility(AvatarAbility ability, AvatarPlayerData data) {
 		PlayerState state = data.getState();
@@ -112,12 +112,12 @@ public class Waterbending implements IBendingController {
 		}
 		
 	}
-
+	
 	@Override
 	public IBendingState createState(AvatarPlayerData data) {
 		return new WaterbendingState(data);
 	}
-
+	
 	@Override
 	public void onUpdate(AvatarPlayerData data) {
 		
@@ -134,7 +134,7 @@ public class Waterbending implements IBendingController {
 				Vec3 lookPos = plus(getEyePos(player), times(look, 3));
 				Vec3 motion = minus(lookPos, getEntityPos(water));
 				motion.normalize();
-				mult(motion, .05*3);
+				mult(motion, .05 * 3);
 				water.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);
 				water.setOwner(player);
 				
@@ -149,24 +149,23 @@ public class Waterbending implements IBendingController {
 		}
 		
 	}
-
+	
 	@Override
 	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
 		
-		if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN)
-			return AvatarAbility.ACTION_WATERARC_THROW;
+		if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_WATERARC_THROW;
 		
 		return AvatarAbility.NONE;
 	}
-
+	
 	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
-
+	
 	@Override
 	public String getControllerName() {
 		return "waterbending";
 	}
-
+	
 }

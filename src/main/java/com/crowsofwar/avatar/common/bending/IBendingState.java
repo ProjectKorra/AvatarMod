@@ -11,19 +11,17 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * Allows an IBendingController to store additional information
- * about a player's state. Each IBendingController can have its
- * own implementation of this interface. One IBendingState is
- * attached to each player, which is initialized using the
- * bending controller's {@link IBendingController#createState(com.crowsofwar.avatar.common.data.AvatarPlayerData)
- * createState method}. After the player's bending controller is
- * deactivated, the Bending state will be discarded however.
- * The current state is saved in NBT in case the game saves
- * while the player is bending.
+ * Allows an IBendingController to store additional information about a player's state. Each
+ * IBendingController can have its own implementation of this interface. One IBendingState is
+ * attached to each player, which is initialized using the bending controller's
+ * {@link IBendingController#createState(com.crowsofwar.avatar.common.data.AvatarPlayerData)
+ * createState method}. After the player's bending controller is deactivated, the Bending state will
+ * be discarded however. The current state is saved in NBT in case the game saves while the player
+ * is bending.
  *
  */
 public interface IBendingState extends ReadableWritable {
-
+	
 	public static CreateFromNBT<IBendingState> creator = new CreateFromNBT<IBendingState>() {
 		@Override
 		public IBendingState create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
@@ -33,8 +31,7 @@ public interface IBendingState extends ReadableWritable {
 				state.readFromNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "StateData"));
 				return state;
 			} else {
-				AvatarLog.error("Could not create new bending state with using ControllerID " 
-						+ nbt.getInteger("ControllerID"));
+				AvatarLog.error("Could not create new bending state with using ControllerID " + nbt.getInteger("ControllerID"));
 			}
 			
 			return null;
@@ -54,8 +51,9 @@ public interface IBendingState extends ReadableWritable {
 	void fromBytes(ByteBuf buf);
 	
 	/**
-	 * Get the Id of the bending state's IBendingController. Should be
-	 * unique per-class (not per-instance).
+	 * Get the Id of the bending state's IBendingController. Should be unique per-class (not
+	 * per-instance).
+	 * 
 	 * @see IBendingController#getID()
 	 */
 	int getId();

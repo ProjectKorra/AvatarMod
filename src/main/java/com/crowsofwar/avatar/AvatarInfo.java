@@ -8,7 +8,6 @@ public class AvatarInfo {
 	public static final int VERSION_MAIN = 0;
 	public static final int VERSION_RELEASE = 1;
 	public static final int VERSION_PATCH = 0;
-	public static final String VERSION = VERSION_MAIN + "." + VERSION_RELEASE + "." + VERSION_PATCH
-			+ (IS_DEV_BUILD ? "-dev" : "");
+	public static final String VERSION = VERSION_MAIN + "." + VERSION_RELEASE + "." + VERSION_PATCH + (IS_DEV_BUILD ? "-dev" : "");
 	
 }

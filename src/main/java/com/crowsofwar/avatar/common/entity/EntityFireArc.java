@@ -24,9 +24,8 @@ public class EntityFireArc extends EntityArc {
 			if (worldObj.isRemote) {
 				int particles = random.nextInt(3) + 4;
 				for (int i = 0; i < particles; i++) {
-					worldObj.spawnParticle("cloud", posX, posY, posZ,
-							(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
-							(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
+					worldObj.spawnParticle("cloud", posX, posY, posZ, (random.nextGaussian() - 0.5) * 0.05 + motionX / 10,
+							random.nextGaussian() * 0.08, (random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
 				}
 			}
 			worldObj.playSoundAtEntity(this, "random.fizz", 1.0f, random.nextFloat() * 0.3f + 1.1f);// BlockFire

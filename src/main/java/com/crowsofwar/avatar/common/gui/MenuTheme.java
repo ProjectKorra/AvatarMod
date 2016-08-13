@@ -11,19 +11,19 @@ public class MenuTheme {
 		this.edge = edge;
 		this.icon = icon;
 	}
-
+	
 	public ThemeColor getBackground() {
 		return background;
 	}
-
+	
 	public ThemeColor getEdge() {
 		return edge;
 	}
-
+	
 	public ThemeColor getIcon() {
 		return icon;
 	}
-
+	
 	public static class ThemeColor {
 		private final int r, g, b, hoverR, hoverG, hoverB;
 		
@@ -39,15 +39,15 @@ public class MenuTheme {
 			this.hoverG = hoverG;
 			this.hoverB = hoverB;
 		}
-
+		
 		public int getRed(boolean hover) {
 			return hover ? hoverR : r;
 		}
-
+		
 		public int getGreen(boolean hover) {
 			return hover ? hoverG : g;
 		}
-
+		
 		public int getBlue(boolean hover) {
 			return hover ? hoverB : b;
 		}

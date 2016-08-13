@@ -45,7 +45,8 @@ public class NodeBendingAdd extends NodeFunctional {
 		String playerName = args.get(argPlayerName);
 		IBendingController controller = args.get(argBendingController);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName, "Error while getting player data for /avatar bending add");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName,
+				"Error while getting player data for /avatar bending add");
 		
 		if (data == null) {
 			

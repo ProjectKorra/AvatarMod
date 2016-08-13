@@ -12,7 +12,7 @@ import crowsofwar.gorecore.tree.TreeCommand;
 public class AvatarCommand extends TreeCommand {
 	
 	public static final ITypeConverter<IBendingController> CONVERTER_BENDING = new ITypeConverter<IBendingController>() {
-
+		
 		@Override
 		public IBendingController convert(String str) {
 			return BendingManager.getBending(str);
@@ -41,8 +41,8 @@ public class AvatarCommand extends TreeCommand {
 		NodeBendingList bendingList = new NodeBendingList();
 		NodeBendingAdd bendingAdd = new NodeBendingAdd();
 		NodeBendingRemove bendingRemove = new NodeBendingRemove();
-		NodeBranch branchBending = new NodeBranch(AvatarChatMessages.MSG_BENDING_BRANCH_INFO, "bending",
-				bendingList, bendingAdd, bendingRemove);
+		NodeBranch branchBending = new NodeBranch(AvatarChatMessages.MSG_BENDING_BRANCH_INFO, "bending", bendingList, bendingAdd,
+				bendingRemove);
 		
 		return new ICommandNode[] { branchBending };
 		
