@@ -78,6 +78,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		nbt.setInteger("ActiveBending", activeBending == null ? -1 : activeBending.getID());
 	}
 	
+	@Override
+	protected void saveChanges() {
+		super.saveChanges();
+		updateClient();
+	}
+	
 	public boolean isBender() {
 		return !bendingControllers.isEmpty();
 	}
@@ -223,7 +229,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Sends a packet to update the client with information about this player data.
 	 */
 	public void updateClient() {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getState().getPlayerEntity());
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getState().getPlayerEntity());
 	}
 	
 	/**
@@ -234,7 +241,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
-		fetcher = new PlayerDataFetcherSided<AvatarPlayerData>(clientFetcher, new PlayerDataFetcherServer<AvatarPlayerData>(AvatarWorldData.FETCHER));
+		fetcher = new PlayerDataFetcherSided<AvatarPlayerData>(clientFetcher,
+				new PlayerDataFetcherServer<AvatarPlayerData>(AvatarWorldData.FETCHER));
 	}
 	
 	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {

@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.controls.ClientInput;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
@@ -27,8 +26,6 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import crowsofwar.gorecore.data.GoreCorePlayerData;
-import crowsofwar.gorecore.data.PlayerDataCreationHandler;
 import crowsofwar.gorecore.data.PlayerDataFetcher;
 import crowsofwar.gorecore.data.PlayerDataFetcherClient;
 import net.minecraft.client.Minecraft;
@@ -55,12 +52,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		FMLCommonHandler.instance().bus().register(inputHandler);
 		MinecraftForge.EVENT_BUS.register(inputHandler);
 		
-		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, AvatarInfo.MOD_ID, new PlayerDataCreationHandler() {
-			@Override
-			public void onClientPlayerDataCreated(GoreCorePlayerData data) {
-				System.out.println("Requesting data...");
-				AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
-			}
+		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, (data) -> {
+			System.out.println("Requesting data...");
+			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 		});
 		
 	}

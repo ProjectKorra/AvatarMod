@@ -138,10 +138,9 @@ public class ClientInput implements IControlsHandler {
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void openBendingMenu(IBendingController controller) {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer, "Error while getting player data for open-bending-menu checks");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer,
+				"Error while getting player data for open-bending-menu checks");
 		BendingMenuInfo menu = controller.getRadialMenu();
-		System.out.println("Trying controller " + controller);
-		System.out.println("All bending: " + data.getBendingControllers());
 		if (data.hasBending(controller.getID()) && isControlPressed(menu.getKey())) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			AvatarMod.network.sendToServer(new PacketSUseBendingController(controller.getID()));
@@ -172,8 +171,10 @@ public class ClientInput implements IControlsHandler {
 				for (AvatarControl control : pressed) {
 					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
 					if (ability != AvatarAbility.NONE) {
-						RaytraceResult raytrace = ability.needsRaytrace() ? Raytrace.getTargetBlock(player, ability.getRaytraceDistance(), ability.isRaycastLiquids()) : null;
-						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace != null ? raytrace.getPos() : null, raytrace != null ? raytrace.getDirection() : null));
+						RaytraceResult raytrace = ability.needsRaytrace()
+								? Raytrace.getTargetBlock(player, ability.getRaytraceDistance(), ability.isRaycastLiquids()) : null;
+						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace != null ? raytrace.getPos() : null,
+								raytrace != null ? raytrace.getDirection() : null));
 					}
 				}
 			}
