@@ -98,7 +98,7 @@ public class Earthbending implements IBendingController {
 						floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
 						
 						double dist = 2.5;
-						Vec3 force = Vec3.createVectorHelper(0, Math.sqrt(19.62*dist), 0);
+						Vec3 force = Vec3.createVectorHelper(0, Math.sqrt(19.62 * dist), 0);
 						floating.addVelocity(force);
 						floating.setGravityEnabled(true);
 						floating.setCanFall(false);
@@ -111,13 +111,13 @@ public class Earthbending implements IBendingController {
 						data.sendBendingState(ebs);
 						
 						Block.SoundType sound = block.stepSound;
-						if (sound != null) world.playSoundEffect(target.x + 0.5, target.y + 0.5, target.z + 0.5, sound.getBreakSound(), 1, sound.getPitch());
+						if (sound != null) world.playSoundEffect(target.x + 0.5, target.y + 0.5, target.z + 0.5, sound.getBreakSound(), 1,
+								sound.getPitch());
 						
 						world.setBlock(target.x, target.y, target.z, Blocks.air);
 						
 					} else {
-						world.playSoundAtEntity(player, "random.click", 1.0f,
-								(float) (random.nextGaussian() / 0.25 + 0.375));
+						world.playSoundAtEntity(player, "random.click", 1.0f, (float) (random.nextGaussian() / 0.25 + 0.375));
 					}
 					
 				}
@@ -151,10 +151,10 @@ public class Earthbending implements IBendingController {
 					int x = looking.x + lookingSide.offsetX;
 					int y = looking.y + lookingSide.offsetY;
 					int z = looking.z + lookingSide.offsetZ;
-//					if (world.getBlock(x, y, z) == Blocks.air) {
-//						world.setBlock(x, y, z, floating.getBlock());
-//						floating.setDead();
-//					}
+					// if (world.getBlock(x, y, z) == Blocks.air) {
+					// world.setBlock(x, y, z, floating.getBlock());
+					// floating.setDead();
+					// }
 					floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
 					floating.setMovingToBlock(new BlockPos(x, y, z));
 					floating.setGravityEnabled(false);
@@ -180,7 +180,6 @@ public class Earthbending implements IBendingController {
 		if (state != null) {
 			EntityPlayer player = data.getState().getPlayerEntity();
 			EntityFloatingBlock floating = state.getPickupBlock();
-//			System.out.println(floating.ticksExisted);
 			
 			if (floating != null && floating.ticksExisted > 20) {
 				floating.setOwner(player);
@@ -195,34 +194,14 @@ public class Earthbending implements IBendingController {
 				Vec3 eye = VectorUtils.getEyePos(player);
 				Vec3 target = VectorUtils.plus(VectorUtils.times(forward, 2), eye);
 				Vec3 motion = VectorUtils.minus(target, VectorUtils.getEntityPos(floating));
-//				System.out.println(VectorUtils.getEntityPos(floating));
-//				motion.normalize();
 				VectorUtils.mult(motion, 5);
-//				System.out.println(VectorUtils.getEyePos(player).toString());
-//				if (motion.squareDistanceTo(0, 0, 0) > 3) {
-//					motion.normalize();
-//					VectorUtils.mult(motion, 3);
-//				}
-				
-//				motion = Vec3.createVectorHelper(-1, 0, 0);
-				
-//				floating.setVelocity(motion);
-				
-//				if (floating.isGravityEnabled() || floating.canFall()) {
-//					floating.setGravityEnabled(false);
-//					floating.setCanFall(true);
-//				}
-				
-//				floating.moveEntity(target.xCoord - floating.posX, target.yCoord - floating.posY, target.zCoord - floating.posZ);
-//				floating.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);
 				floating.setVelocity(motion);
-//				floating.setPositionAndRotation(target.xCoord, target.yCoord, target.zCoord, 0, 0);
 				
 			}
 			
 		}
 	}
-
+	
 	@Override
 	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
 		PlayerState state = data.getState();
@@ -235,7 +214,7 @@ public class Earthbending implements IBendingController {
 		
 		return AvatarAbility.NONE;
 	}
-
+	
 	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;

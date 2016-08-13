@@ -3,21 +3,16 @@ package com.crowsofwar.avatar.common.util;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-import javax.vecmath.Vector3d;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 /**
- * Contains methods to perform basic operations on vectors.
- * Because, apparently, Mojang was to lazy to do it themselves.
+ * Contains methods to perform basic operations on vectors. Because, apparently, Mojang was to lazy
+ * to do it themselves.
  *
  */
 public class VectorUtils {
@@ -31,8 +26,11 @@ public class VectorUtils {
 	
 	/**
 	 * Add vector b to a, modifying a in the process.
-	 * @param a Vector a (will be modified)
-	 * @param b Vector b (will not be modified)
+	 * 
+	 * @param a
+	 *            Vector a (will be modified)
+	 * @param b
+	 *            Vector b (will not be modified)
 	 */
 	public static void add(Vec3 a, Vec3 b) {
 		a.xCoord += b.xCoord;
@@ -42,8 +40,11 @@ public class VectorUtils {
 	
 	/**
 	 * Subtract vector b from a
-	 * @param a Vector a (will be modified)
-	 * @param b Vector b (will not be modified)
+	 * 
+	 * @param a
+	 *            Vector a (will be modified)
+	 * @param b
+	 *            Vector b (will not be modified)
 	 */
 	public static void subtract(Vec3 a, Vec3 b) {
 		Vec3 inverse = copy(b);
@@ -52,8 +53,9 @@ public class VectorUtils {
 	}
 	
 	/**
-	 * Add vector a and b, returning a new vector. Unlike {{@link #add(Vec3, Vec3)},
-	 * the arguments are not modified.
+	 * Add vector a and b, returning a new vector. Unlike {{@link #add(Vec3, Vec3)}, the arguments
+	 * are not modified.
+	 * 
 	 * @param a
 	 * @param b
 	 * @return
@@ -65,8 +67,9 @@ public class VectorUtils {
 	}
 	
 	/**
-	 * Subtract vector a - b, returning a new vector. Unlike {{@link #subtract(Vec3, Vec3)},
-	 * the arguments are not modified.
+	 * Subtract vector a - b, returning a new vector. Unlike {{@link #subtract(Vec3, Vec3)}, the
+	 * arguments are not modified.
+	 * 
 	 * @param a
 	 * @param b
 	 * @return
@@ -79,6 +82,7 @@ public class VectorUtils {
 	
 	/**
 	 * Multiply the vector by the value
+	 * 
 	 * @param v
 	 * @param f
 	 */
@@ -110,17 +114,16 @@ public class VectorUtils {
 	}
 	
 	/**
-	 * Create a unit vector from the given euler angles. Measurements
-	 * should be in radians.
+	 * Create a unit vector from the given euler angles. Measurements should be in radians.
 	 */
 	public static Vec3 fromDirection(Vec3 euler) {
 		return fromYawPitch(euler.yCoord, euler.xCoord);
 	}
 	
 	/**
-	 * Get a euler angle from point A to point B. Y axis is yaw, and x axis
-	 * is pitch. Z axis is roll, which isn't in minecraft (so it's 0).
-	 * Measurements are in radians.
+	 * Get a euler angle from point A to point B. Y axis is yaw, and x axis is pitch. Z axis is
+	 * roll, which isn't in minecraft (so it's 0). Measurements are in radians.
+	 * 
 	 * @param pos1
 	 * @param pos2
 	 * @return
@@ -131,33 +134,38 @@ public class VectorUtils {
 		double x = diff.xCoord;
 		double y = diff.yCoord;
 		double z = diff.zCoord;
-//		double r = 1;
-//		double rotY = Math.atan2(z, x);
-//		double rotX = Math.atan2(Math.sqrt(z * z + x * x), y) + Math.PI;
+		// double r = 1;
+		// double rotY = Math.atan2(z, x);
+		// double rotX = Math.atan2(Math.sqrt(z * z + x * x), y) + Math.PI;
 		double d0 = x;
-        double d1 = y;
-        double d2 = z;
-        double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+		double d1 = y;
+		double d2 = z;
+		double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
 		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
 		double rotX = -Math.atan2(d1, d3);
 		
-//		double rotY = Math.atan2(y, x);
-//		double rotX = Math.acos(z / r);
+		// double rotY = Math.atan2(y, x);
+		// double rotX = Math.acos(z / r);
 		
-//		double rotX = Math.asin(diff.yCoord / 1);
-//		double rotY = Math.asin(diff.xCoord / (cos(rotX)*1));
-//		double rotX = Math.atan2(y, x);
-//		double rotY = Math.atan2(z, Math.sqrt(x * x + y * y));
+		// double rotX = Math.asin(diff.yCoord / 1);
+		// double rotY = Math.asin(diff.xCoord / (cos(rotX)*1));
+		// double rotX = Math.atan2(y, x);
+		// double rotY = Math.atan2(z, Math.sqrt(x * x + y * y));
 		double rotZ = 0;
 		return Vec3.createVectorHelper(rotX, rotY, rotZ);
 	}
 	
 	/**
 	 * Use {@link Raytrace} instead.
-	 * @param world The world
-	 * @param start Vector to start at
-	 * @param direction Unit vector describing direction
-	 * @param interval Interval for checking
+	 * 
+	 * @param world
+	 *            The world
+	 * @param start
+	 *            Vector to start at
+	 * @param direction
+	 *            Unit vector describing direction
+	 * @param interval
+	 *            Interval for checking
 	 * @return
 	 */
 	@Deprecated
@@ -178,7 +186,6 @@ public class VectorUtils {
 			
 		}
 		
-		System.out.println("Ending position: " + current);
 		return null;
 	}
 	
@@ -195,15 +202,20 @@ public class VectorUtils {
 	}
 	
 	/**
-	 * Get the pitch to lob a projectile in radians. Example:
-	 * pitch to target can be used in {@link #fromYawPitch(double, double)}
-	 * @param v Force of the projectile, going FORWARDS
-	 * @param g Gravity constant
-	 * @param x Horizontal distance to target
-	 * @param y Vertical distance to target
+	 * Get the pitch to lob a projectile in radians. Example: pitch to target can be used in
+	 * {@link #fromYawPitch(double, double)}
+	 * 
+	 * @param v
+	 *            Force of the projectile, going FORWARDS
+	 * @param g
+	 *            Gravity constant
+	 * @param x
+	 *            Horizontal distance to target
+	 * @param y
+	 *            Vertical distance to target
 	 */
 	public static double getProjectileAngle(double v, double g, double x, double y) {
-		return -Math.atan2((v*v+Math.sqrt(v*v*v*v - g*(g*x*x+2*y*v*v))),g*x); 
+		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
 	}
 	
 }

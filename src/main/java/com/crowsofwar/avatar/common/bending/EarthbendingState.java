@@ -19,12 +19,12 @@ public class EarthbendingState implements IBendingState {
 	public void readFromNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		
 	}
-
+	
 	public AvatarPlayerData getData() {
 		return data;
 	}
@@ -32,11 +32,10 @@ public class EarthbendingState implements IBendingState {
 	public EntityFloatingBlock getPickupBlock() {
 		if (pickupBlock != null && pickupBlock.isDead) {
 			pickupBlock = null;
-			System.out.println("deded");
 		}
 		return pickupBlock;
 	}
-
+	
 	public void setPickupBlock(EntityFloatingBlock pickupBlock) {
 		this.pickupBlock = pickupBlock;
 	}
@@ -48,26 +47,21 @@ public class EarthbendingState implements IBendingState {
 	public void dropBlock() {
 		pickupBlock = null;
 	}
-
+	
 	@Override
 	public void toBytes(ByteBuf buf) {
-//		int i = (int) ((new Random()).nextDouble() * 10);
-//		System.out.println("EBS- Writing int: " + i);;
-//		buf.writeInt(i);
 		buf.writeInt(pickupBlock == null ? -1 : pickupBlock.getID());
 	}
-
+	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-//		System.out.println("EBS- Read int: " + buf.readInt());
 		int id = buf.readInt();
 		pickupBlock = id == -1 ? null : EntityFloatingBlock.getFromID(data.getState().getPlayerEntity().worldObj, id);
-		System.out.println("frombytes- " + pickupBlock);
 	}
-
+	
 	@Override
 	public int getId() {
 		return BendingManager.BENDINGID_EARTHBENDING;
 	}
-
+	
 }

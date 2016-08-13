@@ -247,7 +247,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public void updateClient() {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getPlayerEntity());
-			System.out.println("pentity: " + getPlayerEntity());
 		}
 	}
 	

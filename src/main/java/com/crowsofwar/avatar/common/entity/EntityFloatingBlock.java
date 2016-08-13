@@ -59,9 +59,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		velocity = Vec3.createVectorHelper(0, 0, 0);
 		setGravityEnabled(false);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-			System.out.println("Constructed with ID " + nextBlockID);
 			setID(nextBlockID++);
-			System.out.println(getFromID(worldObj, getID()));
 		}
 		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
 		this.internalPosition = Vec3.createVectorHelper(0, 0, 0);
@@ -91,7 +89,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		dataWatcher.addObject(DATAWATCHER_FRICTION, 1f);
 		dataWatcher.addObject(DATAWATCHER_CAN_FALL, (byte) 0);
 		dataWatcher.addObject(DATAWATCHER_ON_LAND, (byte) 0);
-		System.out.println("adding" + DATAWATCHER_METADATA);
 		dataWatcher.addObject(DATAWATCHER_METADATA, 0);
 		
 	}
@@ -163,8 +160,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	public static EntityFloatingBlock getFromID(World world, int id) {
 		for (int i = 0; i < world.loadedEntityList.size(); i++) {
 			Entity e = (Entity) world.loadedEntityList.get(i);
-			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id)
-				return (EntityFloatingBlock) e;
+			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id) return (EntityFloatingBlock) e;
 		}
 		return null;
 	}
@@ -238,8 +234,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				worldObj.setBlock(x, y, z, getBlock());
 				worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(), 3);
 				Block.SoundType sound = getBlock().stepSound;
-				if (sound != null)
-					worldObj.playSoundAtEntity(this, sound.getBreakSound(), sound.getVolume(), sound.getPitch());
+				if (sound != null) worldObj.playSoundAtEntity(this, sound.getBreakSound(), sound.getVolume(), sound.getPitch());
 				
 			}
 		}
@@ -251,8 +246,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				if (collided instanceof EntityLivingBase && collided != getOwner()) {
 					double speed = getVelocity().lengthVector();
 					double multiplier = 0.25;
-					collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(this, collided),
-							(float) (speed * multiplier));
+					collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(this, collided), (float) (speed * multiplier));
 					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
 					motion.yCoord = 0.08;
 					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
@@ -278,9 +272,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
-			worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(), posX,
-					posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1,
-					random.nextGaussian() * 0.1);
+			worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(), posX, posY + 0.3, posZ,
+					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
 		
 		if (!worldObj.isRemote) {

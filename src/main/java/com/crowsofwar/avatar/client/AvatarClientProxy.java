@@ -53,7 +53,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		MinecraftForge.EVENT_BUS.register(inputHandler);
 		
 		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, (data) -> {
-			System.out.println("Requesting data...");
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 		});
 		
