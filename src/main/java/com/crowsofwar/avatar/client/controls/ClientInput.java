@@ -1,15 +1,16 @@
 package com.crowsofwar.avatar.client.controls;
 
+import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_AIRBENDING;
+import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_EARTHBENDING;
+import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_FIREBENDING;
+import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_WATERBENDING;
+import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_MIDDLE_CLICK;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_MIDDLE_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_AIRBENDING;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_EARTHBENDING;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_FIREBENDING;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_WATERBENDING;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.NONE;
 
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
@@ -46,8 +46,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Large class that manages input on the client-side.
- * After input is received, it is sent to the server using packets.
+ * Large class that manages input on the client-side. After input is received, it is sent to the
+ * server using packets.
  *
  */
 @SideOnly(Side.CLIENT)
@@ -59,6 +59,11 @@ public class ClientInput implements IControlsHandler {
 	private boolean mouseLeft, mouseRight, mouseMiddle;
 	private boolean wasLeft, wasRight, wasMiddle;
 	
+	/**
+	 * A list of all bending controllers which can be activated by keyboard
+	 */
+	private final List<IBendingController> keyboardBending;
+	
 	private boolean press;
 	
 	public ClientInput() {
@@ -68,16 +73,22 @@ public class ClientInput implements IControlsHandler {
 		
 		keybindings = new HashMap();
 		
-		addKeybinding(KEY_EARTHBENDING, Keyboard.KEY_Z, "main");
-		addKeybinding(KEY_FIREBENDING, Keyboard.KEY_X, "main");
-		addKeybinding(KEY_WATERBENDING, Keyboard.KEY_C, "main");
-		addKeybinding(KEY_AIRBENDING, Keyboard.KEY_F, "main");
+		keyboardBending = new ArrayList<>();
+		addBendingButton(BENDINGID_EARTHBENDING, Keyboard.KEY_Z);
+		addBendingButton(BENDINGID_FIREBENDING, Keyboard.KEY_X);
+		addBendingButton(BENDINGID_WATERBENDING, Keyboard.KEY_C);
+		addBendingButton(BENDINGID_AIRBENDING, Keyboard.KEY_F);
 		
 	}
 	
+	private void addBendingButton(int id, int keycode) {
+		IBendingController controller = getBending(id);
+		addKeybinding(controller.getRadialMenu().getKey(), keycode, "main");
+		keyboardBending.add(controller);
+	}
+	
 	private KeyBinding addKeybinding(AvatarControl control, int key, String cat) {
-		KeyBinding kb = new KeyBinding("avatar." + control.getName(), key,
-				"avatar.category." + cat);
+		KeyBinding kb = new KeyBinding("avatar." + control.getName(), key, "avatar.category." + cat);
 		keybindings.put(control.getName(), kb);
 		ClientRegistry.registerKeyBinding(kb);
 		return kb;
@@ -105,7 +116,7 @@ public class ClientInput implements IControlsHandler {
 		}
 		
 	}
-
+	
 	@Override
 	public int getKeyCode(AvatarControl control) {
 		String keyName = control.getName();
@@ -117,22 +128,20 @@ public class ClientInput implements IControlsHandler {
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
 		
-		openBendingMenu(BendingManager.BENDINGID_EARTHBENDING);
-		openBendingMenu(BendingManager.BENDINGID_FIREBENDING);
-		openBendingMenu(BendingManager.BENDINGID_WATERBENDING);
-		openBendingMenu(BendingManager.BENDINGID_AIRBENDING);
+		for (IBendingController controller : keyboardBending) {
+			openBendingMenu(controller);
+		}
 		
 	}
 	
 	/**
-	 * Open the bending controller with that Id if its key is pressed.
+	 * Tries to open the specified bending controller if its key is pressed.
 	 */
-	private void openBendingMenu(int bendingId) {
-		IBendingController controller = BendingManager.getBending(bendingId);
+	private void openBendingMenu(IBendingController controller) {
 		BendingMenuInfo menu = controller.getRadialMenu();
 		if (isControlPressed(menu.getKey())) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			AvatarMod.network.sendToServer(new PacketSUseBendingController(bendingId));
+			AvatarMod.network.sendToServer(new PacketSUseBendingController(controller.getID()));
 			player.openGui(AvatarMod.instance, menu.getGuiId(), player.worldObj, 0, 0, 0);
 		}
 	}
@@ -151,8 +160,8 @@ public class ClientInput implements IControlsHandler {
 		
 		if (player != null && true) {
 			// Send any input to the server
-//			AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
-//					Minecraft.getMinecraft().thePlayer);
+			// AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
+			// Minecraft.getMinecraft().thePlayer);
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
 			
 			if (data != null && data.getActiveBendingController() != null) {
@@ -160,11 +169,8 @@ public class ClientInput implements IControlsHandler {
 				for (AvatarControl control : pressed) {
 					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
 					if (ability != AvatarAbility.NONE) {
-						RaytraceResult raytrace = ability.needsRaytrace() ? Raytrace.getTargetBlock(player,
-								ability.getRaytraceDistance(), ability.isRaycastLiquids()) : null;
-						AvatarMod.network.sendToServer(new PacketSUseAbility(ability,
-								raytrace != null ? raytrace.getPos() : null,
-								raytrace != null ? raytrace.getDirection() : null));
+						RaytraceResult raytrace = ability.needsRaytrace() ? Raytrace.getTargetBlock(player, ability.getRaytraceDistance(), ability.isRaycastLiquids()) : null;
+						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace != null ? raytrace.getPos() : null, raytrace != null ? raytrace.getDirection() : null));
 					}
 				}
 			}
