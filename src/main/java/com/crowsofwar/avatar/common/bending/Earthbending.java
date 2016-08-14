@@ -25,6 +25,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -206,10 +208,14 @@ public class Earthbending implements IBendingController {
 	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
 		PlayerState state = data.getState();
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState(this);
+		EntityPlayer player = data.getPlayerEntity();
+		ItemStack holding = player.getCurrentEquippedItem();
 		
 		if (ebs.getPickupBlock() != null) {
 			if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_THROW_BLOCK;
-			if (input == AvatarControl.CONTROL_RIGHT_CLICK_DOWN) return AvatarAbility.ACTION_PUT_BLOCK;
+			if (input == AvatarControl.CONTROL_RIGHT_CLICK_DOWN && holding == null
+					|| (holding != null && !(holding.getItem() instanceof ItemBlock)))
+				return AvatarAbility.ACTION_PUT_BLOCK;
 		}
 		
 		return AvatarAbility.NONE;
