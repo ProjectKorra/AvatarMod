@@ -6,8 +6,8 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.gorecore.tree.*;
 
-import crowsofwar.gorecore.tree.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.world.World;
 

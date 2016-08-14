@@ -3,11 +3,10 @@ package com.crowsofwar.avatar.common.command;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
-
-import crowsofwar.gorecore.tree.ICommandNode;
-import crowsofwar.gorecore.tree.ITypeConverter;
-import crowsofwar.gorecore.tree.NodeBranch;
-import crowsofwar.gorecore.tree.TreeCommand;
+import com.crowsofwar.gorecore.tree.ICommandNode;
+import com.crowsofwar.gorecore.tree.ITypeConverter;
+import com.crowsofwar.gorecore.tree.NodeBranch;
+import com.crowsofwar.gorecore.tree.TreeCommand;
 
 public class AvatarCommand extends TreeCommand {
 	

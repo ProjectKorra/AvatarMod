@@ -5,14 +5,14 @@ import java.util.List;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.gorecore.tree.ArgumentDirect;
+import com.crowsofwar.gorecore.tree.ArgumentList;
+import com.crowsofwar.gorecore.tree.CommandCall;
+import com.crowsofwar.gorecore.tree.IArgument;
+import com.crowsofwar.gorecore.tree.ICommandNode;
+import com.crowsofwar.gorecore.tree.ITypeConverter;
+import com.crowsofwar.gorecore.tree.NodeFunctional;
 
-import crowsofwar.gorecore.tree.ArgumentDirect;
-import crowsofwar.gorecore.tree.ArgumentList;
-import crowsofwar.gorecore.tree.CommandCall;
-import crowsofwar.gorecore.tree.IArgument;
-import crowsofwar.gorecore.tree.ICommandNode;
-import crowsofwar.gorecore.tree.ITypeConverter;
-import crowsofwar.gorecore.tree.NodeFunctional;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.world.World;
 

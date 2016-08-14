@@ -4,13 +4,13 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
+import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
+import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
+import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
-import crowsofwar.gorecore.util.GoreCoreByteBufUtil;
-import crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
-import crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 

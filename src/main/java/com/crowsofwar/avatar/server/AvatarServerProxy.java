@@ -6,8 +6,8 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.IAvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
+import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 
-import crowsofwar.gorecore.data.PlayerDataFetcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 

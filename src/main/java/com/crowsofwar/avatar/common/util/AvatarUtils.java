@@ -3,9 +3,10 @@ package com.crowsofwar.avatar.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;

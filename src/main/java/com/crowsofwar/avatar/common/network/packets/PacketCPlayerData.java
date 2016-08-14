@@ -10,12 +10,12 @@ import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
+import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
+import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
-import crowsofwar.gorecore.util.GoreCoreByteBufUtil;
-import crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 import io.netty.buffer.ByteBuf;
 
 /**

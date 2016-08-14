@@ -7,10 +7,10 @@ import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

@@ -1,8 +1,9 @@
 package com.crowsofwar.avatar.common.data;
 
-import crowsofwar.gorecore.data.GoreCorePlayerData;
-import crowsofwar.gorecore.data.GoreCoreWorldDataPlayers;
-import crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
+import com.crowsofwar.gorecore.data.GoreCorePlayerData;
+import com.crowsofwar.gorecore.data.GoreCoreWorldDataPlayers;
+import com.crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
+
 import net.minecraft.world.World;
 
 public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> {

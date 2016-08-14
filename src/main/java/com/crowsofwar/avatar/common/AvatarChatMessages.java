@@ -1,9 +1,10 @@
 package com.crowsofwar.avatar.common;
 
-import static crowsofwar.gorecore.chat.ChatSender.newChatMessage;
+import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
 
-import crowsofwar.gorecore.chat.ChatMessage;
-import crowsofwar.gorecore.chat.MessageConfiguration;
+import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.chat.MessageConfiguration;
+
 import net.minecraft.util.EnumChatFormatting;
 
 public class AvatarChatMessages {

@@ -2,11 +2,11 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 
-import crowsofwar.gorecore.util.GoreCoreNBTUtil;
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
-import crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
