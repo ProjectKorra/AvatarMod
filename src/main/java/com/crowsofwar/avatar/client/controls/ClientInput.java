@@ -154,9 +154,13 @@ public class ClientInput implements IControlsHandler {
 		wasRight = mouseRight;
 		wasMiddle = mouseMiddle;
 		
-		mouseLeft = Mouse.isButtonDown(0);
-		mouseRight = Mouse.isButtonDown(1);
-		mouseMiddle = Mouse.isButtonDown(2);
+		if (mc.inGameHasFocus) {
+			mouseLeft = Mouse.isButtonDown(0);
+			mouseRight = Mouse.isButtonDown(1);
+			mouseMiddle = Mouse.isButtonDown(2);
+		} else {
+			mouseLeft = mouseRight = mouseMiddle = false;
+		}
 		
 		EntityPlayer player = mc.thePlayer;
 		
