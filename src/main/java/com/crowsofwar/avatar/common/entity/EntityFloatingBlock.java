@@ -53,6 +53,12 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	private EntityPlayer owner;
 	
+	/**
+	 * Whether or not to drop an ItemBlock when the floating block has been destroyed. Does not
+	 * matter on client.
+	 */
+	private boolean enableItemDrops;
+	
 	public EntityFloatingBlock(World world) {
 		super(world);
 		setSize(0.95f, 0.95f);
@@ -63,6 +69,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		}
 		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
 		this.internalPosition = Vec3.createVectorHelper(0, 0, 0);
+		
+		this.enableItemDrops = true;
 		
 	}
 	
@@ -103,6 +111,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		setFriction(nbt.getFloat("Friction"));
 		setCanFall(nbt.getBoolean("CanFall"));
 		setOnLandBehavior(nbt.getByte("OnLand"));
+		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 	}
 	
 	@Override
@@ -117,6 +126,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("CanFall", canFall());
 		nbt.setByte("OnLand", getOnLandBehaviorId());
+		nbt.setBoolean("DropItems", areItemDropsEnabled());
 	}
 	
 	public Block getBlock() {
@@ -171,6 +181,28 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id) return (EntityFloatingBlock) e;
 		}
 		return null;
+	}
+	
+	/**
+	 * Returns whether the floating block drops the block as an item when it is destroyed. Only used
+	 * on server-side. By default, is true.
+	 */
+	public boolean areItemDropsEnabled() {
+		return enableItemDrops;
+	}
+	
+	/**
+	 * Set whether the block should be dropped when it is destroyed.
+	 */
+	public void setItemDropsEnabled(boolean enable) {
+		this.enableItemDrops = enable;
+	}
+	
+	/**
+	 * Disable dropping an item when the floating block is destroyed.
+	 */
+	public void disableItemDrops() {
+		setItemDropsEnabled(false);
 	}
 	
 	private String getNameForBlock(Block block) {
@@ -295,7 +327,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
 		
-		if (!worldObj.isRemote) {
+		if (!worldObj.isRemote && areItemDropsEnabled()) {
 			List<ItemStack> drops = getBlock().getDrops(worldObj, 0, 0, 0, getMetadata(), 0);
 			for (ItemStack is : drops) {
 				EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);

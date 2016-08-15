@@ -98,6 +98,7 @@ public class Earthbending implements IBendingController {
 						EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
 						floating.setMetadata(world.getBlockMetadata(target.x, target.y, target.z));
 						floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
+						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
 						
 						double dist = 2.5;
 						Vec3 force = Vec3.createVectorHelper(0, Math.sqrt(19.62 * dist), 0);
