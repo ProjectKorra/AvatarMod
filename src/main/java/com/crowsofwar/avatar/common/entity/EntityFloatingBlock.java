@@ -63,6 +63,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		}
 		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
 		this.internalPosition = Vec3.createVectorHelper(0, 0, 0);
+		
 	}
 	
 	public EntityFloatingBlock(World world, Block block) {
@@ -137,6 +138,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		dataWatcher.updateObject(DATAWATCHER_METADATA, metadata);
 	}
 	
+	/**
+	 * Get the name of the correct "blockcrack_" particle based on the current block and metadata.
+	 */
+	public String getBlockCrackParticle() {
+		return "blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata();
+	}
+	
 	public boolean isGravityEnabled() {
 		return dataWatcher.getWatchableObjectInt(DATAWATCHER_GRAVITY) == 1;
 	}
@@ -178,6 +186,17 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				vel.yCoord = 0;
 				setVelocity(vel);
 			}
+		}
+		
+		if (ticksExisted == 1) {
+			
+			for (int i = 0; i < 10; i++) {
+				double spawnX = posX + (rand.nextDouble() - 0.5);
+				double spawnY = posY - 0;
+				double spawnZ = posZ + (rand.nextDouble() - 0.5);
+				worldObj.spawnParticle(getBlockCrackParticle(), spawnX, spawnY, spawnZ, 0, -0.1, 0);
+			}
+			
 		}
 		
 		if (!worldObj.isRemote) setVelocity(VectorUtils.times(getVelocity(), getFriction()));
@@ -272,8 +291,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
-			worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata(), posX, posY + 0.3, posZ,
-					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
+			worldObj.spawnParticle(getBlockCrackParticle(), posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
+					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
 		
 		if (!worldObj.isRemote) {
