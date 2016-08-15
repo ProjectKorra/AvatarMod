@@ -29,6 +29,10 @@ public class AvatarCommand extends TreeCommand {
 		
 	};
 	
+	public AvatarCommand() {
+		super(AvatarChatMessages.CFG);
+	}
+	
 	@Override
 	public String getCommandName() {
 		return "avatar";
