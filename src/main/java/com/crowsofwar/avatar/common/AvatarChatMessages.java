@@ -9,8 +9,12 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class AvatarChatMessages {
 	
-	public static final MessageConfiguration CFG = new MessageConfiguration().addColor("value", EnumChatFormatting.AQUA)
-			.addColor("error", EnumChatFormatting.RED).addColor("error_value", EnumChatFormatting.DARK_RED);
+	// @formatter:off
+	public static final MessageConfiguration CFG = new MessageConfiguration()
+			.addColor("value", EnumChatFormatting.AQUA)
+			.addColor("error", EnumChatFormatting.RED)
+			.addColor("error_value", EnumChatFormatting.DARK_RED)
+			.addColor("title", EnumChatFormatting.GOLD);
 	public static final ChatMessage MSG_BENDING_BRANCH_INFO = newChatMessage(CFG, "avatar.cmd.bending");
 	public static final ChatMessage MSG_PLAYER_DATA_NO_DATA = newChatMessage(CFG, "avatar.cmd.bending.list.noData", "player");
 	public static final ChatMessage MSG_BENDING_LIST_NONBENDER = newChatMessage(CFG, "avatar.cmd.bending.list.nonbender", "player");
