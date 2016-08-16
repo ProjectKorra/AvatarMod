@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -44,7 +45,12 @@ public class PacketHandlerClient implements IPacketHandler {
 	}
 	
 	private IMessage handlePacketPlayerData(PacketCPlayerData packet, MessageContext ctx) {
-		EntityPlayer player = mc.thePlayer;
+		EntityPlayer player = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayer());
+		if (player == null) {
+			AvatarLog.warn("Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
+			AvatarLog.warn("The player ID was: " + packet.getPlayer());
+			return null;
+		}
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing player data packet");
 		if (data != null) {
 			// Add bending controllers & bending states
