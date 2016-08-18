@@ -5,7 +5,6 @@ import com.crowsofwar.avatar.common.util.VectorUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityFlame extends Entity implements IPhysics {

@@ -4,7 +4,6 @@ import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityArc {

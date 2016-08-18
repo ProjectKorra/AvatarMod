@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.util;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockPos {
 	

@@ -1,17 +1,11 @@
 package com.crowsofwar.avatar.client.render;
 
-import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
-import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.times;
-
 import com.crowsofwar.avatar.client.particles.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 
 public class RenderFireArc extends RenderArc {
 	

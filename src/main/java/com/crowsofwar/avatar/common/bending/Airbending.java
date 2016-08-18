@@ -22,8 +22,6 @@ import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class Airbending implements IBendingController {

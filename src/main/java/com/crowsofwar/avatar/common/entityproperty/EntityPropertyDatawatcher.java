@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
-import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
 
 /**

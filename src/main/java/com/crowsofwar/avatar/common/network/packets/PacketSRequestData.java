@@ -8,11 +8,10 @@ import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Sent from client to server to request data about a player.

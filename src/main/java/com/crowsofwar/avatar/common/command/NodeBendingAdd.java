@@ -1,5 +1,9 @@
 package com.crowsofwar.avatar.common.command;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BENDING_ADD_ALREADY_HAS;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BENDING_ADD_SUCCESS;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_PLAYER_DATA_NO_DATA;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -16,7 +20,6 @@ import com.crowsofwar.gorecore.tree.NodeFunctional;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.world.World;
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 public class NodeBendingAdd extends NodeFunctional {
 	

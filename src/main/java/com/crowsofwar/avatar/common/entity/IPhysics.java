@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.entity;
 
-import net.minecraft.util.Vec3;
-
 /**
  * Describes an entity which can be moved by physics. sort of.
  *

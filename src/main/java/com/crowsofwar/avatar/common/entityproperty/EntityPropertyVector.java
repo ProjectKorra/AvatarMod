@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
-import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
 
 public class EntityPropertyVector extends EntityPropertyDatawatcher<Vec3> {
 	

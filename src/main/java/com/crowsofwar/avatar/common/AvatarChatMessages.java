@@ -5,8 +5,6 @@ import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.MessageConfiguration;
 
-import net.minecraft.util.EnumChatFormatting;
-
 public class AvatarChatMessages {
 	
 	// @formatter:off

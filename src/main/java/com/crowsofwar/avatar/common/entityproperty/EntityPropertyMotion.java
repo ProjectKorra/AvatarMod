@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
 
 /**
  * An entity property which allows simple access to the entity's motion vector by manipulating the

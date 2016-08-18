@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * Manages instances of bending controllers. Bending controllers can be retrieved via
  * {@link #getBending(int)}. Contains constants which specify the IDs of bending. <br />

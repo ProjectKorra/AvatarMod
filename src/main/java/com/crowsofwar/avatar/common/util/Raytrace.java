@@ -1,16 +1,13 @@
 package com.crowsofwar.avatar.common.util;
 
 import static java.lang.Math.toRadians;
+import static net.minecraft.util.EnumFacing.*;
 
 import com.crowsofwar.avatar.AvatarMod;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraft.util.Vec3;
-import static net.minecraftforge.common.util.ForgeDirection.*;
+import net.minecraft.util.EnumFacing;
 
 public class Raytrace {
 	
@@ -95,7 +92,7 @@ public class Raytrace {
 			return side;
 		}
 		
-		public ForgeDirection getDirection() {
+		public EnumFacing getDirection() {
 			switch (side) {
 			case 0:
 				return DOWN;

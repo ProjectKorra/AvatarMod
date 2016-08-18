@@ -6,7 +6,6 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityWaterArc extends EntityArc {

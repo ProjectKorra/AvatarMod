@@ -1,17 +1,25 @@
 package com.crowsofwar.avatar.common.command;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BENDING_REMOVE_DOESNT_HAVE;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BENDING_REMOVE_SUCCESS;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_PLAYER_DATA_NO_DATA;
+
 import java.util.List;
 
-import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.tree.*;
+import com.crowsofwar.gorecore.tree.ArgumentDirect;
+import com.crowsofwar.gorecore.tree.ArgumentList;
+import com.crowsofwar.gorecore.tree.ArgumentOptions;
+import com.crowsofwar.gorecore.tree.CommandCall;
+import com.crowsofwar.gorecore.tree.IArgument;
+import com.crowsofwar.gorecore.tree.ICommandNode;
+import com.crowsofwar.gorecore.tree.ITypeConverter;
+import com.crowsofwar.gorecore.tree.NodeFunctional;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.world.World;
-
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 public class NodeBendingRemove extends NodeFunctional {
 	

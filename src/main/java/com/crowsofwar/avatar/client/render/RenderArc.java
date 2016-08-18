@@ -4,14 +4,11 @@ import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
 import static com.crowsofwar.avatar.common.util.VectorUtils.fromYawPitch;
 import static com.crowsofwar.avatar.common.util.VectorUtils.getRotations;
 import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
 import static com.crowsofwar.avatar.common.util.VectorUtils.times;
 
-import org.joml.Matrix4d;
-import org.joml.Matrix4f;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
-import org.joml.Vector4d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector4d;
+
 import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.entity.EntityArc;
@@ -22,7 +19,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 
 public abstract class RenderArc extends Render {
 	

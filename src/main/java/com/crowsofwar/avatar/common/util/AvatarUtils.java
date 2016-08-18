@@ -9,7 +9,6 @@ import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.MathHelper;
 
 public class AvatarUtils {
 	

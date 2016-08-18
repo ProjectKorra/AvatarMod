@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.entityproperty;
 
 import com.crowsofwar.avatar.common.util.BlockPos;
 
-import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
 
 public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<BlockPos> {

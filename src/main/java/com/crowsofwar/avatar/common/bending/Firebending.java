@@ -1,8 +1,16 @@
 package com.crowsofwar.avatar.common.bending;
 
-import static com.crowsofwar.avatar.common.AvatarAbility.*;
-import static com.crowsofwar.avatar.common.util.VectorUtils.*;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
+import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_FIREARC_THROW;
+import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_FIRE_PUNCH;
+import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_LIGHT_FIRE;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
+import static com.crowsofwar.avatar.common.util.VectorUtils.fromYawPitch;
+import static com.crowsofwar.avatar.common.util.VectorUtils.getEntityPos;
+import static com.crowsofwar.avatar.common.util.VectorUtils.getEyePos;
+import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
+import static com.crowsofwar.avatar.common.util.VectorUtils.mult;
+import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
+import static com.crowsofwar.avatar.common.util.VectorUtils.times;
 
 import java.awt.Color;
 
@@ -11,20 +19,16 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
-import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.common.util.BlockPos;
-import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class Firebending implements IBendingController {
 	

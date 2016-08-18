@@ -3,13 +3,12 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class EntityArc extends Entity implements IPhysics {
 	
