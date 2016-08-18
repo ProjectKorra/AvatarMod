@@ -6,11 +6,12 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityWaterArc extends EntityArc {
 	
-	private static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 20, 0);
+	private static final Vec3d GRAVITY = Vec3d.createVectorHelper(0, -9.81 / 20, 0);
 	
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
@@ -69,7 +70,7 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vec3 getGravityVector() {
+	protected Vec3d getGravityVector() {
 		return GRAVITY;
 	}
 	

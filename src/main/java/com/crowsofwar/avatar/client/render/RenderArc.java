@@ -1,10 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
-import static com.crowsofwar.avatar.common.util.VectorUtils.fromYawPitch;
-import static com.crowsofwar.avatar.common.util.VectorUtils.getRotations;
-import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.times;
+import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector4d;
@@ -19,6 +15,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 
 public abstract class RenderArc extends Render {
 	
@@ -48,10 +45,10 @@ public abstract class RenderArc extends Render {
 		double y = leader.getYPos() - renderManager.renderPosY;
 		double z = leader.getZPos() - renderManager.renderPosZ;
 		
-		Vec3 from = vec3(0, 0, 0);
-		Vec3 to = minus(point.getPosition(), leader.getPosition());
+		Vec3d from = Vec3d(0, 0, 0);
+		Vec3d to = minus(point.getPosition(), leader.getPosition());
 		
-		Vec3 diff = minus(to, from);
+		Vec3d diff = minus(to, from);
 		
 		double ySize = 1;
 		int textureRepeat = 2;
@@ -67,11 +64,11 @@ public abstract class RenderArc extends Render {
 		double sizeLeader = point.width / 2;
 		double sizePoint = leader.width / 2;
 		
-		Vec3 lookingEuler = getRotations(from, to);
+		Vec3d lookingEuler = getRotations(from, to);
 		// Offset for rotated positive X
-		Vec3 offX = times(fromYawPitch(lookingEuler.yCoord + Math.toRadians(90), lookingEuler.xCoord), sizeLeader);
+		Vec3d offX = times(fromYawPitch(lookingEuler.yCoord + Math.toRadians(90), lookingEuler.xCoord), sizeLeader);
 		offX.yCoord = 0;
-		Vec3 invX = times(offX, -1);
+		Vec3d invX = times(offX, -1);
 		
 		// Matrix4d mat = new Matrix4d();
 		// mat.translate(leader.getXPos(), leader.getYPos(), leader.getZPos());
@@ -123,7 +120,7 @@ public abstract class RenderArc extends Render {
 		return null;
 	}
 	
-	private void drawQuad(int normal, Vec3 pos1, Vec3 pos2, Vec3 pos3, Vec3 pos4, double u1, double v1, double u2, double v2) {
+	private void drawQuad(int normal, Vec3d pos1, Vec3d pos2, Vec3d pos3, Vec3d pos4, double u1, double v1, double u2, double v2) {
 		Tessellator t = Tessellator.instance;
 		if (normal == 0 || normal == 2) {
 			t.startDrawingQuads();
@@ -145,15 +142,15 @@ public abstract class RenderArc extends Render {
 	
 	private void drawQuad(int normal, Vector4d pos1, Vector4d pos2, Vector4d pos3, Vector4d pos4, double u1, double v1, double u2,
 			double v2) {
-		drawQuad(normal, Vec3.createVectorHelper(pos1.x, pos1.y, pos1.z), Vec3.createVectorHelper(pos2.x, pos2.y, pos2.z),
-				Vec3.createVectorHelper(pos3.x, pos3.y, pos3.z), Vec3.createVectorHelper(pos4.x, pos4.y, pos4.z), u1, v1, u2, v2);
+		drawQuad(normal, Vec3d.createVectorHelper(pos1.x, pos1.y, pos1.z), Vec3d.createVectorHelper(pos2.x, pos2.y, pos2.z),
+				Vec3d.createVectorHelper(pos3.x, pos3.y, pos3.z), Vec3d.createVectorHelper(pos4.x, pos4.y, pos4.z), u1, v1, u2, v2);
 	}
 	
-	private Vec3 vec3(double x, double y, double z) {
-		return Vec3.createVectorHelper(x, y, z);
+	private Vec3d Vec3d(double x, double y, double z) {
+		return Vec3d.createVectorHelper(x, y, z);
 	}
 	
-	private Vec3 vec3(Vec3 vec, double x, double y, double z) {
+	private Vec3d Vec3d(Vec3d vec, double x, double y, double z) {
 		return copy(vec).addVector(x, y, z);
 	}
 	

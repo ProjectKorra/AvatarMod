@@ -7,7 +7,9 @@ import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.BlockPos;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -21,12 +23,12 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	
 	private AvatarAbility ability;
 	private BlockPos target;
-	/** ID of ForgeDirection of the side of the block player is looking at */
-	private ForgeDirection side;
+	/** ID of EnumFacing of the side of the block player is looking at */
+	private EnumFacing side;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(AvatarAbility ability, BlockPos target, ForgeDirection side) {
+	public PacketSUseAbility(AvatarAbility ability, BlockPos target, EnumFacing side) {
 		this.ability = ability;
 		this.target = target;
 		this.side = side;
@@ -36,8 +38,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	public void fromBytes(ByteBuf buf) {
 		ability = AvatarAbility.fromId(buf.readInt());
 		target = buf.readBoolean() ? BlockPos.fromBytes(buf) : null;
-		side = ForgeDirection.getOrientation(buf.readInt());
-		if (side == ForgeDirection.UNKNOWN) side = null;
+		side = EnumFacing.getFront(buf.readInt());
 	}
 	
 	@Override
@@ -68,7 +69,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 		return target;
 	}
 	
-	public ForgeDirection getSideHit() {
+	public EnumFacing getSideHit() {
 		return side;
 	}
 	

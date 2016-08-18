@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.util.math.Vec3d;
+
 /**
  * Describes an entity which can be moved by physics. sort of.
  *
@@ -9,12 +11,12 @@ public interface IPhysics {
 	/**
 	 * Get the position in world coordinates.
 	 */
-	Vec3 getPosition();
+	Vec3d getPhysicsPosition();
 	
 	/**
 	 * Get the velocity in m/s.
 	 */
-	Vec3 getVelocity();
+	Vec3d getVelocity();
 	
 	/**
 	 * Set the velocity
@@ -22,7 +24,7 @@ public interface IPhysics {
 	 * @param vel
 	 *            Velocity in m/s
 	 */
-	void setVelocity(Vec3 vel);
+	void setVelocity(Vec3d vel);
 	
 	/**
 	 * Add velocity to the object, ignoring mass.
@@ -30,6 +32,6 @@ public interface IPhysics {
 	 * @param vel
 	 *            Velocity in m/s
 	 */
-	void addVelocity(Vec3 vel);
+	void addVelocity(Vec3d vel);
 	
 }

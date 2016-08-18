@@ -1,9 +1,7 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.client.particles.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
-import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -24,14 +22,17 @@ public class RenderFireArc extends RenderArc {
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		// Parametric equation
 		// For parameters, they will be same as linear equation: y = mx+b
-		Vec3 m = VectorUtils.minus(second.getPosition(), first.getPosition());
-		Vec3 b = first.getPosition();
-		double x = Math.random(); // 0-1
-		Vec3 spawnAt = VectorUtils.plus(VectorUtils.times(m, x), b);
-		Vec3 velocity = Vec3.createVectorHelper(0, 0, 0);
 		
-		AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord / 20, 0.05,
-				velocity.zCoord / 20);
+		// TODO [1.10] Find a good vector class to use- Vec3d no longer exists
+		// Vec3d m = VectorUtils.minus(second.getPosition(), first.getPosition());
+		// Vec3d b = first.getPosition();
+		// double x = Math.random(); // 0-1
+		// Vec3d spawnAt = VectorUtils.plus(VectorUtils.times(m, x), b);
+		// Vec3d velocity = Vec3d.createVectorHelper(0, 0, 0);
+		//
+		// AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord,
+		// spawnAt.zCoord, velocity.xCoord / 20, 0.05,
+		// velocity.zCoord / 20);
 	}
 	
 }

@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.util.text.TextFormatting;
+
 public class MessageConfiguration {
 	
 	public static final MessageConfiguration DEFAULT = new MessageConfiguration();
 	
-	private final Map<String, EnumChatFormatting> colors;
+	private final Map<String, TextFormatting> colors;
 	/**
 	 * Constants are variables which are applied to all ChatMessages using this
 	 * MessageConfiguration. They are applied once to the MessageConfiguration, then every
@@ -20,17 +22,17 @@ public class MessageConfiguration {
 	private final Map<String, String> constants;
 	
 	public MessageConfiguration() {
-		this.colors = new HashMap<String, EnumChatFormatting>();
+		this.colors = new HashMap<String, TextFormatting>();
 		this.constants = new HashMap<>();
 	}
 	
-	public MessageConfiguration addColor(String reference, EnumChatFormatting color) {
+	public MessageConfiguration addColor(String reference, TextFormatting color) {
 		if (!color.isColor()) throw new IllegalArgumentException("The chat formatting must be a color");
 		this.colors.put(reference, color);
 		return this;
 	}
 	
-	public EnumChatFormatting getColor(String reference) {
+	public TextFormatting getColor(String reference) {
 		return colors.get(reference);
 	}
 	

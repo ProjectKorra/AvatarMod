@@ -18,12 +18,17 @@ public class RenderFlame extends Render {
 		EntityFlame flame = (EntityFlame) entity;
 		int time = flame.ticksExisted % 5; // TODO Incorporate more randomization into particle
 											// spawning
-		if (time == 1) flame.worldObj.spawnParticle("smoke", flame.posX, flame.posY, flame.posZ, random.nextGaussian() * 0.1, 0.07,
-				random.nextGaussian() * 0.1);
-		if (time == 3) flame.worldObj.spawnParticle("smoke", flame.posX, flame.posY, flame.posZ, random.nextGaussian() * 0.07, 0.1,
-				random.nextGaussian() * 0.07);
-		if (time == 4) flame.worldObj.spawnParticle("flame", flame.posX, flame.posY, flame.posZ, random.nextGaussian() * 0.03, 0.1,
-				random.nextGaussian() * 0.03);
+		
+		// TODO [1.10] Figure out how to spawn particles
+		// if (time == 1) flame.worldObj.spawnParticle("smoke", flame.posX, flame.posY, flame.posZ,
+		// random.nextGaussian() * 0.1, 0.07,
+		// random.nextGaussian() * 0.1);
+		// if (time == 3) flame.worldObj.spawnParticle("smoke", flame.posX, flame.posY, flame.posZ,
+		// random.nextGaussian() * 0.07, 0.1,
+		// random.nextGaussian() * 0.07);
+		// if (time == 4) flame.worldObj.spawnParticle("flame", flame.posX, flame.posY, flame.posZ,
+		// random.nextGaussian() * 0.03, 0.1,
+		// random.nextGaussian() * 0.03);
 		
 	}
 	

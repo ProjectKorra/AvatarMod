@@ -1,16 +1,8 @@
 package com.crowsofwar.avatar.common.bending;
 
-import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_FIREARC_THROW;
-import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_FIRE_PUNCH;
-import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_LIGHT_FIRE;
+import static com.crowsofwar.avatar.common.AvatarAbility.*;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.util.VectorUtils.fromYawPitch;
-import static com.crowsofwar.avatar.common.util.VectorUtils.getEntityPos;
-import static com.crowsofwar.avatar.common.util.VectorUtils.getEyePos;
-import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.mult;
-import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.times;
+import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 
 import java.awt.Color;
 
@@ -28,6 +20,7 @@ import com.crowsofwar.avatar.common.util.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class Firebending implements IBendingController {
@@ -77,17 +70,17 @@ public class Firebending implements IBendingController {
 			}
 		}
 		if (ability == ACTION_FIRE_PUNCH) {
-			// Vec3 look = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw),
+			// Vec3d look = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw),
 			// Math.toRadians(player.rotationPitch));
-			// Vec3 motion = VectorUtils.times(look, 10);
+			// Vec3d motion = VectorUtils.times(look, 10);
 			// EntityFlame flame = new EntityFlame(world, player.posX, player.posY + 1.6,
 			// player.posZ,
 			// motion.xCoord, motion.yCoord, motion.zCoord);
 			//
 			// world.spawnEntityInWorld(flame);
 			
-			Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-			Vec3 lookPos = plus(getEntityPos(player), times(look, 3));
+			Vec3d look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+			Vec3d lookPos = plus(getEntityPos(player), times(look, 3));
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
 			
@@ -102,7 +95,7 @@ public class Firebending implements IBendingController {
 			
 			EntityFireArc fire = fs.getFireArc();
 			if (fire != null) {
-				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vec3d look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 				fire.addVelocity(times(look, 15));
 				fire.setGravityEnabled(true);
 				fs.setNoFireArc();
@@ -127,9 +120,9 @@ public class Firebending implements IBendingController {
 		if (fs.isManipulatingFire()) {
 			EntityFireArc fire = fs.getFireArc();
 			if (fire != null) {
-				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-				Vec3 lookPos = plus(getEyePos(player), times(look, 3));
-				Vec3 motion = minus(lookPos, getEntityPos(fire));
+				Vec3d look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vec3d lookPos = plus(getEyePos(player), times(look, 3));
+				Vec3d motion = minus(lookPos, getEntityPos(fire));
 				motion.normalize();
 				mult(motion, .05 * 3);
 				fire.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);

@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
 
 public class Raytrace {
 	
@@ -48,10 +49,10 @@ public class Raytrace {
 		
 		if (range == -1) range = getReachDistance(player);
 		
-		Vec3 vec3 = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
-		Vec3 vec31 = player.getLookVec();
-		Vec3 vec32 = vec3.addVector(vec31.xCoord * range, vec31.yCoord * range, vec31.zCoord * range);
-		MovingObjectPosition mop = player.worldObj.func_147447_a(vec3, vec32, raycastLiquids, false, true);
+		Vec3d Vec3d = Vec3d.createVectorHelper(player.posX, player.posY, player.posZ);
+		Vec3d Vec3d1 = player.getLookVec();
+		Vec3d Vec3d2 = Vec3d.addVector(Vec3d1.xCoord * range, Vec3d1.yCoord * range, Vec3d1.zCoord * range);
+		MovingObjectPosition mop = player.worldObj.func_147447_a(Vec3d, Vec3d2, raycastLiquids, false, true);
 		
 		if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
 			return new RaytraceResult(new BlockPos(mop.blockX, mop.blockY, mop.blockZ), mop.sideHit);

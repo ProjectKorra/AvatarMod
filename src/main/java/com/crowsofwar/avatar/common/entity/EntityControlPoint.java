@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -47,12 +48,12 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	protected EntityArc arc;
 	protected EntityPlayer owner;
 	
-	private Vec3 internalPosition;
-	private IEntityProperty<Vec3> internalVelocity;
+	private Vec3d internalPosition;
+	private IEntityProperty<Vec3d> internalVelocity;
 	
 	public EntityControlPoint(World world) {
 		super(world);
-		internalPosition = Vec3.createVectorHelper(0, 0, 0);
+		internalPosition = Vec3d.createVectorHelper(0, 0, 0);
 		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
@@ -62,7 +63,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		setPosition(x, y, z);
 		this.arc = arc;
 		setSize(size, size);
-		internalPosition = Vec3.createVectorHelper(x, y, z);
+		internalPosition = Vec3d.createVectorHelper(x, y, z);
 		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
@@ -108,7 +109,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	 */
 	protected void onCollision(Entity entity) {}
 	
-	public void setPosition(Vec3 pos) {
+	public void setPosition(Vec3d pos) {
 		setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
 	}
 	
@@ -118,7 +119,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		posZ += z;
 	}
 	
-	public void move(Vec3 offset) {
+	public void move(Vec3d offset) {
 		move(offset.xCoord, offset.yCoord, offset.zCoord);
 	}
 	
@@ -139,7 +140,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	@Override
-	public Vec3 getPosition() {
+	public Vec3d getPhysicsPosition() {
 		internalPosition.xCoord = posX;
 		internalPosition.yCoord = posY;
 		internalPosition.zCoord = posZ;
@@ -147,17 +148,17 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	@Override
-	public Vec3 getVelocity() {
+	public Vec3d getVelocity() {
 		return internalVelocity.getValue();
 	}
 	
 	@Override
-	public void setVelocity(Vec3 vel) {
+	public void setVelocity(Vec3d vel) {
 		internalVelocity.setValue(vel);
 	}
 	
 	@Override
-	public void addVelocity(Vec3 vel) {
+	public void addVelocity(Vec3d vel) {
 		setVelocity(VectorUtils.plus(getVelocity(), vel));
 	}
 	

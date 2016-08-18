@@ -4,11 +4,12 @@ import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityFireArc extends EntityArc {
 	
-	private static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 60, 0);
+	private static final Vec3d GRAVITY = Vec3d.createVectorHelper(0, -9.81 / 60, 0);
 	
 	public EntityFireArc(World world) {
 		super(world);
@@ -46,7 +47,7 @@ public class EntityFireArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vec3 getGravityVector() {
+	protected Vec3d getGravityVector() {
 		return GRAVITY;
 	}
 	

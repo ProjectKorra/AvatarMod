@@ -19,11 +19,12 @@ public class RenderAirGust extends RenderArc {
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		
 		World world = arc.worldObj;
-		AxisAlignedBB boundingBox = first.boundingBox;
+		AxisAlignedBB boundingBox = first.getEntityBoundingBox();
 		double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-		world.spawnParticle("cloud", spawnX, spawnY, spawnZ, 0, 0, 0);
+		// TODO [1.10] Find out how to spawn particles
+		// world.spawnParticle("cloud", spawnX, spawnY, spawnZ, 0, 0, 0);
 		
 	}
 	

@@ -10,15 +10,21 @@ import com.crowsofwar.gorecore.chat.MessageConfiguration;
 import com.crowsofwar.gorecore.chat.MultiMessage;
 import com.crowsofwar.gorecore.tree.TreeCommandException.Reason;
 
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 public abstract class TreeCommand implements ICommand {
 	
 	private NodeBranch branchRoot;
 	
 	public TreeCommand() {
-		this(new MessageConfiguration().addColor("value", EnumChatFormatting.GREEN).addColor("title", EnumChatFormatting.LIGHT_PURPLE));
+		// TODO Think of a default theme that doesn't look like neon barf.
+		this(new MessageConfiguration().addColor("value", TextFormatting.GREEN).addColor("title", TextFormatting.BLUE));
 	}
 	
 	public TreeCommand(MessageConfiguration cfg) {
@@ -27,7 +33,7 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(ICommand cmd) {
 		return 0;
 	}
 	
@@ -42,7 +48,7 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	@Override
-	public void processCommand(ICommandSender sender, String[] arguments) {
+	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
 		
 		try {
 			
@@ -86,19 +92,9 @@ public abstract class TreeCommand implements ICommand {
 			
 		} catch (TreeCommandException e) {
 			
-			sender.addChatMessage(new ChatComponentTranslation(e.getMessage(), e.getFormattingArgs()));
+			sender.addChatMessage(new TextComponentTranslation(e.getMessage(), e.getFormattingArgs()));
 		}
 		
-	}
-	
-	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return true;
-	}
-	
-	@Override
-	public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
-		return null;
 	}
 	
 	@Override
@@ -227,6 +223,17 @@ public abstract class TreeCommand implements ICommand {
 		nodeHelpAccepted = newChatMessage(cfg, "gc.tree.nodeHelp.accepted");
 		nodeHelpAcceptedItem = newChatMessage(cfg, "gc.tree.nodeHelp.accepted.item", "input");
 		
+	}
+	
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		return true;
+	}
+	
+	@Override
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+		// TODO Support Tree Command Tab completion
+		return null;
 	}
 	
 }

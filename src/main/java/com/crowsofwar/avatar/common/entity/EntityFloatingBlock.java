@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -44,11 +45,11 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	/**
 	 * Holds the current velocity. Please don't use this field directly, as it is not designed to be
-	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(Vec3)}.
+	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(Vec3d)}.
 	 */
-	private final Vec3 velocity;
+	private final Vec3d velocity;
 	private final EntityPropertyBlockPos propBlockPos;
-	private final Vec3 internalPosition;
+	private final Vec3d internalPosition;
 	
 	private EntityPlayer owner;
 	
@@ -61,13 +62,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	public EntityFloatingBlock(World world) {
 		super(world);
 		setSize(0.95f, 0.95f);
-		velocity = Vec3.createVectorHelper(0, 0, 0);
+		velocity = Vec3d.createVectorHelper(0, 0, 0);
 		setGravityEnabled(false);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
 		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
-		this.internalPosition = Vec3.createVectorHelper(0, 0, 0);
+		this.internalPosition = Vec3d.createVectorHelper(0, 0, 0);
 		
 		this.enableItemDrops = true;
 		
@@ -118,7 +119,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		nbt.setString("Block", getNameForBlock(getBlock()));
 		nbt.setInteger("Metadata", getMetadata());
 		nbt.setBoolean("Gravity", isGravityEnabled());
-		Vec3 velocity = getVelocity();
+		Vec3d velocity = getVelocity();
 		nbt.setDouble("VelocityX", velocity.xCoord);
 		nbt.setDouble("VelocityY", velocity.yCoord);
 		nbt.setDouble("VelocityZ", velocity.zCoord);
@@ -211,8 +212,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	@Override
 	public void onUpdate() {
 		if (isGravityEnabled()) {
-			addVelocity(Vec3.createVectorHelper(0, -9.81 / 20, 0));
-			Vec3 vel = getVelocity();
+			addVelocity(Vec3d.createVectorHelper(0, -9.81 / 20, 0));
+			Vec3d vel = getVelocity();
 			if (!canFall() && vel.yCoord < 0) {
 				vel.yCoord = 0;
 				setVelocity(vel);
@@ -238,7 +239,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		lastTickPosX = posX;
 		lastTickPosY = posY;
 		lastTickPosZ = posZ;
-		Vec3 velocity = getVelocity();
+		Vec3d velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
 		motionX = velocity.xCoord / 20;
 		motionY = velocity.yCoord / 20;
@@ -272,9 +273,9 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		
 		if (isMovingToBlock()) {
 			BlockPos target = getMovingToBlock();
-			Vec3 targetVec = Vec3.createVectorHelper(target.x + 0.5, target.y, target.z + 0.5);
-			Vec3 thisPos = Vec3.createVectorHelper(posX, posY, posZ);
-			Vec3 force = VectorUtils.minus(targetVec, thisPos);
+			Vec3d targetVec = Vec3d.createVectorHelper(target.x + 0.5, target.y, target.z + 0.5);
+			Vec3d thisPos = Vec3d.createVectorHelper(posX, posY, posZ);
+			Vec3d force = VectorUtils.minus(targetVec, thisPos);
 			force.normalize();
 			VectorUtils.mult(force, 3);
 			setVelocity(force);
@@ -297,13 +298,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 					double speed = getVelocity().lengthVector();
 					double multiplier = 0.25;
 					collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(this, collided), (float) (speed * multiplier));
-					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
+					Vec3d motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
 					motion.yCoord = 0.08;
 					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
 					if (!worldObj.isRemote) setDead();
 					onCollision();
 				} else if (collided != getOwner()) {
-					Vec3 motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
+					Vec3d motion = VectorUtils.minus(VectorUtils.getEntityPos(collided), VectorUtils.getEntityPos(this));
 					VectorUtils.mult(motion, 0.3);
 					motion.yCoord = 0.08;
 					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
@@ -336,12 +337,12 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public void addVelocity(Vec3 force) {
+	public void addVelocity(Vec3d force) {
 		setVelocity(VectorUtils.plus(getVelocity(), force));
 	}
 	
 	@Override
-	public Vec3 getVelocity() {
+	public Vec3d getVelocity() {
 		velocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
 		velocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELY);
 		velocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELZ);
@@ -349,7 +350,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public void setVelocity(Vec3 velocity) {
+	public void setVelocity(Vec3d velocity) {
 		if (!worldObj.isRemote) {
 			dataWatcher.updateObject(DATAWATCHER_VELX, (float) velocity.xCoord);
 			dataWatcher.updateObject(DATAWATCHER_VELY, (float) velocity.yCoord);
@@ -358,7 +359,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public Vec3 getPosition() {
+	public Vec3d getPosition() {
 		internalPosition.xCoord = posX;
 		internalPosition.yCoord = posY;
 		internalPosition.zCoord = posZ;

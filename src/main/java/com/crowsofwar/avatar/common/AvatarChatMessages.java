@@ -5,14 +5,16 @@ import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.MessageConfiguration;
 
+import net.minecraft.util.text.TextFormatting;
+
 public class AvatarChatMessages {
 	
 	// @formatter:off
 	public static final MessageConfiguration CFG = new MessageConfiguration()
-			.addColor("value", EnumChatFormatting.AQUA)
-			.addColor("error", EnumChatFormatting.RED)
-			.addColor("error_value", EnumChatFormatting.DARK_RED)
-			.addColor("title", EnumChatFormatting.GOLD);
+			.addColor("value", TextFormatting.AQUA)
+			.addColor("error", TextFormatting.RED)
+			.addColor("error_value", TextFormatting.DARK_RED)
+			.addColor("title", TextFormatting.GOLD);
 	public static final ChatMessage MSG_BENDING_BRANCH_INFO = newChatMessage(CFG, "avatar.cmd.bending");
 	public static final ChatMessage MSG_PLAYER_DATA_NO_DATA = newChatMessage(CFG, "avatar.cmd.bending.list.noData", "player");
 	public static final ChatMessage MSG_BENDING_LIST_NONBENDER = newChatMessage(CFG, "avatar.cmd.bending.list.nonbender", "player");

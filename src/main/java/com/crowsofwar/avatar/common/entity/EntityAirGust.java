@@ -4,11 +4,12 @@ import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityArc {
 	
-	public static final Vec3 ZERO = Vec3.createVectorHelper(0, 0, 0);
+	public static final Vec3d ZERO = new Vec3d(0, 0, 0);
 	
 	public EntityAirGust(World world) {
 		super(world);
@@ -47,7 +48,7 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	protected Vec3 getGravityVector() {
+	protected Vec3d getGravityVector() {
 		return ZERO;
 	}
 	

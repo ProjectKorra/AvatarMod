@@ -1,17 +1,7 @@
 package com.crowsofwar.avatar.client.controls;
 
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_AIRBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_EARTHBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_FIREBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_WATERBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_MIDDLE_CLICK;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_MIDDLE_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.NONE;
+import static com.crowsofwar.avatar.common.bending.BendingManager.*;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,10 +1,5 @@
 package com.crowsofwar.avatar.client.render;
 
-import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
-import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.times;
-
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 
@@ -22,16 +17,19 @@ public class RenderWaterArc extends RenderArc {
 	@Override
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
 		// Parametric equation
-		Vec3 from = Vec3.createVectorHelper(0, 0, 0);
-		Vec3 to = minus(second.getPosition(), first.getPosition());
-		Vec3 diff = minus(to, from);
-		Vec3 offset = first.getPosition();
-		Vec3 direction = copy(diff);
-		direction.normalize();
-		Vec3 spawnAt = plus(offset, times(direction, Math.random()));
-		Vec3 velocity = first.getVelocity();
-		arc.worldObj.spawnParticle("splash", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord, velocity.yCoord,
-				velocity.zCoord);
+		
+		// TODO [1.10] Find out how to spawn particles, and find a good vector class
+		// Vec3d from = Vec3d.createVectorHelper(0, 0, 0);
+		// Vec3d to = minus(second.getPosition(), first.getPosition());
+		// Vec3d diff = minus(to, from);
+		// Vec3d offset = first.getPosition();
+		// Vec3d direction = copy(diff);
+		// direction.normalize();
+		// Vec3d spawnAt = plus(offset, times(direction, Math.random()));
+		// Vec3d velocity = first.getVelocity();
+		// arc.worldObj.spawnParticle("splash", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord,
+		// velocity.xCoord, velocity.yCoord,
+		// velocity.zCoord);
 	}
 	
 }

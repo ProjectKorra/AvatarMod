@@ -3,13 +3,7 @@ package com.crowsofwar.avatar.common.bending;
 import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_WATER_ARC;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_WATERBENDING;
 import static com.crowsofwar.avatar.common.gui.AvatarGuiIds.GUI_RADIAL_MENU_WATER;
-import static com.crowsofwar.avatar.common.util.VectorUtils.fromYawPitch;
-import static com.crowsofwar.avatar.common.util.VectorUtils.getEntityPos;
-import static com.crowsofwar.avatar.common.util.VectorUtils.getEyePos;
-import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.mult;
-import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.times;
+import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 
 import java.awt.Color;
 
@@ -28,6 +22,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class Waterbending implements IBendingController {
@@ -104,7 +99,7 @@ public class Waterbending implements IBendingController {
 				
 				EntityWaterArc water = bendingState.getWaterArc();
 				
-				Vec3 force = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vec3d force = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 				VectorUtils.mult(force, 10);
 				water.addVelocity(force);
 				water.setGravityEnabled(true);
@@ -135,9 +130,9 @@ public class Waterbending implements IBendingController {
 			
 			EntityWaterArc water = bendingState.getWaterArc();
 			if (water != null) {
-				Vec3 look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-				Vec3 lookPos = plus(getEyePos(player), times(look, 3));
-				Vec3 motion = minus(lookPos, getEntityPos(water));
+				Vec3d look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vec3d lookPos = plus(getEyePos(player), times(look, 3));
+				Vec3d motion = minus(lookPos, getEntityPos(water));
 				motion.normalize();
 				mult(motion, .05 * 3);
 				water.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);

@@ -6,26 +6,27 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Used by AvatarPlayerData. Holds information about the player right now, such as its position,
  * entity, and looking at block.
- *
+ * 
  */
 public class PlayerState {
 	
 	private EntityPlayer playerEntity;
 	private BlockPos clientLookAtBlock;
 	private BlockPos serverLookAtBlock;
-	private ForgeDirection lookAtSide;
+	private EnumFacing lookAtSide;
 	
 	public PlayerState() {
 		
 	}
 	
-	public PlayerState(EntityPlayer playerEntity, BlockPos clientLookAtBlock, ForgeDirection lookAtSide) {
+	public PlayerState(EntityPlayer playerEntity, BlockPos clientLookAtBlock, EnumFacing lookAtSide) {
 		update(playerEntity, clientLookAtBlock, lookAtSide);
 	}
 	
@@ -33,7 +34,7 @@ public class PlayerState {
 		update(playerEntity, raytrace == null ? null : raytrace.getPos(), raytrace == null ? null : raytrace.getDirection());
 	}
 	
-	public void update(EntityPlayer playerEntity, BlockPos clientLookAtBlock, ForgeDirection lookAtSide) {
+	public void update(EntityPlayer playerEntity, BlockPos clientLookAtBlock, EnumFacing lookAtSide) {
 		this.playerEntity = playerEntity;
 		this.clientLookAtBlock = clientLookAtBlock;
 		this.lookAtSide = lookAtSide;
@@ -58,7 +59,7 @@ public class PlayerState {
 	 * 
 	 * @return
 	 */
-	public ForgeDirection getLookAtSide() {
+	public EnumFacing getLookAtSide() {
 		return lookAtSide;
 	}
 	

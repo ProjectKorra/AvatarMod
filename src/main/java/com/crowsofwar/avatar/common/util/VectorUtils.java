@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -16,12 +17,12 @@ import net.minecraft.world.World;
  */
 public class VectorUtils {
 	
-	public static final Vec3 UP = Vec3.createVectorHelper(0, 1, 0);
-	public static final Vec3 DOWN = Vec3.createVectorHelper(0, -1, 0);
-	public static final Vec3 EAST = Vec3.createVectorHelper(1, 0, 0);
-	public static final Vec3 WEST = Vec3.createVectorHelper(-1, 1, 0);
-	public static final Vec3 NORTH = Vec3.createVectorHelper(0, 0, -1);
-	public static final Vec3 SOUTH = Vec3.createVectorHelper(0, 0, 1);
+	public static final Vec3d UP = Vec3d.createVectorHelper(0, 1, 0);
+	public static final Vec3d DOWN = Vec3d.createVectorHelper(0, -1, 0);
+	public static final Vec3d EAST = Vec3d.createVectorHelper(1, 0, 0);
+	public static final Vec3d WEST = Vec3d.createVectorHelper(-1, 1, 0);
+	public static final Vec3d NORTH = Vec3d.createVectorHelper(0, 0, -1);
+	public static final Vec3d SOUTH = Vec3d.createVectorHelper(0, 0, 1);
 	
 	/**
 	 * Add vector b to a, modifying a in the process.
@@ -31,7 +32,7 @@ public class VectorUtils {
 	 * @param b
 	 *            Vector b (will not be modified)
 	 */
-	public static void add(Vec3 a, Vec3 b) {
+	public static void add(Vec3d a, Vec3d b) {
 		a.xCoord += b.xCoord;
 		a.yCoord += b.yCoord;
 		a.zCoord += b.zCoord;
@@ -45,36 +46,36 @@ public class VectorUtils {
 	 * @param b
 	 *            Vector b (will not be modified)
 	 */
-	public static void subtract(Vec3 a, Vec3 b) {
-		Vec3 inverse = copy(b);
+	public static void subtract(Vec3d a, Vec3d b) {
+		Vec3d inverse = copy(b);
 		inverse(inverse);
 		add(a, inverse);
 	}
 	
 	/**
-	 * Add vector a and b, returning a new vector. Unlike {{@link #add(Vec3, Vec3)}, the arguments
+	 * Add vector a and b, returning a new vector. Unlike {{@link #add(Vec3d, Vec3d)}, the arguments
 	 * are not modified.
 	 * 
 	 * @param a
 	 * @param b
 	 * @return
 	 */
-	public static Vec3 plus(Vec3 a, Vec3 b) {
-		Vec3 result = copy(a);
+	public static Vec3d plus(Vec3d a, Vec3d b) {
+		Vec3d result = copy(a);
 		add(result, b);
 		return result;
 	}
 	
 	/**
-	 * Subtract vector a - b, returning a new vector. Unlike {{@link #subtract(Vec3, Vec3)}, the
+	 * Subtract vector a - b, returning a new vector. Unlike {{@link #subtract(Vec3d, Vec3d)}, the
 	 * arguments are not modified.
 	 * 
 	 * @param a
 	 * @param b
 	 * @return
 	 */
-	public static Vec3 minus(Vec3 a, Vec3 b) {
-		Vec3 result = copy(a);
+	public static Vec3d minus(Vec3d a, Vec3d b) {
+		Vec3d result = copy(a);
 		subtract(result, b);
 		return result;
 	}
@@ -85,37 +86,37 @@ public class VectorUtils {
 	 * @param v
 	 * @param f
 	 */
-	public static void mult(Vec3 v, double f) {
+	public static void mult(Vec3d v, double f) {
 		v.xCoord *= f;
 		v.yCoord *= f;
 		v.zCoord *= f;
 	}
 	
-	public static Vec3 times(Vec3 v, double f) {
-		Vec3 result = copy(v);
+	public static Vec3d times(Vec3d v, double f) {
+		Vec3d result = copy(v);
 		mult(result, f);
 		return result;
 	}
 	
-	public static void inverse(Vec3 v) {
+	public static void inverse(Vec3d v) {
 		mult(v, -1);
 	}
 	
-	public static Vec3 copy(Vec3 v) {
-		return Vec3.createVectorHelper(v.xCoord, v.yCoord, v.zCoord);
+	public static Vec3d copy(Vec3d v) {
+		return Vec3d.createVectorHelper(v.xCoord, v.yCoord, v.zCoord);
 	}
 	
 	/**
 	 * Create a unit vector from yaw and pitch. Parameters should be in radians.
 	 */
-	public static Vec3 fromYawPitch(double yaw, double pitch) {
-		return Vec3.createVectorHelper(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
+	public static Vec3d fromYawPitch(double yaw, double pitch) {
+		return Vec3d.createVectorHelper(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
 	}
 	
 	/**
 	 * Create a unit vector from the given euler angles. Measurements should be in radians.
 	 */
-	public static Vec3 fromDirection(Vec3 euler) {
+	public static Vec3d fromDirection(Vec3d euler) {
 		return fromYawPitch(euler.yCoord, euler.xCoord);
 	}
 	
@@ -127,8 +128,8 @@ public class VectorUtils {
 	 * @param pos2
 	 * @return
 	 */
-	public static Vec3 getRotations(Vec3 pos1, Vec3 pos2) {
-		Vec3 diff = minus(pos2, pos1);
+	public static Vec3d getRotations(Vec3d pos1, Vec3d pos2) {
+		Vec3d diff = minus(pos2, pos1);
 		diff.normalize();
 		double x = diff.xCoord;
 		double y = diff.yCoord;
@@ -151,7 +152,7 @@ public class VectorUtils {
 		// double rotX = Math.atan2(y, x);
 		// double rotY = Math.atan2(z, Math.sqrt(x * x + y * y));
 		double rotZ = 0;
-		return Vec3.createVectorHelper(rotX, rotY, rotZ);
+		return Vec3d.createVectorHelper(rotX, rotY, rotZ);
 	}
 	
 	/**
@@ -168,9 +169,9 @@ public class VectorUtils {
 	 * @return
 	 */
 	@Deprecated
-	public static Vec3 raytrace(World world, Vec3 start, Vec3 direction, double interval, double length) {
-		Vec3 current = copy(start);
-		Vec3 add = copy(direction);
+	public static Vec3d raytrace(World world, Vec3d start, Vec3d direction, double interval, double length) {
+		Vec3d current = copy(start);
+		Vec3d add = copy(direction);
 		mult(add, interval);
 		for (double dist = 0; dist < length; dist += interval) {
 			
@@ -178,7 +179,7 @@ public class VectorUtils {
 			int y = (int) (current.yCoord);
 			int z = (int) (current.zCoord);
 			if (world.getBlock(x, y, z) != Blocks.air) {
-				return Vec3.createVectorHelper(x, y, z);
+				return Vec3d.createVectorHelper(x, y, z);
 			}
 			
 			add(current, add);
@@ -188,14 +189,14 @@ public class VectorUtils {
 		return null;
 	}
 	
-	public static Vec3 getEntityPos(Entity entity) {
-		Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
+	public static Vec3d getEntityPos(Entity entity) {
+		Vec3d pos = Vec3d.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) pos.yCoord -= 1.62;
 		return pos;
 	}
 	
-	public static Vec3 getEyePos(Entity entity) {
-		Vec3 pos = getEntityPos(entity);
+	public static Vec3d getEyePos(Entity entity) {
+		Vec3d pos = getEntityPos(entity);
 		pos.yCoord += 1.62;
 		return pos;
 	}

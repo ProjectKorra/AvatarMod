@@ -1,24 +1,25 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * An entity property which allows simple access to the entity's motion vector by manipulating the
  * motionX, motionY, and motionZ fields. All methods for velocity are in m/s.
  *
  */
-public class EntityPropertyMotion implements IEntityProperty<Vec3> {
+public class EntityPropertyMotion implements IEntityProperty<Vec3d> {
 	
-	private final Vec3 internalVelocity;
+	private final Vec3d internalVelocity;
 	private final Entity entity;
 	
 	public EntityPropertyMotion(Entity entity) {
-		this.internalVelocity = Vec3.createVectorHelper(0, 0, 0);
+		this.internalVelocity = Vec3d.createVectorHelper(0, 0, 0);
 		this.entity = entity;
 	}
 	
 	@Override
-	public Vec3 getValue() {
+	public Vec3d getValue() {
 		internalVelocity.xCoord = entity.motionX * 20;
 		internalVelocity.yCoord = entity.motionY * 20;
 		internalVelocity.zCoord = entity.motionZ * 20;
@@ -26,7 +27,7 @@ public class EntityPropertyMotion implements IEntityProperty<Vec3> {
 	}
 	
 	@Override
-	public void setValue(Vec3 value) {
+	public void setValue(Vec3d value) {
 		entity.motionX = value.xCoord / 20;
 		entity.motionY = value.yCoord / 20;
 		entity.motionZ = value.zCoord / 20;

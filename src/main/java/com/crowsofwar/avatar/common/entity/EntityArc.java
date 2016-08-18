@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.util.VectorUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,7 +19,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	private static int nextId = 1;
 	private EntityControlPoint[] points;
 	
-	private Vec3 internalPos;
+	private Vec3d internalPos;
 	private EntityPropertyVector velocity;
 	
 	protected EntityPlayer owner;
@@ -33,7 +34,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			points[i] = createControlPoint(size);
 		}
 		
-		this.internalPos = Vec3.createVectorHelper(0, 0, 0);
+		this.internalPos = Vec3d.createVectorHelper(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) {
 			setId(nextId++);
@@ -69,7 +70,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		
 		ignoreFrustumCheck = true;
 		
-		Vec3 vel = getVelocity();
+		Vec3d vel = getVelocity();
 		if (ticksExisted % 5 == 0) {
 			velocity.sync();
 		}
@@ -91,7 +92,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			
 			EntityControlPoint leader = points[i - 1];
 			EntityControlPoint p = points[i];
-			Vec3 leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
+			Vec3d leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
 			double sqrDist = p.getPosition().squareDistanceTo(leadPos);
 			
 			if (sqrDist > getControlPointTeleportDistanceSq()) {
@@ -100,7 +101,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 				
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 				
-				Vec3 diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
+				Vec3d diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
 				diff.normalize();
 				VectorUtils.mult(diff, 0.15 * 20);
 				p.addVelocity(diff);
@@ -113,7 +114,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	protected abstract void onCollideWithBlock();
 	
-	protected abstract Vec3 getGravityVector();
+	protected abstract Vec3d getGravityVector();
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -191,7 +192,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public Vec3 getPosition() {
+	public Vec3d getPosition() {
 		internalPos.xCoord = posX;
 		internalPos.yCoord = posY;
 		internalPos.zCoord = posZ;
@@ -199,17 +200,17 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public Vec3 getVelocity() {
+	public Vec3d getVelocity() {
 		return velocity.getValue();
 	}
 	
 	@Override
-	public void setVelocity(Vec3 vel) {
+	public void setVelocity(Vec3d vel) {
 		velocity.setValue(vel);
 	}
 	
 	@Override
-	public void addVelocity(Vec3 vel) {
+	public void addVelocity(Vec3d vel) {
 		setVelocity(VectorUtils.plus(getVelocity(), vel));
 	}
 	

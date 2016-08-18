@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.command;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BENDING_REMOVE_DOESNT_HAVE;
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BENDING_REMOVE_SUCCESS;
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_PLAYER_DATA_NO_DATA;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 import java.util.List;
 

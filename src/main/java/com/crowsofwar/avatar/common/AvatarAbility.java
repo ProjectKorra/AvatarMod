@@ -1,9 +1,6 @@
 package com.crowsofwar.avatar.common;
 
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_AIRBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_EARTHBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_FIREBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_WATERBENDING;
+import static com.crowsofwar.avatar.common.bending.BendingManager.*;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingController;
