@@ -12,4 +12,5 @@ eclipse/
 gradle/
 
 #src/main/resources/assets/gorecore/lang/en_US.lang
+swap_mc_versions.sh
 
