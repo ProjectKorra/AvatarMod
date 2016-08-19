@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.util.BlockPos;
+import com.crowsofwar.avatar.common.util.AvBlockPos;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
 
@@ -18,15 +18,15 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PlayerState {
 	
 	private EntityPlayer playerEntity;
-	private BlockPos clientLookAtBlock;
-	private BlockPos serverLookAtBlock;
+	private AvBlockPos clientLookAtBlock;
+	private AvBlockPos serverLookAtBlock;
 	private EnumFacing lookAtSide;
 	
 	public PlayerState() {
 		
 	}
 	
-	public PlayerState(EntityPlayer playerEntity, BlockPos clientLookAtBlock, EnumFacing lookAtSide) {
+	public PlayerState(EntityPlayer playerEntity, AvBlockPos clientLookAtBlock, EnumFacing lookAtSide) {
 		update(playerEntity, clientLookAtBlock, lookAtSide);
 	}
 	
@@ -34,7 +34,7 @@ public class PlayerState {
 		update(playerEntity, raytrace == null ? null : raytrace.getPos(), raytrace == null ? null : raytrace.getDirection());
 	}
 	
-	public void update(EntityPlayer playerEntity, BlockPos clientLookAtBlock, EnumFacing lookAtSide) {
+	public void update(EntityPlayer playerEntity, AvBlockPos clientLookAtBlock, EnumFacing lookAtSide) {
 		this.playerEntity = playerEntity;
 		this.clientLookAtBlock = clientLookAtBlock;
 		this.lookAtSide = lookAtSide;
@@ -50,7 +50,7 @@ public class PlayerState {
 		return playerEntity;
 	}
 	
-	public BlockPos getClientLookAtBlock() {
+	public AvBlockPos getClientLookAtBlock() {
 		return clientLookAtBlock;
 	}
 	
@@ -93,7 +93,7 @@ public class PlayerState {
 	 * 
 	 * @see Raytrace#getTargetBlock(EntityPlayer, double)
 	 */
-	public BlockPos verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
+	public AvBlockPos verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
 		if (clientLookAtBlock == null) return null;
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookAtBlock;
 		RaytraceResult res = Raytrace.getTargetBlock(playerEntity, raycastDist);

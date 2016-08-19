@@ -2,11 +2,11 @@ package com.crowsofwar.avatar.common.util;
 
 import io.netty.buffer.ByteBuf;
 
-public class BlockPos {
+public class AvBlockPos {
 	
 	public int x, y, z;
 	
-	public BlockPos(int x, int y, int z) {
+	public AvBlockPos(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -18,23 +18,23 @@ public class BlockPos {
 		buf.writeInt(z);
 	}
 	
-	public static BlockPos fromBytes(ByteBuf buf) {
-		return new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+	public static AvBlockPos fromBytes(ByteBuf buf) {
+		return new AvBlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 	}
 	
-	public double dist(BlockPos pos) {
+	public double dist(AvBlockPos pos) {
 		return dist(this, pos);
 	}
 	
-	public double distSq(BlockPos pos) {
+	public double distSq(AvBlockPos pos) {
 		return distSq(this, pos);
 	}
 	
-	public static double dist(BlockPos pos1, BlockPos pos2) {
+	public static double dist(AvBlockPos pos1, AvBlockPos pos2) {
 		return Math.sqrt(distSq(pos1, pos2));
 	}
 	
-	public static double distSq(BlockPos pos1, BlockPos pos2) {
+	public static double distSq(AvBlockPos pos1, AvBlockPos pos2) {
 		double dx = pos2.x - pos1.x;
 		double dy = pos2.y - pos1.y;
 		double dz = pos2.z - pos1.z;
@@ -55,8 +55,8 @@ public class BlockPos {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof BlockPos)) return false;
-		BlockPos pos = (BlockPos) obj;
+		if (obj == null || !(obj instanceof AvBlockPos)) return false;
+		AvBlockPos pos = (AvBlockPos) obj;
 		return x == pos.x && y == pos.y && z == pos.z;
 	}
 	

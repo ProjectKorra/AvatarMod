@@ -55,7 +55,7 @@ public class Raytrace {
 		MovingObjectPosition mop = player.worldObj.func_147447_a(Vec3d, Vec3d2, raycastLiquids, false, true);
 		
 		if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
-			return new RaytraceResult(new BlockPos(mop.blockX, mop.blockY, mop.blockZ), mop.sideHit);
+			return new RaytraceResult(new AvBlockPos(mop.blockX, mop.blockY, mop.blockZ), mop.sideHit);
 		} else {
 			return null;
 		}
@@ -77,15 +77,15 @@ public class Raytrace {
 	
 	public static class RaytraceResult {
 		
-		private final BlockPos pos;
+		private final AvBlockPos pos;
 		private final int side;
 		
-		public RaytraceResult(BlockPos pos, int side) {
+		public RaytraceResult(AvBlockPos pos, int side) {
 			this.pos = pos;
 			this.side = side;
 		}
 		
-		public BlockPos getPos() {
+		public AvBlockPos getPos() {
 			return pos;
 		}
 		

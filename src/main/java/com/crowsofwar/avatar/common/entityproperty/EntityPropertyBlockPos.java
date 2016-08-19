@@ -1,10 +1,10 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
-import com.crowsofwar.avatar.common.util.BlockPos;
+import com.crowsofwar.avatar.common.util.AvBlockPos;
 
 import net.minecraft.entity.Entity;
 
-public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<BlockPos> {
+public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<AvBlockPos> {
 	
 	public EntityPropertyBlockPos(Entity entity, DataWatcher dataWatcher, int dataWatcherIndex) {
 		super(entity, dataWatcher, dataWatcherIndex);
@@ -19,7 +19,7 @@ public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<BlockPos> 
 	}
 	
 	@Override
-	protected void sendToDataWatcher(BlockPos value) {
+	protected void sendToDataWatcher(AvBlockPos value) {
 		if (value == null) {
 			dataWatcher.updateObject(index + 3, (byte) 0);
 		} else {
@@ -31,9 +31,9 @@ public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<BlockPos> 
 	}
 	
 	@Override
-	protected BlockPos retrieveFromDataWatcher() {
+	protected AvBlockPos retrieveFromDataWatcher() {
 		if (dataWatcher.getWatchableObjectByte(index + 3) == 1) {
-			return new BlockPos(dataWatcher.getWatchableObjectInt(index), dataWatcher.getWatchableObjectInt(index + 1),
+			return new AvBlockPos(dataWatcher.getWatchableObjectInt(index), dataWatcher.getWatchableObjectInt(index + 1),
 					dataWatcher.getWatchableObjectInt(index + 2));
 		} else {
 			return null;
@@ -41,7 +41,7 @@ public class EntityPropertyBlockPos extends EntityPropertyDatawatcher<BlockPos> 
 	}
 	
 	@Override
-	protected BlockPos createValue() {
+	protected AvBlockPos createValue() {
 		return null;
 	}
 	

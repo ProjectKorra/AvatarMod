@@ -18,7 +18,7 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.util.BlockPos;
+import com.crowsofwar.avatar.common.util.AvBlockPos;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.block.Block;
@@ -28,6 +28,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -45,19 +46,20 @@ public class Earthbending implements IBendingController {
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_EARTHBENDING,
-				AvatarGuiIds.GUI_RADIAL_MENU_EARTH, AvatarAbility.ACTION_TOGGLE_BENDING, AvatarAbility.ACTION_THROW_BLOCK);
+				AvatarGuiIds.GUI_RADIAL_MENU_EARTH, AvatarAbility.ACTION_TOGGLE_BENDING,
+				AvatarAbility.ACTION_THROW_BLOCK);
 		
 		bendableBlocks = new ArrayList<Block>();
-		bendableBlocks.add(Blocks.stone);
-		bendableBlocks.add(Blocks.sand);
-		bendableBlocks.add(Blocks.sandstone);
-		bendableBlocks.add(Blocks.cobblestone);
-		bendableBlocks.add(Blocks.dirt);
-		bendableBlocks.add(Blocks.gravel);
-		bendableBlocks.add(Blocks.brick_block);
-		bendableBlocks.add(Blocks.mossy_cobblestone);
-		bendableBlocks.add(Blocks.nether_brick);
-		bendableBlocks.add(Blocks.stonebrick);
+		bendableBlocks.add(Blocks.STONE);
+		bendableBlocks.add(Blocks.SAND);
+		bendableBlocks.add(Blocks.SANDSTONE);
+		bendableBlocks.add(Blocks.COBBLESTONE);
+		bendableBlocks.add(Blocks.DIRT);
+		bendableBlocks.add(Blocks.GRAVEL);
+		bendableBlocks.add(Blocks.BRICK_BLOCK);
+		bendableBlocks.add(Blocks.MOSSY_COBBLESTONE);
+		bendableBlocks.add(Blocks.NETHER_BRICK);
+		bendableBlocks.add(Blocks.STONEBRICK);
 		
 	}
 	
@@ -89,9 +91,9 @@ public class Earthbending implements IBendingController {
 				ebs.setPickupBlock(null);
 				AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
 			} else {
-				BlockPos target = state.verifyClientLookAtBlock(-1, 5);
+				AvBlockPos target = state.verifyClientLookAtBlock(-1, 5);
 				if (target != null) {
-					Block block = world.getBlock(target.x, target.y, target.z);
+					Block block = world.getBlockState(new BlockPos(target.x, target.y, target.z)).getBlock();
 					if (bendableBlocks.contains(block)) {
 						
 						EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
@@ -113,13 +115,14 @@ public class Earthbending implements IBendingController {
 						data.sendBendingState(ebs);
 						
 						Block.SoundType sound = block.stepSound;
-						if (sound != null) world.playSoundEffect(target.x + 0.5, target.y + 0.5, target.z + 0.5, sound.getBreakSound(), 1,
-								sound.getPitch());
+						if (sound != null) world.playSoundEffect(target.x + 0.5, target.y + 0.5,
+								target.z + 0.5, sound.getBreakSound(), 1, sound.getPitch());
 						
 						world.setBlock(target.x, target.y, target.z, Blocks.air);
 						
 					} else {
-						world.playSoundAtEntity(player, "random.click", 1.0f, (float) (random.nextGaussian() / 0.25 + 0.375));
+						world.playSoundAtEntity(player, "random.click", 1.0f,
+								(float) (random.nextGaussian() / 0.25 + 0.375));
 					}
 					
 				}
@@ -147,7 +150,7 @@ public class Earthbending implements IBendingController {
 			EntityFloatingBlock floating = ebs.getPickupBlock();
 			if (floating != null) {
 				// TODO Verify look at block
-				BlockPos looking = state.getClientLookAtBlock();
+				AvBlockPos looking = state.getClientLookAtBlock();
 				ForgeDirection lookingSide = state.getLookAtSide();
 				if (looking != null && lookingSide != null) {
 					int x = looking.x + lookingSide.offsetX;
@@ -158,9 +161,10 @@ public class Earthbending implements IBendingController {
 					// floating.setDead();
 					// }
 					floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
-					floating.setMovingToBlock(new BlockPos(x, y, z));
+					floating.setMovingToBlock(new AvBlockPos(x, y, z));
 					floating.setGravityEnabled(false);
-					Vec3d force = VectorUtils.minus(Vec3d.createVectorHelper(x, y, z), VectorUtils.getEntityPos(floating));
+					Vec3d force = VectorUtils.minus(Vec3d.createVectorHelper(x, y, z),
+							VectorUtils.getEntityPos(floating));
 					force.normalize();
 					floating.addVelocity(force);
 					ebs.dropBlock();

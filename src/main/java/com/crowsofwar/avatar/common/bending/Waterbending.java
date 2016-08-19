@@ -15,7 +15,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-import com.crowsofwar.avatar.common.util.BlockPos;
+import com.crowsofwar.avatar.common.util.AvBlockPos;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.block.Block;
@@ -71,7 +71,7 @@ public class Waterbending implements IBendingController {
 				needsSync = true;
 			}
 			
-			BlockPos targetPos = state.getClientLookAtBlock();
+			AvBlockPos targetPos = state.getClientLookAtBlock();
 			if (targetPos != null) {
 				Block lookAt = world.getBlock(targetPos.x, targetPos.y, targetPos.z);
 				if (lookAt == Blocks.water || lookAt == Blocks.flowing_water) {

@@ -16,7 +16,6 @@ import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -33,7 +32,8 @@ public class Airbending implements IBendingController {
 		ThemeColor edge = new ThemeColor(dark, dark);
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
 		MenuTheme theme = new MenuTheme(background, edge, icon);
-		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, AvatarGuiIds.GUI_RADIAL_MENU_AIR, ACTION_AIR_GUST);
+		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, AvatarGuiIds.GUI_RADIAL_MENU_AIR,
+				ACTION_AIR_GUST);
 	}
 	
 	@Override
@@ -63,13 +63,16 @@ public class Airbending implements IBendingController {
 			player.addVelocity(0, 1, 0);
 			
 			// Note: This always is called on server-side
-			((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(player));
+			// TODO [1.10] Setting velocity on a client- is sending a packet even necessary?
+			// ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new
+			// S12PacketEntityVelocity(player));
 			
 		}
 		
 		if (ability == ACTION_AIR_GUST) {
 			
-			Vec3d look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+			Vec3d look = fromYawPitch(Math.toRadians(player.rotationYaw),
+					Math.toRadians(player.rotationPitch));
 			Vec3d pos = getEyePos(player);
 			
 			EntityAirGust gust = new EntityAirGust(world);

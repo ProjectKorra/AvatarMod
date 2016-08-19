@@ -15,7 +15,7 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-import com.crowsofwar.avatar.common.util.BlockPos;
+import com.crowsofwar.avatar.common.util.AvBlockPos;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -61,10 +61,10 @@ public class Firebending implements IBendingController {
 		FirebendingState fs = (FirebendingState) data.getBendingState(this);
 		
 		if (ability == ACTION_LIGHT_FIRE) {
-			BlockPos looking = ps.verifyClientLookAtBlock(-1, 5);
+			AvBlockPos looking = ps.verifyClientLookAtBlock(-1, 5);
 			ForgeDirection side = ps.getLookAtSide();
 			if (ps.isLookingAtBlock(-1, 5)) {
-				BlockPos setAt = new BlockPos(looking.x, looking.y, looking.z);
+				AvBlockPos setAt = new AvBlockPos(looking.x, looking.y, looking.z);
 				setAt.offset(side);
 				if (world.getBlock(setAt.x, setAt.y, setAt.z) == Blocks.air) world.setBlock(setAt.x, setAt.y, setAt.z, Blocks.fire);
 			}
