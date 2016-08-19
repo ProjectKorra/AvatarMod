@@ -7,9 +7,11 @@ import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,17 +19,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderFloatingBlock extends Render {
+	// [1.10] Find out substitution for Renderblocks- maybe ModelLoader?
 	private final RenderBlocks field_147920_a = new RenderBlocks();
 	private static final String __OBFID = "CL_00000994";
 	
-	public RenderFloatingBlock() {
+	public RenderFloatingBlock(RenderManager renderManager) {
+		super(renderManager);
 		this.shadowSize = 0.5F;
 	}
 	
 	/**
 	 * 
 	 */
-	public void doRender(EntityFloatingBlock entity, double x, double y, double z, float interpolatedYaw, float lerp) {
+	public void doRender(EntityFloatingBlock entity, double x, double y, double z, float interpolatedYaw,
+			float lerp) {
 		World world = entity.worldObj;
 		Block block = entity.getBlock();
 		int i = MathHelper.floor_double(entity.posX);
@@ -39,7 +44,7 @@ public class RenderFloatingBlock extends Render {
 		// z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * ((lerp -
 		// entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) - RenderManager.renderPosZ;
 		
-		if (block != null && block != world.getBlock(i, j, k)) {
+		if (block != null && block != world.getBlockState(new BlockPos(i, j, k)).getBlock()) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) x, (float) y + 0.5f, (float) z);
 			this.bindEntityTexture(entity);
@@ -85,7 +90,7 @@ public class RenderFloatingBlock extends Render {
 	 * Render.bindEntityTexture.
 	 */
 	protected ResourceLocation getEntityTexture(EntityFloatingBlock p_110775_1_) {
-		return TextureMap.locationBlocksTexture;
+		return TextureMap.LOCATION_BLOCKS_TEXTURE;
 	}
 	
 	/**
@@ -103,7 +108,9 @@ public class RenderFloatingBlock extends Render {
 	 * signature public void func_76986_a(T entity, double d, double d1, double d2, float f, float
 	 * f1). But JAD is pre 1.5 so doesn't do that.
 	 */
-	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-		this.doRender((EntityFloatingBlock) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_,
+			float p_76986_8_, float p_76986_9_) {
+		this.doRender((EntityFloatingBlock) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_,
+				p_76986_9_);
 	}
 }

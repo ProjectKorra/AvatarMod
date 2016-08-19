@@ -3,13 +3,16 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderFireArc extends RenderArc {
 	
-	private static final ResourceLocation fire = new ResourceLocation("avatarmod", "textures/entity/fire-ribbon.png");
+	private static final ResourceLocation fire = new ResourceLocation("avatarmod",
+			"textures/entity/fire-ribbon.png");
 	
-	public RenderFireArc() {
+	public RenderFireArc(RenderManager renderManager) {
+		super(renderManager);
 		enableFullBrightness();
 	}
 	

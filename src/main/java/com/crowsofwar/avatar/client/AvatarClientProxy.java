@@ -78,12 +78,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@Override
 	public void init() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityFloatingBlock.class, new RenderFloatingBlock());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFlame.class, new RenderFlame());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFireArc.class, new RenderFireArc());
-		RenderingRegistry.registerEntityRenderingHandler(EntityWaterArc.class, new RenderWaterArc());
-		RenderingRegistry.registerEntityRenderingHandler(EntityControlPoint.class, new RenderControlPoint());
-		RenderingRegistry.registerEntityRenderingHandler(EntityAirGust.class, new RenderAirGust());
+		RenderingRegistry.registerEntityRenderingHandler(EntityFloatingBlock.class, RenderFloatingBlock::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFlame.class, RenderFlame::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireArc.class, RenderFireArc::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterArc.class, RenderWaterArc::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityControlPoint.class, RenderControlPoint::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
 	}
 	
 	@Override

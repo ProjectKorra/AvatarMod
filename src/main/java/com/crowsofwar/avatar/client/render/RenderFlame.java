@@ -5,6 +5,7 @@ import java.util.Random;
 import com.crowsofwar.avatar.common.entity.EntityFlame;
 
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
@@ -12,8 +13,16 @@ public class RenderFlame extends Render {
 	
 	private static final Random random = new Random();
 	
+	/**
+	 * @param renderManager
+	 */
+	public RenderFlame(RenderManager renderManager) {
+		super(renderManager);
+	}
+	
 	@Override
-	public void doRender(Entity entity, double x, double y, double z, float interpolatedYaw, float p_76986_9_) {
+	public void doRender(Entity entity, double x, double y, double z, float interpolatedYaw,
+			float p_76986_9_) {
 		
 		EntityFlame flame = (EntityFlame) entity;
 		int time = flame.ticksExisted % 5; // TODO Incorporate more randomization into particle

@@ -3,11 +3,21 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderWaterArc extends RenderArc {
 	
-	private static final ResourceLocation water = new ResourceLocation("avatarmod", "textures/entity/water-ribbon.png");
+	private static final ResourceLocation water = new ResourceLocation("avatarmod",
+			"textures/entity/water-ribbon.png");
+	
+	/**
+	 * @param renderManager
+	 */
+	public RenderWaterArc(RenderManager renderManager) {
+		super(renderManager);
+		// TODO Auto-generated constructor stub
+	}
 	
 	@Override
 	protected ResourceLocation getTexture() {

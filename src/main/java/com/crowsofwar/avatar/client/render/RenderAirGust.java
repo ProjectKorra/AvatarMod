@@ -5,15 +5,24 @@ import java.util.Random;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
 
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class RenderAirGust extends RenderArc {
 	
-	public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/entity/air-ribbon.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
+			"textures/entity/air-ribbon.png");
 	
 	private static final Random random = new Random();
+	
+	/**
+	 * @param renderManager
+	 */
+	public RenderAirGust(RenderManager renderManager) {
+		super(renderManager);
+	}
 	
 	@Override
 	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
