@@ -7,6 +7,8 @@ import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 public class TestCakeFrost extends NodeFunctional {
 	
 	public TestCakeFrost() {
@@ -16,7 +18,7 @@ public class TestCakeFrost extends NodeFunctional {
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		String end = options.contains("fancy") ? ".fancy" : "";
-		call.getFrom().addChatMessage(new ChatComponentTranslation("test.frostCake" + end));
+		call.getFrom().addChatMessage(new TextComponentTranslation("test.frostCake" + end));
 		return null;
 	}
 	

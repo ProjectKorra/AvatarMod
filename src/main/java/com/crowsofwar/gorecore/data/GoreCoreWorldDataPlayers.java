@@ -30,13 +30,14 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		this.players = GoreCoreNBTUtil.readMapFromNBT(nbt, GoreCorePlayerData.MAP_USER, "PlayerData", new Object[] {},
-				new Object[] { playerDataClass(), this });
+		this.players = GoreCoreNBTUtil.readMapFromNBT(nbt, GoreCorePlayerData.MAP_USER, "PlayerData",
+				new Object[] {}, new Object[] { playerDataClass(), this });
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		GoreCoreNBTUtil.writeMapToNBT(nbt, players, GoreCorePlayerData.MAP_USER, "PlayerData");
+		return nbt;
 	}
 	
 	/**
@@ -81,8 +82,10 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 		try {
 			
 			EntityPlayer playerEntity = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player);
-			if (playerEntity == null) System.out.println("WARNING: playerEntity was null while creating new player data");
-			GoreCorePlayerData data = playerDataClass().getConstructor(GoreCoreDataSaver.class, UUID.class, EntityPlayer.class)
+			if (playerEntity == null)
+				System.out.println("WARNING: playerEntity was null while creating new player data");
+			GoreCorePlayerData data = playerDataClass()
+					.getConstructor(GoreCoreDataSaver.class, UUID.class, EntityPlayer.class)
 					.newInstance(this, player, playerEntity);
 			return (T) data;
 			

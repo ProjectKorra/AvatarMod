@@ -19,7 +19,7 @@ public class PlayerDataFetcherServer<T extends GoreCorePlayerData> implements Pl
 	
 	@Override
 	public T fetch(EntityPlayer player, String errorMessage) {
-		return fetch(player.worldObj, player.getCommandSenderName(), errorMessage);
+		return fetch(player.worldObj, player.getName(), errorMessage);
 	}
 	
 	@Override
@@ -44,7 +44,8 @@ public class PlayerDataFetcherServer<T extends GoreCorePlayerData> implements Pl
 		if (error == ResultOutcome.SUCCESS) {
 			return pd;
 		} else {
-			if (errorMessage != null) GoreCore.LOGGER.error("Error while retrieving player data- " + errorMessage);
+			if (errorMessage != null)
+				GoreCore.LOGGER.error("Error while retrieving player data- " + errorMessage);
 			String log;
 			switch (error) {
 			case BAD_HTTP_CODE:
@@ -70,7 +71,7 @@ public class PlayerDataFetcherServer<T extends GoreCorePlayerData> implements Pl
 	
 	@Override
 	public T fetchPerformance(EntityPlayer player) {
-		return fetchPerformance(player.worldObj, player.getCommandSenderName());
+		return fetchPerformance(player.worldObj, player.getName());
 	}
 	
 	@Override

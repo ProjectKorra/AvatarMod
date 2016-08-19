@@ -10,6 +10,8 @@ import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 public class TestNode1 extends NodeFunctional {
 	
 	private final IArgument<String> argA;
@@ -27,7 +29,7 @@ public class TestNode1 extends NodeFunctional {
 		ArgumentList args = call.popArguments(argA, argB);
 		String a = args.get(argA);
 		Integer b = args.get(argB);
-		call.getFrom().addChatMessage(new ChatComponentText(b + " " + a + "s"));
+		call.getFrom().addChatMessage(new TextComponentTranslation(b + " " + a + "s"));
 		
 		return null;
 	}

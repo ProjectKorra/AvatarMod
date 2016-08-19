@@ -5,6 +5,8 @@ import java.util.List;
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.ChatSender;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 public abstract class NodeFunctional implements ICommandNode {
 	
 	private static final ChatMessage DEFAULT_INFO;
@@ -54,7 +56,7 @@ public abstract class NodeFunctional implements ICommandNode {
 	@Override
 	public final ICommandNode execute(CommandCall call, List<String> options) {
 		if (options.contains("help")) {
-			call.getFrom().addChatMessage(new ChatComponentTranslation("gc.tree.help", getHelp(), getNodeName()));
+			call.getFrom().addChatMessage(new TextComponentTranslation("gc.tree.help", getHelp(), getNodeName()));
 			return null;
 		} else {
 			return doFunction(call, options);

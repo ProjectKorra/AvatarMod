@@ -1,6 +1,8 @@
 package com.crowsofwar.gorecore.chat;
 
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class ChatMessage {
 	
@@ -14,8 +16,8 @@ public class ChatMessage {
 		this.config = config;
 	}
 	
-	public IChatComponent getChatMessage(Object... formattingArgs) {
-		return new ChatComponentTranslation(translateKey, formattingArgs);
+	public ITextComponent getChatMessage(Object... formattingArgs) {
+		return new TextComponentTranslation(translateKey, formattingArgs);
 	}
 	
 	public void send(ICommandSender sender, Object... formattingArgs) {

@@ -6,11 +6,13 @@ import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.ChatSender;
 import com.crowsofwar.gorecore.chat.MessageConfiguration;
 
+import net.minecraft.util.text.TextFormatting;
+
 public class TestMessages {
 	
 	// @formatter:off
 	public static final MessageConfiguration CFG = new MessageConfiguration()
-			.addColor("special", EnumChatFormatting.LIGHT_PURPLE)
+			.addColor("special", TextFormatting.LIGHT_PURPLE)
 			.addConstant("const", "This_is_a_constant");
 	public static final ChatMessage MSG_VIDEOGAME_HELP = newChatMessage(CFG, "test.buyVideogames.help");
 	public static final ChatMessage MSG_CAKE_FROST_HELP = newChatMessage(CFG, "test.frostCake.help");

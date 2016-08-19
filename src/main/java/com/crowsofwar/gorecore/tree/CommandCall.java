@@ -3,10 +3,6 @@ package com.crowsofwar.gorecore.tree;
 import java.util.Arrays;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.rcon.RConConsoleSource;
-import net.minecraft.server.MinecraftServer;
 
 public class CommandCall {
 	
@@ -20,19 +16,8 @@ public class CommandCall {
 		this.passedArgs = passedArgs;
 		this.argumentIndex = 0;
 		
-		if (from instanceof CommandBlockLogic) {
-			isOp = true;
-		} else if (from instanceof MinecraftServer) {
-			isOp = true;
-		} else if (from instanceof RConConsoleSource) {
-			isOp = true;
-		} else if (from instanceof EntityPlayer) {
-			isOp = false;
-			if (from instanceof EntityPlayerMP) {
-				EntityPlayerMP player = (EntityPlayerMP) from; // TODO needs testing
-				isOp = player.mcServer.getConfigurationManager().func_152596_g(player.getGameProfile());
-			}
-		}
+		// TODO find a better way to find out if Command sender is operator
+		isOp = from.canCommandSenderUseCommand(2, "gamemode");
 		
 	}
 	

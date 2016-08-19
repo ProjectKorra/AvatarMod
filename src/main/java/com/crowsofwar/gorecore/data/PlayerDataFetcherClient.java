@@ -16,6 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -78,7 +79,7 @@ public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements Pl
 	
 	@Override
 	public T fetch(EntityPlayer player, String errorMessage) {
-		return fetch(player.worldObj, player.getCommandSenderName(), errorMessage);
+		return fetch(player.worldObj, player.getName(), errorMessage);
 	}
 	
 	@Override
@@ -108,7 +109,8 @@ public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements Pl
 		if (error == ResultOutcome.SUCCESS) {
 			return data;
 		} else {
-			if (errorMessage != null) GoreCore.LOGGER.error("Error while retrieving player data- " + errorMessage);
+			if (errorMessage != null)
+				GoreCore.LOGGER.error("Error while retrieving player data- " + errorMessage);
 			String log;
 			switch (error) {
 			case BAD_HTTP_CODE:
@@ -134,7 +136,7 @@ public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements Pl
 	
 	@Override
 	public T fetchPerformance(EntityPlayer player) {
-		return fetchPerformance(player.worldObj, player.getCommandSenderName());
+		return fetchPerformance(player.worldObj, player.getName());
 	}
 	
 	@Override

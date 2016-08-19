@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.text.ITextComponent;
 
 public class MultiMessage {
 	
@@ -27,7 +28,7 @@ public class MultiMessage {
 	
 	public void send(ICommandSender sender) {
 		if (chatMessages.isEmpty()) throw new IllegalArgumentException("Cannot send empty MultiMessage");
-		IChatComponent send = null;
+		ITextComponent send = null;
 		for (int i = 0; i < chatMessages.size(); i++) {
 			ChatMessage message = chatMessages.get(i);
 			if (send == null) {

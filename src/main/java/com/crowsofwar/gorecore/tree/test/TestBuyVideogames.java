@@ -11,6 +11,8 @@ import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 public class TestBuyVideogames extends NodeFunctional {
 	
 	private final IArgument<Integer> argAmount;
@@ -24,7 +26,7 @@ public class TestBuyVideogames extends NodeFunctional {
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		ArgumentList args = call.popArguments(argAmount);
 		int amount = args.get(argAmount);
-		call.getFrom().addChatMessage(new ChatComponentTranslation("test.buyVideogames", amount));
+		call.getFrom().addChatMessage(new TextComponentTranslation("test.buyVideogames", amount));
 		return null;
 	}
 	

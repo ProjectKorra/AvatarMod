@@ -10,6 +10,8 @@ import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 public class TestNode2 extends NodeFunctional {
 	
 	private final IArgument<Double> argTemp;
@@ -23,7 +25,7 @@ public class TestNode2 extends NodeFunctional {
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		ArgumentList args = call.popArguments(argTemp);
-		call.getFrom().addChatMessage(new ChatComponentText("The temperature is " + args.get(argTemp)));
+		call.getFrom().addChatMessage(new TextComponentTranslation("The temperature is " + args.get(argTemp)));
 		return null;
 	}
 	

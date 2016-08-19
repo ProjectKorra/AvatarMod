@@ -8,6 +8,9 @@ import java.util.Set;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -35,52 +38,53 @@ public class ChatSender {
 		return newChatMessage(MessageConfiguration.DEFAULT, translateKey, translateArgs);
 	}
 	
-	public static ChatMessage newChatMessage(MessageConfiguration config, String translateKey, String... translateArgs) {
+	public static ChatMessage newChatMessage(MessageConfiguration config, String translateKey,
+			String... translateArgs) {
 		ChatMessage cm = new ChatMessage(config, translateKey, translateArgs);
 		translateKeyToChatMessage.put(translateKey, cm);
 		return cm;
 	}
 	
-	private Object[] getFormatArgs(ChatComponentTranslation message) {
-		return ObfuscationReflectionHelper.getPrivateValue(ChatComponentTranslation.class, message, 1);
+	private Object[] getFormatArgs(TextComponentTranslation message) {
+		return ObfuscationReflectionHelper.getPrivateValue(TextComponentTranslation.class, message, 1);
 	}
 	
-	private String getKey(ChatComponentTranslation message) {
-		return ObfuscationReflectionHelper.getPrivateValue(ChatComponentTranslation.class, message, 0);
+	private String getKey(TextComponentTranslation message) {
+		return ObfuscationReflectionHelper.getPrivateValue(TextComponentTranslation.class, message, 0);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void processClientChat(ClientChatReceivedEvent e) {
-		if (e.message instanceof ChatComponentTranslation) {
-			ChatComponentTranslation message = (ChatComponentTranslation) e.message;
+		if (e.getMessage() instanceof TextComponentTranslation) {
+			TextComponentTranslation message = (TextComponentTranslation) e.getMessage();
 			
 			String result = "";
 			
-			List<IChatComponent> comps = new ArrayList();
+			List<ITextComponent> comps = new ArrayList();
 			
 			Object[] cloneFormatArgs = getFormatArgs(message);
-			comps.add(new ChatComponentTranslation(getKey(message), cloneFormatArgs));
+			comps.add(new TextComponentTranslation(getKey(message), cloneFormatArgs));
 			
-			comps.addAll(e.message.getSiblings());
+			comps.addAll(e.getMessage().getSiblings());
 			boolean changed = false;
 			
-			for (IChatComponent chat : comps) {
+			for (ITextComponent chat : comps) {
 				String processed = processChatComponent(chat);
 				if (processed != null) {
 					changed = true;
 					result += processed;
 				}
 			}
-			if (changed) e.message = new ChatComponentText(result);
+			if (changed) e.setMessage(new TextComponentTranslation(result));
 		}
 		
 	}
 	
-	private String processChatComponent(IChatComponent chat) {
+	private String processChatComponent(ITextComponent chat) {
 		String result = null;
-		if (chat instanceof ChatComponentTranslation) {
-			ChatComponentTranslation translate = (ChatComponentTranslation) chat;
+		if (chat instanceof TextComponentTranslation) {
+			TextComponentTranslation translate = (TextComponentTranslation) chat;
 			String key = (String) getKey(translate);
 			ChatMessage cm = translateKeyToChatMessage.get(key);
 			
@@ -160,10 +164,10 @@ public class ChatSender {
 			
 			// If any formats changed, must re add all chat formats
 			if (recievedFormatInstruction) {
-				newText += EnumChatFormatting.RESET;
+				newText += TextFormatting.RESET;
 				newText += format.getColor(); // For some reason, color must come before bold
-				newText += format.isBold() ? EnumChatFormatting.BOLD : "";
-				newText += format.isItalic() ? EnumChatFormatting.ITALIC : "";
+				newText += format.isBold() ? TextFormatting.BOLD : "";
+				newText += format.isItalic() ? TextFormatting.ITALIC : "";
 			} else {
 				newText += item;
 			}
@@ -182,7 +186,7 @@ public class ChatSender {
 		
 		private boolean isBold;
 		private boolean isItalic;
-		private EnumChatFormatting color;
+		private TextFormatting color;
 		
 		public ChatFormat() {
 			isBold = false;
@@ -195,15 +199,15 @@ public class ChatSender {
 		}
 		
 		public boolean setColor(MessageConfiguration config, String colorStr) {
-			EnumChatFormatting set = null;
+			TextFormatting set = null;
 			if (colorStr.equals("/color")) {
-				set = EnumChatFormatting.WHITE;
+				set = TextFormatting.WHITE;
 			} else if (config.hasColor(colorStr)) {
 				set = config.getColor(colorStr);
 			} else {
-				EnumChatFormatting[] allFormats = EnumChatFormatting.values();
+				TextFormatting[] allFormats = TextFormatting.values();
 				for (int i = 0; i < allFormats.length; i++) {
-					EnumChatFormatting format = allFormats[i];
+					TextFormatting format = allFormats[i];
 					if (format.isColor() && format.name().toLowerCase().equals(colorStr.toLowerCase())) {
 						set = format;
 						break;
@@ -236,7 +240,7 @@ public class ChatSender {
 			return isItalic;
 		}
 		
-		public EnumChatFormatting getColor() {
+		public TextFormatting getColor() {
 			return color;
 		}
 		

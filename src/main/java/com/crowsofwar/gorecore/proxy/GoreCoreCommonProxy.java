@@ -2,8 +2,7 @@ package com.crowsofwar.gorecore.proxy;
 
 import java.io.File;
 
-import com.crowsofwar.gorecore.util.GoreCoreIsPlayerWalking;
-
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class GoreCoreCommonProxy {
@@ -40,16 +39,13 @@ public class GoreCoreCommonProxy {
 		return false;
 	}
 	
-	public GoreCoreIsPlayerWalking initPlayerWalkingClient() {
-		return null;
-	}
-	
 	public void sideSpecifics() {
 		
 	}
 	
 	public String translate(String key, Object... args) {
-		return String.format(StatCollector.translateToLocal(key), args);
+		// TODO [1.10] find out way to translate server side
+		return I18n.format(key, args);
 	}
 	
 	public EntityPlayer getClientSidePlayer() {

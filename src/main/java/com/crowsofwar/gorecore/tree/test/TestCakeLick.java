@@ -10,6 +10,8 @@ import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 public class TestCakeLick extends NodeFunctional {
 	
 	private IArgument<Double> argGallons;
@@ -23,7 +25,7 @@ public class TestCakeLick extends NodeFunctional {
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		double gallons = call.popArguments(argGallons).get(argGallons);
-		call.getFrom().addChatMessage(new ChatComponentTranslation("test.lickCake", gallons));
+		call.getFrom().addChatMessage(new TextComponentTranslation("test.lickCake", gallons));
 		return null;
 	}
 	

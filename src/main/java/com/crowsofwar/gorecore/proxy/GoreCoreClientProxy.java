@@ -2,16 +2,10 @@ package com.crowsofwar.gorecore.proxy;
 
 import java.io.File;
 
-import com.crowsofwar.gorecore.client.GoreCoreClientEvents;
-import com.crowsofwar.gorecore.client.GoreCoreRenderTickEvent;
-import com.crowsofwar.gorecore.util.GoreCoreIsPlayerWalking;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class GoreCoreClientProxy extends GoreCoreCommonProxy {
 	
@@ -28,26 +22,16 @@ public class GoreCoreClientProxy extends GoreCoreCommonProxy {
 	@Override
 	public boolean isPlayerWalking(EntityPlayer player) {
 		if (player == Minecraft.getMinecraft().thePlayer) {
-			GameSettings gc = Minecraft.getMinecraft().gameSettings;
-			return gc.keyBindForward.getIsKeyPressed() || gc.keyBindBack.getIsKeyPressed() || gc.keyBindLeft.getIsKeyPressed()
-					|| gc.keyBindRight.getIsKeyPressed();
+			GameSettings gs = Minecraft.getMinecraft().gameSettings;
+			return gs.keyBindForward.isKeyDown() || gs.keyBindBack.isKeyDown() || gs.keyBindLeft.isKeyDown()
+					|| gs.keyBindRight.isKeyDown();
 		}
 		
 		return false;
 	}
 	
 	@Override
-	public GoreCoreIsPlayerWalking initPlayerWalkingClient() {
-		return new GoreCoreIsPlayerWalking();
-	}
-	
-	@Override
-	public void sideSpecifics() {
-		FMLCommonHandler.instance().bus().register(new GoreCoreRenderTickEvent());
-		GoreCoreClientEvents eventHandler = new GoreCoreClientEvents();
-		MinecraftForge.EVENT_BUS.register(eventHandler);
-		FMLCommonHandler.instance().bus().register(eventHandler);
-	}
+	public void sideSpecifics() {}
 	
 	@Override
 	public String translate(String key, Object... args) {

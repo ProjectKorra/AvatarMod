@@ -154,7 +154,12 @@ public final class GoreCoreNBTUtil {
 	 * @return The stack's data compound
 	 */
 	public static NBTTagCompound getStackCompound(ItemStack stack) {
-		return stack.stackTagCompound == null ? stack.stackTagCompound = new NBTTagCompound() : stack.stackTagCompound;
+		if (stack.getTagCompound() == null) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			stack.setTagCompound(nbt);
+			return nbt;
+		}
+		return stack.getTagCompound();
 	}
 	
 }

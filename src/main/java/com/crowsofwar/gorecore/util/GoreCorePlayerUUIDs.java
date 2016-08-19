@@ -63,6 +63,7 @@ public final class GoreCorePlayerUUIDs {
 				file.createNewFile();
 			}
 			
+			// FIXME close BufferedReader
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			
 			String line = null;
@@ -151,7 +152,7 @@ public final class GoreCorePlayerUUIDs {
 	 */
 	public static EntityPlayer findPlayerInWorldFromUUID(World world, UUID playerID) {
 		for (int i = 0; i < world.playerEntities.size(); i++) {
-			if (getUUID(((EntityPlayer) world.playerEntities.get(i)).getCommandSenderName()).getUUID().equals(playerID)) {
+			if (getUUID(((EntityPlayer) world.playerEntities.get(i)).getName()).getUUID().equals(playerID)) {
 				return (EntityPlayer) world.playerEntities.get(i);
 			}
 		}

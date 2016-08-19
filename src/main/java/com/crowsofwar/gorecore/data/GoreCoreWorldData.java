@@ -66,13 +66,15 @@ public abstract class GoreCoreWorldData extends WorldSavedData implements GoreCo
 	 *            Whether world data is saved for each dimension or for all dimensions
 	 * @return World data, retrieved using the specified options
 	 */
-	protected static <T extends GoreCoreWorldData> T getDataForWorld(Class<T> worldDataClass, String key, World world,
-			boolean separatePerDimension) {
+	protected static <T extends GoreCoreWorldData> T getDataForWorld(Class<T> worldDataClass, String key,
+			World world, boolean separatePerDimension) {
 		try {
-			MapStorage ms = separatePerDimension ? world.perWorldStorage : world.mapStorage;
-			T data = worldDataClass.cast(ms.loadData(worldDataClass, key));
+			MapStorage ms = separatePerDimension ? world.getPerWorldStorage() : world.getMapStorage();
+			T data = worldDataClass.cast(ms.getOrLoadData(worldDataClass, key));
 			
 			if (data == null) {
+				// TODO [1.7.10] Not sure if this is actually called anymore- need to check.
+				System.out.println("Data was null");
 				data = worldDataClass.getConstructor(String.class).newInstance(key);
 				data.setDirty(true);
 				ms.setData(key, data);
