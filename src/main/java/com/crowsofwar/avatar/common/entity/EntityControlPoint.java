@@ -1,13 +1,10 @@
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.times;
-
 import java.util.List;
 
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
-import com.crowsofwar.avatar.common.util.VectorUtils;
+import com.crowsofwar.gorecore.util.Vector;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -48,12 +45,12 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	protected EntityArc arc;
 	protected EntityPlayer owner;
 	
-	private Vec3d internalPosition;
-	private IEntityProperty<Vec3d> internalVelocity;
+	private Vector internalPosition;
+	private IEntityProperty<Vector> internalVelocity;
 	
 	public EntityControlPoint(World world) {
 		super(world);
-		internalPosition = Vec3d.createVectorHelper(0, 0, 0);
+		internalPosition = new Vector();
 		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
@@ -63,7 +60,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		setPosition(x, y, z);
 		this.arc = arc;
 		setSize(size, size);
-		internalPosition = Vec3d.createVectorHelper(x, y, z);
+		internalPosition = new Vector(x, y, z);
 		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
@@ -91,10 +88,11 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		setPosition(plus(getPosition(), times(getVelocity(), .05)));
-		setVelocity(times(getVelocity(), 0.4));
 		
-		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
+		setPosition(getPhysicsPosition().plus(getVelocity().times(0.05)));
+		setVelocity(getVelocity().times(0.4));
+		
+		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
 		if (!collisions.isEmpty()) {
 			Entity collidedWith = collisions.get(0);
 			if (!(collidedWith instanceof EntityControlPoint) && collidedWith != this.arc) {
@@ -109,8 +107,8 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	 */
 	protected void onCollision(Entity entity) {}
 	
-	public void setPosition(Vec3d pos) {
-		setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+	public void setPosition(Vector pos) {
+		setPosition(pos.x(), pos.y(), pos.z());
 	}
 	
 	public void move(double x, double y, double z) {
@@ -124,42 +122,42 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	public double getXPos() {
-		return getPosition().xCoord;
+		return getPhysicsPosition().x();
 	}
 	
 	public double getYPos() {
-		return getPosition().yCoord;
+		return getPhysicsPosition().y();
 	}
 	
 	public double getZPos() {
-		return getPosition().zCoord;
+		return getPhysicsPosition().z();
 	}
 	
 	public double getDistance(EntityControlPoint point) {
-		return getPosition().distanceTo(point.getPosition());
+		return getPhysicsPosition().dist(point.getPhysicsPosition());
 	}
 	
 	@Override
-	public Vec3d getPhysicsPosition() {
-		internalPosition.xCoord = posX;
-		internalPosition.yCoord = posY;
-		internalPosition.zCoord = posZ;
+	public Vector getPhysicsPosition() {
+		internalPosition.setX(posX);
+		internalPosition.setY(posY);
+		internalPosition.setZ(posZ);
 		return internalPosition;
 	}
 	
 	@Override
-	public Vec3d getVelocity() {
+	public Vector getVelocity() {
 		return internalVelocity.getValue();
 	}
 	
 	@Override
-	public void setVelocity(Vec3d vel) {
+	public void setVelocity(Vector vel) {
 		internalVelocity.setValue(vel);
 	}
 	
 	@Override
-	public void addVelocity(Vec3d vel) {
-		setVelocity(VectorUtils.plus(getVelocity(), vel));
+	public void addVelocity(Vector vel) {
+		setVelocity(getVelocity().plus(vel));
 	}
 	
 	/**
@@ -204,7 +202,8 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	
 	public static EntityControlPoint findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id) return (EntityControlPoint) obj;
+			if (obj instanceof EntityControlPoint && ((EntityControlPoint) obj).getId() == id)
+				return (EntityControlPoint) obj;
 		}
 		return null;
 	}

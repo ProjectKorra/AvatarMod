@@ -157,6 +157,30 @@ public class Vector {
 	}
 	
 	/**
+	 * Creates a new vector from the sum of this vector and the given vector.
+	 * 
+	 * @param vec
+	 *            Vector for sum
+	 */
+	public Vector plus(Vector vec) {
+		return plus(vec.x, vec.y, vec.z);
+	}
+	
+	/**
+	 * Creates a new vector from the sub of this vector and the vector defined by (x, y, z).
+	 * 
+	 * @param x
+	 *            X-coordinate of other vector
+	 * @param y
+	 *            Y-coordinate of other vector
+	 * @param z
+	 *            Z-coordinate of other vector
+	 */
+	public Vector plus(double x, double y, double z) {
+		return new Vector(this).add(x, y, z);
+	}
+	
+	/**
 	 * Subtract the given vector from this vector.
 	 * 
 	 * @param vec
@@ -183,6 +207,30 @@ public class Vector {
 	}
 	
 	/**
+	 * Creates a new vector from this vector minus the given vector.
+	 * 
+	 * @param vec
+	 *            Other vector
+	 */
+	public Vector minus(Vector vec) {
+		return minus(vec.x, vec.y, vec.z);
+	}
+	
+	/**
+	 * Creates a new vector from this vector minus the vector defined by (x,y,z).
+	 * 
+	 * @param x
+	 *            X-coordinate to subtract
+	 * @param y
+	 *            Y-coordinate to subtract
+	 * @param z
+	 *            Z-coordinate to subtract
+	 */
+	public Vector minus(double x, double y, double z) {
+		return new Vector(this).subtract(x, y, z);
+	}
+	
+	/**
 	 * Multiply this vector by the given scalar, and returns the result. Modifies the original
 	 * vector.
 	 * 
@@ -195,14 +243,34 @@ public class Vector {
 	}
 	
 	/**
+	 * Creates a new vector from this vector times the scalar.
+	 * 
+	 * @param scalar
+	 *            The scalar to multiply the new vector by
+	 */
+	public Vector times(double scalar) {
+		return new Vector(this).mul(scalar);
+	}
+	
+	/**
 	 * Divide this vector by the given scalar, and returns the result. Modifies the original vector.
 	 * 
 	 * @param scalar
 	 *            The scalar to divide this vector by
 	 * @return this
 	 */
-	public Vector div(double scalar) {
+	public Vector divide(double scalar) {
 		return set(x / scalar, y / scalar, z / scalar);
+	}
+	
+	/**
+	 * Creates a new vector based on this vector divided by the other vector.
+	 * 
+	 * @param scalar
+	 *            The scalar to divide the new vector by
+	 */
+	public Vector dividedBy(double scalar) {
+		return new Vector(this).divide(scalar);
 	}
 	
 	/**
@@ -237,7 +305,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector normalize() {
-		return div(magnitude());
+		return divide(magnitude());
 	}
 	
 	/**

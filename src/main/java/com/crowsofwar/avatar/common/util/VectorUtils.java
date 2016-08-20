@@ -3,6 +3,8 @@ package com.crowsofwar.avatar.common.util;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
+import com.crowsofwar.gorecore.util.Vector;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -11,10 +13,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
+ * Currently transitioning to {@link Vector custom vector class}.
+ * <p>
  * Contains methods to perform basic operations on vectors. Because, apparently, Mojang was to lazy
  * to do it themselves.
  *
  */
+@Deprecated
 public class VectorUtils {
 	
 	public static final Vec3d UP = Vec3d.createVectorHelper(0, 1, 0);
