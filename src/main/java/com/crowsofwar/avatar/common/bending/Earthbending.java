@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.util.AvBlockPos;
 import com.crowsofwar.avatar.common.util.VectorUtils;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -93,11 +94,12 @@ public class Earthbending implements IBendingController {
 			} else {
 				AvBlockPos target = state.verifyClientLookAtBlock(-1, 5);
 				if (target != null) {
-					Block block = world.getBlockState(new BlockPos(target.x, target.y, target.z)).getBlock();
+					IBlockState ibs = world.getBlockState(new BlockPos(target.x, target.y, target.z));
+					Block block = ibs.getBlock();
 					if (bendableBlocks.contains(block)) {
 						
 						EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
-						floating.setMetadata(world.getBlockMetadata(target.x, target.y, target.z));
+						floating.setMetadata(ibs.get(target.x, target.y, target.z));
 						floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
 						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
 						
