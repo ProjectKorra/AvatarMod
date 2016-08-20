@@ -1,15 +1,15 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.util.VectorD;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vector;
 import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityArc {
 	
-	public static final Vector ZERO = new Vector(0, 0, 0);
+	public static final VectorD ZERO = new VectorD(0, 0, 0);
 	
 	public EntityAirGust(World world) {
 		super(world);
@@ -21,7 +21,7 @@ public class EntityAirGust extends EntityArc {
 		super.onUpdate();
 		EntityControlPoint first = getControlPoint(0);
 		EntityControlPoint second = getControlPoint(1);
-		if (first.getPosition().squareDistanceTo(second.getPosition()) >= getControlPointMaxDistanceSq()) {
+		if (first.getVecPosition().sqrDist(second.getVecPosition()) >= getControlPointMaxDistanceSq()) {
 			setDead();
 		}
 		if (ticksExisted > 80) setDead();
@@ -48,7 +48,7 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	protected Vector getGravityVector() {
+	protected VectorD getGravityVector() {
 		return ZERO;
 	}
 	
@@ -88,7 +88,8 @@ public class EntityAirGust extends EntityArc {
 		protected void onCollision(Entity entity) {
 			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
 				double multiplier = 10;
-				entity.addVelocity((entity.posX - this.posX) * multiplier, 0.4, (entity.posZ - this.posZ) * multiplier);
+				entity.addVelocity((entity.posX - this.posX) * multiplier, 0.4,
+						(entity.posZ - this.posZ) * multiplier);
 				setDead();
 			}
 		}

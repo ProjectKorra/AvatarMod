@@ -52,11 +52,11 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	/**
 	 * Holds the current velocity. Please don't use this field directly, as it is not designed to be
-	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(Vector)}.
+	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(VectorD)}.
 	 */
-	private final Vector velocity;
+	private final VectorD velocity;
 	private final EntityPropertyBlockPos propBlockPos;
-	private final Vector internalPosition;
+	private final VectorD internalPosition;
 	
 	private EntityPlayer owner;
 	
@@ -69,13 +69,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	public EntityFloatingBlock(World world) {
 		super(world);
 		setSize(0.95f, 0.95f);
-		velocity = new Vector(0, 0, 0);
+		velocity = new VectorD(0, 0, 0);
 		setGravityEnabled(false);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
 		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
-		this.internalPosition = new Vector(0, 0, 0);
+		this.internalPosition = new VectorD(0, 0, 0);
 		
 		this.enableItemDrops = true;
 		
@@ -127,7 +127,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		nbt.setString("Block", getNameForBlock(getBlock()));
 		nbt.setInteger("Metadata", getMetadata());
 		nbt.setBoolean("Gravity", isGravityEnabled());
-		Vector velocity = getVelocity();
+		VectorD velocity = getVelocity();
 		nbt.setDouble("VelocityX", velocity.xCoord);
 		nbt.setDouble("VelocityY", velocity.yCoord);
 		nbt.setDouble("VelocityZ", velocity.zCoord);
@@ -223,8 +223,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	@Override
 	public void onUpdate() {
 		if (isGravityEnabled()) {
-			addVelocity(new Vector(0, -9.81 / 20, 0));
-			Vector vel = getVelocity();
+			addVelocity(new VectorD(0, -9.81 / 20, 0));
+			VectorD vel = getVelocity();
 			if (!canFall() && vel.yCoord < 0) {
 				vel.yCoord = 0;
 				setVelocity(vel);
@@ -250,7 +250,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		lastTickPosX = posX;
 		lastTickPosY = posY;
 		lastTickPosZ = posZ;
-		Vector velocity = getVelocity();
+		VectorD velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
 		motionX = velocity.xCoord / 20;
 		motionY = velocity.yCoord / 20;
@@ -284,9 +284,9 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		
 		if (isMovingToBlock()) {
 			AvBlockPos target = getMovingToBlock();
-			Vector targetVec = new Vector(target.x + 0.5, target.y, target.z + 0.5);
-			Vector thisPos = new Vector(posX, posY, posZ);
-			Vector force = VectorUtils.minus(targetVec, thisPos);
+			VectorD targetVec = new VectorD(target.x + 0.5, target.y, target.z + 0.5);
+			VectorD thisPos = new VectorD(posX, posY, posZ);
+			VectorD force = VectorUtils.minus(targetVec, thisPos);
 			force.normalize();
 			VectorUtils.mult(force, 3);
 			setVelocity(force);
@@ -311,14 +311,14 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 					double multiplier = 0.25;
 					collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(this, collided),
 							(float) (speed * multiplier));
-					Vector motion = VectorUtils.minus(VectorUtils.getEntityPos(collided),
+					VectorD motion = VectorUtils.minus(VectorUtils.getEntityPos(collided),
 							VectorUtils.getEntityPos(this));
 					motion.yCoord = 0.08;
 					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
 					if (!worldObj.isRemote) setDead();
 					onCollision();
 				} else if (collided != getOwner()) {
-					Vector motion = VectorUtils.minus(VectorUtils.getEntityPos(collided),
+					VectorD motion = VectorUtils.minus(VectorUtils.getEntityPos(collided),
 							VectorUtils.getEntityPos(this));
 					VectorUtils.mult(motion, 0.3);
 					motion.yCoord = 0.08;
@@ -352,12 +352,12 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public void addVelocity(Vector force) {
+	public void addVelocity(VectorD force) {
 		setVelocity(VectorUtils.plus(getVelocity(), force));
 	}
 	
 	@Override
-	public Vector getVelocity() {
+	public VectorD getVelocity() {
 		velocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
 		velocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELY);
 		velocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELZ);
@@ -365,7 +365,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public void setVelocity(Vector velocity) {
+	public void setVelocity(VectorD velocity) {
 		if (!worldObj.isRemote) {
 			dataWatcher.updateObject(DATAWATCHER_VELX, (float) velocity.xCoord);
 			dataWatcher.updateObject(DATAWATCHER_VELY, (float) velocity.yCoord);
@@ -374,7 +374,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public Vector getPosition() {
+	public VectorD getPosition() {
 		internalPosition.xCoord = posX;
 		internalPosition.yCoord = posY;
 		internalPosition.zCoord = posZ;

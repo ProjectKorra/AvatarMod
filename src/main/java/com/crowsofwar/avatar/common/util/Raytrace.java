@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.util;
 import static java.lang.Math.toRadians;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

@@ -17,14 +17,14 @@ public class EntityFlame extends Entity implements IPhysics {
 	/**
 	 * Don't access this- used internally by {@link #getVelocity()}
 	 */
-	private Vector internalVelocity;
+	private VectorD internalVelocity;
 	
-	private Vector source;
+	private VectorD source;
 	
 	public EntityFlame(World world) {
 		super(world);
 		setSize(0.25f, 0.25f);
-		internalVelocity = new Vector(0, 0, 0);
+		internalVelocity = new VectorD(0, 0, 0);
 	}
 	
 	public EntityFlame(World world, double posX, double posY, double posZ) {
@@ -34,7 +34,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	
 	public EntityFlame(World world, double posX, double posY, double posZ, double mx, double my, double mz) {
 		this(world, posX, posY, posZ);
-		setVelocity(new Vector(mx, my, mz));
+		setVelocity(new VectorD(mx, my, mz));
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		Vector velocity = getVelocity();
+		VectorD velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
 		float size = (float) (Math.pow(getDistanceTravelled() / MAX_DIST_TRAVELLED, 1.7) * 1.5);
 		setSize(size, size);
@@ -76,7 +76,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
-		source = new Vector(x, y, z);
+		source = new VectorD(x, y, z);
 	}
 	
 	/**
@@ -88,13 +88,13 @@ public class EntityFlame extends Entity implements IPhysics {
 	
 	public void setDistanceTravelled() {
 		if (!worldObj.isRemote) {
-			float dist = (float) new Vector(posX, posY, posZ).distanceTo(source);
+			float dist = (float) new VectorD(posX, posY, posZ).distanceTo(source);
 			dataWatcher.updateObject(DATAWATCHER_DIST_TRAVELLED, dist);
 		}
 	}
 	
 	@Override
-	public Vector getVelocity() {
+	public VectorD getVelocity() {
 		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
 		internalVelocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELY);
 		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELZ);
@@ -102,12 +102,12 @@ public class EntityFlame extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public Vector getPosition() {
+	public VectorD getPosition() {
 		return VectorUtils.getEntityPos(this);
 	}
 	
 	@Override
-	public void setVelocity(Vector vel) {
+	public void setVelocity(VectorD vel) {
 		if (!worldObj.isRemote) {
 			dataWatcher.updateObject(DATAWATCHER_VELX, (float) vel.xCoord);
 			dataWatcher.updateObject(DATAWATCHER_VELY, (float) vel.yCoord);
@@ -116,7 +116,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public void addVelocity(Vector vel) {
+	public void addVelocity(VectorD vel) {
 		setVelocity(VectorUtils.plus(getVelocity(), vel));
 	}
 	

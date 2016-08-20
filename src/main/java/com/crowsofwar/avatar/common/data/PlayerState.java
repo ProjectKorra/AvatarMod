@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.util.AvBlockPos;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
+import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -18,23 +19,24 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PlayerState {
 	
 	private EntityPlayer playerEntity;
-	private AvBlockPos clientLookAtBlock;
-	private AvBlockPos serverLookAtBlock;
+	private VectorI clientLookAtBlock;
+	private VectorI serverLookAtBlock;
 	private EnumFacing lookAtSide;
 	
 	public PlayerState() {
 		
 	}
 	
-	public PlayerState(EntityPlayer playerEntity, AvBlockPos clientLookAtBlock, EnumFacing lookAtSide) {
+	public PlayerState(EntityPlayer playerEntity, VectorI clientLookAtBlock, EnumFacing lookAtSide) {
 		update(playerEntity, clientLookAtBlock, lookAtSide);
 	}
 	
 	public void update(EntityPlayer playerEntity, Result raytrace) {
-		update(playerEntity, raytrace == null ? null : raytrace.getPos(), raytrace == null ? null : raytrace.getDirection());
+		update(playerEntity, raytrace == null ? null : raytrace.getPos(),
+				raytrace == null ? null : raytrace.getDirection());
 	}
 	
-	public void update(EntityPlayer playerEntity, AvBlockPos clientLookAtBlock, EnumFacing lookAtSide) {
+	public void update(EntityPlayer playerEntity, VectorI clientLookAtBlock, EnumFacing lookAtSide) {
 		this.playerEntity = playerEntity;
 		this.clientLookAtBlock = clientLookAtBlock;
 		this.lookAtSide = lookAtSide;
@@ -50,7 +52,7 @@ public class PlayerState {
 		return playerEntity;
 	}
 	
-	public AvBlockPos getClientLookAtBlock() {
+	public VectorI getClientLookAtBlock() {
 		return clientLookAtBlock;
 	}
 	
@@ -103,7 +105,8 @@ public class PlayerState {
 		if (dist <= maxDeviation) {
 			return clientLookAtBlock;
 		} else {
-			AvatarLog.warn("Warning: PlayerState- Client sent too far location " + "to look at block. (" + dist + ") Hacking?");
+			AvatarLog.warn("Warning: PlayerState- Client sent too far location " + "to look at block. ("
+					+ dist + ") Hacking?");
 			Thread.dumpStack();
 			return serverLookAtBlock;
 		}

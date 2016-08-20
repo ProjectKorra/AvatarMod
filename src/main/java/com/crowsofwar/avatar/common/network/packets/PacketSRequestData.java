@@ -11,6 +11,7 @@ import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -28,11 +29,11 @@ public class PacketSRequestData implements IAvatarPacket<PacketSRequestData> {
 	}
 	
 	public PacketSRequestData(EntityPlayer player) {
-		GetUUIDResult result = GoreCorePlayerUUIDs.getUUID(player.getCommandSenderName());
+		GetUUIDResult result = GoreCorePlayerUUIDs.getUUID(player.getName());
 		if (result.isResultSuccessful()) {
 			this.asking = result.getUUID();
 		} else {
-			System.err.println("Couldn't get UUID for player " + player.getCommandSenderName() + " to send Request");
+			System.err.println("Couldn't get UUID for player " + player.getName() + " to send Request");
 			result.logError();
 		}
 	}

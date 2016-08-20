@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class EntityFireArc extends EntityArc {
 	
-	private static final Vector GRAVITY = new Vector(0, -9.81 / 60, 0);
+	private static final VectorD GRAVITY = new VectorD(0, -9.81 / 60, 0);
 	
 	public EntityFireArc(World world) {
 		super(world);
@@ -47,7 +47,7 @@ public class EntityFireArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vector getGravityVector() {
+	protected VectorD getGravityVector() {
 		return GRAVITY;
 	}
 	

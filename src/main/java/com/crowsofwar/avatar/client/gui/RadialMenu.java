@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GlStateManager;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarAbility;
@@ -20,13 +19,17 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
-	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod", "textures/gui/radial_segment_cut.png");
-	private static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
-	private static final ResourceLocation edge = new ResourceLocation("avatarmod", "textures/gui/radial_segment_edge_thicker.png");
+	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
+			"textures/gui/radial_segment_cut.png");
+	private static final ResourceLocation icons = new ResourceLocation("avatarmod",
+			"textures/gui/ability_icons.png");
+	private static final ResourceLocation edge = new ResourceLocation("avatarmod",
+			"textures/gui/radial_segment_edge_thicker.png");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png
@@ -48,8 +51,9 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	public RadialMenu(int controllerId) {
 		IBendingController controller = BendingManager.getBending(controllerId);
-		if (controller == null) throw new IllegalArgumentException(
-				"Can't make radial menu gui for controller id " + controllerId + " because there is no controller for that Id");
+		if (controller == null)
+			throw new IllegalArgumentException("Can't make radial menu gui for controller id " + controllerId
+					+ " because there is no controller for that Id");
 		
 		BendingMenuInfo menu = controller.getRadialMenu();
 		construct(menu.getTheme(), menu.getKey(), menu.getButtons());
@@ -76,7 +80,8 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		this.pressing = pressing;
 		
 		if (controls == null) throw new IllegalArgumentException("Controls is null");
-		if (controls.length > 8) throw new IllegalArgumentException("The length of controls can't be more than 8");
+		if (controls.length > 8)
+			throw new IllegalArgumentException("The length of controls can't be more than 8");
 		AvatarAbility[] ctrl = new AvatarAbility[8];
 		for (int i = 0; i < ctrl.length; i++) {
 			if (i < controls.length)
@@ -128,11 +133,11 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 			
 			for (int i = 0; i < segments.length; i++) {
 				if (segments[i].isMouseHover(mouseX, mouseY)) {
-					Result raytrace = controls[i].needsRaytrace()
-							? Raytrace.getTargetBlock(mc.thePlayer, controls[i].getRaytraceDistance(), controls[i].isRaycastLiquids())
-							: null;
-					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], raytrace != null ? raytrace.getPos() : null,
-							raytrace != null ? raytrace.getDirection() : null));
+					Result raytrace = controls[i].needsRaytrace() ? Raytrace.getTargetBlock(mc.thePlayer,
+							controls[i].getRaytraceDistance(), controls[i].isRaycastLiquids()) : null;
+					AvatarMod.network.sendToServer(
+							new PacketSUseAbility(controls[i], raytrace != null ? raytrace.getPos() : null,
+									raytrace != null ? raytrace.getSide() : null));
 					break;
 				}
 			}
@@ -150,46 +155,52 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	private void drawRadialSegment(RadialSegment segment, boolean hover) {
 		
 		// Draw background & edge
-		GlStateManager.glPushMatrix();
-		GlStateManager.glTranslatef(width / 2f, height / 2f, 0); // Re-center origin
-		GlStateManager.glScalef(menuScale, menuScale, menuScale); // Scale all following arguments
-		GlStateManager.glRotatef(segment.getAngle(), 0, 0, 1); // All transform operations and the image are
-														// rotated
-		GlStateManager.glTranslatef(-segmentX, -segmentY, 0); // Offset the image to the correct center point
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
+		GlStateManager.scale(menuScale, menuScale, menuScale); // Scale all following arguments
+		GlStateManager.rotate(segment.getAngle(), 0, 0, 1); // All transform operations and the
+															// image are
+		// rotated
+		GlStateManager.translate(-segmentX, -segmentY, 0); // Offset the image to the correct
+															// center point
 		// Draw background
-		GlStateManager.glColor3f(theme.getBackground().getRed(hover) / 255f, theme.getBackground().getGreen(hover) / 255f,
-				theme.getBackground().getBlue(hover) / 255f);
+		GlStateManager.color(theme.getBackground().getRed(hover) / 255f,
+				theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(radialMenu);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		// Draw edge
-		GlStateManager.glColor3f(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f, theme.getEdge().getBlue(hover) / 255f);
+		GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
+				theme.getEdge().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(this.edge);
-		GlStateManager.glTranslatef(0, 0, 1);
+		GlStateManager.translate(0, 0, 1);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-		GlStateManager.glPopMatrix();
+		GlStateManager.popMatrix();
 		
 		// Draw icon
-		GlStateManager.glPushMatrix();
+		GlStateManager.pushMatrix();
 		float iconScale = .8f;
 		float angle = segment.getAngle() + 45f;
 		angle %= 360;
-		GlStateManager.glTranslatef(width / 2f, height / 2f, 0); // Re-center origin
-		GlStateManager.glRotatef(angle, 0, 0, 1); // Rotation for next translation
-		GlStateManager.glTranslatef(-59, -27, 0); // Translate into correct position
-		GlStateManager.glRotatef(-angle, 0, 0, 1); // Icon is now at desired position, rotate the image back
-											// to regular
+		GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
+		GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
+		GlStateManager.translate(-59, -27, 0); // Translate into correct position
+		GlStateManager.rotate(-angle, 0, 0, 1); // Icon is now at desired position, rotate the
+												// image back
+		// to regular
 		
 		// Color to icon RGB
-		GlStateManager.glColor3f(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f, theme.getIcon().getBlue(hover) / 255f);
+		GlStateManager.color(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
+				theme.getIcon().getBlue(hover) / 255f);
 		
-		GlStateManager.glTranslatef(0, 0, 2); // Ensure icon is not overlapped
-		GlStateManager.glScalef(iconScale, iconScale, iconScale); // Scale the icon's recentering and actual
-														// image
-		GlStateManager.glTranslatef(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
+		GlStateManager.translate(0, 0, 2); // Ensure icon is not overlapped
+		GlStateManager.scale(iconScale, iconScale, iconScale); // Scale the icon's recentering
+																// and actual
+		// image
+		GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
 		mc.getTextureManager().bindTexture(icons);
 		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
 		
-		GlStateManager.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	private int getMouseX() {

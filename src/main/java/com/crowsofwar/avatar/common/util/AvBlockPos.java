@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.util;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Recommended to use minecraft Vec3i instead.
@@ -50,10 +51,18 @@ public class AvBlockPos {
 	/**
 	 * Move this BlockPos in the specified direction by 1 meter.
 	 */
-	public void offset(ForgeDirection direction) {
-		x += direction.offsetX;
-		y += direction.offsetY;
-		z += direction.offsetZ;
+	public void offset(EnumFacing direction) {
+		switch (direction.getAxis()) {
+			case X:
+				x += direction.getAxisDirection().getOffset();
+				break;
+			case Y:
+				y += direction.getAxisDirection().getOffset();
+				break;
+			case Z:
+				z += direction.getAxisDirection().getOffset();
+				break;
+		}
 	}
 	
 	/**

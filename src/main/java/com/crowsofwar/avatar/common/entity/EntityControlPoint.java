@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
-import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.gorecore.util.VectorD;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -44,12 +44,12 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	protected EntityArc arc;
 	protected EntityPlayer owner;
 	
-	private Vector internalPosition;
-	private IEntityProperty<Vector> internalVelocity;
+	private VectorD internalPosition;
+	private IEntityProperty<VectorD> internalVelocity;
 	
 	public EntityControlPoint(World world) {
 		super(world);
-		internalPosition = new Vector();
+		internalPosition = new VectorD();
 		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
@@ -59,7 +59,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		setPosition(x, y, z);
 		this.arc = arc;
 		setSize(size, size);
-		internalPosition = new Vector(x, y, z);
+		internalPosition = new VectorD(x, y, z);
 		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
@@ -88,7 +88,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	public void onUpdate() {
 		super.onUpdate();
 		
-		setPosition(getVecPosition().plus(getVelocity().times(0.05)));
+		setVecPosition(getVecPosition().plus(getVelocity().times(0.05)));
 		setVelocity(getVelocity().times(0.4));
 		
 		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
@@ -106,7 +106,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	 */
 	protected void onCollision(Entity entity) {}
 	
-	public void setPosition(Vector pos) {
+	public void setVecPosition(VectorD pos) {
 		setPosition(pos.x(), pos.y(), pos.z());
 	}
 	
@@ -116,7 +116,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		posZ += z;
 	}
 	
-	public void move(Vector offset) {
+	public void move(VectorD offset) {
 		move(offset.xCoord, offset.yCoord, offset.zCoord);
 	}
 	
@@ -137,7 +137,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	@Override
-	public Vector getVecPosition() {
+	public VectorD getVecPosition() {
 		internalPosition.setX(posX);
 		internalPosition.setY(posY);
 		internalPosition.setZ(posZ);
@@ -145,17 +145,17 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	@Override
-	public Vector getVelocity() {
+	public VectorD getVelocity() {
 		return internalVelocity.getValue();
 	}
 	
 	@Override
-	public void setVelocity(Vector vel) {
+	public void setVelocity(VectorD vel) {
 		internalVelocity.setValue(vel);
 	}
 	
 	@Override
-	public void addVelocity(Vector vel) {
+	public void addVelocity(VectorD vel) {
 		setVelocity(getVelocity().plus(vel));
 	}
 	

@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class EntityWaterArc extends EntityArc {
 	
-	private static final Vector GRAVITY = new Vector(0, -9.81 / 20, 0);
+	private static final VectorD GRAVITY = new VectorD(0, -9.81 / 20, 0);
 	
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
@@ -70,7 +70,7 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vector getGravityVector() {
+	protected VectorD getGravityVector() {
 		return GRAVITY;
 	}
 	

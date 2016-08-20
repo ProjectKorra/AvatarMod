@@ -1,12 +1,15 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyVector;
-import com.crowsofwar.avatar.common.util.VectorUtils;
+import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.gorecore.util.VectorD;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vector;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,11 +19,18 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELOCITY = 4, // 4,5,6
 			DATAWATCHER_GRAVITY = 7;
 	
+	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityArc.class,
+			DataSerializers.VARINT);
+	private static final DataParameter<VectorD> SYNC_VELOCITY = EntityDataManager.createKey(EntityArc.class,
+			AvatarDataSerializers.SERIALIZER_VECTOR);
+	private static final DataParameter<Boolean> SYNC_GRAVITY = EntityDataManager.createKey(EntityArc.class,
+			DataSerializers.BOOLEAN);
+	
 	private static int nextId = 1;
 	private EntityControlPoint[] points;
 	
-	private Vector internalPos;
-	private EntityPropertyVector velocity;
+	private VectorD internalPos;
+	private EntityPropertyDataManager<VectorD> velocity;
 	
 	protected EntityPlayer owner;
 	
@@ -34,8 +44,9 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			points[i] = createControlPoint(size);
 		}
 		
-		this.internalPos = new Vector(0, 0, 0);
-		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
+		this.internalPos = new VectorD(0, 0, 0);
+		this.velocity = new EntityPropertyDataManager<VectorD>(this, EntityArc.class,
+				AvatarDataSerializers.SERIALIZER_VECTOR, new VectorD());
 		if (!worldObj.isRemote) {
 			setId(nextId++);
 		}
@@ -53,8 +64,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	@Override
 	protected void entityInit() {
-		dataWatcher.addObject(DATAWATCHER_ID, 0);
-		dataWatcher.addObject(DATAWATCHER_GRAVITY, (byte) 0);
+		dataManager.register(SYNC_ID, 0);
+		dataManager.register(SYNC_GRAVITY, false);
 	}
 	
 	@Override
@@ -63,23 +74,20 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		
 		if (this.ticksExisted == 1) {
 			for (int i = 0; i < points.length; i++) {
-				points[i].setPosition(getPosition());
+				points[i].setVecPosition(getVecPosition());
 				worldObj.spawnEntityInWorld(points[i]);
 			}
 		}
 		
 		ignoreFrustumCheck = true;
 		
-		Vector vel = getVelocity();
-		if (ticksExisted % 5 == 0) {
-			velocity.sync();
-		}
+		VectorD vel = getVelocity();
 		
 		if (isGravityEnabled()) {
 			addVelocity(getGravityVector());
 		}
 		
-		moveEntity(vel.xCoord / 20, vel.yCoord / 20, vel.zCoord / 20);
+		moveEntity(vel.x() / 20, vel.y() / 20, vel.z() / 20);
 		getLeader().setPosition(posX, posY, posZ);
 		getLeader().setVelocity(getVelocity());
 		
@@ -92,8 +100,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			
 			EntityControlPoint leader = points[i - 1];
 			EntityControlPoint p = points[i];
-			Vector leadPos = i == 0 ? getPosition() : getLeader(i).getPosition();
-			double sqrDist = p.getPosition().squareDistanceTo(leadPos);
+			VectorD leadPos = i == 0 ? getVecPosition() : getLeader(i).getVecPosition();
+			double sqrDist = p.getVecPosition().sqrDist(leadPos);
 			
 			if (sqrDist > getControlPointTeleportDistanceSq()) {
 				
@@ -101,9 +109,9 @@ public abstract class EntityArc extends Entity implements IPhysics {
 				
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 				
-				Vector diff = VectorUtils.minus(leader.getPosition(), p.getPosition());
+				VectorD diff = leader.getVecPosition().minus(p.getVecPosition());
 				diff.normalize();
-				VectorUtils.mult(diff, 0.15 * 20);
+				diff.mul(3);
 				p.addVelocity(diff);
 				
 			}
@@ -114,7 +122,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	protected abstract void onCollideWithBlock();
 	
-	protected abstract Vector getGravityVector();
+	protected abstract VectorD getGravityVector();
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -165,11 +173,11 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	}
 	
 	public int getId() {
-		return dataWatcher.getWatchableObjectInt(DATAWATCHER_ID);
+		return dataManager.get(SYNC_ID);
 	}
 	
 	public void setId(int id) {
-		dataWatcher.updateObject(DATAWATCHER_ID, id);
+		dataManager.set(SYNC_ID, id);
 	}
 	
 	public static EntityArc findFromId(World world, int id) {
@@ -192,34 +200,34 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public Vector getPosition() {
-		internalPos.xCoord = posX;
-		internalPos.yCoord = posY;
-		internalPos.zCoord = posZ;
+	public VectorD getVecPosition() {
+		internalPos.setX(posX);
+		internalPos.setY(posY);
+		internalPos.setZ(posZ);
 		return internalPos;
 	}
 	
 	@Override
-	public Vector getVelocity() {
+	public VectorD getVelocity() {
 		return velocity.getValue();
 	}
 	
 	@Override
-	public void setVelocity(Vector vel) {
+	public void setVelocity(VectorD vel) {
 		velocity.setValue(vel);
 	}
 	
 	@Override
-	public void addVelocity(Vector vel) {
-		setVelocity(VectorUtils.plus(getVelocity(), vel));
+	public void addVelocity(VectorD vel) {
+		setVelocity(getVelocity().plus(vel));
 	}
 	
 	public boolean isGravityEnabled() {
-		return dataWatcher.getWatchableObjectByte(DATAWATCHER_GRAVITY) == 1;
+		return dataManager.get(SYNC_GRAVITY);
 	}
 	
 	public void setGravityEnabled(boolean enabled) {
-		dataWatcher.updateObject(DATAWATCHER_GRAVITY, (byte) (enabled ? 1 : 0));
+		dataManager.set(SYNC_GRAVITY, enabled);
 	}
 	
 	public EntityPlayer getOwner() {

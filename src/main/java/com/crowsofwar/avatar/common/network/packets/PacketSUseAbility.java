@@ -4,7 +4,7 @@ import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-import com.crowsofwar.avatar.common.util.AvBlockPos;
+import com.crowsofwar.gorecore.util.VectorI;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumFacing;
@@ -22,13 +22,13 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	
 	private AvatarAbility ability;
-	private AvBlockPos target;
+	private VectorI target;
 	/** ID of EnumFacing of the side of the block player is looking at */
 	private EnumFacing side;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(AvatarAbility ability, AvBlockPos target, EnumFacing side) {
+	public PacketSUseAbility(AvatarAbility ability, VectorI target, EnumFacing side) {
 		this.ability = ability;
 		this.target = target;
 		this.side = side;
@@ -37,7 +37,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		ability = AvatarAbility.fromId(buf.readInt());
-		target = buf.readBoolean() ? AvBlockPos.fromBytes(buf) : null;
+		target = buf.readBoolean() ? new VectorI(buf) : null;
 		side = EnumFacing.getFront(buf.readInt());
 	}
 	
@@ -65,7 +65,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 		return ability;
 	}
 	
-	public AvBlockPos getTargetPos() {
+	public VectorI getTargetPos() {
 		return target;
 	}
 	

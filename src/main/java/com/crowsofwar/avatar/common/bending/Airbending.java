@@ -71,9 +71,9 @@ public class Airbending implements IBendingController {
 		
 		if (ability == ACTION_AIR_GUST) {
 			
-			Vector look = fromYawPitch(Math.toRadians(player.rotationYaw),
+			VectorD look = fromYawPitch(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
-			Vector pos = getEyePos(player);
+			VectorD pos = getEyePos(player);
 			
 			EntityAirGust gust = new EntityAirGust(world);
 			gust.setVelocity(times(look, 10));

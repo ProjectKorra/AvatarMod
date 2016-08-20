@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -37,7 +38,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (packet instanceof PacketSRequestData) return handleRequestData((PacketSRequestData) packet, ctx);
 		
-		if (packet instanceof PacketSUseBendingController) return handleUseBendingController((PacketSUseBendingController) packet, ctx);
+		if (packet instanceof PacketSUseBendingController)
+			return handleUseBendingController((PacketSUseBendingController) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -50,7 +52,8 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing UseAbility packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
+				"Error while processing UseAbility packet");
 		if (data != null) {
 			IBendingController controller = data.getActiveBendingController();
 			if (controller != null) {
@@ -75,14 +78,15 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		World world = player.worldObj;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player, "Error while processing" + " UseBendingController packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
+				"Error while processing" + " UseBendingController packet");
 		
 		if (data != null) {
 			
 			if (data.hasBending(packet.getBendingControllerId())) {
 				data.setActiveBendingController(packet.getBendingControllerId());
 			} else {
-				AvatarLog.warn("Player '" + player.getCommandSenderName() + "' attempted to activate a BendingController "
+				AvatarLog.warn("Player '" + player.getName() + "' attempted to activate a BendingController "
 						+ "they don't have; hacking?");
 			}
 			

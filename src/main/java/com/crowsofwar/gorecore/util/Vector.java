@@ -1,103 +1,32 @@
 package com.crowsofwar.gorecore.util;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-
 /**
- * A 3-dimensional vector.
+ * 
  * 
  * @author CrowsOfWar
  */
-public class Vector {
-	
-	private double cachedMagnitude;
-	private double x, y, z;
-	
-	/**
-	 * Creates a new vector at the origin point.
-	 */
-	public Vector() {
-		this(0, 0, 0);
-	}
-	
-	/**
-	 * Creates using the coordinates (x, y, z).
-	 * 
-	 * @param x
-	 *            X-position of the new vector
-	 * @param y
-	 *            Y-position of the new vector
-	 * @param z
-	 *            Z-position of the new vector
-	 */
-	public Vector(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		recalcMagnitude();
-	}
-	
-	/**
-	 * Creates a copy of the given vector.
-	 * 
-	 * @param vec
-	 *            Vector to copy
-	 */
-	public Vector(Vector vec) {
-		this(vec.x, vec.y, vec.z);
-		this.cachedMagnitude = vec.cachedMagnitude;
-	}
-	
-	/**
-	 * Creates a copy of the given Minecraft vector.
-	 * 
-	 * @param vec
-	 *            Vector to copy
-	 */
-	public Vector(Vec3d vec) {
-		this(vec.xCoord, vec.yCoord, vec.zCoord);
-	}
+public interface Vector<UNIT> {
 	
 	/**
 	 * Get the x-coordinate of this vector.
 	 */
-	public double x() {
-		return x;
-	}
+	UNIT x();
 	
-	public void setX(double x) {
-		this.x = x;
-		recalcMagnitude();
-	}
+	void setX(UNIT x);
 	
 	/**
 	 * Get the y-coordinate of this vector.
 	 */
-	public double y() {
-		return y;
-	}
+	UNIT y();
 	
-	public void setY(double y) {
-		this.y = y;
-		recalcMagnitude();
-	}
+	void setY(UNIT y);
 	
 	/**
 	 * Get the z-coordinate of this vector.
 	 */
-	public double z() {
-		return z;
-	}
+	UNIT z();
 	
-	public void setZ(double z) {
-		this.z = z;
-		recalcMagnitude();
-	}
+	void setZ(UNIT z);
 	
 	/**
 	 * Set this vector to the vector defined by (x, y, z).
@@ -110,12 +39,7 @@ public class Vector {
 	 *            Z-coordinate to set to
 	 * @return this
 	 */
-	public Vector set(double x, double y, double z) {
-		setX(x);
-		setY(y);
-		setZ(z);
-		return this;
-	}
+	Vector<UNIT> set(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Set this vector to the given vector.
@@ -124,17 +48,12 @@ public class Vector {
 	 *            Vector to set to
 	 * @return this
 	 */
-	public Vector set(Vector vec) {
-		set(vec.x, vec.y, vec.z);
-		return this;
-	}
+	Vector<UNIT> set(Vector<UNIT> vec);
 	
 	/**
 	 * Returns a new vector with the same coordinates as this one.
 	 */
-	public Vector createCopy() {
-		return new Vector(this);
-	}
+	Vector<UNIT> createCopy();
 	
 	/**
 	 * Add the given vector to this vector.
@@ -143,9 +62,7 @@ public class Vector {
 	 *            The vector to add
 	 * @return this
 	 */
-	public Vector add(Vector vec) {
-		return add(vec.x, vec.y, vec.z);
-	}
+	Vector<UNIT> add(Vector<UNIT> vec);
 	
 	/**
 	 * Add the given vector defined by (x, y, z) to this vector.
@@ -158,9 +75,7 @@ public class Vector {
 	 *            Z-coordinate to add
 	 * @return this
 	 */
-	public Vector add(double x, double y, double z) {
-		return set(this.x + x, this.y + y, this.z + z);
-	}
+	Vector<UNIT> add(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Creates a new vector from the sum of this vector and the given vector.
@@ -168,9 +83,7 @@ public class Vector {
 	 * @param vec
 	 *            Vector for sum
 	 */
-	public Vector plus(Vector vec) {
-		return plus(vec.x, vec.y, vec.z);
-	}
+	Vector<UNIT> plus(Vector<UNIT> vec);
 	
 	/**
 	 * Creates a new vector from the sub of this vector and the vector defined by (x, y, z).
@@ -182,9 +95,7 @@ public class Vector {
 	 * @param z
 	 *            Z-coordinate of other vector
 	 */
-	public Vector plus(double x, double y, double z) {
-		return new Vector(this).add(x, y, z);
-	}
+	Vector<UNIT> plus(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Subtract the given vector from this vector.
@@ -193,9 +104,7 @@ public class Vector {
 	 *            The reduction vector
 	 * @return this
 	 */
-	public Vector subtract(Vector vec) {
-		return subtract(vec.x, vec.y, vec.z);
-	}
+	Vector<UNIT> subtract(Vector<UNIT> vec);
 	
 	/**
 	 * Subtract the given vector defined by (x, y, z) from this vector.
@@ -208,9 +117,7 @@ public class Vector {
 	 *            Z-coordinate to subtract
 	 * @return this
 	 */
-	public Vector subtract(double x, double y, double z) {
-		return set(this.x - x, this.y - y, this.z - z);
-	}
+	Vector<UNIT> subtract(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Creates a new vector from this vector minus the given vector.
@@ -218,9 +125,7 @@ public class Vector {
 	 * @param vec
 	 *            Other vector
 	 */
-	public Vector minus(Vector vec) {
-		return minus(vec.x, vec.y, vec.z);
-	}
+	Vector<UNIT> minus(Vector<UNIT> vec);
 	
 	/**
 	 * Creates a new vector from this vector minus the vector defined by (x,y,z).
@@ -232,9 +137,7 @@ public class Vector {
 	 * @param z
 	 *            Z-coordinate to subtract
 	 */
-	public Vector minus(double x, double y, double z) {
-		return new Vector(this).subtract(x, y, z);
-	}
+	Vector<UNIT> minus(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Multiply this vector by the given scalar, and returns the result. Modifies the original
@@ -244,9 +147,7 @@ public class Vector {
 	 *            The scalar to multiply this vector by
 	 * @returns this
 	 */
-	public Vector mul(double scalar) {
-		return set(x * scalar, y * scalar, z * scalar);
-	}
+	Vector<UNIT> mul(UNIT scalar);
 	
 	/**
 	 * Creates a new vector from this vector times the scalar.
@@ -254,9 +155,7 @@ public class Vector {
 	 * @param scalar
 	 *            The scalar to multiply the new vector by
 	 */
-	public Vector times(double scalar) {
-		return new Vector(this).mul(scalar);
-	}
+	Vector<UNIT> times(UNIT scalar);
 	
 	/**
 	 * Divide this vector by the given scalar, and returns the result. Modifies the original vector.
@@ -265,9 +164,7 @@ public class Vector {
 	 *            The scalar to divide this vector by
 	 * @return this
 	 */
-	public Vector divide(double scalar) {
-		return set(x / scalar, y / scalar, z / scalar);
-	}
+	Vector<UNIT> divide(UNIT scalar);
 	
 	/**
 	 * Creates a new vector based on this vector divided by the other vector.
@@ -275,44 +172,26 @@ public class Vector {
 	 * @param scalar
 	 *            The scalar to divide the new vector by
 	 */
-	public Vector dividedBy(double scalar) {
-		return new Vector(this).divide(scalar);
-	}
+	Vector<UNIT> dividedBy(UNIT scalar);
 	
 	/**
 	 * Get the length of this vector.
 	 * <p>
 	 * The result is cached since square-root is a performance-heavy operation.
 	 */
-	public double magnitude() {
-		if (cachedMagnitude == -1) {
-			cachedMagnitude = Math.sqrt(sqrMagnitude());
-		}
-		return cachedMagnitude;
-	}
+	UNIT magnitude();
 	
 	/**
 	 * Get the square magnitude of this vector.
 	 */
-	public double sqrMagnitude() {
-		return x * x + y * y + z * z;
-	}
-	
-	/**
-	 * Mark cachedMagnitude so it needs to be recalculated.
-	 */
-	private void recalcMagnitude() {
-		cachedMagnitude = -1;
-	}
+	UNIT sqrMagnitude();
 	
 	/**
 	 * Normalizes this vector so that it has a length of 1.
 	 * 
 	 * @return this
 	 */
-	public Vector normalize() {
-		return divide(magnitude());
-	}
+	Vector<UNIT> normalize();
 	
 	/**
 	 * Get the square distance from the given vector.
@@ -320,9 +199,7 @@ public class Vector {
 	 * @param vec
 	 *            The other vector
 	 */
-	public double sqrDist(Vector vec) {
-		return sqrDist(vec.x, vec.y, vec.z);
-	}
+	UNIT sqrDist(Vector<UNIT> vec);
 	
 	/**
 	 * Get the square distance from the vector defined by (x, y, z).
@@ -334,9 +211,7 @@ public class Vector {
 	 * @param z
 	 *            The z-position of the other vector
 	 */
-	public double sqrDist(double x, double y, double z) {
-		return (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y) + (this.z - z) * (this.z - z);
-	}
+	UNIT sqrDist(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Get the distance from the given vector.
@@ -344,9 +219,7 @@ public class Vector {
 	 * @param vec
 	 *            The other vector
 	 */
-	public double dist(Vector vec) {
-		return Math.sqrt(sqrDist(vec));
-	}
+	UNIT dist(Vector<UNIT> vec);
 	
 	/**
 	 * Get the distance from the vector defined by (x, y, z).
@@ -358,9 +231,7 @@ public class Vector {
 	 * @param z
 	 *            The z-position of the other vector
 	 */
-	public double dist(double x, double y, double z) {
-		return Math.sqrt(sqrDist(x, y, z));
-	}
+	UNIT dist(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Get the dot product with the given vector.
@@ -368,9 +239,7 @@ public class Vector {
 	 * @param vec
 	 *            The other vector
 	 */
-	public double dot(Vector vec) {
-		return dot(vec.x, vec.y, vec.z);
-	}
+	UNIT dot(Vector<UNIT> vec);
 	
 	/**
 	 * Get the dot product with the vector defined by (x, y, z).
@@ -382,9 +251,7 @@ public class Vector {
 	 * @param z
 	 *            Z-coordinate of the other vector
 	 */
-	public double dot(double x, double y, double z) {
-		return this.x * x + this.y * y + this.z * z;
-	}
+	UNIT dot(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Returns the cross product of the given vector. This creates a new vector.
@@ -392,9 +259,7 @@ public class Vector {
 	 * @param vec
 	 *            The vector to cross with
 	 */
-	public Vector cross(Vector vec) {
-		return cross(vec.x, vec.y, vec.z);
-	}
+	Vector<UNIT> cross(Vector<UNIT> vec);
 	
 	/**
 	 * Returns the cross product with the vector defined by (x, y, z). This creates a new vector.
@@ -406,9 +271,7 @@ public class Vector {
 	 * @param z
 	 *            Z-coordinate of other vector
 	 */
-	public Vector cross(double x, double y, double z) {
-		return new Vector(this.y * z - this.z * y, this.z * x - this.x * z, this.x * y - this.y * x);
-	}
+	Vector<UNIT> cross(UNIT x, UNIT y, UNIT z);
 	
 	/**
 	 * Returns the angle between the other vector, in radians. (result is ranged 0-PI).
@@ -416,85 +279,6 @@ public class Vector {
 	 * @param vec
 	 *            Other vector
 	 */
-	public double angle(Vector vec) {
-		double dot = dot(vec);
-		return Math.acos(dot / (this.magnitude() * vec.magnitude()));
-	}
-	
-	/**
-	 * Converts this vector into a minecraft vector.
-	 */
-	public Vector toMinecraft() {
-		return new Vector(x, y, z);
-	}
-	
-	/**
-	 * Returns the euler angles from position 1 to position 2.
-	 * <p>
-	 * The returned vector has Y for yaw, and X for pitch. Measurements are in radians.
-	 * 
-	 * @param pos1
-	 *            Where we are
-	 * @param pos2
-	 *            Where to look at
-	 */
-	public static Vector getRotations(Vector pos1, Vector pos2) {
-		Vector diff = pos2.minus(pos1);
-		diff.normalize();
-		double x = diff.x;
-		double y = diff.y;
-		double z = diff.z;
-		double d0 = x;
-		double d1 = y;
-		double d2 = z;
-		double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
-		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
-		double rotX = -Math.atan2(d1, d3);
-		double rotZ = 0;
-		return new Vector(rotX, rotY, rotZ);
-	}
-	
-	public static Vector getEntityPos(Entity entity) {
-		Vector pos = new Vector(entity.posX, entity.posY, entity.posZ);
-		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) pos.setY(pos.y - 1.62);
-		return pos;
-	}
-	
-	public static Vector getEyePos(Entity entity) {
-		Vector pos = getEntityPos(entity);
-		pos.setY(pos.y + 1.62);
-		return pos;
-	}
-	
-	/**
-	 * Get the pitch to lob a projectile in radians. Example: pitch to target can be used in
-	 * {@link #fromYawPitch(double, double)}
-	 * 
-	 * @param v
-	 *            Force of the projectile, going FORWARDS
-	 * @param g
-	 *            Gravity constant
-	 * @param x
-	 *            Horizontal distance to target
-	 * @param y
-	 *            Vertical distance to target
-	 */
-	public static double getProjectileAngle(double v, double g, double x, double y) {
-		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
-	}
-	
-	/**
-	 * Create a unit vector from yaw and pitch. Parameters should be in radians.
-	 */
-	public static Vector fromYawPitch(double yaw, double pitch) {
-		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
-	}
-	
-	/**
-	 * Create a unit vector from the given euler angles. Measurements should be in radians.
-	 */
-	public static Vector fromDirection(Vector euler) {
-		return fromYawPitch(euler.y, euler.x);
-	}
+	UNIT angle(Vector<UNIT> vec);
 	
 }

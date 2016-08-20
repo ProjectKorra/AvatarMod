@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.common.util;
 
 import java.io.IOException;
 
+import com.crowsofwar.gorecore.util.VectorD;
+
 import net.minecraft.block.Block;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
@@ -29,8 +31,26 @@ public class AvatarDataSerializers {
 		
 		@Override
 		public DataParameter<Block> createKey(int id) {
-			// TODO Auto-generated method stub
-			return null;
+			return new DataParameter<>(id, this);
+		}
+	};
+	public static final DataSerializer<VectorD> SERIALIZER_VECTOR = new DataSerializer<VectorD>() {
+		
+		@Override
+		public void write(PacketBuffer buf, VectorD value) {
+			buf.writeDouble(value.x());
+			buf.writeDouble(value.y());
+			buf.writeDouble(value.z());
+		}
+		
+		@Override
+		public VectorD read(PacketBuffer buf) throws IOException {
+			return new VectorD(buf.readDouble(), buf.readDouble(), buf.readDouble());
+		}
+		
+		@Override
+		public DataParameter<VectorD> createKey(int id) {
+			return new DataParameter<>(id, this);
 		}
 	};
 	
