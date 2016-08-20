@@ -69,13 +69,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	public EntityFloatingBlock(World world) {
 		super(world);
 		setSize(0.95f, 0.95f);
-		velocity = Vec3d.createVectorHelper(0, 0, 0);
+		velocity = new Vec3d(0, 0, 0);
 		setGravityEnabled(false);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
 		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
-		this.internalPosition = Vec3d.createVectorHelper(0, 0, 0);
+		this.internalPosition = new Vec3d(0, 0, 0);
 		
 		this.enableItemDrops = true;
 		
@@ -223,7 +223,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	@Override
 	public void onUpdate() {
 		if (isGravityEnabled()) {
-			addVelocity(Vec3d.createVectorHelper(0, -9.81 / 20, 0));
+			addVelocity(new Vec3d(0, -9.81 / 20, 0));
 			Vec3d vel = getVelocity();
 			if (!canFall() && vel.yCoord < 0) {
 				vel.yCoord = 0;
@@ -284,8 +284,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		
 		if (isMovingToBlock()) {
 			AvBlockPos target = getMovingToBlock();
-			Vec3d targetVec = Vec3d.createVectorHelper(target.x + 0.5, target.y, target.z + 0.5);
-			Vec3d thisPos = Vec3d.createVectorHelper(posX, posY, posZ);
+			Vec3d targetVec = new Vec3d(target.x + 0.5, target.y, target.z + 0.5);
+			Vec3d thisPos = new Vec3d(posX, posY, posZ);
 			Vec3d force = VectorUtils.minus(targetVec, thisPos);
 			force.normalize();
 			VectorUtils.mult(force, 3);

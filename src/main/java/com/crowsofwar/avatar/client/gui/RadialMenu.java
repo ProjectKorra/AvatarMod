@@ -17,7 +17,7 @@ import com.crowsofwar.avatar.common.gui.IAvatarGui;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
+import com.crowsofwar.avatar.common.util.Raytrace.Result;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -128,7 +128,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 			
 			for (int i = 0; i < segments.length; i++) {
 				if (segments[i].isMouseHover(mouseX, mouseY)) {
-					RaytraceResult raytrace = controls[i].needsRaytrace()
+					Result raytrace = controls[i].needsRaytrace()
 							? Raytrace.getTargetBlock(mc.thePlayer, controls[i].getRaytraceDistance(), controls[i].isRaycastLiquids())
 							: null;
 					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], raytrace != null ? raytrace.getPos() : null,

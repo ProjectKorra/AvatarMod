@@ -1,5 +1,11 @@
 package com.crowsofwar.gorecore.util;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -420,6 +426,75 @@ public class Vector {
 	 */
 	public Vec3d toMinecraft() {
 		return new Vec3d(x, y, z);
+	}
+	
+	/**
+	 * Returns the euler angles from position 1 to position 2.
+	 * <p>
+	 * The returned vector has Y for yaw, and X for pitch. Measurements are in radians.
+	 * 
+	 * @param pos1
+	 *            Where we are
+	 * @param pos2
+	 *            Where to look at
+	 */
+	public static Vector getRotations(Vector pos1, Vector pos2) {
+		Vector diff = pos2.minus(pos1);
+		diff.normalize();
+		double x = diff.x;
+		double y = diff.y;
+		double z = diff.z;
+		double d0 = x;
+		double d1 = y;
+		double d2 = z;
+		double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
+		double rotX = -Math.atan2(d1, d3);
+		double rotZ = 0;
+		return new Vector(rotX, rotY, rotZ);
+	}
+	
+	public static Vector getEntityPos(Entity entity) {
+		Vector pos = new Vector(entity.posX, entity.posY, entity.posZ);
+		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) pos.setY(pos.y - 1.62);
+		return pos;
+	}
+	
+	public static Vector getEyePos(Entity entity) {
+		Vector pos = getEntityPos(entity);
+		pos.setY(pos.y + 1.62);
+		return pos;
+	}
+	
+	/**
+	 * Get the pitch to lob a projectile in radians. Example: pitch to target can be used in
+	 * {@link #fromYawPitch(double, double)}
+	 * 
+	 * @param v
+	 *            Force of the projectile, going FORWARDS
+	 * @param g
+	 *            Gravity constant
+	 * @param x
+	 *            Horizontal distance to target
+	 * @param y
+	 *            Vertical distance to target
+	 */
+	public static double getProjectileAngle(double v, double g, double x, double y) {
+		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
+	}
+	
+	/**
+	 * Create a unit vector from yaw and pitch. Parameters should be in radians.
+	 */
+	public static Vector fromYawPitch(double yaw, double pitch) {
+		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
+	}
+	
+	/**
+	 * Create a unit vector from the given euler angles. Measurements should be in radians.
+	 */
+	public static Vector fromDirection(Vector euler) {
+		return fromYawPitch(euler.y, euler.x);
 	}
 	
 }

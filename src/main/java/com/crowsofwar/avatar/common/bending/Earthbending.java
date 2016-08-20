@@ -104,7 +104,7 @@ public class Earthbending implements IBendingController {
 						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
 						
 						double dist = 2.5;
-						Vec3d force = Vec3d.createVectorHelper(0, Math.sqrt(19.62 * dist), 0);
+						Vec3d force = new Vec3d(0, Math.sqrt(19.62 * dist), 0);
 						floating.addVelocity(force);
 						floating.setGravityEnabled(true);
 						floating.setCanFall(false);
@@ -165,7 +165,7 @@ public class Earthbending implements IBendingController {
 					floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
 					floating.setMovingToBlock(new AvBlockPos(x, y, z));
 					floating.setGravityEnabled(false);
-					Vec3d force = VectorUtils.minus(Vec3d.createVectorHelper(x, y, z),
+					Vec3d force = VectorUtils.minus(new Vec3d(x, y, z),
 							VectorUtils.getEntityPos(floating));
 					force.normalize();
 					floating.addVelocity(force);

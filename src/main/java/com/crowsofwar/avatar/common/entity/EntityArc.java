@@ -34,7 +34,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			points[i] = createControlPoint(size);
 		}
 		
-		this.internalPos = Vec3d.createVectorHelper(0, 0, 0);
+		this.internalPos = new Vec3d(0, 0, 0);
 		this.velocity = new EntityPropertyVector(this, dataWatcher, DATAWATCHER_VELOCITY);
 		if (!worldObj.isRemote) {
 			setId(nextId++);

@@ -24,7 +24,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	public EntityFlame(World world) {
 		super(world);
 		setSize(0.25f, 0.25f);
-		internalVelocity = Vec3d.createVectorHelper(0, 0, 0);
+		internalVelocity = new Vec3d(0, 0, 0);
 	}
 	
 	public EntityFlame(World world, double posX, double posY, double posZ) {
@@ -34,7 +34,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	
 	public EntityFlame(World world, double posX, double posY, double posZ, double mx, double my, double mz) {
 		this(world, posX, posY, posZ);
-		setVelocity(Vec3d.createVectorHelper(mx, my, mz));
+		setVelocity(new Vec3d(mx, my, mz));
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
-		source = Vec3d.createVectorHelper(x, y, z);
+		source = new Vec3d(x, y, z);
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	
 	public void setDistanceTravelled() {
 		if (!worldObj.isRemote) {
-			float dist = (float) Vec3d.createVectorHelper(posX, posY, posZ).distanceTo(source);
+			float dist = (float) new Vec3d(posX, posY, posZ).distanceTo(source);
 			dataWatcher.updateObject(DATAWATCHER_DIST_TRAVELLED, dist);
 		}
 	}

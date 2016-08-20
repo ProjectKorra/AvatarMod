@@ -89,7 +89,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	public void onUpdate() {
 		super.onUpdate();
 		
-		setPosition(getPhysicsPosition().plus(getVelocity().times(0.05)));
+		setPosition(getVecPosition().plus(getVelocity().times(0.05)));
 		setVelocity(getVelocity().times(0.4));
 		
 		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
@@ -122,23 +122,23 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	public double getXPos() {
-		return getPhysicsPosition().x();
+		return getVecPosition().x();
 	}
 	
 	public double getYPos() {
-		return getPhysicsPosition().y();
+		return getVecPosition().y();
 	}
 	
 	public double getZPos() {
-		return getPhysicsPosition().z();
+		return getVecPosition().z();
 	}
 	
 	public double getDistance(EntityControlPoint point) {
-		return getPhysicsPosition().dist(point.getPhysicsPosition());
+		return getVecPosition().dist(point.getVecPosition());
 	}
 	
 	@Override
-	public Vector getPhysicsPosition() {
+	public Vector getVecPosition() {
 		internalPosition.setX(posX);
 		internalPosition.setY(posY);
 		internalPosition.setZ(posZ);

@@ -1,13 +1,12 @@
 package com.crowsofwar.avatar.client.render;
 
-import static com.crowsofwar.avatar.common.util.VectorUtils.*;
-
 import org.joml.Matrix4d;
 import org.joml.Vector4d;
 import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -58,10 +57,10 @@ public abstract class RenderArc extends Render {
 		double y = leader.getYPos() - renderPosY;
 		double z = leader.getZPos() - renderPosZ;
 		
-		Vec3d from = Vec3d(0, 0, 0);
-		Vec3d to = minus(point.getPosition(), leader.getPosition());
+		Vector from = new Vector();
+		Vector to = point.getVecPosition().minus(leader.getVecPosition());
 		
-		Vec3d diff = minus(to, from);
+		Vector diff = to.minus(from);
 		
 		double ySize = 1;
 		int textureRepeat = 2;
@@ -77,7 +76,7 @@ public abstract class RenderArc extends Render {
 		double sizeLeader = point.width / 2;
 		double sizePoint = leader.width / 2;
 		
-		Vec3d lookingEuler = getRotations(from, to);
+		Vector lookingEuler = Vector.getRotations(from, to);
 		// Offset for rotated positive X
 		Vec3d offX = times(fromYawPitch(lookingEuler.yCoord + Math.toRadians(90), lookingEuler.xCoord),
 				sizeLeader);
@@ -176,14 +175,12 @@ public abstract class RenderArc extends Render {
 	
 	private void drawQuad(int normal, Vector4d pos1, Vector4d pos2, Vector4d pos3, Vector4d pos4, double u1,
 			double v1, double u2, double v2) {
-		drawQuad(normal, Vec3d.createVectorHelper(pos1.x, pos1.y, pos1.z),
-				Vec3d.createVectorHelper(pos2.x, pos2.y, pos2.z),
-				Vec3d.createVectorHelper(pos3.x, pos3.y, pos3.z),
-				Vec3d.createVectorHelper(pos4.x, pos4.y, pos4.z), u1, v1, u2, v2);
+		drawQuad(normal, new Vec3d(pos1.x, pos1.y, pos1.z), new Vec3d(pos2.x, pos2.y, pos2.z),
+				new Vec3d(pos3.x, pos3.y, pos3.z), new Vec3d(pos4.x, pos4.y, pos4.z), u1, v1, u2, v2);
 	}
 	
 	private Vec3d Vec3d(double x, double y, double z) {
-		return Vec3d.createVectorHelper(x, y, z);
+		return new Vec3d(x, y, z);
 	}
 	
 	private Vec3d Vec3d(Vec3d vec, double x, double y, double z) {

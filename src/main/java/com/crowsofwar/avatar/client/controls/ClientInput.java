@@ -22,7 +22,7 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
+import com.crowsofwar.avatar.common.util.Raytrace.Result;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
@@ -165,7 +165,7 @@ public class ClientInput implements IControlsHandler {
 				for (AvatarControl control : pressed) {
 					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
 					if (ability != AvatarAbility.NONE) {
-						RaytraceResult raytrace = ability.needsRaytrace()
+						Result raytrace = ability.needsRaytrace()
 								? Raytrace.getTargetBlock(player, ability.getRaytraceDistance(), ability.isRaycastLiquids()) : null;
 						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace != null ? raytrace.getPos() : null,
 								raytrace != null ? raytrace.getDirection() : null));

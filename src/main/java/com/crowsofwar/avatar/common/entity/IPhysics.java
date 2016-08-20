@@ -11,7 +11,7 @@ public interface IPhysics {
 	/**
 	 * Get the position in world coordinates.
 	 */
-	Vector getPhysicsPosition();
+	Vector getVecPosition();
 	
 	/**
 	 * Get the velocity in m/s.

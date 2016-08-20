@@ -1,13 +1,13 @@
 package com.crowsofwar.avatar.common.util;
 
 import static java.lang.Math.toRadians;
-import static net.minecraft.util.EnumFacing.*;
 
 import com.crowsofwar.avatar.AvatarMod;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
 public class Raytrace {
@@ -23,7 +23,7 @@ public class Raytrace {
 	 * @return The position of the block that the player is looking at. May differ between server
 	 *         and client.
 	 */
-	public static RaytraceResult getTargetBlock(EntityPlayer player, double range) {
+	public static Result getTargetBlock(EntityPlayer player, double range) {
 		
 		return getTargetBlock(player, range, false);
 		
@@ -42,20 +42,20 @@ public class Raytrace {
 	 * @return The position of the block that the player is looking at. May differ between server
 	 *         and client.
 	 */
-	public static RaytraceResult getTargetBlock(EntityPlayer player, double range, boolean raycastLiquids) {
+	public static Result getTargetBlock(EntityPlayer player, double range, boolean raycastLiquids) {
 		
 		double yaw = toRadians(player.rotationYaw);
 		double pitch = toRadians(player.rotationPitch);
 		
 		if (range == -1) range = getReachDistance(player);
 		
-		Vec3d Vec3d = Vec3d.createVectorHelper(player.posX, player.posY, player.posZ);
+		Vec3d Vec3d = new Vec3d(player.posX, player.posY, player.posZ);
 		Vec3d Vec3d1 = player.getLookVec();
 		Vec3d Vec3d2 = Vec3d.addVector(Vec3d1.xCoord * range, Vec3d1.yCoord * range, Vec3d1.zCoord * range);
-		MovingObjectPosition mop = player.worldObj.func_147447_a(Vec3d, Vec3d2, raycastLiquids, false, true);
+		RayTraceResult res = player.worldObj.rayTraceBlocks(Vec3d, Vec3d2, raycastLiquids, false, true);
 		
-		if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
-			return new RaytraceResult(new AvBlockPos(mop.blockX, mop.blockY, mop.blockZ), mop.sideHit);
+		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
+			return new Result(new VectorI(res.getBlockPos()), res.sideHit);
 		} else {
 			return null;
 		}
@@ -69,46 +69,29 @@ public class Raytrace {
 	 */
 	public static double getReachDistance(EntityPlayer player) {
 		if (player instanceof EntityPlayerMP) {
-			return ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
+			// TODO [1.10] how does reach distance work?
+			return 5;
 		} else {
 			return AvatarMod.proxy.getPlayerReach();
 		}
 	}
 	
-	public static class RaytraceResult {
+	public static class Result {
 		
-		private final AvBlockPos pos;
-		private final int side;
+		private final VectorI pos;
+		private final EnumFacing side;
 		
-		public RaytraceResult(AvBlockPos pos, int side) {
+		public Result(VectorI pos, EnumFacing side) {
 			this.pos = pos;
 			this.side = side;
 		}
 		
-		public AvBlockPos getPos() {
+		public VectorI getPos() {
 			return pos;
 		}
 		
-		public int getSide() {
+		public EnumFacing getSide() {
 			return side;
-		}
-		
-		public EnumFacing getDirection() {
-			switch (side) {
-			case 0:
-				return DOWN;
-			case 1:
-				return UP;
-			case 2:
-				return NORTH;
-			case 3:
-				return SOUTH;
-			case 4:
-				return WEST;
-			case 5:
-				return EAST;
-			}
-			return null;
 		}
 		
 	}

@@ -31,7 +31,7 @@ public class RenderFireArc extends RenderArc {
 		// Vec3d b = first.getPosition();
 		// double x = Math.random(); // 0-1
 		// Vec3d spawnAt = VectorUtils.plus(VectorUtils.times(m, x), b);
-		// Vec3d velocity = Vec3d.createVectorHelper(0, 0, 0);
+		// Vec3d velocity = new Vec3d(0, 0, 0);
 		//
 		// AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord,
 		// spawnAt.zCoord, velocity.xCoord / 20, 0.05,

@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class EntityFireArc extends EntityArc {
 	
-	private static final Vec3d GRAVITY = Vec3d.createVectorHelper(0, -9.81 / 60, 0);
+	private static final Vec3d GRAVITY = new Vec3d(0, -9.81 / 60, 0);
 	
 	public EntityFireArc(World world) {
 		super(world);

@@ -2,6 +2,12 @@ package com.crowsofwar.avatar.common.util;
 
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Recommended to use minecraft Vec3i instead.
+ * 
+ * @author CrowsOfWar
+ */
+@Deprecated
 public class AvBlockPos {
 	
 	public int x, y, z;

@@ -29,7 +29,7 @@ public class RenderWaterArc extends RenderArc {
 		// Parametric equation
 		
 		// TODO [1.10] Find out how to spawn particles, and find a good vector class
-		// Vec3d from = Vec3d.createVectorHelper(0, 0, 0);
+		// Vec3d from = new Vec3d(0, 0, 0);
 		// Vec3d to = minus(second.getPosition(), first.getPosition());
 		// Vec3d diff = minus(to, from);
 		// Vec3d offset = first.getPosition();
