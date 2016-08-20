@@ -49,10 +49,11 @@ public class Raytrace {
 		
 		if (range == -1) range = getReachDistance(player);
 		
-		Vec3d Vec3d = new Vec3d(player.posX, player.posY, player.posZ);
-		Vec3d Vec3d1 = player.getLookVec();
-		Vec3d Vec3d2 = Vec3d.addVector(Vec3d1.xCoord * range, Vec3d1.yCoord * range, Vec3d1.zCoord * range);
-		RayTraceResult res = player.worldObj.rayTraceBlocks(Vec3d, Vec3d2, raycastLiquids, false, true);
+		Vec3d Vector = new Vec3d(player.posX, player.posY, player.posZ);
+		Vec3d Vector1 = player.getLookVec();
+		Vec3d Vector2 = Vector.addVector(Vector1.xCoord * range, Vector1.yCoord * range,
+				Vector1.zCoord * range);
+		RayTraceResult res = player.worldObj.rayTraceBlocks(Vector, Vector2, raycastLiquids, false, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
 			return new Result(new VectorI(res.getBlockPos()), res.sideHit);

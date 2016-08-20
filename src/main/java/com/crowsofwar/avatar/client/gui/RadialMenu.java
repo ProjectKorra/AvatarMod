@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GlStateManager;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarAbility;
@@ -150,46 +150,46 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	private void drawRadialSegment(RadialSegment segment, boolean hover) {
 		
 		// Draw background & edge
-		GL11.glPushMatrix();
-		GL11.glTranslatef(width / 2f, height / 2f, 0); // Re-center origin
-		GL11.glScalef(menuScale, menuScale, menuScale); // Scale all following arguments
-		GL11.glRotatef(segment.getAngle(), 0, 0, 1); // All transform operations and the image are
+		GlStateManager.glPushMatrix();
+		GlStateManager.glTranslatef(width / 2f, height / 2f, 0); // Re-center origin
+		GlStateManager.glScalef(menuScale, menuScale, menuScale); // Scale all following arguments
+		GlStateManager.glRotatef(segment.getAngle(), 0, 0, 1); // All transform operations and the image are
 														// rotated
-		GL11.glTranslatef(-segmentX, -segmentY, 0); // Offset the image to the correct center point
+		GlStateManager.glTranslatef(-segmentX, -segmentY, 0); // Offset the image to the correct center point
 		// Draw background
-		GL11.glColor3f(theme.getBackground().getRed(hover) / 255f, theme.getBackground().getGreen(hover) / 255f,
+		GlStateManager.glColor3f(theme.getBackground().getRed(hover) / 255f, theme.getBackground().getGreen(hover) / 255f,
 				theme.getBackground().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(radialMenu);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		// Draw edge
-		GL11.glColor3f(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f, theme.getEdge().getBlue(hover) / 255f);
+		GlStateManager.glColor3f(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f, theme.getEdge().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(this.edge);
-		GL11.glTranslatef(0, 0, 1);
+		GlStateManager.glTranslatef(0, 0, 1);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-		GL11.glPopMatrix();
+		GlStateManager.glPopMatrix();
 		
 		// Draw icon
-		GL11.glPushMatrix();
+		GlStateManager.glPushMatrix();
 		float iconScale = .8f;
 		float angle = segment.getAngle() + 45f;
 		angle %= 360;
-		GL11.glTranslatef(width / 2f, height / 2f, 0); // Re-center origin
-		GL11.glRotatef(angle, 0, 0, 1); // Rotation for next translation
-		GL11.glTranslatef(-59, -27, 0); // Translate into correct position
-		GL11.glRotatef(-angle, 0, 0, 1); // Icon is now at desired position, rotate the image back
+		GlStateManager.glTranslatef(width / 2f, height / 2f, 0); // Re-center origin
+		GlStateManager.glRotatef(angle, 0, 0, 1); // Rotation for next translation
+		GlStateManager.glTranslatef(-59, -27, 0); // Translate into correct position
+		GlStateManager.glRotatef(-angle, 0, 0, 1); // Icon is now at desired position, rotate the image back
 											// to regular
 		
 		// Color to icon RGB
-		GL11.glColor3f(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f, theme.getIcon().getBlue(hover) / 255f);
+		GlStateManager.glColor3f(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f, theme.getIcon().getBlue(hover) / 255f);
 		
-		GL11.glTranslatef(0, 0, 2); // Ensure icon is not overlapped
-		GL11.glScalef(iconScale, iconScale, iconScale); // Scale the icon's recentering and actual
+		GlStateManager.glTranslatef(0, 0, 2); // Ensure icon is not overlapped
+		GlStateManager.glScalef(iconScale, iconScale, iconScale); // Scale the icon's recentering and actual
 														// image
-		GL11.glTranslatef(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
+		GlStateManager.glTranslatef(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
 		mc.getTextureManager().bindTexture(icons);
 		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
 		
-		GL11.glPopMatrix();
+		GlStateManager.glPopMatrix();
 	}
 	
 	private int getMouseX() {

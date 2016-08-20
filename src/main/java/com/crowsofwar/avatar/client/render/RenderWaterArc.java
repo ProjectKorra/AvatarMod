@@ -29,14 +29,14 @@ public class RenderWaterArc extends RenderArc {
 		// Parametric equation
 		
 		// TODO [1.10] Find out how to spawn particles, and find a good vector class
-		// Vec3d from = new Vec3d(0, 0, 0);
-		// Vec3d to = minus(second.getPosition(), first.getPosition());
-		// Vec3d diff = minus(to, from);
-		// Vec3d offset = first.getPosition();
-		// Vec3d direction = copy(diff);
+		// Vector from = new Vector(0, 0, 0);
+		// Vector to = minus(second.getPosition(), first.getPosition());
+		// Vector diff = minus(to, from);
+		// Vector offset = first.getPosition();
+		// Vector direction = copy(diff);
 		// direction.normalize();
-		// Vec3d spawnAt = plus(offset, times(direction, Math.random()));
-		// Vec3d velocity = first.getVelocity();
+		// Vector spawnAt = plus(offset, times(direction, Math.random()));
+		// Vector velocity = first.getVelocity();
 		// arc.worldObj.spawnParticle("splash", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord,
 		// velocity.xCoord, velocity.yCoord,
 		// velocity.zCoord);

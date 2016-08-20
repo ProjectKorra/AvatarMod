@@ -26,12 +26,12 @@ public class RenderFireArc extends RenderArc {
 		// Parametric equation
 		// For parameters, they will be same as linear equation: y = mx+b
 		
-		// TODO [1.10] Find a good vector class to use- Vec3d no longer exists
-		// Vec3d m = VectorUtils.minus(second.getPosition(), first.getPosition());
-		// Vec3d b = first.getPosition();
+		// TODO [1.10] Find a good vector class to use- Vector no longer exists
+		// Vector m = VectorUtils.minus(second.getPosition(), first.getPosition());
+		// Vector b = first.getPosition();
 		// double x = Math.random(); // 0-1
-		// Vec3d spawnAt = VectorUtils.plus(VectorUtils.times(m, x), b);
-		// Vec3d velocity = new Vec3d(0, 0, 0);
+		// Vector spawnAt = VectorUtils.plus(VectorUtils.times(m, x), b);
+		// Vector velocity = new Vector(0, 0, 0);
 		//
 		// AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord,
 		// spawnAt.zCoord, velocity.xCoord / 20, 0.05,

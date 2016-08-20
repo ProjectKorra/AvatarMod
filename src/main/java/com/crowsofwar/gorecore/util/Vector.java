@@ -424,8 +424,8 @@ public class Vector {
 	/**
 	 * Converts this vector into a minecraft vector.
 	 */
-	public Vec3d toMinecraft() {
-		return new Vec3d(x, y, z);
+	public Vector toMinecraft() {
+		return new Vector(x, y, z);
 	}
 	
 	/**

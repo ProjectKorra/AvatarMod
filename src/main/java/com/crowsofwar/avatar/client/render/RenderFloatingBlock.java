@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GlStateManager;
 
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
@@ -45,10 +45,10 @@ public class RenderFloatingBlock extends Render {
 		// entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) - RenderManager.renderPosZ;
 		
 		if (block != null && block != world.getBlockState(new BlockPos(i, j, k)).getBlock()) {
-			GL11.glPushMatrix();
-			GL11.glTranslatef((float) x, (float) y + 0.5f, (float) z);
+			GlStateManager.glPushMatrix();
+			GlStateManager.glTranslatef((float) x, (float) y + 0.5f, (float) z);
 			this.bindEntityTexture(entity);
-			GL11.glDisable(GL11.GL_LIGHTING);
+			GlStateManager.glDisable(GlStateManager.GL_LIGHTING);
 			Tessellator tessellator;
 			
 			// if (block instanceof BlockAnvil)
@@ -80,8 +80,8 @@ public class RenderFloatingBlock extends Render {
 			this.field_147920_a.renderBlockSandFalling(block, world, i, j, k, entity.getMetadata());
 			// }
 			
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glPopMatrix();
+			GlStateManager.glEnable(GlStateManager.GL_LIGHTING);
+			GlStateManager.glPopMatrix();
 		}
 	}
 	

@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vector;
 
-public class EntityPropertyVector extends EntityPropertyDatawatcher<Vec3d> {
+public class EntityPropertyVector extends EntityPropertyDatawatcher<Vector> {
 	
 	public EntityPropertyVector(Entity entity, DataWatcher dataWatcher, int dataWatcherIndex) {
 		super(entity, dataWatcher, dataWatcherIndex);
@@ -17,21 +17,21 @@ public class EntityPropertyVector extends EntityPropertyDatawatcher<Vec3d> {
 	}
 	
 	@Override
-	protected void sendToDataWatcher(Vec3d value) {
+	protected void sendToDataWatcher(Vector value) {
 		dataWatcher.updateObject(index, (float) value.xCoord);
 		dataWatcher.updateObject(index + 1, (float) value.yCoord);
 		dataWatcher.updateObject(index + 2, (float) value.zCoord);
 	}
 	
 	@Override
-	protected Vec3d retrieveFromDataWatcher() {
-		return new Vec3d(dataWatcher.getWatchableObjectFloat(index), dataWatcher.getWatchableObjectFloat(index + 1),
+	protected Vector retrieveFromDataWatcher() {
+		return new Vector(dataWatcher.getWatchableObjectFloat(index), dataWatcher.getWatchableObjectFloat(index + 1),
 				dataWatcher.getWatchableObjectFloat(index + 2));
 	}
 	
 	@Override
-	protected Vec3d createValue() {
-		return new Vec3d(0, 0, 0);
+	protected Vector createValue() {
+		return new Vector(0, 0, 0);
 	}
 	
 }

@@ -17,7 +17,7 @@ import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vector;
 import net.minecraft.world.World;
 
 public class Airbending implements IBendingController {
@@ -71,9 +71,9 @@ public class Airbending implements IBendingController {
 		
 		if (ability == ACTION_AIR_GUST) {
 			
-			Vec3d look = fromYawPitch(Math.toRadians(player.rotationYaw),
+			Vector look = fromYawPitch(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
-			Vec3d pos = getEyePos(player);
+			Vector pos = getEyePos(player);
 			
 			EntityAirGust gust = new EntityAirGust(world);
 			gust.setVelocity(times(look, 10));

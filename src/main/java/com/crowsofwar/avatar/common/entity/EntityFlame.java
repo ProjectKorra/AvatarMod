@@ -5,7 +5,7 @@ import com.crowsofwar.avatar.common.util.VectorUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vector;
 import net.minecraft.world.World;
 
 public class EntityFlame extends Entity implements IPhysics {
@@ -17,14 +17,14 @@ public class EntityFlame extends Entity implements IPhysics {
 	/**
 	 * Don't access this- used internally by {@link #getVelocity()}
 	 */
-	private Vec3d internalVelocity;
+	private Vector internalVelocity;
 	
-	private Vec3d source;
+	private Vector source;
 	
 	public EntityFlame(World world) {
 		super(world);
 		setSize(0.25f, 0.25f);
-		internalVelocity = new Vec3d(0, 0, 0);
+		internalVelocity = new Vector(0, 0, 0);
 	}
 	
 	public EntityFlame(World world, double posX, double posY, double posZ) {
@@ -34,7 +34,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	
 	public EntityFlame(World world, double posX, double posY, double posZ, double mx, double my, double mz) {
 		this(world, posX, posY, posZ);
-		setVelocity(new Vec3d(mx, my, mz));
+		setVelocity(new Vector(mx, my, mz));
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		Vec3d velocity = getVelocity();
+		Vector velocity = getVelocity();
 		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
 		float size = (float) (Math.pow(getDistanceTravelled() / MAX_DIST_TRAVELLED, 1.7) * 1.5);
 		setSize(size, size);
@@ -76,7 +76,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
-		source = new Vec3d(x, y, z);
+		source = new Vector(x, y, z);
 	}
 	
 	/**
@@ -88,13 +88,13 @@ public class EntityFlame extends Entity implements IPhysics {
 	
 	public void setDistanceTravelled() {
 		if (!worldObj.isRemote) {
-			float dist = (float) new Vec3d(posX, posY, posZ).distanceTo(source);
+			float dist = (float) new Vector(posX, posY, posZ).distanceTo(source);
 			dataWatcher.updateObject(DATAWATCHER_DIST_TRAVELLED, dist);
 		}
 	}
 	
 	@Override
-	public Vec3d getVelocity() {
+	public Vector getVelocity() {
 		internalVelocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
 		internalVelocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELY);
 		internalVelocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELZ);
@@ -102,12 +102,12 @@ public class EntityFlame extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public Vec3d getPosition() {
+	public Vector getPosition() {
 		return VectorUtils.getEntityPos(this);
 	}
 	
 	@Override
-	public void setVelocity(Vec3d vel) {
+	public void setVelocity(Vector vel) {
 		if (!worldObj.isRemote) {
 			dataWatcher.updateObject(DATAWATCHER_VELX, (float) vel.xCoord);
 			dataWatcher.updateObject(DATAWATCHER_VELY, (float) vel.yCoord);
@@ -116,7 +116,7 @@ public class EntityFlame extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public void addVelocity(Vec3d vel) {
+	public void addVelocity(Vector vel) {
 		setVelocity(VectorUtils.plus(getVelocity(), vel));
 	}
 	

@@ -30,7 +30,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vector;
 import net.minecraft.world.World;
 
 public class Earthbending implements IBendingController {
@@ -104,7 +104,7 @@ public class Earthbending implements IBendingController {
 						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
 						
 						double dist = 2.5;
-						Vec3d force = new Vec3d(0, Math.sqrt(19.62 * dist), 0);
+						Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
 						floating.addVelocity(force);
 						floating.setGravityEnabled(true);
 						floating.setCanFall(false);
@@ -139,7 +139,7 @@ public class Earthbending implements IBendingController {
 				float pitch = (float) Math.toRadians(player.rotationPitch);
 				
 				// Calculate force and everything
-				Vec3d lookDir = VectorUtils.fromYawPitch(yaw, pitch);
+				Vector lookDir = VectorUtils.fromYawPitch(yaw, pitch);
 				floating.addVelocity(times(lookDir, 20));
 				
 				floating.drop();
@@ -165,7 +165,7 @@ public class Earthbending implements IBendingController {
 					floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
 					floating.setMovingToBlock(new AvBlockPos(x, y, z));
 					floating.setGravityEnabled(false);
-					Vec3d force = VectorUtils.minus(new Vec3d(x, y, z),
+					Vector force = VectorUtils.minus(new Vector(x, y, z),
 							VectorUtils.getEntityPos(floating));
 					force.normalize();
 					floating.addVelocity(force);
@@ -198,10 +198,10 @@ public class Earthbending implements IBendingController {
 				
 				double yaw = Math.toRadians(player.rotationYaw);
 				double pitch = Math.toRadians(player.rotationPitch);
-				Vec3d forward = VectorUtils.fromYawPitch(yaw, pitch);
-				Vec3d eye = VectorUtils.getEyePos(player);
-				Vec3d target = VectorUtils.plus(VectorUtils.times(forward, 2), eye);
-				Vec3d motion = VectorUtils.minus(target, VectorUtils.getEntityPos(floating));
+				Vector forward = VectorUtils.fromYawPitch(yaw, pitch);
+				Vector eye = VectorUtils.getEyePos(player);
+				Vector target = VectorUtils.plus(VectorUtils.times(forward, 2), eye);
+				Vector motion = VectorUtils.minus(target, VectorUtils.getEntityPos(floating));
 				VectorUtils.mult(motion, 5);
 				floating.setVelocity(motion);
 				

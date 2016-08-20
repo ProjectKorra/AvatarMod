@@ -1,6 +1,6 @@
 // package com.crowsofwar.avatar.client.particles;
 //
-// import org.lwjgl.opengl.GL11;
+// import org.lwjgl.opengl.GlStateManager;
 //
 // import net.minecraft.client.Minecraft;
 // import net.minecraft.client.renderer.Tessellator;
@@ -43,7 +43,7 @@
 // float p_70539_5_, float p_70539_6_,
 // float p_70539_7_) {
 // t.draw();
-// if (additiveBlending) GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+// if (additiveBlending) GlStateManager.glBlendFunc(GlStateManager.GL_SRC_ALPHA, GlStateManager.GL_ONE);
 // Minecraft.getMinecraft().renderEngine.bindTexture(getTexture());
 // t.setBrightness(200);
 // t.startDrawingQuads();
@@ -52,7 +52,7 @@
 // super.renderParticle(t, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
 // t.draw();
 // Minecraft.getMinecraft().renderEngine.bindTexture(VANILLA_PARTICLES);
-// if (additiveBlending) GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+// if (additiveBlending) GlStateManager.glBlendFunc(GlStateManager.GL_SRC_ALPHA, GlStateManager.GL_ONE_MINUS_SRC_ALPHA);
 // t.startDrawingQuads();
 // }
 //

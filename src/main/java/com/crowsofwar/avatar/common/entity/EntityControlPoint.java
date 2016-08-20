@@ -10,7 +10,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -117,7 +116,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		posZ += z;
 	}
 	
-	public void move(Vec3d offset) {
+	public void move(Vector offset) {
 		move(offset.xCoord, offset.yCoord, offset.zCoord);
 	}
 	
