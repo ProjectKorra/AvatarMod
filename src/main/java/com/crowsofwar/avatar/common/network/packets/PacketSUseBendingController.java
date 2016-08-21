@@ -1,14 +1,11 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class PacketSUseBendingController implements IAvatarPacket<PacketSUseBendingController> {
+public class PacketSUseBendingController extends AvatarPacket<PacketSUseBendingController> {
 	
 	private int id;
 	
@@ -29,17 +26,17 @@ public class PacketSUseBendingController implements IAvatarPacket<PacketSUseBend
 	}
 	
 	@Override
-	public IMessage onMessage(PacketSUseBendingController message, MessageContext ctx) {
-		return PacketRedirector.redirectMessage(message, ctx);
-	}
-	
-	@Override
 	public Side getRecievedSide() {
 		return Side.SERVER;
 	}
 	
 	public int getBendingControllerId() {
 		return id;
+	}
+	
+	@Override
+	protected AvatarPacket.Handler<PacketSUseBendingController> getPacketHandler() {
+		return PacketRedirector::redirectMessage;
 	}
 	
 }

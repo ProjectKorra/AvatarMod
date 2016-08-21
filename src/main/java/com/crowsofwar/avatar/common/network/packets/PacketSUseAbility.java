@@ -2,14 +2,11 @@ package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -19,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * @see AvatarControl
  *
  */
-public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
+public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
 	private AvatarAbility ability;
 	private VectorI target;
@@ -52,11 +49,6 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	}
 	
 	@Override
-	public IMessage onMessage(PacketSUseAbility message, MessageContext ctx) {
-		return PacketRedirector.redirectMessage(message, ctx);
-	}
-	
-	@Override
 	public Side getRecievedSide() {
 		return Side.SERVER;
 	}
@@ -71,6 +63,11 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	
 	public EnumFacing getSideHit() {
 		return side;
+	}
+	
+	@Override
+	protected AvatarPacket.Handler<PacketSUseAbility> getPacketHandler() {
+		return PacketRedirector::redirectMessage;
 	}
 	
 }

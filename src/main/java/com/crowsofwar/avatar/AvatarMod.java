@@ -10,7 +10,7 @@ import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.network.IAvatarPacket;
+import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -86,7 +86,7 @@ public class AvatarMod {
 		e.registerServerCommand(new AvatarCommand());
 	}
 	
-	private <REQ extends IAvatarPacket<REQ>> void registerPacket(Class<REQ> packet, Side side) {
+	private <MSG extends AvatarPacket<MSG>> void registerPacket(Class<MSG> packet, Side side) {
 		network.registerMessage(packet, packet, nextMessageID++, side);
 	}
 	

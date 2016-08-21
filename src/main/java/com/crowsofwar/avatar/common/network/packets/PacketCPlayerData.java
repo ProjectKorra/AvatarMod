@@ -5,20 +5,18 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Sent from server to client to notify the client of a player's current bending controller.
  *
+ * @author CrowsOfWar
  */
-public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
+public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	private UUID player;
 	private int[] allControllers;
@@ -70,11 +68,6 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 	}
 	
 	@Override
-	public IMessage onMessage(PacketCPlayerData message, MessageContext ctx) {
-		return PacketRedirector.redirectMessage(message, ctx);
-	}
-	
-	@Override
 	public Side getRecievedSide() {
 		return Side.CLIENT;
 	}
@@ -100,6 +93,13 @@ public class PacketCPlayerData implements IAvatarPacket<PacketCPlayerData> {
 	
 	public int getIndex() {
 		return buffer.readerIndex();
+	}
+	
+	@Override
+	protected AvatarPacket.Handler<PacketCPlayerData> getPacketHandler() {
+		return (message, context) -> {
+			PacketRedirector.redirectMessage(message, context);
+		};
 	}
 	
 }

@@ -15,14 +15,13 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IMessageHandler<MSG, IMessage> {
 	
-	private final Handler<MSG> handler;
-	
-	public AvatarPacket(Handler<MSG> handler) {
-		this.handler = handler;
-	}
+	public AvatarPacket() {}
 	
 	@Override
 	public final IMessage onMessage(MSG message, MessageContext ctx) {
+		
+		Handler<MSG> handler = getPacketHandler();
+		
 		IThreadListener mainThread = getRecievedSide().isServer()
 				? ctx.getServerHandler().playerEntity.getServerWorld()
 				: AvatarMod.proxy.getClientThreadListener();
@@ -41,7 +40,16 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 	protected abstract Side getRecievedSide();
 	
 	/**
+	 * Get a packet handler which contains the logic for when this packet is received.
+	 */
+	protected abstract Handler<MSG> getPacketHandler();
+	
+	/**
 	 * An interface to handle the packet being received.
+	 * <p>
+	 * Method must be implemented: {@link #onMessageRecieved(MSG, MessageContext)}.
+	 * <p>
+	 * Optional method {@link #getResponse(MSG)} allows you to send a follow-up apcket.
 	 * 
 	 * @param <MSG>
 	 *            The type of the message to receive

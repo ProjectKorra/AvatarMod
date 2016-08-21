@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 
 public class AvatarServerProxy implements AvatarCommonProxy {
@@ -46,6 +47,11 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	
 	@Override
 	public PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher() {
+		return null;
+	}
+	
+	@Override
+	public IThreadListener getClientThreadListener() {
 		return null;
 	}
 	
