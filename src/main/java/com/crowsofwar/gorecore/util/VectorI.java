@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * A mutable 3-dimensional integer vector.
  * <p>
- * For precise measurements, please use {@link VectorD}.
+ * For precise measurements, please use {@link Vector}.
  * 
  * @author CrowsOfWar
  */

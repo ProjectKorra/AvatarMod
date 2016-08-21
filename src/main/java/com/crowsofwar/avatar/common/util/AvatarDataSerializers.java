@@ -2,7 +2,7 @@ package com.crowsofwar.avatar.common.util;
 
 import java.io.IOException;
 
-import com.crowsofwar.gorecore.util.VectorD;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.network.PacketBuffer;
@@ -21,12 +21,12 @@ public class AvatarDataSerializers {
 		@Override
 		public void write(PacketBuffer buf, Block value) {
 			// TODO Find out if DataSerializer<Block> actually works...
-			buf.writeString(value.getUnlocalizedName());
+			buf.writeInt(Block.getIdFromBlock(value));
 		}
 		
 		@Override
 		public Block read(PacketBuffer buf) throws IOException {
-			return Block.getBlockFromName(buf.readStringFromBuffer(20));
+			return Block.getBlockById(buf.readInt());
 		}
 		
 		@Override
@@ -34,22 +34,22 @@ public class AvatarDataSerializers {
 			return new DataParameter<>(id, this);
 		}
 	};
-	public static final DataSerializer<VectorD> SERIALIZER_VECTOR = new DataSerializer<VectorD>() {
+	public static final DataSerializer<Vector> SERIALIZER_VECTOR = new DataSerializer<Vector>() {
 		
 		@Override
-		public void write(PacketBuffer buf, VectorD value) {
+		public void write(PacketBuffer buf, Vector value) {
 			buf.writeDouble(value.x());
 			buf.writeDouble(value.y());
 			buf.writeDouble(value.z());
 		}
 		
 		@Override
-		public VectorD read(PacketBuffer buf) throws IOException {
-			return new VectorD(buf.readDouble(), buf.readDouble(), buf.readDouble());
+		public Vector read(PacketBuffer buf) throws IOException {
+			return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
 		}
 		
 		@Override
-		public DataParameter<VectorD> createKey(int id) {
+		public DataParameter<Vector> createKey(int id) {
 			return new DataParameter<>(id, this);
 		}
 	};

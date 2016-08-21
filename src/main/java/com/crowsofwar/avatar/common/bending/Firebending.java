@@ -79,8 +79,8 @@ public class Firebending implements IBendingController {
 			//
 			// world.spawnEntityInWorld(flame);
 			
-			VectorD look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-			VectorD lookPos = plus(getEntityPos(player), times(look, 3));
+			Vector look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+			Vector lookPos = plus(getEntityPos(player), times(look, 3));
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.xCoord, lookPos.yCoord, lookPos.zCoord);
 			
@@ -95,7 +95,7 @@ public class Firebending implements IBendingController {
 			
 			EntityFireArc fire = fs.getFireArc();
 			if (fire != null) {
-				VectorD look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vector look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 				fire.addVelocity(times(look, 15));
 				fire.setGravityEnabled(true);
 				fs.setNoFireArc();
@@ -120,9 +120,9 @@ public class Firebending implements IBendingController {
 		if (fs.isManipulatingFire()) {
 			EntityFireArc fire = fs.getFireArc();
 			if (fire != null) {
-				VectorD look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-				VectorD lookPos = plus(getEyePos(player), times(look, 3));
-				VectorD motion = minus(lookPos, getEntityPos(fire));
+				Vector look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vector lookPos = plus(getEyePos(player), times(look, 3));
+				Vector motion = minus(lookPos, getEntityPos(fire));
 				motion.normalize();
 				mult(motion, .05 * 3);
 				fire.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);

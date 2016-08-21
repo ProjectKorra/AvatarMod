@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
-import com.crowsofwar.gorecore.util.VectorD;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 
@@ -9,18 +9,18 @@ import net.minecraft.entity.Entity;
  * motionX, motionY, and motionZ fields. All methods for velocity are in m/s.
  *
  */
-public class EntityPropertyMotion implements IEntityProperty<VectorD> {
+public class EntityPropertyMotion implements IEntityProperty<Vector> {
 	
-	private final VectorD internalVelocity;
+	private final Vector internalVelocity;
 	private final Entity entity;
 	
 	public EntityPropertyMotion(Entity entity) {
-		this.internalVelocity = new VectorD(0, 0, 0);
+		this.internalVelocity = new Vector(0, 0, 0);
 		this.entity = entity;
 	}
 	
 	@Override
-	public VectorD getValue() {
+	public Vector getValue() {
 		internalVelocity.setX(entity.motionX * 20);
 		internalVelocity.setY(entity.motionY * 20);
 		internalVelocity.setZ(entity.motionZ * 20);
@@ -28,7 +28,7 @@ public class EntityPropertyMotion implements IEntityProperty<VectorD> {
 	}
 	
 	@Override
-	public void setValue(VectorD value) {
+	public void setValue(Vector value) {
 		entity.motionX = value.x() / 20;
 		entity.motionY = value.y() / 20;
 		entity.motionZ = value.z() / 20;

@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
-import com.crowsofwar.gorecore.util.VectorD;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -59,10 +59,10 @@ public abstract class RenderArc extends Render {
 		double y = leader.getYPos() - renderPosY;
 		double z = leader.getZPos() - renderPosZ;
 		
-		VectorD from = new VectorD();
-		VectorD to = point.getVecPosition().minus(leader.getVecPosition());
+		Vector from = new Vector();
+		Vector to = point.getVecPosition().minus(leader.getVecPosition());
 		
-		VectorD diff = to.minus(from);
+		Vector diff = to.minus(from);
 		
 		double ySize = 1;
 		int textureRepeat = 2;
@@ -81,7 +81,7 @@ public abstract class RenderArc extends Render {
 		double sizeLeader = point.width / 2;
 		double sizePoint = leader.width / 2;
 		
-		VectorD lookingEuler = VectorD.getRotations(from, to);
+		Vector lookingEuler = Vector.getRotations(from, to);
 		
 		double u1 = ((arc.ticksExisted / 20.0) % 1);
 		double u2 = (u1 + 0.5);
@@ -125,7 +125,7 @@ public abstract class RenderArc extends Render {
 		return null;
 	}
 	
-	private void drawQuad(int normal, VectorD pos1, VectorD pos2, VectorD pos3, VectorD pos4, double u1,
+	private void drawQuad(int normal, Vector pos1, Vector pos2, Vector pos3, Vector pos4, double u1,
 			double v1, double u2, double v2) {
 		
 		Tessellator t = Tessellator.getInstance();
@@ -167,8 +167,8 @@ public abstract class RenderArc extends Render {
 	
 	private void drawQuad(int normal, Vector4d pos1, Vector4d pos2, Vector4d pos3, Vector4d pos4, double u1,
 			double v1, double u2, double v2) {
-		drawQuad(normal, new VectorD(pos1.x, pos1.y, pos1.z), new VectorD(pos2.x, pos2.y, pos2.z),
-				new VectorD(pos3.x, pos3.y, pos3.z), new VectorD(pos4.x, pos4.y, pos4.z), u1, v1, u2, v2);
+		drawQuad(normal, new Vector(pos1.x, pos1.y, pos1.z), new Vector(pos2.x, pos2.y, pos2.z),
+				new Vector(pos3.x, pos3.y, pos3.z), new Vector(pos4.x, pos4.y, pos4.z), u1, v1, u2, v2);
 	}
 	
 	protected abstract ResourceLocation getTexture();

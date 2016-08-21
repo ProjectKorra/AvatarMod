@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
  * 
  * @author CrowsOfWar
  */
-public class VectorD {
+public class Vector {
 	
 	private double cachedMagnitude;
 	private double x, y, z;
@@ -22,7 +22,7 @@ public class VectorD {
 	/**
 	 * Creates a new vector at the origin point.
 	 */
-	public VectorD() {
+	public Vector() {
 		this(0, 0, 0);
 	}
 	
@@ -36,7 +36,7 @@ public class VectorD {
 	 * @param z
 	 *            Z-position of the new vector
 	 */
-	public VectorD(double x, double y, double z) {
+	public Vector(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -49,7 +49,7 @@ public class VectorD {
 	 * @param vec
 	 *            Vector to copy
 	 */
-	public VectorD(VectorD vec) {
+	public Vector(Vector vec) {
 		this(vec.x, vec.y, vec.z);
 		this.cachedMagnitude = vec.cachedMagnitude;
 	}
@@ -60,8 +60,19 @@ public class VectorD {
 	 * @param vec
 	 *            Vector to copy
 	 */
-	public VectorD(Vec3d vec) {
+	public Vector(Vec3d vec) {
 		this(vec.xCoord, vec.yCoord, vec.zCoord);
+	}
+	
+	/**
+	 * Creates a vector from the feet position of the given entity.
+	 * 
+	 * @param entity
+	 *            The entity to use
+	 */
+	public Vector(Entity entity) {
+		this(entity.posX, entity.posY, entity.posZ);
+		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) setY(y - 1.62);
 	}
 	
 	/**
@@ -111,7 +122,7 @@ public class VectorD {
 	 *            Z-coordinate to set to
 	 * @return this
 	 */
-	public VectorD set(double x, double y, double z) {
+	public Vector set(double x, double y, double z) {
 		setX(x);
 		setY(y);
 		setZ(z);
@@ -125,7 +136,7 @@ public class VectorD {
 	 *            Vector to set to
 	 * @return this
 	 */
-	public VectorD set(VectorD vec) {
+	public Vector set(Vector vec) {
 		set(vec.x, vec.y, vec.z);
 		return this;
 	}
@@ -133,8 +144,8 @@ public class VectorD {
 	/**
 	 * Returns a new vector with the same coordinates as this one.
 	 */
-	public VectorD createCopy() {
-		return new VectorD(this);
+	public Vector createCopy() {
+		return new Vector(this);
 	}
 	
 	/**
@@ -144,7 +155,7 @@ public class VectorD {
 	 *            The vector to add
 	 * @return this
 	 */
-	public VectorD add(VectorD vec) {
+	public Vector add(Vector vec) {
 		return add(vec.x, vec.y, vec.z);
 	}
 	
@@ -159,7 +170,7 @@ public class VectorD {
 	 *            Z-coordinate to add
 	 * @return this
 	 */
-	public VectorD add(double x, double y, double z) {
+	public Vector add(double x, double y, double z) {
 		return set(this.x + x, this.y + y, this.z + z);
 	}
 	
@@ -169,7 +180,7 @@ public class VectorD {
 	 * @param vec
 	 *            Vector for sum
 	 */
-	public VectorD plus(VectorD vec) {
+	public Vector plus(Vector vec) {
 		return plus(vec.x, vec.y, vec.z);
 	}
 	
@@ -183,8 +194,8 @@ public class VectorD {
 	 * @param z
 	 *            Z-coordinate of other vector
 	 */
-	public VectorD plus(double x, double y, double z) {
-		return new VectorD(this).add(x, y, z);
+	public Vector plus(double x, double y, double z) {
+		return new Vector(this).add(x, y, z);
 	}
 	
 	/**
@@ -194,7 +205,7 @@ public class VectorD {
 	 *            The reduction vector
 	 * @return this
 	 */
-	public VectorD subtract(VectorD vec) {
+	public Vector subtract(Vector vec) {
 		return subtract(vec.x, vec.y, vec.z);
 	}
 	
@@ -209,7 +220,7 @@ public class VectorD {
 	 *            Z-coordinate to subtract
 	 * @return this
 	 */
-	public VectorD subtract(double x, double y, double z) {
+	public Vector subtract(double x, double y, double z) {
 		return set(this.x - x, this.y - y, this.z - z);
 	}
 	
@@ -219,7 +230,7 @@ public class VectorD {
 	 * @param vec
 	 *            Other vector
 	 */
-	public VectorD minus(VectorD vec) {
+	public Vector minus(Vector vec) {
 		return minus(vec.x, vec.y, vec.z);
 	}
 	
@@ -233,8 +244,8 @@ public class VectorD {
 	 * @param z
 	 *            Z-coordinate to subtract
 	 */
-	public VectorD minus(double x, double y, double z) {
-		return new VectorD(this).subtract(x, y, z);
+	public Vector minus(double x, double y, double z) {
+		return new Vector(this).subtract(x, y, z);
 	}
 	
 	/**
@@ -245,7 +256,7 @@ public class VectorD {
 	 *            The scalar to multiply this vector by
 	 * @returns this
 	 */
-	public VectorD mul(double scalar) {
+	public Vector mul(double scalar) {
 		return set(x * scalar, y * scalar, z * scalar);
 	}
 	
@@ -255,8 +266,8 @@ public class VectorD {
 	 * @param scalar
 	 *            The scalar to multiply the new vector by
 	 */
-	public VectorD times(double scalar) {
-		return new VectorD(this).mul(scalar);
+	public Vector times(double scalar) {
+		return new Vector(this).mul(scalar);
 	}
 	
 	/**
@@ -266,7 +277,7 @@ public class VectorD {
 	 *            The scalar to divide this vector by
 	 * @return this
 	 */
-	public VectorD divide(double scalar) {
+	public Vector divide(double scalar) {
 		return set(x / scalar, y / scalar, z / scalar);
 	}
 	
@@ -276,8 +287,8 @@ public class VectorD {
 	 * @param scalar
 	 *            The scalar to divide the new vector by
 	 */
-	public VectorD dividedBy(double scalar) {
-		return new VectorD(this).divide(scalar);
+	public Vector dividedBy(double scalar) {
+		return new Vector(this).divide(scalar);
 	}
 	
 	/**
@@ -311,7 +322,7 @@ public class VectorD {
 	 * 
 	 * @return this
 	 */
-	public VectorD normalize() {
+	public Vector normalize() {
 		return divide(magnitude());
 	}
 	
@@ -321,7 +332,7 @@ public class VectorD {
 	 * @param vec
 	 *            The other vector
 	 */
-	public double sqrDist(VectorD vec) {
+	public double sqrDist(Vector vec) {
 		return sqrDist(vec.x, vec.y, vec.z);
 	}
 	
@@ -345,7 +356,7 @@ public class VectorD {
 	 * @param vec
 	 *            The other vector
 	 */
-	public double dist(VectorD vec) {
+	public double dist(Vector vec) {
 		return Math.sqrt(sqrDist(vec));
 	}
 	
@@ -369,7 +380,7 @@ public class VectorD {
 	 * @param vec
 	 *            The other vector
 	 */
-	public double dot(VectorD vec) {
+	public double dot(Vector vec) {
 		return dot(vec.x, vec.y, vec.z);
 	}
 	
@@ -393,7 +404,7 @@ public class VectorD {
 	 * @param vec
 	 *            The vector to cross with
 	 */
-	public VectorD cross(VectorD vec) {
+	public Vector cross(Vector vec) {
 		return cross(vec.x, vec.y, vec.z);
 	}
 	
@@ -407,8 +418,8 @@ public class VectorD {
 	 * @param z
 	 *            Z-coordinate of other vector
 	 */
-	public VectorD cross(double x, double y, double z) {
-		return new VectorD(this.y * z - this.z * y, this.z * x - this.x * z, this.x * y - this.y * x);
+	public Vector cross(double x, double y, double z) {
+		return new Vector(this.y * z - this.z * y, this.z * x - this.x * z, this.x * y - this.y * x);
 	}
 	
 	/**
@@ -417,7 +428,7 @@ public class VectorD {
 	 * @param vec
 	 *            Other vector
 	 */
-	public double angle(VectorD vec) {
+	public double angle(Vector vec) {
 		double dot = dot(vec);
 		return Math.acos(dot / (this.magnitude() * vec.magnitude()));
 	}
@@ -425,8 +436,8 @@ public class VectorD {
 	/**
 	 * Converts this vector into a minecraft vector.
 	 */
-	public VectorD toMinecraft() {
-		return new VectorD(x, y, z);
+	public Vector toMinecraft() {
+		return new Vector(x, y, z);
 	}
 	
 	/**
@@ -451,8 +462,8 @@ public class VectorD {
 	 * @param pos2
 	 *            Where to look at
 	 */
-	public static VectorD getRotations(VectorD pos1, VectorD pos2) {
-		VectorD diff = pos2.minus(pos1);
+	public static Vector getRotations(Vector pos1, Vector pos2) {
+		Vector diff = pos2.minus(pos1);
 		diff.normalize();
 		double x = diff.x;
 		double y = diff.y;
@@ -464,17 +475,15 @@ public class VectorD {
 		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
 		double rotX = -Math.atan2(d1, d3);
 		double rotZ = 0;
-		return new VectorD(rotX, rotY, rotZ);
+		return new Vector(rotX, rotY, rotZ);
 	}
 	
-	public static VectorD getEntityPos(Entity entity) {
-		VectorD pos = new VectorD(entity.posX, entity.posY, entity.posZ);
-		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) pos.setY(pos.y - 1.62);
-		return pos;
+	public static Vector getEntityPos(Entity entity) {
+		return new Vector(entity);
 	}
 	
-	public static VectorD getEyePos(Entity entity) {
-		VectorD pos = getEntityPos(entity);
+	public static Vector getEyePos(Entity entity) {
+		Vector pos = getEntityPos(entity);
 		pos.setY(pos.y + 1.62);
 		return pos;
 	}
@@ -499,14 +508,14 @@ public class VectorD {
 	/**
 	 * Create a unit vector from yaw and pitch. Parameters should be in radians.
 	 */
-	public static VectorD fromYawPitch(double yaw, double pitch) {
-		return new VectorD(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
+	public static Vector fromYawPitch(double yaw, double pitch) {
+		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
 	}
 	
 	/**
 	 * Create a unit vector from the given euler angles. Measurements should be in radians.
 	 */
-	public static VectorD fromDirection(VectorD euler) {
+	public static Vector fromDirection(Vector euler) {
 		return fromYawPitch(euler.y, euler.x);
 	}
 	
@@ -516,8 +525,8 @@ public class VectorD {
 	 * @param buf
 	 *            Buffer to read from
 	 */
-	public static VectorD fromBytes(ByteBuf buf) {
-		return new VectorD(buf.readDouble(), buf.readDouble(), buf.readDouble());
+	public static Vector fromBytes(ByteBuf buf) {
+		return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
 	}
 	
 }

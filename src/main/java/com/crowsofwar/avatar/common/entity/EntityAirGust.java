@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.util.VectorD;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityArc {
 	
-	public static final VectorD ZERO = new VectorD(0, 0, 0);
+	public static final Vector ZERO = new Vector(0, 0, 0);
 	
 	public EntityAirGust(World world) {
 		super(world);
@@ -48,7 +48,7 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	protected VectorD getGravityVector() {
+	protected Vector getGravityVector() {
 		return ZERO;
 	}
 	

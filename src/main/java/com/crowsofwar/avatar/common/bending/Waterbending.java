@@ -99,7 +99,7 @@ public class Waterbending implements IBendingController {
 				
 				EntityWaterArc water = bendingState.getWaterArc();
 				
-				VectorD force = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vector force = VectorUtils.fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
 				VectorUtils.mult(force, 10);
 				water.addVelocity(force);
 				water.setGravityEnabled(true);
@@ -130,9 +130,9 @@ public class Waterbending implements IBendingController {
 			
 			EntityWaterArc water = bendingState.getWaterArc();
 			if (water != null) {
-				VectorD look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
-				VectorD lookPos = plus(getEyePos(player), times(look, 3));
-				VectorD motion = minus(lookPos, getEntityPos(water));
+				Vector look = fromYawPitch(Math.toRadians(player.rotationYaw), Math.toRadians(player.rotationPitch));
+				Vector lookPos = plus(getEyePos(player), times(look, 3));
+				Vector motion = minus(lookPos, getEntityPos(water));
 				motion.normalize();
 				mult(motion, .05 * 3);
 				water.moveEntity(motion.xCoord, motion.yCoord, motion.zCoord);

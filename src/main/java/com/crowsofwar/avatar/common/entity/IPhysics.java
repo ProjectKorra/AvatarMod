@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.gorecore.util.VectorD;
+import com.crowsofwar.gorecore.util.Vector;
 
 /**
  * Describes an entity which can be moved by physics. sort of.
@@ -11,12 +11,12 @@ public interface IPhysics {
 	/**
 	 * Get the position in world coordinates.
 	 */
-	VectorD getVecPosition();
+	Vector getVecPosition();
 	
 	/**
 	 * Get the velocity in m/s.
 	 */
-	VectorD getVelocity();
+	Vector getVelocity();
 	
 	/**
 	 * Set the velocity
@@ -24,7 +24,7 @@ public interface IPhysics {
 	 * @param vel
 	 *            Velocity in m/s
 	 */
-	void setVelocity(VectorD vel);
+	void setVelocity(Vector vel);
 	
 	/**
 	 * Add velocity to the object, ignoring mass.
@@ -32,6 +32,6 @@ public interface IPhysics {
 	 * @param vel
 	 *            Velocity in m/s
 	 */
-	void addVelocity(VectorD vel);
+	void addVelocity(Vector vel);
 	
 }

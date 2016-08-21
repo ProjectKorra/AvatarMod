@@ -2,14 +2,17 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
 
+import com.crowsofwar.gorecore.util.Vector;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.Vector;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 public class EntityFireArc extends EntityArc {
 	
-	private static final VectorD GRAVITY = new VectorD(0, -9.81 / 60, 0);
+	private static final Vector GRAVITY = new Vector(0, -9.81 / 60, 0);
 	
 	public EntityFireArc(World world) {
 		super(world);
@@ -24,11 +27,18 @@ public class EntityFireArc extends EntityArc {
 			if (worldObj.isRemote) {
 				int particles = random.nextInt(3) + 4;
 				for (int i = 0; i < particles; i++) {
-					worldObj.spawnParticle("cloud", posX, posY, posZ, (random.nextGaussian() - 0.5) * 0.05 + motionX / 10,
-							random.nextGaussian() * 0.08, (random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
+					// TODO [1.10] Figure out how to spawn particles
+					// worldObj.spawnParticle("cloud", posX, posY, posZ,
+					// (random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() *
+					// 0.08,
+					// (random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
 				}
 			}
-			worldObj.playSoundAtEntity(this, "random.fizz", 1.0f, random.nextFloat() * 0.3f + 1.1f);// BlockFire
+			// TODO [1.10] Where is "random.fizz" sound??
+			worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_ANVIL_BREAK, SoundCategory.PLAYERS, 1,
+					random.nextFloat() * 0.3f + 1.1f, false);
+			// worldObj.playSoundAtEntity(this, "random.fizz", 1.0f, random.nextFloat() * 0.3f +
+			// 1.1f);// BlockFire
 		}
 	}
 	
@@ -42,12 +52,12 @@ public class EntityFireArc extends EntityArc {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
-			worldObj.setBlock(x, y, z, Blocks.fire);
+			worldObj.setBlock(x, y, z, Blocks.FIRE);
 		}
 	}
 	
 	@Override
-	protected VectorD getGravityVector() {
+	protected Vector getGravityVector() {
 		return GRAVITY;
 	}
 	

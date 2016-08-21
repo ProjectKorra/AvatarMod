@@ -38,6 +38,24 @@ public final class EntityPropertyDataManager<T> implements IEntityProperty<T> {
 		this.dataManager.register(parameter, startingValue);
 	}
 	
+	/**
+	 * Create a new EntityProperty.
+	 * 
+	 * @param entity
+	 *            The instance of the entity
+	 * @param parameter
+	 *            The DataParameter which is used to store the entity property. Note: Is also
+	 *            registered to the EntityDataManager.
+	 * @param startingValue
+	 *            The initial value of the property.
+	 */
+	public EntityPropertyDataManager(Entity entity, DataParameter<T> parameter, T startingValue) {
+		this.entity = entity;
+		this.dataManager = entity.getDataManager();
+		this.parameter = parameter;
+		this.dataManager.register(parameter, startingValue);
+	}
+	
 	@Override
 	public T getValue() {
 		return dataManager.get(parameter);

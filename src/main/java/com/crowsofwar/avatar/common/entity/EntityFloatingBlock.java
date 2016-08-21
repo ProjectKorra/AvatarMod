@@ -1,15 +1,17 @@
 package com.crowsofwar.avatar.common.entity;
 
+import static net.minecraft.network.datasync.EntityDataManager.createKey;
+
 import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyBlockPos;
-import com.crowsofwar.avatar.common.util.AvBlockPos;
+import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.common.util.VectorUtils;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -18,8 +20,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.Vector;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,36 +31,61 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityFloatingBlock extends Entity implements IPhysics {
 	// EntitySkeleton
-	public static final Block DEFAULT_BLOCK = Blocks.stone;
-	public static final int DATAWATCHER_BLOCKID = 2;
-	/** Whether gravity can affect the block's velocity. */
-	public static final int DATAWATCHER_GRAVITY = 3;
-	public static final int DATAWATCHER_FLOATINGBLOCKID = 4;
 	
-	public static final int DATAWATCHER_VELX = 5, DATAWATCHER_VELY = 6, DATAWATCHER_VELZ = 7,
-			DATAWATCHER_FRICTION = 8;
-	/**
-	 * Whether gravity can cause the block to have negative Y velocity (gravity will still affect
-	 * it).
+	/*
+	 * 
+	 * Block#getIdFromBlock, Block#getBlockById
+	 * 
+	 * 
 	 */
-	public static final int DATAWATCHER_CAN_FALL = 9;
-	/** Whether the floating block breaks on contact with other blocks. */
-	public static final int DATAWATCHER_ON_LAND = 10;
-	public static final int DATAWATCHER_TARGET_BLOCK = 11; // 11,12,13,14
-	public static final int DATAWATCHER_METADATA = 15;
 	
-	public static final DataParameter<Block> DATA_BLOCK = EntityDataManager
+	public static final Block DEFAULT_BLOCK = Blocks.STONE;
+	
+	// public static final int SYNC_BLOCKID = 2;
+	// /** Whether gravity can affect the block's velocity. */
+	// public static final int SYNC_GRAVITY = 3;
+	// public static final int SYNC_FLOATINGBLOCKID = 4;
+	//
+	// public static final int SYNC_VELX = 5, SYNC_VELY = 6, SYNC_VELZ = 7,
+	// SYNC_FRICTION = 8;
+	// /**
+	// * Whether gravity can cause the block to have negative Y velocity (gravity will still affect
+	// * it).
+	// */
+	// public static final int SYNC_CAN_FALL = 9;
+	// /** Whether the floating block breaks on contact with other blocks. */
+	// public static final int SYNC_ON_LAND = 10;
+	// public static final int SYNC_TARGET_BLOCK = 11; // 11,12,13,14
+	// public static final int SYNC_METADATA = 15;
+	
+	private static final DataParameter<Block> SYNC_BLOCK = EntityDataManager
 			.createKey(EntityFloatingBlock.class, AvatarDataSerializers.SERIALIZER_BLOCK);
+	private static final DataParameter<Boolean> SYNC_GRAVITY_ENABLED = EntityDataManager
+			.createKey(EntityFloatingBlock.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Integer> SYNC_ENTITY_ID = EntityDataManager
+			.createKey(EntityFloatingBlock.class, DataSerializers.VARINT);
+	private static final DataParameter<Vector> SYNC_VELOCITY = createKey(EntityFloatingBlock.class,
+			AvatarDataSerializers.SERIALIZER_VECTOR);
+	private static final DataParameter<Float> SYNC_FRICTION = createKey(EntityFloatingBlock.class,
+			DataSerializers.FLOAT);
+	private static final DataParameter<Boolean> SYNC_CAN_FALL = createKey(EntityFloatingBlock.class,
+			DataSerializers.BOOLEAN);
+	private static final DataParameter<Byte> SYNC_ON_LAND = createKey(EntityFloatingBlock.class,
+			DataSerializers.BYTE);
+	private static final DataParameter<BlockPos> SYNC_TARGET_BLOCK = createKey(EntityFloatingBlock.class,
+			DataSerializers.BLOCK_POS);
+	private static final DataParameter<Integer> SYNC_METADATA = createKey(EntityFloatingBlock.class,
+			DataSerializers.VARINT);
 	
 	private static int nextBlockID = 0;
 	
 	/**
-	 * Holds the current velocity. Please don't use this field directly, as it is not designed to be
-	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(VectorD)}.
+	 * Holds the current velocity. Please don't use this field directly, as it is designed to be
+	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(Vector)}.
 	 */
-	private final VectorD velocity;
-	private final EntityPropertyBlockPos propBlockPos;
-	private final VectorD internalPosition;
+	private Vector velocity;
+	private final EntityPropertyDataManager<BlockPos> propBlockPos;
+	private final Vector internalPosition;
 	
 	private EntityPlayer owner;
 	
@@ -69,13 +98,14 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	public EntityFloatingBlock(World world) {
 		super(world);
 		setSize(0.95f, 0.95f);
-		velocity = new VectorD(0, 0, 0);
+		velocity = new Vector(0, 0, 0);
 		setGravityEnabled(false);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
-		this.propBlockPos = new EntityPropertyBlockPos(this, dataWatcher, DATAWATCHER_TARGET_BLOCK);
-		this.internalPosition = new VectorD(0, 0, 0);
+		this.propBlockPos = new EntityPropertyDataManager<BlockPos>(this, EntityFloatingBlock.class,
+				DataSerializers.BLOCK_POS, null);
+		this.internalPosition = new Vector(0, 0, 0);
 		
 		this.enableItemDrops = true;
 		
@@ -94,25 +124,26 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	// Called from constructor of Entity class
 	@Override
 	protected void entityInit() {
-		dataManager.addObject(DATAWATCHER_BLOCKID, getNameForBlock(DEFAULT_BLOCK));
-		dataManager.register(key, value);
-		dataWatcher.addObject(DATAWATCHER_GRAVITY, 0);
-		dataWatcher.addObject(DATAWATCHER_FLOATINGBLOCKID, 0);
 		
-		dataWatcher.addObject(DATAWATCHER_VELX, 0f);
-		dataWatcher.addObject(DATAWATCHER_VELY, 0f);
-		dataWatcher.addObject(DATAWATCHER_VELZ, 0f);
-		
-		dataWatcher.addObject(DATAWATCHER_FRICTION, 1f);
-		dataWatcher.addObject(DATAWATCHER_CAN_FALL, (byte) 0);
-		dataWatcher.addObject(DATAWATCHER_ON_LAND, (byte) 0);
-		dataWatcher.addObject(DATAWATCHER_METADATA, 0);
+		// dataManager.addObject(SYNC_BLOCKID, getNameForBlock(DEFAULT_BLOCK));
+		// dataManager.register(key, value);
+		// dataWatcher.addObject(SYNC_GRAVITY, 0);
+		// dataWatcher.addObject(SYNC_FLOATINGBLOCKID, 0);
+		//
+		// dataWatcher.addObject(SYNC_VELX, 0f);
+		// dataWatcher.addObject(SYNC_VELY, 0f);
+		// dataWatcher.addObject(SYNC_VELZ, 0f);
+		//
+		// dataWatcher.addObject(SYNC_FRICTION, 1f);
+		// dataWatcher.addObject(SYNC_CAN_FALL, (byte) 0);
+		// dataWatcher.addObject(SYNC_ON_LAND, (byte) 0);
+		// dataWatcher.addObject(SYNC_METADATA, 0);
 		
 	}
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		setBlock(Block.getBlockFromName(nbt.getString("Block")));
+		setBlock(Block.getBlockById(nbt.getInteger("BlockId")));
 		setMetadata(nbt.getInteger("Metadata"));
 		setGravityEnabled(nbt.getBoolean("Gravity"));
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
@@ -124,13 +155,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		nbt.setString("Block", getNameForBlock(getBlock()));
+		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
 		nbt.setInteger("Metadata", getMetadata());
 		nbt.setBoolean("Gravity", isGravityEnabled());
-		VectorD velocity = getVelocity();
-		nbt.setDouble("VelocityX", velocity.xCoord);
-		nbt.setDouble("VelocityY", velocity.yCoord);
-		nbt.setDouble("VelocityZ", velocity.zCoord);
+		Vector velocity = getVelocity();
+		nbt.setDouble("VelocityX", velocity.x());
+		nbt.setDouble("VelocityY", velocity.y());
+		nbt.setDouble("VelocityZ", velocity.z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("CanFall", canFall());
 		nbt.setByte("OnLand", getOnLandBehaviorId());
@@ -138,24 +169,23 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	public Block getBlock() {
-		Block block = (Block) Block.blockRegistry
-				.getObject(dataWatcher.getWatchableObjectString(DATAWATCHER_BLOCKID));
+		Block block = dataManager.get(SYNC_BLOCK);
 		if (block == null) block = DEFAULT_BLOCK;
 		return block;
 	}
 	
 	public void setBlock(Block block) {
 		if (block == null) block = DEFAULT_BLOCK;
-		dataWatcher.updateObject(DATAWATCHER_BLOCKID, getNameForBlock(block));
+		dataManager.set(SYNC_BLOCK, block);
 	}
 	
 	public int getMetadata() {
-		return dataWatcher.getWatchableObjectInt(DATAWATCHER_METADATA);
+		return dataManager.get(SYNC_METADATA);
 	}
 	
 	//
 	public void setMetadata(int metadata) {
-		dataWatcher.updateObject(DATAWATCHER_METADATA, metadata);
+		dataManager.set(SYNC_METADATA, metadata);
 	}
 	
 	/**
@@ -166,11 +196,11 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	public boolean isGravityEnabled() {
-		return dataWatcher.getWatchableObjectInt(DATAWATCHER_GRAVITY) == 1;
+		return dataManager.get(SYNC_GRAVITY_ENABLED);
 	}
 	
 	public void setGravityEnabled(boolean gravity) {
-		if (!worldObj.isRemote) dataWatcher.updateObject(DATAWATCHER_GRAVITY, gravity ? 1 : 0);
+		if (!worldObj.isRemote) dataManager.set(SYNC_GRAVITY_ENABLED, gravity);
 	}
 	
 	/**
@@ -178,11 +208,11 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	 * and server.
 	 */
 	public int getID() {
-		return dataWatcher.getWatchableObjectInt(DATAWATCHER_FLOATINGBLOCKID);
+		return dataManager.get(SYNC_ENTITY_ID);
 	}
 	
 	public void setID(int id) {
-		if (!worldObj.isRemote) dataWatcher.updateObject(DATAWATCHER_FLOATINGBLOCKID, id);
+		if (!worldObj.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
 	}
 	
 	public static EntityFloatingBlock getFromID(World world, int id) {
@@ -216,17 +246,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		setItemDropsEnabled(false);
 	}
 	
-	private String getNameForBlock(Block block) {
-		return Block.blockRegistry.getNameForObject(block);
-	}
-	
 	@Override
 	public void onUpdate() {
 		if (isGravityEnabled()) {
-			addVelocity(new VectorD(0, -9.81 / 20, 0));
-			VectorD vel = getVelocity();
-			if (!canFall() && vel.yCoord < 0) {
-				vel.yCoord = 0;
+			addVelocity(new Vector(0, -9.81 / 20, 0));
+			Vector vel = getVelocity();
+			if (!canFall() && vel.y() < 0) {
+				vel.setY(0);
 				setVelocity(vel);
 			}
 		}
@@ -237,12 +263,14 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				double spawnX = posX + (rand.nextDouble() - 0.5);
 				double spawnY = posY - 0;
 				double spawnZ = posZ + (rand.nextDouble() - 0.5);
-				worldObj.spawnParticle(getBlockCrackParticle(), spawnX, spawnY, spawnZ, 0, -0.1, 0);
+				// TODO [1.10] Find out how to spawn particles
+				// worldObj.spawnParticle(getBlockCrackParticle(), spawnX, spawnY, spawnZ, 0, -0.1,
+				// 0);
 			}
 			
 		}
 		
-		if (!worldObj.isRemote) setVelocity(VectorUtils.times(getVelocity(), getFriction()));
+		if (!worldObj.isRemote) setVelocity(getVelocity().times(getFriction()));
 		
 		prevPosX = posX;
 		prevPosY = posY;
@@ -250,31 +278,35 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		lastTickPosX = posX;
 		lastTickPosY = posY;
 		lastTickPosZ = posZ;
-		VectorD velocity = getVelocity();
-		moveEntity(velocity.xCoord / 20, velocity.yCoord / 20, velocity.zCoord / 20);
-		motionX = velocity.xCoord / 20;
-		motionY = velocity.yCoord / 20;
-		motionZ = velocity.zCoord / 20;
+		Vector velocity = getVelocity();
+		moveEntity(velocity.x() / 20, velocity.y() / 20, velocity.z() / 20);
+		motionX = velocity.x() / 20;
+		motionY = velocity.y() / 20;
+		motionZ = velocity.z() / 20;
 		if (isCollided) {
 			switch (getOnLandBehavior()) {
-			case BREAK:
-				if (!worldObj.isRemote) setDead();
-				onCollision();
-				break;
-			case PLACE:
-				if (!worldObj.isRemote) {
-					// TODO Fix duplicate placing code (Weird!) - I don't believe this part ever
-					// gets called.
-					setDead();
-					int x = (int) Math.floor(posX);
-					int y = (int) Math.floor(posY);
-					int z = (int) Math.floor(posZ);
-					worldObj.setBlock(x, y, z, getBlock());
-					worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(), 3);
-				}
-				break;
-			default:
-				break;
+				case BREAK:
+					if (!worldObj.isRemote) setDead();
+					onCollision();
+					break;
+				case PLACE:
+					if (!worldObj.isRemote) {
+						// TODO Fix duplicate placing code (Weird!) - I don't believe this part ever
+						// gets called.
+						setDead();
+						int x = (int) Math.floor(posX);
+						int y = (int) Math.floor(posY);
+						int z = (int) Math.floor(posZ);
+						// worldObj.setBlock(x, y, z, getBlock());
+						// BlockSand
+						// TODO [1.10] find out how to set Block metadata using BlockStates. Do we
+						// have to store an IBlockState in our fields instead of a BlockState?
+						worldObj.setBlockState(new BlockPos(x, y, z), getBlock().getDefaultState());
+						// worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(), 3);
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		
@@ -283,51 +315,55 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		int z = (int) Math.floor(posZ);
 		
 		if (isMovingToBlock()) {
-			AvBlockPos target = getMovingToBlock();
-			VectorD targetVec = new VectorD(target.x + 0.5, target.y, target.z + 0.5);
-			VectorD thisPos = new VectorD(posX, posY, posZ);
-			VectorD force = VectorUtils.minus(targetVec, thisPos);
+			BlockPos target = getMovingToBlock();
+			Vector targetVec = new Vector(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+			Vector thisPos = new Vector(posX, posY, posZ);
+			Vector force = targetVec.minus(thisPos);
 			force.normalize();
-			VectorUtils.mult(force, 3);
+			force.mul(3);
 			setVelocity(force);
-			if (!worldObj.isRemote && targetVec.squareDistanceTo(thisPos) < 0.001) {
+			if (!worldObj.isRemote && targetVec.sqrDist(thisPos) < 0.001) {
 				
 				setDead();
-				worldObj.setBlock(x, y, z, getBlock());
-				worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(), 3);
-				Block.SoundType sound = getBlock().stepSound;
-				if (sound != null) worldObj.playSoundAtEntity(this, sound.getBreakSound(), sound.getVolume(),
-						sound.getPitch());
+				// TODO [1.10] Figure out how to set block states with metadata
+				worldObj.setBlockState(new BlockPos(x, y, z), getBlock().getDefaultState());
+				// OLD set metadata is: worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(),
+				// 3);
+				
+				SoundType sound = getBlock().getSoundType();
+				if (sound != null) {
+					worldObj.playSound(posX, posY, posZ, sound.getBreakSound(), SoundCategory.PLAYERS,
+							sound.getVolume(), sound.getPitch(), false);
+				}
 				
 			}
 		}
 		
 		if (!isDead) {
-			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
+			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
+					getEntityBoundingBox());
 			if (!collidedList.isEmpty()) {
 				Entity collided = collidedList.get(0);
 				if (collided instanceof EntityLivingBase && collided != getOwner()) {
-					double speed = getVelocity().lengthVector();
+					double speed = getVelocity().magnitude();
 					double multiplier = 0.25;
 					collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(this, collided),
 							(float) (speed * multiplier));
-					VectorD motion = VectorUtils.minus(VectorUtils.getEntityPos(collided),
-							VectorUtils.getEntityPos(this));
-					motion.yCoord = 0.08;
-					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
+					
+					Vector motion = new Vector(collided).minus(new Vector(this));
+					
+					motion.setY(0.08);
+					collided.addVelocity(motion.x(), motion.y(), motion.z());
 					if (!worldObj.isRemote) setDead();
 					onCollision();
 				} else if (collided != getOwner()) {
-					VectorD motion = VectorUtils.minus(VectorUtils.getEntityPos(collided),
-							VectorUtils.getEntityPos(this));
-					VectorUtils.mult(motion, 0.3);
-					motion.yCoord = 0.08;
-					collided.addVelocity(motion.xCoord, motion.yCoord, motion.zCoord);
+					Vector motion = new Vector(collided).minus(new Vector(this));
+					motion.mul(0.3);
+					motion.setY(0.08);
+					collided.addVelocity(motion.x(), motion.y(), motion.z());
 				}
 			}
 		}
-		// setDead();
-		if (ticksExisted % 5 == 0) propBlockPos.sync();
 		
 	}
 	
@@ -338,12 +374,16 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
-			worldObj.spawnParticle(getBlockCrackParticle(), posX, posY + 0.3, posZ,
-					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
+			// TODO [1.10] Find out how to spawn particles
+			// worldObj.spawnParticle(getBlockCrackParticle(), posX, posY + 0.3, posZ,
+			// random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() *
+			// 0.1);
 		}
 		
 		if (!worldObj.isRemote && areItemDropsEnabled()) {
-			List<ItemStack> drops = getBlock().getDrops(worldObj, 0, 0, 0, getMetadata(), 0);
+			// TODO [1.10] Take into account FloatingBlock's metadata for drops
+			List<ItemStack> drops = getBlock().getDrops(worldObj, new BlockPos(this),
+					getBlock().getDefaultState(), 0);
 			for (ItemStack is : drops) {
 				EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
 				worldObj.spawnEntityInWorld(ei);
@@ -352,53 +392,49 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public void addVelocity(VectorD force) {
-		setVelocity(VectorUtils.plus(getVelocity(), force));
+	public void addVelocity(Vector force) {
+		setVelocity(getVelocity().plus(force));
 	}
 	
 	@Override
-	public VectorD getVelocity() {
-		velocity.xCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELX);
-		velocity.yCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELY);
-		velocity.zCoord = dataWatcher.getWatchableObjectFloat(DATAWATCHER_VELZ);
+	public Vector getVelocity() {
+		velocity = dataManager.get(SYNC_VELOCITY);
 		return velocity;
 	}
 	
 	@Override
-	public void setVelocity(VectorD velocity) {
+	public void setVelocity(Vector velocity) {
 		if (!worldObj.isRemote) {
-			dataWatcher.updateObject(DATAWATCHER_VELX, (float) velocity.xCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELY, (float) velocity.yCoord);
-			dataWatcher.updateObject(DATAWATCHER_VELZ, (float) velocity.zCoord);
+			dataManager.set(SYNC_VELOCITY, velocity);
 		}
 	}
 	
 	@Override
-	public VectorD getPosition() {
-		internalPosition.xCoord = posX;
-		internalPosition.yCoord = posY;
-		internalPosition.zCoord = posZ;
+	public Vector getVecPosition() {
+		internalPosition.setX(posX);
+		internalPosition.setY(posY);
+		internalPosition.setZ(posZ);
 		return internalPosition;
 	}
 	
 	public float getFriction() {
-		return dataWatcher.getWatchableObjectFloat(DATAWATCHER_FRICTION);
+		return dataManager.get(SYNC_FRICTION);
 	}
 	
 	public void setFriction(float friction) {
-		if (!worldObj.isRemote) dataWatcher.updateObject(DATAWATCHER_FRICTION, friction);
+		if (!worldObj.isRemote) dataManager.set(SYNC_FRICTION, friction);
 	}
 	
 	public boolean canFall() {
-		return dataWatcher.getWatchableObjectByte(DATAWATCHER_CAN_FALL) == 1;
+		return dataManager.get(SYNC_CAN_FALL);
 	}
 	
 	public void setCanFall(boolean falls) {
-		dataWatcher.updateObject(DATAWATCHER_CAN_FALL, (byte) (falls ? 1 : 0));
+		dataManager.set(SYNC_CAN_FALL, falls);
 	}
 	
 	public byte getOnLandBehaviorId() {
-		return dataWatcher.getWatchableObjectByte(DATAWATCHER_ON_LAND);
+		return dataManager.get(SYNC_ON_LAND);
 	}
 	
 	public OnBlockLand getOnLandBehavior() {
@@ -406,7 +442,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	public void setOnLandBehavior(byte id) {
-		dataWatcher.updateObject(DATAWATCHER_ON_LAND, id);
+		dataManager.set(SYNC_ON_LAND, id);
 	}
 	
 	public void setOnLandBehavior(OnBlockLand onLand) {
@@ -434,11 +470,11 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		this.owner = owner;
 	}
 	
-	public AvBlockPos getMovingToBlock() {
+	public BlockPos getMovingToBlock() {
 		return propBlockPos.getValue();
 	}
 	
-	public void setMovingToBlock(AvBlockPos pos) {
+	public void setMovingToBlock(BlockPos pos) {
 		propBlockPos.setValue(pos);
 	}
 	

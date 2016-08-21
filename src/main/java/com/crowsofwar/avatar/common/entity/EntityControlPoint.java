@@ -4,12 +4,16 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
-import com.crowsofwar.gorecore.util.VectorD;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.gorecore.util.Vector;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -36,20 +40,22 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
  */
 public class EntityControlPoint extends Entity implements IPhysics, IEntityAdditionalSpawnData {
 	
-	private static final int DATAWATCHER_VELOCITY = 3; // 3,4,5
-	private static final int DATAWATCHER_ID = 6;
+	private static final DataParameter<Integer> SYNC_ID = EntityDataManager
+			.createKey(EntityControlPoint.class, DataSerializers.VARINT);
+	private static final DataParameter<Vector> SYNC_VELOCITY = EntityDataManager
+			.createKey(EntityControlPoint.class, AvatarDataSerializers.SERIALIZER_VECTOR);
 	
 	private static int nextId = 1;
 	
 	protected EntityArc arc;
 	protected EntityPlayer owner;
 	
-	private VectorD internalPosition;
-	private IEntityProperty<VectorD> internalVelocity;
+	private Vector internalPosition;
+	private IEntityProperty<Vector> internalVelocity;
 	
 	public EntityControlPoint(World world) {
 		super(world);
-		internalPosition = new VectorD();
+		internalPosition = new Vector();
 		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
@@ -59,14 +65,14 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 		setPosition(x, y, z);
 		this.arc = arc;
 		setSize(size, size);
-		internalPosition = new VectorD(x, y, z);
+		internalPosition = new Vector(x, y, z);
 		internalVelocity = new EntityPropertyMotion(this);
 		if (!worldObj.isRemote) setId(nextId++);
 	}
 	
 	@Override
 	protected void entityInit() {
-		dataWatcher.addObject(DATAWATCHER_ID, 0);
+		dataManager.register(SYNC_ID, 0);
 	}
 	
 	@Override
@@ -106,18 +112,28 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	 */
 	protected void onCollision(Entity entity) {}
 	
-	public void setVecPosition(VectorD pos) {
+	public void setVecPosition(Vector pos) {
 		setPosition(pos.x(), pos.y(), pos.z());
 	}
 	
+	/**
+	 * Move this control point by the designated offset, not checking for collisions.
+	 * <p>
+	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}.
+	 */
 	public void move(double x, double y, double z) {
 		posX += x;
 		posY += y;
 		posZ += z;
 	}
 	
-	public void move(VectorD offset) {
-		move(offset.xCoord, offset.yCoord, offset.zCoord);
+	/**
+	 * Move this control point by the designated offset, not checking for collisions.
+	 * <p>
+	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}.
+	 */
+	public void move(Vector offset) {
+		move(offset.x(), offset.y(), offset.z());
 	}
 	
 	public double getXPos() {
@@ -137,7 +153,7 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	@Override
-	public VectorD getVecPosition() {
+	public Vector getVecPosition() {
 		internalPosition.setX(posX);
 		internalPosition.setY(posY);
 		internalPosition.setZ(posZ);
@@ -145,17 +161,17 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	}
 	
 	@Override
-	public VectorD getVelocity() {
+	public Vector getVelocity() {
 		return internalVelocity.getValue();
 	}
 	
 	@Override
-	public void setVelocity(VectorD vel) {
+	public void setVelocity(Vector vel) {
 		internalVelocity.setValue(vel);
 	}
 	
 	@Override
-	public void addVelocity(VectorD vel) {
+	public void addVelocity(Vector vel) {
 		setVelocity(getVelocity().plus(vel));
 	}
 	
@@ -181,14 +197,14 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	 * synced between server and client.
 	 */
 	public int getId() {
-		return dataWatcher.getWatchableObjectInt(DATAWATCHER_ID);
+		return dataManager.get(SYNC_ID);
 	}
 	
 	/**
 	 * Synchronize the Id between server and client.
 	 */
 	public void setId(int id) {
-		dataWatcher.updateObject(DATAWATCHER_ID, id);
+		dataManager.set(SYNC_ID, id);
 	}
 	
 	/**

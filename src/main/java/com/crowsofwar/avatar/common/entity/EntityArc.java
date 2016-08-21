@@ -2,7 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.gorecore.util.VectorD;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +21,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.VARINT);
-	private static final DataParameter<VectorD> SYNC_VELOCITY = EntityDataManager.createKey(EntityArc.class,
+	private static final DataParameter<Vector> SYNC_VELOCITY = EntityDataManager.createKey(EntityArc.class,
 			AvatarDataSerializers.SERIALIZER_VECTOR);
 	private static final DataParameter<Boolean> SYNC_GRAVITY = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.BOOLEAN);
@@ -29,8 +29,8 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	private static int nextId = 1;
 	private EntityControlPoint[] points;
 	
-	private VectorD internalPos;
-	private EntityPropertyDataManager<VectorD> velocity;
+	private Vector internalPos;
+	private EntityPropertyDataManager<Vector> velocity;
 	
 	protected EntityPlayer owner;
 	
@@ -44,9 +44,9 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			points[i] = createControlPoint(size);
 		}
 		
-		this.internalPos = new VectorD(0, 0, 0);
-		this.velocity = new EntityPropertyDataManager<VectorD>(this, EntityArc.class,
-				AvatarDataSerializers.SERIALIZER_VECTOR, new VectorD());
+		this.internalPos = new Vector(0, 0, 0);
+		this.velocity = new EntityPropertyDataManager<Vector>(this, EntityArc.class,
+				AvatarDataSerializers.SERIALIZER_VECTOR, new Vector());
 		if (!worldObj.isRemote) {
 			setId(nextId++);
 		}
@@ -81,7 +81,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 		
 		ignoreFrustumCheck = true;
 		
-		VectorD vel = getVelocity();
+		Vector vel = getVelocity();
 		
 		if (isGravityEnabled()) {
 			addVelocity(getGravityVector());
@@ -100,7 +100,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 			
 			EntityControlPoint leader = points[i - 1];
 			EntityControlPoint p = points[i];
-			VectorD leadPos = i == 0 ? getVecPosition() : getLeader(i).getVecPosition();
+			Vector leadPos = i == 0 ? getVecPosition() : getLeader(i).getVecPosition();
 			double sqrDist = p.getVecPosition().sqrDist(leadPos);
 			
 			if (sqrDist > getControlPointTeleportDistanceSq()) {
@@ -109,7 +109,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 				
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 				
-				VectorD diff = leader.getVecPosition().minus(p.getVecPosition());
+				Vector diff = leader.getVecPosition().minus(p.getVecPosition());
 				diff.normalize();
 				diff.mul(3);
 				p.addVelocity(diff);
@@ -122,7 +122,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	
 	protected abstract void onCollideWithBlock();
 	
-	protected abstract VectorD getGravityVector();
+	protected abstract Vector getGravityVector();
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -200,7 +200,7 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public VectorD getVecPosition() {
+	public Vector getVecPosition() {
 		internalPos.setX(posX);
 		internalPos.setY(posY);
 		internalPos.setZ(posZ);
@@ -208,17 +208,17 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	}
 	
 	@Override
-	public VectorD getVelocity() {
+	public Vector getVelocity() {
 		return velocity.getValue();
 	}
 	
 	@Override
-	public void setVelocity(VectorD vel) {
+	public void setVelocity(Vector vel) {
 		velocity.setValue(vel);
 	}
 	
 	@Override
-	public void addVelocity(VectorD vel) {
+	public void addVelocity(Vector vel) {
 		setVelocity(getVelocity().plus(vel));
 	}
 	

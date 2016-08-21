@@ -3,15 +3,17 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.Vector;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 public class EntityWaterArc extends EntityArc {
 	
-	private static final VectorD GRAVITY = new VectorD(0, -9.81 / 20, 0);
+	private static final Vector GRAVITY = new Vector(0, -9.81 / 20, 0);
 	
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
@@ -59,9 +61,11 @@ public class EntityWaterArc extends EntityArc {
 			int particles = random.nextInt(3) + 4;
 			for (int i = 0; i < particles; i++) {
 				
-				worldObj.spawnParticle("splash", posX + random.nextGaussian() * offX, posY + random.nextGaussian() * offY + 0.2,
-						posZ + random.nextGaussian() * offZ, random.nextGaussian() * xVel, random.nextGaussian() * yVel,
-						random.nextGaussian() * zVel);
+				// TODO [1.10] how to spawn particles??
+				// worldObj.spawnParticle("splash", posX + random.nextGaussian() * offX,
+				// posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
+				// random.nextGaussian() * xVel, random.nextGaussian() * yVel,
+				// random.nextGaussian() * zVel);
 				
 			}
 			
@@ -70,7 +74,7 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected VectorD getGravityVector() {
+	protected Vector getGravityVector() {
 		return GRAVITY;
 	}
 	
@@ -85,7 +89,8 @@ public class EntityWaterArc extends EntityArc {
 	
 	public static EntityWaterArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id) return (EntityWaterArc) obj;
+			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id)
+				return (EntityWaterArc) obj;
 		}
 		return null;
 	}
@@ -100,7 +105,8 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	public void playSplash() {
-		worldObj.playSoundAtEntity(this, "game.neutral.swim.splash", 0.3f, 1.5f);
+		worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
+				1.5f, false);
 		lastPlayedSplash = 0;
 	}
 	
@@ -119,7 +125,8 @@ public class EntityWaterArc extends EntityArc {
 			if (entity == owner) return;
 			entity.addVelocity(this.posX - entity.posX, 0.2, this.posZ - entity.posZ);
 			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase) entity).attackEntityFrom(AvatarDamageSource.causeWaterDamage((EntityWaterArc) arc, entity), 6);
+				((EntityLivingBase) entity).attackEntityFrom(
+						AvatarDamageSource.causeWaterDamage((EntityWaterArc) arc, entity), 6);
 			}
 		}
 		
