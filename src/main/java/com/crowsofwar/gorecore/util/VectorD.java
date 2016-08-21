@@ -9,21 +9,17 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * A mutable 3-dimensional vector using Doubles. Also contains convenience methods for converting
- * to/from Minecraft vectors (Vec3d).
+ * A mutable 3-dimensional vector using doubles.
  * 
  * @author CrowsOfWar
  */
-public class VectorD implements Vector<Double> {
+public class VectorD {
 	
-	// TODO make the zero vector immutable
-	public static final Vector<Double> ZERO = new VectorD();
-	
-	private Double cachedMagnitude;
-	private Double x, y, z;
+	private double cachedMagnitude;
+	private double x, y, z;
 	
 	/**
-	 * Creates the zero vector.
+	 * Creates a new vector at the origin point.
 	 */
 	public VectorD() {
 		this(0, 0, 0);
@@ -39,7 +35,7 @@ public class VectorD implements Vector<Double> {
 	 * @param z
 	 *            Z-position of the new vector
 	 */
-	public VectorD(Double x, Double y, Double z) {
+	public VectorD(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -52,7 +48,7 @@ public class VectorD implements Vector<Double> {
 	 * @param vec
 	 *            Vector to copy
 	 */
-	public VectorD(Vector<Double> vec) {
+	public VectorD(VectorD vec) {
 		this(vec.x, vec.y, vec.z);
 		this.cachedMagnitude = vec.cachedMagnitude;
 	}
@@ -70,13 +66,11 @@ public class VectorD implements Vector<Double> {
 	/**
 	 * Get the x-coordinate of this vector.
 	 */
-	@Override
-	public Double x() {
+	public double x() {
 		return x;
 	}
 	
-	@Override
-	public void setX(Double x) {
+	public void setX(double x) {
 		this.x = x;
 		recalcMagnitude();
 	}
@@ -84,13 +78,11 @@ public class VectorD implements Vector<Double> {
 	/**
 	 * Get the y-coordinate of this vector.
 	 */
-	@Override
-	public Double y() {
+	public double y() {
 		return y;
 	}
 	
-	@Override
-	public void setY(Double y) {
+	public void setY(double y) {
 		this.y = y;
 		recalcMagnitude();
 	}
@@ -98,13 +90,11 @@ public class VectorD implements Vector<Double> {
 	/**
 	 * Get the z-coordinate of this vector.
 	 */
-	@Override
-	public Double z() {
+	public double z() {
 		return z;
 	}
 	
-	@Override
-	public void setZ(Double z) {
+	public void setZ(double z) {
 		this.z = z;
 		recalcMagnitude();
 	}
@@ -120,8 +110,7 @@ public class VectorD implements Vector<Double> {
 	 *            Z-coordinate to set to
 	 * @return this
 	 */
-	@Override
-	public Vector<Double> set(Double x, Double y, Double z) {
+	public VectorD set(double x, double y, double z) {
 		setX(x);
 		setY(y);
 		setZ(z);
@@ -135,8 +124,7 @@ public class VectorD implements Vector<Double> {
 	 *            Vector to set to
 	 * @return this
 	 */
-	@Override
-	public Vector<Double> set(Vector<Double> vec) {
+	public VectorD set(VectorD vec) {
 		set(vec.x, vec.y, vec.z);
 		return this;
 	}
@@ -144,9 +132,8 @@ public class VectorD implements Vector<Double> {
 	/**
 	 * Returns a new vector with the same coordinates as this one.
 	 */
-	@Override
-	public Vector<Double> createCopy() {
-		return new Vector<Double>(this);
+	public VectorD createCopy() {
+		return new VectorD(this);
 	}
 	
 	/**
@@ -156,8 +143,7 @@ public class VectorD implements Vector<Double> {
 	 *            The vector to add
 	 * @return this
 	 */
-	@Override
-	public Vector<Double> add(Vector<Double> vec) {
+	public VectorD add(VectorD vec) {
 		return add(vec.x, vec.y, vec.z);
 	}
 	
@@ -172,8 +158,7 @@ public class VectorD implements Vector<Double> {
 	 *            Z-coordinate to add
 	 * @return this
 	 */
-	@Override
-	public Vector<Double> add(Double x, Double y, Double z) {
+	public VectorD add(double x, double y, double z) {
 		return set(this.x + x, this.y + y, this.z + z);
 	}
 	
@@ -183,8 +168,7 @@ public class VectorD implements Vector<Double> {
 	 * @param vec
 	 *            Vector for sum
 	 */
-	@Override
-	public Vector<Double> plus(Vector<Double> vec) {
+	public VectorD plus(VectorD vec) {
 		return plus(vec.x, vec.y, vec.z);
 	}
 	
@@ -198,9 +182,8 @@ public class VectorD implements Vector<Double> {
 	 * @param z
 	 *            Z-coordinate of other vector
 	 */
-	@Override
-	public Vector<Double> plus(Double x, Double y, Double z) {
-		return new Vector<Double>(this).add(x, y, z);
+	public VectorD plus(double x, double y, double z) {
+		return new VectorD(this).add(x, y, z);
 	}
 	
 	/**
@@ -210,8 +193,7 @@ public class VectorD implements Vector<Double> {
 	 *            The reduction vector
 	 * @return this
 	 */
-	@Override
-	public Vector<Double> subtract(Vector<Double> vec) {
+	public VectorD subtract(VectorD vec) {
 		return subtract(vec.x, vec.y, vec.z);
 	}
 	
@@ -226,8 +208,7 @@ public class VectorD implements Vector<Double> {
 	 *            Z-coordinate to subtract
 	 * @return this
 	 */
-	@Override
-	public Vector<Double> subtract(Double x, Double y, Double z) {
+	public VectorD subtract(double x, double y, double z) {
 		return set(this.x - x, this.y - y, this.z - z);
 	}
 	
@@ -237,8 +218,7 @@ public class VectorD implements Vector<Double> {
 	 * @param vec
 	 *            Other vector
 	 */
-	@Override
-	public Vector<Double> minus(Vector<Double> vec) {
+	public VectorD minus(VectorD vec) {
 		return minus(vec.x, vec.y, vec.z);
 	}
 	
@@ -252,9 +232,8 @@ public class VectorD implements Vector<Double> {
 	 * @param z
 	 *            Z-coordinate to subtract
 	 */
-	@Override
-	public Vector<Double> minus(Double x, Double y, Double z) {
-		return new Vector<Double>(this).subtract(x, y, z);
+	public VectorD minus(double x, double y, double z) {
+		return new VectorD(this).subtract(x, y, z);
 	}
 	
 	/**
@@ -265,8 +244,7 @@ public class VectorD implements Vector<Double> {
 	 *            The scalar to multiply this vector by
 	 * @returns this
 	 */
-	@Override
-	public Vector<Double> mul(Double scalar) {
+	public VectorD mul(double scalar) {
 		return set(x * scalar, y * scalar, z * scalar);
 	}
 	
@@ -276,9 +254,8 @@ public class VectorD implements Vector<Double> {
 	 * @param scalar
 	 *            The scalar to multiply the new vector by
 	 */
-	@Override
-	public Vector<Double> times(Double scalar) {
-		return new Vector<Double>(this).mul(scalar);
+	public VectorD times(double scalar) {
+		return new VectorD(this).mul(scalar);
 	}
 	
 	/**
@@ -288,8 +265,7 @@ public class VectorD implements Vector<Double> {
 	 *            The scalar to divide this vector by
 	 * @return this
 	 */
-	@Override
-	public Vector<Double> divide(Double scalar) {
+	public VectorD divide(double scalar) {
 		return set(x / scalar, y / scalar, z / scalar);
 	}
 	
@@ -299,9 +275,8 @@ public class VectorD implements Vector<Double> {
 	 * @param scalar
 	 *            The scalar to divide the new vector by
 	 */
-	@Override
-	public Vector<Double> dividedBy(Double scalar) {
-		return new Vector<Double>(this).divide(scalar);
+	public VectorD dividedBy(double scalar) {
+		return new VectorD(this).divide(scalar);
 	}
 	
 	/**
@@ -309,8 +284,7 @@ public class VectorD implements Vector<Double> {
 	 * <p>
 	 * The result is cached since square-root is a performance-heavy operation.
 	 */
-	@Override
-	public Double magnitude() {
+	public double magnitude() {
 		if (cachedMagnitude == -1) {
 			cachedMagnitude = Math.sqrt(sqrMagnitude());
 		}
@@ -320,8 +294,7 @@ public class VectorD implements Vector<Double> {
 	/**
 	 * Get the square magnitude of this vector.
 	 */
-	@Override
-	public Double sqrMagnitude() {
+	public double sqrMagnitude() {
 		return x * x + y * y + z * z;
 	}
 	
@@ -337,8 +310,7 @@ public class VectorD implements Vector<Double> {
 	 * 
 	 * @return this
 	 */
-	@Override
-	public Vector<Double> normalize() {
+	public VectorD normalize() {
 		return divide(magnitude());
 	}
 	
@@ -348,8 +320,7 @@ public class VectorD implements Vector<Double> {
 	 * @param vec
 	 *            The other vector
 	 */
-	@Override
-	public Double sqrDist(Vector<Double> vec) {
+	public double sqrDist(VectorD vec) {
 		return sqrDist(vec.x, vec.y, vec.z);
 	}
 	
@@ -363,8 +334,7 @@ public class VectorD implements Vector<Double> {
 	 * @param z
 	 *            The z-position of the other vector
 	 */
-	@Override
-	public Double sqrDist(Double x, Double y, Double z) {
+	public double sqrDist(double x, double y, double z) {
 		return (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y) + (this.z - z) * (this.z - z);
 	}
 	
@@ -374,8 +344,7 @@ public class VectorD implements Vector<Double> {
 	 * @param vec
 	 *            The other vector
 	 */
-	@Override
-	public Double dist(Vector<Double> vec) {
+	public double dist(VectorD vec) {
 		return Math.sqrt(sqrDist(vec));
 	}
 	
@@ -389,8 +358,7 @@ public class VectorD implements Vector<Double> {
 	 * @param z
 	 *            The z-position of the other vector
 	 */
-	@Override
-	public Double dist(Double x, Double y, Double z) {
+	public double dist(double x, double y, double z) {
 		return Math.sqrt(sqrDist(x, y, z));
 	}
 	
@@ -400,8 +368,7 @@ public class VectorD implements Vector<Double> {
 	 * @param vec
 	 *            The other vector
 	 */
-	@Override
-	public Double dot(Vector<Double> vec) {
+	public double dot(VectorD vec) {
 		return dot(vec.x, vec.y, vec.z);
 	}
 	
@@ -415,8 +382,7 @@ public class VectorD implements Vector<Double> {
 	 * @param z
 	 *            Z-coordinate of the other vector
 	 */
-	@Override
-	public Double dot(Double x, Double y, Double z) {
+	public double dot(double x, double y, double z) {
 		return this.x * x + this.y * y + this.z * z;
 	}
 	
@@ -426,8 +392,7 @@ public class VectorD implements Vector<Double> {
 	 * @param vec
 	 *            The vector to cross with
 	 */
-	@Override
-	public Vector<Double> cross(Vector<Double> vec) {
+	public VectorD cross(VectorD vec) {
 		return cross(vec.x, vec.y, vec.z);
 	}
 	
@@ -441,9 +406,8 @@ public class VectorD implements Vector<Double> {
 	 * @param z
 	 *            Z-coordinate of other vector
 	 */
-	@Override
-	public Vector<Double> cross(Double x, Double y, Double z) {
-		return new Vector<Double>(this.y * z - this.z * y, this.z * x - this.x * z, this.x * y - this.y * x);
+	public VectorD cross(double x, double y, double z) {
+		return new VectorD(this.y * z - this.z * y, this.z * x - this.x * z, this.x * y - this.y * x);
 	}
 	
 	/**
@@ -452,17 +416,16 @@ public class VectorD implements Vector<Double> {
 	 * @param vec
 	 *            Other vector
 	 */
-	@Override
-	public Double angle(Vector<Double> vec) {
-		Double dot = dot(vec);
+	public double angle(VectorD vec) {
+		double dot = dot(vec);
 		return Math.acos(dot / (this.magnitude() * vec.magnitude()));
 	}
 	
 	/**
 	 * Converts this vector into a minecraft vector.
 	 */
-	public Vector<Double> toMinecraft() {
-		return new Vector<Double>(x, y, z);
+	public VectorD toMinecraft() {
+		return new VectorD(x, y, z);
 	}
 	
 	/**
@@ -475,37 +438,37 @@ public class VectorD implements Vector<Double> {
 	 * @param pos2
 	 *            Where to look at
 	 */
-	public static Vector<Double> getRotations(Vector<Double> pos1, Vector<Double> pos2) {
-		Vector<Double> diff = pos2.minus(pos1);
+	public static VectorD getRotations(VectorD pos1, VectorD pos2) {
+		VectorD diff = pos2.minus(pos1);
 		diff.normalize();
-		Double x = diff.x;
-		Double y = diff.y;
-		Double z = diff.z;
-		Double d0 = x;
-		Double d1 = y;
-		Double d2 = z;
-		Double d3 = (Double) MathHelper.sqrt_Double(d0 * d0 + d2 * d2);
-		Double rotY = Math.atan2(d2, d0) - Math.PI / 2;
-		Double rotX = -Math.atan2(d1, d3);
-		Double rotZ = 0;
-		return new Vector<Double>(rotX, rotY, rotZ);
+		double x = diff.x;
+		double y = diff.y;
+		double z = diff.z;
+		double d0 = x;
+		double d1 = y;
+		double d2 = z;
+		double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
+		double rotX = -Math.atan2(d1, d3);
+		double rotZ = 0;
+		return new VectorD(rotX, rotY, rotZ);
 	}
 	
-	public static Vector<Double> getEntityPos(Entity entity) {
-		Vector<Double> pos = new Vector<Double>(entity.posX, entity.posY, entity.posZ);
+	public static VectorD getEntityPos(Entity entity) {
+		VectorD pos = new VectorD(entity.posX, entity.posY, entity.posZ);
 		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) pos.setY(pos.y - 1.62);
 		return pos;
 	}
 	
-	public static Vector<Double> getEyePos(Entity entity) {
-		Vector<Double> pos = getEntityPos(entity);
+	public static VectorD getEyePos(Entity entity) {
+		VectorD pos = getEntityPos(entity);
 		pos.setY(pos.y + 1.62);
 		return pos;
 	}
 	
 	/**
 	 * Get the pitch to lob a projectile in radians. Example: pitch to target can be used in
-	 * {@link #fromYawPitch(Double, Double)}
+	 * {@link #fromYawPitch(double, double)}
 	 * 
 	 * @param v
 	 *            Force of the projectile, going FORWARDS
@@ -516,21 +479,21 @@ public class VectorD implements Vector<Double> {
 	 * @param y
 	 *            Vertical distance to target
 	 */
-	public static Double getProjectileAngle(Double v, Double g, Double x, Double y) {
+	public static double getProjectileAngle(double v, double g, double x, double y) {
 		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
 	}
 	
 	/**
 	 * Create a unit vector from yaw and pitch. Parameters should be in radians.
 	 */
-	public static Vector<Double> fromYawPitch(Double yaw, Double pitch) {
-		return new Vector<Double>(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
+	public static VectorD fromYawPitch(double yaw, double pitch) {
+		return new VectorD(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
 	}
 	
 	/**
 	 * Create a unit vector from the given euler angles. Measurements should be in radians.
 	 */
-	public static Vector<Double> fromDirection(Vector<Double> euler) {
+	public static VectorD fromDirection(VectorD euler) {
 		return fromYawPitch(euler.y, euler.x);
 	}
 	
