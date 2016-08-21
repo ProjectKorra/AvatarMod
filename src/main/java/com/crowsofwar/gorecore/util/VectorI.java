@@ -1,5 +1,6 @@
 package com.crowsofwar.gorecore.util;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -370,6 +371,28 @@ public class VectorI {
 	 */
 	public BlockPos toBlockPos() {
 		return new BlockPos(x, y, z);
+	}
+	
+	/**
+	 * Writes this vector to the packet byte buffer.
+	 * 
+	 * @param buf
+	 *            Buffer to write to
+	 */
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(x);
+		buf.writeInt(y);
+		buf.writeInt(z);
+	}
+	
+	/**
+	 * Creates a new vector from the packet information in the byte buffer.
+	 * 
+	 * @param buf
+	 *            Buffer to read from
+	 */
+	public static VectorI fromBytes(ByteBuf buf) {
+		return new VectorI(buf.readInt(), buf.readInt(), buf.readInt());
 	}
 	
 }

@@ -37,7 +37,7 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		ability = AvatarAbility.fromId(buf.readInt());
-		target = buf.readBoolean() ? new VectorI(buf) : null;
+		target = buf.readBoolean() ? VectorI.fromBytes(buf) : null;
 		side = EnumFacing.getFront(buf.readInt());
 	}
 	

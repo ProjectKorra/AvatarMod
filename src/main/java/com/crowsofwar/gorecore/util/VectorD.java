@@ -3,6 +3,7 @@ package com.crowsofwar.gorecore.util;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
@@ -429,6 +430,18 @@ public class VectorD {
 	}
 	
 	/**
+	 * Writes this vector to the packet byte buffer.
+	 * 
+	 * @param buf
+	 *            Buffer to write to
+	 */
+	public void toBytes(ByteBuf buf) {
+		buf.writeDouble(x);
+		buf.writeDouble(y);
+		buf.writeDouble(z);
+	}
+	
+	/**
 	 * Returns the euler angles from position 1 to position 2.
 	 * <p>
 	 * The returned vector has Y for yaw, and X for pitch. Measurements are in radians.
@@ -495,6 +508,16 @@ public class VectorD {
 	 */
 	public static VectorD fromDirection(VectorD euler) {
 		return fromYawPitch(euler.y, euler.x);
+	}
+	
+	/**
+	 * Creates a new vector from the packet information in the byte buffer.
+	 * 
+	 * @param buf
+	 *            Buffer to read from
+	 */
+	public static VectorD fromBytes(ByteBuf buf) {
+		return new VectorD(buf.readDouble(), buf.readDouble(), buf.readDouble());
 	}
 	
 }

@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.util.AvBlockPos;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -33,7 +32,7 @@ public class PlayerState {
 	
 	public void update(EntityPlayer playerEntity, Result raytrace) {
 		update(playerEntity, raytrace == null ? null : raytrace.getPos(),
-				raytrace == null ? null : raytrace.getDirection());
+				raytrace == null ? null : raytrace.getSide());
 	}
 	
 	public void update(EntityPlayer playerEntity, VectorI clientLookAtBlock, EnumFacing lookAtSide) {
@@ -95,7 +94,7 @@ public class PlayerState {
 	 * 
 	 * @see Raytrace#getTargetBlock(EntityPlayer, double)
 	 */
-	public AvBlockPos verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
+	public VectorI verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
 		if (clientLookAtBlock == null) return null;
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookAtBlock;
 		Result res = Raytrace.getTargetBlock(playerEntity, raycastDist);
