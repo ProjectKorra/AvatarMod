@@ -2,6 +2,7 @@ package com.crowsofwar.gorecore.tree;
 
 import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,15 +22,19 @@ import net.minecraft.util.text.TextFormatting;
 public abstract class TreeCommand implements ICommand {
 	
 	private NodeBranch branchRoot;
+	protected final List<String> aliases;
 	
 	public TreeCommand() {
 		// TODO Think of a default theme that doesn't look like neon barf.
-		this(new MessageConfiguration().addColor("value", TextFormatting.GREEN).addColor("title", TextFormatting.BLUE));
+		this(new MessageConfiguration().addColor("value", TextFormatting.GREEN).addColor("title",
+				TextFormatting.BLUE));
 	}
 	
 	public TreeCommand(MessageConfiguration cfg) {
 		initChatMessages(cfg);
-		branchRoot = new NodeBranch(newChatMessage(cfg, "gc.tree.branchHelp.root", "command"), getCommandName(), addCommands());
+		branchRoot = new NodeBranch(newChatMessage(cfg, "gc.tree.branchHelp.root", "command"),
+				getCommandName(), addCommands());
+		this.aliases = new ArrayList<>();
 	}
 	
 	@Override
@@ -44,11 +49,12 @@ public abstract class TreeCommand implements ICommand {
 	
 	@Override
 	public List getCommandAliases() {
-		return null;
+		return aliases;
 	}
 	
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
+	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments)
+			throws CommandException {
 		
 		try {
 			
@@ -67,7 +73,8 @@ public abstract class TreeCommand implements ICommand {
 			ICommandNode node = branchRoot;
 			while (node != null) {
 				
-				if (node.needsOpPermission() && !call.isOpped()) throw new TreeCommandException(Reason.NO_PERMISSION);
+				if (node.needsOpPermission() && !call.isOpped())
+					throw new TreeCommandException(Reason.NO_PERMISSION);
 				
 				if (call.getArgumentsLeft() == 0 && options.contains("help")) {
 					
@@ -131,7 +138,8 @@ public abstract class TreeCommand implements ICommand {
 		ICommandNode[] subNodes = branch.getSubNodes();
 		for (int i = 0; i < subNodes.length; i++) {
 			chain.add(branchHelpOptionsItem, subNodes[i].getNodeName());
-			if (i < subNodes.length - 1) chain.add(i == subNodes.length - 2 ? branchHelpOptionsSeparatorLast : branchHelpOptionsSeparator);
+			if (i < subNodes.length - 1) chain.add(
+					i == subNodes.length - 2 ? branchHelpOptionsSeparatorLast : branchHelpOptionsSeparator);
 			
 		}
 		chain.send(sender);
@@ -231,7 +239,8 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
+			BlockPos pos) {
 		// TODO Support Tree Command Tab completion
 		return null;
 	}

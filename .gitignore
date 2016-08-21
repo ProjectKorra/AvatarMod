@@ -12,3 +12,11 @@ run/
 gradlew
 gradlew.bat
 
+
+GoreCore_ClientUUIDCache.txt
+config/
+logs/
+options.txt
+saves/
+usercache.json
+usernamecache.json

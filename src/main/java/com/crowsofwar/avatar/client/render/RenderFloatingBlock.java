@@ -1,10 +1,9 @@
 package com.crowsofwar.avatar.client.render;
 
-import org.lwjgl.opengl.GlStateManager;
-
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -20,7 +19,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderFloatingBlock extends Render {
 	// [1.10] Find out substitution for Renderblocks- maybe ModelLoader?
-	private final RenderBlocks field_147920_a = new RenderBlocks();
 	private static final String __OBFID = "CL_00000994";
 	
 	public RenderFloatingBlock(RenderManager renderManager) {
@@ -45,11 +43,14 @@ public class RenderFloatingBlock extends Render {
 		// entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) - RenderManager.renderPosZ;
 		
 		if (block != null && block != world.getBlockState(new BlockPos(i, j, k)).getBlock()) {
-			GlStateManager.glPushMatrix();
-			GlStateManager.glTranslatef((float) x, (float) y + 0.5f, (float) z);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((float) x, (float) y + 0.5f, (float) z);
 			this.bindEntityTexture(entity);
-			GlStateManager.glDisable(GlStateManager.GL_LIGHTING);
+			GlStateManager.disableLighting();
 			Tessellator tessellator;
+			
+			// BlockModelShapes Minecraft
+			// RenderFallingBlock
 			
 			// if (block instanceof BlockAnvil)
 			// {
@@ -76,12 +77,18 @@ public class RenderFloatingBlock extends Render {
 			// }
 			// else
 			// {
-			this.field_147920_a.setRenderBoundsFromBlock(block);
-			this.field_147920_a.renderBlockSandFalling(block, world, i, j, k, entity.getMetadata());
+			
+			// FIXME actually render block, see RenderFallingBlock for example
+			/*
+			 * this.field_147920_a.setRenderBoundsFromBlock(block);
+			 * this.field_147920_a.renderBlockSandFalling(block, world, i, j, k,
+			 * entity.getMetadata());
+			 */
+			
 			// }
 			
-			GlStateManager.glEnable(GlStateManager.GL_LIGHTING);
-			GlStateManager.glPopMatrix();
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
 		}
 	}
 	
