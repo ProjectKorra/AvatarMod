@@ -27,10 +27,17 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 				: AvatarMod.proxy.getClientThreadListener();
 		
 		mainThread.addScheduledTask(() -> {
-			handler.onMessageRecieved(message, ctx);
+			IMessage followup = handler.onMessageRecieved(message, ctx);
+			if (followup != null) {
+				if (ctx.side.isClient()) {
+					AvatarMod.network.sendToServer(followup);
+				} else {
+					AvatarMod.network.sendTo(followup, ctx.getServerHandler().playerEntity);
+				}
+			}
 		});
 		
-		return handler.getResponse(message);
+		return null;
 		
 	}
 	
@@ -48,8 +55,6 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 	 * An interface to handle the packet being received.
 	 * <p>
 	 * Method must be implemented: {@link #onMessageRecieved(MSG, MessageContext)}.
-	 * <p>
-	 * Optional method {@link #getResponse(MSG)} allows you to send a follow-up apcket.
 	 * 
 	 * @param <MSG>
 	 *            The type of the message to receive
@@ -68,25 +73,11 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 		 * @param ctx
 		 *            The context of the message. Can be used to obtain necessary objects such as a
 		 *            player entity.
-		 */
-		void onMessageRecieved(MSG message, MessageContext ctx);
-		
-		/**
-		 * Get the response packet to this message. Please note, this is called BEFORE
-		 * {@link #onMessageRecieved(IMessage, MessageContext)}.
-		 * <p>
-		 * <strong>EXTREMELY IMPORTANT:</strong> Make sure that you don't access/modify vanilla
-		 * Minecraft fields. This method is called on a different thread and you might end up
-		 * causing concurrency issues.
 		 * 
-		 * @param message
-		 *            The actual message
-		 * 
-		 * @return Follow-up packet to the given packet, or null for none
+		 * @return The follow-up packet, null for none. Note: doesn't actually use default
+		 *         SimpleImpl follow ups.
 		 */
-		default IMessage getResponse(MSG message) {
-			return null;
-		}
+		IMessage onMessageRecieved(MSG message, MessageContext ctx);
 		
 	}
 	

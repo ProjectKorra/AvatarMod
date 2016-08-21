@@ -56,7 +56,10 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	
 	@Override
 	protected AvatarPacket.Handler<PacketSRequestData> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
+		return (message, ctx) -> {
+			PacketRedirector.redirectMessage(message, ctx);
+			return null;
+		};
 	}
 	
 }

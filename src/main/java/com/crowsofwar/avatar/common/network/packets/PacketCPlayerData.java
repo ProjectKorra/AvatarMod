@@ -97,9 +97,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	@Override
 	protected AvatarPacket.Handler<PacketCPlayerData> getPacketHandler() {
-		return (message, context) -> {
-			PacketRedirector.redirectMessage(message, context);
-		};
+		return PacketRedirector::redirectMessage;
 	}
 	
 }
