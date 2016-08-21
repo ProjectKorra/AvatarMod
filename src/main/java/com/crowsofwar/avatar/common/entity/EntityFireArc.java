@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityFireArc extends EntityArc {
@@ -52,7 +53,7 @@ public class EntityFireArc extends EntityArc {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
-			worldObj.setBlock(x, y, z, Blocks.FIRE);
+			worldObj.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
 		}
 	}
 	

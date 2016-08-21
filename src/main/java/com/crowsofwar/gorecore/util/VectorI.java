@@ -1,6 +1,7 @@
 package com.crowsofwar.gorecore.util;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -234,6 +235,38 @@ public class VectorI {
 	}
 	
 	/**
+	 * Move this Vector in the specified direction by 1 meter.
+	 * 
+	 * @param direction
+	 *            The direction to offset this vector
+	 */
+	public void offset(EnumFacing direction) {
+		offset(direction, 1);
+	}
+	
+	/**
+	 * Move this Vector in the specified direction by the specified amount of meters.
+	 * 
+	 * @param direction
+	 *            The direction to offset this vector
+	 * @param distance
+	 *            How far to offset by
+	 */
+	public void offset(EnumFacing direction, int distance) {
+		switch (direction.getAxis()) {
+			case X:
+				x += direction.getAxisDirection().getOffset() * distance;
+				break;
+			case Y:
+				y += direction.getAxisDirection().getOffset() * distance;
+				break;
+			case Z:
+				z += direction.getAxisDirection().getOffset() * distance;
+				break;
+		}
+	}
+	
+	/**
 	 * Get the length of this vector.
 	 * <p>
 	 * The result is cached since square-root is a performance-heavy operation.
@@ -371,6 +404,13 @@ public class VectorI {
 	 */
 	public BlockPos toBlockPos() {
 		return new BlockPos(x, y, z);
+	}
+	
+	/**
+	 * Creates and returns a new double vector for greater precision.
+	 */
+	public Vector precision() {
+		return new Vector(x, y, z);
 	}
 	
 	/**

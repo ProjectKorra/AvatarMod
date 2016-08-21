@@ -7,7 +7,6 @@ import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
-import com.crowsofwar.avatar.common.entity.EntityFlame;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -68,7 +67,6 @@ public class AvatarMod {
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
-		registerEntity(EntityFlame.class, "Flame");
 		registerEntity(EntityFireArc.class, "FireArc");
 		registerEntity(EntityFireArc.FireControlPoint.class, "FireArcCP");
 		registerEntity(EntityWaterArc.class, "WaterArc");

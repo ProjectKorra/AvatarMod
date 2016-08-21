@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.bending;
 
 import static com.crowsofwar.avatar.common.AvatarAbility.*;
-import static com.crowsofwar.avatar.common.util.VectorUtils.*;
 
 import java.awt.Color;
 
@@ -14,10 +13,10 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vector;
 import net.minecraft.world.World;
 
 public class Airbending implements IBendingController {
@@ -71,13 +70,13 @@ public class Airbending implements IBendingController {
 		
 		if (ability == ACTION_AIR_GUST) {
 			
-			Vector look = fromYawPitch(Math.toRadians(player.rotationYaw),
+			Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
-			Vector pos = getEyePos(player);
+			Vector pos = Vector.getEyePos(player);
 			
 			EntityAirGust gust = new EntityAirGust(world);
-			gust.setVelocity(times(look, 10));
-			gust.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+			gust.setVelocity(look.times(10));
+			gust.setPosition(pos.x(), pos.y(), pos.z());
 			gust.setOwner(player);
 			
 			world.spawnEntityInWorld(gust);

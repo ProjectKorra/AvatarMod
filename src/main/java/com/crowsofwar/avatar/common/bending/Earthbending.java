@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.bending;
 
-import static com.crowsofwar.avatar.common.util.VectorUtils.times;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,19 +16,21 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.util.AvBlockPos;
-import com.crowsofwar.avatar.common.util.VectorUtils;
+import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vector;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 public class Earthbending implements IBendingController {
@@ -92,15 +92,16 @@ public class Earthbending implements IBendingController {
 				ebs.setPickupBlock(null);
 				AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
 			} else {
-				AvBlockPos target = state.verifyClientLookAtBlock(-1, 5);
+				VectorI target = state.verifyClientLookAtBlock(-1, 5);
 				if (target != null) {
-					IBlockState ibs = world.getBlockState(new BlockPos(target.x, target.y, target.z));
+					IBlockState ibs = world.getBlockState(target.toBlockPos());
 					Block block = ibs.getBlock();
 					if (bendableBlocks.contains(block)) {
 						
 						EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
-						floating.setMetadata(ibs.get(target.x, target.y, target.z));
-						floating.setPosition(target.x + 0.5, target.y, target.z + 0.5);
+						// TODO [1.10] Figure out metadata!!
+						// floating.setMetadata(ibs.);
+						floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);
 						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
 						
 						double dist = 2.5;
@@ -116,15 +117,18 @@ public class Earthbending implements IBendingController {
 						ebs.setPickupBlock(floating);
 						data.sendBendingState(ebs);
 						
-						Block.SoundType sound = block.stepSound;
-						if (sound != null) world.playSoundEffect(target.x + 0.5, target.y + 0.5,
-								target.z + 0.5, sound.getBreakSound(), 1, sound.getPitch());
+						SoundType sound = block.getSoundType();
+						if (sound != null) {
+							world.playSound(target.x() + 0.5, target.y() + 0.5, target.z() + 0.5,
+									sound.getBreakSound(), SoundCategory.PLAYERS, sound.getVolume(),
+									sound.getPitch(), false);
+						}
 						
-						world.setBlock(target.x, target.y, target.z, Blocks.air);
+						world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 						
 					} else {
-						world.playSoundAtEntity(player, "random.click", 1.0f,
-								(float) (random.nextGaussian() / 0.25 + 0.375));
+						world.playSound(player, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
+								SoundCategory.PLAYERS, 1, (float) (random.nextGaussian() / 0.25 + 0.375));
 					}
 					
 				}
@@ -139,8 +143,8 @@ public class Earthbending implements IBendingController {
 				float pitch = (float) Math.toRadians(player.rotationPitch);
 				
 				// Calculate force and everything
-				Vector lookDir = VectorUtils.fromYawPitch(yaw, pitch);
-				floating.addVelocity(times(lookDir, 20));
+				Vector lookDir = Vector.fromYawPitch(yaw, pitch);
+				floating.addVelocity(lookDir.times(20));
 				
 				floating.drop();
 				ebs.setPickupBlock(null);
@@ -152,21 +156,18 @@ public class Earthbending implements IBendingController {
 			EntityFloatingBlock floating = ebs.getPickupBlock();
 			if (floating != null) {
 				// TODO Verify look at block
-				AvBlockPos looking = state.getClientLookAtBlock();
-				ForgeDirection lookingSide = state.getLookAtSide();
+				VectorI looking = state.getClientLookAtBlock();
+				EnumFacing lookingSide = state.getLookAtSide();
+				looking.offset(lookingSide);
 				if (looking != null && lookingSide != null) {
-					int x = looking.x + lookingSide.offsetX;
-					int y = looking.y + lookingSide.offsetY;
-					int z = looking.z + lookingSide.offsetZ;
 					// if (world.getBlock(x, y, z) == Blocks.air) {
 					// world.setBlock(x, y, z, floating.getBlock());
 					// floating.setDead();
 					// }
 					floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
-					floating.setMovingToBlock(new AvBlockPos(x, y, z));
+					floating.setMovingToBlock(looking.toBlockPos());
 					floating.setGravityEnabled(false);
-					Vector force = VectorUtils.minus(new Vector(x, y, z),
-							VectorUtils.getEntityPos(floating));
+					Vector force = looking.precision().minus(new Vector(floating));
 					force.normalize();
 					floating.addVelocity(force);
 					ebs.dropBlock();
@@ -198,11 +199,11 @@ public class Earthbending implements IBendingController {
 				
 				double yaw = Math.toRadians(player.rotationYaw);
 				double pitch = Math.toRadians(player.rotationPitch);
-				Vector forward = VectorUtils.fromYawPitch(yaw, pitch);
-				Vector eye = VectorUtils.getEyePos(player);
-				Vector target = VectorUtils.plus(VectorUtils.times(forward, 2), eye);
-				Vector motion = VectorUtils.minus(target, VectorUtils.getEntityPos(floating));
-				VectorUtils.mult(motion, 5);
+				Vector forward = Vector.fromYawPitch(yaw, pitch);
+				Vector eye = Vector.getEyePos(player);
+				Vector target = forward.times(2).plus(eye);
+				Vector motion = target.minus(new Vector(floating));
+				motion.mul(5);
 				floating.setVelocity(motion);
 				
 			}
@@ -215,7 +216,8 @@ public class Earthbending implements IBendingController {
 		PlayerState state = data.getState();
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState(this);
 		EntityPlayer player = data.getPlayerEntity();
-		ItemStack holding = player.getCurrentEquippedItem();
+		// TODO [1.10] How does dual wielding even work?? (lol i didn't really play 1.9 that much)
+		ItemStack holding = player.getActiveItemStack();
 		
 		if (ebs.getPickupBlock() != null) {
 			if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_THROW_BLOCK;

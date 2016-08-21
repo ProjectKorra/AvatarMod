@@ -254,7 +254,7 @@ public class Vector {
 	 * 
 	 * @param scalar
 	 *            The scalar to multiply this vector by
-	 * @returns this
+	 * @return this
 	 */
 	public Vector mul(double scalar) {
 		return set(x * scalar, y * scalar, z * scalar);
