@@ -25,6 +25,7 @@ import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -91,6 +92,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher() {
 		return clientFetcher;
+	}
+	
+	@Override
+	public IThreadListener getClientThreadListener() {
+		return mc;
 	}
 	
 }

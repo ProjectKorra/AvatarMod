@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 
 /**
@@ -46,5 +47,12 @@ public interface AvatarCommonProxy {
 	IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 	
 	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
+	
+	/**
+	 * Get client-side IThreadListener, null on server
+	 * 
+	 * @return
+	 */
+	IThreadListener getClientThreadListener();
 	
 }
