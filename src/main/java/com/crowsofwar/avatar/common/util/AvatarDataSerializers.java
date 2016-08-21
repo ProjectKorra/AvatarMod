@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.util;
 
+import static net.minecraft.network.datasync.DataSerializers.registerSerializer;
+
 import java.io.IOException;
 
 import com.crowsofwar.gorecore.util.Vector;
@@ -16,7 +18,7 @@ import net.minecraft.network.datasync.DataSerializer;
  */
 public class AvatarDataSerializers {
 	
-	public static final DataSerializer<Block> SERIALIZER_BLOCK = new DataSerializer<Block>() {
+	public static final DataSerializer<Block> SERIALIZER_BLOCK = new AvatarSerializer<Block>() {
 		
 		@Override
 		public void write(PacketBuffer buf, Block value) {
@@ -34,7 +36,7 @@ public class AvatarDataSerializers {
 			return new DataParameter<>(id, this);
 		}
 	};
-	public static final DataSerializer<Vector> SERIALIZER_VECTOR = new DataSerializer<Vector>() {
+	public static final DataSerializer<Vector> SERIALIZER_VECTOR = new AvatarSerializer<Vector>() {
 		
 		@Override
 		public void write(PacketBuffer buf, Vector value) {
@@ -53,5 +55,13 @@ public class AvatarDataSerializers {
 			return new DataParameter<>(id, this);
 		}
 	};
+	
+	private static abstract class AvatarSerializer<T> implements DataSerializer<T> {
+		
+		protected AvatarSerializer() {
+			registerSerializer(this);
+		}
+		
+	}
 	
 }
