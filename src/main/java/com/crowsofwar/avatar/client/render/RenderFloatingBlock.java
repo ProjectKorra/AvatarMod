@@ -3,12 +3,18 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -29,7 +35,7 @@ public class RenderFloatingBlock extends Render {
 	/**
 	 * 
 	 */
-	public void doRender(EntityFloatingBlock entity, double x, double y, double z, float interpolatedYaw,
+	public void doRender(EntityFloatingBlock entity, double x, double y, double z, float entityYaw,
 			float lerp) {
 		World world = entity.worldObj;
 		Block block = entity.getBlock();
@@ -43,52 +49,47 @@ public class RenderFloatingBlock extends Render {
 		// entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) - RenderManager.renderPosZ;
 		
 		if (block != null && block != world.getBlockState(new BlockPos(i, j, k)).getBlock()) {
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float) x, (float) y + 0.5f, (float) z);
-			this.bindEntityTexture(entity);
-			GlStateManager.disableLighting();
-			Tessellator tessellator;
+			Tessellator tessellator = Tessellator.getInstance();
 			
-			// BlockModelShapes Minecraft
-			// RenderFallingBlock
+			IBlockState iblockstate = entity.getBlockState();
 			
-			// if (block instanceof BlockAnvil)
-			// {
-			// this.field_147920_a.blockAccess = world;
-			// tessellator = Tessellator.instance;
-			// tessellator.startDrawingQuads();
-			// tessellator.setTranslation((double)((float)(-i) - 0.5F), (double)((float)(-j) -
-			// 0.5F), (double)((float)(-k) - 0.5F));
-			// this.field_147920_a.renderBlockAnvilMetadata((BlockAnvil)block, i, j, k,
-			// p_76986_1_.field_145814_a);
-			// tessellator.setTranslation(0.0D, 0.0D, 0.0D);
-			// tessellator.draw();
-			// }
-			// else if (block instanceof BlockDragonEgg)
-			// {
-			// this.field_147920_a.blockAccess = world;
-			// tessellator = Tessellator.instance;
-			// tessellator.startDrawingQuads();
-			// tessellator.setTranslation((double)((float)(-i) - 0.5F), (double)((float)(-j) -
-			// 0.5F), (double)((float)(-k) - 0.5F));
-			// this.field_147920_a.renderBlockDragonEgg((BlockDragonEgg)block, i, j, k);
-			// tessellator.setTranslation(0.0D, 0.0D, 0.0D);
-			// tessellator.draw();
-			// }
-			// else
-			// {
+			if (iblockstate.getRenderType() == EnumBlockRenderType.MODEL) {
+				
+				if (iblockstate != world.getBlockState(new BlockPos(entity))
+						&& iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
+					this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+					GlStateManager.pushMatrix();
+					GlStateManager.disableLighting();
+					VertexBuffer vertexbuffer = tessellator.getBuffer();
+					
+					if (this.renderOutlines) {
+						GlStateManager.enableColorMaterial();
+						GlStateManager.enableOutlineMode(this.getTeamColor(entity));
+					}
+					
+					vertexbuffer.begin(7, DefaultVertexFormats.BLOCK);
+					BlockPos blockpos = new BlockPos(entity.posX, entity.getEntityBoundingBox().maxY,
+							entity.posZ);
+					GlStateManager.translate(x - blockpos.getX() - 0.5, y - blockpos.getY(),
+							z - blockpos.getZ() - 0.5);
+					BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft()
+							.getBlockRendererDispatcher();
+					blockrendererdispatcher.getBlockModelRenderer().renderModel(world,
+							blockrendererdispatcher.getModelForState(iblockstate), iblockstate, blockpos,
+							vertexbuffer, false, 0);
+					tessellator.draw();
+					
+					if (this.renderOutlines) {
+						GlStateManager.disableOutlineMode();
+						GlStateManager.disableColorMaterial();
+					}
+					
+					GlStateManager.enableLighting();
+					GlStateManager.popMatrix();
+					super.doRender(entity, x, y, z, entityYaw, lerp);
+				}
+			}
 			
-			// FIXME actually render block, see RenderFallingBlock for example
-			/*
-			 * this.field_147920_a.setRenderBoundsFromBlock(block);
-			 * this.field_147920_a.renderBlockSandFalling(block, world, i, j, k,
-			 * entity.getMetadata());
-			 */
-			
-			// }
-			
-			GlStateManager.enableLighting();
-			GlStateManager.popMatrix();
 		}
 	}
 	
