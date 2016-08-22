@@ -71,8 +71,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			DataSerializers.BOOLEAN);
 	private static final DataParameter<Byte> SYNC_ON_LAND = createKey(EntityFloatingBlock.class,
 			DataSerializers.BYTE);
-	private static final DataParameter<BlockPos> SYNC_TARGET_BLOCK = createKey(EntityFloatingBlock.class,
-			DataSerializers.BLOCK_POS);
 	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
 			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
 	
@@ -83,6 +81,9 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(Vector)}.
 	 */
 	private Vector velocity;
+	/**
+	 * Target block to go to
+	 */
 	private final EntityPropertyDataManager<BlockPos> propBlockPos;
 	private final Vector internalPosition;
 	
@@ -103,7 +104,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			setID(nextBlockID++);
 		}
 		this.propBlockPos = new EntityPropertyDataManager<BlockPos>(this, EntityFloatingBlock.class,
-				DataSerializers.BLOCK_POS, null);
+				DataSerializers.BLOCK_POS, BlockPos.ORIGIN);
 		this.internalPosition = new Vector(0, 0, 0);
 		
 		this.enableItemDrops = true;
@@ -124,19 +125,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	@Override
 	protected void entityInit() {
 		
-		// dataManager.addObject(SYNC_BLOCKID, getNameForBlock(DEFAULT_BLOCK));
-		// dataManager.register(key, value);
-		// dataWatcher.addObject(SYNC_GRAVITY, 0);
-		// dataWatcher.addObject(SYNC_FLOATINGBLOCKID, 0);
-		//
-		// dataWatcher.addObject(SYNC_VELX, 0f);
-		// dataWatcher.addObject(SYNC_VELY, 0f);
-		// dataWatcher.addObject(SYNC_VELZ, 0f);
-		//
-		// dataWatcher.addObject(SYNC_FRICTION, 1f);
-		// dataWatcher.addObject(SYNC_CAN_FALL, (byte) 0);
-		// dataWatcher.addObject(SYNC_ON_LAND, (byte) 0);
-		// dataWatcher.addObject(SYNC_METADATA, 0);
+		dataManager.register(SYNC_GRAVITY_ENABLED, false);
+		dataManager.register(SYNC_ENTITY_ID, 0);
+		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
+		dataManager.register(SYNC_FRICTION, 1f);
+		dataManager.register(SYNC_CAN_FALL, false);
+		dataManager.register(SYNC_ON_LAND, OnBlockLand.DO_NOTHING.getId());
+		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
 		
 	}
 	

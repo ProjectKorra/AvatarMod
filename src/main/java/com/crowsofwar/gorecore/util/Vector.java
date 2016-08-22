@@ -16,6 +16,11 @@ import net.minecraft.util.math.Vec3d;
  */
 public class Vector {
 	
+	/**
+	 * The zero vector.
+	 */
+	public static final Vector ZERO = new Vector();
+	
 	private double cachedMagnitude;
 	private double x, y, z;
 	
