@@ -9,9 +9,11 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -21,7 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -58,12 +59,10 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	// public static final int SYNC_TARGET_BLOCK = 11; // 11,12,13,14
 	// public static final int SYNC_METADATA = 15;
 	
-	private static final DataParameter<Block> SYNC_BLOCK = EntityDataManager
-			.createKey(EntityFloatingBlock.class, AvatarDataSerializers.SERIALIZER_BLOCK);
-	private static final DataParameter<Boolean> SYNC_GRAVITY_ENABLED = EntityDataManager
-			.createKey(EntityFloatingBlock.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Integer> SYNC_ENTITY_ID = EntityDataManager
-			.createKey(EntityFloatingBlock.class, DataSerializers.VARINT);
+	private static final DataParameter<Boolean> SYNC_GRAVITY_ENABLED = createKey(EntityFloatingBlock.class,
+			DataSerializers.BOOLEAN);
+	private static final DataParameter<Integer> SYNC_ENTITY_ID = createKey(EntityFloatingBlock.class,
+			DataSerializers.VARINT);
 	private static final DataParameter<Vector> SYNC_VELOCITY = createKey(EntityFloatingBlock.class,
 			AvatarDataSerializers.SERIALIZER_VECTOR);
 	private static final DataParameter<Float> SYNC_FRICTION = createKey(EntityFloatingBlock.class,
@@ -74,8 +73,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			DataSerializers.BYTE);
 	private static final DataParameter<BlockPos> SYNC_TARGET_BLOCK = createKey(EntityFloatingBlock.class,
 			DataSerializers.BLOCK_POS);
-	private static final DataParameter<Integer> SYNC_METADATA = createKey(EntityFloatingBlock.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
+			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
 	
 	private static int nextBlockID = 0;
 	
@@ -143,8 +142,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		setBlock(Block.getBlockById(nbt.getInteger("BlockId")));
-		setMetadata(nbt.getInteger("Metadata"));
+		setBlockState(
+				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
 		setGravityEnabled(nbt.getBoolean("Gravity"));
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
 		setFriction(nbt.getFloat("Friction"));
@@ -156,7 +155,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
-		nbt.setInteger("Metadata", getMetadata());
+		nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
 		nbt.setBoolean("Gravity", isGravityEnabled());
 		Vector velocity = getVelocity();
 		nbt.setDouble("VelocityX", velocity.x());
@@ -169,30 +168,30 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	}
 	
 	public Block getBlock() {
-		Block block = dataManager.get(SYNC_BLOCK);
-		if (block == null) block = DEFAULT_BLOCK;
-		return block;
+		return getBlockState().getBlock();
 	}
 	
 	public void setBlock(Block block) {
-		if (block == null) block = DEFAULT_BLOCK;
-		dataManager.set(SYNC_BLOCK, block);
+		setBlockState(block.getDefaultState());
 	}
 	
-	public int getMetadata() {
-		return dataManager.get(SYNC_METADATA);
+	public IBlockState getBlockState() {
+		Optional<IBlockState> obs = dataManager.get(SYNC_BLOCK);
+		return obs.get();
 	}
 	
-	//
-	public void setMetadata(int metadata) {
-		dataManager.set(SYNC_METADATA, metadata);
+	public void setBlockState(IBlockState state) {
+		dataManager.set(SYNC_BLOCK, Optional.of(state));
 	}
 	
 	/**
 	 * Get the name of the correct "blockcrack_" particle based on the current block and metadata.
 	 */
 	public String getBlockCrackParticle() {
-		return "blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata();
+		// TODO [1.10] HOW TO SPAWN PARTICLES!!??!?!? How to spawn block crack particles!
+		// EntityEnderman
+		return "too bad for you";
+		// return "blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata();
 	}
 	
 	public boolean isGravityEnabled() {
