@@ -55,6 +55,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 		});
 		
+		RenderingRegistry.registerEntityRenderingHandler(EntityFloatingBlock.class, RenderFloatingBlock::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireArc.class, RenderFireArc::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterArc.class, RenderWaterArc::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityControlPoint.class, RenderControlPoint::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
+		
 	}
 	
 	@Override
@@ -77,11 +83,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@Override
 	public void init() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityFloatingBlock.class, RenderFloatingBlock::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFireArc.class, RenderFireArc::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityWaterArc.class, RenderWaterArc::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityControlPoint.class, RenderControlPoint::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
+		
 	}
 	
 	@Override

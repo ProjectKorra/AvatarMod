@@ -42,6 +42,9 @@ public interface AvatarCommonProxy {
 	 */
 	double getPlayerReach();
 	
+	/**
+	 * Called during the FMLInitialization event
+	 */
 	void init();
 	
 	IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
