@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -179,16 +180,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		dataManager.set(SYNC_BLOCK, Optional.of(state));
 	}
 	
-	/**
-	 * Get the name of the correct "blockcrack_" particle based on the current block and metadata.
-	 */
-	public String getBlockCrackParticle() {
-		// TODO [1.10] HOW TO SPAWN PARTICLES!!??!?!? How to spawn block crack particles!
-		// EntityEnderman
-		return "too bad for you";
-		// return "blockcrack_" + Block.getIdFromBlock(getBlock()) + "_" + getMetadata();
-	}
-	
 	public boolean isGravityEnabled() {
 		return dataManager.get(SYNC_GRAVITY_ENABLED);
 	}
@@ -240,6 +231,11 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		setItemDropsEnabled(false);
 	}
 	
+	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
+		worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
+				Block.getStateId(getBlockState()));
+	}
+	
 	@Override
 	public void onUpdate() {
 		if (isGravityEnabled()) {
@@ -257,9 +253,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				double spawnX = posX + (rand.nextDouble() - 0.5);
 				double spawnY = posY - 0;
 				double spawnZ = posZ + (rand.nextDouble() - 0.5);
-				// TODO [1.10] Find out how to spawn particles
-				// worldObj.spawnParticle(getBlockCrackParticle(), spawnX, spawnY, spawnZ, 0, -0.1,
-				// 0);
+				spawnCrackParticle(spawnX, spawnY, spawnZ, 0, -0.1, 0);
 			}
 			
 		}
@@ -368,10 +362,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
-			// TODO [1.10] Find out how to spawn particles
-			// worldObj.spawnParticle(getBlockCrackParticle(), posX, posY + 0.3, posZ,
-			// random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() *
-			// 0.1);
+			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
+					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
 		
 		if (!worldObj.isRemote && areItemDropsEnabled()) {

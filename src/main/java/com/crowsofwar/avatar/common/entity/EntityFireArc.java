@@ -7,6 +7,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,11 +29,9 @@ public class EntityFireArc extends EntityArc {
 			if (worldObj.isRemote) {
 				int particles = random.nextInt(3) + 4;
 				for (int i = 0; i < particles; i++) {
-					// TODO [1.10] Figure out how to spawn particles
-					// worldObj.spawnParticle("cloud", posX, posY, posZ,
-					// (random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() *
-					// 0.08,
-					// (random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
+					worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
+							(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
+							(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
 				}
 			}
 			// TODO [1.10] Where is "random.fizz" sound??

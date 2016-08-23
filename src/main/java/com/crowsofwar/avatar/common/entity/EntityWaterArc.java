@@ -8,6 +8,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
@@ -61,11 +62,10 @@ public class EntityWaterArc extends EntityArc {
 			int particles = random.nextInt(3) + 4;
 			for (int i = 0; i < particles; i++) {
 				
-				// TODO [1.10] how to spawn particles??
-				// worldObj.spawnParticle("splash", posX + random.nextGaussian() * offX,
-				// posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
-				// random.nextGaussian() * xVel, random.nextGaussian() * yVel,
-				// random.nextGaussian() * zVel);
+				worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX + random.nextGaussian() * offX,
+						posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
+						random.nextGaussian() * xVel, random.nextGaussian() * yVel,
+						random.nextGaussian() * zVel);
 				
 			}
 			
