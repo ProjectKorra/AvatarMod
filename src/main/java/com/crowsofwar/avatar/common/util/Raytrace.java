@@ -3,13 +3,13 @@ package com.crowsofwar.avatar.common.util;
 import static java.lang.Math.toRadians;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 
 public class Raytrace {
 	
@@ -50,11 +50,11 @@ public class Raytrace {
 		
 		if (range == -1) range = getReachDistance(player);
 		
-		Vec3d Vector = new Vec3d(player.posX, player.posY, player.posZ);
-		Vec3d Vector1 = player.getLookVec();
-		Vec3d Vector2 = Vector.addVector(Vector1.xCoord * range, Vector1.yCoord * range,
-				Vector1.zCoord * range);
-		RayTraceResult res = player.worldObj.rayTraceBlocks(Vector, Vector2, raycastLiquids, false, true);
+		Vector playerPos = Vector.getEyePos(player);
+		Vector look = new Vector(player.getLookVec());
+		Vector end = playerPos.plus(look.times(range));
+		RayTraceResult res = player.worldObj.rayTraceBlocks(playerPos.toMinecraft(), end.toMinecraft(),
+				raycastLiquids, true, false);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
 			return new Result(new VectorI(res.getBlockPos()), res.sideHit);

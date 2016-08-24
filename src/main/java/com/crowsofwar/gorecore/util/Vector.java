@@ -5,7 +5,6 @@ import static java.lang.Math.sin;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -77,7 +76,7 @@ public class Vector {
 	 */
 	public Vector(Entity entity) {
 		this(entity.posX, entity.posY, entity.posZ);
-		if (entity instanceof EntityPlayer && entity.worldObj.isRemote) setY(y - 1.62);
+		// if (entity instanceof EntityPlayer && entity.worldObj.isRemote) setY(y - 1.62);
 	}
 	
 	/**
@@ -441,8 +440,8 @@ public class Vector {
 	/**
 	 * Converts this vector into a minecraft vector.
 	 */
-	public Vector toMinecraft() {
-		return new Vector(x, y, z);
+	public Vec3d toMinecraft() {
+		return new Vec3d(x, y, z);
 	}
 	
 	/**
@@ -489,7 +488,7 @@ public class Vector {
 	
 	public static Vector getEyePos(Entity entity) {
 		Vector pos = getEntityPos(entity);
-		pos.setY(pos.y + 1.62);
+		pos.setY(pos.y + entity.getEyeHeight());
 		return pos;
 	}
 	
