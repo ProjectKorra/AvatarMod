@@ -2,8 +2,10 @@ package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityControlPoint;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderFireArc extends RenderArc {
@@ -26,16 +28,19 @@ public class RenderFireArc extends RenderArc {
 		// Parametric equation
 		// For parameters, they will be same as linear equation: y = mx+b
 		
-		// TODO [1.10] Find a good vector class to use- Vector no longer exists
-		// Vector m = VectorUtils.minus(second.getPosition(), first.getPosition());
-		// Vector b = first.getPosition();
-		// double x = Math.random(); // 0-1
-		// Vector spawnAt = VectorUtils.plus(VectorUtils.times(m, x), b);
-		// Vector velocity = new Vector(0, 0, 0);
-		//
+		Vector m = second.getVecPosition().minus(first.getVecPosition());
+		Vector b = first.getVecPosition();
+		double x = Math.random(); // 0-1
+		Vector spawnAt = m.times(x).plus(b);
+		Vector velocity = new Vector(0, 0, 0);
+		
+		// TODO [1.10] Re-introduce flame particle
+		arc.worldObj.spawnParticle(EnumParticleTypes.FLAME, spawnAt.x(), spawnAt.y(), spawnAt.z(),
+				velocity.x() / 20, 0.05, velocity.z() / 20);
 		// AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord,
-		// spawnAt.zCoord, velocity.xCoord / 20, 0.05,
-		// velocity.zCoord / 20);
+		// spawnAt.zCoord,
+		// velocity.xCoord / 20, 0.05, velocity.zCoord / 20);
+		
 	}
 	
 }

@@ -149,7 +149,7 @@ public class Vector {
 	/**
 	 * Returns a new vector with the same coordinates as this one.
 	 */
-	public Vector createCopy() {
+	public Vector copy() {
 		return new Vector(this);
 	}
 	

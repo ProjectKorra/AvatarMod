@@ -98,9 +98,7 @@ public class Earthbending implements IBendingController {
 					Block block = ibs.getBlock();
 					if (bendableBlocks.contains(block)) {
 						
-						EntityFloatingBlock floating = new EntityFloatingBlock(world, block);
-						// TODO [1.10] Figure out metadata!!
-						// floating.setMetadata(ibs.);
+						EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 						floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);
 						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
 						

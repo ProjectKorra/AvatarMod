@@ -91,9 +91,6 @@ public class AvatarMod {
 	}
 	
 	private void registerEntity(Class<? extends Entity> entity, String name) {
-		// EntityRegistry.registerGlobalEntityID(entity, name,
-		// EntityRegistry.findGlobalUniqueEntityId());
-		// TODO [1.10] Verify if MOD ENTITY is working
 		EntityRegistry.registerModEntity(entity, name, nextEntityID++, this, 64, 20, true);
 	}
 	

@@ -73,7 +73,7 @@ public abstract class GoreCoreWorldData extends WorldSavedData implements GoreCo
 			T data = worldDataClass.cast(ms.getOrLoadData(worldDataClass, key));
 			
 			if (data == null) {
-				// TODO [1.7.10] Not sure if this is actually called anymore- need to check.
+				// TODO [1.10] Not sure if this is actually called anymore- need to check.
 				System.out.println("Data was null");
 				data = worldDataClass.getConstructor(String.class).newInstance(key);
 				data.setDirty(true);

@@ -112,13 +112,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		
 	}
 	
-	public EntityFloatingBlock(World world, Block block) {
+	public EntityFloatingBlock(World world, IBlockState blockState) {
 		this(world);
-		setBlock(block);
+		setBlockState(blockState);
 	}
 	
-	public EntityFloatingBlock(World world, Block block, EntityPlayer owner) {
-		this(world, block);
+	public EntityFloatingBlock(World world, IBlockState blockState, EntityPlayer owner) {
+		this(world, blockState);
 		setOwner(owner);
 	}
 	
@@ -285,12 +285,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 						int x = (int) Math.floor(posX);
 						int y = (int) Math.floor(posY);
 						int z = (int) Math.floor(posZ);
-						// worldObj.setBlock(x, y, z, getBlock());
-						// BlockSand
-						// TODO [1.10] find out how to set Block metadata using BlockStates. Do we
-						// have to store an IBlockState in our fields instead of a BlockState?
-						worldObj.setBlockState(new BlockPos(x, y, z), getBlock().getDefaultState());
-						// worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(), 3);
+						worldObj.setBlockState(new BlockPos(x, y, z), getBlockState());
 					}
 					break;
 				default:
@@ -313,10 +308,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			if (!worldObj.isRemote && targetVec.sqrDist(thisPos) < 0.001) {
 				
 				setDead();
-				// TODO [1.10] Figure out how to set block states with metadata
-				worldObj.setBlockState(new BlockPos(x, y, z), getBlock().getDefaultState());
-				// OLD set metadata is: worldObj.setBlockMetadataWithNotify(x, y, z, getMetadata(),
-				// 3);
+				worldObj.setBlockState(new BlockPos(x, y, z), getBlockState());
 				
 				SoundType sound = getBlock().getSoundType();
 				if (sound != null) {
@@ -367,9 +359,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		}
 		
 		if (!worldObj.isRemote && areItemDropsEnabled()) {
-			// TODO [1.10] Take into account FloatingBlock's metadata for drops
-			List<ItemStack> drops = getBlock().getDrops(worldObj, new BlockPos(this),
-					getBlock().getDefaultState(), 0);
+			List<ItemStack> drops = getBlock().getDrops(worldObj, new BlockPos(this), getBlockState(), 0);
 			for (ItemStack is : drops) {
 				EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
 				worldObj.spawnEntityInWorld(ei);
