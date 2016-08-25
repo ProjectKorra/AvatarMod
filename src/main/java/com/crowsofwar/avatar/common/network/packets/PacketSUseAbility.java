@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -19,14 +19,14 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
-	private IBendingAbility ability;
+	private BendingAbility ability;
 	private VectorI target;
 	/** ID of EnumFacing of the side of the block player is looking at */
 	private EnumFacing side;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(IBendingAbility ability, VectorI target, EnumFacing side) {
+	public PacketSUseAbility(BendingAbility ability, VectorI target, EnumFacing side) {
 		this.ability = ability;
 		this.target = target;
 		this.side = side;
@@ -57,7 +57,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		return Side.SERVER;
 	}
 	
-	public IBendingAbility getAbility() {
+	public BendingAbility getAbility() {
 		return ability;
 	}
 	

@@ -31,9 +31,9 @@ public class Raytrace {
 	}
 	
 	/**
-	 * Returns the position of the block the player is looking at. {@link Raytrace.Result#hitSomething()
-	 * No hit} if the player is not targeting anything in range, or the information doesn't require
-	 * raytrace.
+	 * Returns the position of the block the player is looking at.
+	 * {@link Raytrace.Result#hitSomething() No hit} if the player is not targeting anything in
+	 * range, or the information doesn't require raytrace.
 	 * 
 	 * @param info
 	 *            Information of this raytrace
@@ -156,7 +156,7 @@ public class Raytrace {
 		 * Constructs a raytrace information requesting a raytrace with the designated parameters.
 		 * 
 		 * @param range
-		 *            Range of raytrace
+		 *            Range of raytrace. If -1, how far player can reach.
 		 * @param raycastLiquids
 		 *            Whether to keep going when liquids are hit
 		 */

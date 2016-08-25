@@ -27,8 +27,11 @@ import net.minecraft.nbt.NBTTagCompound;
  * *Optionally = the subclass must declare the method, but does not need to put any code inside of
  * it.
  *
+ * @param <STATE>
+ *            The IBendingState this controller is using
+ * 
  */
-public abstract class BendingController implements ReadableWritable {
+public abstract class BendingController<STATE extends IBendingState> implements ReadableWritable {
 	
 	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
 		@Override
@@ -59,13 +62,13 @@ public abstract class BendingController implements ReadableWritable {
 	 */
 	public static final Random random = new Random();
 	
-	private final List<IBendingAbility> abilities;
+	private final List<BendingAbility> abilities;
 	
 	public BendingController() {
 		this.abilities = new ArrayList<>();
 	}
 	
-	protected void addAbility(IBendingAbility ability) {
+	protected void addAbility(BendingAbility ability) {
 		this.abilities.add(ability);
 	}
 	
@@ -84,7 +87,7 @@ public abstract class BendingController implements ReadableWritable {
 	 * 
 	 * @return
 	 */
-	public IBendingState createState(AvatarPlayerData data) {
+	public STATE createState(AvatarPlayerData data) {
 		return null;
 	}
 	
@@ -105,7 +108,7 @@ public abstract class BendingController implements ReadableWritable {
 	 *            Input received from client
 	 * @return The ability to execute, or null for none.
 	 */
-	public abstract IBendingAbility getAbility(AvatarPlayerData data, AvatarControl input);
+	public abstract BendingAbility getAbility(AvatarPlayerData data, AvatarControl input);
 	
 	/**
 	 * Get information about this bending controller's radial menu.

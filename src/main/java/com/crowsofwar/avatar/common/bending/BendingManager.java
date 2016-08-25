@@ -25,8 +25,8 @@ public class BendingManager {
 	private static Map<String, BendingController> bendingByName;
 	private static List<BendingController> allBending;
 	
-	private static Map<Integer, IBendingAbility> abilities;
-	private static List<IBendingAbility> allAbilities;
+	private static Map<Integer, BendingAbility> abilities;
+	private static List<BendingAbility> allAbilities;
 	
 	public static void init() {
 		bending = new HashMap<Integer, BendingController>();
@@ -70,11 +70,11 @@ public class BendingManager {
 		return Collections.unmodifiableList(allBending);
 	}
 	
-	public static IBendingAbility getAbility(int id) {
+	public static BendingAbility getAbility(int id) {
 		return abilities.get(id);
 	}
 	
-	public static List<IBendingAbility> allAbilities() {
+	public static List<BendingAbility> allAbilities() {
 		return Collections.unmodifiableList(allAbilities);
 	}
 	
@@ -84,7 +84,7 @@ public class BendingManager {
 		allBending.add(controller);
 	}
 	
-	public static void registerAbility(IBendingAbility ability) {
+	public static void registerAbility(BendingAbility ability) {
 		abilities.put(ability.getId(), ability);
 		allAbilities.add(ability);
 	}

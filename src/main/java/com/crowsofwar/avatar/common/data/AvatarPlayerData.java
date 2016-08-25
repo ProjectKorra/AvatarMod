@@ -9,8 +9,8 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -109,7 +109,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			bendingStateList.add(state);
 			saveChanges();
 		} else {
-			AvatarLog.warn("Cannot add BendingController " + bending + "' because player already has instance.");
+			AvatarLog.warn(
+					"Cannot add BendingController " + bending + "' because player already has instance.");
 		}
 	}
 	
@@ -132,7 +133,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			if (activeBending == bending) activeBending = null;
 			saveChanges();
 		} else {
-			AvatarLog.warn("Cannot remove BendingController '" + bending + "' because player does not have that instance.");
+			AvatarLog.warn("Cannot remove BendingController '" + bending
+					+ "' because player does not have that instance.");
 		}
 	}
 	
@@ -145,7 +147,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (hasBending(id)) {
 			removeBending(getBendingController(id));
 		} else {
-			AvatarLog.warn("Cannot remove bending with ID '" + id + "' because player does not have that instance.");
+			AvatarLog.warn(
+					"Cannot remove bending with ID '" + id + "' because player does not have that instance.");
 		}
 	}
 	
@@ -220,7 +223,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public IBendingState getBendingState(int id) {
 		if (!hasBending(id)) {
-			AvatarLog.warn("Tried to access BendingState with Id " + id + ", but player does not have the BendingController");
+			AvatarLog.warn("Tried to access BendingState with Id " + id
+					+ ", but player does not have the BendingController");
 		}
 		return hasBending(id) ? bendingStates.get(id) : null;
 	}
@@ -228,8 +232,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	/**
 	 * Get extra metadata for the given bending controller, returns null if no Bending controller.
 	 */
-	public IBendingState getBendingState(BendingController controller) {
-		return getBendingState(controller.getID());
+	public <STATE extends IBendingState> STATE getBendingState(BendingController<STATE> controller) {
+		return (STATE) getBendingState(controller.getID());
 	}
 	
 	public List<IBendingState> getAllBendingStates() {

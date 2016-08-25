@@ -7,19 +7,30 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  * Encapsulates all logic required for a bending ability. There is 1 instance of a bending ability
  * for each ability present - similar to BendingController.
  * 
+ * @param <STATE>
+ *            The IBendingState this ability uses
+ * 
  * @author CrowsOfWar
  */
-public interface IBendingAbility {
+public abstract class BendingAbility<STATE extends IBendingState> {
+	
+	protected final BendingController<STATE> controller;
+	
+	public BendingAbility(BendingController<STATE> controller) {
+		this.controller = controller;
+	}
 	
 	/**
 	 * Returns whether this bending ability should be subscribed to an update tick event.
 	 */
-	boolean requiresUpdateTick();
+	public abstract boolean requiresUpdateTick();
 	
 	/**
+	 * TODO actually call this
+	 * <p>
 	 * Tick this bending ability. Only called if {@link #requiresUpdateTick()} is true.
 	 */
-	default void tick() {}
+	public void update(AvatarPlayerData data) {}
 	
 	/**
 	 * Execute this ability.
@@ -27,28 +38,28 @@ public interface IBendingAbility {
 	 * @param data
 	 *            Player data to use.
 	 */
-	void execute(AvatarPlayerData data);
+	public abstract void execute(AvatarPlayerData data);
 	
 	/**
 	 * Get the Id of this ability.
 	 */
-	int getId();
+	public abstract int getId();
 	
 	/**
 	 * Get the texture index of this bending ability. -1 for no texture.
 	 */
-	int getIconIndex();
+	public abstract int getIconIndex();
 	
 	/**
 	 * Returns whether this bending ability has an icon.
 	 */
-	default boolean hasTexture() {
+	public boolean hasTexture() {
 		return getIconIndex() > -1;
 	}
 	
 	/**
 	 * Get a request for a raytrace.
 	 */
-	Raytrace.Info getRaytrace();
+	public abstract Raytrace.Info getRaytrace();
 	
 }
