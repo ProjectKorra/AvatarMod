@@ -13,8 +13,8 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.IBendingAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -163,13 +163,11 @@ public class ClientInput implements IControlsHandler {
 			if (data != null && data.getActiveBendingController() != null) {
 				List<AvatarControl> pressed = getAllPressed();
 				for (AvatarControl control : pressed) {
-					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
-					if (ability != AvatarAbility.NONE) {
-						Result raytrace = ability.needsRaytrace() ? Raytrace.getTargetBlock(player,
-								ability.getRaytraceDistance(), ability.isRaycastLiquids()) : null;
+					IBendingAbility ability = data.getActiveBendingController().getAbility(data, control);
+					if (ability != null) {
+						Result raytrace = Raytrace.getTargetBlock(player, ability.getRaytrace());
 						AvatarMod.network.sendToServer(
-								new PacketSUseAbility(ability, raytrace != null ? raytrace.getPos() : null,
-										raytrace != null ? raytrace.getSide() : null));
+								new PacketSUseAbility(ability, raytrace.getPos(), raytrace.getSide()));
 					}
 				}
 			}

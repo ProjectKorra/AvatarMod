@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
  * Encapsulates all logic required for a bending ability. There is 1 instance of a bending ability
@@ -44,5 +45,10 @@ public interface IBendingAbility {
 	default boolean hasTexture() {
 		return getIconIndex() > -1;
 	}
+	
+	/**
+	 * Get a request for a raytrace.
+	 */
+	Raytrace.Info getRaytrace();
 	
 }

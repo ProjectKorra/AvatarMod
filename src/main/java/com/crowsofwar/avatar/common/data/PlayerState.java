@@ -98,7 +98,7 @@ public class PlayerState {
 		if (clientLookAtBlock == null) return null;
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookAtBlock;
 		Result res = Raytrace.getTargetBlock(playerEntity, raycastDist);
-		if (res == null) return null;
+		if (!res.hitSomething()) return null;
 		this.serverLookAtBlock = res.getPos();
 		double dist = serverLookAtBlock.dist(clientLookAtBlock);
 		if (dist <= maxDeviation) {
