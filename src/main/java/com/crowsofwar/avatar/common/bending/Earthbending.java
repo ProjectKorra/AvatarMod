@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.ability.AbilityPickUpBlock;
+import com.crowsofwar.avatar.common.bending.ability.AbilityPutBlock;
+import com.crowsofwar.avatar.common.bending.ability.AbilityThrowBlock;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
@@ -20,14 +22,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class Earthbending extends BendingController {
 	
 	private final BendingMenuInfo menu;
 	private final List<Block> bendableBlocks;
 	
-	private BendingAbility abilityPickUpBlock;
+	private final BendingAbility abilityPickUpBlock, abilityThrowBlock, abilityPutBlock;
 	
 	Earthbending() {
 		
@@ -45,6 +46,8 @@ public class Earthbending extends BendingController {
 		
 		this.abilityPickUpBlock = new AbilityPickUpBlock(this,
 				state -> bendableBlocks.contains(state.getBlock()));
+		this.abilityThrowBlock = new AbilityThrowBlock(this);
+		this.abilityPutBlock = new AbilityPutBlock(this);
 		
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
@@ -61,27 +64,6 @@ public class Earthbending extends BendingController {
 	@Override
 	public int getID() {
 		return BendingManager.BENDINGID_EARTHBENDING;
-	}
-	
-	// @Override
-	// TODO [refactor] Remove- prescence is placeholder for code which will be separated into
-	// abilities
-	public void onAbility(AvatarPlayerData data) {
-		PlayerState state = data.getState();
-		EntityPlayer player = state.getPlayerEntity();
-		World world = player.worldObj;
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(this);
-		
-		if (ability == AvatarAbility.ACTION_TOGGLE_BENDING) {
-			
-		}
-		if (ability == AvatarAbility.ACTION_THROW_BLOCK) {
-			
-		}
-		if (ability == AvatarAbility.ACTION_PUT_BLOCK) {
-			
-		}
-		
 	}
 	
 	@Override
@@ -126,13 +108,13 @@ public class Earthbending extends BendingController {
 		ItemStack holding = player.getActiveItemStack();
 		
 		if (ebs.getPickupBlock() != null) {
-			if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return AvatarAbility.ACTION_THROW_BLOCK;
+			if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return abilityThrowBlock;
 			if (input == AvatarControl.CONTROL_RIGHT_CLICK_DOWN && holding == null
 					|| (holding != null && !(holding.getItem() instanceof ItemBlock)))
-				return AvatarAbility.ACTION_PUT_BLOCK;
+				return abilityPutBlock;
 		}
 		
-		return AvatarAbility.NONE;
+		return null;
 	}
 	
 	@Override
