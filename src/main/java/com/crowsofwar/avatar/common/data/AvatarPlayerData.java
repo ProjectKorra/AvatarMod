@@ -10,7 +10,7 @@ import java.util.UUID;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingController;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -31,12 +31,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
-	private Map<Integer, IBendingController> bendingControllers;
-	private List<IBendingController> bendingControllerList;
+	private Map<Integer, BendingController> bendingControllers;
+	private List<BendingController> bendingControllerList;
 	/**
 	 * Bending controller currently in use, null if no ability is activated
 	 */
-	private IBendingController activeBending;
+	private BendingController activeBending;
 	
 	private Map<Integer, IBendingState> bendingStates;
 	private List<IBendingState> bendingStateList;
@@ -45,8 +45,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
-		bendingControllers = new HashMap<Integer, IBendingController>();
-		bendingControllerList = new ArrayList<IBendingController>();
+		bendingControllers = new HashMap<Integer, BendingController>();
+		bendingControllerList = new ArrayList<BendingController>();
 		bendingStates = new HashMap<Integer, IBendingState>();
 		bendingStateList = new ArrayList<IBendingState>();
 		state = new PlayerState();
@@ -54,12 +54,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
-		bendingControllerList = AvatarUtils.readFromNBT(IBendingController.creator, nbt, "BendingAbilities");
+		bendingControllerList = AvatarUtils.readFromNBT(BendingController.creator, nbt, "BendingAbilities");
 		// bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator, nbt, "BendingData");
 		bendingStateList = GoreCoreNBTUtil.readListFromNBT(nbt, "BendingData", IBendingState.creator, this);
 		
 		bendingControllers.clear();
-		for (IBendingController controller : bendingControllerList) {
+		for (BendingController controller : bendingControllerList) {
 			bendingControllers.put(controller.getID(), controller);
 		}
 		
@@ -74,7 +74,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	@Override
 	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
-		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", IBendingController.writer);
+		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", BendingController.writer);
 		AvatarUtils.writeToNBT(bendingStateList, nbt, "BendingData", IBendingState.writer);
 		nbt.setInteger("ActiveBending", activeBending == null ? -1 : activeBending.getID());
 	}
@@ -100,7 +100,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		return hasBending(BendingManager.BENDINGID_EARTHBENDING);
 	}
 	
-	public void addBending(IBendingController bending) {
+	public void addBending(BendingController bending) {
 		if (!hasBending(bending.getID())) {
 			bendingControllers.put(bending.getID(), bending);
 			bendingControllerList.add(bending);
@@ -121,7 +121,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Remove the specified bending controller. Please note, this will be saved, so is permanent
 	 * (unless another bending controller is added).
 	 */
-	public void removeBending(IBendingController bending) {
+	public void removeBending(BendingController bending) {
 		if (hasBending(bending.getID())) {
 			// remove state before controller- getBendingState only works with controller present
 			IBendingState state = getBendingState(bending);
@@ -154,9 +154,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public void takeBending() {
 		
-		Iterator<IBendingController> iterator = bendingControllerList.iterator();
+		Iterator<BendingController> iterator = bendingControllerList.iterator();
 		while (iterator.hasNext()) {
-			IBendingController bending = iterator.next();
+			BendingController bending = iterator.next();
 			
 			IBendingState state = getBendingState(bending);
 			bendingControllers.remove(bending.getID());
@@ -179,12 +179,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	/**
 	 * Set the active bending controller. Pass null as the argument to deactivate bending.
 	 */
-	public void setActiveBendingController(IBendingController controller) {
+	public void setActiveBendingController(BendingController controller) {
 		activeBending = controller;
 		saveChanges();
 	}
 	
-	public IBendingController getActiveBendingController() {
+	public BendingController getActiveBendingController() {
 		return activeBending;
 	}
 	
@@ -195,7 +195,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		return activeBending != null;
 	}
 	
-	public List<IBendingController> getBendingControllers() {
+	public List<BendingController> getBendingControllers() {
 		return bendingControllerList;
 	}
 	
@@ -206,7 +206,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * @param id
 	 * @return
 	 */
-	public IBendingController getBendingController(int id) {
+	public BendingController getBendingController(int id) {
 		return bendingControllers.get(id);
 	}
 	
@@ -228,7 +228,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	/**
 	 * Get extra metadata for the given bending controller, returns null if no Bending controller.
 	 */
-	public IBendingState getBendingState(IBendingController controller) {
+	public IBendingState getBendingState(BendingController controller) {
 		return getBendingState(controller.getID());
 	}
 	

@@ -14,7 +14,7 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarAbility;
-import com.crowsofwar.avatar.common.bending.IBendingController;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -52,7 +52,7 @@ public class ClientInput implements IControlsHandler {
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
 	 */
-	private final List<IBendingController> keyboardBending;
+	private final List<BendingController> keyboardBending;
 	
 	private boolean press;
 	
@@ -72,7 +72,7 @@ public class ClientInput implements IControlsHandler {
 	}
 	
 	private void addBendingButton(int id, int keycode) {
-		IBendingController controller = getBending(id);
+		BendingController controller = getBending(id);
 		addKeybinding(controller.getRadialMenu().getKey(), keycode, "main");
 		keyboardBending.add(controller);
 	}
@@ -118,7 +118,7 @@ public class ClientInput implements IControlsHandler {
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
 		
-		for (IBendingController controller : keyboardBending) {
+		for (BendingController controller : keyboardBending) {
 			openBendingMenu(controller);
 		}
 		
@@ -127,7 +127,7 @@ public class ClientInput implements IControlsHandler {
 	/**
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
-	private void openBendingMenu(IBendingController controller) {
+	private void openBendingMenu(BendingController controller) {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer,
 				"Error while getting player data for open-bending-menu checks");
 		BendingMenuInfo menu = controller.getRadialMenu();

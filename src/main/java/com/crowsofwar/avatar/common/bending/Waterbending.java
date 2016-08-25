@@ -23,7 +23,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class Waterbending implements IBendingController {
+public class Waterbending implements BendingController {
 	
 	private BendingMenuInfo menu;
 	

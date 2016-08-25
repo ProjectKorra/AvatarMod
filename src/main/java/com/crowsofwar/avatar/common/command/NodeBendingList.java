@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.common.command;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.bending.IBendingController;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
@@ -44,10 +44,10 @@ public class NodeBendingList extends NodeFunctional {
 			
 			if (data.isBender()) {
 				
-				List<IBendingController> allControllers = data.getBendingControllers();
+				List<BendingController> allControllers = data.getBendingControllers();
 				AvatarChatMessages.MSG_BENDING_LIST_TOP.send(sender, playerName, allControllers.size());
 				
-				for (IBendingController controller : allControllers) {
+				for (BendingController controller : allControllers) {
 					AvatarChatMessages.MSG_BENDING_LIST_ITEM.send(sender, controller.getControllerName());
 				}
 				

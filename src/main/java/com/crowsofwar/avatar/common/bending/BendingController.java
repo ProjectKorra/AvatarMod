@@ -1,9 +1,10 @@
 package com.crowsofwar.avatar.common.bending;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -27,14 +28,14 @@ import net.minecraft.nbt.NBTTagCompound;
  * it.
  *
  */
-public interface IBendingController extends ReadableWritable {
+public abstract class BendingController implements ReadableWritable {
 	
-	public static final CreateFromNBT<IBendingController> creator = new CreateFromNBT<IBendingController>() {
+	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
 		@Override
-		public IBendingController create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
+		public BendingController create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
 			int id = nbt.getInteger("ControllerID");
 			try {
-				IBendingController bc = BendingManager.getBending(id);
+				BendingController bc = BendingManager.getBending(id);
 				return bc;
 			} catch (Exception e) {
 				AvatarLog.error(
@@ -45,9 +46,9 @@ public interface IBendingController extends ReadableWritable {
 		}
 	};
 	
-	public static final WriteToNBT<IBendingController> writer = new WriteToNBT<IBendingController>() {
+	public static final WriteToNBT<BendingController> writer = new WriteToNBT<BendingController>() {
 		@Override
-		public void write(NBTTagCompound nbt, IBendingController object, Object[] methodsExtraData,
+		public void write(NBTTagCompound nbt, BendingController object, Object[] methodsExtraData,
 				Object[] extraData) {
 			nbt.setInteger("ControllerID", object.getID());
 		}
@@ -58,18 +59,23 @@ public interface IBendingController extends ReadableWritable {
 	 */
 	public static final Random random = new Random();
 	
+	private final List<IBendingAbility> abilities;
+	
+	public BendingController() {
+		this.abilities = new ArrayList<>();
+	}
+	
+	protected void addAbility(IBendingAbility ability) {
+		this.abilities.add(ability);
+	}
+	
 	/**
 	 * Get an identifier for this bending ability. Should be unique per-class. (not per-instance)
 	 */
-	int getID();
+	public abstract int getID();
 	
 	/**
-	 * Hook method that gets called when the player activates the specified ability.
-	 */
-	default void onAbility(AvatarAbility ability, AvatarPlayerData data) {}
-	
-	/**
-	 * Called to create an IBendingState for the player. This allows the IBendingController to store
+	 * Called to create an IBendingState for the player. This allows the BendingController to store
 	 * specific metadata for each player, making things much easier. <br />
 	 * <br />
 	 * Keep in mind - when loading a saved state, it will be read from NBT. However, when creating a
@@ -78,15 +84,17 @@ public interface IBendingController extends ReadableWritable {
 	 * 
 	 * @return
 	 */
-	IBendingState createState(AvatarPlayerData data);
+	public IBendingState createState(AvatarPlayerData data) {
+		return null;
+	}
 	
 	/**
-	 * Called when this bending controller is activated on each tick.
+	 * Called on each tick.
 	 * 
 	 * @param data
 	 *            The data for the player. Target block has not been calculated.
 	 */
-	void onUpdate(AvatarPlayerData data);
+	public void onUpdate(AvatarPlayerData data) {}
 	
 	/**
 	 * Get the ability to be executed for the given client input.
@@ -97,16 +105,22 @@ public interface IBendingController extends ReadableWritable {
 	 *            Input received from client
 	 * @return The ability to execute, or null for none.
 	 */
-	IBendingAbility getAbility(AvatarPlayerData data, AvatarControl input);
+	public abstract IBendingAbility getAbility(AvatarPlayerData data, AvatarControl input);
 	
 	/**
 	 * Get information about this bending controller's radial menu.
 	 */
-	BendingMenuInfo getRadialMenu();
+	public abstract BendingMenuInfo getRadialMenu();
 	
 	/**
 	 * Get the name of this bending controller in lowercase. e.g. "earthbending"
 	 */
-	String getControllerName();
+	public abstract String getControllerName();
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {}
 	
 }

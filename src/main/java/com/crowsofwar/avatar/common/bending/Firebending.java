@@ -23,7 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-public class Firebending implements IBendingController {
+public class Firebending implements BendingController {
 	
 	private final BendingMenuInfo menu;
 	

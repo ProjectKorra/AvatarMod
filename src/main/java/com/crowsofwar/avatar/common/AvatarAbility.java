@@ -4,7 +4,7 @@ import static com.crowsofwar.avatar.common.bending.BendingManager.*;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingAbility;
-import com.crowsofwar.avatar.common.bending.IBendingController;
+import com.crowsofwar.avatar.common.bending.BendingController;
 
 /**
  * Describes an action which is sent to the server.
@@ -28,7 +28,7 @@ public enum AvatarAbility {
 	ACTION_AIR_GUST("AirGust", BENDINGID_AIRBENDING, -2, false, 7);
 	
 	private final String name;
-	private final IBendingController controller;
+	private final BendingController controller;
 	/**
 	 * Raytrace distance. -1 = Player's reach, -2 = No raytrace.
 	 */
@@ -61,11 +61,11 @@ public enum AvatarAbility {
 		return ordinal();
 	}
 	
-	public IBendingController getBendingController() {
+	public BendingController getBendingController() {
 		return controller;
 	}
 	
-	public boolean isCompatible(IBendingController controller) {
+	public boolean isCompatible(BendingController controller) {
 		return this.controller == controller;
 	}
 	

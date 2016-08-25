@@ -10,7 +10,7 @@ import java.util.Map;
  * Manages instances of bending controllers. Bending controllers can be retrieved via
  * {@link #getBending(int)}. Contains constants which specify the IDs of bending. <br />
  * <br />
- * Third-party mods can use {@link #registerBending(IBendingController)} to enable custom bending
+ * Third-party mods can use {@link #registerBending(BendingController)} to enable custom bending
  * controllers.
  *
  */
@@ -21,17 +21,17 @@ public class BendingManager {
 	public static final int BENDINGID_WATERBENDING = 3;
 	public static final int BENDINGID_AIRBENDING = 4;
 	
-	private static Map<Integer, IBendingController> bending;
-	private static Map<String, IBendingController> bendingByName;
-	private static List<IBendingController> allBending;
+	private static Map<Integer, BendingController> bending;
+	private static Map<String, BendingController> bendingByName;
+	private static List<BendingController> allBending;
 	
 	private static Map<Integer, IBendingAbility> abilities;
 	private static List<IBendingAbility> allAbilities;
 	
 	public static void init() {
-		bending = new HashMap<Integer, IBendingController>();
-		bendingByName = new HashMap<String, IBendingController>();
-		allBending = new ArrayList<IBendingController>();
+		bending = new HashMap<Integer, BendingController>();
+		bendingByName = new HashMap<String, BendingController>();
+		allBending = new ArrayList<BendingController>();
 		abilities = new HashMap<>();
 		allAbilities = new ArrayList<>();
 		registerBending(new Earthbending());
@@ -46,7 +46,7 @@ public class BendingManager {
 	 * @param id
 	 * @return
 	 */
-	public static IBendingController getBending(int id) {
+	public static BendingController getBending(int id) {
 		return bending.get(id);
 	}
 	
@@ -57,7 +57,7 @@ public class BendingManager {
 	 *            The name of the bending controller
 	 * @return
 	 */
-	public static IBendingController getBending(String name) {
+	public static BendingController getBending(String name) {
 		return bendingByName.get(name);
 	}
 	
@@ -66,7 +66,7 @@ public class BendingManager {
 	 * 
 	 * @return
 	 */
-	public static List<IBendingController> allBending() {
+	public static List<BendingController> allBending() {
 		return Collections.unmodifiableList(allBending);
 	}
 	
@@ -78,7 +78,7 @@ public class BendingManager {
 		return Collections.unmodifiableList(allAbilities);
 	}
 	
-	public static void registerBending(IBendingController controller) {
+	public static void registerBending(BendingController controller) {
 		bending.put(controller.getID(), controller);
 		bendingByName.put(controller.getControllerName(), controller);
 		allBending.add(controller);

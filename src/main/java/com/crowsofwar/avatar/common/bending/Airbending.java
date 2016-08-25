@@ -19,7 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class Airbending implements IBendingController {
+public class Airbending implements BendingController {
 	
 	private BendingMenuInfo menu;
 	

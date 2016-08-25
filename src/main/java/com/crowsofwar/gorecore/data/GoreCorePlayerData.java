@@ -8,6 +8,7 @@ import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
 
 public abstract class GoreCorePlayerData implements GoreCoreNBTInterfaces.ReadableWritable {
@@ -22,7 +23,8 @@ public abstract class GoreCorePlayerData implements GoreCoreNBTInterfaces.Readab
 		public GoreCorePlayerData createV(NBTTagCompound nbt, UUID key, Object[] constructArgsV) {
 			try {
 				GoreCorePlayerData data = ((Class<? extends GoreCorePlayerData>) constructArgsV[0])
-						.getConstructor(GoreCoreDataSaver.class, UUID.class, EntityPlayer.class).newInstance(constructArgsV[1], key, null);
+						.getConstructor(GoreCoreDataSaver.class, UUID.class, EntityPlayer.class)
+						.newInstance(constructArgsV[1], key, null);
 				data.readFromNBT(nbt);
 				return data;
 			} catch (Exception e) {
@@ -76,8 +78,10 @@ public abstract class GoreCorePlayerData implements GoreCoreNBTInterfaces.Readab
 	 * Called from constructor to initialize data. Override to change constructor.
 	 */
 	protected void construct(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer playerEntity) {
-		if (dataSaver == null) FMLLog.severe("GoreCore> Player data was created with a null dataSaver - this is a bug! Debug:");
-		if (playerID == null) FMLLog.severe("GoreCore> Player data was created with a null playerID - this is a bug! Debug:");
+		if (dataSaver == null)
+			FMLLog.severe("GoreCore> Player data was created with a null dataSaver - this is a bug! Debug:");
+		if (playerID == null)
+			FMLLog.severe("GoreCore> Player data was created with a null playerID - this is a bug! Debug:");
 		if (dataSaver == null || playerID == null) Thread.dumpStack();
 		
 		this.dataSaver = dataSaver;
@@ -133,6 +137,15 @@ public abstract class GoreCorePlayerData implements GoreCoreNBTInterfaces.Readab
 	
 	public void setPlayerEntity(EntityPlayer player) {
 		this.playerEntity = player;
+	}
+	
+	/**
+	 * Get the world this player data is in.
+	 * <p>
+	 * Uses {@link #getPlayerEntity()} for the world. It may be null on servers.
+	 */
+	public World getWorld() {
+		return getPlayerEntity() == null ? null : getPlayerEntity().getEntityWorld();
 	}
 	
 }

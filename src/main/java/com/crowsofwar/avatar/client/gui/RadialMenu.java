@@ -8,7 +8,7 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingController;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -50,7 +50,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	private MenuTheme theme;
 	
 	public RadialMenu(int controllerId) {
-		IBendingController controller = BendingManager.getBending(controllerId);
+		BendingController controller = BendingManager.getBending(controllerId);
 		if (controller == null)
 			throw new IllegalArgumentException("Can't make radial menu gui for controller id " + controllerId
 					+ " because there is no controller for that Id");

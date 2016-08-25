@@ -33,7 +33,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-public class Earthbending implements IBendingController {
+public class Earthbending implements BendingController {
 	
 	private final BendingMenuInfo menu;
 	private final List<Block> bendableBlocks;

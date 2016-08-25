@@ -4,7 +4,7 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 /**
  * Encapsulates all logic required for a bending ability. There is 1 instance of a bending ability
- * for each ability present - similar to IBendingController.
+ * for each ability present - similar to BendingController.
  * 
  * @author CrowsOfWar
  */

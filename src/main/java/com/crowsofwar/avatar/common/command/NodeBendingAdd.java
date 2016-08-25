@@ -5,7 +5,7 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingController;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
@@ -22,14 +22,14 @@ import net.minecraft.world.World;
 public class NodeBendingAdd extends NodeFunctional {
 	
 	private final IArgument<String> argPlayerName;
-	private final IArgument<IBendingController> argBendingController;
+	private final IArgument<BendingController> argBendingController;
 	
 	public NodeBendingAdd() {
 		super("add", true);
 		
 		this.argPlayerName = new ArgumentDirect<String>("player", ITypeConverter.CONVERTER_STRING);
-		this.argBendingController = new ArgumentOptions<IBendingController>(AvatarCommand.CONVERTER_BENDING, "bending",
-				BendingManager.allBending().toArray(new IBendingController[0]));
+		this.argBendingController = new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING, "bending",
+				BendingManager.allBending().toArray(new BendingController[0]));
 		
 		this.addArguments(argPlayerName, argBendingController);
 		
@@ -44,7 +44,7 @@ public class NodeBendingAdd extends NodeFunctional {
 		ArgumentList args = call.popArguments(argPlayerName, argBendingController);
 		
 		String playerName = args.get(argPlayerName);
-		IBendingController controller = args.get(argBendingController);
+		BendingController controller = args.get(argBendingController);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName,
 				"Error while getting player data for /avatar bending add");

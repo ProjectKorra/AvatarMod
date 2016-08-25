@@ -4,7 +4,7 @@ import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 
 /**
- * Encapsulates information about an IBendingController's radial menu- the Gui Id, AvatarControl,
+ * Encapsulates information about an BendingController's radial menu- the Gui Id, AvatarControl,
  * and AvatarAbilities which will be included in the Gui.
  *
  */
@@ -16,7 +16,7 @@ public class BendingMenuInfo {
 	private final AvatarAbility[] buttons;
 	
 	/**
-	 * Create information for an IBendingController's radial menu.
+	 * Create information for an BendingController's radial menu.
 	 * 
 	 * @param theme
 	 *            The theme of this menu, defines colors, etc.
