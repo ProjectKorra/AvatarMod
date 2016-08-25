@@ -16,15 +16,13 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Base class for bending abilities. All bending classes extend this one. They can save data to NBT
  * if necessary. Functionality for bending should be in subclasses. Bending controllers are
- * singletons, but must be accessed through {@link BendingManager}. <br />
- * <br />
+ * singletons, but must be accessed through {@link BendingManager}.
+ * <p>
  * For the sake of abstraction, you won't need to refer to bending controllers by their concrete
- * names. <br />
- * <br />
- * Subclasses have access to client input via optionally* implementable hook methods. They also are
- * automatically subscribed to both the FML and Forge event buses. Hook methods contain parameters
- * which provide necessary information such as the player entity. <br />
- * <br />
+ * names.
+ * <p>
+ * Subclasses have access to client input via optionally* implementable hook methods.
+ * <p>
  * *Optionally = the subclass must declare the method, but does not need to put any code inside of
  * it.
  *
@@ -39,7 +37,8 @@ public interface IBendingController extends ReadableWritable {
 				IBendingController bc = BendingManager.getBending(id);
 				return bc;
 			} catch (Exception e) {
-				AvatarLog.error("Could not find bending controller from ID '" + id + "' - please check NBT data");
+				AvatarLog.error(
+						"Could not find bending controller from ID '" + id + "' - please check NBT data");
 				e.printStackTrace();
 				return null;
 			}
@@ -48,7 +47,8 @@ public interface IBendingController extends ReadableWritable {
 	
 	public static final WriteToNBT<IBendingController> writer = new WriteToNBT<IBendingController>() {
 		@Override
-		public void write(NBTTagCompound nbt, IBendingController object, Object[] methodsExtraData, Object[] extraData) {
+		public void write(NBTTagCompound nbt, IBendingController object, Object[] methodsExtraData,
+				Object[] extraData) {
 			nbt.setInteger("ControllerID", object.getID());
 		}
 	};
@@ -66,7 +66,7 @@ public interface IBendingController extends ReadableWritable {
 	/**
 	 * Hook method that gets called when the player activates the specified ability.
 	 */
-	void onAbility(AvatarAbility ability, AvatarPlayerData data);
+	default void onAbility(AvatarAbility ability, AvatarPlayerData data) {}
 	
 	/**
 	 * Called to create an IBendingState for the player. This allows the IBendingController to store
@@ -89,12 +89,15 @@ public interface IBendingController extends ReadableWritable {
 	void onUpdate(AvatarPlayerData data);
 	
 	/**
-	 * Get the ability for the client input, only called on client side. Return
-	 * {@link AvatarAbility#NONE} for no ability.
+	 * Get the ability to be executed for the given client input.
 	 * 
-	 * @return
+	 * @param data
+	 *            Player data containing necessary information
+	 * @param input
+	 *            Input received from client
+	 * @return The ability to execute, or null for none.
 	 */
-	AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input);
+	IBendingAbility getAbility(AvatarPlayerData data, AvatarControl input);
 	
 	/**
 	 * Get information about this bending controller's radial menu.
