@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.AvatarAbility;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.IBendingAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -18,14 +19,14 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
-	private AvatarAbility ability;
+	private IBendingAbility ability;
 	private VectorI target;
 	/** ID of EnumFacing of the side of the block player is looking at */
 	private EnumFacing side;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(AvatarAbility ability, VectorI target, EnumFacing side) {
+	public PacketSUseAbility(IBendingAbility ability, VectorI target, EnumFacing side) {
 		this.ability = ability;
 		this.target = target;
 		this.side = side;
@@ -33,7 +34,10 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		ability = AvatarAbility.fromId(buf.readInt());
+		ability = BendingManager.getAbility(buf.readInt());
+		if (ability == null) {
+			throw new NullPointerException("Server sent invalid ability over network: ID " + ability);
+		}
 		target = buf.readBoolean() ? VectorI.fromBytes(buf) : null;
 		side = EnumFacing.getFront(buf.readInt());
 	}
@@ -53,7 +57,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		return Side.SERVER;
 	}
 	
-	public AvatarAbility getAbility() {
+	public IBendingAbility getAbility() {
 		return ability;
 	}
 	

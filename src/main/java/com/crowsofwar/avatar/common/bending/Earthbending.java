@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
@@ -33,7 +32,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-public class Earthbending implements BendingController {
+public class Earthbending extends BendingController {
 	
 	private final BendingMenuInfo menu;
 	private final List<Block> bendableBlocks;

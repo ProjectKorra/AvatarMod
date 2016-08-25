@@ -1,12 +1,10 @@
 package com.crowsofwar.avatar.common.bending;
 
-import static com.crowsofwar.avatar.common.AvatarAbility.ACTION_WATER_ARC;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_WATERBENDING;
 import static com.crowsofwar.avatar.common.gui.AvatarGuiIds.GUI_RADIAL_MENU_WATER;
 
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
@@ -23,7 +21,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class Waterbending implements BendingController {
+public class Waterbending extends BendingController {
 	
 	private BendingMenuInfo menu;
 	

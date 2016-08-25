@@ -1,11 +1,9 @@
 package com.crowsofwar.avatar.common.bending;
 
-import static com.crowsofwar.avatar.common.AvatarAbility.*;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
 
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.AvatarAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
@@ -23,7 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-public class Firebending implements BendingController {
+public class Firebending extends BendingController {
 	
 	private final BendingMenuInfo menu;
 	

@@ -58,7 +58,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			BendingController controller = data.getActiveBendingController();
 			if (controller != null) {
 				data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
-				controller.onAbility(packet.getAbility(), data);
+				packet.getAbility().execute(data);
 			}
 			
 		}
