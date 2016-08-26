@@ -59,7 +59,7 @@ public class AbilityLightFire extends BendingAbility<FirebendingState> {
 	
 	@Override
 	public Info getRaytrace() {
-		return null;
+		return raytrace;
 	}
 	
 }
