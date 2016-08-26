@@ -106,7 +106,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			setID(nextBlockID++);
 		}
 		this.propBlockPos = new EntityPropertyDataManager<Optional<BlockPos>>(this, EntityFloatingBlock.class,
-				DataSerializers.OPTIONAL_BLOCK_POS, Optional.of(BlockPos.ORIGIN));
+				DataSerializers.OPTIONAL_BLOCK_POS, Optional.absent());
 		this.internalPosition = new Vector(0, 0, 0);
 		
 		this.enableItemDrops = true;
