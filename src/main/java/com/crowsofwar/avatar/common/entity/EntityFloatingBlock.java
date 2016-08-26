@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 
+import jline.internal.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -85,7 +86,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	/**
 	 * Target block to go to
 	 */
-	private final EntityPropertyDataManager<BlockPos> propBlockPos;
+	private final EntityPropertyDataManager<Optional<BlockPos>> propBlockPos;
 	private final Vector internalPosition;
 	
 	private EntityPlayer owner;
@@ -104,8 +105,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
-		this.propBlockPos = new EntityPropertyDataManager<BlockPos>(this, EntityFloatingBlock.class,
-				DataSerializers.BLOCK_POS, BlockPos.ORIGIN);
+		this.propBlockPos = new EntityPropertyDataManager<Optional<BlockPos>>(this, EntityFloatingBlock.class,
+				DataSerializers.OPTIONAL_BLOCK_POS, Optional.of(BlockPos.ORIGIN));
 		this.internalPosition = new Vector(0, 0, 0);
 		
 		this.enableItemDrops = true;
@@ -446,12 +447,15 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		this.owner = owner;
 	}
 	
+	@Nullable
 	public BlockPos getMovingToBlock() {
-		return propBlockPos.getValue();
+		Optional<BlockPos> optional = propBlockPos.getValue();
+		return optional.isPresent() ? optional.get() : null;
 	}
 	
-	public void setMovingToBlock(BlockPos pos) {
-		propBlockPos.setValue(pos);
+	public void setMovingToBlock(@Nullable BlockPos pos) {
+		Optional<BlockPos> optional = pos == null ? Optional.absent() : Optional.of(pos);
+		propBlockPos.setValue(optional);
 	}
 	
 	public boolean isMovingToBlock() {
