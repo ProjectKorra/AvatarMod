@@ -31,7 +31,7 @@ public class BendingMenuInfo {
 	 */
 	public BendingMenuInfo(MenuTheme theme, AvatarControl key, int guiId, BendingAbility... buttons) {
 		if (buttons.length > 8) throw new IllegalArgumentException(
-				"Cannot create BendingMenuInfo with buttons " + "being larger than 8");
+				"Cannot create BendingMenuInfo with buttons being larger than 8");
 		this.theme = theme;
 		this.key = key;
 		this.guiId = guiId;
@@ -55,7 +55,7 @@ public class BendingMenuInfo {
 	
 	/**
 	 * Get all the buttons. Size is guaranteed to be 8; if there is no button in that slot, it is
-	 * {@link AvatarAbility#NONE}.
+	 * null.
 	 */
 	public BendingAbility[] getButtons() {
 		return buttons;
