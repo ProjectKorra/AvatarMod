@@ -48,15 +48,14 @@ public class RenderFloatingBlock extends Render {
 		// z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * ((lerp -
 		// entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) - RenderManager.renderPosZ;
 		
-		if (block != null && block != world.getBlockState(new BlockPos(i, j, k)).getBlock()) {
+		if (block != null) {
 			Tessellator tessellator = Tessellator.getInstance();
 			
 			IBlockState iblockstate = entity.getBlockState();
 			
 			if (iblockstate.getRenderType() == EnumBlockRenderType.MODEL) {
 				
-				if (iblockstate != world.getBlockState(new BlockPos(entity))
-						&& iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
+				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
 					this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 					GlStateManager.pushMatrix();
 					GlStateManager.disableLighting();
