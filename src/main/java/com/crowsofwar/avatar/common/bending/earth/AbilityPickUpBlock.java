@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.ability;
+package com.crowsofwar.avatar.common.bending.earth;
 
 import java.util.Random;
 import java.util.function.Predicate;
@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.EarthbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;

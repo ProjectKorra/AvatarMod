@@ -1,6 +1,5 @@
-package com.crowsofwar.avatar.common.bending.ability;
+package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.AirbendingState;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;

@@ -1,8 +1,7 @@
-package com.crowsofwar.avatar.common.bending.ability;
+package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.WaterbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;

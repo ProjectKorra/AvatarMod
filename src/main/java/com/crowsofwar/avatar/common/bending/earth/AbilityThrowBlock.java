@@ -1,9 +1,8 @@
-package com.crowsofwar.avatar.common.bending.ability;
+package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.EarthbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;

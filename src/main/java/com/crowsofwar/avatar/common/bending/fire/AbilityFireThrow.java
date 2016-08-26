@@ -1,10 +1,9 @@
-package com.crowsofwar.avatar.common.bending.ability;
+package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.WaterbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
@@ -16,43 +15,37 @@ import net.minecraft.entity.player.EntityPlayer;
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterThrow extends BendingAbility<WaterbendingState> {
+public class AbilityFireThrow extends BendingAbility<FirebendingState> {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityWaterThrow(BendingController<WaterbendingState> controller) {
+	public AbilityFireThrow(BendingController<FirebendingState> controller) {
 		super(controller);
 		this.raytrace = new Raytrace.Info();
 	}
 	
 	@Override
 	public boolean requiresUpdateTick() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	@Override
 	public void execute(AvatarPlayerData data) {
 		
-		WaterbendingState bendingState = data.getBendingState(controller);
 		EntityPlayer player = data.getPlayerEntity();
+		FirebendingState fs = data.getBendingState(controller);
 		
-		if (bendingState.isBendingWater()) {
-			
-			EntityWaterArc water = bendingState.getWaterArc();
-			
-			Vector force = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+		EntityFireArc fire = fs.getFireArc();
+		if (fire != null) {
+			Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
-			force.mul(10);
-			water.addVelocity(force);
-			water.setGravityEnabled(true);
-			
-			bendingState.releaseWater();
-			data.sendBendingState(bendingState);
-			
+			fire.addVelocity(look.times(15));
+			fire.setGravityEnabled(true);
+			fs.setNoFireArc();
+			data.sendBendingState(fs);
 		}
 	}
 	

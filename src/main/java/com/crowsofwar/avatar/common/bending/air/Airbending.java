@@ -1,8 +1,11 @@
-package com.crowsofwar.avatar.common.bending;
+package com.crowsofwar.avatar.common.bending.air;
 
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.bending.ability.AbilityAirGust;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;

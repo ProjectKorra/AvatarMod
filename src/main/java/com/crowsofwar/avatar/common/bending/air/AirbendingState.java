@@ -1,4 +1,7 @@
-package com.crowsofwar.avatar.common.bending;
+package com.crowsofwar.avatar.common.bending.air;
+
+import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.IBendingState;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;

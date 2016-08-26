@@ -1,12 +1,13 @@
-package com.crowsofwar.avatar.common.bending;
+package com.crowsofwar.avatar.common.bending.earth;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.ability.AbilityPickUpBlock;
-import com.crowsofwar.avatar.common.bending.ability.AbilityPutBlock;
-import com.crowsofwar.avatar.common.bending.ability.AbilityThrowBlock;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
@@ -30,7 +31,7 @@ public class Earthbending extends BendingController {
 	
 	private final BendingAbility abilityPickUpBlock, abilityThrowBlock, abilityPutBlock;
 	
-	Earthbending() {
+	public Earthbending() {
 		
 		bendableBlocks = new ArrayList<Block>();
 		bendableBlocks.add(Blocks.STONE);
