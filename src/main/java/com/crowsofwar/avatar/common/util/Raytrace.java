@@ -71,7 +71,7 @@ public class Raytrace {
 		Vector look = new Vector(player.getLookVec());
 		Vector end = playerPos.plus(look.times(range));
 		RayTraceResult res = player.worldObj.rayTraceBlocks(playerPos.toMinecraft(), end.toMinecraft(),
-				raycastLiquids, true, false);
+				!raycastLiquids, raycastLiquids, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
 			return new Result(new VectorI(res.getBlockPos()), res.sideHit);

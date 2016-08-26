@@ -29,7 +29,7 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 	 */
 	public AbilityWaterArc(BendingController<WaterbendingState> controller) {
 		super(controller);
-		this.raytrace = new Raytrace.Info();
+		this.raytrace = new Raytrace.Info(-1, false);
 	}
 	
 	@Override
