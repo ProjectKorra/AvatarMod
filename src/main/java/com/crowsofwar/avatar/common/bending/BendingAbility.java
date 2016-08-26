@@ -22,6 +22,7 @@ public abstract class BendingAbility<STATE extends IBendingState> {
 	public BendingAbility(BendingController<STATE> controller) {
 		this.controller = controller;
 		this.id = nextId++;
+		BendingManager.registerAbility(this);
 	}
 	
 	/**
