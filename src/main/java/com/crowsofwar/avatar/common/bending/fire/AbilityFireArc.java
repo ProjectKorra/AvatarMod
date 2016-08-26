@@ -45,7 +45,6 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 			if (fire != null) {
 				Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 						Math.toRadians(player.rotationPitch));
-				System.out.println("Eye pos is: " + Vector.getEyePos(player).y());
 				Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
 				Vector motion = lookPos.minus(new Vector(fire));
 				motion.normalize();

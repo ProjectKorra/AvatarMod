@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -55,9 +56,9 @@ public abstract class RenderArc extends Render {
 	
 	private void renderSegment(EntityArc arc, EntityControlPoint leader, EntityControlPoint point,
 			double renderPosX, double renderPosY, double renderPosZ) {
-		double x = leader.getXPos() - renderPosX;
-		double y = leader.getYPos() - renderPosY;
-		double z = leader.getZPos() - renderPosZ;
+		double x = leader.getXPos() - TileEntityRendererDispatcher.staticPlayerX;
+		double y = leader.getYPos() - TileEntityRendererDispatcher.staticPlayerY;
+		double z = leader.getZPos() - TileEntityRendererDispatcher.staticPlayerZ;
 		
 		Vector from = new Vector();
 		Vector to = point.getVecPosition().minus(leader.getVecPosition());
@@ -134,10 +135,10 @@ public abstract class RenderArc extends Render {
 		if (normal == 0 || normal == 2) {
 			
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(pos1.x(), pos1.y(), pos1.z()).tex(u2, v1);
-			vb.pos(pos2.x(), pos2.y(), pos2.z()).tex(u2, v2);
-			vb.pos(pos3.x(), pos3.y(), pos3.z()).tex(u1, v2);
-			vb.pos(pos4.x(), pos4.y(), pos4.z()).tex(u1, v1);
+			vb.pos(pos1.x(), pos1.y(), pos1.z()).tex(u2, v1).endVertex();
+			vb.pos(pos2.x(), pos2.y(), pos2.z()).tex(u2, v2).endVertex();
+			vb.pos(pos3.x(), pos3.y(), pos3.z()).tex(u1, v2).endVertex();
+			vb.pos(pos4.x(), pos4.y(), pos4.z()).tex(u1, v1).endVertex();
 			t.draw();
 			
 			// t.startDrawingQuads();
@@ -150,10 +151,10 @@ public abstract class RenderArc extends Render {
 		if (normal == 1 || normal == 2) {
 			
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(pos1.x(), pos1.y(), pos1.z()).tex(u2, v1);
-			vb.pos(pos4.x(), pos4.y(), pos4.z()).tex(u1, v1);
-			vb.pos(pos3.x(), pos3.y(), pos3.z()).tex(u1, v2);
-			vb.pos(pos2.x(), pos2.y(), pos2.z()).tex(u2, v2);
+			vb.pos(pos1.x(), pos1.y(), pos1.z()).tex(u2, v1).endVertex();
+			vb.pos(pos4.x(), pos4.y(), pos4.z()).tex(u1, v1).endVertex();
+			vb.pos(pos3.x(), pos3.y(), pos3.z()).tex(u1, v2).endVertex();
+			vb.pos(pos2.x(), pos2.y(), pos2.z()).tex(u2, v2).endVertex();
 			t.draw();
 			
 			// t.startDrawingQuads();
