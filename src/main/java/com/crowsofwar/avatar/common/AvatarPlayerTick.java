@@ -21,7 +21,7 @@ public class AvatarPlayerTick {
 				List<BendingAbility> abilities = controller.getAllAbilities();
 				for (BendingAbility ability : abilities) {
 					if (ability.requiresUpdateTick()) {
-						ability.execute(data);
+						ability.update(data);
 					}
 				}
 			}
