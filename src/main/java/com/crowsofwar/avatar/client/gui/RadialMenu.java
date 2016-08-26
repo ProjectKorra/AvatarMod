@@ -6,9 +6,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -16,7 +16,6 @@ import com.crowsofwar.avatar.common.gui.IAvatarGui;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Result;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -46,7 +45,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	
 	private RadialSegment[] segments;
 	private AvatarControl pressing;
-	private AvatarAbility[] controls;
+	private BendingAbility[] controls;
 	private MenuTheme theme;
 	
 	public RadialMenu(int controllerId) {
@@ -67,14 +66,13 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	 *            The key which must be pressed to keep the GUI open.
 	 * @param controls
 	 *            A 8-element array of controls. If the arguments passed are less than 8, then the
-	 *            array is filled with {@link AvatarAbility#NONE}. The arguments can only be a
-	 *            maximum of 8.
+	 *            array is filled with null. The arguments can only be a maximum of 8.
 	 */
-	public RadialMenu(MenuTheme theme, AvatarControl pressing, AvatarAbility... controls) {
+	public RadialMenu(MenuTheme theme, AvatarControl pressing, BendingAbility... controls) {
 		construct(theme, pressing, controls);
 	}
 	
-	private void construct(MenuTheme theme, AvatarControl pressing, AvatarAbility[] controls) {
+	private void construct(MenuTheme theme, AvatarControl pressing, BendingAbility[] controls) {
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
@@ -82,12 +80,12 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		if (controls == null) throw new IllegalArgumentException("Controls is null");
 		if (controls.length > 8)
 			throw new IllegalArgumentException("The length of controls can't be more than 8");
-		AvatarAbility[] ctrl = new AvatarAbility[8];
+		BendingAbility[] ctrl = new BendingAbility[8];
 		for (int i = 0; i < ctrl.length; i++) {
 			if (i < controls.length)
 				ctrl[i] = controls[i];
 			else
-				ctrl[i] = AvatarAbility.NONE;
+				ctrl[i] = null;
 		}
 		this.controls = ctrl;
 	}
@@ -132,13 +130,15 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 			int mouseY = getMouseY();
 			
 			for (int i = 0; i < segments.length; i++) {
+				if (controls[i] == null) continue;
 				if (segments[i].isMouseHover(mouseX, mouseY)) {
-					Result raytrace = controls[i].needsRaytrace() ? Raytrace.getTargetBlock(mc.thePlayer,
-							controls[i].getRaytraceDistance(), controls[i].isRaycastLiquids()) : null;
+					
+					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer,
+							controls[i].getRaytrace());
 					AvatarMod.network.sendToServer(
-							new PacketSUseAbility(controls[i], raytrace != null ? raytrace.getPos() : null,
-									raytrace != null ? raytrace.getSide() : null));
+							new PacketSUseAbility(controls[i], raytrace.getPos(), raytrace.getSide()));
 					break;
+					
 				}
 			}
 			mc.thePlayer.closeScreen();
