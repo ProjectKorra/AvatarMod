@@ -32,6 +32,7 @@ public class BendingManager {
 	
 	private static Map<Integer, BendingAbility> abilities;
 	private static List<BendingAbility> allAbilities;
+	private static List<BendingAbility> updateAbilities;
 	
 	public static void init() {
 		bending = new HashMap<Integer, BendingController>();
@@ -39,6 +40,7 @@ public class BendingManager {
 		allBending = new ArrayList<BendingController>();
 		abilities = new HashMap<>();
 		allAbilities = new ArrayList<>();
+		updateAbilities = new ArrayList<>();
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
 		registerBending(new Waterbending());
@@ -79,8 +81,18 @@ public class BendingManager {
 		return abilities.get(id);
 	}
 	
+	/**
+	 * Returns an unmodifiable view of all abilities.
+	 */
 	public static List<BendingAbility> allAbilities() {
 		return Collections.unmodifiableList(allAbilities);
+	}
+	
+	/**
+	 * Returns an unmodifiable view of all abilities which require update tick.
+	 */
+	public static List<BendingAbility> updatedAbilities() {
+		return Collections.unmodifiableList(updateAbilities);
 	}
 	
 	public static void registerBending(BendingController controller) {
@@ -92,6 +104,7 @@ public class BendingManager {
 	public static void registerAbility(BendingAbility ability) {
 		abilities.put(ability.getId(), ability);
 		allAbilities.add(ability);
+		if (ability.requiresUpdateTick()) updateAbilities.add(ability);
 	}
 	
 }

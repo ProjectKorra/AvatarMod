@@ -62,13 +62,13 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 */
 	public static final Random random = new Random();
 	
-	private final List<BendingAbility> abilities;
+	private final List<BendingAbility<STATE>> abilities;
 	
 	public BendingController() {
 		this.abilities = new ArrayList<>();
 	}
 	
-	protected void addAbility(BendingAbility ability) {
+	protected void addAbility(BendingAbility<STATE> ability) {
 		this.abilities.add(ability);
 	}
 	
@@ -92,14 +92,6 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	}
 	
 	/**
-	 * Called on each tick.
-	 * 
-	 * @param data
-	 *            The data for the player. Target block has not been calculated.
-	 */
-	public void onUpdate(AvatarPlayerData data) {}
-	
-	/**
 	 * Get the ability to be executed for the given client input.
 	 * 
 	 * @param data
@@ -119,6 +111,10 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 * Get the name of this bending controller in lowercase. e.g. "earthbending"
 	 */
 	public abstract String getControllerName();
+	
+	public List<BendingAbility<STATE>> getAllAbilities() {
+		return this.abilities;
+	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {}
