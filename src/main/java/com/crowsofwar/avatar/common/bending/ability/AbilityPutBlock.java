@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock.OnBlockLand;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -20,11 +21,15 @@ import net.minecraft.util.EnumFacing;
  */
 public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 	
+	private final Raytrace.Info raytrace;
+	
 	/**
 	 * @param controller
 	 */
 	public AbilityPutBlock(BendingController<EarthbendingState> controller) {
 		super(controller);
+		
+		this.raytrace = new Raytrace.Info(-1, true);
 	}
 	
 	@Override
@@ -62,21 +67,13 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-	@Override
 	public int getIconIndex() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
 	@Override
 	public Info getRaytrace() {
-		// TODO Auto-generated method stub
-		return null;
+		return raytrace;
 	}
 	
 }

@@ -134,11 +134,6 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public int getId() {
-		return 1;
-	}
-	
-	@Override
 	public int getIconIndex() {
 		return 0;
 	}

@@ -58,11 +58,6 @@ public class AbilityThrowBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public int getId() {
-		return 2;
-	}
-	
-	@Override
 	public int getIconIndex() {
 		return 1;
 	}

@@ -13,6 +13,8 @@ import net.minecraft.util.math.RayTraceResult;
 
 public class Raytrace {
 	
+	private Raytrace() {}
+	
 	/**
 	 * Returns the position of the block the player is looking at. Null if the player is not
 	 * targeting anything in range. This does not raycast liquids.
