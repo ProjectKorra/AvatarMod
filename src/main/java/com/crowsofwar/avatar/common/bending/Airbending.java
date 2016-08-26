@@ -2,25 +2,24 @@ package com.crowsofwar.avatar.common.bending;
 
 import java.awt.Color;
 
+import com.crowsofwar.avatar.common.bending.ability.AbilityAirGust;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.PlayerState;
-import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
 public class Airbending extends BendingController {
 	
 	private BendingMenuInfo menu;
+	private final BendingAbility<AirbendingState> abilityAirGust;
 	
 	public Airbending() {
+		this.abilityAirGust = new AbilityAirGust(this);
+		
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);
 		Color iconClr = new Color(196, 109, 0);
@@ -29,7 +28,7 @@ public class Airbending extends BendingController {
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
 		MenuTheme theme = new MenuTheme(background, edge, icon);
 		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, AvatarGuiIds.GUI_RADIAL_MENU_AIR,
-				ACTION_AIR_GUST);
+				abilityAirGust);
 	}
 	
 	@Override
@@ -48,41 +47,6 @@ public class Airbending extends BendingController {
 	}
 	
 	@Override
-	public void onAbility(AvatarAbility ability, AvatarPlayerData data) {
-		
-		PlayerState state = data.getState();
-		EntityPlayer player = state.getPlayerEntity();
-		World world = player.worldObj;
-		
-		if (ability == ACTION_AIRBEND_TEST) {
-			
-			player.addVelocity(0, 1, 0);
-			
-			// Note: This always is called on server-side
-			// TODO [1.10] Setting velocity on a client- is sending a packet even necessary?
-			// ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new
-			// S12PacketEntityVelocity(player));
-			
-		}
-		
-		if (ability == ACTION_AIR_GUST) {
-			
-			Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
-					Math.toRadians(player.rotationPitch));
-			Vector pos = Vector.getEyePos(player);
-			
-			EntityAirGust gust = new EntityAirGust(world);
-			gust.setVelocity(look.times(10));
-			gust.setPosition(pos.x(), pos.y(), pos.z());
-			gust.setOwner(player);
-			
-			world.spawnEntityInWorld(gust);
-			
-		}
-		
-	}
-	
-	@Override
 	public IBendingState createState(AvatarPlayerData data) {
 		return new AirbendingState();
 	}
@@ -93,8 +57,8 @@ public class Airbending extends BendingController {
 	}
 	
 	@Override
-	public AvatarAbility getAbility(AvatarPlayerData data, AvatarControl input) {
-		return NONE;
+	public BendingAbility getAbility(AvatarPlayerData data, AvatarControl input) {
+		return null;
 	}
 	
 	@Override

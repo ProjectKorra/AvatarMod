@@ -14,10 +14,14 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  */
 public abstract class BendingAbility<STATE extends IBendingState> {
 	
+	private static int nextId = 1;
+	
 	protected final BendingController<STATE> controller;
+	protected final int id;
 	
 	public BendingAbility(BendingController<STATE> controller) {
 		this.controller = controller;
+		this.id = nextId++;
 	}
 	
 	/**
@@ -43,7 +47,9 @@ public abstract class BendingAbility<STATE extends IBendingState> {
 	/**
 	 * Get the Id of this ability.
 	 */
-	public abstract int getId();
+	public final int getId() {
+		return id;
+	}
 	
 	/**
 	 * Get the texture index of this bending ability. -1 for no texture.
