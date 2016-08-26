@@ -43,10 +43,10 @@ public class Earthbending extends BendingController {
 		bendableBlocks.add(Blocks.NETHER_BRICK);
 		bendableBlocks.add(Blocks.STONEBRICK);
 		
-		this.abilityPickUpBlock = new AbilityPickUpBlock(this,
-				state -> bendableBlocks.contains(state.getBlock()));
-		this.abilityThrowBlock = new AbilityThrowBlock(this);
-		this.abilityPutBlock = new AbilityPutBlock(this);
+		addAbility(this.abilityPickUpBlock = new AbilityPickUpBlock(this,
+				state -> bendableBlocks.contains(state.getBlock())));
+		addAbility(this.abilityThrowBlock = new AbilityThrowBlock(this));
+		addAbility(this.abilityPutBlock = new AbilityPutBlock(this));
 		
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);

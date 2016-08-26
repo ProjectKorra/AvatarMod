@@ -21,7 +21,7 @@ public class Airbending extends BendingController {
 	private final BendingAbility<AirbendingState> abilityAirGust;
 	
 	public Airbending() {
-		this.abilityAirGust = new AbilityAirGust(this);
+		addAbility(this.abilityAirGust = new AbilityAirGust(this));
 		
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);

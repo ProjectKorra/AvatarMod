@@ -24,9 +24,9 @@ public class Firebending extends BendingController {
 	
 	public Firebending() {
 		
-		this.abilityLightFire = new AbilityLightFire(this);
-		this.abilityFireArc = new AbilityFireArc(this);
-		this.abilityFireThrow = new AbilityFireThrow(this);
+		addAbility(this.abilityLightFire = new AbilityLightFire(this));
+		addAbility(this.abilityFireArc = new AbilityFireArc(this));
+		addAbility(this.abilityFireThrow = new AbilityFireThrow(this));
 		
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
