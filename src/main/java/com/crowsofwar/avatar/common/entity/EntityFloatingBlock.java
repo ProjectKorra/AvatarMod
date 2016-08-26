@@ -306,7 +306,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			force.normalize();
 			force.mul(3);
 			setVelocity(force);
-			if (!worldObj.isRemote && targetVec.sqrDist(thisPos) < 0.001) {
+			if (!worldObj.isRemote && targetVec.sqrDist(thisPos) < 0.01) {
 				
 				setDead();
 				worldObj.setBlockState(new BlockPos(x, y, z), getBlockState());
