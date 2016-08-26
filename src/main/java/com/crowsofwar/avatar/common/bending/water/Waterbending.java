@@ -11,16 +11,11 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.PlayerState;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
 public class Waterbending extends BendingController {
 	
@@ -59,38 +54,6 @@ public class Waterbending extends BendingController {
 	@Override
 	public IBendingState createState(AvatarPlayerData data) {
 		return new WaterbendingState(data);
-	}
-	
-	@Override
-	public void onUpdate(AvatarPlayerData data) {
-		
-		PlayerState state = data.getState();
-		EntityPlayer player = state.getPlayerEntity();
-		World world = player.worldObj;
-		WaterbendingState bendingState = (WaterbendingState) data.getBendingState(this);
-		
-		if (bendingState.isBendingWater()) {
-			
-			EntityWaterArc water = bendingState.getWaterArc();
-			if (water != null) {
-				Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
-						Math.toRadians(player.rotationPitch));
-				Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
-				Vector motion = lookPos.minus(new Vector(water));
-				motion.normalize();
-				motion.mul(.15);
-				water.moveEntity(motion.x(), motion.y(), motion.z());
-				water.setOwner(player);
-				
-				if (water.worldObj.isRemote && water.canPlaySplash()) {
-					if (motion.sqrMagnitude() >= 0.004) water.playSplash();
-				}
-			} else {
-				if (!world.isRemote) bendingState.setWaterArc(null);
-			}
-			
-		}
-		
 	}
 	
 	@Override

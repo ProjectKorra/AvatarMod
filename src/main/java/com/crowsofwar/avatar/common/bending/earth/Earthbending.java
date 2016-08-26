@@ -11,12 +11,10 @@ import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,34 +68,6 @@ public class Earthbending extends BendingController {
 	@Override
 	public IBendingState createState(AvatarPlayerData data) {
 		return new EarthbendingState(data);
-	}
-	
-	@Override
-	public void onUpdate(AvatarPlayerData data) {
-		EarthbendingState state = (EarthbendingState) data.getBendingState(this);
-		if (state != null) {
-			EntityPlayer player = data.getPlayerEntity();
-			EntityFloatingBlock floating = state.getPickupBlock();
-			
-			if (floating != null && floating.ticksExisted > 20) {
-				floating.setOwner(player);
-				
-				if (floating.isGravityEnabled()) {
-					floating.setGravityEnabled(false);
-				}
-				
-				double yaw = Math.toRadians(player.rotationYaw);
-				double pitch = Math.toRadians(player.rotationPitch);
-				Vector forward = Vector.fromYawPitch(yaw, pitch);
-				Vector eye = Vector.getEyePos(player);
-				Vector target = forward.times(2).plus(eye);
-				Vector motion = target.minus(new Vector(floating));
-				motion.mul(5);
-				floating.setVelocity(motion);
-				
-			}
-			
-		}
 	}
 	
 	@Override

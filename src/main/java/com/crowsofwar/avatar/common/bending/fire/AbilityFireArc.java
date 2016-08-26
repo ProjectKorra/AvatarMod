@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -30,7 +31,31 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 	
 	@Override
 	public boolean requiresUpdateTick() {
-		return false;
+		return true;
+	}
+	
+	@Override
+	public void update(AvatarPlayerData data) {
+		PlayerState state = data.getState();
+		EntityPlayer player = data.getPlayerEntity();
+		World world = player.worldObj;
+		FirebendingState fs = data.getBendingState(controller);
+		if (fs.isManipulatingFire()) {
+			EntityFireArc fire = fs.getFireArc();
+			if (fire != null) {
+				Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+						Math.toRadians(player.rotationPitch));
+				System.out.println("Eye pos is: " + Vector.getEyePos(player).y());
+				Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
+				Vector motion = lookPos.minus(new Vector(fire));
+				motion.normalize();
+				motion.mul(.15);
+				fire.moveEntity(motion.x(), motion.y(), motion.z());
+				fire.setOwner(player);
+			} else {
+				if (!world.isRemote) fs.setNoFireArc();
+			}
+		}
 	}
 	
 	@Override

@@ -55,11 +55,6 @@ public class Airbending extends BendingController {
 	}
 	
 	@Override
-	public void onUpdate(AvatarPlayerData data) {
-		
-	}
-	
-	@Override
 	public BendingAbility getAbility(AvatarPlayerData data, AvatarControl input) {
 		return null;
 	}

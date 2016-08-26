@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
+import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
@@ -33,7 +34,37 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 	
 	@Override
 	public boolean requiresUpdateTick() {
-		return false;
+		return true;
+	}
+	
+	@Override
+	public void update(AvatarPlayerData data) {
+		PlayerState state = data.getState();
+		EntityPlayer player = data.getPlayerEntity();
+		World world = player.worldObj;
+		WaterbendingState bendingState = data.getBendingState(controller);
+		
+		if (bendingState.isBendingWater()) {
+			
+			EntityWaterArc water = bendingState.getWaterArc();
+			if (water != null) {
+				Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+						Math.toRadians(player.rotationPitch));
+				Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
+				Vector motion = lookPos.minus(new Vector(water));
+				motion.normalize();
+				motion.mul(.15);
+				water.moveEntity(motion.x(), motion.y(), motion.z());
+				water.setOwner(player);
+				
+				if (water.worldObj.isRemote && water.canPlaySplash()) {
+					if (motion.sqrMagnitude() >= 0.004) water.playSplash();
+				}
+			} else {
+				if (!world.isRemote) bendingState.setWaterArc(null);
+			}
+			
+		}
 	}
 	
 	@Override

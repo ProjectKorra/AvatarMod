@@ -10,17 +10,12 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.PlayerState;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
 public class Firebending extends BendingController {
 	
@@ -61,30 +56,6 @@ public class Firebending extends BendingController {
 	@Override
 	public IBendingState createState(AvatarPlayerData data) {
 		return new FirebendingState(data);
-	}
-	
-	@Override
-	public void onUpdate(AvatarPlayerData data) {
-		PlayerState state = data.getState();
-		EntityPlayer player = state.getPlayerEntity();
-		World world = player.worldObj;
-		FirebendingState fs = (FirebendingState) data.getBendingState(this);
-		if (fs.isManipulatingFire()) {
-			EntityFireArc fire = fs.getFireArc();
-			if (fire != null) {
-				Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
-						Math.toRadians(player.rotationPitch));
-				System.out.println("Eye pos is: " + Vector.getEyePos(player).y());
-				Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
-				Vector motion = lookPos.minus(new Vector(fire));
-				motion.normalize();
-				motion.mul(.15);
-				fire.moveEntity(motion.x(), motion.y(), motion.z());
-				fire.setOwner(player);
-			} else {
-				if (!world.isRemote) fs.setNoFireArc();
-			}
-		}
 	}
 	
 	@Override
