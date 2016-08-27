@@ -107,25 +107,26 @@ public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements Pl
 		}
 		
 		if (error == ResultOutcome.SUCCESS) {
+			data.setPlayerEntity(world.getPlayerEntityByName(playerName));
 			return data;
 		} else {
 			if (errorMessage != null)
 				GoreCore.LOGGER.error("Error while retrieving player data- " + errorMessage);
 			String log;
 			switch (error) {
-			case BAD_HTTP_CODE:
-				log = "Unexpected HTTP code";
-				break;
-			case EXCEPTION_OCCURED:
-				log = "Unexpected exception occurred";
-				break;
-			case USERNAME_DOES_NOT_EXIST:
-				log = "Account is not registered";
-				break;
-			default:
-				log = "Unexpected error: " + error;
-				break;
-			
+				case BAD_HTTP_CODE:
+					log = "Unexpected HTTP code";
+					break;
+				case EXCEPTION_OCCURED:
+					log = "Unexpected exception occurred";
+					break;
+				case USERNAME_DOES_NOT_EXIST:
+					log = "Account is not registered";
+					break;
+				default:
+					log = "Unexpected error: " + error;
+					break;
+				
 			}
 			
 			return null;
@@ -157,6 +158,7 @@ public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements Pl
 			data = null;
 		}
 		
+		data.setPlayerEntity(world.getPlayerEntityByName(playerName));
 		return data;
 	}
 	

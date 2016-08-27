@@ -49,10 +49,16 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 	 */
 	public T getPlayerData(UUID player) {
 		if (players.containsKey(player)) {
-			return getPlayerDataWithoutCreate(player);
+			T data = getPlayerDataWithoutCreate(player);
+			if (getWorld() != null)
+				data.setPlayerEntity(GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
+			return data;
 		} else {
+			System.out.println("New player data for " + player);
 			T data = createNewPlayerData(player);
 			players.put(player, data);
+			if (getWorld() != null)
+				data.setPlayerEntity(GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
 			saveChanges();
 			return data;
 		}
@@ -69,9 +75,7 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 	public T getPlayerDataWithoutCreate(UUID player) {
 		T data = (T) players.get(player);
 		if (data.getPlayerEntity() == null) {
-			System.out.println("Player data is null!~");
 			data.setPlayerEntity(GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
-			System.out.println("Now it is: " + data.getPlayerEntity());
 		}
 		return data;
 	}

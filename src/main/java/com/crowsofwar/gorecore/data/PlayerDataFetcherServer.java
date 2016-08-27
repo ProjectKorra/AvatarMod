@@ -24,43 +24,44 @@ public class PlayerDataFetcherServer<T extends GoreCorePlayerData> implements Pl
 	
 	@Override
 	public T fetch(World world, String playerName, String errorMessage) {
-		T pd;
+		T data;
 		GoreCorePlayerUUIDs.ResultOutcome error;
 		
 		GoreCorePlayerUUIDs.GetUUIDResult getUUID = GoreCorePlayerUUIDs.getUUID(playerName);
 		if (getUUID.isResultSuccessful()) {
 			
-			pd = worldDataFetcher.fetch(world).getPlayerData(getUUID.getUUID());
+			data = worldDataFetcher.fetch(world).getPlayerData(getUUID.getUUID());
 			error = getUUID.getResult();
 			
 		} else {
 			
 			getUUID.logError();
-			pd = null;
+			data = null;
 			error = getUUID.getResult();
 			
 		}
 		
 		if (error == ResultOutcome.SUCCESS) {
-			return pd;
+			data.setPlayerEntity(world.getPlayerEntityByName(playerName));
+			return data;
 		} else {
 			if (errorMessage != null)
 				GoreCore.LOGGER.error("Error while retrieving player data- " + errorMessage);
 			String log;
 			switch (error) {
-			case BAD_HTTP_CODE:
-				log = "Unexpected HTTP code";
-				break;
-			case EXCEPTION_OCCURED:
-				log = "Unexpected exception occurred";
-				break;
-			case USERNAME_DOES_NOT_EXIST:
-				log = "Account is not registered";
-				break;
-			default:
-				log = "Unexpected error: " + error;
-				break;
-			
+				case BAD_HTTP_CODE:
+					log = "Unexpected HTTP code";
+					break;
+				case EXCEPTION_OCCURED:
+					log = "Unexpected exception occurred";
+					break;
+				case USERNAME_DOES_NOT_EXIST:
+					log = "Account is not registered";
+					break;
+				default:
+					log = "Unexpected error: " + error;
+					break;
+				
 			}
 			
 			return null;

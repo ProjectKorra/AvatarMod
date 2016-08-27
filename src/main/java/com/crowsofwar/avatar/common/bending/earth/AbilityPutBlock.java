@@ -47,8 +47,8 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 			// TODO Verify look at block
 			VectorI looking = state.getClientLookAtBlock();
 			EnumFacing lookingSide = state.getLookAtSide();
-			looking.offset(lookingSide);
 			if (looking != null && lookingSide != null) {
+				looking.offset(lookingSide);
 				// if (world.getBlock(x, y, z) == Blocks.air) {
 				// world.setBlock(x, y, z, floating.getBlock());
 				// floating.setDead();
