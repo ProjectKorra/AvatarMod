@@ -313,8 +313,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				
 				SoundType sound = getBlock().getSoundType();
 				if (sound != null) {
-					worldObj.playSound(posX, posY, posZ, sound.getBreakSound(), SoundCategory.PLAYERS,
-							sound.getVolume(), sound.getPitch(), false);
+					worldObj.playSound(null, target, sound.getBreakSound(), SoundCategory.PLAYERS,
+							sound.getVolume(), sound.getPitch());
 				}
 				
 			}

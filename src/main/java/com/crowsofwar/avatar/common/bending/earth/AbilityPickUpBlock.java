@@ -116,15 +116,14 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					
 					SoundType sound = block.getSoundType();
 					if (sound != null) {
-						world.playSound(target.x() + 0.5, target.y() + 0.5, target.z() + 0.5,
-								sound.getBreakSound(), SoundCategory.PLAYERS, sound.getVolume(),
-								sound.getPitch(), false);
+						world.playSound(null, target.toBlockPos(), sound.getBreakSound(),
+								SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 					}
 					
 					world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 					
 				} else {
-					world.playSound(player, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
+					world.playSound(null, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
 							SoundCategory.PLAYERS, 1, (float) (random.nextGaussian() / 0.25 + 0.375));
 				}
 				
