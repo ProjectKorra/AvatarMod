@@ -9,10 +9,25 @@ package com.crowsofwar.avatar.common.util.event;
  */
 public interface Subject<EVENT extends IEvent> {
 	
+	/**
+	 * Attach the observer to this subject.
+	 * 
+	 * @param obs
+	 */
 	void addObserver(Observer obs);
 	
+	/**
+	 * Remove the observer from this subject.
+	 * 
+	 * @param obs
+	 */
 	void removeObserver(Observer obs);
 	
+	/**
+	 * Notify all listening observers of the given event.
+	 * 
+	 * @param e
+	 */
 	void notifyObservers(EVENT e);
 	
 }
