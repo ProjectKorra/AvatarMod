@@ -53,6 +53,8 @@ public class AbilityThrowBlock extends BendingAbility<EarthbendingState> {
 			ebs.setPickupBlock(null);
 			AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
 			
+			controller.notifyObservers(new EarthbendingEvent.BlockThrown(floating));
+			
 		}
 	}
 	

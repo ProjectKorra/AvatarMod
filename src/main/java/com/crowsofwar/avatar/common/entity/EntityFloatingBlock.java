@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvent;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
@@ -277,6 +279,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				case BREAK:
 					if (!worldObj.isRemote) setDead();
 					onCollision();
+					BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
+							.notifyObservers(new EarthbendingEvent.BlockThrownReached(this));
 					break;
 				case PLACE:
 					if (!worldObj.isRemote) {
@@ -316,6 +320,9 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 					worldObj.playSound(null, target, sound.getBreakSound(), SoundCategory.PLAYERS,
 							sound.getVolume(), sound.getPitch());
 				}
+				
+				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
+						.notifyObservers(new EarthbendingEvent.BlockPlacedReached(this));
 				
 			}
 		}

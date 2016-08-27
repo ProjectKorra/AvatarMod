@@ -122,6 +122,8 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					
 					world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 					
+					controller.notifyObservers(new EarthbendingEvent.BlockPickedUp(floating));
+					
 				} else {
 					world.playSound(null, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
 							SoundCategory.PLAYERS, 1, (float) (random.nextGaussian() / 0.25 + 0.375));
