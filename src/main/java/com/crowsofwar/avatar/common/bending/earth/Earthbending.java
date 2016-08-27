@@ -16,7 +16,6 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.common.util.event.EventNotifier;
-import com.crowsofwar.avatar.common.util.event.Observer;
 import com.crowsofwar.avatar.common.util.event.Subject;
 
 import net.minecraft.block.Block;
@@ -25,7 +24,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public class Earthbending extends BendingController implements Subject<EarthbendingEvent> {
+public class Earthbending extends BendingController {
 	
 	private final BendingMenuInfo menu;
 	private final List<Block> bendableBlocks;
@@ -103,21 +102,6 @@ public class Earthbending extends BendingController implements Subject<Earthbend
 	@Override
 	public String getControllerName() {
 		return "earthbending";
-	}
-	
-	@Override
-	public void addObserver(Observer obs) {
-		eventNotifier.addObserver(obs);
-	}
-	
-	@Override
-	public void removeObserver(Observer obs) {
-		eventNotifier.removeObserver(obs);
-	}
-	
-	@Override
-	public void notifyObservers(EarthbendingEvent e) {
-		eventNotifier.notifyObservers(e);
 	}
 	
 }

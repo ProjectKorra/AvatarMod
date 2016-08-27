@@ -3,6 +3,7 @@ package com.crowsofwar.avatar;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
@@ -48,6 +49,7 @@ public class AvatarMod {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		BendingManager.init();
+		BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING).addObserver(new EarthSoundHandler());
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());

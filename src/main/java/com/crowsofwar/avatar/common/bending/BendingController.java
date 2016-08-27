@@ -8,6 +8,10 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
+import com.crowsofwar.avatar.common.util.event.EventNotifier;
+import com.crowsofwar.avatar.common.util.event.IEvent;
+import com.crowsofwar.avatar.common.util.event.Observer;
+import com.crowsofwar.avatar.common.util.event.Subject;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
@@ -31,7 +35,8 @@ import net.minecraft.nbt.NBTTagCompound;
  *            The IBendingState this controller is using
  * 
  */
-public abstract class BendingController<STATE extends IBendingState> implements ReadableWritable {
+public abstract class BendingController<STATE extends IBendingState>
+		implements ReadableWritable, Subject<IEvent> {
 	
 	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
 		@Override
@@ -63,9 +68,11 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	public static final Random random = new Random();
 	
 	private final List<BendingAbility<STATE>> abilities;
+	private final Subject<IEvent> eventNotifier;
 	
 	public BendingController() {
 		this.abilities = new ArrayList<>();
+		this.eventNotifier = new EventNotifier<>();
 	}
 	
 	protected void addAbility(BendingAbility<STATE> ability) {
@@ -121,5 +128,20 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {}
+	
+	@Override
+	public void addObserver(Observer obs) {
+		eventNotifier.addObserver(obs);
+	}
+	
+	@Override
+	public void removeObserver(Observer obs) {
+		eventNotifier.removeObserver(obs);
+	}
+	
+	@Override
+	public void notifyObservers(IEvent e) {
+		eventNotifier.notifyObservers(e);
+	}
 	
 }

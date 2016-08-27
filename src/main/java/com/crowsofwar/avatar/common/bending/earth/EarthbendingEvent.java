@@ -8,7 +8,7 @@ import com.crowsofwar.avatar.common.util.event.IEvent;
  * 
  * @author CrowsOfWar
  */
-public class EarthbendingEvent implements IEvent {
+public abstract class EarthbendingEvent implements IEvent {
 	
 	public static class BlockPickedUp extends EarthbendingEvent {
 		
