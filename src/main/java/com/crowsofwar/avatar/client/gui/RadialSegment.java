@@ -31,7 +31,8 @@ public class RadialSegment {
 		
 		int mouseCenteredX = mouseX - gui.width / 2;
 		int mouseCenteredY = mouseY - gui.height / 2;
-		double r = Math.sqrt(mouseCenteredX * mouseCenteredX + mouseCenteredY * mouseCenteredY) / RadialMenu.menuScale;
+		double r = Math.sqrt(mouseCenteredX * mouseCenteredX + mouseCenteredY * mouseCenteredY)
+				/ RadialMenu.menuScale;
 		double currentAngle = Math.toDegrees(Math.atan2(mouseCenteredY, mouseCenteredX)) + 90;
 		double minAngle = angle - 44;
 		if (minAngle < 0) minAngle += 360;
@@ -55,7 +56,7 @@ public class RadialSegment {
 	}
 	
 	public int getTextureV() {
-		return (icon / 32) * 32;
+		return (icon / 8) * 32;
 	}
 	
 }
