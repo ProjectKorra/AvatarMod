@@ -29,7 +29,7 @@ public class Earthbending extends BendingController {
 	private final BendingMenuInfo menu;
 	private final List<Block> bendableBlocks;
 	
-	private final BendingAbility abilityPickUpBlock, abilityThrowBlock, abilityPutBlock;
+	private final BendingAbility abilityPickUpBlock, abilityThrowBlock, abilityPutBlock, abilityRavine;
 	
 	private final Subject<EarthbendingEvent> eventNotifier;
 	
@@ -51,6 +51,7 @@ public class Earthbending extends BendingController {
 				state -> bendableBlocks.contains(state.getBlock())));
 		addAbility(this.abilityThrowBlock = new AbilityThrowBlock(this));
 		addAbility(this.abilityPutBlock = new AbilityPutBlock(this));
+		addAbility(this.abilityRavine = new AbilityRavine(this));
 		
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
@@ -60,7 +61,7 @@ public class Earthbending extends BendingController {
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_EARTHBENDING,
-				AvatarGuiIds.GUI_RADIAL_MENU_EARTH, abilityPickUpBlock);
+				AvatarGuiIds.GUI_RADIAL_MENU_EARTH, abilityPickUpBlock, abilityRavine);
 		
 		this.eventNotifier = new EventNotifier<>();
 		
