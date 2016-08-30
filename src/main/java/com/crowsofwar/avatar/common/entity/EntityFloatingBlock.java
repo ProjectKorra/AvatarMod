@@ -8,6 +8,7 @@ import java.util.Random;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvent;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
@@ -24,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumParticleTypes;
@@ -426,18 +428,29 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public abstract class Behavior {
 		
-		abstract void onUpdate();
+		/**
+		 * Called every update tick.
+		 * 
+		 * @return Next behavior. Return <code>this</code> to continue the behavior.
+		 */
+		public abstract Behavior onUpdate();
+		
+		public abstract void fromBytes(PacketBuffer buf);
+		
+		public abstract void toBytes(PacketBuffer buf);
 		
 	}
 	
 	public class Place extends Behavior {
 		
+		private BlockPos placeAt;
+		
 		public Place(BlockPos placeAt) {
-			setMovingToBlock(placeAt);
+			this.placeAt = placeAt;
 		}
 		
 		@Override
-		public void onUpdate() {
+		public Behavior onUpdate() {
 			BlockPos target = getMovingToBlock();
 			Vector targetVec = new Vector(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
 			Vector thisPos = new Vector(posX, posY, posZ);
@@ -460,6 +473,18 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 						.notifyObservers(new EarthbendingEvent.BlockPlacedReached(EntityFloatingBlock.this));
 				
 			}
+			
+			return this;
+		}
+		
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+			placeAt = buf.readBlockPos();
+		}
+		
+		@Override
+		public void toBytes(PacketBuffer buf) {
+			buf.writeBlockPos(placeAt);
 		}
 		
 	}
@@ -467,7 +492,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	public class Thrown extends Behavior {
 		
 		@Override
-		void onUpdate() {
+		public Behavior onUpdate() {
 			if (!isDead) {
 				List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(
 						EntityFloatingBlock.this, getEntityBoundingBox());
@@ -501,6 +526,74 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 						.notifyObservers(new EarthbendingEvent.BlockThrownReached(EntityFloatingBlock.this));
 			}
 			
+			return this;
+			
+		}
+		
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void toBytes(PacketBuffer buf) {}
+		
+	}
+	
+	public class PickUp extends Behavior {
+		
+		@Override
+		public Behavior onUpdate() {
+			if (ticksExisted > 20) {
+				return new PlayerControlled(owner);
+			}
+			
+			return this;
+		}
+		
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void toBytes(PacketBuffer buf) {}
+		
+	}
+	
+	public class PlayerControlled extends Behavior {
+		
+		private EntityPlayer controller;
+		
+		public PlayerControlled(EntityPlayer controller) {
+			this.controller = controller;
+		}
+		
+		@Override
+		public Behavior onUpdate() {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(controller,
+					"Could not get player data to update PlayerControlled Floating Block");
+			
+			if (isGravityEnabled()) {
+				setGravityEnabled(false);
+			}
+			
+			double yaw = Math.toRadians(controller.rotationYaw);
+			double pitch = Math.toRadians(controller.rotationPitch);
+			Vector forward = Vector.fromYawPitch(yaw, pitch);
+			Vector eye = Vector.getEyePos(controller);
+			Vector target = forward.times(2).plus(eye);
+			Vector motion = target.minus(new Vector(EntityFloatingBlock.this));
+			motion.mul(5);
+			setVelocity(motion);
+			
+			return this;
+		}
+		
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+			controller = worldObj.getPlayerEntityByName(buf.readStringFromBuffer(50));
+		}
+		
+		@Override
+		public void toBytes(PacketBuffer buf) {
+			buf.writeString(controller.getName());
 		}
 		
 	}
