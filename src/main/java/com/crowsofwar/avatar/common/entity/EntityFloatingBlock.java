@@ -5,7 +5,6 @@ import static net.minecraft.network.datasync.EntityDataManager.createKey;
 import java.util.List;
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock.OnBlockLand;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
@@ -107,7 +106,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
 		dataManager.register(SYNC_CAN_FALL, false);
-		dataManager.register(SYNC_ON_LAND, OnBlockLand.DO_NOTHING.getId());
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
 		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
 		
@@ -121,7 +119,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
 		setFriction(nbt.getFloat("Friction"));
 		setCanFall(nbt.getBoolean("CanFall"));
-		setOnLandBehavior(nbt.getByte("OnLand"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 	}
 	
@@ -321,29 +318,13 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		return dataManager.get(SYNC_ON_LAND);
 	}
 	
-	public OnBlockLand getOnLandBehavior() {
-		return OnBlockLand.getFromId(getOnLandBehaviorId());
-	}
-	
-	public void setOnLandBehavior(byte id) {
-		dataManager.set(SYNC_ON_LAND, id);
-	}
-	
-	public void setOnLandBehavior(OnBlockLand onLand) {
-		setOnLandBehavior(onLand.getId());
-	}
-	
-	public boolean canBeDestroyed() {
-		return getOnLandBehavior() == OnBlockLand.BREAK;
-	}
-	
 	/**
 	 * Drop the block - enable gravity, can fall, and can be destroyed.
 	 */
 	public void drop() {
 		setGravityEnabled(true);
 		setCanFall(true);
-		setOnLandBehavior(OnBlockLand.BREAK);
+		setBehavior(new FloatingBlockBehavior.DoNothing());
 	}
 	
 	public EntityPlayer getOwner() {
@@ -352,6 +333,14 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public void setOwner(EntityPlayer owner) {
 		this.owner = owner;
+	}
+	
+	public FloatingBlockBehavior getBehavior() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+	
+	public void setBehavior(FloatingBlockBehavior behavior) {
+		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
 	@Override
