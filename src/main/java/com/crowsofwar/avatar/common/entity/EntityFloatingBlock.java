@@ -274,84 +274,10 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		motionX = velocity.x() / 20;
 		motionY = velocity.y() / 20;
 		motionZ = velocity.z() / 20;
-		if (isCollided) {
-			switch (getOnLandBehavior()) {
-				case BREAK:
-					if (!worldObj.isRemote) setDead();
-					onCollision();
-					BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
-							.notifyObservers(new EarthbendingEvent.BlockThrownReached(this));
-					break;
-				case PLACE:
-					if (!worldObj.isRemote) {
-						// TODO Fix duplicate placing code (Weird!) - I don't believe this part ever
-						// gets called.
-						setDead();
-						int x = (int) Math.floor(posX);
-						int y = (int) Math.floor(posY);
-						int z = (int) Math.floor(posZ);
-						worldObj.setBlockState(new BlockPos(x, y, z), getBlockState());
-					}
-					break;
-				default:
-					break;
-			}
-		}
 		
 		int x = (int) Math.floor(posX);
 		int y = (int) Math.floor(posY);
 		int z = (int) Math.floor(posZ);
-		
-		if (isMovingToBlock()) {
-			BlockPos target = getMovingToBlock();
-			Vector targetVec = new Vector(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
-			Vector thisPos = new Vector(posX, posY, posZ);
-			Vector force = targetVec.minus(thisPos);
-			force.normalize();
-			force.mul(3);
-			setVelocity(force);
-			if (!worldObj.isRemote && targetVec.sqrDist(thisPos) < 0.01) {
-				
-				setDead();
-				worldObj.setBlockState(new BlockPos(x, y, z), getBlockState());
-				
-				SoundType sound = getBlock().getSoundType();
-				if (sound != null) {
-					worldObj.playSound(null, target, sound.getBreakSound(), SoundCategory.PLAYERS,
-							sound.getVolume(), sound.getPitch());
-				}
-				
-				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
-						.notifyObservers(new EarthbendingEvent.BlockPlacedReached(this));
-				
-			}
-		}
-		
-		if (!isDead) {
-			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
-					getEntityBoundingBox());
-			if (!collidedList.isEmpty()) {
-				Entity collided = collidedList.get(0);
-				if (collided instanceof EntityLivingBase && collided != getOwner()) {
-					double speed = getVelocity().magnitude();
-					double multiplier = 0.25;
-					collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(this, collided),
-							(float) (speed * multiplier));
-					
-					Vector motion = new Vector(collided).minus(new Vector(this));
-					
-					motion.setY(0.08);
-					collided.addVelocity(motion.x(), motion.y(), motion.z());
-					if (!worldObj.isRemote) setDead();
-					onCollision();
-				} else if (collided != getOwner()) {
-					Vector motion = new Vector(collided).minus(new Vector(this));
-					motion.mul(0.3);
-					motion.setY(0.08);
-					collided.addVelocity(motion.x(), motion.y(), motion.z());
-				}
-			}
-		}
 		
 	}
 	
@@ -494,6 +420,87 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		
 		public static OnBlockLand getFromId(byte id) {
 			return values()[id];
+		}
+		
+	}
+	
+	public abstract class Behavior {
+		
+		abstract void onUpdate();
+		
+	}
+	
+	public class Place extends Behavior {
+		
+		public Place(BlockPos placeAt) {
+			setMovingToBlock(placeAt);
+		}
+		
+		@Override
+		public void onUpdate() {
+			BlockPos target = getMovingToBlock();
+			Vector targetVec = new Vector(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+			Vector thisPos = new Vector(posX, posY, posZ);
+			Vector force = targetVec.minus(thisPos);
+			force.normalize();
+			force.mul(3);
+			setVelocity(force);
+			if (!worldObj.isRemote && targetVec.sqrDist(thisPos) < 0.01) {
+				
+				setDead();
+				worldObj.setBlockState(new BlockPos(EntityFloatingBlock.this), getBlockState());
+				
+				SoundType sound = getBlock().getSoundType();
+				if (sound != null) {
+					worldObj.playSound(null, target, sound.getBreakSound(), SoundCategory.PLAYERS,
+							sound.getVolume(), sound.getPitch());
+				}
+				
+				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
+						.notifyObservers(new EarthbendingEvent.BlockPlacedReached(EntityFloatingBlock.this));
+				
+			}
+		}
+		
+	}
+	
+	public class Thrown extends Behavior {
+		
+		@Override
+		void onUpdate() {
+			if (!isDead) {
+				List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(
+						EntityFloatingBlock.this, getEntityBoundingBox());
+				if (!collidedList.isEmpty()) {
+					Entity collided = collidedList.get(0);
+					if (collided instanceof EntityLivingBase && collided != getOwner()) {
+						double speed = getVelocity().magnitude();
+						double multiplier = 0.25;
+						collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(
+								EntityFloatingBlock.this, collided), (float) (speed * multiplier));
+						
+						Vector motion = new Vector(collided).minus(new Vector(EntityFloatingBlock.this));
+						
+						motion.setY(0.08);
+						collided.addVelocity(motion.x(), motion.y(), motion.z());
+						if (!worldObj.isRemote) setDead();
+						onCollision();
+					} else if (collided != getOwner()) {
+						Vector motion = new Vector(collided).minus(new Vector(EntityFloatingBlock.this));
+						motion.mul(0.3);
+						motion.setY(0.08);
+						collided.addVelocity(motion.x(), motion.y(), motion.z());
+					}
+				}
+			}
+			
+			if (isCollided) {
+				if (!worldObj.isRemote) setDead();
+				onCollision();
+				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
+						.notifyObservers(new EarthbendingEvent.BlockThrownReached(EntityFloatingBlock.this));
+			}
+			
 		}
 		
 	}
