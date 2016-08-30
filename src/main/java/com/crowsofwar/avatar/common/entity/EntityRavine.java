@@ -6,6 +6,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 /**
@@ -61,6 +62,8 @@ public class EntityRavine extends Entity implements IPhysics {
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
 		if (getSqrDistanceTravelled() > 25) setDead();
+		if (!worldObj.getBlockState(getPosition().offset(EnumFacing.DOWN)).isNormalCube()) setDead();
+		
 	}
 	
 	@Override
