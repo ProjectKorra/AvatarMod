@@ -5,12 +5,11 @@ import static net.minecraft.network.datasync.EntityDataManager.createKey;
 import java.util.List;
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock.OnBlockLand;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 
-import jline.internal.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -40,23 +39,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public static final Block DEFAULT_BLOCK = Blocks.STONE;
 	
-	// public static final int SYNC_BLOCKID = 2;
-	// /** Whether gravity can affect the block's velocity. */
-	// public static final int SYNC_GRAVITY = 3;
-	// public static final int SYNC_FLOATINGBLOCKID = 4;
-	//
-	// public static final int SYNC_VELX = 5, SYNC_VELY = 6, SYNC_VELZ = 7,
-	// SYNC_FRICTION = 8;
-	// /**
-	// * Whether gravity can cause the block to have negative Y velocity (gravity will still affect
-	// * it).
-	// */
-	// public static final int SYNC_CAN_FALL = 9;
-	// /** Whether the floating block breaks on contact with other blocks. */
-	// public static final int SYNC_ON_LAND = 10;
-	// public static final int SYNC_TARGET_BLOCK = 11; // 11,12,13,14
-	// public static final int SYNC_METADATA = 15;
-	
 	private static final DataParameter<Boolean> SYNC_GRAVITY_ENABLED = createKey(EntityFloatingBlock.class,
 			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> SYNC_ENTITY_ID = createKey(EntityFloatingBlock.class,
@@ -72,6 +54,9 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
 			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
 	
+	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
+			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
+	
 	private static int nextBlockID = 0;
 	
 	/**
@@ -79,10 +64,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(Vector)}.
 	 */
 	private Vector velocity;
-	/**
-	 * Target block to go to
-	 */
-	private final EntityPropertyDataManager<Optional<BlockPos>> propBlockPos;
 	private final Vector internalPosition;
 	
 	private EntityPlayer owner;
@@ -101,8 +82,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
-		this.propBlockPos = new EntityPropertyDataManager<Optional<BlockPos>>(this, EntityFloatingBlock.class,
-				DataSerializers.OPTIONAL_BLOCK_POS, Optional.absent());
 		this.internalPosition = new Vector(0, 0, 0);
 		
 		this.enableItemDrops = true;
@@ -130,6 +109,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		dataManager.register(SYNC_CAN_FALL, false);
 		dataManager.register(SYNC_ON_LAND, OnBlockLand.DO_NOTHING.getId());
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
+		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
 		
 	}
 	
@@ -374,48 +354,10 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		this.owner = owner;
 	}
 	
-	@Nullable
-	public BlockPos getMovingToBlock() {
-		Optional<BlockPos> optional = propBlockPos.getValue();
-		return optional.isPresent() ? optional.get() : null;
-	}
-	
-	public void setMovingToBlock(@Nullable BlockPos pos) {
-		Optional<BlockPos> optional = pos == null ? Optional.absent() : Optional.of(pos);
-		propBlockPos.setValue(optional);
-	}
-	
-	public boolean isMovingToBlock() {
-		return getMovingToBlock() != null;
-	}
-	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double d) {
 		return true;
-	}
-	
-	/**
-	 * Determines what the block will do when it touches a solid (non floating) block.
-	 *
-	 */
-	public static enum OnBlockLand {
-		
-		/** Do nothing */
-		DO_NOTHING,
-		/** Break the floating block and drop its item */
-		BREAK,
-		/** Place the floating block into the world */
-		PLACE;
-		
-		public byte getId() {
-			return (byte) ordinal();
-		}
-		
-		public static OnBlockLand getFromId(byte id) {
-			return values()[id];
-		}
-		
 	}
 	
 }

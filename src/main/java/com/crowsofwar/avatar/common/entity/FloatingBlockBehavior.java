@@ -30,7 +30,7 @@ import net.minecraft.world.World;
  */
 public abstract class FloatingBlockBehavior {
 	
-	private static final DataSerializer<FloatingBlockBehavior> SERIALIZER_BEHAVIOR = new DataSerializer<FloatingBlockBehavior>() {
+	public static final DataSerializer<FloatingBlockBehavior> DATA_SERIALIZER = new DataSerializer<FloatingBlockBehavior>() {
 		
 		@Override
 		public void write(PacketBuffer buf, FloatingBlockBehavior value) {
@@ -63,8 +63,22 @@ public abstract class FloatingBlockBehavior {
 	
 	private static int nextId = 1;
 	private static final Map<Integer, Class<? extends FloatingBlockBehavior>> behaviorIdToClass;
+	private static final Map<Class<? extends FloatingBlockBehavior>, Integer> classToBehaviorId;
+	
+	private static void registerBehavior(int id, Class<? extends FloatingBlockBehavior> behaviorClass) {
+		behaviorIdToClass.put(id, behaviorClass);
+		classToBehaviorId.put(behaviorClass, id);
+	}
+	
 	static {
 		behaviorIdToClass = new HashMap<>();
+		classToBehaviorId = new HashMap<>();
+		registerBehavior(1, Break.class);
+		registerBehavior(2, Thrown.class);
+		registerBehavior(3, DoNothing.class);
+		registerBehavior(4, PickUp.class);
+		registerBehavior(5, Place.class);
+		registerBehavior(6, PlayerControlled.class);
 	}
 	
 	/**
@@ -73,21 +87,19 @@ public abstract class FloatingBlockBehavior {
 	 * NOTE: Is null during client-side construction from packet buffer.
 	 */
 	protected EntityFloatingBlock floating;
-	private final int id;
 	
-	public FloatingBlockBehavior() {
-		this.id = nextId;
-		this.behaviorIdToClass.put(nextId, getClass());
-		nextId++;
-	}
+	public FloatingBlockBehavior() {}
 	
 	public FloatingBlockBehavior(EntityFloatingBlock floating) {
-		this();
-		this.floating = floating;
+		setFloatingBlock(floating);
 	}
 	
 	public void setFloatingBlock(EntityFloatingBlock floating) {
 		this.floating = floating;
+	}
+	
+	public int getId() {
+		return classToBehaviorId.get(getClass());
 	}
 	
 	/**
@@ -102,11 +114,22 @@ public abstract class FloatingBlockBehavior {
 	
 	public abstract void toBytes(PacketBuffer buf);
 	
-	public final int getId() {
-		return id;
+	public static class DoNothing extends FloatingBlockBehavior {
+		
+		@Override
+		public FloatingBlockBehavior onUpdate() {
+			return this;
+		}
+		
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void toBytes(PacketBuffer buf) {}
+		
 	}
 	
-	public class Place extends FloatingBlockBehavior {
+	public static class Place extends FloatingBlockBehavior {
 		
 		private BlockPos placeAt;
 		
@@ -118,14 +141,13 @@ public abstract class FloatingBlockBehavior {
 		
 		@Override
 		public FloatingBlockBehavior onUpdate() {
-			BlockPos target = floating.getMovingToBlock();
-			Vector targetVec = new Vector(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
 			Vector thisPos = new Vector(floating);
-			Vector force = targetVec.minus(thisPos);
+			Vector force = placeAtVec.minus(thisPos);
 			force.normalize();
 			force.mul(3);
 			floating.setVelocity(force);
-			if (!floating.worldObj.isRemote && targetVec.sqrDist(thisPos) < 0.01) {
+			if (!floating.worldObj.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
 				
 				floating.setDead();
 				floating.worldObj.setBlockState(new BlockPos(floating), floating.getBlockState());
@@ -133,7 +155,7 @@ public abstract class FloatingBlockBehavior {
 				// TODO move BlockPlacedReached sound into EarthSoundHandler
 				SoundType sound = floating.getBlock().getSoundType();
 				if (sound != null) {
-					floating.worldObj.playSound(null, target, sound.getBreakSound(), SoundCategory.PLAYERS,
+					floating.worldObj.playSound(null, placeAt, sound.getBreakSound(), SoundCategory.PLAYERS,
 							sound.getVolume(), sound.getPitch());
 				}
 				
@@ -157,7 +179,35 @@ public abstract class FloatingBlockBehavior {
 		
 	}
 	
-	public class Thrown extends FloatingBlockBehavior {
+	public static class Break extends FloatingBlockBehavior {
+		
+		public Break() {}
+		
+		public Break(EntityFloatingBlock floating) {
+			super(floating);
+		}
+		
+		@Override
+		public FloatingBlockBehavior onUpdate() {
+			if (floating.isCollided) {
+				if (!floating.worldObj.isRemote) floating.setDead();
+				floating.onCollision();
+				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
+						.notifyObservers(new EarthbendingEvent.BlockThrownReached(floating));
+			}
+			
+			return this;
+		}
+		
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void toBytes(PacketBuffer buf) {}
+		
+	}
+	
+	public static class Thrown extends Break {
 		
 		public Thrown() {}
 		
@@ -170,6 +220,8 @@ public abstract class FloatingBlockBehavior {
 		
 		@Override
 		public FloatingBlockBehavior onUpdate() {
+			super.onUpdate();
+			
 			World world = floating.worldObj;
 			if (!floating.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(floating,
@@ -198,13 +250,6 @@ public abstract class FloatingBlockBehavior {
 				}
 			}
 			
-			if (floating.isCollided) {
-				if (!world.isRemote) floating.setDead();
-				floating.onCollision();
-				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
-						.notifyObservers(new EarthbendingEvent.BlockThrownReached(floating));
-			}
-			
 			return this;
 			
 		}
@@ -217,7 +262,7 @@ public abstract class FloatingBlockBehavior {
 		
 	}
 	
-	public class PickUp extends FloatingBlockBehavior {
+	public static class PickUp extends FloatingBlockBehavior {
 		
 		public PickUp() {}
 		
@@ -245,7 +290,7 @@ public abstract class FloatingBlockBehavior {
 		
 	}
 	
-	public class PlayerControlled extends FloatingBlockBehavior {
+	public static class PlayerControlled extends FloatingBlockBehavior {
 		
 		private String playerName;
 		private EntityPlayer player;
