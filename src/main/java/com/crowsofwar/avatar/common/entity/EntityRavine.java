@@ -6,10 +6,15 @@ import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -71,7 +76,19 @@ public class EntityRavine extends Entity implements IPhysics {
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
 		if (getSqrDistanceTravelled() > 100) setDead();
-		if (!worldObj.getBlockState(getPosition().offset(EnumFacing.DOWN)).isNormalCube()) setDead();
+		
+		BlockPos above = getPosition().offset(EnumFacing.UP);
+		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		
+		if (!worldObj.getBlockState(below).isNormalCube()) setDead();
+		IBlockState inBlock = worldObj.getBlockState(getPosition());
+		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+			for (int i = 0; i < 7; i++) {
+				worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, -velocity.x(), 0.3,
+						-velocity.z(), Block.getStateId(inBlock));
+			}
+			worldObj.setBlockToAir(getPosition());
+		}
 		
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
