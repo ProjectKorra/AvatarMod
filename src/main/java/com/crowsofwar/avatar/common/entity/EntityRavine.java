@@ -28,10 +28,6 @@ public class EntityRavine extends Entity implements IPhysics {
 		
 	}
 	
-	public void setInitialPosition(Vector position) {
-		this.initialPosition = position;
-	}
-	
 	public double getSqrDistanceTravelled() {
 		return getVecPosition().sqrDist(initialPosition);
 	}
@@ -53,6 +49,11 @@ public class EntityRavine extends Entity implements IPhysics {
 	
 	@Override
 	public void onEntityUpdate() {
+		
+		if (initialPosition == null) {
+			initialPosition = getVecPosition();
+		}
+		
 		Vector position = getVecPosition();
 		Vector velocity = getVelocity();
 		
