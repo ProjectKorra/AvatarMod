@@ -2,13 +2,11 @@ package com.crowsofwar.avatar.common.entity;
 
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvent;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock.Behavior;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
@@ -16,10 +14,8 @@ import com.google.common.base.Optional;
 
 import jline.internal.Nullable;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -27,9 +23,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -64,6 +60,26 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	// public static final int SYNC_ON_LAND = 10;
 	// public static final int SYNC_TARGET_BLOCK = 11; // 11,12,13,14
 	// public static final int SYNC_METADATA = 15;
+	
+	private static final DataSerializer<Behavior> SERIALIZER_BEHAVIOR = new DataSerializer<EntityFloatingBlock.Behavior>() {
+		
+		@Override
+		public void write(PacketBuffer buf, Behavior value) {
+			
+		}
+		
+		@Override
+		public Behavior read(PacketBuffer buf) throws IOException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public DataParameter<Behavior> createKey(int id) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	};
 	
 	private static final DataParameter<Boolean> SYNC_GRAVITY_ENABLED = createKey(EntityFloatingBlock.class,
 			DataSerializers.BOOLEAN);
@@ -286,7 +302,7 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	/**
 	 * Called when the block collides with another block or an entity
 	 */
-	private void onCollision() {
+	public void onCollision() {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
@@ -422,178 +438,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		
 		public static OnBlockLand getFromId(byte id) {
 			return values()[id];
-		}
-		
-	}
-	
-	public abstract class Behavior {
-		
-		/**
-		 * Called every update tick.
-		 * 
-		 * @return Next behavior. Return <code>this</code> to continue the behavior.
-		 */
-		public abstract Behavior onUpdate();
-		
-		public abstract void fromBytes(PacketBuffer buf);
-		
-		public abstract void toBytes(PacketBuffer buf);
-		
-	}
-	
-	public class Place extends Behavior {
-		
-		private BlockPos placeAt;
-		
-		public Place(BlockPos placeAt) {
-			this.placeAt = placeAt;
-		}
-		
-		@Override
-		public Behavior onUpdate() {
-			BlockPos target = getMovingToBlock();
-			Vector targetVec = new Vector(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
-			Vector thisPos = new Vector(posX, posY, posZ);
-			Vector force = targetVec.minus(thisPos);
-			force.normalize();
-			force.mul(3);
-			setVelocity(force);
-			if (!worldObj.isRemote && targetVec.sqrDist(thisPos) < 0.01) {
-				
-				setDead();
-				worldObj.setBlockState(new BlockPos(EntityFloatingBlock.this), getBlockState());
-				
-				SoundType sound = getBlock().getSoundType();
-				if (sound != null) {
-					worldObj.playSound(null, target, sound.getBreakSound(), SoundCategory.PLAYERS,
-							sound.getVolume(), sound.getPitch());
-				}
-				
-				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
-						.notifyObservers(new EarthbendingEvent.BlockPlacedReached(EntityFloatingBlock.this));
-				
-			}
-			
-			return this;
-		}
-		
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-			placeAt = buf.readBlockPos();
-		}
-		
-		@Override
-		public void toBytes(PacketBuffer buf) {
-			buf.writeBlockPos(placeAt);
-		}
-		
-	}
-	
-	public class Thrown extends Behavior {
-		
-		@Override
-		public Behavior onUpdate() {
-			if (!isDead) {
-				List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(
-						EntityFloatingBlock.this, getEntityBoundingBox());
-				if (!collidedList.isEmpty()) {
-					Entity collided = collidedList.get(0);
-					if (collided instanceof EntityLivingBase && collided != getOwner()) {
-						double speed = getVelocity().magnitude();
-						double multiplier = 0.25;
-						collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(
-								EntityFloatingBlock.this, collided), (float) (speed * multiplier));
-						
-						Vector motion = new Vector(collided).minus(new Vector(EntityFloatingBlock.this));
-						
-						motion.setY(0.08);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
-						if (!worldObj.isRemote) setDead();
-						onCollision();
-					} else if (collided != getOwner()) {
-						Vector motion = new Vector(collided).minus(new Vector(EntityFloatingBlock.this));
-						motion.mul(0.3);
-						motion.setY(0.08);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
-					}
-				}
-			}
-			
-			if (isCollided) {
-				if (!worldObj.isRemote) setDead();
-				onCollision();
-				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
-						.notifyObservers(new EarthbendingEvent.BlockThrownReached(EntityFloatingBlock.this));
-			}
-			
-			return this;
-			
-		}
-		
-		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
-		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
-	}
-	
-	public class PickUp extends Behavior {
-		
-		@Override
-		public Behavior onUpdate() {
-			if (ticksExisted > 20) {
-				return new PlayerControlled(owner);
-			}
-			
-			return this;
-		}
-		
-		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
-		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
-	}
-	
-	public class PlayerControlled extends Behavior {
-		
-		private EntityPlayer controller;
-		
-		public PlayerControlled(EntityPlayer controller) {
-			this.controller = controller;
-		}
-		
-		@Override
-		public Behavior onUpdate() {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(controller,
-					"Could not get player data to update PlayerControlled Floating Block");
-			
-			if (isGravityEnabled()) {
-				setGravityEnabled(false);
-			}
-			
-			double yaw = Math.toRadians(controller.rotationYaw);
-			double pitch = Math.toRadians(controller.rotationPitch);
-			Vector forward = Vector.fromYawPitch(yaw, pitch);
-			Vector eye = Vector.getEyePos(controller);
-			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(new Vector(EntityFloatingBlock.this));
-			motion.mul(5);
-			setVelocity(motion);
-			
-			return this;
-		}
-		
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-			controller = worldObj.getPlayerEntityByName(buf.readStringFromBuffer(50));
-		}
-		
-		@Override
-		public void toBytes(PacketBuffer buf) {
-			buf.writeString(controller.getName());
 		}
 		
 	}
