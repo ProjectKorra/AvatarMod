@@ -82,8 +82,13 @@ public class EntityRavine extends Entity implements IPhysics {
 		
 		if (!worldObj.getBlockState(below).isNormalCube()) setDead();
 		
-		// Destroy non-solid blocks in the ravine
+		// Destroy if in a block
 		IBlockState inBlock = worldObj.getBlockState(getPosition());
+		if (inBlock.isFullBlock()) {
+			setDead();
+		}
+		
+		// Destroy non-solid blocks in the ravine
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 			for (int i = 0; i < 7; i++) {
 				worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
