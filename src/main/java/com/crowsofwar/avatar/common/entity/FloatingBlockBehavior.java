@@ -1,8 +1,11 @@
 package com.crowsofwar.avatar.common.entity;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvent;
@@ -31,25 +34,59 @@ public abstract class FloatingBlockBehavior {
 		
 		@Override
 		public void write(PacketBuffer buf, FloatingBlockBehavior value) {
-			
+			buf.writeInt(value.getId());
+			value.toBytes(buf);
 		}
 		
 		@Override
 		public FloatingBlockBehavior read(PacketBuffer buf) throws IOException {
-			// TODO Auto-generated method stub
-			return null;
+			try {
+				
+				FloatingBlockBehavior behavior = behaviorIdToClass.get(buf).newInstance();
+				behavior.fromBytes(buf);
+				return behavior;
+				
+			} catch (Exception e) {
+				
+				AvatarLog.error("Error reading FloatingBlockBehavior from bytes");
+				e.printStackTrace();
+				return null;
+				
+			}
 		}
 		
 		@Override
 		public DataParameter<FloatingBlockBehavior> createKey(int id) {
-			// TODO Auto-generated method stub
-			return null;
+			return new DataParameter<>(id, this);
 		}
 	};
 	
-	protected final EntityFloatingBlock floating;
+	private static int nextId = 1;
+	private static final Map<Integer, Class<? extends FloatingBlockBehavior>> behaviorIdToClass;
+	static {
+		behaviorIdToClass = new HashMap<>();
+	}
+	
+	/**
+	 * The floating block that this block belongs to.
+	 * <p>
+	 * NOTE: Is null during client-side construction from packet buffer.
+	 */
+	protected EntityFloatingBlock floating;
+	private final int id;
+	
+	public FloatingBlockBehavior() {
+		this.id = nextId;
+		this.behaviorIdToClass.put(nextId, getClass());
+		nextId++;
+	}
 	
 	public FloatingBlockBehavior(EntityFloatingBlock floating) {
+		this();
+		this.floating = floating;
+	}
+	
+	public void setFloatingBlock(EntityFloatingBlock floating) {
 		this.floating = floating;
 	}
 	
@@ -65,16 +102,17 @@ public abstract class FloatingBlockBehavior {
 	
 	public abstract void toBytes(PacketBuffer buf);
 	
+	public final int getId() {
+		return id;
+	}
+	
 	public class Place extends FloatingBlockBehavior {
 		
 		private BlockPos placeAt;
 		
-		public Place(EntityFloatingBlock floating) {
-			super(floating);
-		}
+		public Place() {}
 		
-		public Place(EntityFloatingBlock floating, BlockPos placeAt) {
-			this(floating);
+		public Place(BlockPos placeAt) {
 			this.placeAt = placeAt;
 		}
 		
@@ -120,6 +158,8 @@ public abstract class FloatingBlockBehavior {
 	}
 	
 	public class Thrown extends FloatingBlockBehavior {
+		
+		public Thrown() {}
 		
 		/**
 		 * @param floating
@@ -179,6 +219,8 @@ public abstract class FloatingBlockBehavior {
 	
 	public class PickUp extends FloatingBlockBehavior {
 		
+		public PickUp() {}
+		
 		/**
 		 * @param floating
 		 */
@@ -205,19 +247,28 @@ public abstract class FloatingBlockBehavior {
 	
 	public class PlayerControlled extends FloatingBlockBehavior {
 		
-		private EntityPlayer controller;
+		private String playerName;
+		private EntityPlayer player;
 		
-		public PlayerControlled(EntityFloatingBlock floating) {
+		public PlayerControlled() {}
+		
+		public PlayerControlled(EntityFloatingBlock floating, EntityPlayer player) {
 			super(floating);
+			this.player = player;
 		}
 		
-		public PlayerControlled(EntityFloatingBlock floating, EntityPlayer controller) {
-			this(floating);
-			this.controller = controller;
+		private EntityPlayer getControllingPlayer() {
+			if (player != null) {
+				return player;
+			} else {
+				return player = floating.worldObj.getPlayerEntityByName(playerName);
+			}
 		}
 		
 		@Override
 		public FloatingBlockBehavior onUpdate() {
+			EntityPlayer controller = getControllingPlayer();
+			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(controller,
 					"Could not get player data to update PlayerControlled Floating Block");
 			
@@ -239,12 +290,12 @@ public abstract class FloatingBlockBehavior {
 		
 		@Override
 		public void fromBytes(PacketBuffer buf) {
-			controller = floating.worldObj.getPlayerEntityByName(buf.readStringFromBuffer(50));
+			playerName = buf.readStringFromBuffer(16);
 		}
 		
 		@Override
 		public void toBytes(PacketBuffer buf) {
-			buf.writeString(controller.getName());
+			buf.writeString(player.getName());
 		}
 		
 	}

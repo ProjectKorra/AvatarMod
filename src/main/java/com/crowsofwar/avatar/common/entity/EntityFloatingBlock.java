@@ -2,11 +2,9 @@ package com.crowsofwar.avatar.common.entity;
 
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock.Behavior;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
@@ -21,9 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -60,26 +56,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	// public static final int SYNC_ON_LAND = 10;
 	// public static final int SYNC_TARGET_BLOCK = 11; // 11,12,13,14
 	// public static final int SYNC_METADATA = 15;
-	
-	private static final DataSerializer<Behavior> SERIALIZER_BEHAVIOR = new DataSerializer<EntityFloatingBlock.Behavior>() {
-		
-		@Override
-		public void write(PacketBuffer buf, Behavior value) {
-			
-		}
-		
-		@Override
-		public Behavior read(PacketBuffer buf) throws IOException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		@Override
-		public DataParameter<Behavior> createKey(int id) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-	};
 	
 	private static final DataParameter<Boolean> SYNC_GRAVITY_ENABLED = createKey(EntityFloatingBlock.class,
 			DataSerializers.BOOLEAN);
