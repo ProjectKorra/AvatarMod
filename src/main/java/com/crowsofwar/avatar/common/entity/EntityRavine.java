@@ -81,15 +81,19 @@ public class EntityRavine extends Entity implements IPhysics {
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		
 		if (!worldObj.getBlockState(below).isNormalCube()) setDead();
+		
+		// Destroy non-solid blocks in the ravine
 		IBlockState inBlock = worldObj.getBlockState(getPosition());
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 			for (int i = 0; i < 7; i++) {
-				worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, -velocity.x(), 0.3,
-						-velocity.z(), Block.getStateId(inBlock));
+				worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
+						3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
+						3 * (rand.nextGaussian() - 0.5), Block.getStateId(inBlock));
 			}
 			worldObj.setBlockToAir(getPosition());
 		}
 		
+		// Push collided entities back
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != owner);
