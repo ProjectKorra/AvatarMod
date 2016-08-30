@@ -47,35 +47,12 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 	
 	@Override
 	public boolean requiresUpdateTick() {
-		return true;
+		return false;
 	}
 	
 	@Override
 	public void update(AvatarPlayerData data) {
-		EarthbendingState state = data.getBendingState(controller);
-		if (state != null) {
-			EntityPlayer player = data.getPlayerEntity();
-			EntityFloatingBlock floating = state.getPickupBlock();
-			
-			if (floating != null && floating.ticksExisted > 20) {
-				floating.setOwner(player);
-				
-				if (floating.isGravityEnabled()) {
-					floating.setGravityEnabled(false);
-				}
-				
-				double yaw = Math.toRadians(player.rotationYaw);
-				double pitch = Math.toRadians(player.rotationPitch);
-				Vector forward = Vector.fromYawPitch(yaw, pitch);
-				Vector eye = Vector.getEyePos(player);
-				Vector target = forward.times(2).plus(eye);
-				Vector motion = target.minus(new Vector(floating));
-				motion.mul(5);
-				floating.setVelocity(motion);
-				
-			}
-			
-		}
+		
 	}
 	
 	@Override

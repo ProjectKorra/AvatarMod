@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
@@ -48,8 +49,9 @@ public class AbilityThrowBlock extends BendingAbility<EarthbendingState> {
 			// Calculate force and everything
 			Vector lookDir = Vector.fromYawPitch(yaw, pitch);
 			floating.addVelocity(lookDir.times(20));
-			
-			floating.drop();
+			floating.setGravityEnabled(true);
+			floating.setCanFall(true);
+			floating.setBehavior(new FloatingBlockBehavior.Thrown(floating));
 			ebs.setPickupBlock(null);
 			AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
 			

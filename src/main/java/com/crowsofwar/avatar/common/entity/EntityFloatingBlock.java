@@ -243,12 +243,9 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		motionY = velocity.y() / 20;
 		motionZ = velocity.z() / 20;
 		
-		int x = (int) Math.floor(posX);
-		int y = (int) Math.floor(posY);
-		int z = (int) Math.floor(posZ);
-		
 		getBehavior().setFloatingBlock(this);
-		getBehavior().onUpdate();
+		FloatingBlockBehavior nextBehavior = getBehavior().onUpdate();
+		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
 		
 	}
 	
