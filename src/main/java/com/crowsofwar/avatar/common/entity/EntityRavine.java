@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 public class EntityRavine extends Entity implements IPhysics {
 	
 	private final IEntityProperty<Vector> propVelocity;
+	private Vector initialPosition;
 	
 	/**
 	 * @param world
@@ -24,6 +25,15 @@ public class EntityRavine extends Entity implements IPhysics {
 		super(world);
 		
 		this.propVelocity = new EntityPropertyMotion(this);
+		
+	}
+	
+	public void setInitialPosition(Vector position) {
+		this.initialPosition = position;
+	}
+	
+	public double getSqrDistanceTravelled() {
+		return getVecPosition().sqrDist(initialPosition);
 	}
 	
 	@Override
@@ -49,7 +59,7 @@ public class EntityRavine extends Entity implements IPhysics {
 		Vector nowPos = position.add(velocity.times(0.05));
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
-		if (++ticksExisted > 100) setDead();
+		if (getSqrDistanceTravelled() > 25) setDead();
 	}
 	
 	@Override
