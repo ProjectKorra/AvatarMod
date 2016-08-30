@@ -61,7 +61,7 @@ public class EntityRavine extends Entity implements IPhysics {
 		Vector nowPos = position.add(velocity.times(0.05));
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
-		if (getSqrDistanceTravelled() > 25) setDead();
+		if (getSqrDistanceTravelled() > 100) setDead();
 		if (!worldObj.getBlockState(getPosition().offset(EnumFacing.DOWN)).isNormalCube()) setDead();
 		
 	}
