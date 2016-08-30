@@ -30,7 +30,7 @@ public class EntityRavine extends Entity implements IPhysics {
 		super(world);
 		
 		this.propVelocity = new EntityPropertyMotion(this);
-		setSize(2, 2);
+		setSize(1, 1);
 		
 	}
 	
