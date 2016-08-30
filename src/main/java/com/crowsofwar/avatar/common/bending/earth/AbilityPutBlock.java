@@ -5,7 +5,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock.OnBlockLand;
+import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
@@ -53,8 +53,7 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 				// world.setBlock(x, y, z, floating.getBlock());
 				// floating.setDead();
 				// }
-				floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
-				floating.setMovingToBlock(looking.toBlockPos());
+				floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
 				floating.setGravityEnabled(false);
 				Vector force = looking.precision().minus(new Vector(floating));
 				force.normalize();

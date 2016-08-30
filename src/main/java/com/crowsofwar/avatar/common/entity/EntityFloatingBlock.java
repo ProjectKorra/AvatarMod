@@ -250,6 +250,9 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		int y = (int) Math.floor(posY);
 		int z = (int) Math.floor(posZ);
 		
+		getBehavior().setFloatingBlock(this);
+		getBehavior().onUpdate();
+		
 	}
 	
 	/**

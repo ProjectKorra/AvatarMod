@@ -9,7 +9,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock.OnBlockLand;
+import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -106,7 +106,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					floating.addVelocity(force);
 					floating.setGravityEnabled(true);
 					floating.setCanFall(false);
-					floating.setOnLandBehavior(OnBlockLand.DO_NOTHING);
+					floating.setBehavior(new FloatingBlockBehavior.PickUp(floating));
 					floating.setOwner(player);
 					
 					world.spawnEntityInWorld(floating);
