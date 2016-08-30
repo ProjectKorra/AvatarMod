@@ -43,6 +43,7 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw), 0);
 		
 		EntityRavine ravine = new EntityRavine(world);
+		ravine.setOwner(player);
 		ravine.setPosition(player.posX, player.posY, player.posZ);
 		ravine.setVelocity(look.times(10));
 		world.spawnEntityInWorld(ravine);

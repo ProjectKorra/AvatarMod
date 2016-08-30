@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -20,6 +21,7 @@ public class EntityRavine extends Entity implements IPhysics {
 	
 	private final IEntityProperty<Vector> propVelocity;
 	private Vector initialPosition;
+	private EntityPlayer owner;
 	
 	/**
 	 * @param world
@@ -30,6 +32,10 @@ public class EntityRavine extends Entity implements IPhysics {
 		this.propVelocity = new EntityPropertyMotion(this);
 		setSize(2, 2);
 		
+	}
+	
+	public void setOwner(EntityPlayer owner) {
+		this.owner = owner;
 	}
 	
 	public double getSqrDistanceTravelled() {
@@ -67,10 +73,13 @@ public class EntityRavine extends Entity implements IPhysics {
 		if (getSqrDistanceTravelled() > 100) setDead();
 		if (!worldObj.getBlockState(getPosition().offset(EnumFacing.DOWN)).isNormalCube()) setDead();
 		
-		List<Entity> collided = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
-		if (!collided.isEmpty()) {
-			for (Entity entity : collided) {
-				entity.addVelocity(velocity.x() / 2, 0.5, velocity.z() / 2);
+		if (!worldObj.isRemote) {
+			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+					entity -> entity != owner);
+			if (!collided.isEmpty()) {
+				for (Entity entity : collided) {
+					entity.addVelocity(velocity.x() / 2, 0.5, velocity.z() / 2);
+				}
 			}
 		}
 		
