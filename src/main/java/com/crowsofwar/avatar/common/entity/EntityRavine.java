@@ -78,7 +78,7 @@ public class EntityRavine extends Entity implements IPhysics {
 					entity -> entity != owner);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					entity.addVelocity(velocity.x() / 2, 0.5, velocity.z() / 2);
+					entity.addVelocity(velocity.x() / 4, 1, velocity.z() / 4);
 				}
 			}
 		}
