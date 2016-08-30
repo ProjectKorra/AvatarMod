@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
@@ -26,6 +28,7 @@ public class EntityRavine extends Entity implements IPhysics {
 		super(world);
 		
 		this.propVelocity = new EntityPropertyMotion(this);
+		setSize(2, 2);
 		
 	}
 	
@@ -63,6 +66,13 @@ public class EntityRavine extends Entity implements IPhysics {
 		
 		if (getSqrDistanceTravelled() > 100) setDead();
 		if (!worldObj.getBlockState(getPosition().offset(EnumFacing.DOWN)).isNormalCube()) setDead();
+		
+		List<Entity> collided = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
+		if (!collided.isEmpty()) {
+			for (Entity entity : collided) {
+				entity.addVelocity(velocity.x() / 2, 0.5, velocity.z() / 2);
+			}
+		}
 		
 	}
 	
