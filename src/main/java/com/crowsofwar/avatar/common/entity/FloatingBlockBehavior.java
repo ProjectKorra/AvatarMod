@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,7 +43,7 @@ public abstract class FloatingBlockBehavior {
 		public FloatingBlockBehavior read(PacketBuffer buf) throws IOException {
 			try {
 				
-				FloatingBlockBehavior behavior = behaviorIdToClass.get(buf).newInstance();
+				FloatingBlockBehavior behavior = behaviorIdToClass.get(buf.readInt()).newInstance();
 				behavior.fromBytes(buf);
 				return behavior;
 				
@@ -71,6 +72,9 @@ public abstract class FloatingBlockBehavior {
 	}
 	
 	static {
+		System.out.println("==========registering serializer=============");
+		DataSerializers.registerSerializer(DATA_SERIALIZER);
+		
 		behaviorIdToClass = new HashMap<>();
 		classToBehaviorId = new HashMap<>();
 		registerBehavior(1, Break.class);

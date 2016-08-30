@@ -48,8 +48,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 			DataSerializers.FLOAT);
 	private static final DataParameter<Boolean> SYNC_CAN_FALL = createKey(EntityFloatingBlock.class,
 			DataSerializers.BOOLEAN);
-	private static final DataParameter<Byte> SYNC_ON_LAND = createKey(EntityFloatingBlock.class,
-			DataSerializers.BYTE);
 	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
 			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
 	
@@ -133,7 +131,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		nbt.setDouble("VelocityZ", velocity.z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("CanFall", canFall());
-		nbt.setByte("OnLand", getOnLandBehaviorId());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 	}
 	
@@ -315,10 +312,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public void setCanFall(boolean falls) {
 		dataManager.set(SYNC_CAN_FALL, falls);
-	}
-	
-	public byte getOnLandBehaviorId() {
-		return dataManager.get(SYNC_ON_LAND);
 	}
 	
 	/**
