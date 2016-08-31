@@ -77,7 +77,7 @@ public abstract class FloatingBlockBehavior {
 		
 		behaviorIdToClass = new HashMap<>();
 		classToBehaviorId = new HashMap<>();
-		registerBehavior(1, Break.class);
+		registerBehavior(1, Fall.class);
 		registerBehavior(2, Thrown.class);
 		registerBehavior(3, DoNothing.class);
 		registerBehavior(4, PickUp.class);
@@ -117,6 +117,10 @@ public abstract class FloatingBlockBehavior {
 	public abstract void fromBytes(PacketBuffer buf);
 	
 	public abstract void toBytes(PacketBuffer buf);
+	
+	protected void applyGravity() {
+		floating.addVelocity(new Vector(0, -9.81 / 20, 0));
+	}
 	
 	public static class DoNothing extends FloatingBlockBehavior {
 		
@@ -183,35 +187,7 @@ public abstract class FloatingBlockBehavior {
 		
 	}
 	
-	public static class Break extends FloatingBlockBehavior {
-		
-		public Break() {}
-		
-		public Break(EntityFloatingBlock floating) {
-			super(floating);
-		}
-		
-		@Override
-		public FloatingBlockBehavior onUpdate() {
-			if (floating.isCollided) {
-				if (!floating.worldObj.isRemote) floating.setDead();
-				floating.onCollision();
-				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
-						.notifyObservers(new EarthbendingEvent.BlockThrownReached(floating));
-			}
-			
-			return this;
-		}
-		
-		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
-		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
-	}
-	
-	public static class Thrown extends Break {
+	public static class Thrown extends FloatingBlockBehavior {
 		
 		public Thrown() {}
 		
@@ -224,7 +200,15 @@ public abstract class FloatingBlockBehavior {
 		
 		@Override
 		public FloatingBlockBehavior onUpdate() {
-			super.onUpdate();
+			
+			if (floating.isCollided) {
+				if (!floating.worldObj.isRemote) floating.setDead();
+				floating.onCollision();
+				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
+						.notifyObservers(new EarthbendingEvent.BlockThrownReached(floating));
+			}
+			
+			applyGravity();
 			
 			World world = floating.worldObj;
 			if (!floating.isDead) {
@@ -279,7 +263,12 @@ public abstract class FloatingBlockBehavior {
 		
 		@Override
 		public FloatingBlockBehavior onUpdate() {
-			if (floating.ticksExisted > 20) {
+			applyGravity();
+			
+			Vector velocity = floating.getVelocity();
+			if (velocity.y() <= 0) {
+				velocity.setY(0);
+				floating.setVelocity(velocity);
 				return new PlayerControlled(floating, floating.getOwner());
 			}
 			
@@ -321,10 +310,6 @@ public abstract class FloatingBlockBehavior {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(controller,
 					"Could not get player data to update PlayerControlled Floating Block");
 			
-			if (floating.isGravityEnabled()) {
-				floating.setGravityEnabled(false);
-			}
-			
 			double yaw = Math.toRadians(controller.rotationYaw);
 			double pitch = Math.toRadians(controller.rotationPitch);
 			Vector forward = Vector.fromYawPitch(yaw, pitch);
@@ -346,6 +331,22 @@ public abstract class FloatingBlockBehavior {
 		public void toBytes(PacketBuffer buf) {
 			buf.writeString(player.getName());
 		}
+		
+	}
+	
+	public static class Fall extends FloatingBlockBehavior {
+		
+		@Override
+		public FloatingBlockBehavior onUpdate() {
+			applyGravity();
+			return this;
+		}
+		
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void toBytes(PacketBuffer buf) {}
 		
 	}
 	

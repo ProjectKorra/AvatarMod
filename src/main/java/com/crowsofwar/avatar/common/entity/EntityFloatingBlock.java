@@ -38,16 +38,12 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public static final Block DEFAULT_BLOCK = Blocks.STONE;
 	
-	private static final DataParameter<Boolean> SYNC_GRAVITY_ENABLED = createKey(EntityFloatingBlock.class,
-			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> SYNC_ENTITY_ID = createKey(EntityFloatingBlock.class,
 			DataSerializers.VARINT);
 	private static final DataParameter<Vector> SYNC_VELOCITY = createKey(EntityFloatingBlock.class,
 			AvatarDataSerializers.SERIALIZER_VECTOR);
 	private static final DataParameter<Float> SYNC_FRICTION = createKey(EntityFloatingBlock.class,
 			DataSerializers.FLOAT);
-	private static final DataParameter<Boolean> SYNC_CAN_FALL = createKey(EntityFloatingBlock.class,
-			DataSerializers.BOOLEAN);
 	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
 			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
 	
@@ -75,7 +71,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		super(world);
 		setSize(0.95f, 0.95f);
 		velocity = new Vector(0, 0, 0);
-		setGravityEnabled(false);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
@@ -99,11 +94,9 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	@Override
 	protected void entityInit() {
 		
-		dataManager.register(SYNC_GRAVITY_ENABLED, false);
 		dataManager.register(SYNC_ENTITY_ID, 0);
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
-		dataManager.register(SYNC_CAN_FALL, false);
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
 		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
 		
@@ -113,10 +106,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setBlockState(
 				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
-		setGravityEnabled(nbt.getBoolean("Gravity"));
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
 		setFriction(nbt.getFloat("Friction"));
-		setCanFall(nbt.getBoolean("CanFall"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 	}
 	
@@ -124,13 +115,11 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
 		nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
-		nbt.setBoolean("Gravity", isGravityEnabled());
 		Vector velocity = getVelocity();
 		nbt.setDouble("VelocityX", velocity.x());
 		nbt.setDouble("VelocityY", velocity.y());
 		nbt.setDouble("VelocityZ", velocity.z());
 		nbt.setFloat("Friction", getFriction());
-		nbt.setBoolean("CanFall", canFall());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 	}
 	
@@ -149,14 +138,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public void setBlockState(IBlockState state) {
 		dataManager.set(SYNC_BLOCK, Optional.of(state));
-	}
-	
-	public boolean isGravityEnabled() {
-		return dataManager.get(SYNC_GRAVITY_ENABLED);
-	}
-	
-	public void setGravityEnabled(boolean gravity) {
-		if (!worldObj.isRemote) dataManager.set(SYNC_GRAVITY_ENABLED, gravity);
 	}
 	
 	/**
@@ -209,14 +190,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	@Override
 	public void onUpdate() {
-		if (isGravityEnabled()) {
-			addVelocity(new Vector(0, -9.81 / 20, 0));
-			Vector vel = getVelocity();
-			if (!canFall() && vel.y() < 0) {
-				vel.setY(0);
-				setVelocity(vel);
-			}
-		}
 		
 		if (ticksExisted == 1) {
 			
@@ -303,21 +276,8 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 		if (!worldObj.isRemote) dataManager.set(SYNC_FRICTION, friction);
 	}
 	
-	public boolean canFall() {
-		return dataManager.get(SYNC_CAN_FALL);
-	}
-	
-	public void setCanFall(boolean falls) {
-		dataManager.set(SYNC_CAN_FALL, falls);
-	}
-	
-	/**
-	 * Drop the block - enable gravity, can fall, and can be destroyed.
-	 */
 	public void drop() {
-		setGravityEnabled(true);
-		setCanFall(true);
-		setBehavior(new FloatingBlockBehavior.DoNothing());
+		setBehavior(new FloatingBlockBehavior.Fall());
 	}
 	
 	public EntityPlayer getOwner() {

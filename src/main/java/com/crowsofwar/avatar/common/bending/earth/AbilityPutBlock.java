@@ -54,7 +54,6 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 				// floating.setDead();
 				// }
 				floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
-				floating.setGravityEnabled(false);
 				Vector force = looking.precision().minus(new Vector(floating));
 				force.normalize();
 				floating.addVelocity(force);
