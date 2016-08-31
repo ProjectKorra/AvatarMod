@@ -9,8 +9,10 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -89,6 +91,7 @@ public class EntityRavine extends Entity implements IPhysics {
 		}
 		
 		// Destroy non-solid blocks in the ravine
+		BlockPos inPos = getPosition();
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 			for (int i = 0; i < 7; i++) {
 				worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
@@ -96,6 +99,18 @@ public class EntityRavine extends Entity implements IPhysics {
 						3 * (rand.nextGaussian() - 0.5), Block.getStateId(inBlock));
 			}
 			worldObj.setBlockToAir(getPosition());
+			
+			if (!worldObj.isRemote) {
+				List<ItemStack> drops = inBlock.getBlock().getDrops(worldObj, inPos, inBlock, 0);
+				for (ItemStack stack : drops) {
+					EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
+					item.setDefaultPickupDelay();
+					item.motionX *= 2;
+					item.motionY *= 1.2;
+					item.motionZ *= 2;
+					worldObj.spawnEntityInWorld(item);
+				}
+			}
 		}
 		
 		// Push collided entities back
@@ -104,6 +119,7 @@ public class EntityRavine extends Entity implements IPhysics {
 					entity -> entity != owner);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
+					if (entity instanceof EntityItem && entity.ticksExisted <= 10) continue;
 					entity.addVelocity(velocity.x() / 4, 1, velocity.z() / 4);
 				}
 			}
