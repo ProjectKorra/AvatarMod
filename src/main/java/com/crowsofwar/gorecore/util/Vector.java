@@ -456,6 +456,22 @@ public class Vector {
 		buf.writeDouble(z);
 	}
 	
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ", " + z + ")";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (obj instanceof Vector) {
+			Vector vec = (Vector) obj;
+			return this.x == vec.x && this.y == vec.y && this.z == vec.z;
+		} else {
+			return false;
+		}
+	}
+	
 	/**
 	 * Returns the euler angles from position 1 to position 2.
 	 * <p>
