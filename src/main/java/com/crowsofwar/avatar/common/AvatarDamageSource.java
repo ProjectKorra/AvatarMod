@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 
 import net.minecraft.entity.Entity;
@@ -38,6 +39,18 @@ public class AvatarDamageSource {
 	 */
 	public static DamageSource causeWaterDamage(EntityWaterArc waterArc, Entity wasHit) {
 		return new EntityDamageSourceIndirect("avatar_waterArc", waterArc, wasHit);
+	}
+	
+	/**
+	 * Create a DamageSource for damage caused by a ravine.
+	 * 
+	 * @param ravine
+	 *            The ravine entity
+	 * @param wasHit
+	 *            The entity who was hit by the ravine
+	 */
+	public static DamageSource causeRavineDamage(EntityRavine ravine, Entity wasHit) {
+		return new EntityDamageSourceIndirect("avatar_ravine", ravine, wasHit);
 	}
 	
 }

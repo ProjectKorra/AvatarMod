@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
@@ -121,6 +122,7 @@ public class EntityRavine extends Entity implements IPhysics {
 				for (Entity entity : collided) {
 					if (entity instanceof EntityItem && entity.ticksExisted <= 10) continue;
 					entity.addVelocity(velocity.x() / 4, 1, velocity.z() / 4);
+					entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(this, entity), 5);
 				}
 			}
 		}
