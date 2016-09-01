@@ -15,8 +15,6 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-import com.crowsofwar.avatar.common.util.event.EventNotifier;
-import com.crowsofwar.avatar.common.util.event.Subject;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,8 +28,6 @@ public class Earthbending extends BendingController {
 	private final List<Block> bendableBlocks;
 	
 	private final BendingAbility abilityPickUpBlock, abilityThrowBlock, abilityPutBlock, abilityRavine;
-	
-	private final Subject<EarthbendingEvent> eventNotifier;
 	
 	public Earthbending() {
 		
@@ -62,8 +58,6 @@ public class Earthbending extends BendingController {
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_EARTHBENDING,
 				AvatarGuiIds.GUI_RADIAL_MENU_EARTH, abilityPickUpBlock, abilityRavine);
-		
-		this.eventNotifier = new EventNotifier<>();
 		
 	}
 	

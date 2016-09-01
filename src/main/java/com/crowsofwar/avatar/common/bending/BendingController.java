@@ -9,7 +9,6 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.util.event.EventNotifier;
-import com.crowsofwar.avatar.common.util.event.IEvent;
 import com.crowsofwar.avatar.common.util.event.Observer;
 import com.crowsofwar.avatar.common.util.event.Subject;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
@@ -35,8 +34,7 @@ import net.minecraft.nbt.NBTTagCompound;
  *            The IBendingState this controller is using
  * 
  */
-public abstract class BendingController<STATE extends IBendingState>
-		implements ReadableWritable, Subject<IEvent> {
+public abstract class BendingController<STATE extends IBendingState> implements ReadableWritable, Subject {
 	
 	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
 		@Override
@@ -68,11 +66,11 @@ public abstract class BendingController<STATE extends IBendingState>
 	public static final Random random = new Random();
 	
 	private final List<BendingAbility<STATE>> abilities;
-	private final Subject<IEvent> eventNotifier;
+	private final Subject eventNotifier;
 	
 	public BendingController() {
 		this.abilities = new ArrayList<>();
-		this.eventNotifier = new EventNotifier<>();
+		this.eventNotifier = new EventNotifier();
 	}
 	
 	protected void addAbility(BendingAbility<STATE> ability) {
@@ -130,17 +128,17 @@ public abstract class BendingController<STATE extends IBendingState>
 	public void writeToNBT(NBTTagCompound nbt) {}
 	
 	@Override
-	public void addObserver(Observer obs) {
-		eventNotifier.addObserver(obs);
+	public <E> void addObserver(Observer<E> obs, Class<E> eventClass) {
+		eventNotifier.addObserver(obs, eventClass);
 	}
 	
 	@Override
-	public void removeObserver(Observer obs) {
-		eventNotifier.removeObserver(obs);
+	public <E> void removeObserver(Observer<E> obs, Class<E> eventClass) {
+		eventNotifier.removeObserver(obs, eventClass);
 	}
 	
 	@Override
-	public void notifyObservers(IEvent e) {
+	public void notifyObservers(Object e) {
 		eventNotifier.notifyObservers(e);
 	}
 	

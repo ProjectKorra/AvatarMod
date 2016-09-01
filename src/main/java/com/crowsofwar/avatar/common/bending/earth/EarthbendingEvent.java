@@ -1,14 +1,13 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.util.event.IEvent;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public abstract class EarthbendingEvent implements IEvent {
+public abstract class EarthbendingEvent {
 	
 	public static class BlockPickedUp extends EarthbendingEvent {
 		

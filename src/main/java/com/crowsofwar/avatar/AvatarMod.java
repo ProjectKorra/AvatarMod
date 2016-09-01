@@ -50,7 +50,7 @@ public class AvatarMod {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		BendingManager.init();
-		BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING).addObserver(new EarthSoundHandler());
+		EarthSoundHandler.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
