@@ -1,8 +1,10 @@
 package com.crowsofwar.avatar.common.util.event;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.annotation.ThreadSafe;
 
@@ -16,29 +18,36 @@ import org.apache.http.annotation.ThreadSafe;
  * @author CrowsOfWar
  */
 @ThreadSafe
-public final class EventNotifier<EVENT extends IEvent> implements Subject<EVENT> {
+public final class EventNotifier implements Subject {
 	
-	private final List<Observer> observers;
+	private final Map<Class, Set<Observer>> observers;
 	
 	public EventNotifier() {
-		this.observers = new ArrayList<>();
+		this.observers = new HashMap<>();
+	}
+	
+	private Set<Observer> getObserversForEvent(Class eventClass) {
+		if (!observers.containsKey(eventClass)) {
+			observers.put(eventClass, new HashSet<>());
+		}
+		return observers.get(eventClass);
 	}
 	
 	@Override
-	public synchronized void addObserver(Observer obs) {
-		observers.add(obs);
+	public synchronized <E> void addObserver(Observer<E> obs, Class<E> eventClass) {
+		getObserversForEvent(eventClass).add(obs);
 	}
 	
 	@Override
-	public synchronized void removeObserver(Observer obs) {
-		observers.remove(obs);
+	public synchronized <E> void removeObserver(Observer<E> obs, Class<E> eventClass) {
+		getObserversForEvent(eventClass).remove(obs);
 	}
 	
 	@Override
-	public synchronized void notifyObservers(EVENT e) {
-		Iterator<Observer> it = observers.iterator();
+	public synchronized void notifyObservers(Object e) {
+		Iterator<Observer> it = getObserversForEvent(e.getClass()).iterator();
 		while (it.hasNext()) {
-			it.next().notify(e);
+			it.next().invoke(e);
 		}
 	}
 	
