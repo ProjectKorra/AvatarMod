@@ -44,7 +44,7 @@ public final class EventNotifier implements Subject {
 	}
 	
 	@Override
-	public synchronized void notifyObservers(Object e) {
+	public synchronized void post(Object e) {
 		Iterator<Observer> it = getObserversForEvent(e.getClass()).iterator();
 		while (it.hasNext()) {
 			it.next().invoke(e);

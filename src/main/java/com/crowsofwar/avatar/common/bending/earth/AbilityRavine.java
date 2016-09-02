@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -35,7 +37,6 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	
 	@Override
 	public void execute(AvatarPlayerData data) {
-		System.out.println("I make a ravine!");
 		
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();
@@ -47,6 +48,8 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 		ravine.setPosition(player.posX, player.posY, player.posZ);
 		ravine.setVelocity(look.times(10));
 		world.spawnEntityInWorld(ravine);
+		
+		BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, player));
 		
 	}
 	

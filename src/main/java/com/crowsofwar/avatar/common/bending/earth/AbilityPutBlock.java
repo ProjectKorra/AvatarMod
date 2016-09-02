@@ -59,7 +59,7 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 				floating.addVelocity(force);
 				ebs.dropBlock();
 				
-				controller.notifyObservers(
+				controller.post(
 						new FloatingBlockEvent.BlockPlaced(floating, data.getPlayerEntity()));
 				
 			}

@@ -138,8 +138,8 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	}
 	
 	@Override
-	public void notifyObservers(Object e) {
-		eventNotifier.notifyObservers(e);
+	public void post(Object e) {
+		eventNotifier.post(e);
 	}
 	
 }

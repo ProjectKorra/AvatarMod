@@ -3,6 +3,9 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.earth.RavineEvent;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
@@ -78,22 +81,32 @@ public class EntityRavine extends Entity implements IPhysics {
 		Vector nowPos = position.add(velocity.times(0.05));
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
-		if (getSqrDistanceTravelled() > 100) setDead();
+		if (getSqrDistanceTravelled() > 100) {
+			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.End(this));
+			setDead();
+		}
 		
 		BlockPos above = getPosition().offset(EnumFacing.UP);
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		
-		if (!worldObj.getBlockState(below).isNormalCube()) setDead();
+		if (!worldObj.getBlockState(below).isNormalCube()) {
+			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
+			setDead();
+		}
 		
 		// Destroy if in a block
 		IBlockState inBlock = worldObj.getBlockState(getPosition());
 		if (inBlock.isFullBlock()) {
+			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
 			setDead();
 		}
 		
 		// Destroy non-solid blocks in the ravine
 		BlockPos inPos = getPosition();
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+			BendingManager.getBending(BendingType.EARTHBENDING)
+					.post(new RavineEvent.DestroyBlock(this, inBlock));
+			
 			for (int i = 0; i < 7; i++) {
 				worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
 						3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
@@ -120,9 +133,13 @@ public class EntityRavine extends Entity implements IPhysics {
 					entity -> entity != owner);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					if (entity instanceof EntityItem && entity.ticksExisted <= 10) continue;
-					entity.addVelocity(velocity.x() / 4, 1, velocity.z() / 4);
-					entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(this, entity), 5);
+					if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
+						BendingManager.getBending(BendingType.EARTHBENDING)
+								.post(new RavineEvent.HitEntity(this, entity));
+						
+						entity.addVelocity(velocity.x() / 4, 1, velocity.z() / 4);
+						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(this, entity), 5);
+					}
 				}
 			}
 		}

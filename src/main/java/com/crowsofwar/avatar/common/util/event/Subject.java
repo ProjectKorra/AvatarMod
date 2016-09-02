@@ -34,6 +34,6 @@ public interface Subject {
 	 * 
 	 * @param e
 	 */
-	void notifyObservers(Object e);
+	void post(Object e);
 	
 }

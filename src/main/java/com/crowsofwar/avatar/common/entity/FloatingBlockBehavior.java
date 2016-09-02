@@ -160,7 +160,7 @@ public abstract class FloatingBlockBehavior {
 				floating.worldObj.setBlockState(new BlockPos(floating), floating.getBlockState());
 				
 				BendingManager.getBending(BendingType.EARTHBENDING)
-						.notifyObservers(new FloatingBlockEvent.BlockPlacedReached(floating));
+						.post(new FloatingBlockEvent.BlockPlacedReached(floating));
 				
 			}
 			
@@ -197,7 +197,7 @@ public abstract class FloatingBlockBehavior {
 				if (!floating.worldObj.isRemote) floating.setDead();
 				floating.onCollision();
 				BendingManager.getBending(BendingType.EARTHBENDING)
-						.notifyObservers(new FloatingBlockEvent.BlockThrownReached(floating));
+						.post(new FloatingBlockEvent.BlockThrownReached(floating));
 			}
 			
 			applyGravity();
