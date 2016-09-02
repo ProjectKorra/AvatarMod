@@ -1,7 +1,8 @@
 package com.crowsofwar.avatar.common.bending;
 
 /**
- * 
+ * Defines different types of bending without actually describing their behavior. Useful for things
+ * like Id and Id lookup.
  * 
  * @author CrowsOfWar
  */

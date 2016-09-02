@@ -21,10 +21,12 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
  */
 public class BendingManager {
 	
-	public static final int BENDINGID_EARTHBENDING = 1;
-	public static final int BENDINGID_FIREBENDING = 2;
-	public static final int BENDINGID_WATERBENDING = 3;
-	public static final int BENDINGID_AIRBENDING = 4;
+	/**
+	 * Use {@link BendingType} instead.
+	 */
+	@Deprecated
+	public static final int BENDINGID_EARTHBENDING = 1, BENDINGID_FIREBENDING = 2, BENDINGID_WATERBENDING = 3,
+			BENDINGID_AIRBENDING = 4;
 	
 	private static Map<Integer, BendingController> bending;
 	private static Map<String, BendingController> bendingByName;
@@ -49,12 +51,25 @@ public class BendingManager {
 	
 	/**
 	 * Get the BendingController with that ID. Returns null if the given Id is invalid.
+	 * <p>
+	 * Recommended to use {@link #getBending(BendingType) BendingType abstraction} instead.
 	 * 
 	 * @param id
 	 * @return
 	 */
+	@Deprecated
 	public static BendingController getBending(int id) {
 		return bending.get(id);
+	}
+	
+	/**
+	 * Get the BendingController for that bending type.
+	 * 
+	 * @param type
+	 *            Bending type to look for
+	 */
+	public static BendingController<?> getBending(BendingType type) {
+		return getBending(type.id());
 	}
 	
 	/**
@@ -62,21 +77,24 @@ public class BendingManager {
 	 * 
 	 * @param name
 	 *            The name of the bending controller
-	 * @return
 	 */
 	public static BendingController getBending(String name) {
 		return bendingByName.get(name);
 	}
 	
 	/**
-	 * Get a list of all bending controllers. This cannot be modified.
-	 * 
-	 * @return
+	 * Get an unmodifiable list of all bending controllers.
 	 */
 	public static List<BendingController> allBending() {
 		return Collections.unmodifiableList(allBending);
 	}
 	
+	/**
+	 * Get the ability with the given Id, or null if the ability is undefined.
+	 * 
+	 * @param id
+	 *            The Id of the ability
+	 */
 	public static BendingAbility getAbility(int id) {
 		return abilities.get(id);
 	}
