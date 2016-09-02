@@ -17,7 +17,7 @@ import net.minecraft.world.World;
  */
 public class EarthSoundHandler {
 	
-	private static void onPickedUp(EarthbendingEvent.BlockPickedUp e) {
+	private static void onPickedUp(FloatingBlockEvent.BlockPickedUp e) {
 		EntityFloatingBlock floating = e.getFloatingBlock();
 		World world = floating.worldObj;
 		Block block = e.getFloatingBlock().getBlockState().getBlock();
@@ -28,7 +28,7 @@ public class EarthSoundHandler {
 		}
 	}
 	
-	private static void onBlockPlaceReach(EarthbendingEvent.BlockPlacedReached e) {
+	private static void onBlockPlaceReach(FloatingBlockEvent.BlockPlacedReached e) {
 		EntityFloatingBlock floating = e.getFloatingBlock();
 		SoundType sound = floating.getBlock().getSoundType();
 		if (sound != null) {
@@ -37,7 +37,7 @@ public class EarthSoundHandler {
 		}
 	}
 	
-	private static void onBlockThrown(EarthbendingEvent.BlockThrownReached e) {
+	private static void onBlockThrown(FloatingBlockEvent.BlockThrownReached e) {
 		EntityFloatingBlock floating = e.getFloatingBlock();
 		SoundType sound = floating.getBlock().getSoundType();
 		if (sound != null) {
@@ -48,10 +48,10 @@ public class EarthSoundHandler {
 	
 	public static void register() {
 		Subject registerTo = BendingManager.getBending(BendingType.EARTHBENDING);
-		registerTo.addObserver(EarthSoundHandler::onPickedUp, EarthbendingEvent.BlockPickedUp.class);
+		registerTo.addObserver(EarthSoundHandler::onPickedUp, FloatingBlockEvent.BlockPickedUp.class);
 		registerTo.addObserver(EarthSoundHandler::onBlockPlaceReach,
-				EarthbendingEvent.BlockPlacedReached.class);
-		registerTo.addObserver(EarthSoundHandler::onBlockThrown, EarthbendingEvent.BlockThrownReached.class);
+				FloatingBlockEvent.BlockPlacedReached.class);
+		registerTo.addObserver(EarthSoundHandler::onBlockThrown, FloatingBlockEvent.BlockThrownReached.class);
 	}
 	
 }

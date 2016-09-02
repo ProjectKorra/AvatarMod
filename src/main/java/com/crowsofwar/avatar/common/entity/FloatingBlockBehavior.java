@@ -9,7 +9,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvent;
+import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -160,7 +160,7 @@ public abstract class FloatingBlockBehavior {
 				floating.worldObj.setBlockState(new BlockPos(floating), floating.getBlockState());
 				
 				BendingManager.getBending(BendingType.EARTHBENDING)
-						.notifyObservers(new EarthbendingEvent.BlockPlacedReached(floating));
+						.notifyObservers(new FloatingBlockEvent.BlockPlacedReached(floating));
 				
 			}
 			
@@ -196,8 +196,8 @@ public abstract class FloatingBlockBehavior {
 			if (floating.isCollided) {
 				if (!floating.worldObj.isRemote) floating.setDead();
 				floating.onCollision();
-				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
-						.notifyObservers(new EarthbendingEvent.BlockThrownReached(floating));
+				BendingManager.getBending(BendingType.EARTHBENDING)
+						.notifyObservers(new FloatingBlockEvent.BlockThrownReached(floating));
 			}
 			
 			applyGravity();
