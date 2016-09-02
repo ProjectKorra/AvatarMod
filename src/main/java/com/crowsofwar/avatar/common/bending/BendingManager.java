@@ -13,7 +13,7 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
 
 /**
  * Manages instances of bending controllers. Bending controllers can be retrieved via
- * {@link #getBending(int)}. Contains constants which specify the IDs of bending. <br />
+ * {@link #getBending(BendingType)}. Contains constants which specify the IDs of bending. <br />
  * <br />
  * Third-party mods can use {@link #registerBending(BendingController)} to enable custom bending
  * controllers.

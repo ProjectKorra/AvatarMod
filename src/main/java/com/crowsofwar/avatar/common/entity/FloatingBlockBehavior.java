@@ -8,11 +8,11 @@ import java.util.Map;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +20,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -160,14 +159,7 @@ public abstract class FloatingBlockBehavior {
 				floating.setDead();
 				floating.worldObj.setBlockState(new BlockPos(floating), floating.getBlockState());
 				
-				// TODO move BlockPlacedReached sound into EarthSoundHandler
-				SoundType sound = floating.getBlock().getSoundType();
-				if (sound != null) {
-					floating.worldObj.playSound(null, placeAt, sound.getBreakSound(), SoundCategory.PLAYERS,
-							sound.getVolume(), sound.getPitch());
-				}
-				
-				BendingManager.getBending(BendingManager.BENDINGID_EARTHBENDING)
+				BendingManager.getBending(BendingType.EARTHBENDING)
 						.notifyObservers(new EarthbendingEvent.BlockPlacedReached(floating));
 				
 			}

@@ -17,7 +17,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -88,12 +87,6 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					
 					ebs.setPickupBlock(floating);
 					data.sendBendingState(ebs);
-					
-					SoundType sound = block.getSoundType();
-					if (sound != null) {
-						world.playSound(null, target.toBlockPos(), sound.getBreakSound(),
-								SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-					}
 					
 					world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 					
