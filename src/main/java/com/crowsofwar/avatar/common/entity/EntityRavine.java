@@ -105,7 +105,7 @@ public class EntityRavine extends Entity implements IPhysics {
 		BlockPos inPos = getPosition();
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 			BendingManager.getBending(BendingType.EARTHBENDING)
-					.post(new RavineEvent.DestroyBlock(this, inBlock));
+					.post(new RavineEvent.DestroyBlock(this, inBlock, inPos));
 			
 			for (int i = 0; i < 7; i++) {
 				worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,

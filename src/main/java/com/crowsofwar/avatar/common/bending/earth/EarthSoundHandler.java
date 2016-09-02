@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.util.event.Subject;
 
 import net.minecraft.block.Block;
@@ -17,7 +18,7 @@ import net.minecraft.world.World;
  */
 public class EarthSoundHandler {
 	
-	private static void onPickedUp(FloatingBlockEvent.BlockPickedUp e) {
+	private static void floatingPlayBreak(FloatingBlockEvent e) {
 		EntityFloatingBlock floating = e.getFloatingBlock();
 		World world = floating.worldObj;
 		Block block = e.getFloatingBlock().getBlockState().getBlock();
@@ -28,7 +29,7 @@ public class EarthSoundHandler {
 		}
 	}
 	
-	private static void onBlockPlaceReach(FloatingBlockEvent.BlockPlacedReached e) {
+	private static void floatingPlayPlace(FloatingBlockEvent.BlockPlacedReached e) {
 		EntityFloatingBlock floating = e.getFloatingBlock();
 		SoundType sound = floating.getBlock().getSoundType();
 		if (sound != null) {
@@ -37,21 +38,21 @@ public class EarthSoundHandler {
 		}
 	}
 	
-	private static void onBlockThrown(FloatingBlockEvent.BlockThrownReached e) {
-		EntityFloatingBlock floating = e.getFloatingBlock();
-		SoundType sound = floating.getBlock().getSoundType();
-		if (sound != null) {
-			floating.worldObj.playSound(null, floating.getPosition(), sound.getBreakSound(),
-					SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-		}
+	private static void onRavineDestroyBlock(RavineEvent.DestroyBlock e) {
+		EntityRavine ravine = e.getRavine();
+		SoundType sound = e.getBlockState().getBlock().getSoundType();
+		ravine.worldObj.playSound(null, e.getDestroyedAt(), sound.getBreakSound(), SoundCategory.BLOCKS, 1,
+				1);
 	}
 	
 	public static void register() {
 		Subject registerTo = BendingManager.getBending(BendingType.EARTHBENDING);
-		registerTo.addObserver(EarthSoundHandler::onPickedUp, FloatingBlockEvent.BlockPickedUp.class);
-		registerTo.addObserver(EarthSoundHandler::onBlockPlaceReach,
+		registerTo.addObserver(EarthSoundHandler::floatingPlayBreak, FloatingBlockEvent.BlockPickedUp.class);
+		registerTo.addObserver(EarthSoundHandler::floatingPlayPlace,
 				FloatingBlockEvent.BlockPlacedReached.class);
-		registerTo.addObserver(EarthSoundHandler::onBlockThrown, FloatingBlockEvent.BlockThrownReached.class);
+		registerTo.addObserver(EarthSoundHandler::floatingPlayBreak,
+				FloatingBlockEvent.BlockThrownReached.class);
+		registerTo.addObserver(EarthSoundHandler::onRavineDestroyBlock, RavineEvent.DestroyBlock.class);
 	}
 	
 }
