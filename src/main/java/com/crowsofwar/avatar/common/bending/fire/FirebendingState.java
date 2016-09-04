@@ -12,10 +12,13 @@ public class FirebendingState implements IBendingState {
 	
 	private EntityFireArc fireArc;
 	private AvatarPlayerData data;
+	// TODO refactor flamethrower code- this is temporary
+	private int timeLeftFlamethrowing;
 	
 	public FirebendingState(AvatarPlayerData data) {
 		fireArc = null;
 		this.data = data;
+		this.timeLeftFlamethrowing = 0;
 	}
 	
 	public int getFireArcId() {
@@ -38,6 +41,22 @@ public class FirebendingState implements IBendingState {
 		setFireArc(null);
 	}
 	
+	public int getTicksLeftFlamethrowing() {
+		return timeLeftFlamethrowing;
+	}
+	
+	public boolean isFlamethrowing() {
+		return timeLeftFlamethrowing > 0;
+	}
+	
+	public void setNotFlamethrowing() {
+		timeLeftFlamethrowing = 0;
+	}
+	
+	public void setFlamethrowing(int ticks) {
+		timeLeftFlamethrowing = ticks;
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		// TODO Implement saving fire arcs
@@ -51,11 +70,13 @@ public class FirebendingState implements IBendingState {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(getFireArcId());
+		buf.writeInt(timeLeftFlamethrowing);
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		fireArc = EntityFireArc.findFromId(data.getState().getPlayerEntity().worldObj, buf.readInt());
+		timeLeftFlamethrowing = buf.readInt();
 	}
 	
 	@Override

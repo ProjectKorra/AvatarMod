@@ -533,6 +533,19 @@ public class Vector {
 	}
 	
 	/**
+	 * Create a unit vector based from the direction of the entity's head.
+	 * <p>
+	 * This equivalent to calling {@link #fromYawPitch(double, double)} using entity's rotations as
+	 * inputs.
+	 * 
+	 * @param entity
+	 *            The entity to use
+	 */
+	public static Vector fromEntityLook(Entity entity) {
+		return fromYawPitch(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
+	}
+	
+	/**
 	 * Create a unit vector from the given euler angles. Measurements should be in radians.
 	 */
 	public static Vector fromDirection(Vector euler) {
