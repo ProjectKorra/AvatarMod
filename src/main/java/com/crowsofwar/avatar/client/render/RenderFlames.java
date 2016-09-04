@@ -31,7 +31,8 @@ public class RenderFlames extends Render<EntityFlames> {
 			float partialTicks) {
 		
 		entity.worldObj.spawnParticle(EnumParticleTypes.FLAME, entity.posX, entity.posY, entity.posZ,
-				random.nextGaussian() - 0.5, random.nextGaussian() * 0.8, random.nextGaussian() - 0.5);
+				(random.nextGaussian() - 0.5) * 0.02, random.nextGaussian() * 0.01,
+				(random.nextGaussian() - 0.5) * 0.02);
 		
 	}
 	
