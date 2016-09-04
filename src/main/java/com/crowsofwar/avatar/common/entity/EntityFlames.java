@@ -47,7 +47,10 @@ public class EntityFlames extends Entity implements IPhysics {
 		Vector velocityPerTick = getVelocity().dividedBy(20);
 		moveEntity(velocityPerTick.x(), velocityPerTick.y(), velocityPerTick.z());
 		
-		if (ticksExisted >= 30) setDead();
+		setVelocity(getVelocity().times(0.94));
+		
+		if (getVelocity().sqrMagnitude() <= 0.5 * 0.5) setDead();
+		
 	}
 	
 	@Override

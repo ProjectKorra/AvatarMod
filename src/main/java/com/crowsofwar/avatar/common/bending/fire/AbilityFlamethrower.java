@@ -45,7 +45,7 @@ public class AbilityFlamethrower extends BendingAbility<FirebendingState> {
 			World world = data.getWorld();
 			
 			EntityFlames flames = new EntityFlames(world);
-			flames.setVelocity(look.times(4));
+			flames.setVelocity(look.times(10));
 			flames.setPosition(eye.x(), eye.y(), eye.z());
 			world.spawnEntityInWorld(flames);
 			
