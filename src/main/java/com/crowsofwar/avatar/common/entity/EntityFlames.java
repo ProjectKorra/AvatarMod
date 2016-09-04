@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
@@ -49,7 +51,13 @@ public class EntityFlames extends Entity implements IPhysics {
 		
 		setVelocity(getVelocity().times(0.94));
 		
-		if (getVelocity().sqrMagnitude() <= 0.5 * 0.5) setDead();
+		if (getVelocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
+		
+		List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+				entity -> !(entity instanceof EntityFlames));
+		for (Entity entity : collided) {
+			entity.setFire(3);
+		}
 		
 	}
 	
