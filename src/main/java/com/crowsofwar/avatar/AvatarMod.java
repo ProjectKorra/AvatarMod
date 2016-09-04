@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -77,6 +78,7 @@ public class AvatarMod {
 		registerEntity(EntityAirGust.class, "AirGust");
 		registerEntity(EntityAirGust.AirGustControlPoint.class, "AirGustCP");
 		registerEntity(EntityRavine.class, "Ravine");
+		registerEntity(EntityFlames.class, "Flames");
 		proxy.init();
 	}
 	
