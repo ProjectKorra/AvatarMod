@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
@@ -65,6 +66,8 @@ public class AvatarMod {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
 		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
+		
+		AvatarParticles.register();
 		
 	}
 	
