@@ -2,7 +2,12 @@ package com.crowsofwar.avatar.client.particles;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -58,16 +63,24 @@ public class AvatarParticleFlames extends Particle {
 	}
 	
 	@Override
-	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks,
-			float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+	public void renderParticle(VertexBuffer vb, Entity entity, float partialTicks, float rotationX,
+			float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 		
+		Tessellator t = Tessellator.getInstance();
 		Minecraft mc = Minecraft.getMinecraft();
+		
+		t.draw();
 		mc.getTextureManager().bindTexture(AVATAR_PARTICLES);
+		vb.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+		GlStateManager.blendFunc(SourceFactor.ONE, DestFactor.ONE);
 		
-		super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX, rotationZ, rotationYZ,
-				rotationXY, rotationXZ);
+		super.renderParticle(vb, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY,
+				rotationXZ);
 		
+		t.draw();
+		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		mc.getTextureManager().bindTexture(VANILLA_PARTICLES);
+		vb.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 		
 	}
 	
