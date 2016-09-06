@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
-
 import java.awt.Color;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -37,7 +35,8 @@ public class Firebending extends BendingController {
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_FIREBENDING,
-				AvatarGuiIds.GUI_RADIAL_MENU_FIRE, abilityLightFire, abilityFireArc, abilityFlamethrower);
+				AvatarGuiIds.GUI_RADIAL_MENU_FIRE, abilityLightFire, abilityFireArc);
+		
 	}
 	
 	@Override
@@ -62,9 +61,12 @@ public class Firebending extends BendingController {
 	
 	@Override
 	public BendingAbility<FirebendingState> getAbility(AvatarPlayerData data, AvatarControl input) {
-		if (input == CONTROL_LEFT_CLICK_DOWN) {
+		if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) {
 			FirebendingState state = (FirebendingState) data.getBendingState(this);
 			if (state != null && state.isManipulatingFire()) return abilityFireThrow;
+		}
+		if (input == AvatarControl.CONTROL_RIGHT_CLICK) {
+			return abilityFlamethrower;
 		}
 		
 		return null;
