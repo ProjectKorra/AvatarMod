@@ -1,12 +1,21 @@
 package com.crowsofwar.avatar.client.particles;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class AvatarParticleFlames extends Particle {
+	
+	private static final ResourceLocation VANILLA_PARTICLES = new ResourceLocation(
+			"textures/particle/particles.png");
+	private static final ResourceLocation AVATAR_PARTICLES = new ResourceLocation("avatar",
+			"textures/particles/flame.png");
 	
 	public AvatarParticleFlames(int particleID, World world, double x, double y, double z, double velX,
 			double velY, double velZ, int... parameters) {
@@ -22,7 +31,7 @@ public class AvatarParticleFlames extends Particle {
 		this.particleRed = 1.0F;
 		this.particleGreen = 1.0F;
 		this.particleBlue = 1.0F;
-		this.setParticleTextureIndex(32);
+		this.setParticleTextureIndex(4);
 		this.setSize(0.02F, 0.02F);
 		this.particleScale *= this.rand.nextFloat() * 0.6F + 0.2F;
 		this.motionX = velX * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
@@ -46,6 +55,20 @@ public class AvatarParticleFlames extends Particle {
 		if (this.particleMaxAge-- <= 0) {
 			this.setExpired();
 		}
+	}
+	
+	@Override
+	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks,
+			float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+		
+		Minecraft mc = Minecraft.getMinecraft();
+		mc.getTextureManager().bindTexture(AVATAR_PARTICLES);
+		
+		super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX, rotationZ, rotationYZ,
+				rotationXY, rotationXZ);
+		
+		mc.getTextureManager().bindTexture(VANILLA_PARTICLES);
+		
 	}
 	
 }
