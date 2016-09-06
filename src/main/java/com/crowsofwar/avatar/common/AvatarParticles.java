@@ -13,7 +13,7 @@ public class AvatarParticles {
 	private static EnumParticleTypes particleFlames;
 	
 	public static void register() {
-		EnumHelper.addEnum(EnumParticleTypes.class, "AVATAR_FLAMES",
+		particleFlames = EnumHelper.addEnum(EnumParticleTypes.class, "AVATAR_FLAMES",
 				new Class<?>[] { String.class, int.class, boolean.class }, "avatarflame", nextParticleId(),
 				true);
 	}

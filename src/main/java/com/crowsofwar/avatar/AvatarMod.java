@@ -54,6 +54,8 @@ public class AvatarMod {
 		BendingManager.init();
 		EarthSoundHandler.register();
 		
+		AvatarParticles.register();
+		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 		
@@ -66,8 +68,6 @@ public class AvatarMod {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
 		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
-		
-		AvatarParticles.register();
 		
 	}
 	
