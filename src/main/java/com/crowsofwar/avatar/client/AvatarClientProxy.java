@@ -69,9 +69,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityRavine.class, RenderRavine::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlames.class, RenderFlames::new);
 		
-		mc.effectRenderer.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
-				AvatarParticleFlames::new);
-		
 	}
 	
 	@Override
@@ -94,7 +91,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@Override
 	public void init() {
-		
+		Minecraft.getMinecraft().effectRenderer.registerParticle(
+				AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 	}
 	
 	@Override
