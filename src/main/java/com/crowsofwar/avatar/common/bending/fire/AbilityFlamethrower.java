@@ -30,34 +30,21 @@ public class AbilityFlamethrower extends BendingAbility<FirebendingState> {
 	
 	@Override
 	public boolean requiresUpdateTick() {
-		return true;
+		return false;
 	}
 	
-	@Override
-	public void update(AvatarPlayerData data) {
-		FirebendingState fs = data.getBendingState(controller);
-		EntityPlayer player = data.getPlayerEntity();
-		if (fs.isFlamethrowing() && player.ticksExisted % 2 == 0) {
-			
-			Vector look = Vector.fromEntityLook(player);
-			Vector eye = Vector.getEyePos(player);
-			
-			World world = data.getWorld();
-			
-			EntityFlames flames = new EntityFlames(world);
-			flames.setVelocity(look.times(10));
-			flames.setPosition(eye.x(), eye.y(), eye.z());
-			world.spawnEntityInWorld(flames);
-			
-			fs.setFlamethrowing(fs.getTicksLeftFlamethrowing() - 1);
-			
-		}
-	}
-	
-	@Override
 	public void execute(AvatarPlayerData data) {
-		System.out.println("FWOOOSH!");
-		data.getBendingState(controller).setFlamethrowing(30);
+		EntityPlayer player = data.getPlayerEntity();
+		
+		Vector look = Vector.fromEntityLook(player);
+		Vector eye = Vector.getEyePos(player);
+		
+		World world = data.getWorld();
+		
+		EntityFlames flames = new EntityFlames(world);
+		flames.setVelocity(look.times(10));
+		flames.setPosition(eye.x(), eye.y(), eye.z());
+		world.spawnEntityInWorld(flames);
 	}
 	
 	@Override
