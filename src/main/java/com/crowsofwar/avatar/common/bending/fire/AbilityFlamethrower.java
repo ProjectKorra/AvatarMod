@@ -33,8 +33,11 @@ public class AbilityFlamethrower extends BendingAbility<FirebendingState> {
 		return false;
 	}
 	
+	@Override
 	public void execute(AvatarPlayerData data) {
 		EntityPlayer player = data.getPlayerEntity();
+		
+		if (player.ticksExisted % 3 != 0) return;
 		
 		Vector look = Vector.fromEntityLook(player);
 		Vector eye = Vector.getEyePos(player);
