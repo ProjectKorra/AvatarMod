@@ -19,7 +19,7 @@ public class AvatarParticleFlames extends Particle {
 	
 	private static final ResourceLocation VANILLA_PARTICLES = new ResourceLocation(
 			"textures/particle/particles.png");
-	private static final ResourceLocation AVATAR_PARTICLES = new ResourceLocation("avatar",
+	private static final ResourceLocation AVATAR_PARTICLES = new ResourceLocation("avatarmod",
 			"textures/particles/flame.png");
 	
 	public AvatarParticleFlames(int particleID, World world, double x, double y, double z, double velX,
