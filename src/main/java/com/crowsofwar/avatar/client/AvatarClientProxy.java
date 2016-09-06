@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.controls.ClientInput;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
+import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
 import com.crowsofwar.avatar.client.render.RenderAirGust;
 import com.crowsofwar.avatar.client.render.RenderControlPoint;
 import com.crowsofwar.avatar.client.render.RenderFireArc;
@@ -11,6 +12,7 @@ import com.crowsofwar.avatar.client.render.RenderFloatingBlock;
 import com.crowsofwar.avatar.client.render.RenderRavine;
 import com.crowsofwar.avatar.client.render.RenderWaterArc;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
@@ -66,6 +68,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityRavine.class, RenderRavine::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlames.class, RenderFlames::new);
+		
+		mc.effectRenderer.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
+				AvatarParticleFlames::new);
 		
 	}
 	
