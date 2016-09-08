@@ -53,10 +53,10 @@ public abstract class AvatarParticle extends Particle {
 		
 		// CUSTOM RENDER PARTICLE
 		
-		float minU = frame.minU;
-		float maxU = frame.maxU;
-		float minV = frame.minV;
-		float maxV = frame.maxV;
+		float minU = frame.minU / 256f;
+		float maxU = frame.maxU / 256f;
+		float minV = frame.minV / 256f;
+		float maxV = frame.maxV / 256f;
 		float f4 = 0.1F * this.particleScale;
 		
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
@@ -128,6 +128,7 @@ public abstract class AvatarParticle extends Particle {
 	protected abstract ParticleFrame[] getTextureFrames();
 	
 	protected int getCurrentFrame() {
+		// FIXME doesn't actually work
 		return (int) (((double) particleAge / particleMaxAge) * getTextureFrames().length);
 	}
 	
