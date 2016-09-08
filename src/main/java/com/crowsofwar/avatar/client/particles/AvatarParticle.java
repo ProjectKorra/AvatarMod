@@ -53,10 +53,10 @@ public abstract class AvatarParticle extends Particle {
 		
 		// CUSTOM RENDER PARTICLE
 		
-		float minU = frame.minU / 256f;
-		float maxU = frame.maxU / 256f;
-		float minV = frame.minV / 256f;
-		float maxV = frame.maxV / 256f;
+		float minU = (float) frame.minU / frame.textureSize;
+		float maxU = (float) frame.maxU / frame.textureSize;
+		float minV = (float) frame.minV / frame.textureSize;
+		float maxV = (float) frame.maxV / frame.textureSize;
 		float f4 = 0.1F * this.particleScale;
 		
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
@@ -135,18 +135,49 @@ public abstract class AvatarParticle extends Particle {
 	public static class ParticleFrame {
 		
 		private final ResourceLocation texture;
-		private final int minU, maxU, minV, maxV;
+		private final int minU, maxU, minV, maxV, textureSize;
 		
-		public ParticleFrame(ResourceLocation texture, int minU, int minV, int width, int height) {
+		/**
+		 * Create a particle frame.
+		 * 
+		 * @param texture
+		 *            The texture location
+		 * @param textureSize
+		 *            Size of your texture (width/height) in pixels. Texture is assumed to be
+		 *            square, so 64 = 64x64 pixels, etc.
+		 * @param minU
+		 *            Minimum x-coordinate on texture
+		 * @param minV
+		 *            Minimum y-coordinate on texture
+		 * @param width
+		 *            Width in pixels of texture
+		 * @param height
+		 *            Height in pixels of texture
+		 */
+		public ParticleFrame(ResourceLocation texture, int textureSize, int minU, int minV, int width,
+				int height) {
 			this.texture = texture;
+			this.textureSize = textureSize;
 			this.minU = minU;
 			this.maxU = minU + width;
 			this.minV = minV;
 			this.maxV = minV + height;
 		}
 		
+		/**
+		 * Create a particle frame using the Avatar spritesheet.
+		 * 
+		 * @param minU
+		 *            Minimum x-coordinate on texture
+		 * @param minV
+		 *            Minimum y-coordinate on texture
+		 * @param width
+		 *            Width in pixels of texture
+		 * @param height
+		 *            Height in pixels of texture
+		 */
 		public ParticleFrame(int minU, int minV, int width, int height) {
-			this(AVATAR_PARTICLES, minU, minV, width, height);
+			this(AVATAR_PARTICLES, 256, minU, minV, width, height);
 		}
 		
 	}
