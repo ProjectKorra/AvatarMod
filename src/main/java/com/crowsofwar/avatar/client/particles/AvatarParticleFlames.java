@@ -36,6 +36,8 @@ public class AvatarParticleFlames extends AvatarParticle {
 		this.motionZ = velZ * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
 		this.particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
 		
+		enableAdditiveBlending();
+		
 	}
 	
 	@Override
