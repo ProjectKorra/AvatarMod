@@ -1,26 +1,18 @@
 package com.crowsofwar.avatar.client.particles;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class AvatarParticleFlames extends Particle {
+public class AvatarParticleFlames extends AvatarParticle {
 	
-	private static final ResourceLocation VANILLA_PARTICLES = new ResourceLocation(
-			"textures/particle/particles.png");
-	private static final ResourceLocation AVATAR_PARTICLES = new ResourceLocation("avatarmod",
-			"textures/particles/flame.png");
+	private static final ParticleFrame[] FRAMES = new ParticleFrame[7];
+	static {
+		for (int i = 0; i < FRAMES.length; i++) {
+			FRAMES[i] = new ParticleFrame(32 * i, 0, 32, 32);
+		}
+	}
 	
 	public AvatarParticleFlames(int particleID, World world, double x, double y, double z, double velX,
 			double velY, double velZ, int... parameters) {
@@ -63,25 +55,8 @@ public class AvatarParticleFlames extends Particle {
 	}
 	
 	@Override
-	public void renderParticle(VertexBuffer vb, Entity entity, float partialTicks, float rotationX,
-			float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		
-		Tessellator t = Tessellator.getInstance();
-		Minecraft mc = Minecraft.getMinecraft();
-		
-		t.draw();
-		mc.getTextureManager().bindTexture(AVATAR_PARTICLES);
-		vb.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-		GlStateManager.blendFunc(SourceFactor.ONE, DestFactor.ONE);
-		
-		super.renderParticle(vb, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY,
-				rotationXZ);
-		
-		t.draw();
-		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		mc.getTextureManager().bindTexture(VANILLA_PARTICLES);
-		vb.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-		
+	protected ParticleFrame[] getTextureFrames() {
+		return FRAMES;
 	}
 	
 }

@@ -136,16 +136,16 @@ public abstract class AvatarParticle extends Particle {
 		private final ResourceLocation texture;
 		private final int minU, maxU, minV, maxV;
 		
-		public ParticleFrame(ResourceLocation texture, int minU, int maxU, int minV, int maxV) {
+		public ParticleFrame(ResourceLocation texture, int minU, int minV, int width, int height) {
 			this.texture = texture;
 			this.minU = minU;
-			this.maxU = maxU;
+			this.maxU = minU + width;
 			this.minV = minV;
-			this.maxV = maxV;
+			this.maxV = minV + height;
 		}
 		
-		public ParticleFrame(int minU, int maxU, int minV, int maxV) {
-			this(AVATAR_PARTICLES, minU, maxU, minV, maxV);
+		public ParticleFrame(int minU, int minV, int width, int height) {
+			this(AVATAR_PARTICLES, minU, minV, width, height);
 		}
 		
 	}
