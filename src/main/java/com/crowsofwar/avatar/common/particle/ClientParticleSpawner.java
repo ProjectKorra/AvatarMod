@@ -21,7 +21,8 @@ public class ClientParticleSpawner implements ParticleSpawner {
 		
 		if (world.isRemote) {
 			
-			world.spawnParticle(particle.vanilla(), x, y, z, velocityX, velocityY, velocityZ, parameters);
+			world.spawnParticle(particle.vanilla(), x, y, z, velocityX / 20, velocityY / 20, velocityZ / 20,
+					parameters);
 			
 		}
 		
@@ -43,9 +44,10 @@ public class ClientParticleSpawner implements ParticleSpawner {
 			
 			for (int i = 0; i < particlesToSpawn; i++) {
 				
-				world.spawnParticle(particle.vanilla(), x, y, z, random(random, -maxVelocityX, maxVelocityX),
-						random(random, -maxVelocityY, maxVelocityY),
-						random(random, -maxVelocityZ, maxVelocityZ), parameters);
+				world.spawnParticle(particle.vanilla(), x, y, z,
+						random(random, -maxVelocityX, maxVelocityX) / 20,
+						random(random, -maxVelocityY, maxVelocityY) / 20,
+						random(random, -maxVelocityZ, maxVelocityZ) / 20, parameters);
 				
 			}
 			

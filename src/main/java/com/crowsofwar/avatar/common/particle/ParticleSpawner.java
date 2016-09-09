@@ -27,11 +27,11 @@ public interface ParticleSpawner {
 	 * @param z
 	 *            Z-position of particle
 	 * @param velocityX
-	 *            Velocity X of particle
+	 *            Velocity X of particle in m/s
 	 * @param velocityY
-	 *            Velocity Y of particle
+	 *            Velocity Y of particle in m/s
 	 * @param velocityZ
-	 *            Velocity Z of particle
+	 *            Velocity Z of particle in m/s
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
@@ -50,7 +50,7 @@ public interface ParticleSpawner {
 	 * @param position
 	 *            Position of particle
 	 * @param velocity
-	 *            Velocity of particle
+	 *            Velocity of particle in m/s
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
@@ -79,11 +79,11 @@ public interface ParticleSpawner {
 	 * @param z
 	 *            Z-position to spawn at
 	 * @param maxVelocityX
-	 *            Maximum velocity X
+	 *            Maximum velocity X in m/s
 	 * @param maxVelocityY
-	 *            Maximum velocity Y
+	 *            Maximum velocity Y in m/s
 	 * @param maxVelocityZ
-	 *            Maximum velocity Z
+	 *            Maximum velocity Z in m/s
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
@@ -106,7 +106,7 @@ public interface ParticleSpawner {
 	 * @param position
 	 *            Position to spawn at
 	 * @param maxVelocity
-	 *            Maximum velocity of particles
+	 *            Maximum velocity of particles in m/s
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
