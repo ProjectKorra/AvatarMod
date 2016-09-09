@@ -34,7 +34,8 @@ public class AvatarParticleFlames extends AvatarParticle {
 		this.motionX = velX * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
 		this.motionY = velY * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
 		this.motionZ = velZ * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
-		this.particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+		this.particleAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+		this.particleMaxAge = particleAge;
 		
 		enableAdditiveBlending();
 		
@@ -42,18 +43,19 @@ public class AvatarParticleFlames extends AvatarParticle {
 	
 	@Override
 	public void onUpdate() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		this.motionY += 0.002D;
-		this.moveEntity(this.motionX, this.motionY, this.motionZ);
-		this.motionX *= 0.8500000238418579D;
-		this.motionY *= 0.8500000238418579D;
-		this.motionZ *= 0.8500000238418579D;
-		
-		if (this.particleMaxAge-- <= 0) {
-			this.setExpired();
-		}
+		super.onUpdate();
+		// this.prevPosX = this.posX;
+		// this.prevPosY = this.posY;
+		// this.prevPosZ = this.posZ;
+		// this.motionY += 0.002D;
+		// this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		// this.motionX *= 0.8500000238418579D;
+		// this.motionY *= 0.8500000238418579D;
+		// this.motionZ *= 0.8500000238418579D;
+		//
+		// if (this.particleAge-- <= 0) {
+		// this.setExpired();
+		// }
 	}
 	
 	@Override

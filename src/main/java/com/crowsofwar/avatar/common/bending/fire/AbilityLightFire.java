@@ -1,11 +1,15 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
+import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.init.Blocks;
@@ -31,7 +35,18 @@ public class AbilityLightFire extends BendingAbility<FirebendingState> {
 	
 	@Override
 	public boolean requiresUpdateTick() {
-		return false;
+		return true;
+	}
+	
+	@Override
+	public void update(AvatarPlayerData data) {
+		World world = data.getWorld();
+		if (AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK)
+				&& world.isRemote) {
+			Vector p = Vector.getEntityPos(data.getPlayerEntity());
+			p.add(0, -0.5, 0);
+			world.spawnParticle(AvatarParticles.getParticleFlames(), p.x(), p.y(), p.z(), 0, 0, 0);
+		}
 	}
 	
 	@Override

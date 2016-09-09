@@ -129,7 +129,13 @@ public abstract class AvatarParticle extends Particle {
 	
 	protected int getCurrentFrame() {
 		// FIXME doesn't actually work
-		return (int) (((double) particleAge / particleMaxAge) * getTextureFrames().length);
+		// System.out.println("Age% is: " + (1.0 * particleAge / particleMaxAge));
+		// particleAge++;
+		System.out.println(hashCode() + "Age is: " + particleAge + "/" + particleMaxAge + " ("
+				+ ((double) particleAge / particleMaxAge));
+		int frame = (int) ((double) (particleAge * getTextureFrames().length) / particleMaxAge);
+		if (frame == getTextureFrames().length) frame = getTextureFrames().length - 1;
+		return frame;
 	}
 	
 	public static class ParticleFrame {
