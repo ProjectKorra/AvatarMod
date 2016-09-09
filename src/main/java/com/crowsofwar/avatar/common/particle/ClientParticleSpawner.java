@@ -39,6 +39,7 @@ public class ClientParticleSpawner implements ParticleSpawner {
 			int particlesToSpawn = (int) ((random.nextGaussian() * (maximum - minimum)) + minimum);
 			int particleSetting = 1 + AvatarMod.proxy.getParticleAmount();// 1+0=1,1+1=2,1+2=3
 			particlesToSpawn /= particleSetting;
+			if (particlesToSpawn == 0 && random.nextInt(8) == 0) particlesToSpawn = 1;
 			
 			for (int i = 0; i < particlesToSpawn; i++) {
 				
