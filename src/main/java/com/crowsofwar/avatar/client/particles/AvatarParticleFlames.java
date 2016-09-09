@@ -42,23 +42,6 @@ public class AvatarParticleFlames extends AvatarParticle {
 	}
 	
 	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		// this.prevPosX = this.posX;
-		// this.prevPosY = this.posY;
-		// this.prevPosZ = this.posZ;
-		// this.motionY += 0.002D;
-		// this.moveEntity(this.motionX, this.motionY, this.motionZ);
-		// this.motionX *= 0.8500000238418579D;
-		// this.motionY *= 0.8500000238418579D;
-		// this.motionZ *= 0.8500000238418579D;
-		//
-		// if (this.particleAge-- <= 0) {
-		// this.setExpired();
-		// }
-	}
-	
-	@Override
 	protected ParticleFrame[] getTextureFrames() {
 		return FRAMES;
 	}
