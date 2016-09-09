@@ -41,7 +41,7 @@ public class AbilityLightFire extends BendingAbility<FirebendingState> {
 	@Override
 	public void update(AvatarPlayerData data) {
 		World world = data.getWorld();
-		if (AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK)
+		if (AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK_DOWN)
 				&& world.isRemote) {
 			Vector p = Vector.getEntityPos(data.getPlayerEntity());
 			p.add(0, -0.5, 0);
