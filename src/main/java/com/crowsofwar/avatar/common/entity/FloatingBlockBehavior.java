@@ -205,7 +205,7 @@ public abstract class FloatingBlockBehavior {
 			World world = floating.worldObj;
 			if (!floating.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(floating,
-						floating.getEntityBoundingBox());
+						floating.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != floating.getOwner()) {

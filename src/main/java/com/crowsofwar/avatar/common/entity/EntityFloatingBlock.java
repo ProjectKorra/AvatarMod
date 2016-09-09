@@ -20,6 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -27,14 +28,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityFloatingBlock extends Entity implements IPhysics {
-	// EntitySkeleton
-	
-	/*
-	 * 
-	 * Block#getIdFromBlock, Block#getBlockById
-	 * 
-	 * 
-	 */
 	
 	public static final Block DEFAULT_BLOCK = Blocks.STONE;
 	
@@ -66,6 +59,12 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	 * matter on client.
 	 */
 	private boolean enableItemDrops;
+	
+	/**
+	 * The hitbox for this floating block, but slightly expanded to give more room for killing
+	 * things with.
+	 */
+	private AxisAlignedBB expandedHitbox;
 	
 	public EntityFloatingBlock(World world) {
 		super(world);
@@ -294,6 +293,16 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 	
 	public void setBehavior(FloatingBlockBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	public AxisAlignedBB getExpandedHitbox() {
+		return this.expandedHitbox;
+	}
+	
+	@Override
+	public void setEntityBoundingBox(AxisAlignedBB bb) {
+		super.setEntityBoundingBox(bb);
+		expandedHitbox = bb.expand(0.35, 0.35, 0.35);
 	}
 	
 	@Override
