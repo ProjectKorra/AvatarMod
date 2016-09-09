@@ -58,4 +58,9 @@ public interface AvatarCommonProxy {
 	 */
 	IThreadListener getClientThreadListener();
 	
+	/**
+	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
+	 */
+	int getParticleAmount();
+	
 }

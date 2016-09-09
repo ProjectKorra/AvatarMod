@@ -55,4 +55,9 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 		return null;
 	}
 	
+	@Override
+	public int getParticleAmount() {
+		return 0;
+	}
+	
 }

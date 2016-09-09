@@ -110,4 +110,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		return mc;
 	}
 	
+	@Override
+	public int getParticleAmount() {
+		return mc.gameSettings.particleSetting;
+	}
+	
 }
