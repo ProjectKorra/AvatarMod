@@ -25,20 +25,21 @@ public abstract class BendingAbility<STATE extends IBendingState> {
 		BendingManager.registerAbility(this);
 	}
 	
+	// TODO move requiresUpdateTick into an optionally implementable interface? such as Updatable
 	/**
+	 *
 	 * Returns whether this bending ability should be subscribed to an update tick event.
 	 */
 	public abstract boolean requiresUpdateTick();
 	
 	/**
-	 * TODO actually call this
-	 * <p>
-	 * Tick this bending ability. Only called if {@link #requiresUpdateTick()} is true.
+	 * Tick this bending ability. Only called if {@link #requiresUpdateTick()} is true. Called on
+	 * both server and client.
 	 */
 	public void update(AvatarPlayerData data) {}
 	
 	/**
-	 * Execute this ability.
+	 * Execute this ability. Only called on server.
 	 * 
 	 * @param data
 	 *            Player data to use.

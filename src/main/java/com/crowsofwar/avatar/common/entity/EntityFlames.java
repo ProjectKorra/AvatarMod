@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -20,12 +21,22 @@ public class EntityFlames extends Entity implements IPhysics {
 	private final IEntityProperty<Vector> propVelocity;
 	
 	/**
+	 * The owner, null client side
+	 */
+	private EntityPlayer owner;
+	
+	/**
 	 * @param worldIn
 	 */
 	public EntityFlames(World worldIn) {
 		super(worldIn);
 		this.propVelocity = new EntityPropertyMotion(this);
 		setSize(0.1f, 0.1f);
+	}
+	
+	public EntityFlames(World world, EntityPlayer owner) {
+		this(world);
+		this.owner = owner;
 	}
 	
 	@Override
@@ -53,10 +64,13 @@ public class EntityFlames extends Entity implements IPhysics {
 		
 		if (getVelocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
 		
-		List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-				entity -> !(entity instanceof EntityFlames));
-		for (Entity entity : collided) {
-			entity.setFire(3);
+		if (!worldObj.isRemote) {
+			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+					entity -> entity != owner && !(entity instanceof EntityFlames));
+			
+			for (Entity entity : collided) {
+				entity.setFire(3);
+			}
 		}
 		
 	}
