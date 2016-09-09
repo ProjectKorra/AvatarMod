@@ -25,11 +25,13 @@ import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.gui.IAvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
+import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
@@ -67,7 +69,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityControlPoint.class, RenderControlPoint::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityRavine.class, RenderRavine::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFlames.class, RenderFlames::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFlames.class,
+				(RenderManager rm) -> new RenderFlames(rm, new ClientParticleSpawner()));
 		
 	}
 	
