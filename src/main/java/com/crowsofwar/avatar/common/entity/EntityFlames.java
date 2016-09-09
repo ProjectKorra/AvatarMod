@@ -6,9 +6,11 @@ import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -74,6 +76,9 @@ public class EntityFlames extends Entity implements IPhysics {
 		}
 		
 	}
+	
+	@Override
+	protected void playStepSound(BlockPos pos, Block blockIn) {}
 	
 	@Override
 	public Vector getVecPosition() {
