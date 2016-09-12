@@ -4,6 +4,7 @@ bin/
 build/
 gradle/
 run/
+eclipse/
 
 .classpath
 .project
