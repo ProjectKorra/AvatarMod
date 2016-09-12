@@ -5,8 +5,10 @@ import static java.lang.Math.sin;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 /**
  * A mutable 3-dimensional vector using doubles.
@@ -19,6 +21,15 @@ public class Vector {
 	 * The zero vector.
 	 */
 	public static final Vector ZERO = new Vector();
+	
+	public static final Vector UP = new Vector(0, 1, 0);
+	public static final Vector DOWN = new Vector(0, -1, 0);
+	public static final Vector EAST = new Vector(1, 0, 0);
+	public static final Vector WEST = new Vector(-1, 0, 0);
+	public static final Vector NORTH = new Vector(0, 0, -1);
+	public static final Vector SOUTH = new Vector(0, 0, 1);
+	
+	public static final Vector[] DIRECTION_VECTORS = { UP, DOWN, EAST, WEST, NORTH, SOUTH };
 	
 	private double cachedMagnitude;
 	private double x, y, z;
@@ -77,6 +88,16 @@ public class Vector {
 	public Vector(Entity entity) {
 		this(entity.posX, entity.posY, entity.posZ);
 		// if (entity instanceof EntityPlayer && entity.worldObj.isRemote) setY(y - 1.62);
+	}
+	
+	/**
+	 * Creates a vector from the coordinates defined by blockPos.
+	 * 
+	 * @param blockPos
+	 *            The vanilla blockPos
+	 */
+	public Vector(BlockPos blockPos) {
+		this(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 	}
 	
 	/**
@@ -438,10 +459,47 @@ public class Vector {
 	}
 	
 	/**
+	 * Returns this vector reflected across the given normal.
+	 * 
+	 * @param normal
+	 *            Must be normalized
+	 */
+	public Vector reflect(Vector normal) {
+		if (normal.sqrMagnitude() != 1)
+			throw new IllegalArgumentException("Normal vector must be normalized");
+		return this.minus(normal.times(2).times(this.dot(normal)));
+	}
+	
+	/**
 	 * Converts this vector into a minecraft vector.
 	 */
 	public Vec3d toMinecraft() {
 		return new Vec3d(x, y, z);
+	}
+	
+	/**
+	 * Convert this vector to an integer vector by rounding each component.
+	 */
+	public VectorI round() {
+		return new VectorI((int) Math.round(x()), (int) Math.round(y()), (int) Math.round(z()));
+	}
+	
+	/**
+	 * Convert this vector to an integer vector by casting each component to an integer.
+	 */
+	public VectorI cast() {
+		return new VectorI((int) x(), (int) y(), (int) z());
+	}
+	
+	/**
+	 * Convert this vector to a BlockPos.
+	 */
+	public BlockPos toBlockPos() {
+		return cast().toBlockPos();
+	}
+	
+	public Vec3i toMinecraftInteger() {
+		return new Vec3i(x(), y(), z());
 	}
 	
 	/**
@@ -470,6 +528,10 @@ public class Vector {
 		} else {
 			return false;
 		}
+	}
+	
+	public static Vector reflect(Vector vec, Vector normal) {
+		return vec.reflect(normal);
 	}
 	
 	/**

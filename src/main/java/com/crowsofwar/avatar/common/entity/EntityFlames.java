@@ -7,8 +7,10 @@ import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -65,6 +67,19 @@ public class EntityFlames extends Entity implements IPhysics {
 		setVelocity(getVelocity().times(0.94));
 		
 		if (getVelocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
+		
+		if (worldObj.getBlockState(getPosition()).getBlock() == Blocks.AIR) {
+			Vector blockPosition = new Vector(getPosition());
+			for (Vector direction : Vector.DIRECTION_VECTORS) {
+				IBlockState blockThere = worldObj
+						.getBlockState(getPosition().add(direction.toMinecraftInteger()));
+				if (blockThere.getBlock() != Blocks.AIR) {
+					System.out.println("Reflecting in " + direction);
+					setVelocity(getVelocity().reflect(direction));
+					break;
+				}
+			}
+		}
 		
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
