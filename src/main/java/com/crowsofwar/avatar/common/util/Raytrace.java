@@ -98,18 +98,18 @@ public class Raytrace {
 	 *            World
 	 * @param start
 	 *            Starting position of raytrace
-	 * @param rotations
-	 *            Euler angles of direction to raytrace, in radians
+	 * @param direction
+	 *            Normalized direction vector of where to go
 	 * @param range
 	 *            How far to raytrace at most
 	 * @param raycastLiquids
 	 *            Whether to keep going when liquids are hit
 	 */
-	public static Result raytrace(World world, Vector start, Vector rotations, double range,
+	public static Result raytrace(World world, Vector start, Vector direction, double range,
 			boolean raycastLiquids) {
 		
 		RayTraceResult res = world.rayTraceBlocks(start.toMinecraft(),
-				start.plus(rotations.times(range)).toMinecraft(), !raycastLiquids, raycastLiquids, true);
+				start.plus(direction.times(range)).toMinecraft(), !raycastLiquids, raycastLiquids, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
 			return new Result(new VectorI(res.getBlockPos()), res.sideHit);

@@ -68,7 +68,8 @@ public class EntityFlames extends Entity implements IPhysics {
 		
 		if (getVelocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
 		
-		Raytrace.Result raytrace = Raytrace.raytrace(worldObj, getVecPosition(), getVelocity(), 0.06, true);
+		Raytrace.Result raytrace = Raytrace.raytrace(worldObj, getVecPosition(), getVelocity().normalize(),
+				0.3, true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
 			setVelocity(getVelocity().reflect(new Vector(sideHit)).times(0.5));
