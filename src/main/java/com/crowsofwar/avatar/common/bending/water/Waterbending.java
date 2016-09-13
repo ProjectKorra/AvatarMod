@@ -20,11 +20,12 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Waterbending extends BendingController {
 	
 	private BendingMenuInfo menu;
-	private final BendingAbility<WaterbendingState> abilityWaterArc, abilityWaterThrow;
+	private final BendingAbility<WaterbendingState> abilityWaterArc, abilityWaterThrow, abilityWave;
 	
 	public Waterbending() {
 		addAbility(this.abilityWaterArc = new AbilityWaterArc(this));
 		addAbility(this.abilityWaterThrow = new AbilityWaterThrow(this));
+		addAbility(this.abilityWave = new AbilityCreateWave(this));
 		
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);
@@ -33,7 +34,7 @@ public class Waterbending extends BendingController {
 		menu = new BendingMenuInfo(
 				new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
 						new ThemeColor(icon, base)),
-				KEY_WATERBENDING, GUI_RADIAL_MENU_WATER, abilityWaterArc);
+				KEY_WATERBENDING, GUI_RADIAL_MENU_WATER, abilityWaterArc, abilityWave);
 	}
 	
 	@Override
