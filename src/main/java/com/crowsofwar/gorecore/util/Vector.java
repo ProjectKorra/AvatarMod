@@ -5,6 +5,7 @@ import static java.lang.Math.sin;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -98,6 +99,14 @@ public class Vector {
 	 */
 	public Vector(BlockPos blockPos) {
 		this(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+	}
+	
+	public Vector(Vec3i vec) {
+		this(vec.getX(), vec.getY(), vec.getZ());
+	}
+	
+	public Vector(EnumFacing facing) {
+		this(facing.getDirectionVec());
 	}
 	
 	/**

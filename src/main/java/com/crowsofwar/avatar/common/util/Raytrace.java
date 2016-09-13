@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.util;
 
-import static java.lang.Math.toRadians;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -10,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.World;
 
 public class Raytrace {
 	
@@ -62,9 +61,6 @@ public class Raytrace {
 	 */
 	public static Result getTargetBlock(EntityPlayer player, double range, boolean raycastLiquids) {
 		
-		double yaw = toRadians(player.rotationYaw);
-		double pitch = toRadians(player.rotationPitch);
-		
 		if (range == -1) range = getReachDistance(player);
 		
 		Vector playerPos = Vector.getEyePos(player);
@@ -92,6 +88,33 @@ public class Raytrace {
 			return 5;
 		} else {
 			return AvatarMod.proxy.getPlayerReach();
+		}
+	}
+	
+	/**
+	 * Returns a raytrace over blocks.
+	 * 
+	 * @param world
+	 *            World
+	 * @param start
+	 *            Starting position of raytrace
+	 * @param rotations
+	 *            Euler angles of direction to raytrace, in radians
+	 * @param range
+	 *            How far to raytrace at most
+	 * @param raycastLiquids
+	 *            Whether to keep going when liquids are hit
+	 */
+	public static Result raytrace(World world, Vector start, Vector rotations, double range,
+			boolean raycastLiquids) {
+		
+		RayTraceResult res = world.rayTraceBlocks(start.toMinecraft(),
+				start.plus(rotations.times(range)).toMinecraft(), !raycastLiquids, raycastLiquids, true);
+		
+		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
+			return new Result(new VectorI(res.getBlockPos()), res.sideHit);
+		} else {
+			return new Result();
 		}
 	}
 	
