@@ -154,7 +154,7 @@ public class ClientInput implements IControlsHandler {
 		
 		EntityPlayer player = mc.thePlayer;
 		
-		if (player != null && true) {
+		if (player != null && player.worldObj != null) {
 			// Send any input to the server
 			// AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
 			// Minecraft.getMinecraft().thePlayer);
