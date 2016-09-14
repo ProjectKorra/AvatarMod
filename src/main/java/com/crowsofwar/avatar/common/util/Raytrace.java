@@ -1,12 +1,16 @@
 package com.crowsofwar.avatar.common.util;
 
+import java.util.function.Predicate;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -116,6 +120,26 @@ public class Raytrace {
 		} else {
 			return new Result();
 		}
+	}
+	
+	public static Result advancedRaytrace(World world, Vector start, Vector direction, double range,
+			Predicate<IBlockState> verify) {
+		
+		Vector currentPosition = start.copy();
+		Vector increment = direction.times(0.2);
+		while (currentPosition.sqrDist(start) <= range * range) {
+			
+			BlockPos pos = currentPosition.toBlockPos();
+			IBlockState blockState = world.getBlockState(pos);
+			if (verify.test(blockState)) {
+				return new Result(new VectorI(pos), EnumFacing.DOWN);
+			}
+			
+			currentPosition.add(increment);
+			
+		}
+		return new Result();
+		
 	}
 	
 	public static class Result {

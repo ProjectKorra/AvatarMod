@@ -435,4 +435,9 @@ public class VectorI {
 		return new VectorI(buf.readInt(), buf.readInt(), buf.readInt());
 	}
 	
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ", " + z + ")";
+	}
+	
 }
