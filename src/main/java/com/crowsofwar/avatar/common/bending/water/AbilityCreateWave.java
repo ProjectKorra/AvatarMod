@@ -36,11 +36,8 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 		
 		Vector look = Vector.fromEntityLook(player);
 		look.setY(0);
-		Raytrace.Result result = Raytrace.advancedRaytrace(world, Vector.getEntityPos(player).add(0, -1, 0),
-				look, 4, blockState -> {
-					System.out.println("testing " + blockState.getBlock().getUnlocalizedName());
-					return blockState.getBlock() == Blocks.WATER;
-				});
+		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(player).add(0, -1, 0),
+				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
 			
 			VectorI hitPos = result.getPos();

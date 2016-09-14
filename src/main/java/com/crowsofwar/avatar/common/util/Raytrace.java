@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.util;
 
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.gorecore.util.Vector;
@@ -122,8 +122,24 @@ public class Raytrace {
 		}
 	}
 	
-	public static Result advancedRaytrace(World world, Vector start, Vector direction, double range,
-			Predicate<IBlockState> verify) {
+	/**
+	 * Custom raytrace which allows you to specify a (Bi)Predicate to determine if the block has
+	 * been hit. Unfortunately, this implementation does not correctly report the side hit (always
+	 * is {@link EnumFacing#DOWN}).
+	 * 
+	 * @param world
+	 *            The world
+	 * @param start
+	 *            Starting position to raytrace
+	 * @param direction
+	 *            Normalized vector to specify direction
+	 * @param range
+	 *            How many meters (blocks) to raytrace
+	 * @param verify
+	 *            A BiPredicate used to verify if that block is correct
+	 */
+	public static Result predicateRaytrace(World world, Vector start, Vector direction, double range,
+			BiPredicate<BlockPos, IBlockState> verify) {
 		
 		Vector currentPosition = start.copy();
 		Vector increment = direction.times(0.2);
@@ -131,7 +147,7 @@ public class Raytrace {
 			
 			BlockPos pos = currentPosition.toBlockPos();
 			IBlockState blockState = world.getBlockState(pos);
-			if (verify.test(blockState)) {
+			if (verify.test(pos, blockState)) {
 				return new Result(new VectorI(pos), EnumFacing.DOWN);
 			}
 			
