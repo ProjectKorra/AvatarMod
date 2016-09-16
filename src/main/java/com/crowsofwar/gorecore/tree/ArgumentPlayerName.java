@@ -52,13 +52,14 @@ public class ArgumentPlayerName implements IArgument<String> {
 	@Override
 	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
 		World world = sender.getEntityWorld();
-		
 		List<String> suggestions = new ArrayList<>();
 		
 		world.playerEntities.forEach(player -> {
 			suggestions.add(player.getName());
 		});
 		
+		if (!suggestions.get(0).toLowerCase().startsWith(currentInput.toLowerCase()))
+			return new ArrayList<>();
 		return suggestions;
 	}
 	
