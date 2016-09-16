@@ -105,8 +105,39 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	@Override
-	public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
+	public boolean isUsernameIndex(String[] p_82358_1_, int index) {
 		return false;
+	}
+	
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		return true;
+	}
+	
+	@Override
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender,
+			String[] sentArgs, BlockPos pos) {
+		
+		List<String> emptyList = Arrays.asList();
+		
+		CommandCall call = new CommandCall(sender, sentArgs);
+		ICommandNode node = branchRoot;
+		int nodeIndex = 0;
+		while (node != null) {
+			
+			if (node instanceof NodeBranch) {
+				node = node.execute(call, emptyList);
+				nodeIndex++;
+			} else {
+				IArgument<?>[] nodeArgs = node.getArgumentList();
+				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
+				System.out.println("using arg: " + useArg);
+			}
+			
+		}
+		
+		return emptyList;
+		
 	}
 	
 	private void sendCommandHelp(ICommandSender sender) {
@@ -231,18 +262,6 @@ public abstract class TreeCommand implements ICommand {
 		nodeHelpAccepted = newChatMessage(cfg, "gc.tree.nodeHelp.accepted");
 		nodeHelpAcceptedItem = newChatMessage(cfg, "gc.tree.nodeHelp.accepted.item", "input");
 		
-	}
-	
-	@Override
-	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-		return true;
-	}
-	
-	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
-			BlockPos pos) {
-		// TODO Support Tree Command Tab completion
-		return null;
 	}
 	
 }

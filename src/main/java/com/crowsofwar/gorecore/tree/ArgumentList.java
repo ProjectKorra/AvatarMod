@@ -34,4 +34,8 @@ public class ArgumentList {
 		return (T) argumentValues.get(argument);
 	}
 	
+	public int length() {
+		return argumentValues.size();
+	}
+	
 }

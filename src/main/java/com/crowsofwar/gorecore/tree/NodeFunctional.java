@@ -1,10 +1,12 @@
 package com.crowsofwar.gorecore.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.ChatSender;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentTranslation;
 
 public abstract class NodeFunctional implements ICommandNode {
@@ -56,7 +58,8 @@ public abstract class NodeFunctional implements ICommandNode {
 	@Override
 	public final ICommandNode execute(CommandCall call, List<String> options) {
 		if (options.contains("help")) {
-			call.getFrom().addChatMessage(new TextComponentTranslation("gc.tree.help", getHelp(), getNodeName()));
+			call.getFrom()
+					.addChatMessage(new TextComponentTranslation("gc.tree.help", getHelp(), getNodeName()));
 			return null;
 		} else {
 			return doFunction(call, options);
@@ -68,6 +71,15 @@ public abstract class NodeFunctional implements ICommandNode {
 	@Override
 	public ChatMessage getInfoMessage() {
 		return DEFAULT_INFO;
+	}
+	
+	@Override
+	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput,
+			IArgument<?> argument) {
+		
+		System.out.println("Functional completion suggestions");
+		return new ArrayList<>();
+		
 	}
 	
 }
