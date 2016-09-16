@@ -249,7 +249,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Sends a packet to update the client with information about this player data.
 	 */
 	public void updateClient() {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && getPlayerEntity() != null) {
 			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getPlayerEntity());
 		}
 	}
