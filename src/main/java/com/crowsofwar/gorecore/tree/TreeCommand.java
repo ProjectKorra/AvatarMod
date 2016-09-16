@@ -120,18 +120,26 @@ public abstract class TreeCommand implements ICommand {
 		
 		List<String> emptyList = Arrays.asList();
 		
+		// Basically, traverse the tree, going up the correct branches
+		// to find the functional node. Then, call getCompletionSuggestions
+		// on that node.
+		
 		CommandCall call = new CommandCall(sender, sentArgs);
 		ICommandNode node = branchRoot;
 		int nodeIndex = 0;
 		while (node != null) {
 			
-			if (node instanceof NodeBranch) {
+			// If it is a branch, keep traversing the tree
+			// Make sure that this isn't the last node (arguments left)
+			if (node instanceof NodeBranch && call.getArgumentsLeft() > 1) {
 				node = node.execute(call, emptyList);
 				nodeIndex++;
 			} else {
 				IArgument<?>[] nodeArgs = node.getArgumentList();
 				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
 				System.out.println("using arg: " + useArg);
+				System.out.println("Currently typed: " + sentArgs[sentArgs.length - 1]);
+				return node.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1], useArg);
 			}
 			
 		}
