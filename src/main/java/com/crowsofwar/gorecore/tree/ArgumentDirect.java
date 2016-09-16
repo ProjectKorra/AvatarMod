@@ -5,6 +5,15 @@ import java.util.List;
 
 import net.minecraft.command.ICommandSender;
 
+/**
+ * An argument that takes direct user input and converts it into a value. This allows all possible
+ * values. Does not support tab completion.
+ * 
+ * @param <T>
+ *            The type of value
+ * 
+ * @author CrowsOfWar
+ */
 public class ArgumentDirect<T> implements IArgument<T> {
 	
 	private final T defaultValue;

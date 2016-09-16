@@ -4,14 +4,39 @@ import java.util.List;
 
 import net.minecraft.command.ICommandSender;
 
+/**
+ * Represents an argument for a command node.
+ * <p>
+ * Is responsible for converting the values of the argument to/from Strings.
+ * 
+ * @param <T>
+ *            Type of the argument
+ * 
+ * @author CrowsOfWar
+ */
 public interface IArgument<T> {
 	
+	/**
+	 * Returns whether this argument can be omitted for the command node to still work.
+	 */
 	boolean isOptional();
 	
+	/**
+	 * Gets the default value of this argument. Null if not optional.
+	 */
 	T getDefaultValue();
 	
+	/**
+	 * Return a value based off of the given input.
+	 * 
+	 * @param input
+	 *            Input string
+	 */
 	T convert(String input);
 	
+	/**
+	 * Get the name of this argument to show up in the help pages
+	 */
 	String getArgumentName();
 	
 	/**

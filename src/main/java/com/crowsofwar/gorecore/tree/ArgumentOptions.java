@@ -8,6 +8,14 @@ import com.crowsofwar.gorecore.tree.TreeCommandException.Reason;
 
 import net.minecraft.command.ICommandSender;
 
+/**
+ * An argument which allows the user to specify one of several values. Supports tab completion.
+ * 
+ * @param <T>
+ *            The type of value
+ * 
+ * @author CrowsOfWar
+ */
 public class ArgumentOptions<T> implements IArgument<T> {
 	
 	private final List<T> options;
