@@ -74,9 +74,22 @@ public class NodeBranch implements ICommandNode {
 	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput,
 			IArgument<?> argument) {
 		
-		System.out.println("Tab completion for branch...");
 		List<String> out = new ArrayList<>();
 		Arrays.asList(nodes).forEach(node -> out.add(node.getNodeName()));
+		
+		out.sort((String str1, String str2) -> {
+			// See if any string starts with current input
+			if (!currentInput.isEmpty() && str1.startsWith(currentInput)) return -1;
+			if (!currentInput.isEmpty() && str2.startsWith(currentInput)) return 1;
+			// Otherwise, just sort alphabetically
+			return str1.compareTo(str2);
+		});
+		
+		// Make sure that there are tab completions for what user has typed so far
+		// If not, don't give any suggestions
+		if (!out.get(0).startsWith(currentInput)) {
+			return new ArrayList<>();
+		}
 		
 		return out;
 	}
