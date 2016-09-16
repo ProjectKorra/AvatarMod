@@ -15,15 +15,26 @@ public interface IArgument<T> {
 	String getArgumentName();
 	
 	/**
-	 * Format the argument into a user-friendly help string. e.g. &lt;ON|OFF>
+	 * Format the argument to show the accepted values of the argument. e.g. &lt;ON|OFF>
 	 */
 	String getHelpString();
 	
 	/**
-	 * Let the user know that the argument is there. e.g. [duration]
+	 * Show a description of what this argument represents. e.g. [duration]
 	 */
 	String getSpecificationString();
 	
+	/**
+	 * Gets a list of tab completion suggestions while the player is typing an argument. The first
+	 * item on the list is the item which will be auto-completed.
+	 * <p>
+	 * If there are no suggestions, returns an empty list (doesn't returns null).
+	 * 
+	 * @param sender
+	 *            Player who is typing the message
+	 * @param currentInput
+	 *            What is typed so far for the argument
+	 */
 	List<String> getCompletionSuggestions(ICommandSender sender, String currentInput);
 	
 }

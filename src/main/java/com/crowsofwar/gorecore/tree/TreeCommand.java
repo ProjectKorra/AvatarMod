@@ -137,11 +137,8 @@ public abstract class TreeCommand implements ICommand {
 			} else {
 				IArgument<?>[] nodeArgs = node.getArgumentList();
 				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
-				System.out.println("using arg: " + useArg);
-				System.out.println("Currently typed: " + sentArgs[sentArgs.length - 1]);
-				// return node.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1],
-				// useArg);
-				return useArg.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1]);
+				return nodeArgs[sentArgs.length - 1 - nodeIndex].getCompletionSuggestions(sender,
+						sentArgs[sentArgs.length - 1]);
 			}
 			
 		}
