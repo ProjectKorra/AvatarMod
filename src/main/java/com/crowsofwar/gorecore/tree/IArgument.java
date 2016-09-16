@@ -1,5 +1,9 @@
 package com.crowsofwar.gorecore.tree;
 
+import java.util.List;
+
+import net.minecraft.command.ICommandSender;
+
 public interface IArgument<T> {
 	
 	boolean isOptional();
@@ -19,5 +23,7 @@ public interface IArgument<T> {
 	 * Let the user know that the argument is there. e.g. [duration]
 	 */
 	String getSpecificationString();
+	
+	List<String> getCompletionSuggestions(ICommandSender sender, String currentInput);
 	
 }

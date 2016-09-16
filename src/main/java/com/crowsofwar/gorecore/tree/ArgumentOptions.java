@@ -1,9 +1,12 @@
 package com.crowsofwar.gorecore.tree;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.crowsofwar.gorecore.tree.TreeCommandException.Reason;
+
+import net.minecraft.command.ICommandSender;
 
 public class ArgumentOptions<T> implements IArgument<T> {
 	
@@ -63,6 +66,28 @@ public class ArgumentOptions<T> implements IArgument<T> {
 		String start = isOptional() ? "[" : "<";
 		String end = isOptional() ? "]" : ">";
 		return start + getArgumentName() + end;
+	}
+	
+	@Override
+	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
+		List<String> out = new ArrayList<>();
+		options.forEach(option -> out.add(convert.toString(option)));
+		
+		out.sort((String str1, String str2) -> {
+			// See if any string starts with current input
+			if (!currentInput.isEmpty() && str1.startsWith(currentInput)) return -1;
+			if (!currentInput.isEmpty() && str2.startsWith(currentInput)) return 1;
+			// Otherwise, just sort alphabetically
+			return str1.compareTo(str2);
+		});
+		
+		// Make sure that there are tab completions for what user has typed so far
+		// If not, don't give any suggestions
+		if (!out.get(0).startsWith(currentInput)) {
+			return new ArrayList<>();
+		}
+		
+		return out;
 	}
 	
 }

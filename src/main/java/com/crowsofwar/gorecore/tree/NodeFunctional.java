@@ -1,6 +1,5 @@
 package com.crowsofwar.gorecore.tree;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
@@ -78,7 +77,7 @@ public abstract class NodeFunctional implements ICommandNode {
 			IArgument<?> argument) {
 		
 		System.out.println("Functional completion suggestions");
-		return new ArrayList<>();
+		return argument.getCompletionSuggestions(sender, currentInput);
 		
 	}
 	

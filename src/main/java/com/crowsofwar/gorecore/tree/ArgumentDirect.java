@@ -1,5 +1,10 @@
 package com.crowsofwar.gorecore.tree;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.command.ICommandSender;
+
 public class ArgumentDirect<T> implements IArgument<T> {
 	
 	private final T defaultValue;
@@ -48,6 +53,11 @@ public class ArgumentDirect<T> implements IArgument<T> {
 		String before = isOptional() ? "[" : "<";
 		String after = isOptional() ? "]" : ">";
 		return before + getArgumentName() + after;
+	}
+	
+	@Override
+	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
+		return new ArrayList<>();
 	}
 	
 }
