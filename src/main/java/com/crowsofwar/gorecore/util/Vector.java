@@ -63,7 +63,7 @@ public class Vector {
 	 *            Vector to copy
 	 */
 	public Vector(Vector vec) {
-		this(vec.x(), vec.y(), vec.z());
+		set(vec);
 		this.cachedMagnitude = vec.cachedMagnitude;
 	}
 	
