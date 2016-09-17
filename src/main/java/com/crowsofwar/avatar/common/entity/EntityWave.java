@@ -25,6 +25,12 @@ public class EntityWave extends Entity {
 	@Override
 	public void onUpdate() {
 		
+		Vector move = velocity().dividedBy(20);
+		Vector newPos = getVecPosition().add(move);
+		setPosition(newPos.x(), newPos.y(), newPos.z());
+		
+		System.out.println(motionX);
+		
 		if (ticksExisted > 70) setDead();
 		
 	}
