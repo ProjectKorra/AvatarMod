@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
@@ -43,6 +44,11 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 			VectorI hitPos = result.getPos();
 			IBlockState hitBlockState = world.getBlockState(hitPos.toBlockPos());
 			System.out.println("Wave hit at " + hitPos);
+			
+			EntityWave wave = new EntityWave(world);
+			wave.velocity().set(look);
+			wave.setPosition(hitPos.x(), hitPos.y(), hitPos.z());
+			world.spawnEntityInWorld(wave);
 			
 		}
 		

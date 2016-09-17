@@ -17,6 +17,7 @@ public class BackedVector extends Vector {
 	 */
 	public BackedVector(Consumer<Vector> onChanged) {
 		this.onChanged = onChanged;
+		System.out.println("Set onChanged to " + onChanged);
 	}
 	
 	@Override

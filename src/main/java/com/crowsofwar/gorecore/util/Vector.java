@@ -39,7 +39,7 @@ public class Vector {
 	 * Creates a new vector at the origin point.
 	 */
 	public Vector() {
-		this(0, 0, 0);
+		
 	}
 	
 	/**
