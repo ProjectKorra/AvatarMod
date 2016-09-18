@@ -14,22 +14,21 @@ public class EntityWave extends Entity {
 	
 	public EntityWave(World world) {
 		super(world);
-		this.internalVelocity = new BackedVector(vec -> {
-			this.motionX = vec.x() / 20;
-			this.motionY = vec.y() / 20;
-			this.motionZ = vec.z() / 20;
-		});
+		//@formatter:off
+		this.internalVelocity = new BackedVector(x -> motionX = x * 20, y -> motionY = y * 20, z -> motionZ = z * 20,
+				() -> motionX / 20, () -> motionY / 20, () -> motionZ / 20);
 		this.internalPosition = new Vector();
 	}
 	
 	@Override
 	public void onUpdate() {
 		
-		Vector move = velocity().dividedBy(20);
+		Vector move = velocity();
 		Vector newPos = getVecPosition().add(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
 		
-		System.out.println(motionX);
+//		System.out.println("Velocity is: " + velocity());
+		System.out.println("MotionX is: " + motionX);
 		
 		if (ticksExisted > 70) setDead();
 		

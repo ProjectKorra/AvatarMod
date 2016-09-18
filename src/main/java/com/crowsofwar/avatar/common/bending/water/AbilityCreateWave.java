@@ -47,6 +47,7 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 			
 			EntityWave wave = new EntityWave(world);
 			wave.velocity().set(look);
+			System.out.println("set velocity to " + look);
 			wave.setPosition(hitPos.x(), hitPos.y(), hitPos.z());
 			world.spawnEntityInWorld(wave);
 			

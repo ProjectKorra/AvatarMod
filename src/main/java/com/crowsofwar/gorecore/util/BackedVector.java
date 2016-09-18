@@ -1,52 +1,89 @@
 package com.crowsofwar.gorecore.util;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * A vector which is adds Consumers in a way that allows clients to create a view of another vector.
+ * <p>
+ * In a backed vector, the vector's fields x, y, and z have become obsolete. Instead, functions
+ * provide the x, y, and z when they are retrieved, and enact necessary behavior when the components
+ * are set.
  * 
  * @author CrowsOfWar
  */
 public class BackedVector extends Vector {
 	
-	private final Consumer<Vector> onChanged;
+	private final Consumer<Double> setX, setY, setZ;
+	private final Supplier<Double> getX, getY, getZ;
 	
 	/**
-	 * @param onGet
-	 * @param onChanged
+	 * Create a backed vector.
+	 * 
+	 * @param setX
+	 *            Called when X was set. Use this to modify the underlying vector.
+	 * @param setY
+	 *            Called when Y was set. Use this to modify the underlying vector.
+	 * @param setZ
+	 *            Called when Z was set. Use this to modify the underlying vector.
+	 * @param getX
+	 *            Called to retrieve the x-value of the vector
+	 * @param getY
+	 *            Called to retrieve the y-value of the vector
+	 * @param getZ
+	 *            Called to retrieve the z-value of the vector
 	 */
-	public BackedVector(Consumer<Vector> onChanged) {
-		this.onChanged = onChanged;
-		System.out.println("Set onChanged to " + onChanged);
+	public BackedVector(Consumer<Double> setX, Consumer<Double> setY, Consumer<Double> setZ,
+			Supplier<Double> getX, Supplier<Double> getY, Supplier<Double> getZ) {
+		this.setX = setX;
+		this.setY = setY;
+		this.setZ = setZ;
+		this.getX = getX;
+		this.getY = getY;
+		this.getZ = getZ;
+	}
+	
+	@Override
+	public double x() {
+		return getX.get();
+	}
+	
+	@Override
+	public double y() {
+		return getY.get();
+	}
+	
+	@Override
+	public double z() {
+		return getZ.get();
 	}
 	
 	@Override
 	public Vector setX(double x) {
 		super.setX(x);
-		onChanged.accept(this);
+		setX.accept(x);
 		return this;
 	}
 	
 	@Override
 	public Vector setY(double y) {
 		super.setY(y);
-		onChanged.accept(this);
+		setY.accept(y);
 		return this;
 	}
 	
 	@Override
 	public Vector setZ(double z) {
 		super.setZ(z);
-		onChanged.accept(this);
+		setZ.accept(z);
 		return this;
 	}
 	
 	@Override
 	public Vector set(double x, double y, double z) {
-		super.setX(x);
-		super.setY(y);
-		super.setZ(z);
-		onChanged.accept(this);
+		setX(x);
+		setY(y);
+		setZ(z);
 		return this;
 	}
 	
