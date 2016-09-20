@@ -4,6 +4,7 @@ import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -30,7 +31,7 @@ public class EntityWave extends Entity {
 //		System.out.println("Velocity is: " + velocity());
 		System.out.println("MotionX is: " + motionX);
 		
-		if (ticksExisted > 70) setDead();
+		if (ticksExisted > 70 || worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) setDead();
 		
 	}
 	
