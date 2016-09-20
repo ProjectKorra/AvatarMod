@@ -28,10 +28,7 @@ public class EntityWave extends Entity {
 		Vector newPos = getVecPosition().add(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
 		
-//		System.out.println("Velocity is: " + velocity());
-		System.out.println("MotionX is: " + motionX);
-		
-		if (ticksExisted > 70 || worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) setDead();
+		if (ticksExisted > 7000 || worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) setDead();
 		
 	}
 	
