@@ -15,8 +15,8 @@ public class EntityWave extends Entity {
 	public EntityWave(World world) {
 		super(world);
 		//@formatter:off
-		this.internalVelocity = new BackedVector(x -> motionX = x * 20, y -> motionY = y * 20, z -> motionZ = z * 20,
-				() -> motionX / 20, () -> motionY / 20, () -> motionZ / 20);
+		this.internalVelocity = new BackedVector(x -> this.motionX = x / 20, y -> this.motionY = y / 20, z -> this.motionZ = z / 20,
+				() -> this.motionX * 20, () -> this.motionY * 20, () -> this.motionZ * 20);
 		this.internalPosition = new Vector();
 	}
 	
