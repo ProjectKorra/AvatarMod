@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -38,6 +39,7 @@ public class EntityWave extends Entity {
 			Vector motion = velocity().dividedBy(20).times(6);
 			motion.setY(0.4);
 			entity.addVelocity(motion.x(), motion.y(), motion.z());
+			entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(this, owner), 9);
 		}
 		if (!collided.isEmpty()) setDead();
 		

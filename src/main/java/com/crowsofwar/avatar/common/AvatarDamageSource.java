@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.EntityWave;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
@@ -51,6 +52,18 @@ public class AvatarDamageSource {
 	 */
 	public static DamageSource causeRavineDamage(EntityRavine ravine, Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_ravine", ravine, owner);
+	}
+	
+	/**
+	 * Create a DamageSource for damage caused by a wave.
+	 * 
+	 * @param wave
+	 *            The wave entity
+	 * @param owner
+	 *            Who created the wave
+	 */
+	public static DamageSource causeWaveDamage(EntityWave wave, Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_wave", wave, owner);
 	}
 	
 }
