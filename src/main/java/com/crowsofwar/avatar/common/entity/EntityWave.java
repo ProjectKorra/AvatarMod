@@ -6,6 +6,7 @@ import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -14,6 +15,8 @@ public class EntityWave extends Entity {
 	
 	private final Vector internalVelocity;
 	private final Vector internalPosition;
+	
+	private EntityPlayer owner;
 	
 	public EntityWave(World world) {
 		super(world);
@@ -47,10 +50,14 @@ public class EntityWave extends Entity {
 	}
 	
 	/**
-	 * Get velocity in m/s. Any modifications to this vector will modify the actual velocity.
+	 * Get velocity in m/s. Any modifications to this vector will modify the entity motion fields.
 	 */
 	public Vector velocity() {
 		return internalVelocity;
+	}
+	
+	public void setOwner(EntityPlayer owner) {
+		this.owner = owner;
 	}
 	
 	@Override
