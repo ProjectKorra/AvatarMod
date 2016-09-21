@@ -25,6 +25,9 @@ public class EntityWave extends Entity {
 		this.internalVelocity = new BackedVector(x -> this.motionX = x / 20, y -> this.motionY = y / 20, z -> this.motionZ = z / 20,
 				() -> this.motionX * 20, () -> this.motionY * 20, () -> this.motionZ * 20);
 		this.internalPosition = new Vector();
+		
+		setSize(2f, 2);
+		
 	}
 	
 	@Override
@@ -34,14 +37,17 @@ public class EntityWave extends Entity {
 		Vector newPos = getVecPosition().add(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
 		
-		List<Entity> collided = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
-		for (Entity entity : collided) {
-			Vector motion = velocity().dividedBy(20).times(6);
-			motion.setY(0.4);
-			entity.addVelocity(motion.x(), motion.y(), motion.z());
-			entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(this, owner), 9);
+		if (!worldObj.isRemote) {
+			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
+			for (Entity entity : collided) {
+				System.out.println("Entity " + entity);
+				Vector motion = velocity().dividedBy(20).times(6);
+				motion.setY(0.4);
+				entity.addVelocity(motion.x(), motion.y(), motion.z());
+				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(this, owner), 9);
+			}
+			if (!collided.isEmpty()) setDead();
 		}
-		if (!collided.isEmpty()) setDead();
 		
 		if (ticksExisted > 7000 || worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) setDead();
 		
