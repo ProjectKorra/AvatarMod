@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -27,6 +29,14 @@ public class EntityWave extends Entity {
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = getVecPosition().add(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
+		
+		List<Entity> collided = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
+		for (Entity entity : collided) {
+			Vector motion = velocity().dividedBy(20).times(6);
+			motion.setY(0.4);
+			entity.addVelocity(motion.x(), motion.y(), motion.z());
+		}
+		if (!collided.isEmpty()) setDead();
 		
 		if (ticksExisted > 7000 || worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) setDead();
 		
