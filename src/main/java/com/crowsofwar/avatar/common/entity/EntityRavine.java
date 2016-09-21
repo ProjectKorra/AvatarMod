@@ -138,7 +138,7 @@ public class EntityRavine extends Entity implements IPhysics {
 								.post(new RavineEvent.HitEntity(this, entity));
 						
 						entity.addVelocity(velocity.x() / 4, 1, velocity.z() / 4);
-						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(this, entity), 5);
+						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(this, owner), 5);
 					}
 				}
 			}

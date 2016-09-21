@@ -212,7 +212,7 @@ public abstract class FloatingBlockBehavior {
 						double speed = floating.getVelocity().magnitude();
 						double multiplier = 0.25;
 						collided.attackEntityFrom(
-								AvatarDamageSource.causeFloatingBlockDamage(floating, collided),
+								AvatarDamageSource.causeFloatingBlockDamage(floating, floating.getOwner()),
 								(float) (speed * multiplier));
 						
 						Vector motion = new Vector(collided).minus(new Vector(floating));
