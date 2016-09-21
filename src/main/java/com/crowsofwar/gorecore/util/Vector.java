@@ -500,28 +500,64 @@ public class Vector {
 	}
 	
 	/**
-	 * Converts this vector into a minecraft vector.
+	 * <strong>Assuming</strong> this vector represents spherical coordinates (in radians), returns
+	 * a unit vector in Cartesian space which has the rotations of this vector.
+	 * <p>
+	 * Does not modify this vector.
+	 */
+	public Vector toRectangular() {
+		return Vector.fromDirection(this);
+	}
+	
+	/**
+	 * <strong>Assuming</strong> this vector represents rectangular coordinates, returns the
+	 * rotations (in radians) for this vector.
+	 * <p>
+	 * Does not modify this vector.
+	 */
+	public Vector toSpherical() {
+		return Vector.getRotations(Vector.ZERO, this);
+	}
+	
+	/**
+	 * <strong>Assuming</strong> this vector represents spherical coordinates in degrees, returns a
+	 * new spherical coordinate vector which is in radians.
+	 */
+	public Vector toRadians() {
+		return new Vector(Math.toRadians(x()), Math.toRadians(y()), Math.toRadians(z()));
+	}
+	
+	/**
+	 * <strong>Assuming</strong> this vector represents spherical coordinates in radians, returns a
+	 * new spherical coordinate vector which is in degrees.
+	 */
+	public Vector toDegrees() {
+		return new Vector(Math.toDegrees(x()), Math.toDegrees(y()), Math.toDegrees(z()));
+	}
+	
+	/**
+	 * Returns a minecraft vector with the same coordinates as this vector.
 	 */
 	public Vec3d toMinecraft() {
 		return new Vec3d(x(), y(), z());
 	}
 	
 	/**
-	 * Convert this vector to an integer vector by rounding each component.
+	 * Returns an integer vector of this vector by rounding each component.
 	 */
 	public VectorI round() {
 		return new VectorI((int) Math.round(x()), (int) Math.round(y()), (int) Math.round(z()));
 	}
 	
 	/**
-	 * Convert this vector to an integer vector by casting each component to an integer.
+	 * Returns an integer vector of this vector by casting each component to an integer.
 	 */
 	public VectorI cast() {
 		return new VectorI((int) x(), (int) y(), (int) z());
 	}
 	
 	/**
-	 * Convert this vector to a BlockPos.
+	 * Returns a BlockPos with the same coordinates as this vector.
 	 */
 	public BlockPos toBlockPos() {
 		return cast().toBlockPos();
