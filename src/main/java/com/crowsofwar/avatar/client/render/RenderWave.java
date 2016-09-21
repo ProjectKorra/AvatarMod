@@ -47,9 +47,10 @@ public class RenderWave extends Render<EntityWave> {
 		// Please see notebook for diagrams
 		
 		Matrix4f matrix = new Matrix4f();
-		matrix.translate(fx, fy, fz);
+		matrix.translate(fx, fy + 1, fz);
 		matrix.rotate((float) Math.toRadians(entity.rotationYaw), 0, -1, 0);
 		matrix.translate(-entity.width / 1, 0, -entity.width / 2);
+		matrix.scale(1, 0.5f, 1);
 		
 		Vector4f a = new Vector4f(1, 1, 0.5f, 1).mul(matrix);
 		Vector4f b = new Vector4f(0, 1, 0.5f, 1).mul(matrix);
