@@ -1,12 +1,16 @@
 package com.crowsofwar.avatar.common.util;
 
+import java.util.function.BiPredicate;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -116,6 +120,42 @@ public class Raytrace {
 		} else {
 			return new Result();
 		}
+	}
+	
+	/**
+	 * Custom raytrace which allows you to specify a (Bi)Predicate to determine if the block has
+	 * been hit. Unfortunately, this implementation does not correctly report the side hit (always
+	 * is {@link EnumFacing#DOWN}).
+	 * 
+	 * @param world
+	 *            The world
+	 * @param start
+	 *            Starting position to raytrace
+	 * @param direction
+	 *            Normalized vector to specify direction
+	 * @param range
+	 *            How many meters (blocks) to raytrace
+	 * @param verify
+	 *            A BiPredicate used to verify if that block is correct
+	 */
+	public static Result predicateRaytrace(World world, Vector start, Vector direction, double range,
+			BiPredicate<BlockPos, IBlockState> verify) {
+		
+		Vector currentPosition = start.copy();
+		Vector increment = direction.times(0.2);
+		while (currentPosition.sqrDist(start) <= range * range) {
+			
+			BlockPos pos = currentPosition.toBlockPos();
+			IBlockState blockState = world.getBlockState(pos);
+			if (verify.test(pos, blockState)) {
+				return new Result(new VectorI(pos), EnumFacing.DOWN);
+			}
+			
+			currentPosition.add(increment);
+			
+		}
+		return new Result();
+		
 	}
 	
 	public static class Result {

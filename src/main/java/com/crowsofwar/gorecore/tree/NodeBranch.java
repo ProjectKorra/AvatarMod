@@ -19,7 +19,8 @@ public class NodeBranch implements ICommandNode {
 		String[] possibilities = new String[nodes.length];
 		for (int i = 0; i < possibilities.length; i++)
 			possibilities[i] = nodes[i].getNodeName();
-		this.argName = new ArgumentOptions<String>(ITypeConverter.CONVERTER_STRING, "node-name", possibilities);
+		this.argName = new ArgumentOptions<String>(ITypeConverter.CONVERTER_STRING, "node-name",
+				possibilities);
 		this.args = new IArgument<?>[] { argName };
 		this.name = name;
 		this.infoMessage = infoMessage;

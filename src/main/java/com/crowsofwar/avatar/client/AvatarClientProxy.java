@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.client;
 
+import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.controls.ClientInput;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
@@ -11,6 +13,7 @@ import com.crowsofwar.avatar.client.render.RenderFlames;
 import com.crowsofwar.avatar.client.render.RenderFloatingBlock;
 import com.crowsofwar.avatar.client.render.RenderRavine;
 import com.crowsofwar.avatar.client.render.RenderWaterArc;
+import com.crowsofwar.avatar.client.render.RenderWave;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
@@ -22,6 +25,7 @@ import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.gui.IAvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
@@ -31,12 +35,10 @@ import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -63,14 +65,15 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 		});
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityFloatingBlock.class, RenderFloatingBlock::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFireArc.class, RenderFireArc::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityWaterArc.class, RenderWaterArc::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityControlPoint.class, RenderControlPoint::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityRavine.class, RenderRavine::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFlames.class,
-				(RenderManager rm) -> new RenderFlames(rm, new ClientParticleSpawner()));
+		registerEntityRenderingHandler(EntityFloatingBlock.class, RenderFloatingBlock::new);
+		registerEntityRenderingHandler(EntityFireArc.class, RenderFireArc::new);
+		registerEntityRenderingHandler(EntityWaterArc.class, RenderWaterArc::new);
+		registerEntityRenderingHandler(EntityControlPoint.class, RenderControlPoint::new);
+		registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
+		registerEntityRenderingHandler(EntityRavine.class, RenderRavine::new);
+		registerEntityRenderingHandler(EntityFlames.class,
+				rm -> new RenderFlames(rm, new ClientParticleSpawner()));
+		registerEntityRenderingHandler(EntityWave.class, RenderWave::new);
 		
 	}
 	

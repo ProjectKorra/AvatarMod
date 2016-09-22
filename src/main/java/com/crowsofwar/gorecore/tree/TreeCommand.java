@@ -105,8 +105,46 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	@Override
-	public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
+	public boolean isUsernameIndex(String[] p_82358_1_, int index) {
 		return false;
+	}
+	
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		return true;
+	}
+	
+	@Override
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender,
+			String[] sentArgs, BlockPos pos) {
+		
+		List<String> emptyList = Arrays.asList();
+		
+		// Basically, traverse the tree, going up the correct branches
+		// to find the functional node. Then, call getCompletionSuggestions
+		// on that node.
+		
+		CommandCall call = new CommandCall(sender, sentArgs);
+		ICommandNode node = branchRoot;
+		int nodeIndex = 0;
+		while (node != null) {
+			
+			// If it is a branch, keep traversing the tree
+			// Make sure that this isn't the last node (arguments left)
+			if (node instanceof NodeBranch && call.getArgumentsLeft() > 1) {
+				node = node.execute(call, emptyList);
+				nodeIndex++;
+			} else {
+				IArgument<?>[] nodeArgs = node.getArgumentList();
+				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
+				return nodeArgs[sentArgs.length - 1 - nodeIndex].getCompletionSuggestions(sender,
+						sentArgs[sentArgs.length - 1]);
+			}
+			
+		}
+		
+		return emptyList;
+		
 	}
 	
 	private void sendCommandHelp(ICommandSender sender) {
@@ -231,18 +269,6 @@ public abstract class TreeCommand implements ICommand {
 		nodeHelpAccepted = newChatMessage(cfg, "gc.tree.nodeHelp.accepted");
 		nodeHelpAcceptedItem = newChatMessage(cfg, "gc.tree.nodeHelp.accepted.item", "input");
 		
-	}
-	
-	@Override
-	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-		return true;
-	}
-	
-	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
-			BlockPos pos) {
-		// TODO Support Tree Command Tab completion
-		return null;
 	}
 	
 }

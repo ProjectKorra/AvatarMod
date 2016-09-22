@@ -4,16 +4,15 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
 import com.crowsofwar.gorecore.tree.ArgumentOptions;
+import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
 import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.IArgument;
 import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 
 import net.minecraft.command.ICommandSender;
@@ -27,9 +26,9 @@ public class NodeBendingRemove extends NodeFunctional {
 	public NodeBendingRemove() {
 		super("remove", true);
 		
-		this.argPlayerName = new ArgumentDirect<String>("player", ITypeConverter.CONVERTER_STRING);
-		this.argBendingController = new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING, "bending",
-				BendingManager.allBending().toArray(new BendingController[0]));
+		this.argPlayerName = new ArgumentPlayerName("player");
+		this.argBendingController = new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING,
+				"bending", BendingManager.allBending().toArray(new BendingController[0]));
 		
 		this.addArguments(argPlayerName, argBendingController);
 		

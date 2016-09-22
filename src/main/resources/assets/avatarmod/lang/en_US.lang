@@ -34,3 +34,5 @@ avatar.cmd.bending.remove.success=[bold]Took [color=value][translate=avatar.${be
 
 death.attack.avatar_earthbendBlock=%1$s smashed %2$s with earthbending
 death.attack.avatar_waterArc=%2$s used waterbending to bring down %1$s
+death.attack.avatar_ravine=%2$s crushed %1$s in a ravine
+death.attack.avatar_wave=%1$s can't surf

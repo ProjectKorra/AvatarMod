@@ -39,7 +39,7 @@ public class Vector {
 	 * Creates a new vector at the origin point.
 	 */
 	public Vector() {
-		this(0, 0, 0);
+		
 	}
 	
 	/**
@@ -53,10 +53,7 @@ public class Vector {
 	 *            Z-position of the new vector
 	 */
 	public Vector(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		recalcMagnitude();
+		set(x, y, z);
 	}
 	
 	/**
@@ -66,7 +63,7 @@ public class Vector {
 	 *            Vector to copy
 	 */
 	public Vector(Vector vec) {
-		this(vec.x, vec.y, vec.z);
+		set(vec);
 		this.cachedMagnitude = vec.cachedMagnitude;
 	}
 	
@@ -116,9 +113,16 @@ public class Vector {
 		return x;
 	}
 	
-	public void setX(double x) {
+	/**
+	 * Set the x-coordinate of this vector. Returns <code>this</code> for method chaining.
+	 * 
+	 * @param x
+	 *            X-coordinate
+	 */
+	public Vector setX(double x) {
 		this.x = x;
 		recalcMagnitude();
+		return this;
 	}
 	
 	/**
@@ -128,9 +132,16 @@ public class Vector {
 		return y;
 	}
 	
-	public void setY(double y) {
+	/**
+	 * Set the y-coordinate of this vector. Returns <code>this</code> for method chaining.
+	 * 
+	 * @param y
+	 *            Y-coordinate
+	 */
+	public Vector setY(double y) {
 		this.y = y;
 		recalcMagnitude();
+		return this;
 	}
 	
 	/**
@@ -140,9 +151,16 @@ public class Vector {
 		return z;
 	}
 	
-	public void setZ(double z) {
+	/**
+	 * Set the z-coordinate of this vector. Returns <code>this</code> for method chaining.
+	 * 
+	 * @param z
+	 *            Z-coordinate
+	 */
+	public Vector setZ(double z) {
 		this.z = z;
 		recalcMagnitude();
+		return this;
 	}
 	
 	/**
@@ -171,7 +189,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector set(Vector vec) {
-		set(vec.x, vec.y, vec.z);
+		set(vec.x(), vec.y(), vec.z());
 		return this;
 	}
 	
@@ -190,7 +208,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector add(Vector vec) {
-		return add(vec.x, vec.y, vec.z);
+		return add(vec.x(), vec.y(), vec.z());
 	}
 	
 	/**
@@ -205,7 +223,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector add(double x, double y, double z) {
-		return set(this.x + x, this.y + y, this.z + z);
+		return set(this.x() + x, this.y() + y, this.z() + z);
 	}
 	
 	/**
@@ -215,7 +233,7 @@ public class Vector {
 	 *            Vector for sum
 	 */
 	public Vector plus(Vector vec) {
-		return plus(vec.x, vec.y, vec.z);
+		return plus(vec.x(), vec.y(), vec.z());
 	}
 	
 	/**
@@ -240,7 +258,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector subtract(Vector vec) {
-		return subtract(vec.x, vec.y, vec.z);
+		return subtract(vec.x(), vec.y(), vec.z());
 	}
 	
 	/**
@@ -255,7 +273,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector subtract(double x, double y, double z) {
-		return set(this.x - x, this.y - y, this.z - z);
+		return set(this.x() - x, this.y() - y, this.z() - z);
 	}
 	
 	/**
@@ -265,7 +283,7 @@ public class Vector {
 	 *            Other vector
 	 */
 	public Vector minus(Vector vec) {
-		return minus(vec.x, vec.y, vec.z);
+		return minus(vec.x(), vec.y(), vec.z());
 	}
 	
 	/**
@@ -291,7 +309,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector mul(double scalar) {
-		return set(x * scalar, y * scalar, z * scalar);
+		return set(x() * scalar, y() * scalar, z() * scalar);
 	}
 	
 	/**
@@ -312,7 +330,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector divide(double scalar) {
-		return set(x / scalar, y / scalar, z / scalar);
+		return set(x() / scalar, y() / scalar, z() / scalar);
 	}
 	
 	/**
@@ -341,7 +359,7 @@ public class Vector {
 	 * Get the square magnitude of this vector.
 	 */
 	public double sqrMagnitude() {
-		return x * x + y * y + z * z;
+		return x() * x() + y() * y() + z() * z();
 	}
 	
 	/**
@@ -367,7 +385,7 @@ public class Vector {
 	 *            The other vector
 	 */
 	public double sqrDist(Vector vec) {
-		return sqrDist(vec.x, vec.y, vec.z);
+		return sqrDist(vec.x(), vec.y(), vec.z());
 	}
 	
 	/**
@@ -381,7 +399,8 @@ public class Vector {
 	 *            The z-position of the other vector
 	 */
 	public double sqrDist(double x, double y, double z) {
-		return (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y) + (this.z - z) * (this.z - z);
+		return (this.x() - x) * (this.x() - x) + (this.y() - y) * (this.y() - y)
+				+ (this.z() - z) * (this.z() - z);
 	}
 	
 	/**
@@ -415,7 +434,7 @@ public class Vector {
 	 *            The other vector
 	 */
 	public double dot(Vector vec) {
-		return dot(vec.x, vec.y, vec.z);
+		return dot(vec.x(), vec.y(), vec.z());
 	}
 	
 	/**
@@ -429,7 +448,7 @@ public class Vector {
 	 *            Z-coordinate of the other vector
 	 */
 	public double dot(double x, double y, double z) {
-		return this.x * x + this.y * y + this.z * z;
+		return this.x() * x + this.y() * y + this.z() * z;
 	}
 	
 	/**
@@ -439,7 +458,7 @@ public class Vector {
 	 *            The vector to cross with
 	 */
 	public Vector cross(Vector vec) {
-		return cross(vec.x, vec.y, vec.z);
+		return cross(vec.x(), vec.y(), vec.z());
 	}
 	
 	/**
@@ -453,7 +472,8 @@ public class Vector {
 	 *            Z-coordinate of other vector
 	 */
 	public Vector cross(double x, double y, double z) {
-		return new Vector(this.y * z - this.z * y, this.z * x - this.x * z, this.x * y - this.y * x);
+		return new Vector(this.y() * z - this.z() * y, this.z() * x - this.x() * z,
+				this.x() * y - this.y() * x);
 	}
 	
 	/**
@@ -480,28 +500,64 @@ public class Vector {
 	}
 	
 	/**
-	 * Converts this vector into a minecraft vector.
+	 * <strong>Assuming</strong> this vector represents spherical coordinates (in radians), returns
+	 * a unit vector in Cartesian space which has the rotations of this vector.
+	 * <p>
+	 * Does not modify this vector.
 	 */
-	public Vec3d toMinecraft() {
-		return new Vec3d(x, y, z);
+	public Vector toRectangular() {
+		return Vector.fromDirection(this);
 	}
 	
 	/**
-	 * Convert this vector to an integer vector by rounding each component.
+	 * <strong>Assuming</strong> this vector represents rectangular coordinates, returns the
+	 * rotations (in radians) for this vector.
+	 * <p>
+	 * Does not modify this vector.
+	 */
+	public Vector toSpherical() {
+		return Vector.getRotations(Vector.ZERO, this);
+	}
+	
+	/**
+	 * <strong>Assuming</strong> this vector represents spherical coordinates in degrees, returns a
+	 * new spherical coordinate vector which is in radians.
+	 */
+	public Vector toRadians() {
+		return new Vector(Math.toRadians(x()), Math.toRadians(y()), Math.toRadians(z()));
+	}
+	
+	/**
+	 * <strong>Assuming</strong> this vector represents spherical coordinates in radians, returns a
+	 * new spherical coordinate vector which is in degrees.
+	 */
+	public Vector toDegrees() {
+		return new Vector(Math.toDegrees(x()), Math.toDegrees(y()), Math.toDegrees(z()));
+	}
+	
+	/**
+	 * Returns a minecraft vector with the same coordinates as this vector.
+	 */
+	public Vec3d toMinecraft() {
+		return new Vec3d(x(), y(), z());
+	}
+	
+	/**
+	 * Returns an integer vector of this vector by rounding each component.
 	 */
 	public VectorI round() {
 		return new VectorI((int) Math.round(x()), (int) Math.round(y()), (int) Math.round(z()));
 	}
 	
 	/**
-	 * Convert this vector to an integer vector by casting each component to an integer.
+	 * Returns an integer vector of this vector by casting each component to an integer.
 	 */
 	public VectorI cast() {
 		return new VectorI((int) x(), (int) y(), (int) z());
 	}
 	
 	/**
-	 * Convert this vector to a BlockPos.
+	 * Returns a BlockPos with the same coordinates as this vector.
 	 */
 	public BlockPos toBlockPos() {
 		return cast().toBlockPos();
@@ -518,14 +574,14 @@ public class Vector {
 	 *            Buffer to write to
 	 */
 	public void toBytes(ByteBuf buf) {
-		buf.writeDouble(x);
-		buf.writeDouble(y);
-		buf.writeDouble(z);
+		buf.writeDouble(x());
+		buf.writeDouble(y());
+		buf.writeDouble(z());
 	}
 	
 	@Override
 	public String toString() {
-		return "(" + x + ", " + y + ", " + z + ")";
+		return "(" + x() + ", " + y() + ", " + z() + ")";
 	}
 	
 	@Override
@@ -533,7 +589,7 @@ public class Vector {
 		if (obj == null) return false;
 		if (obj instanceof Vector) {
 			Vector vec = (Vector) obj;
-			return this.x == vec.x && this.y == vec.y && this.z == vec.z;
+			return this.x() == vec.x() && this.y() == vec.y() && this.z() == vec.z();
 		} else {
 			return false;
 		}
@@ -556,9 +612,9 @@ public class Vector {
 	public static Vector getRotations(Vector pos1, Vector pos2) {
 		Vector diff = pos2.minus(pos1);
 		diff.normalize();
-		double x = diff.x;
-		double y = diff.y;
-		double z = diff.z;
+		double x = diff.x();
+		double y = diff.y();
+		double z = diff.z();
 		double d0 = x;
 		double d1 = y;
 		double d2 = z;
@@ -575,7 +631,7 @@ public class Vector {
 	
 	public static Vector getEyePos(Entity entity) {
 		Vector pos = getEntityPos(entity);
-		pos.setY(pos.y + entity.getEyeHeight());
+		pos.setY(pos.y() + entity.getEyeHeight());
 		return pos;
 	}
 	
@@ -620,7 +676,7 @@ public class Vector {
 	 * Create a unit vector from the given euler angles. Measurements should be in radians.
 	 */
 	public static Vector fromDirection(Vector euler) {
-		return fromYawPitch(euler.y, euler.x);
+		return fromYawPitch(euler.y(), euler.x());
 	}
 	
 	/**

@@ -5,12 +5,11 @@ import java.util.List;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
+import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
 import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.IArgument;
 import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 
 import net.minecraft.command.ICommandSender;
@@ -22,7 +21,7 @@ public class NodeBendingList extends NodeFunctional {
 	
 	public NodeBendingList() {
 		super("list", true);
-		this.argPlayerName = new ArgumentDirect<String>("player", ITypeConverter.CONVERTER_STRING);
+		this.argPlayerName = new ArgumentPlayerName("player");
 		addArguments(argPlayerName);
 	}
 	
@@ -35,7 +34,8 @@ public class NodeBendingList extends NodeFunctional {
 		ArgumentList args = call.popArguments(argPlayerName);
 		String playerName = args.get(argPlayerName);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName, "Retrieving for /avatar bending list");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName,
+				"Retrieving for /avatar bending list");
 		if (data == null) {
 			
 			AvatarChatMessages.MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
