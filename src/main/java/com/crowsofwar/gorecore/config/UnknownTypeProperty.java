@@ -6,8 +6,8 @@ import java.util.Map;
 
 /**
  * Represents a property where the type is unknown. The type must be assumed based on the
- * configuration file. Use {@link #as(ConfigurableFactory)} or a similar method to find the actual
- * value by casting.
+ * configuration file. Use {@link #as(ObjectLoader)} or a similar method to find the actual value by
+ * casting.
  * 
  * @author CrowsOfWar
  */
@@ -21,7 +21,7 @@ public class UnknownTypeProperty {
 		this.object = obj;
 	}
 	
-	public <T> T as(ConfigurableFactory<T> factory) {
+	public <T> T as(ObjectLoader<T> factory) {
 		if (!(object instanceof Map)) throw new ConfigException(name + " isn't a Dictionary");
 		return factory.load(new Configuration((Map) object));
 	}
@@ -56,6 +56,10 @@ public class UnknownTypeProperty {
 	
 	public List<String> asStringList() {
 		return asList(obj -> (String) obj);
+	}
+	
+	public Configuration asMapping() {
+		return new Configuration((Map) object);
 	}
 	
 }

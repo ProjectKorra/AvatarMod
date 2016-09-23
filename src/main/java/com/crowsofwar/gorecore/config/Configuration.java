@@ -9,6 +9,8 @@ import org.yaml.snakeyaml.Yaml;
 /**
  * Represents a configuration, where String keys are mapped to {@link UnknownTypeProperty unknown
  * type values}.
+ * <p>
+ * An instance of Configuration is obtained with {@link #from(String)}.
  * 
  * @author CrowsOfWar
  */
@@ -31,13 +33,32 @@ public class Configuration {
 		return new UnknownTypeProperty(key, map.get(key));
 	}
 	
-	public Configuration inSection(String key) {
+	/**
+	 * Return a configuration instance from a mapping.
+	 * <p>
+	 * 
+	 * <pre>
+	 * spellSize: 4
+	 * commandSettings:
+	 *   commandBlock: true
+	 *   configurationCommand: true
+	 * </pre>
+	 * 
+	 * The following would return commandBlock:
+	 * <code>config.fromMapping("commandSettings").load("commandBlock").asString()</code> The
+	 * following would return commandSettings:
+	 * <code>config.load("commandSettings").asMapping()</code>
+	 * 
+	 * @param key
+	 *            String key to fetch value from
+	 */
+	public Configuration fromMapping(String key) {
 		if (!map.containsKey(key)) throw new IllegalArgumentException("Invalid key: " + key);
 		return new Configuration((Map) map.get(key));
 	}
 	
 	/**
-	 * Load a Configuration instance from the given path.
+	 * Load a Configuration instance from the given file system path.
 	 */
 	public static Configuration from(String path) {
 		
