@@ -22,11 +22,23 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class Configuration {
 	
-	private final Map<String, ?> map;
-	private final List<Configuration> defaults;
+	private Map<String, ?> map;
+	private List<Configuration> defaults;
 	
-	Configuration(Map<String, ?> map) {
+	Configuration(Object obj) {
+		if (obj instanceof Map) {
+			construct((Map) obj);
+		} else if (obj instanceof String) {
+			System.out.println(obj);
+			
+		} else {
+			System.out.println("WHAT TYPE IS THIS?? " + obj);
+		}
+	}
+	
+	private void construct(Map<String, ?> map) {
 		this.map = map;
+		System.out.println("Set map to " + map);
 		this.defaults = new ArrayList<>();
 	}
 	
@@ -94,7 +106,7 @@ public class Configuration {
 			BufferedReader br = new BufferedReader(new InputStreamReader(instr));
 			
 			String ln = null;
-			while ((br.readLine()) != null)
+			while ((ln = br.readLine()) != null)
 				text += ln;
 			
 			br.close();
@@ -103,9 +115,7 @@ public class Configuration {
 			Object loaded = yaml.load(text);
 			
 			if (loaded != null) {
-				Map<String, ?> map = (Map) loaded;
-				
-				defaults.add(new Configuration(map));
+				defaults.add(new Configuration(loaded));
 			}
 			
 		} catch (Exception e) {
