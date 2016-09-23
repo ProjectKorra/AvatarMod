@@ -1,7 +1,6 @@
 package com.crowsofwar.gorecore.config;
 
 import static com.crowsofwar.gorecore.config.Animal.ANIMAL;
-import static com.crowsofwar.gorecore.config.Configuration.from;
 
 import java.util.List;
 
@@ -21,21 +20,22 @@ public class ConfigTest {
 	
 	public ConfigTest() {
 		
-		// george = Configuration.from("file.txt").load("george", Animal.FACTORY);
-		george = from("file.txt").load("george").as(ANIMAL);
+		Configuration config = Configuration.from("avatar/test.cfg");
 		
-		Configuration configuration = Configuration.from("avatar/test.cfg");
-		showLoadingBar = configuration.load("showLoadingBar").asBoolean();
-		list = configuration.load("allowedBlocks").asStringList();
+		george = config.load("george").as(ANIMAL);
 		
-		tabCompletion = configuration.load("tabCompletion").asBoolean();
-		remoteFsAccess = configuration.load("enableRemoteFilesystem").asBoolean();
+		showLoadingBar = config.load("showLoadingBar").asBoolean();
+		list = config.load("allowedBlocks").asStringList();
+		
+		tabCompletion = config.section("commandOptions").load("tabCompletion").asBoolean();
+		remoteFsAccess = config.section("commandOptions").load("enableRemoteFilesystem").asBoolean();
 		
 		System.out.print("\n\n\n\n\n");
 		
 		System.out.println("George is: " + george);
 		System.out.println("List is: " + list);
 		System.out.println("Show loading bar: " + showLoadingBar);
+		System.out.println("Remote FS access: " + remoteFsAccess);
 		
 	}
 	

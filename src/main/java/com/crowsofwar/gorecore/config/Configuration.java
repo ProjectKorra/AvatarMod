@@ -9,15 +9,16 @@ import java.util.Scanner;
 import org.yaml.snakeyaml.Yaml;
 
 /**
- * 
+ * Represents a configuration, where String keys are mapped to {@link UnknownTypeProperty unknown
+ * type values}.
  * 
  * @author CrowsOfWar
  */
 public class Configuration {
 	
-	private final Map<?, ?> map;
+	private final Map<String, ?> map;
 	
-	private Configuration(Map<?, ?> map) {
+	private Configuration(Map<String, ?> map) {
 		System.out.println("Made cfg " + this + ", " + map);
 		this.map = map;
 	}
@@ -25,6 +26,11 @@ public class Configuration {
 	public UnknownTypeProperty load(String key) {
 		if (!map.containsKey(key)) throw new IllegalArgumentException("Invalid key: " + key);
 		return new UnknownTypeProperty(map.get(key));
+	}
+	
+	public Configuration section(String key) {
+		if (!map.containsKey(key)) throw new IllegalArgumentException("Invalid key: " + key);
+		return new Configuration((Map) map.get(key));
 	}
 	
 	public static Configuration from(String path) {
@@ -41,7 +47,7 @@ public class Configuration {
 			scanner.close();
 			
 			Yaml yaml = new Yaml();
-			Map<?, ?> map = (Map) yaml.load(contents);
+			Map<String, ?> map = (Map) yaml.load(contents);
 			System.out.println(map);
 			
 			return new Configuration(map);
