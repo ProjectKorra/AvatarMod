@@ -36,8 +36,17 @@ public class Configuration {
 	 * @return
 	 */
 	public UnknownTypeProperty load(String key) {
-		if (!map.containsKey(key)) throw new IllegalArgumentException("Invalid key: " + key);
+		if (!hasMapping(key)) {
+			for (Configuration def : defaults) {
+				if (def.hasMapping(key)) return def.load(key);
+			}
+			throw new IllegalArgumentException("Invalid key: " + key);
+		}
 		return new UnknownTypeProperty(key, map.get(key));
+	}
+	
+	public boolean hasMapping(String key) {
+		return map.containsKey(key);
 	}
 	
 	/**
@@ -61,8 +70,7 @@ public class Configuration {
 	 *            String key to fetch value from
 	 */
 	public Configuration fromMapping(String key) {
-		if (!map.containsKey(key)) throw new IllegalArgumentException("Invalid key: " + key);
-		return new Configuration((Map) map.get(key));
+		return load(key).asMapping();
 	}
 	
 	/**
