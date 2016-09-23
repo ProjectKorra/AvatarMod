@@ -2,6 +2,7 @@ package com.crowsofwar.gorecore.config;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -88,7 +89,8 @@ public class Configuration {
 			
 			String text = "";
 			
-			InputStream instr = getClass().getResourceAsStream(path);
+			InputStream instr = getClass().getClassLoader().getResourceAsStream(path);
+			if (instr == null) throw new FileNotFoundException("Default configuration file not found");
 			BufferedReader br = new BufferedReader(new InputStreamReader(instr));
 			
 			String ln = null;
@@ -98,9 +100,13 @@ public class Configuration {
 			br.close();
 			
 			Yaml yaml = new Yaml();
-			Map<String, ?> map = (Map) yaml.load(text);
+			Object loaded = yaml.load(text);
 			
-			defaults.add(new Configuration(map));
+			if (loaded != null) {
+				Map<String, ?> map = (Map) loaded;
+				
+				defaults.add(new Configuration(map));
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,7 +123,7 @@ public class Configuration {
 			
 			String contents = "";
 			
-			Scanner scanner = new Scanner(new File("config/avatar/test.cfg"));
+			Scanner scanner = new Scanner(new File("config/" + path));
 			while (scanner.hasNextLine())
 				contents += scanner.nextLine() + "\n";
 			scanner.close();

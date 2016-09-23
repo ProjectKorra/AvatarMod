@@ -20,13 +20,14 @@ public class ConfigTest {
 	
 	public ConfigTest() {
 		
-		Configuration config = Configuration.from("avatar/test.cfg");
+		Configuration config = Configuration.from("avatar/test.cfg").withDefaults("def/test_defaults.cfg");
 		
 		george = config.load("george").as(ANIMAL);
 		showLoadingBar = config.load("showLoadingBar").asBoolean();
 		list = config.load("allowedBlocks").asStringList();
 		tabCompletion = config.fromMapping("commandOptions").load("tabCompletion").asBoolean();
 		remoteFsAccess = config.fromMapping("commandOptions").load("enableRemoteFilesystem").asBoolean();
+		System.out.println(config.load("default").asString());
 		
 		System.out.println("George is: " + george);
 		System.out.println("List is: " + list);
