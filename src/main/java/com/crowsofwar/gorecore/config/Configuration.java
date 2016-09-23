@@ -95,7 +95,7 @@ public class Configuration {
 			
 			String ln = null;
 			while ((br.readLine()) != null)
-				text += "";
+				text += ln;
 			
 			br.close();
 			
