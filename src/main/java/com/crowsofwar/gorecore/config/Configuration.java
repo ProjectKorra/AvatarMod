@@ -43,10 +43,12 @@ public class Configuration {
 	}
 	
 	/**
-	 * Load a property from this map. Returns
+	 * Load a property from this map. If the property is not defined in this configuration, defers
+	 * to other configurations to see if they have a mapping. If this configuration and the defaults
+	 * don't have a mapping, throws an IllegalArgumentException.
 	 * 
 	 * @param key
-	 * @return
+	 *            String key to load
 	 */
 	public UnknownTypeProperty load(String key) {
 		if (!hasMapping(key)) {
@@ -87,10 +89,10 @@ public class Configuration {
 	}
 	
 	/**
-	 * If any mappings are not found when using {@link #load(String)}, the configuration will
-	 * default to the configuration found at this path.
+	 * If any mappings are not found when using {@link #load(String)}, the configuration will defer
+	 * to the configuration found at this path.
 	 * <p>
-	 * Path is in the JAR file.
+	 * Path is in the JAR file, relative to src/main/resources.
 	 * 
 	 * @param path
 	 *            Path to default configuration.
