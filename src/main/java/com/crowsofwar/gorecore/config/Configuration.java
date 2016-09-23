@@ -1,8 +1,6 @@
 package com.crowsofwar.gorecore.config;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -18,14 +16,19 @@ public class Configuration {
 	
 	private final Map<String, ?> map;
 	
-	private Configuration(Map<String, ?> map) {
-		System.out.println("Made cfg " + this + ", " + map);
+	Configuration(Map<String, ?> map) {
 		this.map = map;
 	}
 	
+	/**
+	 * Load a property from this map. Returns
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public UnknownTypeProperty load(String key) {
 		if (!map.containsKey(key)) throw new IllegalArgumentException("Invalid key: " + key);
-		return new UnknownTypeProperty(map.get(key));
+		return new UnknownTypeProperty(key, map.get(key));
 	}
 	
 	public Configuration section(String key) {
@@ -33,9 +36,10 @@ public class Configuration {
 		return new Configuration((Map) map.get(key));
 	}
 	
+	/**
+	 * Load a Configuration instance from the given path.
+	 */
 	public static Configuration from(String path) {
-		
-		System.out.println("Testing config...");
 		
 		try {
 			
@@ -48,60 +52,12 @@ public class Configuration {
 			
 			Yaml yaml = new Yaml();
 			Map<String, ?> map = (Map) yaml.load(contents);
-			System.out.println(map);
 			
 			return new Configuration(map);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		}
-		
-		// System.exit(0);
-		// FMLCommonHandler.instance().exitJava(0, false);
-		
-	}
-	
-	public class UnknownTypeProperty {
-		
-		private final Object object;
-		
-		public UnknownTypeProperty(Object obj) {
-			this.object = obj;
-		}
-		
-		public <T> T as(ConfigurableFactory<T> factory) {
-			return factory.load(new Configuration((Map) object));
-		}
-		
-		public String asString() {
-			return (String) object;
-		}
-		
-		public int asInt() {
-			return (int) object;
-		}
-		
-		public boolean asBoolean() {
-			return (boolean) object;
-		}
-		
-		public <T> List<T> asList(ListLoader<T> factory) {
-			// Object[] arr = (Object[]) object;
-			System.out.println("Converting " + object + " to a list");
-			List<T> out = new ArrayList<>();
-			
-			List<?> list = (List<?>) object;
-			for (Object obj : list) {
-				System.out.println("Object " + obj);
-				out.add(factory.load(obj));
-			}
-			
-			return out;
-		}
-		
-		public List<String> asStringList() {
-			return asList(obj -> (String) obj);
 		}
 		
 	}

@@ -7,13 +7,9 @@ package com.crowsofwar.gorecore.config;
  */
 public class Animal {
 	
-	public static ConfigurableFactory<Animal> ANIMAL = (Configuration cfg) -> {
-		
-		System.out.println("Loading an animal from configuration " + cfg);
-		
-		return new Animal(cfg.load("species").asString(), cfg.load("name").asString(),
-				cfg.load("eats").asString(), cfg.load("age").asInt());
-	};
+	public static ConfigurableFactory<Animal> ANIMAL = (Configuration cfg) -> new Animal(
+			cfg.load("species").asString(), cfg.load("name").asString(), cfg.load("eats").asString(),
+			cfg.load("age").asInt());
 	
 	private final String species, name, diet;
 	private final int age;

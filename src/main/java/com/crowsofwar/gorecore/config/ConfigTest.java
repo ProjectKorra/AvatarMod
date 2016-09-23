@@ -23,14 +23,10 @@ public class ConfigTest {
 		Configuration config = Configuration.from("avatar/test.cfg");
 		
 		george = config.load("george").as(ANIMAL);
-		
 		showLoadingBar = config.load("showLoadingBar").asBoolean();
 		list = config.load("allowedBlocks").asStringList();
-		
 		tabCompletion = config.section("commandOptions").load("tabCompletion").asBoolean();
 		remoteFsAccess = config.section("commandOptions").load("enableRemoteFilesystem").asBoolean();
-		
-		System.out.print("\n\n\n\n\n");
 		
 		System.out.println("George is: " + george);
 		System.out.println("List is: " + list);
