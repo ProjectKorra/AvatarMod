@@ -31,7 +31,7 @@ public class Configuration {
 		return new UnknownTypeProperty(key, map.get(key));
 	}
 	
-	public Configuration section(String key) {
+	public Configuration inSection(String key) {
 		if (!map.containsKey(key)) throw new IllegalArgumentException("Invalid key: " + key);
 		return new Configuration((Map) map.get(key));
 	}

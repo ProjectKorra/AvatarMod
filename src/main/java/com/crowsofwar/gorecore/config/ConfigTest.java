@@ -25,8 +25,8 @@ public class ConfigTest {
 		george = config.load("george").as(ANIMAL);
 		showLoadingBar = config.load("showLoadingBar").asBoolean();
 		list = config.load("allowedBlocks").asStringList();
-		tabCompletion = config.section("commandOptions").load("tabCompletion").asBoolean();
-		remoteFsAccess = config.section("commandOptions").load("enableRemoteFilesystem").asBoolean();
+		tabCompletion = config.inSection("commandOptions").load("tabCompletion").asBoolean();
+		remoteFsAccess = config.inSection("commandOptions").load("enableRemoteFilesystem").asBoolean();
 		
 		System.out.println("George is: " + george);
 		System.out.println("List is: " + list);
