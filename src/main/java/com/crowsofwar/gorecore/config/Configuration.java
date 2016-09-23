@@ -1,6 +1,11 @@
 package com.crowsofwar.gorecore.config;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -17,9 +22,11 @@ import org.yaml.snakeyaml.Yaml;
 public class Configuration {
 	
 	private final Map<String, ?> map;
+	private final List<Configuration> defaults;
 	
 	Configuration(Map<String, ?> map) {
 		this.map = map;
+		this.defaults = new ArrayList<>();
 	}
 	
 	/**
@@ -44,9 +51,10 @@ public class Configuration {
 	 *   configurationCommand: true
 	 * </pre>
 	 * 
-	 * The following would return commandBlock:
-	 * <code>config.fromMapping("commandSettings").load("commandBlock").asString()</code> The
-	 * following would return commandSettings:
+	 * The following would return commandBlock:<br />
+	 * <code>config.fromMapping("commandSettings").load("commandBlock").asString()</code>
+	 * <p>
+	 * The following would return commandSettings:<br />
 	 * <code>config.load("commandSettings").asMapping()</code>
 	 * 
 	 * @param key
@@ -55,6 +63,41 @@ public class Configuration {
 	public Configuration fromMapping(String key) {
 		if (!map.containsKey(key)) throw new IllegalArgumentException("Invalid key: " + key);
 		return new Configuration((Map) map.get(key));
+	}
+	
+	/**
+	 * If any mappings are not found when using {@link #load(String)}, the configuration will
+	 * default to the configuration found at this path.
+	 * <p>
+	 * Path is in the JAR file.
+	 * 
+	 * @param path
+	 *            Path to default configuration.
+	 * @return this
+	 */
+	public Configuration withDefaults(String path) {
+		try {
+			
+			String text = "";
+			
+			InputStream instr = getClass().getResourceAsStream(path);
+			BufferedReader br = new BufferedReader(new InputStreamReader(instr));
+			
+			String ln = null;
+			while ((br.readLine()) != null)
+				text += "";
+			
+			br.close();
+			
+			Yaml yaml = new Yaml();
+			Map<String, ?> map = (Map) yaml.load(text);
+			
+			defaults.add(new Configuration(map));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return this;
 	}
 	
 	/**
