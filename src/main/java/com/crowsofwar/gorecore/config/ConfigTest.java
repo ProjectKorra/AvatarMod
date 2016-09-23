@@ -27,7 +27,7 @@ public class ConfigTest {
 		list = config.load("allowedBlocks").asStringList();
 		tabCompletion = config.fromMapping("commandOptions").load("tabCompletion").asBoolean();
 		remoteFsAccess = config.fromMapping("commandOptions").load("enableRemoteFilesystem").asBoolean();
-		System.out.println(config.load("default").asString());
+		System.out.println("Default is: " + config.load("default").asString());
 		
 		System.out.println("George is: " + george);
 		System.out.println("List is: " + list);

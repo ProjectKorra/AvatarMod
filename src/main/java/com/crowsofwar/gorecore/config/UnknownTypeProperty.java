@@ -27,8 +27,7 @@ public class UnknownTypeProperty {
 	}
 	
 	public String asString() {
-		if (!(object instanceof String)) throw new ConfigException(name + " isn't a String");
-		return (String) object;
+		return object.toString();
 	}
 	
 	public int asInt() {
