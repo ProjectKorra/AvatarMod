@@ -15,7 +15,7 @@ gradlew.bat
 
 
 GoreCore_ClientUUIDCache.txt
-config/
+/config
 logs/
 options.txt
 saves/
