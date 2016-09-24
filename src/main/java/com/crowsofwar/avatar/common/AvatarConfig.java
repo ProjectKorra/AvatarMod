@@ -39,19 +39,19 @@ public class AvatarConfig {
 		return floatingBlockDamage;
 	}
 	
-	public static int getRavineDamage() {
+	public static int ravineDamage() {
 		return ravineDamage;
 	}
 	
-	public static int getWaveDamage() {
+	public static int waveDamage() {
 		return waveDamage;
 	}
 	
-	public static double getRavinePush() {
+	public static double ravinePush() {
 		return ravinePush;
 	}
 	
-	public static double getWavePush() {
+	public static double wavePush() {
 		return wavePush;
 	}
 	

@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.AvatarConfig.waveDamage;
+import static com.crowsofwar.avatar.common.AvatarConfig.wavePush;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
@@ -40,11 +43,10 @@ public class EntityWave extends Entity {
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
-				System.out.println("Entity " + entity);
-				Vector motion = velocity().dividedBy(20).times(6);
+				Vector motion = velocity().dividedBy(20).times(wavePush());
 				motion.setY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
-				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(this, owner), 9);
+				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(this, owner), waveDamage());
 			}
 			if (!collided.isEmpty()) setDead();
 		}
