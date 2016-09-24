@@ -31,9 +31,11 @@ public class Configuration {
 	private Map<String, ?> map;
 	private List<Configuration> defaults;
 	private String path;
+	private List<Mapping> missingMappings;
 	
 	Configuration(Object obj) {
 		this.defaults = new ArrayList<>();
+		this.missingMappings = new ArrayList<>();
 		if (obj == null) {
 			this.map = new HashMap<>();
 		} else if (obj instanceof Map) {
@@ -60,7 +62,11 @@ public class Configuration {
 	public UnknownTypeProperty load(String key) {
 		if (!hasMapping(key)) {
 			for (Configuration def : defaults) {
-				if (def.hasMapping(key)) return def.load(key);
+				if (def.hasMapping(key)) {
+					UnknownTypeProperty property = def.load(key);
+					missingMappings.add(new Mapping(key, property.getObject()));
+					return property;
+				}
 			}
 			throw new IllegalArgumentException("Invalid key: " + key);
 		}
@@ -178,6 +184,18 @@ public class Configuration {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+		
+	}
+	
+	static class Mapping {
+		
+		private final String key;
+		private final Object value;
+		
+		public Mapping(String key, Object value) {
+			this.key = key;
+			this.value = value;
 		}
 		
 	}

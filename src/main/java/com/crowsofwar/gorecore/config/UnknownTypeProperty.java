@@ -21,6 +21,10 @@ public class UnknownTypeProperty {
 		this.object = obj;
 	}
 	
+	public Object getObject() {
+		return object;
+	}
+	
 	public <T> T as(ObjectLoader<T> factory) {
 		if (!(object instanceof Map)) throw new ConfigException(name + " isn't a Dictionary");
 		return factory.load(new Configuration((Map) object));
