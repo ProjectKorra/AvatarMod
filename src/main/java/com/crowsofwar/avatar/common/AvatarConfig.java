@@ -9,19 +9,44 @@ import com.crowsofwar.gorecore.config.Configuration;
  */
 public class AvatarConfig {
 	
-	private static int FLOATING_BLOCK_DAMAGE, RAVINE_DAMAGE, WAVE_DAMAGE;
-	private static double RAVINE_PUSH_MULTIPLIER, WAVE_PUSH_MULTIPLIER;
+	private static int floatingBlockDamage, ravineDamage, waveDamage;
+	private static double blockPush, ravinePush, wavePush;
 	
 	public static void load() {
 		
 		Configuration config = Configuration.from("avatar/balance.cfg").withDefaults("config/balancedef.cfg");
-		FLOATING_BLOCK_DAMAGE = config.fromMapping("block").load("floatingBlockDamage").asInt();
-		RAVINE_DAMAGE = config.fromMapping("ravine").load("ravineDamage").asInt();
-		WAVE_DAMAGE = config.fromMapping("wave").load("waveDamage").asInt();
+		floatingBlockDamage = config.fromMapping("block").load("damageMultiplier").asInt();
+		ravineDamage = config.fromMapping("ravine").load("damage").asInt();
+		waveDamage = config.fromMapping("wave").load("damage").asInt();
 		
-		RAVINE_PUSH_MULTIPLIER = config.fromMapping("ravine").load("ravinePush").asDouble();
-		WAVE_PUSH_MULTIPLIER = config.fromMapping("wave").load("wavePush").asDouble();
+		blockPush = config.fromMapping("block").load("pushMultiplier").asDouble();
+		ravinePush = config.fromMapping("ravine").load("pushMultiplier").asDouble();
+		wavePush = config.fromMapping("wave").load("pushMultiplier").asDouble();
 		
+	}
+	
+	public static int getFloatingBlockDamage() {
+		return floatingBlockDamage;
+	}
+	
+	public static int getRavineDamage() {
+		return ravineDamage;
+	}
+	
+	public static int getWaveDamage() {
+		return waveDamage;
+	}
+	
+	public static double getRavinePush() {
+		return ravinePush;
+	}
+	
+	public static double getWavePush() {
+		return wavePush;
+	}
+	
+	public static double getBlockPush() {
+		return blockPush;
 	}
 	
 }

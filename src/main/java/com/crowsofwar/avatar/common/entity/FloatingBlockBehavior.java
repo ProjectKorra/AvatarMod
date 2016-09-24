@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.AvatarConfig;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -210,13 +211,12 @@ public abstract class FloatingBlockBehavior {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != floating.getOwner()) {
 						double speed = floating.getVelocity().magnitude();
-						double multiplier = 0.25;
 						collided.attackEntityFrom(
 								AvatarDamageSource.causeFloatingBlockDamage(floating, floating.getOwner()),
-								(float) (speed * multiplier));
+								(float) (speed * AvatarConfig.getFloatingBlockDamage()));
 						
 						Vector motion = new Vector(collided).minus(new Vector(floating));
-						
+						motion.mul(AvatarConfig.getBlockPush());
 						motion.setY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 						if (!world.isRemote) floating.setDead();
