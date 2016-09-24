@@ -21,8 +21,7 @@ public class ConfigTest {
 	
 	public ConfigTest() throws IOException {
 		
-		Configuration config = Configuration.from("avatar/test.cfg")
-				.withDefaults("assets/avatarmod/lang/en_US.lang");
+		Configuration config = Configuration.from("avatar/test.cfg").withDefaults("def/test_defaults.cfg");
 		
 		george = config.load("george").as(ANIMAL);
 		showLoadingBar = config.load("showLoadingBar").asBoolean();

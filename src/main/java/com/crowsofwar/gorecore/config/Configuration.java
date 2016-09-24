@@ -1,10 +1,8 @@
 package com.crowsofwar.gorecore.config;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -27,7 +27,7 @@ public class Configuration {
 	
 	private Map<String, ?> map;
 	private List<Configuration> defaults;
-	private BufferedWriter writer;
+	private String path;
 	
 	Configuration(Object obj) {
 		if (obj instanceof Map) {
@@ -93,9 +93,23 @@ public class Configuration {
 	}
 	
 	public void save() throws IOException {
-		String asText = new Yaml().dump(map);
-		writer.write(asText);
-		writer.close();
+		
+		// BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path)));
+		
+		DumperOptions options = new DumperOptions();
+		options.setPrettyFlow(true);
+		options.setDefaultFlowStyle(FlowStyle.BLOCK);
+		
+		String asText = "";
+		Yaml yaml = new Yaml(options);
+		asText = yaml.dump(map);
+		System.out.println("Dumped: \n" + asText);
+		for (Configuration def : defaults) {
+			asText += "\n" + yaml.dump(def.map);
+		}
+		
+		// writer.write(asText);
+		// writer.close();
 		
 	}
 	
@@ -156,7 +170,7 @@ public class Configuration {
 			Map<String, ?> map = (Map) yaml.load(contents);
 			
 			Configuration config = new Configuration(map);
-			config.writer = new BufferedWriter(new FileWriter(new File(path)));
+			config.path = "config/" + path;
 			return config;
 			
 		} catch (Exception e) {
