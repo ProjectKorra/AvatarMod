@@ -136,7 +136,7 @@ public class Configuration {
 			
 			String ln = null;
 			while ((ln = br.readLine()) != null)
-				text += ln;
+				text += ln + "\n";
 			
 			br.close();
 			
