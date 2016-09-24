@@ -109,12 +109,14 @@ public class Configuration {
 		options.setPrettyFlow(true);
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
 		
+		Map<String, Object> toDump = new HashMap<>(map);
+		for (Mapping mapping : missingMappings) {
+			toDump.put(mapping.key, mapping.value);
+		}
+		
 		String asText = "";
 		Yaml yaml = new Yaml(options);
-		asText = yaml.dump(map);
-		for (Configuration def : defaults) {
-			asText += "\n" + yaml.dump(def.map);
-		}
+		asText = yaml.dump(toDump);
 		
 		writer.write(asText);
 		writer.close();
