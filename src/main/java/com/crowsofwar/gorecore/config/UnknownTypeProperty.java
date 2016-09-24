@@ -36,8 +36,8 @@ public class UnknownTypeProperty {
 	
 	public int asInt() {
 		try {
-			return (int) object;
-		} catch (ClassCastException e) {
+			return Integer.valueOf(object + "");
+		} catch (NumberFormatException e) {
 			throw new ConfigException(name + " isn't an integer");
 		}
 	}
@@ -52,8 +52,8 @@ public class UnknownTypeProperty {
 	
 	public double asDouble() {
 		try {
-			return (double) object;
-		} catch (ClassCastException e) {
+			return Double.valueOf(object + "");
+		} catch (NumberFormatException e) {
 			throw new ConfigException(name + " isn't a double");
 		}
 	}
