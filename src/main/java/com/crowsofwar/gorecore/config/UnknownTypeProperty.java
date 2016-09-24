@@ -35,19 +35,27 @@ public class UnknownTypeProperty {
 	}
 	
 	public int asInt() {
-		if (!(object instanceof Integer)) throw new ConfigException(name + " isn't an integer");
-		return (int) object;
+		try {
+			return (int) object;
+		} catch (ClassCastException e) {
+			throw new ConfigException(name + " isn't an integer");
+		}
 	}
 	
 	public boolean asBoolean() {
-		if (!(object instanceof Boolean)) throw new ConfigException(name + " isn't a boolean");
-		return (boolean) object;
+		try {
+			return (boolean) object;
+		} catch (ClassCastException e) {
+			throw new ConfigException(name + " isn't a boolean");
+		}
 	}
 	
 	public double asDouble() {
-		if (!(object instanceof Double || object instanceof Float || object instanceof Integer))
+		try {
+			return (double) object;
+		} catch (ClassCastException e) {
 			throw new ConfigException(name + " isn't a double");
-		return (double) object;
+		}
 	}
 	
 	public <T> List<T> asList(ListLoader<T> factory) {

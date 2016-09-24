@@ -20,7 +20,7 @@ public class AvatarConfig {
 		try {
 			Configuration config = Configuration.from("avatar/balance.cfg")
 					.withDefaults("config/balancedef.cfg");
-			floatingBlockDamage = config.fromMapping("block").load("damageMultiplier").asInt();
+			floatingBlockDamage = config.fromMapping("block").load("damageMultiplier").asDouble();
 			ravineDamage = config.fromMapping("ravine").load("damage").asInt();
 			waveDamage = config.fromMapping("wave").load("damage").asInt();
 			
