@@ -1,8 +1,10 @@
 package com.crowsofwar.gorecore.config;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -94,7 +96,7 @@ public class Configuration {
 	
 	public void save() throws IOException {
 		
-		// BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path)));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path)));
 		
 		DumperOptions options = new DumperOptions();
 		options.setPrettyFlow(true);
@@ -103,13 +105,12 @@ public class Configuration {
 		String asText = "";
 		Yaml yaml = new Yaml(options);
 		asText = yaml.dump(map);
-		System.out.println("Dumped: \n" + asText);
 		for (Configuration def : defaults) {
 			asText += "\n" + yaml.dump(def.map);
 		}
 		
-		// writer.write(asText);
-		// writer.close();
+		writer.write(asText);
+		writer.close();
 		
 	}
 	
