@@ -2,6 +2,7 @@ package com.crowsofwar.gorecore.config;
 
 import static com.crowsofwar.gorecore.config.Animal.ANIMAL;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,9 +19,10 @@ public class ConfigTest {
 	
 	private Animal george;
 	
-	public ConfigTest() {
+	public ConfigTest() throws IOException {
 		
-		Configuration config = Configuration.from("avatar/test.cfg").withDefaults("def/test_defaults.cfg");
+		Configuration config = Configuration.from("avatar/test.cfg")
+				.withDefaults("assets/avatarmod/lang/en_US.lang");
 		
 		george = config.load("george").as(ANIMAL);
 		showLoadingBar = config.load("showLoadingBar").asBoolean();
@@ -34,9 +36,11 @@ public class ConfigTest {
 		System.out.println("Show loading bar: " + showLoadingBar);
 		System.out.println("Remote FS access: " + remoteFsAccess);
 		
+		config.save();
+		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		new ConfigTest();
 	}
 	

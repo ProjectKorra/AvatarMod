@@ -1,8 +1,11 @@
 package com.crowsofwar.gorecore.config;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ public class Configuration {
 	
 	private Map<String, ?> map;
 	private List<Configuration> defaults;
+	private BufferedWriter writer;
 	
 	Configuration(Object obj) {
 		if (obj instanceof Map) {
@@ -88,6 +92,13 @@ public class Configuration {
 		return load(key).asMapping();
 	}
 	
+	public void save() throws IOException {
+		String asText = new Yaml().dump(map);
+		writer.write(asText);
+		writer.close();
+		
+	}
+	
 	/**
 	 * If any mappings are not found when using {@link #load(String)}, the configuration will defer
 	 * to the configuration found at this path.
@@ -104,8 +115,9 @@ public class Configuration {
 			String text = "";
 			
 			InputStream instr = getClass().getClassLoader().getResourceAsStream(path);
-			if (instr == null) throw new FileNotFoundException("Default configuration file not found");
-			BufferedReader br = new BufferedReader(new InputStreamReader(instr));
+			if (instr == null)
+				throw new FileNotFoundException("Default configuration file not found: " + path);
+			BufferedReader br = new BufferedReader(new InputStreamReader(instr, "UTF-8"));
 			
 			String ln = null;
 			while ((ln = br.readLine()) != null)
@@ -143,7 +155,9 @@ public class Configuration {
 			Yaml yaml = new Yaml();
 			Map<String, ?> map = (Map) yaml.load(contents);
 			
-			return new Configuration(map);
+			Configuration config = new Configuration(map);
+			config.writer = new BufferedWriter(new FileWriter(new File(path)));
+			return config;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
