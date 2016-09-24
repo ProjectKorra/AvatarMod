@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -32,13 +33,13 @@ public class Configuration {
 	private String path;
 	
 	Configuration(Object obj) {
-		if (obj instanceof Map) {
+		this.defaults = new ArrayList<>();
+		if (obj == null) {
+			this.map = new HashMap<>();
+		} else if (obj instanceof Map) {
 			construct((Map) obj);
-		} else if (obj instanceof String) {
-			System.out.println(obj);
-			
 		} else {
-			System.out.println("WHAT TYPE IS THIS?? " + obj);
+			throw new ConfigException("Config file is not a map");
 		}
 	}
 	
