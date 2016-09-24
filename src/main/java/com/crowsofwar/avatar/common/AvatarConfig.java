@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common;
 
+import java.io.IOException;
+
 import com.crowsofwar.gorecore.config.Configuration;
 
 /**
@@ -14,14 +16,21 @@ public class AvatarConfig {
 	
 	public static void load() {
 		
-		Configuration config = Configuration.from("avatar/balance.cfg").withDefaults("config/balancedef.cfg");
-		floatingBlockDamage = config.fromMapping("block").load("damageMultiplier").asInt();
-		ravineDamage = config.fromMapping("ravine").load("damage").asInt();
-		waveDamage = config.fromMapping("wave").load("damage").asInt();
-		
-		blockPush = config.fromMapping("block").load("pushMultiplier").asDouble();
-		ravinePush = config.fromMapping("ravine").load("pushMultiplier").asDouble();
-		wavePush = config.fromMapping("wave").load("pushMultiplier").asDouble();
+		try {
+			Configuration config = Configuration.from("avatar/balance.cfg")
+					.withDefaults("config/balancedef.cfg");
+			floatingBlockDamage = config.fromMapping("block").load("damageMultiplier").asInt();
+			ravineDamage = config.fromMapping("ravine").load("damage").asInt();
+			waveDamage = config.fromMapping("wave").load("damage").asInt();
+			
+			blockPush = config.fromMapping("block").load("pushMultiplier").asDouble();
+			ravinePush = config.fromMapping("ravine").load("pushMultiplier").asDouble();
+			wavePush = config.fromMapping("wave").load("pushMultiplier").asDouble();
+			
+			config.save();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
