@@ -127,7 +127,8 @@ public class Configuration {
 	 * If any mappings are not found when using {@link #load(String)}, the configuration will defer
 	 * to the configuration found at this path.
 	 * <p>
-	 * Path is in the JAR file, relative to src/main/resources.
+	 * Path is in the JAR file, relative to src/main/resources. If file does not exist, throws an
+	 * exception.
 	 * 
 	 * @param path
 	 *            Path to default configuration.
@@ -164,6 +165,8 @@ public class Configuration {
 	
 	/**
 	 * Load a Configuration instance from the given file system path.
+	 * <p>
+	 * If the file at that location was not found, automatically creates it.
 	 */
 	public static Configuration from(String path) {
 		
@@ -171,7 +174,10 @@ public class Configuration {
 			
 			String contents = "";
 			
-			Scanner scanner = new Scanner(new File("config/" + path));
+			File file = new File("config/" + path);
+			file.createNewFile();
+			
+			Scanner scanner = new Scanner(file);
 			while (scanner.hasNextLine())
 				contents += scanner.nextLine() + "\n";
 			scanner.close();

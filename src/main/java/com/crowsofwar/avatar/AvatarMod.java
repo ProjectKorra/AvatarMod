@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
+import com.crowsofwar.avatar.common.AvatarConfig;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -52,6 +53,8 @@ public class AvatarMod {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+		AvatarConfig.load();
+		
 		BendingManager.init();
 		EarthSoundHandler.register();
 		

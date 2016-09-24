@@ -44,6 +44,12 @@ public class UnknownTypeProperty {
 		return (boolean) object;
 	}
 	
+	public double asDouble() {
+		if (!(object instanceof Double || object instanceof Float || object instanceof Integer))
+			throw new ConfigException(name + " isn't a double");
+		return (double) object;
+	}
+	
 	public <T> List<T> asList(ListLoader<T> factory) {
 		if (!(object instanceof List)) throw new ConfigException(name + " isn't a List");
 		
