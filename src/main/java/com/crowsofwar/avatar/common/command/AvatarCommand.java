@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.command;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeBranch;
@@ -44,10 +44,10 @@ public class AvatarCommand extends TreeCommand {
 		NodeBendingList bendingList = new NodeBendingList();
 		NodeBendingAdd bendingAdd = new NodeBendingAdd();
 		NodeBendingRemove bendingRemove = new NodeBendingRemove();
-		NodeBranch branchBending = new NodeBranch(AvatarChatMessages.MSG_BENDING_BRANCH_INFO, "bending", bendingList, bendingAdd,
-				bendingRemove);
+		NodeBranch branchBending = new NodeBranch(AvatarChatMessages.MSG_BENDING_BRANCH_INFO, "bending",
+				bendingList, bendingAdd, bendingRemove);
 		
-		return new ICommandNode[] { branchBending };
+		return new ICommandNode[] { branchBending, new NodeConfig() };
 		
 	}
 	
