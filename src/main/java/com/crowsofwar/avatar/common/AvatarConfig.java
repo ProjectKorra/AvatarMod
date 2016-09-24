@@ -11,7 +11,8 @@ import com.crowsofwar.gorecore.config.Configuration;
  */
 public class AvatarConfig {
 	
-	private static int floatingBlockDamage, ravineDamage, waveDamage;
+	private static double floatingBlockDamage;
+	private static int ravineDamage, waveDamage;
 	private static double blockPush, ravinePush, wavePush;
 	
 	public static void load() {
@@ -34,7 +35,7 @@ public class AvatarConfig {
 		
 	}
 	
-	public static int getFloatingBlockDamage() {
+	public static double getFloatingBlockDamage() {
 		return floatingBlockDamage;
 	}
 	
