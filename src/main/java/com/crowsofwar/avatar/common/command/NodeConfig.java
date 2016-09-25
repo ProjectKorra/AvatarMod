@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.common.command;
 
 import java.util.List;
 
+import org.yaml.snakeyaml.Yaml;
+
 import com.crowsofwar.avatar.common.AvatarConfig;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
@@ -36,7 +38,7 @@ public class NodeConfig extends NodeFunctional {
 			AvatarConfig.load();
 		} else {
 			System.out.println("Load config " + key + "->" + val);
-			
+			AvatarConfig.set(key, new Yaml().load(val));
 		}
 		
 		return null;

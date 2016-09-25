@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.common;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.crowsofwar.gorecore.config.Configuration;
 
@@ -12,9 +14,25 @@ import com.crowsofwar.gorecore.config.Configuration;
 public class AvatarConfig {
 	
 	private static Configuration config;
+	private static final Map<String, ConfigurableProperty<Object>> allProperties;
 	
-	public static ConfigurableProperty<Double> blockDamage, blockPush, ravinePush, wavePush;
-	public static ConfigurableProperty<Integer> ravineDamage, waveDamage;
+	public static final ConfigurableProperty<Double> blockDamage, blockPush, ravinePush, wavePush;
+	public static final ConfigurableProperty<Integer> ravineDamage, waveDamage;
+	
+	static {
+		
+		allProperties = new HashMap<>();
+		
+		blockPush = new ConfigurableProperty<>("block.pushMultiplier");
+		blockDamage = new ConfigurableProperty<>("block.damageMultiplier");
+		
+		ravinePush = new ConfigurableProperty<>("ravine.pushMultiplier");
+		ravineDamage = new ConfigurableProperty<>("ravine.damage");
+		
+		wavePush = new ConfigurableProperty<>("wave.pushMultiplier");
+		waveDamage = new ConfigurableProperty<>("wave.damage");
+		
+	}
 	
 	public static void load() {
 		
@@ -40,6 +58,10 @@ public class AvatarConfig {
 	 */
 	public static <T> void set(ConfigurableProperty<T> key, T value) {
 		key.value = value;
+	}
+	
+	public static void set(String key, Object value) {
+		set(allProperties.get(key), value);
 	}
 	
 	//@formatter:off
@@ -76,6 +98,7 @@ public class AvatarConfig {
 		
 		public ConfigurableProperty(String key) {
 			this.key = key;
+			allProperties.put(key, (ConfigurableProperty<Object>) this);
 		}
 		
 		public String getKey() {
