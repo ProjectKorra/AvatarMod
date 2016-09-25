@@ -8,26 +8,13 @@ package com.crowsofwar.avatar.common.config;
  * 
  * @author CrowsOfWar
  */
-public class ConfigurableProperty<T> {
+public interface ConfigurableProperty<T> {
 	
-	private final String key;
-	private T value;
+	T currentValue();
 	
-	public ConfigurableProperty(String key) {
-		this.key = key;
-		AvatarConfig.allProperties.put(key, (ConfigurableProperty<Object>) this);
-	}
-	
-	public String getKey() {
-		return key;
-	}
-	
-	public T currentValue() {
-		return value;
-	}
-	
-	void setValue(T value) {
-		this.value = value;
-	}
+	/**
+	 * Not using generics because of annoying things with converting Integer -> Double.
+	 */
+	void setValue(Object value);
 	
 }
