@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common;
+package com.crowsofwar.avatar.common.config;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import com.crowsofwar.gorecore.config.Configuration;
 public class AvatarConfig {
 	
 	private static Configuration config;
-	private static final Map<String, ConfigurableProperty<Object>> allProperties;
+	static final Map<String, ConfigurableProperty<Object>> allProperties;
 	
 	public static final ConfigurableProperty<Double> blockDamage, blockPush, ravinePush, wavePush;
 	public static final ConfigurableProperty<Integer> ravineDamage, waveDamage;
@@ -23,13 +23,13 @@ public class AvatarConfig {
 		
 		allProperties = new HashMap<>();
 		
-		blockPush = new ConfigurableProperty<>("block.pushMultiplier");
-		blockDamage = new ConfigurableProperty<>("block.damageMultiplier");
+		blockPush = new ConfigurablePropertyDouble("block.pushMultiplier");
+		blockDamage = new ConfigurablePropertyDouble("block.damageMultiplier");
 		
-		ravinePush = new ConfigurableProperty<>("ravine.pushMultiplier");
+		ravinePush = new ConfigurablePropertyDouble("ravine.pushMultiplier");
 		ravineDamage = new ConfigurableProperty<>("ravine.damage");
 		
-		wavePush = new ConfigurableProperty<>("wave.pushMultiplier");
+		wavePush = new ConfigurablePropertyDouble("wave.pushMultiplier");
 		waveDamage = new ConfigurableProperty<>("wave.damage");
 		
 	}
@@ -57,7 +57,7 @@ public class AvatarConfig {
 	 * Set the current value of that configurable property.
 	 */
 	public static <T> void set(ConfigurableProperty<T> key, T value) {
-		key.value = value;
+		key.setValue(value);
 	}
 	
 	public static void set(String key, Object value) {
@@ -81,34 +81,6 @@ public class AvatarConfig {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Represents a Configuration entry. It has a String key and a changeable value.
-	 * 
-	 * @param <T>
-	 *            The type of value
-	 * 
-	 * @author CrowsOfWar
-	 */
-	public static class ConfigurableProperty<T> {
-		
-		private final String key;
-		private T value;
-		
-		public ConfigurableProperty(String key) {
-			this.key = key;
-			allProperties.put(key, (ConfigurableProperty<Object>) this);
-		}
-		
-		public String getKey() {
-			return key;
-		}
-		
-		public T currentValue() {
-			return value;
-		}
-		
 	}
 	
 }

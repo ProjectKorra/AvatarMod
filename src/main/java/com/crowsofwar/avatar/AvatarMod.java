@@ -1,12 +1,12 @@
 package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
-import com.crowsofwar.avatar.common.AvatarConfig;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
+import com.crowsofwar.avatar.common.config.AvatarConfig;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;

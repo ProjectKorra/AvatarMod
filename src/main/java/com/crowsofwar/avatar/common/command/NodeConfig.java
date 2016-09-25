@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.yaml.snakeyaml.Yaml;
 
-import com.crowsofwar.avatar.common.AvatarConfig;
+import com.crowsofwar.avatar.common.config.AvatarConfig;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
 import com.crowsofwar.gorecore.tree.CommandCall;

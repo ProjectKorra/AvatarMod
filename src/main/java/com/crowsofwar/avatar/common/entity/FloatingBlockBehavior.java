@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.AvatarConfig.blockDamage;
-import static com.crowsofwar.avatar.common.AvatarConfig.blockPush;
+import static com.crowsofwar.avatar.common.config.AvatarConfig.blockDamage;
+import static com.crowsofwar.avatar.common.config.AvatarConfig.blockPush;
 
 import java.io.IOException;
 import java.util.HashMap;
