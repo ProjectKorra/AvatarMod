@@ -13,24 +13,20 @@ public class AvatarConfig {
 	
 	private static Configuration config;
 	
-	public static ConfigurableValue<Double> blockDamage, blockPush, ravinePush, wavePush;
-	public static ConfigurableValue<Integer> ravineDamage, waveDamage;
-	
-	// public static double blockDamage;
-	// public static int ravineDamage, waveDamage;
-	// public static double blockPush, ravinePush, wavePush;
+	public static ConfigurableProperty<Double> blockDamage, blockPush, ravinePush, wavePush;
+	public static ConfigurableProperty<Integer> ravineDamage, waveDamage;
 	
 	public static void load() {
 		
 		try {
 			config = Configuration.from("avatar/balance.cfg").withDefaults("config/balancedef.cfg");
-			blockDamage = config.fromMapping("block").load("damageMultiplier").asDouble();
-			ravineDamage = config.fromMapping("ravine").load("damage").asInt();
-			waveDamage = config.fromMapping("wave").load("damage").asInt();
+			set(blockDamage, config.fromMapping("block").load("damageMultiplier").asDouble());
+			set(ravineDamage, config.fromMapping("ravine").load("damage").asInt());
+			set(waveDamage, config.fromMapping("wave").load("damage").asInt());
 			
-			blockPush = config.fromMapping("block").load("pushMultiplier").asDouble();
-			ravinePush = config.fromMapping("ravine").load("pushMultiplier").asDouble();
-			wavePush = config.fromMapping("wave").load("pushMultiplier").asDouble();
+			set(blockPush, config.fromMapping("block").load("pushMultiplier").asDouble());
+			set(ravinePush, config.fromMapping("ravine").load("pushMultiplier").asDouble());
+			set(wavePush, config.fromMapping("wave").load("pushMultiplier").asDouble());
 			
 			config.save();
 		} catch (IOException e) {
@@ -39,28 +35,46 @@ public class AvatarConfig {
 		
 	}
 	
-	public static void set(String key, Object value) {
-		
+	/**
+	 * Set the current value of that configurable property.
+	 */
+	public static <T> void set(ConfigurableProperty<T> key, T value) {
+		key.value = value;
 	}
 	
+	//@formatter:off
 	public static void save() {
 		try {
-			config.fromMapping("block").set("damageMultiplier", blockDamage).set("pushMultiplier", blockPush);
-			config.fromMapping("ravine").set("damage", ravineDamage).set("pushMultiplier", ravinePush);
-			config.fromMapping("wave").set("damage", waveDamage).set("pushMultiplier", wavePush);
+			config.fromMapping("block")
+					.set("damageMultiplier",	blockDamage.currentValue())
+					.set("pushMultiplier",		blockPush.currentValue());
+			config.fromMapping("ravine")
+					.set("damage",				ravineDamage.currentValue())
+					.set("pushMultiplier",		ravinePush.currentValue());
+			config.fromMapping("wave")
+					.set("damage", 				waveDamage.currentValue())
+					.set("pushMultiplier", 		wavePush.currentValue());
+			
 			config.save();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	static class ConfigurableValue<T> {
+	/**
+	 * Represents a Configuration entry. It has a String key and a changeable value.
+	 * 
+	 * @param <T>
+	 *            The type of value
+	 * 
+	 * @author CrowsOfWar
+	 */
+	static class ConfigurableProperty<T> {
 		
-		private String key;
+		private final String key;
 		private T value;
 		
-		public ConfigurableValue(String key) {
-			super();
+		public ConfigurableProperty(String key) {
 			this.key = key;
 		}
 		
@@ -68,16 +82,8 @@ public class AvatarConfig {
 			return key;
 		}
 		
-		public void setKey(String key) {
-			this.key = key;
-		}
-		
-		public T getValue() {
+		public T currentValue() {
 			return value;
-		}
-		
-		public void setValue(T value) {
-			this.value = value;
 		}
 		
 	}
