@@ -11,16 +11,20 @@ import com.crowsofwar.gorecore.config.Configuration;
  */
 public class AvatarConfig {
 	
-	public static double floatingBlockDamage;
-	public static int ravineDamage, waveDamage;
-	public static double blockPush, ravinePush, wavePush;
+	private static Configuration config;
+	
+	public static ConfigurableValue<Double> blockDamage, blockPush, ravinePush, wavePush;
+	public static ConfigurableValue<Integer> ravineDamage, waveDamage;
+	
+	// public static double blockDamage;
+	// public static int ravineDamage, waveDamage;
+	// public static double blockPush, ravinePush, wavePush;
 	
 	public static void load() {
 		
 		try {
-			Configuration config = Configuration.from("avatar/balance.cfg")
-					.withDefaults("config/balancedef.cfg");
-			floatingBlockDamage = config.fromMapping("block").load("damageMultiplier").asDouble();
+			config = Configuration.from("avatar/balance.cfg").withDefaults("config/balancedef.cfg");
+			blockDamage = config.fromMapping("block").load("damageMultiplier").asDouble();
 			ravineDamage = config.fromMapping("ravine").load("damage").asInt();
 			waveDamage = config.fromMapping("wave").load("damage").asInt();
 			
@@ -31,6 +35,49 @@ public class AvatarConfig {
 			config.save();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void set(String key, Object value) {
+		
+	}
+	
+	public static void save() {
+		try {
+			config.fromMapping("block").set("damageMultiplier", blockDamage).set("pushMultiplier", blockPush);
+			config.fromMapping("ravine").set("damage", ravineDamage).set("pushMultiplier", ravinePush);
+			config.fromMapping("wave").set("damage", waveDamage).set("pushMultiplier", wavePush);
+			config.save();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	static class ConfigurableValue<T> {
+		
+		private String key;
+		private T value;
+		
+		public ConfigurableValue(String key) {
+			super();
+			this.key = key;
+		}
+		
+		public String getKey() {
+			return key;
+		}
+		
+		public void setKey(String key) {
+			this.key = key;
+		}
+		
+		public T getValue() {
+			return value;
+		}
+		
+		public void setValue(T value) {
+			this.value = value;
 		}
 		
 	}

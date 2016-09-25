@@ -28,7 +28,7 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class Configuration {
 	
-	private Map<String, ?> map;
+	private Map<String, Object> map;
 	private List<Configuration> defaults;
 	private String path;
 	private List<Mapping> missingMappings;
@@ -45,7 +45,7 @@ public class Configuration {
 		}
 	}
 	
-	private void construct(Map<String, ?> map) {
+	private void construct(Map<String, Object> map) {
 		this.map = map;
 		System.out.println("Set map to " + map);
 		this.defaults = new ArrayList<>();
@@ -99,6 +99,11 @@ public class Configuration {
 	 */
 	public Configuration fromMapping(String key) {
 		return load(key).asMapping();
+	}
+	
+	public Configuration set(String key, Object val) {
+		map.put(key, val);
+		return this;
 	}
 	
 	public void save() throws IOException {
