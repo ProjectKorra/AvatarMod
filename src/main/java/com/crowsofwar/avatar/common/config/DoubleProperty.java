@@ -33,7 +33,7 @@ public class DoubleProperty implements ConfigurableProperty<Double> {
 	 */
 	@Override
 	public void setValue(Object value) {
-		value = Double.valueOf(value.toString());
+		this.value = Double.valueOf(value.toString());
 	}
 	
 }

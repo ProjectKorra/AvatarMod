@@ -37,7 +37,6 @@ public class NodeConfig extends NodeFunctional {
 		if (key.equals("") || val.equals("")) {
 			AvatarConfig.load();
 		} else {
-			System.out.println("Load config " + key + "->" + val);
 			AvatarConfig.set(key, new Yaml().load(val));
 			AvatarConfig.save();
 		}
