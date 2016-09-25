@@ -69,7 +69,7 @@ public class AvatarConfig {
 	 * 
 	 * @author CrowsOfWar
 	 */
-	static class ConfigurableProperty<T> {
+	public static class ConfigurableProperty<T> {
 		
 		private final String key;
 		private T value;

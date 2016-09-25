@@ -43,10 +43,10 @@ public class EntityWave extends Entity {
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
-				Vector motion = velocity().dividedBy(20).times(wavePush);
+				Vector motion = velocity().dividedBy(20).times(wavePush.currentValue());
 				motion.setY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
-				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(this, owner), waveDamage);
+				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(this, owner), waveDamage.currentValue());
 			}
 			if (!collided.isEmpty()) setDead();
 		}

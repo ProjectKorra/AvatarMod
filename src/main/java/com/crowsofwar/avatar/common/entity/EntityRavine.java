@@ -140,10 +140,10 @@ public class EntityRavine extends Entity implements IPhysics {
 						BendingManager.getBending(BendingType.EARTHBENDING)
 								.post(new RavineEvent.HitEntity(this, entity));
 						
-						Vector push = velocity.copy().setY(1).mul(ravinePush);
+						Vector push = velocity.copy().setY(1).mul(ravinePush.currentValue());
 						entity.addVelocity(push.x(), push.y(), push.z());
 						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(this, owner),
-								ravineDamage);
+								ravineDamage.currentValue());
 					}
 				}
 			}
