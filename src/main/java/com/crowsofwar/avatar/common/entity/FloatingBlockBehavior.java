@@ -121,7 +121,7 @@ public abstract class FloatingBlockBehavior {
 	public abstract void toBytes(PacketBuffer buf);
 	
 	protected void applyGravity() {
-		floating.addVelocity(new Vector(0, -9.81 / 20, 0));
+		floating.velocity().add(0, -9.81 / 20, 0);
 	}
 	
 	public static class DoNothing extends FloatingBlockBehavior {
@@ -156,7 +156,7 @@ public abstract class FloatingBlockBehavior {
 			Vector force = placeAtVec.minus(thisPos);
 			force.normalize();
 			force.mul(3);
-			floating.setVelocity(force);
+			floating.velocity().set(force);
 			if (!floating.worldObj.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
 				
 				floating.setDead();
@@ -212,7 +212,7 @@ public abstract class FloatingBlockBehavior {
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != floating.getOwner()) {
-						double speed = floating.getVelocity().magnitude();
+						double speed = floating.velocity().magnitude();
 						collided.attackEntityFrom(
 								AvatarDamageSource.causeFloatingBlockDamage(floating, floating.getOwner()),
 								(float) (speed * blockDamage.currentValue()));
@@ -259,10 +259,10 @@ public abstract class FloatingBlockBehavior {
 		public FloatingBlockBehavior onUpdate() {
 			applyGravity();
 			
-			Vector velocity = floating.getVelocity();
+			Vector velocity = floating.velocity();
 			if (velocity.y() <= 0) {
 				velocity.setY(0);
-				floating.setVelocity(velocity);
+				floating.velocity().set(velocity);
 				return new PlayerControlled(floating, floating.getOwner());
 			}
 			
@@ -311,7 +311,7 @@ public abstract class FloatingBlockBehavior {
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(floating));
 			motion.mul(5);
-			floating.setVelocity(motion);
+			floating.velocity().set(motion);
 			
 			return this;
 		}

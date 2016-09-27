@@ -21,7 +21,7 @@ public class EntityAirGust extends EntityArc {
 		super.onUpdate();
 		EntityControlPoint first = getControlPoint(0);
 		EntityControlPoint second = getControlPoint(1);
-		if (first.getVecPosition().sqrDist(second.getVecPosition()) >= getControlPointMaxDistanceSq()) {
+		if (first.position().sqrDist(second.position()) >= getControlPointMaxDistanceSq()) {
 			setDead();
 		}
 		if (ticksExisted > 80) setDead();

@@ -28,8 +28,8 @@ public class RenderFireArc extends RenderArc {
 		// Parametric equation
 		// For parameters, they will be same as linear equation: y = mx+b
 		
-		Vector m = second.getVecPosition().minus(first.getVecPosition());
-		Vector b = first.getVecPosition();
+		Vector m = second.position().minus(first.position());
+		Vector b = first.position();
 		double x = Math.random(); // 0-1
 		Vector spawnAt = m.times(x).plus(b);
 		Vector velocity = new Vector(0, 0, 0);

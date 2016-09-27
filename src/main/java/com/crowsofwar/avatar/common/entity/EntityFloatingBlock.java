@@ -45,13 +45,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	private static int nextBlockID = 0;
 	
-	/**
-	 * Holds the current velocity. Please don't use this field directly, as it is designed to be
-	 * synced. Use {@link #getVelocity()} and {@link #setVelocity(Vector)}.
-	 */
-	private Vector velocity;
-	private final Vector internalPosition;
-	
 	private EntityPlayer owner;
 	
 	/**
@@ -69,12 +62,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public EntityFloatingBlock(World world) {
 		super(world);
 		setSize(0.95f, 0.95f);
-		velocity = new Vector(0, 0, 0);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
-		this.internalPosition = new Vector(0, 0, 0);
-		
 		this.enableItemDrops = true;
 		
 	}
@@ -114,10 +104,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
 		nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
-		Vector velocity = getVelocity();
-		nbt.setDouble("VelocityX", velocity.x());
-		nbt.setDouble("VelocityY", velocity.y());
-		nbt.setDouble("VelocityZ", velocity.z());
+		nbt.setDouble("VelocityX", velocity().x());
+		nbt.setDouble("VelocityY", velocity().y());
+		nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 	}
@@ -201,7 +190,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			
 		}
 		
-		if (!worldObj.isRemote) setVelocity(getVelocity().times(getFriction()));
+		if (!worldObj.isRemote) velocity().mul(getFriction());
 		
 		prevPosX = posX;
 		prevPosY = posY;
@@ -209,11 +198,10 @@ public class EntityFloatingBlock extends AvatarEntity {
 		lastTickPosX = posX;
 		lastTickPosY = posY;
 		lastTickPosZ = posZ;
-		Vector velocity = getVelocity();
-		moveEntity(velocity.x() / 20, velocity.y() / 20, velocity.z() / 20);
-		motionX = velocity.x() / 20;
-		motionY = velocity.y() / 20;
-		motionZ = velocity.z() / 20;
+		moveEntity(velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
+		motionX = velocity().x() / 20;
+		motionY = velocity().y() / 20;
+		motionZ = velocity().z() / 20;
 		
 		getBehavior().setFloatingBlock(this);
 		FloatingBlockBehavior nextBehavior = getBehavior().onUpdate();

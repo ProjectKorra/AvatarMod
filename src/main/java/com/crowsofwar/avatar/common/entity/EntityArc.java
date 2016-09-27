@@ -73,22 +73,21 @@ public abstract class EntityArc extends AvatarEntity {
 		
 		if (this.ticksExisted == 1) {
 			for (int i = 0; i < points.length; i++) {
-				points[i].setVecPosition(getVecPosition());
+				points[i].setVecPosition(position());
 				worldObj.spawnEntityInWorld(points[i]);
 			}
 		}
 		
 		ignoreFrustumCheck = true;
 		
-		Vector vel = getVelocity();
-		
 		if (isGravityEnabled()) {
-			addVelocity(getGravityVector());
+			velocity().add(getGravityVector());
 		}
 		
-		moveEntity(vel.x() / 20, vel.y() / 20, vel.z() / 20);
+		Vector velPerTick = velocity().dividedBy(20);
+		moveEntity(velPerTick.x(), velPerTick.y(), velPerTick.z());
 		getLeader().setPosition(posX, posY, posZ);
-		getLeader().setVelocity(getVelocity());
+		getLeader().velocity().set(velocity());
 		
 		if (isCollided) {
 			setDead();
@@ -99,8 +98,8 @@ public abstract class EntityArc extends AvatarEntity {
 			
 			EntityControlPoint leader = points[i - 1];
 			EntityControlPoint p = points[i];
-			Vector leadPos = i == 0 ? getVecPosition() : getLeader(i).getVecPosition();
-			double sqrDist = p.getVecPosition().sqrDist(leadPos);
+			Vector leadPos = i == 0 ? velocity() : getLeader(i).position();
+			double sqrDist = p.position().sqrDist(leadPos);
 			
 			if (sqrDist > getControlPointTeleportDistanceSq()) {
 				
@@ -108,10 +107,10 @@ public abstract class EntityArc extends AvatarEntity {
 				
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 				
-				Vector diff = leader.getVecPosition().minus(p.getVecPosition());
+				Vector diff = leader.position().minus(p.position());
 				diff.normalize();
 				diff.mul(3);
-				p.addVelocity(diff);
+				p.velocity().add(diff);
 				
 			}
 			

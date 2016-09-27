@@ -61,18 +61,18 @@ public class EntityFlames extends AvatarEntity {
 	
 	@Override
 	public void onUpdate() {
-		Vector velocityPerTick = getVelocity().dividedBy(20);
+		Vector velocityPerTick = velocity().dividedBy(20);
 		moveEntity(velocityPerTick.x(), velocityPerTick.y(), velocityPerTick.z());
 		
-		setVelocity(getVelocity().times(0.94));
+		velocity().mul(0.94);
 		
-		if (getVelocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
+		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
 		
-		Raytrace.Result raytrace = Raytrace.raytrace(worldObj, getVecPosition(), getVelocity().normalize(),
-				0.3, true);
+		Raytrace.Result raytrace = Raytrace.raytrace(worldObj, velocity(), velocity().copy().normalize(), 0.3,
+				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
-			setVelocity(getVelocity().reflect(new Vector(sideHit)).times(0.5));
+			velocity().set(velocity().reflect(new Vector(sideHit)).times(0.5));
 		}
 		
 		if (!worldObj.isRemote) {

@@ -42,7 +42,7 @@ public class AbilityFireThrow extends BendingAbility<FirebendingState> {
 		if (fire != null) {
 			Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
-			fire.addVelocity(look.times(15));
+			fire.velocity().add(look.times(15));
 			fire.setGravityEnabled(true);
 			fs.setNoFireArc();
 			data.sendBendingState(fs);

@@ -46,7 +46,7 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 		EntityRavine ravine = new EntityRavine(world);
 		ravine.setOwner(player);
 		ravine.setPosition(player.posX, player.posY, player.posZ);
-		ravine.setVelocity(look.times(10));
+		ravine.velocity().set(look.times(10));
 		world.spawnEntityInWorld(ravine);
 		
 		BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, player));

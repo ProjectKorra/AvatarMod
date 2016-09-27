@@ -46,7 +46,7 @@ public class AbilityWaterThrow extends BendingAbility<WaterbendingState> {
 			Vector force = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
-			water.addVelocity(force);
+			water.velocity().add(force);
 			water.setGravityEnabled(true);
 			
 			bendingState.releaseWater();

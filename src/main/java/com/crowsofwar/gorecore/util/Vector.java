@@ -488,7 +488,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Returns this vector reflected across the given normal.
+	 * Returns this vector reflected across the given normal. Does not modify this vector or the
+	 * normal.
 	 * 
 	 * @param normal
 	 *            Must be normalized

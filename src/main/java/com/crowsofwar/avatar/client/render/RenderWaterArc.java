@@ -31,13 +31,13 @@ public class RenderWaterArc extends RenderArc {
 		// Parametric equation
 		
 		Vector from = new Vector(0, 0, 0);
-		Vector to = second.getVecPosition().minus(first.getVecPosition());
+		Vector to = second.position().minus(first.position());
 		Vector diff = to.minus(from);
-		Vector offset = first.getVecPosition();
+		Vector offset = first.position();
 		Vector direction = diff.copy();
 		direction.normalize();
 		Vector spawnAt = offset.plus(direction.times(Math.random()));
-		Vector velocity = first.getVelocity();
+		Vector velocity = first.velocity();
 		arc.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, spawnAt.x(), spawnAt.y(), spawnAt.z(),
 				velocity.x(), velocity.y(), velocity.z());
 	}

@@ -79,7 +79,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					
 					double dist = 2.5;
 					Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
-					floating.addVelocity(force);
+					floating.velocity().add(force);
 					floating.setBehavior(new FloatingBlockBehavior.PickUp(floating));
 					floating.setOwner(player);
 					

@@ -53,7 +53,7 @@ public class EntityRavine extends AvatarEntity {
 	}
 	
 	public double getSqrDistanceTravelled() {
-		return getVecPosition().sqrDist(initialPosition);
+		return position().sqrDist(initialPosition);
 	}
 	
 	@Override
@@ -75,11 +75,11 @@ public class EntityRavine extends AvatarEntity {
 	public void onEntityUpdate() {
 		
 		if (initialPosition == null) {
-			initialPosition = getVecPosition();
+			initialPosition = position();
 		}
 		
-		Vector position = getVecPosition();
-		Vector velocity = getVelocity();
+		Vector position = position();
+		Vector velocity = velocity();
 		
 		Vector nowPos = position.add(velocity.times(0.05));
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());

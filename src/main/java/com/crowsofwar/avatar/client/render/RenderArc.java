@@ -61,7 +61,7 @@ public abstract class RenderArc extends Render {
 		double z = leader.getZPos() - TileEntityRendererDispatcher.staticPlayerZ;
 		
 		Vector from = new Vector();
-		Vector to = point.getVecPosition().minus(leader.getVecPosition());
+		Vector to = point.position().minus(leader.position());
 		
 		Vector diff = to.minus(from);
 		

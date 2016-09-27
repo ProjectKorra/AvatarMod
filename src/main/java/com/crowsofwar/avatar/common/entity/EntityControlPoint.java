@@ -94,8 +94,8 @@ public class EntityControlPoint extends AvatarEntity implements IEntityAdditiona
 	public void onUpdate() {
 		super.onUpdate();
 		
-		setVecPosition(getVecPosition().plus(getVelocity().times(0.05)));
-		setVelocity(getVelocity().times(0.4));
+		position().add(velocity().times(0.05));
+		velocity().mul(0.4);
 		
 		List<Entity> collisions = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
 		if (!collisions.isEmpty()) {
@@ -137,19 +137,19 @@ public class EntityControlPoint extends AvatarEntity implements IEntityAdditiona
 	}
 	
 	public double getXPos() {
-		return getVecPosition().x();
+		return position().x();
 	}
 	
 	public double getYPos() {
-		return getVecPosition().y();
+		return position().y();
 	}
 	
 	public double getZPos() {
-		return getVecPosition().z();
+		return position().z();
 	}
 	
 	public double getDistance(EntityControlPoint point) {
-		return getVecPosition().dist(point.getVecPosition());
+		return position().dist(point.position());
 	}
 	
 	/**
