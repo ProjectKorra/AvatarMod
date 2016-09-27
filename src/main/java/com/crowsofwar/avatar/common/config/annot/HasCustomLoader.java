@@ -13,12 +13,12 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface CustomLoader {
+public @interface HasCustomLoader {
 	
 	/**
 	 * Since we can't use lambdas in members, it creates a new instance of that CustomObjectLoader.
 	 */
-	Class<CustomObjectLoader> loaderClass();
+	Class<? extends CustomObjectLoader> loaderClass();
 	
 	/**
 	 * Whether to proceed to load any fields marked with {@link Load}, then leave the rest to the
