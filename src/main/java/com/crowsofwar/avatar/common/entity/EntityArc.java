@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -14,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class EntityArc extends Entity implements IPhysics {
+public abstract class EntityArc extends AvatarEntity {
 	
 	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELOCITY = 4, // 4,5,6
 			DATAWATCHER_GRAVITY = 7;
@@ -197,29 +196,6 @@ public abstract class EntityArc extends Entity implements IPhysics {
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender(float p_70070_1_) {
 		return 15728880;
-	}
-	
-	@Override
-	public Vector getVecPosition() {
-		internalPos.setX(posX);
-		internalPos.setY(posY);
-		internalPos.setZ(posZ);
-		return internalPos;
-	}
-	
-	@Override
-	public Vector getVelocity() {
-		return velocity.getValue();
-	}
-	
-	@Override
-	public void setVelocity(Vector vel) {
-		velocity.setValue(vel);
-	}
-	
-	@Override
-	public void addVelocity(Vector vel) {
-		setVelocity(getVelocity().plus(vel));
 	}
 	
 	public boolean isGravityEnabled() {

@@ -20,7 +20,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class EntityFlames extends Entity implements IPhysics {
+public class EntityFlames extends AvatarEntity {
 	
 	private final IEntityProperty<Vector> propVelocity;
 	
@@ -88,25 +88,5 @@ public class EntityFlames extends Entity implements IPhysics {
 	
 	@Override
 	protected void playStepSound(BlockPos pos, Block blockIn) {}
-	
-	@Override
-	public Vector getVecPosition() {
-		return Vector.getEntityPos(this);
-	}
-	
-	@Override
-	public Vector getVelocity() {
-		return propVelocity.getValue();
-	}
-	
-	@Override
-	public void setVelocity(Vector vel) {
-		propVelocity.setValue(vel);
-	}
-	
-	@Override
-	public void addVelocity(Vector vel) {
-		propVelocity.getValue().add(vel);
-	}
 	
 }

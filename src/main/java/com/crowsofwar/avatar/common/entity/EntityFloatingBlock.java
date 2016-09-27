@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityFloatingBlock extends Entity implements IPhysics {
+public class EntityFloatingBlock extends AvatarEntity {
 	
 	public static final Block DEFAULT_BLOCK = Blocks.STONE;
 	
@@ -239,32 +239,6 @@ public class EntityFloatingBlock extends Entity implements IPhysics {
 				worldObj.spawnEntityInWorld(ei);
 			}
 		}
-	}
-	
-	@Override
-	public void addVelocity(Vector force) {
-		setVelocity(getVelocity().plus(force));
-	}
-	
-	@Override
-	public Vector getVelocity() {
-		velocity = dataManager.get(SYNC_VELOCITY);
-		return velocity;
-	}
-	
-	@Override
-	public void setVelocity(Vector velocity) {
-		if (!worldObj.isRemote) {
-			dataManager.set(SYNC_VELOCITY, velocity);
-		}
-	}
-	
-	@Override
-	public Vector getVecPosition() {
-		internalPosition.setX(posX);
-		internalPosition.setY(posY);
-		internalPosition.setZ(posZ);
-		return internalPosition;
 	}
 	
 	public float getFriction() {

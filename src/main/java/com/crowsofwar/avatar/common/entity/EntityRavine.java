@@ -31,7 +31,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class EntityRavine extends Entity implements IPhysics {
+public class EntityRavine extends AvatarEntity {
 	
 	private final IEntityProperty<Vector> propVelocity;
 	private Vector initialPosition;
@@ -149,26 +149,6 @@ public class EntityRavine extends Entity implements IPhysics {
 			}
 		}
 		
-	}
-	
-	@Override
-	public Vector getVecPosition() {
-		return new Vector(this);
-	}
-	
-	@Override
-	public Vector getVelocity() {
-		return propVelocity.getValue();
-	}
-	
-	@Override
-	public void setVelocity(Vector vel) {
-		propVelocity.setValue(vel);
-	}
-	
-	@Override
-	public void addVelocity(Vector vel) {
-		setVelocity(getVelocity().plus(vel));
 	}
 	
 }

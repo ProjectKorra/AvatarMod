@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
  * 
  * @author CrowsOfWar
  */
-public class EntityControlPoint extends Entity implements IPhysics, IEntityAdditionalSpawnData {
+public class EntityControlPoint extends AvatarEntity implements IEntityAdditionalSpawnData {
 	
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager
 			.createKey(EntityControlPoint.class, DataSerializers.VARINT);
@@ -150,29 +150,6 @@ public class EntityControlPoint extends Entity implements IPhysics, IEntityAddit
 	
 	public double getDistance(EntityControlPoint point) {
 		return getVecPosition().dist(point.getVecPosition());
-	}
-	
-	@Override
-	public Vector getVecPosition() {
-		internalPosition.setX(posX);
-		internalPosition.setY(posY);
-		internalPosition.setZ(posZ);
-		return internalPosition;
-	}
-	
-	@Override
-	public Vector getVelocity() {
-		return internalVelocity.getValue();
-	}
-	
-	@Override
-	public void setVelocity(Vector vel) {
-		internalVelocity.setValue(vel);
-	}
-	
-	@Override
-	public void addVelocity(Vector vel) {
-		setVelocity(getVelocity().plus(vel));
 	}
 	
 	/**
