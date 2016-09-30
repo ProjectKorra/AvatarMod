@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.client.gui;
 
-import java.io.IOException;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -17,11 +15,13 @@ import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class RadialMenu extends GuiScreen implements IAvatarGui {
+public class RadialMenu extends Gui implements IAvatarGui {
 	
 	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
 			"textures/gui/radial_segment_cut.png");
@@ -48,7 +48,14 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 	private BendingAbility[] controls;
 	private MenuTheme theme;
 	
+	private final Minecraft mc = Minecraft.getMinecraft();
+	
+	// TODO Re-calculate width/height on resolution change
+	int width;
+	int height;
+	
 	public RadialMenu(int controllerId) {
+		
 		BendingController controller = BendingManager.getBending(controllerId);
 		if (controller == null)
 			throw new IllegalArgumentException("Can't make radial menu gui for controller id " + controllerId
@@ -91,21 +98,17 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		}
 		this.controls = ctrl;
 		
-	}
-	
-	@Override
-	public void initGui() {
-		super.initGui();
-		
 		for (int i = 0; i < segments.length; i++) {
 			segments[i] = new RadialSegment(this, i, controls[i] == null ? -1 : controls[i].getIconIndex());
 		}
 		
+		ScaledResolution resolution = new ScaledResolution(mc);
+		width = resolution.getScaledWidth();
+		height = resolution.getScaledHeight();
+		
 	}
 	
-	@Override
 	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
-		super.drawScreen(mouseX, mouseY, p_73863_3_);
 		
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
@@ -116,18 +119,6 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		
 	}
 	
-	@Override
-	public boolean doesGuiPauseGame() {
-		return false;
-	}
-	
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-		
-	}
-	
-	@Override
 	public void updateScreen() {
 		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing));
 		if (!pressed) {
@@ -186,6 +177,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		float iconScale = .8f;
 		float angle = segment.getAngle() + 45f;
 		angle %= 360;
+		
 		GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
 		GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
 		GlStateManager.translate(-59, -27, 0); // Translate into correct position
