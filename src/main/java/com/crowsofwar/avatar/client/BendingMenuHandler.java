@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class BendingMenuHandler extends Gui {
 	
-	private final RadialMenu gui;
+	private RadialMenu gui;
 	private final Minecraft mc;
 	// FIXME Need to recalculate upon screen resize?
 	private ScaledResolution resolution;
@@ -34,13 +34,14 @@ public class BendingMenuHandler extends Gui {
 	
 	@SubscribeEvent
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
+		gui.initGui();
 		int mouseX = Mouse.getX() * resolution.getScaledWidth() / mc.displayWidth;
 		int mouseY = Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight;
 		
 		drawTexturedModalRect(100, 100, 0, 0, 100, 100);
-		// gui.drawScreen(mouseX, mouseY, 0);
+		gui.drawScreen(mouseX, mouseY, 0);
 		
-		System.out.println("rrender " + e);
+		// System.out.println("rrender " + e);
 	}
 	
 }

@@ -87,6 +87,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		BendingAbility[] ctrl = new BendingAbility[8];
 		for (int i = 0; i < ctrl.length; i++) {
 			ctrl[i] = i < controls.length ? controls[i] : null;
+			System.out.println("Set ability " + i + " to " + ctrl[i]);
 		}
 		this.controls = ctrl;
 		
@@ -108,6 +109,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
+			System.out.println("Continue to draw segment " + i);
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY);
 			drawRadialSegment(segments[i], hover);
 		}
