@@ -112,7 +112,6 @@ public class RadialMenu extends Gui implements IAvatarGui {
 		
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
-			System.out.println("Continue to draw segment " + i);
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY);
 			drawRadialSegment(segments[i], hover);
 		}

@@ -35,9 +35,9 @@ public class BendingMenuHandler extends Gui {
 	@SubscribeEvent
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
 		int mouseX = Mouse.getX() * resolution.getScaledWidth() / mc.displayWidth;
-		int mouseY = Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight;
+		int mouseY = resolution.getScaledHeight()
+				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
 		
-		drawTexturedModalRect(100, 100, 0, 0, 100, 100);
 		gui.drawScreen(mouseX, mouseY, 0);
 		
 		// System.out.println("rrender " + e);
