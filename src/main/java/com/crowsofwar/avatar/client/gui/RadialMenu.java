@@ -77,17 +77,19 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
 		
-		if (controls == null) throw new IllegalArgumentException("Controls is null");
-		if (controls.length > 8)
+		if (controls == null) {
+			throw new IllegalArgumentException("Controls is null");
+		}
+		if (controls.length > 8) {
 			throw new IllegalArgumentException("The length of controls can't be more than 8");
+		}
+		
 		BendingAbility[] ctrl = new BendingAbility[8];
 		for (int i = 0; i < ctrl.length; i++) {
-			if (i < controls.length)
-				ctrl[i] = controls[i];
-			else
-				ctrl[i] = null;
+			ctrl[i] = i < controls.length ? controls[i] : null;
 		}
 		this.controls = ctrl;
+		
 	}
 	
 	@Override
@@ -105,6 +107,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 		
 		for (int i = 0; i < segments.length; i++) {
+			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY);
 			drawRadialSegment(segments[i], hover);
 		}
@@ -171,7 +174,7 @@ public class RadialMenu extends GuiScreen implements IAvatarGui {
 		// Draw edge
 		GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
 				theme.getEdge().getBlue(hover) / 255f);
-		mc.getTextureManager().bindTexture(this.edge);
+		mc.getTextureManager().bindTexture(edge);
 		GlStateManager.translate(0, 0, 1);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GlStateManager.popMatrix();
