@@ -16,7 +16,7 @@ public class SampleConfiguration {
 	public double settingB;
 	
 	@Load
-	public Animal george;
+	public Animal bob;
 	
 	@Load
 	public Animal fluffy;

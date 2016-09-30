@@ -29,4 +29,12 @@ public class ConfigLoader {
 		
 	}
 	
+	// TODO Implement
+	/**
+	 * Return a yaml representation of that object.
+	 */
+	public static String yaml(Object obj) {
+		return null;
+	}
+	
 }

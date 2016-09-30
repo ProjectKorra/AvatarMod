@@ -8,6 +8,8 @@ package com.crowsofwar.avatar.common.config.annot;
 @HasCustomLoader(loaderClass = Animal.Loader.class)
 public class Animal {
 	
+	public static final String DEFAULT_ANIMAL = ConfigLoader.yaml(new Animal("Bob", "Builder", 4, false));
+	
 	@Load
 	public String name;
 	
@@ -19,6 +21,15 @@ public class Animal {
 	
 	// can't be configured
 	public boolean isAwesome;
+	
+	public Animal() {}
+	
+	public Animal(String name, String species, int age, boolean isAwesome) {
+		this.name = name;
+		this.species = species;
+		this.age = age;
+		this.isAwesome = isAwesome;
+	}
 	
 	public static class Loader implements CustomObjectLoader<Animal> {
 		
