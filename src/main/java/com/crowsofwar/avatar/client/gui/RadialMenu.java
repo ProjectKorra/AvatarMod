@@ -168,7 +168,7 @@ public class RadialMenu extends Gui implements IAvatarGui {
 				theme.getEdge().getBlue(hover) / 255f);
 		mc.getTextureManager().bindTexture(edge);
 		GlStateManager.translate(0, 0, 1);
-		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		// drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GlStateManager.popMatrix();
 		
 		// Draw icon
@@ -194,7 +194,7 @@ public class RadialMenu extends Gui implements IAvatarGui {
 		// image
 		GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
 		mc.getTextureManager().bindTexture(icons);
-		drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
+		// drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
 		
 		GlStateManager.popMatrix();
 	}
