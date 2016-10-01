@@ -119,6 +119,7 @@ public class RadialMenu extends Gui implements IAvatarGui {
 	}
 	
 	public boolean updateScreen() {
+		System.out.println("Must press " + pressing);
 		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing));
 		if (!pressed) {
 			int mouseX = getMouseX();
