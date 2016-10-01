@@ -91,7 +91,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 * Gets an identifier for this bending controller.
 	 */
 	public BendingType getType() {
-		return BendingType.values()[getID()];
+		return BendingType.values()[getID() - 1];
 	}
 	
 	/**
