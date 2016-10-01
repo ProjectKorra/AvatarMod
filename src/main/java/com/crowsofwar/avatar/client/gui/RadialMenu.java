@@ -147,56 +147,61 @@ public class RadialMenu extends Gui implements IAvatarGui {
 	 *            Radial segment to draw
 	 * @param background
 	 */
+	//@formatter:off
 	private void drawRadialSegment(RadialSegment segment, boolean hover) {
+		
+		GlStateManager.enableBlend();
 		
 		// Draw background & edge
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
-		GlStateManager.scale(menuScale, menuScale, menuScale); // Scale all following arguments
-		GlStateManager.rotate(segment.getAngle(), 0, 0, 1); // All transform operations and the
-															// image are
-		// rotated
-		GlStateManager.translate(-segmentX, -segmentY, 0); // Offset the image to the correct
-															// center point
-		// Draw background
-		GlStateManager.color(theme.getBackground().getRed(hover) / 255f,
-				theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f);
-		mc.getTextureManager().bindTexture(radialMenu);
-		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-		// Draw edge
-		GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
-				theme.getEdge().getBlue(hover) / 255f);
-		mc.getTextureManager().bindTexture(edge);
-		GlStateManager.translate(0, 0, 1);
-		// drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			GlStateManager.translate(width / 2f, height / 2f, 0); 	//Re-center origin
+			GlStateManager.scale(menuScale, menuScale, menuScale); 	// Scale all following arguments
+			GlStateManager.rotate(segment.getAngle(), 0, 0, 1);		// All transform operations and the
+																	// image are rotated
+			GlStateManager.translate(-segmentX, -segmentY, 0);		// Offset the image to the correct
+																	// center point
+			// Draw background
+			GlStateManager.color(theme.getBackground().getRed(hover) / 255f,
+					theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f);
+			mc.getTextureManager().bindTexture(radialMenu);
+			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			// Draw edge
+			GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
+					theme.getEdge().getBlue(hover) / 255f);
+			mc.getTextureManager().bindTexture(edge);
+//			GlStateManager.translate(0, 0, 1);
+			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GlStateManager.popMatrix();
 		
 		// Draw icon
 		GlStateManager.pushMatrix();
-		float iconScale = .8f;
-		float angle = segment.getAngle() + 45f;
-		angle %= 360;
-		
-		GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
-		GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
-		GlStateManager.translate(-59, -27, 0); // Translate into correct position
-		GlStateManager.rotate(-angle, 0, 0, 1); // Icon is now at desired position, rotate the
-												// image back
-		// to regular
-		
-		// Color to icon RGB
-		GlStateManager.color(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
-				theme.getIcon().getBlue(hover) / 255f);
-		
-		GlStateManager.translate(0, 0, 2); // Ensure icon is not overlapped
-		GlStateManager.scale(iconScale, iconScale, iconScale); // Scale the icon's recentering
-																// and actual
-		// image
-		GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
-		mc.getTextureManager().bindTexture(icons);
-		// drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
-		
+			float iconScale = .8f;
+			float angle = segment.getAngle() + 45f;
+			angle %= 360;
+			
+			GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
+			GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
+			GlStateManager.translate(-59, -27, 0); // Translate into correct position
+			GlStateManager.rotate(-angle, 0, 0, 1); // Icon is now at desired position, rotate the
+													// image back
+			// to regular
+			
+			// Color to icon RGB
+			GlStateManager.color(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
+					theme.getIcon().getBlue(hover) / 255f);
+			
+			GlStateManager.translate(0, 0, 2); // Ensure icon is not overlapped
+			GlStateManager.scale(iconScale, iconScale, iconScale); // Scale the icon's recentering
+																	// and actual
+			// image
+			GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
+			mc.getTextureManager().bindTexture(icons);
+			drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
+			
 		GlStateManager.popMatrix();
+		
+		GlStateManager.disableBlend();
+		
 	}
 	
 	private int getMouseX() {
