@@ -38,6 +38,14 @@ public class BendingMenuHandler extends Gui {
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
 		
+		if (currentGui != null) {
+			if (currentGui.updateScreen()) {
+				currentGui = null;
+			} else {
+				currentGui.drawScreen(mouseX, mouseY, 0);
+			}
+		}
+		
 		// System.out.println("rrender " + e);
 	}
 	

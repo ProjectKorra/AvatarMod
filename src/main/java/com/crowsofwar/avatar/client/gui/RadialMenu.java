@@ -118,7 +118,7 @@ public class RadialMenu extends Gui implements IAvatarGui {
 		
 	}
 	
-	public void updateScreen() {
+	public boolean updateScreen() {
 		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing));
 		if (!pressed) {
 			int mouseX = getMouseX();
@@ -136,8 +136,8 @@ public class RadialMenu extends Gui implements IAvatarGui {
 					
 				}
 			}
-			mc.thePlayer.closeScreen();
 		}
+		return !pressed;
 	}
 	
 	/**
