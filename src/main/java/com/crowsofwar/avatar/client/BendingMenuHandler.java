@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client;
 import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.client.gui.RadialMenu;
+import com.crowsofwar.avatar.common.bending.BendingType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -20,13 +21,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class BendingMenuHandler extends Gui {
 	
-	private RadialMenu gui;
+	private RadialMenu currentGui;
 	private final Minecraft mc;
 	// FIXME Need to recalculate upon screen resize?
 	private ScaledResolution resolution;
 	
 	public BendingMenuHandler() {
-		gui = new RadialMenu(1);
 		mc = Minecraft.getMinecraft();
 		resolution = new ScaledResolution(mc);
 		System.out.println("Constructed BMH");
@@ -38,9 +38,11 @@ public class BendingMenuHandler extends Gui {
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
 		
-		gui.drawScreen(mouseX, mouseY, 0);
-		
 		// System.out.println("rrender " + e);
+	}
+	
+	public void openBendingGui(BendingType bending) {
+		this.currentGui = new RadialMenu(bending.id());
 	}
 	
 }

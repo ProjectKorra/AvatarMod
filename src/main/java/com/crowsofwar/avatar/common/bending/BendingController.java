@@ -78,9 +78,21 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	}
 	
 	/**
-	 * Get an identifier for this bending ability. Should be unique per-class. (not per-instance)
+	 * @deprecated
+	 * 			
+	 * 			Get an identifier for this bending ability. Should be unique per-class. (not
+	 *             per-instance)
+	 * @see #getType()
 	 */
+	@Deprecated
 	public abstract int getID();
+	
+	/**
+	 * Gets an identifier for this bending controller.
+	 */
+	public BendingType getType() {
+		return BendingType.values()[getID()];
+	}
 	
 	/**
 	 * Called to create an IBendingState for the player. This allows the BendingController to store

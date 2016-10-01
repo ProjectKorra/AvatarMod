@@ -13,14 +13,13 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.client.BendingMenuHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 
@@ -48,6 +47,7 @@ public class ClientInput implements IControlsHandler {
 	private Map<String, KeyBinding> keybindings;
 	private boolean mouseLeft, mouseRight, mouseMiddle;
 	private boolean wasLeft, wasRight, wasMiddle;
+	private final BendingMenuHandler menuHandler;
 	
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
@@ -56,10 +56,11 @@ public class ClientInput implements IControlsHandler {
 	
 	private boolean press;
 	
-	public ClientInput() {
+	public ClientInput(BendingMenuHandler menuHandler) {
 		gameSettings = Minecraft.getMinecraft().gameSettings;
 		mouseLeft = mouseRight = mouseMiddle = wasLeft = wasRight = wasMiddle = false;
 		mc = Minecraft.getMinecraft();
+		this.menuHandler = menuHandler;
 		
 		keybindings = new HashMap();
 		
@@ -128,14 +129,15 @@ public class ClientInput implements IControlsHandler {
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void openBendingMenu(BendingController controller) {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer,
-				"Error while getting player data for open-bending-menu checks");
-		BendingMenuInfo menu = controller.getRadialMenu();
-		if (data.hasBending(controller.getID()) && isControlPressed(menu.getKey())) {
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			AvatarMod.network.sendToServer(new PacketSUseBendingController(controller.getID()));
-			player.openGui(AvatarMod.instance, menu.getGuiId(), player.worldObj, 0, 0, 0);
-		}
+		menuHandler.openBendingGui(controller.getType());
+		// AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer,
+		// "Error while getting player data for open-bending-menu checks");
+		// BendingMenuInfo menu = controller.getRadialMenu();
+		// if (data.hasBending(controller.getID()) && isControlPressed(menu.getKey())) {
+		// EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		// AvatarMod.network.sendToServer(new PacketSUseBendingController(controller.getID()));
+		// player.openGui(AvatarMod.instance, menu.getGuiId(), player.worldObj, 0, 0, 0);
+		// }
 	}
 	
 	@SubscribeEvent
