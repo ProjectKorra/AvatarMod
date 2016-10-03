@@ -55,14 +55,24 @@ public class ConfigLoader {
 				if (field.getAnnotation(Load.class) != null) {
 					System.out.println("Should load " + field.getName());
 					// Should load this field
+					
+					HasCustomLoader loaderAnnotation = field.getType().getAnnotation(HasCustomLoader.class);
+					
 					Object fromData = data.get(field.getName());
+					Object instance;
+					
 					if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
-						Object instance = field.getType().newInstance();
-						load(instance, (Map) fromData);
-						field.set(obj, instance);
+						instance = field.getType().newInstance();
+						if (loaderAnnotation.loadMarkedFields()) load(instance, (Map) fromData);
 					} else {
-						field.set(obj, fromData);
+						instance = fromData;
 					}
+					
+					if (loaderAnnotation != null)
+						loaderAnnotation.loaderClass().newInstance().load(null, instance);
+					
+					field.set(obj, instance);
+					
 				}
 				
 			}
