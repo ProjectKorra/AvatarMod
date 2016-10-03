@@ -10,31 +10,30 @@ import java.util.List;
 public class SampleConfiguration {
 	
 	@Load
-	public int settingA;
+	public static int settingA;
 	
 	@Load
-	public double settingB;
+	public static double settingB;
 	
 	@Load
-	public Animal bob;
+	public static Animal bob;
 	
 	@Load
-	public Animal fluffy = new Animal("Fluffers", "Fluff ball", 4, true);
+	public static Animal fluffy = new Animal("Fluffers", "Fluff ball", 4, true);
 	
 	// @Load
-	public Animal notSoFluffy;
+	public static Animal notSoFluffy;
 	
 	@Load
-	public List<String> people;
+	public static List<String> people;
 	
 	public static void main(String[] args) {
-		SampleConfiguration cfg = new SampleConfiguration();
-		ConfigLoader.load(cfg, "annot-test.cfg");
-		System.out.println("SettingA: " + cfg.settingA);
-		System.out.println("SettingB: " + cfg.settingB);
-		System.out.println("People: " + cfg.people);
-		System.out.println("bob: " + cfg.bob);
-		System.out.println("Fluffy: " + cfg.fluffy);
+		ConfigLoader.load(SampleConfiguration.class, "annot-test.cfg");
+		System.out.println("SettingA: " + settingA);
+		System.out.println("SettingB: " + settingB);
+		System.out.println("People: " + people);
+		System.out.println("bob: " + bob);
+		System.out.println("Fluffy: " + fluffy);
 	}
 	
 }
