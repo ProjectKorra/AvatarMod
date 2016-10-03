@@ -14,6 +14,12 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class ConfigLoader {
 	
+	/**
+	 * Load a Map containing the YAML configurations at that path.
+	 * 
+	 * @param path
+	 *            Path starting at ".minecraft/config/"
+	 */
 	private static Map<String, ?> loadMap(String path) {
 		
 		try {
@@ -40,11 +46,36 @@ public class ConfigLoader {
 		
 	}
 	
+	/**
+	 * Populate the object's fields marked with with {@link Load} with data from the configuration
+	 * file.
+	 * <p>
+	 * If fields are already set (i.e. not null), their current values will only be preserved if
+	 * there is not entry in configuration.
+	 * <p>
+	 * If an object is being loaded, ConfigLoader will attempt to load that object the same way that
+	 * <code>obj</code> is being loaded. If a {@link HasCustomLoader custom loader} is specified,
+	 * ConfigLoader will call that loader to perform any additional modifications after loading
+	 * the @Load fields.
+	 * 
+	 * @param obj
+	 *            Object to load
+	 * @param path
+	 *            Path to the configuration file, from ".minecraft/config/"
+	 */
 	public static void load(Object obj, String path) {
 		load(obj, loadMap(path));
 	}
 	
-	public static void load(Object obj, Map<String, ?> data) {
+	/**
+	 * Populate that object's fields marked with {@link Load} with data from the configuration map.
+	 * 
+	 * @param obj
+	 *            Object to load
+	 * @param data
+	 *            Map containing configuration data
+	 */
+	private static void load(Object obj, Map<String, ?> data) {
 		
 		try {
 			

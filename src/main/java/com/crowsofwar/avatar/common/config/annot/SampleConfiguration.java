@@ -18,8 +18,8 @@ public class SampleConfiguration {
 	@Load
 	public Animal bob;
 	
-	// @Load
-	public Animal fluffy;
+	@Load
+	public Animal fluffy = new Animal("Fluffers", "Fluff ball", 4, true);
 	
 	// @Load
 	public Animal notSoFluffy;
@@ -34,6 +34,7 @@ public class SampleConfiguration {
 		System.out.println("SettingB: " + cfg.settingB);
 		System.out.println("People: " + cfg.people);
 		System.out.println("bob: " + cfg.bob);
+		System.out.println("Fluffy: " + cfg.fluffy);
 	}
 	
 }
