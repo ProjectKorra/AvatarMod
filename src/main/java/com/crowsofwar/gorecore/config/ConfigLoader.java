@@ -12,6 +12,8 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
+import jline.internal.Nullable;
+
 /**
  * 
  * 
@@ -110,7 +112,7 @@ public class ConfigLoader {
 	 * 
 	 * @throws ConfigurationException
 	 */
-	private void load(Class<?> cls, Object obj, Map<String, ?> data) {
+	private void load(Class<?> cls, @Nullable Object obj, Map<String, ?> data) {
 		
 		try {
 			
@@ -123,6 +125,7 @@ public class ConfigLoader {
 					
 					HasCustomLoader loaderAnnotation = field.getType().getAnnotation(HasCustomLoader.class);
 					
+					System.out.println("------------" + data);
 					Object fromData = data.get(field.getName());
 					Object instance;
 					

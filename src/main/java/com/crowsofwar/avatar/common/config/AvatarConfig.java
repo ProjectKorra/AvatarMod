@@ -16,13 +16,13 @@ public class AvatarConfig {
 	static final Map<String, ConfigurableProperty<?>> allProperties;
 	
 	@Load
-	public static FloatingBlockSettings blockSettings;
+	public static FloatingBlockSettings blockSettings = new FloatingBlockSettings();
 	
 	@Load
-	public static RavineSettings ravineSettings;
+	public static RavineSettings ravineSettings = new RavineSettings();
 	
 	@Load
-	public static WaveSettings waveSettings;
+	public static WaveSettings waveSettings = new WaveSettings();
 	
 	static {
 		
@@ -39,30 +39,30 @@ public class AvatarConfig {
 	public static class FloatingBlockSettings {
 		
 		@Load
-		public static double damageMultiplier;
+		public double damageMultiplier = 0.25;
 		
 		@Load
-		public static double pushMultiplier;
+		public double pushMultiplier = 1;
 		
 	}
 	
 	public static class RavineSettings {
 		
 		@Load
-		public static int damage;
+		public int damage = 7;
 		
 		@Load
-		public static double pushMultiplier;
+		public double pushMultiplier = 0.25;
 		
 	}
 	
 	public static class WaveSettings {
 		
 		@Load
-		public static int damage;
+		public int damage = 9;
 		
 		@Load
-		public static double pushMultiplier;
+		public double pushMultiplier = 6;
 		
 	}
 	
