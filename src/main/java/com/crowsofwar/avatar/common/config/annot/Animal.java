@@ -40,4 +40,10 @@ public class Animal {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return "Animal [name=" + name + ", species=" + species + ", age=" + age + ", isAwesome=" + isAwesome
+				+ "]";
+	}
+	
 }

@@ -56,8 +56,8 @@ public class ConfigLoader {
 					System.out.println("Should load " + field.getName());
 					// Should load this field
 					Object fromData = data.get(field.getName());
-					if (fromData instanceof Map<?, ?> && !field.getClass().isAssignableFrom(Map.class)) {
-						Object instance = field.getClass().newInstance();
+					if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
+						Object instance = field.getType().newInstance();
 						load(instance, (Map) fromData);
 						field.set(obj, instance);
 					} else {

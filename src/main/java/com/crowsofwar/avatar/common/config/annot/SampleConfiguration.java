@@ -33,6 +33,7 @@ public class SampleConfiguration {
 		System.out.println("SettingA: " + cfg.settingA);
 		System.out.println("SettingB: " + cfg.settingB);
 		System.out.println("People: " + cfg.people);
+		System.out.println("Fluffy: " + cfg.fluffy);
 	}
 	
 }
