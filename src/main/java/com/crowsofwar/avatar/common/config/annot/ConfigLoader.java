@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.config.annot;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,6 +20,9 @@ public class ConfigLoader {
 	 * 
 	 * @param path
 	 *            Path starting at ".minecraft/config/"
+	 * 
+	 * @throws ConfigurationException
+	 *             when an error occurs while trying to read the file
 	 */
 	private static Map<String, ?> loadMap(String path) {
 		
@@ -39,9 +43,12 @@ public class ConfigLoader {
 			
 			return map;
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		} catch (IOException e) {
+			throw new ConfigurationException.LoadingException(
+					"Exception trying to load config file at config/" + path, e);
+		} catch (ClassCastException e) {
+			throw new ConfigurationException.UserMistake(
+					"Invalid configuration file at config/" + path + ": not a map");
 		}
 		
 	}
@@ -74,6 +81,8 @@ public class ConfigLoader {
 	 *            Object to load
 	 * @param data
 	 *            Map containing configuration data
+	 * 
+	 * @throws ConfigurationException
 	 */
 	private static void load(Object obj, Map<String, ?> data) {
 		
@@ -97,7 +106,7 @@ public class ConfigLoader {
 						if (field.get(obj) != null) {
 							instance = field.get(obj);
 						} else {
-							throw new Exception(
+							throw new ConfigurationException.UserMistake(
 									"No configured definition for " + field.getName() + ", no default value");
 						}
 						
@@ -119,8 +128,9 @@ public class ConfigLoader {
 				
 			}
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ReflectiveOperationException e) {
+			throw new ConfigurationException.ReflectionException(
+					"Exception while setting values of configuration object", e);
 		}
 		
 	}
