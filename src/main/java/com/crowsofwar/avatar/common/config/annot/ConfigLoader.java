@@ -61,11 +61,22 @@ public class ConfigLoader {
 					Object fromData = data.get(field.getName());
 					Object instance;
 					
-					if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
-						instance = field.getType().newInstance();
-						if (loaderAnnotation.loadMarkedFields()) load(instance, (Map) fromData);
+					if (fromData == null) {
+						
+						if (field.get(obj) != null) {
+							instance = field.get(obj);
+						} else {
+							throw new Exception(
+									"No configured definition for " + field.getName() + ", no default value");
+						}
+						
 					} else {
-						instance = fromData;
+						if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
+							instance = field.getType().newInstance();
+							if (loaderAnnotation.loadMarkedFields()) load(instance, (Map) fromData);
+						} else {
+							instance = fromData;
+						}
 					}
 					
 					if (loaderAnnotation != null)
