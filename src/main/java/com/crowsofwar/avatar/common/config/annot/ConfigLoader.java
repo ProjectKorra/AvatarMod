@@ -84,13 +84,25 @@ public class ConfigLoader {
 	public static void load(Object obj, String path) {
 		ConfigLoader loader = new ConfigLoader(path);
 		loader.values = loadMap(path);
-		loader.load(obj, loader.values);
+		loader.load(obj.getClass(), obj, loader.values);
+		loader.save();
+	}
+	
+	/**
+	 * Same as {@link #load(Object, String)}, but works for static fields.
+	 */
+	public static void load(Class<?> cls, String path) {
+		ConfigLoader loader = new ConfigLoader(path);
+		loader.values = loadMap(path);
+		loader.load(cls, null, loader.values);
 		loader.save();
 	}
 	
 	/**
 	 * Populate that object's fields marked with {@link Load} with data from the configuration map.
 	 * 
+	 * @param cls
+	 *            Class to get fields from. Normally it would be <code>obj.getClass()</code>.
 	 * @param obj
 	 *            Object to load
 	 * @param data
@@ -98,11 +110,10 @@ public class ConfigLoader {
 	 * 
 	 * @throws ConfigurationException
 	 */
-	private void load(Object obj, Map<String, ?> data) {
+	private void load(Class<?> cls, Object obj, Map<String, ?> data) {
 		
 		try {
 			
-			Class<?> cls = obj.getClass();
 			Field[] fields = cls.getDeclaredFields();
 			for (Field field : fields) {
 				
@@ -128,7 +139,8 @@ public class ConfigLoader {
 					} else {
 						if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
 							instance = field.getType().newInstance();
-							if (loaderAnnotation.loadMarkedFields()) load(instance, (Map) fromData);
+							if (loaderAnnotation.loadMarkedFields())
+								load(instance.getClass(), instance, (Map) fromData);
 						} else {
 							instance = fromData;
 						}
