@@ -29,7 +29,7 @@ public class ConfigurationException extends RuntimeException {
 	}
 	
 	/**
-	 * An exception occurred while trying to load the configuration file.
+	 * An exception occurred while trying to access the configuration file on disk.
 	 * 
 	 * @author CrowsOfWar
 	 */

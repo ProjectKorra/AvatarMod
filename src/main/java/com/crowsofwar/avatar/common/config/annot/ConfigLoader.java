@@ -1,11 +1,15 @@
 package com.crowsofwar.avatar.common.config.annot;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -146,6 +150,28 @@ public class ConfigLoader {
 	}
 	
 	private void save() {
+		
+		try {
+			
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config/" + path)));
+			
+			DumperOptions options = new DumperOptions();
+			options.setPrettyFlow(true);
+			options.setDefaultFlowStyle(FlowStyle.BLOCK);
+			
+			String asText = "";
+			Yaml yaml = new Yaml(options);
+			asText = yaml.dump(values);
+			
+			writer.write(asText);
+			writer.close();
+			
+		} catch (IOException e) {
+			
+			throw new ConfigurationException.LoadingException("Exception while trying to save config file",
+					e);
+			
+		}
 		
 	}
 	
