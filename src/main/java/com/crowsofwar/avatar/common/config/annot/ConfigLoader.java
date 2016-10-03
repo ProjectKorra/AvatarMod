@@ -20,7 +20,7 @@ import org.yaml.snakeyaml.Yaml;
 public class ConfigLoader {
 	
 	private final String path;
-	private Map<String, ?> values;
+	private Map<String, Object> values;
 	
 	private ConfigLoader(String path) {
 		this.path = path;
@@ -35,7 +35,7 @@ public class ConfigLoader {
 	 * @throws ConfigurationException
 	 *             when an error occurs while trying to read the file
 	 */
-	private static Map<String, ?> loadMap(String path) {
+	private static Map<String, Object> loadMap(String path) {
 		
 		try {
 			
@@ -50,7 +50,7 @@ public class ConfigLoader {
 			scanner.close();
 			
 			Yaml yaml = new Yaml();
-			Map<String, ?> map = (Map) yaml.load(contents);
+			Map<String, Object> map = (Map) yaml.load(contents);
 			
 			return map;
 			
@@ -119,6 +119,7 @@ public class ConfigLoader {
 						
 						if (field.get(obj) != null) {
 							instance = field.get(obj);
+							values.put(field.getName(), instance);
 						} else {
 							throw new ConfigurationException.UserMistake(
 									"No configured definition for " + field.getName() + ", no default value");
