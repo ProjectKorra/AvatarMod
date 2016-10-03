@@ -5,25 +5,45 @@ package com.crowsofwar.gorecore.config;
  * 
  * @author CrowsOfWar
  */
+@HasCustomLoader(loaderClass = Animal.Loader.class)
 public class Animal {
 	
-	public static ObjectLoader<Animal> ANIMAL = (Configuration cfg) -> new Animal(
-			cfg.load("species").asString(), cfg.load("name").asString(), cfg.load("eats").asString(),
-			cfg.load("age").asInt());
+	public static final String DEFAULT_ANIMAL = ConfigLoader.yaml(new Animal("Bob", "Builder", 4, false));
 	
-	private final String species, name, diet;
-	private final int age;
+	@Load
+	public String name;
 	
-	public Animal(String species, String name, String diet, int age) {
-		this.species = species;
+	@Load
+	public String species;
+	
+	@Load
+	public int age;
+	
+	// can't be configured
+	public boolean isAwesome;
+	
+	public Animal() {}
+	
+	public Animal(String name, String species, int age, boolean isAwesome) {
 		this.name = name;
-		this.diet = diet;
+		this.species = species;
 		this.age = age;
+		this.isAwesome = isAwesome;
+	}
+	
+	public static class Loader implements CustomObjectLoader<Animal> {
+		
+		@Override
+		public void load(Object relevantConfigInfoWillGoHere, Animal obj) {
+			obj.isAwesome = obj.species.equals("Crow");
+		}
+		
 	}
 	
 	@Override
 	public String toString() {
-		return "Animal [species=" + species + ", name=" + name + ", diet=" + diet + ", age=" + age + "]";
+		return "Animal [name=" + name + ", species=" + species + ", age=" + age + ", isAwesome=" + isAwesome
+				+ "]";
 	}
 	
 }

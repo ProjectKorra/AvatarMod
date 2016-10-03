@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.config.annot;
+package com.crowsofwar.gorecore.config;
 
 import java.util.List;
 

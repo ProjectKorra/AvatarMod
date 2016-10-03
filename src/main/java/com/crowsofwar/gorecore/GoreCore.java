@@ -3,7 +3,6 @@ package com.crowsofwar.gorecore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.crowsofwar.gorecore.config.Configuration;
 import com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy;
 import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
 import com.crowsofwar.gorecore.tree.test.TreeTest;

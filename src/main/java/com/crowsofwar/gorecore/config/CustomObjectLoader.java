@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.config.annot;
+package com.crowsofwar.gorecore.config;
 
 /**
  * Allows a class to specify extra functionality when being loaded from configuration. The class

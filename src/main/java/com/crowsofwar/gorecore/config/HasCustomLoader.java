@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.config.annot;
+package com.crowsofwar.gorecore.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
