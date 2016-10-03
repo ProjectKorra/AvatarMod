@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.AvatarConfig.ravineDamage;
-import static com.crowsofwar.avatar.common.config.AvatarConfig.ravinePush;
+import static com.crowsofwar.avatar.common.config.AvatarConfig.ravineSettings;
 
 import java.util.List;
 
@@ -140,10 +139,10 @@ public class EntityRavine extends AvatarEntity {
 						BendingManager.getBending(BendingType.EARTHBENDING)
 								.post(new RavineEvent.HitEntity(this, entity));
 						
-						Vector push = velocity.copy().setY(1).mul(ravinePush.currentValue());
+						Vector push = velocity.copy().setY(1).mul(ravineSettings.pushMultiplier);
 						entity.addVelocity(push.x(), push.y(), push.z());
 						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(this, owner),
-								ravineDamage.currentValue());
+								ravineSettings.damage);
 					}
 				}
 			}

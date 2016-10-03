@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.AvatarConfig.blockDamage;
-import static com.crowsofwar.avatar.common.config.AvatarConfig.blockPush;
+import static com.crowsofwar.avatar.common.config.AvatarConfig.blockSettings;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -215,10 +214,10 @@ public abstract class FloatingBlockBehavior {
 						double speed = floating.velocity().magnitude();
 						collided.attackEntityFrom(
 								AvatarDamageSource.causeFloatingBlockDamage(floating, floating.getOwner()),
-								(float) (speed * blockDamage.currentValue()));
+								(float) (speed * blockSettings.damageMultiplier));
 						
 						Vector motion = new Vector(collided).minus(new Vector(floating));
-						motion.mul(blockPush.currentValue());
+						motion.mul(blockSettings.pushMultiplier);
 						motion.setY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 						if (!world.isRemote) floating.setDead();
