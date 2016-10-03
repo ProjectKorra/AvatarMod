@@ -15,6 +15,13 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class ConfigLoader {
 	
+	private final String path;
+	private Map<String, ?> values;
+	
+	private ConfigLoader(String path) {
+		this.path = path;
+	}
+	
 	/**
 	 * Load a Map containing the YAML configurations at that path.
 	 * 
@@ -71,7 +78,10 @@ public class ConfigLoader {
 	 *            Path to the configuration file, from ".minecraft/config/"
 	 */
 	public static void load(Object obj, String path) {
-		load(obj, loadMap(path));
+		ConfigLoader loader = new ConfigLoader(path);
+		loader.values = loadMap(path);
+		loader.load(obj, loader.values);
+		loader.save();
 	}
 	
 	/**
@@ -84,7 +94,7 @@ public class ConfigLoader {
 	 * 
 	 * @throws ConfigurationException
 	 */
-	private static void load(Object obj, Map<String, ?> data) {
+	private void load(Object obj, Map<String, ?> data) {
 		
 		try {
 			
@@ -132,6 +142,10 @@ public class ConfigLoader {
 			throw new ConfigurationException.ReflectionException(
 					"Exception while setting values of configuration object", e);
 		}
+		
+	}
+	
+	private void save() {
 		
 	}
 	
