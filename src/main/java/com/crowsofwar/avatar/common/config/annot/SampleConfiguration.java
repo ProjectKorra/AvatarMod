@@ -27,4 +27,12 @@ public class SampleConfiguration {
 	@Load
 	public List<String> people;
 	
+	public static void main(String[] args) {
+		SampleConfiguration cfg = new SampleConfiguration();
+		ConfigLoader.load(cfg, "annot-test.cfg");
+		System.out.println("SettingA: " + cfg.settingA);
+		System.out.println("SettingB: " + cfg.settingB);
+		System.out.println("People: " + cfg.people);
+	}
+	
 }

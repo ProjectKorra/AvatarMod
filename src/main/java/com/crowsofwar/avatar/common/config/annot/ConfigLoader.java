@@ -54,6 +54,8 @@ public class ConfigLoader {
 				
 				if (field.getAnnotation(Load.class) != null) {
 					System.out.println("Should load " + field.getName());
+					// Should load this field
+					field.set(obj, data.get(field.getName()));
 				}
 				
 			}
