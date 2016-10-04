@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
@@ -55,12 +54,12 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while processing UseAbility packet");
+		System.out.println("use ability...");
 		if (data != null) {
-			BendingController controller = data.getActiveBendingController();
-			if (controller != null) {
-				data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
-				packet.getAbility().execute(new AbilityContext(data));
-			}
+			System.out.println("data not null.");
+			System.out.println("exec");
+			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
+			packet.getAbility().execute(new AbilityContext(data));
 			
 		}
 		

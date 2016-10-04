@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -30,6 +30,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		this.ability = ability;
 		this.target = target;
 		this.side = side;
+		System.out.println("sending use ability packet...");
 	}
 	
 	@Override

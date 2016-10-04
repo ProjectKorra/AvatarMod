@@ -163,7 +163,7 @@ public class ClientInput implements IControlsHandler {
 			// Minecraft.getMinecraft().thePlayer);
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
 			
-			if (data != null && data.getActiveBendingController() != null) {
+			if (data != null) {
 				List<AvatarControl> pressed = getAllPressed();
 				for (AvatarControl control : pressed) {
 					BendingAbility ability = data.getActiveBendingController().getAbility(data, control);
