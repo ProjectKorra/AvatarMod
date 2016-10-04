@@ -3,7 +3,10 @@ package com.crowsofwar.avatar.client;
 import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.client.gui.RadialMenu;
+import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -49,8 +52,13 @@ public class BendingMenuHandler extends Gui {
 	}
 	
 	public void openBendingGui(BendingType bending) {
-		this.currentGui = new RadialMenu(bending.id());
+		
+		BendingController controller = BendingManager.getBending(type);
+		BendingMenuInfo menu = controller.getRadialMenu();
+		
+		this.currentGui = new RadialMenu(menu.getTheme(), menu.getKey(), menu.getButtons());
 		mc.setIngameNotInFocus();
+		
 	}
 	
 }

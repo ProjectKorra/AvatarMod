@@ -5,11 +5,7 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -49,22 +45,6 @@ public class RadialMenu extends Gui {
 	
 	private final Minecraft mc = Minecraft.getMinecraft();
 	
-	// TODO Re-calculate width/height on resolution change
-	int width;
-	int height;
-	
-	public RadialMenu(int controllerId) {
-		
-		BendingController controller = BendingManager.getBending(controllerId);
-		if (controller == null)
-			throw new IllegalArgumentException("Can't make radial menu gui for controller id " + controllerId
-					+ " because there is no controller for that Id");
-		
-		BendingMenuInfo menu = controller.getRadialMenu();
-		construct(menu.getTheme(), menu.getKey(), menu.getButtons());
-		
-	}
-	
 	/**
 	 * Create a new radial menu with the given controls.
 	 * 
@@ -75,10 +55,6 @@ public class RadialMenu extends Gui {
 	 *            array is filled with null. The arguments can only be a maximum of 8.
 	 */
 	public RadialMenu(MenuTheme theme, AvatarControl pressing, BendingAbility... controls) {
-		construct(theme, pressing, controls);
-	}
-	
-	private void construct(MenuTheme theme, AvatarControl pressing, BendingAbility[] controls) {
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
@@ -208,10 +184,6 @@ public class RadialMenu extends Gui {
 	
 	private int getMouseY() {
 		return this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-	}
-	
-	private IControlsHandler getKeyHandler() {
-		return AvatarMod.proxy.getKeyHandler();
 	}
 	
 }
