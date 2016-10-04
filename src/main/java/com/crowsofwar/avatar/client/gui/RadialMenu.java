@@ -119,7 +119,6 @@ public class RadialMenu extends Gui implements IAvatarGui {
 	}
 	
 	public boolean updateScreen() {
-		System.out.println("Must press " + pressing);
 		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing));
 		if (!pressed) {
 			int mouseX = getMouseX();
@@ -151,11 +150,12 @@ public class RadialMenu extends Gui implements IAvatarGui {
 	//@formatter:off
 	private void drawRadialSegment(RadialSegment segment, boolean hover) {
 		
-		GlStateManager.enableBlend();
+//		GlStateManager.enableBlend();
+//		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		
 		// Draw background & edge
 		GlStateManager.pushMatrix();
-			GlStateManager.translate(width / 2f, height / 2f, 0); 	//Re-center origin
+			GlStateManager.translate(width / 2f, height / 2f, 0); 	// Re-center origin
 			GlStateManager.scale(menuScale, menuScale, menuScale); 	// Scale all following arguments
 			GlStateManager.rotate(segment.getAngle(), 0, 0, 1);		// All transform operations and the
 																	// image are rotated
@@ -200,8 +200,6 @@ public class RadialMenu extends Gui implements IAvatarGui {
 			drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
 			
 		GlStateManager.popMatrix();
-		
-		GlStateManager.disableBlend();
 		
 	}
 	

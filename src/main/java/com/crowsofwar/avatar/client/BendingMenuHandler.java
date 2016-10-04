@@ -23,36 +23,34 @@ public class BendingMenuHandler extends Gui {
 	
 	private RadialMenu currentGui;
 	private final Minecraft mc;
-	// FIXME Need to recalculate upon screen resize?
-	private ScaledResolution resolution;
 	
 	public BendingMenuHandler() {
 		mc = Minecraft.getMinecraft();
-		resolution = new ScaledResolution(mc);
-		System.out.println("Constructed BMH");
 	}
 	
 	@SubscribeEvent
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
+		
+		ScaledResolution resolution = e.getResolution();
+		
 		int mouseX = Mouse.getX() * resolution.getScaledWidth() / mc.displayWidth;
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
 		
 		if (currentGui != null) {
-			System.out.println("Draw...");
 			if (currentGui.updateScreen()) {
 				currentGui = null;
-				System.out.println("Close.");
+				mc.setIngameFocus();
 			} else {
 				currentGui.drawScreen(mouseX, mouseY, 0);
 			}
 		}
 		
-		// System.out.println("rrender " + e);
 	}
 	
 	public void openBendingGui(BendingType bending) {
 		this.currentGui = new RadialMenu(bending.id());
+		mc.setIngameNotInFocus();
 	}
 	
 }
