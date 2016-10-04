@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
@@ -21,7 +23,8 @@ public class AvatarUtils {
 	 * @param writer
 	 *            Passed arguments are both empty arrays
 	 */
-	public static <T extends ReadableWritable> void writeToNBT(List<T> list, NBTTagCompound parent, String listName, WriteToNBT<T> writer) {
+	public static <T extends ReadableWritable> void writeToNBT(List<T> list, NBTTagCompound parent,
+			String listName, WriteToNBT<T> writer) {
 		NBTTagList listTag = new NBTTagList();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -47,8 +50,8 @@ public class AvatarUtils {
 	 *            Any extra parameters you want to pass to your CreateFromNBT
 	 * @return
 	 */
-	public static <T extends ReadableWritable> List<T> readFromNBT(CreateFromNBT<T> instantiator, NBTTagCompound parent, String listName,
-			Object... args) {
+	public static <T extends ReadableWritable> List<T> readFromNBT(CreateFromNBT<T> instantiator,
+			NBTTagCompound parent, String listName, Object... args) {
 		List<T> out = new ArrayList<T>();
 		NBTTagList listTag = parent.getTagList(listName, parent.getId());
 		
@@ -77,6 +80,61 @@ public class AvatarUtils {
 		double y = x * x * (3 - 2 * x);
 		y = y < 0 ? 0 : (y > 1 ? 1 : y);
 		return y * (y2 - y1) + y1;
+	}
+	
+	/**
+	 * Reads and returns a list from NBT.
+	 * 
+	 * @param itemProvider
+	 *            Loads items from the list. Takes an NBT for that item, and returns the actual item
+	 *            object.
+	 * @param nbt
+	 *            NBT compound to load the list from
+	 * @param listName
+	 *            The name of the list tag
+	 */
+	public static <T> List<T> readList(Function<NBTTagCompound, T> itemProvider, NBTTagCompound nbt,
+			String listName) {
+		
+		List<T> out = new ArrayList<>();
+		NBTTagList listTag = nbt.getTagList(listName, 10);
+		for (int i = 0; i < listTag.tagCount(); i++) {
+			NBTTagCompound item = listTag.getCompoundTagAt(i);
+			out.add(itemProvider.apply(item));
+		}
+		
+		return out;
+		
+	}
+	
+	/**
+	 * Writes the list to NBT.
+	 * 
+	 * @param list
+	 *            The list to write
+	 * @param writer
+	 *            Responsible for actually writing the desired data to NBT. Takes the NBT to write
+	 *            to & the item.
+	 * @param nbt
+	 *            NBT compound to write list to
+	 * @param listName
+	 *            The name of the list tag
+	 */
+	public static <T> void writeList(List<T> list, BiConsumer<NBTTagCompound, T> writer, NBTTagCompound nbt,
+			String listName) {
+		
+		NBTTagList listTag = new NBTTagList();
+		
+		for (T item : list) {
+			
+			NBTTagCompound nbtItem = new NBTTagCompound();
+			writer.accept(nbtItem, item);
+			listTag.appendTag(nbtItem);
+			
+		}
+		
+		nbt.setTag(listName, listTag);
+		
 	}
 	
 }

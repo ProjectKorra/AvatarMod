@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.GoreCoreDataSaver;
@@ -41,6 +43,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	private Map<Integer, IBendingState> bendingStates;
 	private List<IBendingState> bendingStateList;
 	
+	private List<StatusControl> statusControls;
+	
 	private PlayerState state;
 	
 	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer player) {
@@ -49,6 +53,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		bendingControllerList = new ArrayList<BendingController>();
 		bendingStates = new HashMap<Integer, IBendingState>();
 		bendingStateList = new ArrayList<IBendingState>();
+		statusControls = new ArrayList<>();
 		state = new PlayerState();
 	}
 	
@@ -70,6 +75,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		
 		activeBending = getBendingController(nbt.getInteger("ActiveBending"));
 		
+		statusControls = AvatarUtils.readList(nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), nbt,
+				"StatusControls");
+		System.out.println("Read status controls to be: " + statusControls);
+		
 	}
 	
 	@Override
@@ -77,6 +86,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", BendingController.writer);
 		AvatarUtils.writeToNBT(bendingStateList, nbt, "BendingData", IBendingState.writer);
 		nbt.setInteger("ActiveBending", activeBending == null ? -1 : activeBending.getID());
+		AvatarUtils.writeList(statusControls, (nbtTag, control) -> nbtTag.setInteger("Id", control.id()), nbt,
+				"StatusControls");
 	}
 	
 	@Override
@@ -243,6 +254,14 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public void setBendingState(IBendingState state) {
 		bendingStates.put(state.getId(), state);
 		bendingStateList.add(state);
+	}
+	
+	public List<StatusControl> getActiveStatusControls() {
+		return Collections.unmodifiableList(statusControls);
+	}
+	
+	public boolean hasStatusControl(StatusControl status) {
+		return statusControls.contains(status);
 	}
 	
 	/**
