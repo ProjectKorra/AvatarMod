@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_WATERBENDING;
-import static com.crowsofwar.avatar.common.gui.AvatarGuiIds.GUI_RADIAL_MENU_WATER;
 
 import java.awt.Color;
 
@@ -31,10 +30,8 @@ public class Waterbending extends BendingController {
 		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
-		menu = new BendingMenuInfo(
-				new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
-						new ThemeColor(icon, base)),
-				KEY_WATERBENDING, GUI_RADIAL_MENU_WATER, abilityWaterArc, abilityWave);
+		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
+				new ThemeColor(icon, base)), KEY_WATERBENDING, abilityWaterArc, abilityWave);
 	}
 	
 	@Override

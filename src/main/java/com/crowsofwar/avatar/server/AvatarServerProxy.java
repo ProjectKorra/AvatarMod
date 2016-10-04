@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.server;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.IAvatarGui;
+import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 
@@ -41,7 +41,7 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	}
 	
 	@Override
-	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
+	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		return null;
 	}
 	

@@ -11,7 +11,6 @@ import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
-import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -57,7 +56,7 @@ public class Earthbending extends BendingController {
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_EARTHBENDING,
-				AvatarGuiIds.GUI_RADIAL_MENU_EARTH, abilityPickUpBlock, abilityRavine);
+				abilityPickUpBlock, abilityRavine);
 		
 	}
 	

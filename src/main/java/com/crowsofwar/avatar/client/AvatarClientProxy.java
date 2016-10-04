@@ -4,7 +4,6 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.controls.ClientInput;
-import com.crowsofwar.avatar.client.gui.RadialMenu;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
 import com.crowsofwar.avatar.client.render.RenderAirGust;
 import com.crowsofwar.avatar.client.render.RenderControlPoint;
@@ -26,7 +25,7 @@ import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWave;
-import com.crowsofwar.avatar.common.gui.IAvatarGui;
+import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
@@ -105,8 +104,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 	
 	@Override
-	public IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
-		return new RadialMenu(id);
+	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
+		return null;
 	}
 	
 	@Override

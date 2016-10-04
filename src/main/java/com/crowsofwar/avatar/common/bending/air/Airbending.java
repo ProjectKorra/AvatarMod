@@ -8,7 +8,6 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.AvatarGuiIds;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -30,8 +29,7 @@ public class Airbending extends BendingController {
 		ThemeColor edge = new ThemeColor(dark, dark);
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
 		MenuTheme theme = new MenuTheme(background, edge, icon);
-		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, AvatarGuiIds.GUI_RADIAL_MENU_AIR,
-				abilityAirGust);
+		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, abilityAirGust);
 	}
 	
 	@Override
