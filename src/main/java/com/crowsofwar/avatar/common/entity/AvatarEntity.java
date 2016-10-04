@@ -21,9 +21,7 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	public AvatarEntity(World world) {
 		super(world);
-		this.internalVelocity = new BackedVector(x -> this.motionX = x / 20, y -> this.motionY = y / 20,
-				z -> this.motionZ = z / 20, () -> this.motionX * 20, () -> this.motionY * 20,
-				() -> this.motionZ * 20);
+		this.internalVelocity = createInternalVelocity();
 		this.internalPosition = new BackedVector(x -> this.posX = x, y -> this.posY = y, z -> this.posZ = z,
 				() -> posX, () -> posY, () -> posZ);
 	}
@@ -44,4 +42,15 @@ public abstract class AvatarEntity extends Entity {
 		return internalPosition;
 	}
 	
+	//@formatter:off
+	protected Vector createInternalVelocity() {
+		return new BackedVector(
+				x -> this.motionX = x / 20,
+				y -> this.motionY = y / 20,
+				z -> this.motionZ = z / 20,
+				() -> this.motionX * 20,
+				() -> this.motionY * 20,
+				() -> this.motionZ * 20);
+	}
+		
 }

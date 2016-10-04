@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 
@@ -77,6 +78,18 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public EntityFloatingBlock(World world, IBlockState blockState, EntityPlayer owner) {
 		this(world, blockState);
 		setOwner(owner);
+	}
+	
+	//@formatter:off
+	@Override
+	protected Vector createInternalVelocity() {
+		return new BackedVector(
+				x -> dataManager.set(SYNC_VELOCITY, velocity().copy().setX(x)),
+				y -> dataManager.set(SYNC_VELOCITY, velocity().copy().setY(y)),
+				z -> dataManager.set(SYNC_VELOCITY, velocity().copy().setZ(z)),
+				() -> dataManager.get(SYNC_VELOCITY).x(),
+				() -> dataManager.get(SYNC_VELOCITY).y(),
+				() -> dataManager.get(SYNC_VELOCITY).z());
 	}
 	
 	// Called from constructor of Entity class
