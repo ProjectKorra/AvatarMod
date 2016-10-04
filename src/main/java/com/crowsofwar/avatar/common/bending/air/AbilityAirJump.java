@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 
 /**
@@ -34,14 +35,12 @@ public class AbilityAirJump extends BendingAbility<AirbendingState> {
 	
 	@Override
 	public int getIconIndex() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 10;
 	}
 	
 	@Override
 	public Info getRaytrace() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Raytrace.Info();
 	}
 	
 }
