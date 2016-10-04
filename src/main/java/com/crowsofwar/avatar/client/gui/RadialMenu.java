@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.client.gui;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -77,8 +76,6 @@ public class RadialMenu extends Gui {
 		}
 		
 		ScaledResolution resolution = new ScaledResolution(mc);
-		width = resolution.getScaledWidth();
-		height = resolution.getScaledHeight();
 		
 	}
 	
@@ -86,21 +83,28 @@ public class RadialMenu extends Gui {
 		
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
-			boolean hover = segments[i].isMouseHover(mouseX, mouseY);
+			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
 			drawRadialSegment(segments[i], hover, resolution);
 		}
 		
 	}
 	
-	public boolean updateScreen() {
+	/**
+	 * Handle key release. Triggers new abilities if possible.
+	 * 
+	 * @param mouseX
+	 *            Mouse x-pos
+	 * @param mouseY
+	 *            Mouse y-pos
+	 * @return Whether to close the screen
+	 */
+	public boolean updateScreen(int mouseX, int mouseY, ScaledResolution resolution) {
 		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing));
 		if (!pressed) {
-			int mouseX = getMouseX();
-			int mouseY = getMouseY();
 			
 			for (int i = 0; i < segments.length; i++) {
 				if (controls[i] == null) continue;
-				if (segments[i].isMouseHover(mouseX, mouseY)) {
+				if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
 					
 					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer,
 							controls[i].getRaytrace());
@@ -110,6 +114,7 @@ public class RadialMenu extends Gui {
 					
 				}
 			}
+			
 		}
 		return !pressed;
 	}
@@ -125,8 +130,8 @@ public class RadialMenu extends Gui {
 	//@formatter:off
 	private void drawRadialSegment(RadialSegment segment, boolean hover, ScaledResolution resolution) {
 		
-//		GlStateManager.enableBlend();
-//		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		int width = resolution.getScaledWidth();
+		int height = resolution.getScaledHeight();
 		
 		// Draw background & edge
 		GlStateManager.pushMatrix();
@@ -176,14 +181,6 @@ public class RadialMenu extends Gui {
 			
 		GlStateManager.popMatrix();
 		
-	}
-	
-	private int getMouseX() {
-		return Mouse.getEventX() * this.width / this.mc.displayWidth;
-	}
-	
-	private int getMouseY() {
-		return this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 	}
 	
 }

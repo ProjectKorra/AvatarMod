@@ -41,7 +41,7 @@ public class BendingMenuHandler extends Gui {
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
 		
 		if (currentGui != null) {
-			if (currentGui.updateScreen()) {
+			if (currentGui.updateScreen(mouseX, mouseY, resolution)) {
 				currentGui = null;
 				mc.setIngameFocus();
 			} else {
@@ -53,7 +53,7 @@ public class BendingMenuHandler extends Gui {
 	
 	public void openBendingGui(BendingType bending) {
 		
-		BendingController controller = BendingManager.getBending(type);
+		BendingController controller = BendingManager.getBending(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
 		this.currentGui = new RadialMenu(menu.getTheme(), menu.getKey(), menu.getButtons());

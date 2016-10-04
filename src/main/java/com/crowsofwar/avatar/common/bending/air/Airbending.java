@@ -17,10 +17,11 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Airbending extends BendingController {
 	
 	private BendingMenuInfo menu;
-	private final BendingAbility<AirbendingState> abilityAirGust;
+	private final BendingAbility<AirbendingState> abilityAirGust, abilityAirJump;
 	
 	public Airbending() {
 		addAbility(this.abilityAirGust = new AbilityAirGust(this));
+		addAbility(this.abilityAirJump = new AbilityAirJump(this));
 		
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);
@@ -29,7 +30,7 @@ public class Airbending extends BendingController {
 		ThemeColor edge = new ThemeColor(dark, dark);
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
 		MenuTheme theme = new MenuTheme(background, edge, icon);
-		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, abilityAirGust);
+		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, abilityAirGust, abilityAirJump);
 	}
 	
 	@Override
