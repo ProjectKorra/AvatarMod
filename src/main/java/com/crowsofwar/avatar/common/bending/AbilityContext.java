@@ -1,11 +1,14 @@
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
- * 
+ * Information when an ability is executed. Only is used server-side.
  * 
  * @author CrowsOfWar
  */
@@ -28,7 +31,7 @@ public class AbilityContext {
 	}
 	
 	public void addStatusControl(StatusControl control) {
-		
+		AvatarMod.network.sendTo(new PacketCStatusControl(control), (EntityPlayerMP) playerEntity);
 	}
 	
 }
