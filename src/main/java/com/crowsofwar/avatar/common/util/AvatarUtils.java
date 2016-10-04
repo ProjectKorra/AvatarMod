@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -83,7 +84,8 @@ public class AvatarUtils {
 	}
 	
 	/**
-	 * Reads and returns a list from NBT.
+	 * Clears the list(or collection), and adds items from the NBT list.
+	 * 
 	 * 
 	 * @param itemProvider
 	 *            Loads items from the list. Takes an NBT for that item, and returns the actual item
@@ -93,17 +95,16 @@ public class AvatarUtils {
 	 * @param listName
 	 *            The name of the list tag
 	 */
-	public static <T> List<T> readList(Function<NBTTagCompound, T> itemProvider, NBTTagCompound nbt,
-			String listName) {
+	public static <T> void readList(Collection<T> list, Function<NBTTagCompound, T> itemProvider,
+			NBTTagCompound nbt, String listName) {
 		
-		List<T> out = new ArrayList<>();
+		list.clear();
+		
 		NBTTagList listTag = nbt.getTagList(listName, 10);
 		for (int i = 0; i < listTag.tagCount(); i++) {
 			NBTTagCompound item = listTag.getCompoundTagAt(i);
-			out.add(itemProvider.apply(item));
+			list.add(itemProvider.apply(item));
 		}
-		
-		return out;
 		
 	}
 	
@@ -120,8 +121,8 @@ public class AvatarUtils {
 	 * @param listName
 	 *            The name of the list tag
 	 */
-	public static <T> void writeList(List<T> list, BiConsumer<NBTTagCompound, T> writer, NBTTagCompound nbt,
-			String listName) {
+	public static <T> void writeList(Collection<T> list, BiConsumer<NBTTagCompound, T> writer,
+			NBTTagCompound nbt, String listName) {
 		
 		NBTTagList listTag = new NBTTagList();
 		

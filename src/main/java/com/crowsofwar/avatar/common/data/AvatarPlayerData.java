@@ -3,9 +3,11 @@ package com.crowsofwar.avatar.common.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
@@ -43,7 +45,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	private Map<Integer, IBendingState> bendingStates;
 	private List<IBendingState> bendingStateList;
 	
-	private List<StatusControl> statusControls;
+	private Set<StatusControl> statusControls;
 	
 	private PlayerState state;
 	
@@ -53,7 +55,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		bendingControllerList = new ArrayList<BendingController>();
 		bendingStates = new HashMap<Integer, IBendingState>();
 		bendingStateList = new ArrayList<IBendingState>();
-		statusControls = new ArrayList<>();
+		statusControls = new HashSet<>();
 		state = new PlayerState();
 	}
 	
@@ -75,7 +77,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		
 		activeBending = getBendingController(nbt.getInteger("ActiveBending"));
 		
-		statusControls = AvatarUtils.readList(nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), nbt,
+		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), nbt,
 				"StatusControls");
 		System.out.println("Read status controls to be: " + statusControls);
 		
@@ -256,12 +258,20 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		bendingStateList.add(state);
 	}
 	
-	public List<StatusControl> getActiveStatusControls() {
-		return Collections.unmodifiableList(statusControls);
+	public Set<StatusControl> getActiveStatusControls() {
+		return Collections.unmodifiableSet(statusControls);
 	}
 	
 	public boolean hasStatusControl(StatusControl status) {
 		return statusControls.contains(status);
+	}
+	
+	public void addStatusControl(StatusControl control) {
+		statusControls.add(control);
+	}
+	
+	public void removeStatusControl(StatusControl control) {
+		statusControls.remove(control);
 	}
 	
 	/**
