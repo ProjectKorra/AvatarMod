@@ -10,7 +10,6 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-import com.crowsofwar.avatar.common.gui.IAvatarGui;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -21,7 +20,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class RadialMenu extends Gui implements IAvatarGui {
+public class RadialMenu extends Gui {
 	
 	private static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
 			"textures/gui/radial_segment_cut.png");
@@ -94,7 +93,6 @@ public class RadialMenu extends Gui implements IAvatarGui {
 		BendingAbility[] ctrl = new BendingAbility[8];
 		for (int i = 0; i < ctrl.length; i++) {
 			ctrl[i] = i < controls.length ? controls[i] : null;
-			System.out.println("Set ability " + i + " to " + ctrl[i]);
 		}
 		this.controls = ctrl;
 		
@@ -108,12 +106,12 @@ public class RadialMenu extends Gui implements IAvatarGui {
 		
 	}
 	
-	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
+	public void drawScreen(int mouseX, int mouseY, ScaledResolution resolution) {
 		
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY);
-			drawRadialSegment(segments[i], hover);
+			drawRadialSegment(segments[i], hover, resolution);
 		}
 		
 	}
@@ -146,9 +144,10 @@ public class RadialMenu extends Gui implements IAvatarGui {
 	 * @param segment
 	 *            Radial segment to draw
 	 * @param background
+	 * @param resolution
 	 */
 	//@formatter:off
-	private void drawRadialSegment(RadialSegment segment, boolean hover) {
+	private void drawRadialSegment(RadialSegment segment, boolean hover, ScaledResolution resolution) {
 		
 //		GlStateManager.enableBlend();
 //		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);

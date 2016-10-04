@@ -42,7 +42,7 @@ public class BendingMenuHandler extends Gui {
 				currentGui = null;
 				mc.setIngameFocus();
 			} else {
-				currentGui.drawScreen(mouseX, mouseY, 0);
+				currentGui.drawScreen(mouseX, mouseY, resolution);
 			}
 		}
 		
