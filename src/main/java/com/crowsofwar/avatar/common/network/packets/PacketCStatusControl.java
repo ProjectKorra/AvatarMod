@@ -13,22 +13,22 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketCStatusControl extends AvatarPacket<PacketCStatusControl> {
 	
-	private int controlId;
+	private StatusControl control;
 	
 	public PacketCStatusControl() {}
 	
 	public PacketCStatusControl(StatusControl control) {
-		this.controlId = control.id();
+		this.control = control;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		controlId = buf.readInt();
+		control = StatusControl.lookup(buf.readInt());
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(controlId);
+		buf.writeInt(control.id());
 	}
 	
 	@Override
@@ -39,6 +39,10 @@ public class PacketCStatusControl extends AvatarPacket<PacketCStatusControl> {
 	@Override
 	protected AvatarPacket.Handler<PacketCStatusControl> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
+	}
+	
+	public StatusControl getStatusControl() {
+		return control;
 	}
 	
 }
