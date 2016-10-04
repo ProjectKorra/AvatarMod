@@ -37,6 +37,7 @@ public class AbilityContext {
 	
 	public void addStatusControl(StatusControl control) {
 		AvatarMod.network.sendTo(new PacketCStatusControl(control), (EntityPlayerMP) playerEntity);
+		data.addStatusControl(control);
 	}
 	
 }

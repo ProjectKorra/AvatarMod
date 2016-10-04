@@ -33,6 +33,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class AvatarPlayerData extends GoreCorePlayerData {
 	
+	// TODO change player data lists into sets, when applicable
+	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
 	private Map<Integer, BendingController> bendingControllers;
