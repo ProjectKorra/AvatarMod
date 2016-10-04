@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -29,7 +29,7 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
+	public void execute(AbilityContext data) {
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();
 		

@@ -36,15 +36,16 @@ public abstract class BendingAbility<STATE extends IBendingState> {
 	 * Tick this bending ability. Only called if {@link #requiresUpdateTick()} is true. Called on
 	 * both server and client.
 	 */
+	// TODO remove this- use an interface...
 	public void update(AvatarPlayerData data) {}
 	
 	/**
 	 * Execute this ability. Only called on server.
 	 * 
-	 * @param data
-	 *            Player data to use.
+	 * @param ctx
+	 *            Information for the ability
 	 */
-	public abstract void execute(AvatarPlayerData data);
+	public abstract void execute(AbilityContext ctx);
 	
 	/**
 	 * Get the Id of this ability.

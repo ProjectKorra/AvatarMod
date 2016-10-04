@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.World;
 
 /**
  * Information when an ability is executed. Only is used server-side.
@@ -28,6 +29,10 @@ public class AbilityContext {
 	
 	public EntityPlayer getPlayerEntity() {
 		return playerEntity;
+	}
+	
+	public World getWorld() {
+		return playerEntity == null ? null : playerEntity.worldObj;
 	}
 	
 	public void addStatusControl(StatusControl control) {

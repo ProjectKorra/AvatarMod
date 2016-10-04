@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -34,10 +34,10 @@ public class AbilityWaterThrow extends BendingAbility<WaterbendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
+	public void execute(AbilityContext ctx) {
 		
-		WaterbendingState bendingState = data.getBendingState(controller);
-		EntityPlayer player = data.getPlayerEntity();
+		WaterbendingState bendingState = ctx.getData().getBendingState(controller);
+		EntityPlayer player = ctx.getPlayerEntity();
 		
 		if (bendingState.isBendingWater()) {
 			
@@ -50,7 +50,7 @@ public class AbilityWaterThrow extends BendingAbility<WaterbendingState> {
 			water.setGravityEnabled(true);
 			
 			bendingState.releaseWater();
-			data.sendBendingState(bendingState);
+			ctx.getData().sendBendingState(bendingState);
 			
 		}
 	}

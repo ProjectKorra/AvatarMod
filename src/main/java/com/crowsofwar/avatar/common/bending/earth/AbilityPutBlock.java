@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -37,8 +38,9 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
+	public void execute(AbilityContext ctx) {
 		
+		AvatarPlayerData data = ctx.getData();
 		EarthbendingState ebs = data.getBendingState(controller);
 		PlayerState state = data.getState();
 		
@@ -59,7 +61,7 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 				floating.velocity().add(force);
 				ebs.dropBlock();
 				
-				controller.post(new FloatingBlockEvent.BlockPlaced(floating, data.getPlayerEntity()));
+				controller.post(new FloatingBlockEvent.BlockPlaced(floating, ctx.getPlayerEntity()));
 				
 			}
 		}

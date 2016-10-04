@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -68,11 +69,11 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
-		WaterbendingState bendingState = data.getBendingState(controller);
-		World world = data.getWorld();
-		EntityPlayer player = data.getPlayerEntity();
-		PlayerState state = data.getState();
+	public void execute(AbilityContext ctx) {
+		WaterbendingState bendingState = ctx.getData().getBendingState(controller);
+		World world = ctx.getWorld();
+		EntityPlayer player = ctx.getPlayerEntity();
+		PlayerState state = ctx.getData().getState();
 		
 		boolean needsSync = false;
 		
@@ -101,7 +102,7 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 			}
 		}
 		
-		if (needsSync) data.sendBendingState(bendingState);
+		if (needsSync) ctx.getData().sendBendingState(bendingState);
 	}
 	
 	@Override

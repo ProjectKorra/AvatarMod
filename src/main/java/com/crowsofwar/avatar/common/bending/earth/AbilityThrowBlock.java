@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -34,9 +34,9 @@ public class AbilityThrowBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
-		EntityPlayer player = data.getPlayerEntity();
+	public void execute(AbilityContext ctx) {
+		EarthbendingState ebs = (EarthbendingState) ctx.getData().getBendingState(controller);
+		EntityPlayer player = ctx.getPlayerEntity();
 		World world = player.worldObj;
 		EntityFloatingBlock floating = ebs.getPickupBlock();
 		
@@ -51,7 +51,7 @@ public class AbilityThrowBlock extends BendingAbility<EarthbendingState> {
 			floating.velocity().add(lookDir.times(20));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown(floating));
 			ebs.setPickupBlock(null);
-			AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
+			AvatarMod.network.sendTo(new PacketCPlayerData(ctx.getData()), (EntityPlayerMP) player);
 			
 			controller.post(new FloatingBlockEvent.BlockThrown(floating, player));
 			

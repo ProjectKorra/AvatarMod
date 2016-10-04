@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -58,7 +59,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			BendingController controller = data.getActiveBendingController();
 			if (controller != null) {
 				data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
-				packet.getAbility().execute(data);
+				packet.getAbility().execute(new AbilityContext(data));
 			}
 			
 		}

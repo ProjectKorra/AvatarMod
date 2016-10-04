@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -58,10 +59,10 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
-		EntityPlayer player = data.getPlayerEntity();
-		World world = data.getWorld();
-		FirebendingState fs = data.getBendingState(controller);
+	public void execute(AbilityContext ctx) {
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = ctx.getWorld();
+		FirebendingState fs = ctx.getData().getBendingState(controller);
 		
 		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 				Math.toRadians(player.rotationPitch));
@@ -72,7 +73,7 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 		world.spawnEntityInWorld(fire);
 		
 		fs.setFireArc(fire);
-		data.sendBendingState(fs);
+		ctx.getData().sendBendingState(fs);
 	}
 	
 	@Override

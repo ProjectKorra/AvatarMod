@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -34,10 +34,10 @@ public class AbilityAirGust extends BendingAbility<AirbendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
+	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = data.getPlayerEntity();
-		World world = data.getWorld();
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = ctx.getWorld();
 		
 		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 				Math.toRadians(player.rotationPitch));

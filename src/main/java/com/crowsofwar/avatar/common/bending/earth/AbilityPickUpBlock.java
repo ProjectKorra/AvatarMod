@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -55,8 +56,9 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
+	public void execute(AbilityContext ctx) {
 		
+		AvatarPlayerData data = ctx.getData();
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();

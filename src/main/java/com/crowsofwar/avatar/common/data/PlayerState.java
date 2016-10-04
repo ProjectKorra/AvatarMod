@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.Side;
  * entity, and looking at block.
  * 
  */
+// TODO Move into AbilityContext
+@Deprecated
 public class PlayerState {
 	
 	private EntityPlayer playerEntity;

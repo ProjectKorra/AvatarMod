@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -34,7 +34,7 @@ public class AbilityFlamethrower extends BendingAbility<FirebendingState> {
 	}
 	
 	@Override
-	public void execute(AvatarPlayerData data) {
+	public void execute(AbilityContext data) {
 		EntityPlayer player = data.getPlayerEntity();
 		
 		if (player.ticksExisted % 3 != 0) return;
