@@ -1,6 +1,9 @@
 package com.crowsofwar.avatar.server;
 
+import java.util.Set;
+
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
@@ -58,6 +61,14 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	@Override
 	public int getParticleAmount() {
 		return 0;
+	}
+	
+	@Override
+	public void addStatusControl(StatusControl control) {}
+	
+	@Override
+	public Set<StatusControl> getAllStatusControls() {
+		return null;
 	}
 	
 }

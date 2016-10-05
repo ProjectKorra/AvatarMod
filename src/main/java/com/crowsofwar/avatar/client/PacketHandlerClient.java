@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -80,6 +81,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	private IMessage handlePacketStatusControl(PacketCStatusControl packet, MessageContext ctx) {
 		// TODO add status image to crosshair...
 		System.out.println("Adding status control " + packet.getStatusControl());
+		AvatarMod.proxy.addStatusControl(packet.getStatusControl());
 		return null;
 	}
 	
