@@ -41,6 +41,10 @@ public enum StatusControl {
 		return control;
 	}
 	
+	public void execute(AbilityContext ctx) {
+		callback.accept(ctx);
+	}
+	
 	public static StatusControl lookup(int id) {
 		return values()[id - 1];
 	}

@@ -105,7 +105,12 @@ public class PacketHandlerServer implements IPacketHandler {
 	 * @return
 	 */
 	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
-		System.out.println("Use the status control: " + packet.getStatusControl());
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
+				"Error while processing UseStatusControl packet");
+		
+		if (data != null) packet.getStatusControl().execute(new AbilityContext(data));
 		
 		return null;
 	}
