@@ -37,6 +37,10 @@ public enum StatusControl {
 		return ordinal() + 1;
 	}
 	
+	public AvatarControl getSubscribedControl() {
+		return control;
+	}
+	
 	public static StatusControl lookup(int id) {
 		return values()[id - 1];
 	}

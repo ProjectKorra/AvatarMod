@@ -4,7 +4,9 @@ import static com.crowsofwar.avatar.common.bending.BendingManager.*;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,14 +16,12 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.BendingMenuHandler;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Result;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
@@ -164,15 +164,20 @@ public class ClientInput implements IControlsHandler {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
 			
 			if (data != null) {
-				List<AvatarControl> pressed = getAllPressed();
-				for (AvatarControl control : pressed) {
-					BendingAbility ability = data.getActiveBendingController().getAbility(data, control);
-					if (ability != null) {
-						Result raytrace = Raytrace.getTargetBlock(player, ability.getRaytrace());
-						AvatarMod.network.sendToServer(
-								new PacketSUseAbility(ability, raytrace.getPos(), raytrace.getSide()));
+				
+				Collection<AvatarControl> pressed = getAllPressed();
+				Collection<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();
+				
+				Iterator<StatusControl> sci = statusControls.iterator();
+				while (sci.hasNext()) {
+					StatusControl sc = sci.next();
+					if (pressed.contains(sc.getSubscribedControl())) {
+						System.out.println("Hit control " + sc);
+						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc));
+						sci.remove();
 					}
 				}
+				
 			}
 		}
 		
