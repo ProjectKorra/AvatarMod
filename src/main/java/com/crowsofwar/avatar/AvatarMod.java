@@ -18,9 +18,11 @@ import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -68,6 +70,8 @@ public class AvatarMod {
 		registerPacket(PacketSRequestData.class, Side.SERVER);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		registerPacket(PacketSUseBendingController.class, Side.SERVER);
+		registerPacket(PacketCStatusControl.class, Side.CLIENT);
+		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		

@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -40,6 +41,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (packet instanceof PacketSUseBendingController)
 			return handleUseBendingController((PacketSUseBendingController) packet, ctx);
+		
+		if (packet instanceof PacketSUseStatusControl)
+			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -91,6 +95,17 @@ public class PacketHandlerServer implements IPacketHandler {
 			}
 			
 		}
+		
+		return null;
+	}
+	
+	/**
+	 * @param packet
+	 * @param ctx
+	 * @return
+	 */
+	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
+		System.out.println("Use the status control: " + packet.getStatusControl());
 		
 		return null;
 	}
