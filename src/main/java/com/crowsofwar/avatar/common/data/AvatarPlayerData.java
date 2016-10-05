@@ -81,12 +81,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		
 		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), nbt,
 				"StatusControls");
-		System.out.println("Read status controls to be: " + statusControls);
 		
 	}
 	
 	@Override
 	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
+		
 		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", BendingController.writer);
 		AvatarUtils.writeToNBT(bendingStateList, nbt, "BendingData", IBendingState.writer);
 		nbt.setInteger("ActiveBending", activeBending == null ? -1 : activeBending.getID());
@@ -270,10 +270,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	public void addStatusControl(StatusControl control) {
 		statusControls.add(control);
+		saveChanges();
 	}
 	
 	public void removeStatusControl(StatusControl control) {
 		statusControls.remove(control);
+		saveChanges();
 	}
 	
 	/**
