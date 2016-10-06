@@ -181,7 +181,6 @@ public class ClientInput implements IControlsHandler {
 						Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
 						
 						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
-						sci.remove();
 					}
 				}
 				

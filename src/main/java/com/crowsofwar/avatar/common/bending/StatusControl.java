@@ -37,7 +37,8 @@ public enum StatusControl {
 		player.addVelocity(velocity.x(), velocity.y(), velocity.z());
 		((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 		
-		return true;
+		System.out.println();
+		return false;
 		
 	}, 0, AvatarControl.CONTROL_SPACE);
 	
