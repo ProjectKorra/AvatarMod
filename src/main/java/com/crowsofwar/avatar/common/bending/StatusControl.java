@@ -2,13 +2,23 @@ package com.crowsofwar.avatar.common.bending;
 
 import java.util.function.Function;
 
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
+import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 /**
  * Describes a temporary effect where a callback listener is added to a control event. The listener
@@ -39,7 +49,69 @@ public enum StatusControl {
 		
 		return true;
 		
-	}, 0, AvatarControl.CONTROL_SPACE);
+	}, 0, AvatarControl.CONTROL_SPACE),
+	
+	PLACE_BLOCK(ctx -> {
+		
+		BendingController<EarthbendingState> controller = (BendingController<EarthbendingState>) BendingManager
+				.getBending(BendingType.EARTHBENDING);
+		
+		AvatarPlayerData data = ctx.getData();
+		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
+		
+		EntityFloatingBlock floating = ebs.getPickupBlock();
+		if (floating != null) {
+			// TODO Verify look at block
+			VectorI looking = ctx.getClientLookBlock();
+			EnumFacing lookingSide = ctx.getLookSide();
+			if (looking != null && lookingSide != null) {
+				looking.offset(lookingSide);
+				
+				floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
+				Vector force = looking.precision().minus(new Vector(floating));
+				force.normalize();
+				floating.velocity().add(force);
+				ebs.dropBlock();
+				
+				controller.post(new FloatingBlockEvent.BlockPlaced(floating, ctx.getPlayerEntity()));
+				
+			}
+		}
+		
+		return true;
+		
+	}, 1, AvatarControl.CONTROL_RIGHT_CLICK_DOWN),
+	
+	THROW_BLOCK(ctx -> {
+		
+		BendingController<EarthbendingState> controller = (BendingController<EarthbendingState>) BendingManager
+				.getBending(BendingType.EARTHBENDING);
+		
+		EarthbendingState ebs = (EarthbendingState) ctx.getData().getBendingState(controller);
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = player.worldObj;
+		EntityFloatingBlock floating = ebs.getPickupBlock();
+		
+		if (floating != null) {
+			floating.setOwner(null);
+			
+			float yaw = (float) Math.toRadians(player.rotationYaw);
+			float pitch = (float) Math.toRadians(player.rotationPitch);
+			
+			// Calculate force and everything
+			Vector lookDir = Vector.fromYawPitch(yaw, pitch);
+			floating.velocity().add(lookDir.times(20));
+			floating.setBehavior(new FloatingBlockBehavior.Thrown(floating));
+			ebs.setPickupBlock(null);
+			AvatarMod.network.sendTo(new PacketCPlayerData(ctx.getData()), (EntityPlayerMP) player);
+			
+			controller.post(new FloatingBlockEvent.BlockThrown(floating, player));
+			
+		}
+		
+		return true;
+		
+	}, 2, AvatarControl.CONTROL_LEFT_CLICK_DOWN);
 	
 	private final int texture;
 	private final Function<AbilityContext, Boolean> callback;

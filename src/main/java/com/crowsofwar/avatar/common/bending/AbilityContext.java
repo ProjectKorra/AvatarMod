@@ -56,7 +56,7 @@ public class AbilityContext {
 		return playerEntity == null ? null : playerEntity.worldObj;
 	}
 	
-	public VectorI getclientLookBlock() {
+	public VectorI getClientLookBlock() {
 		return clientLookBlock;
 	}
 	
@@ -65,7 +65,7 @@ public class AbilityContext {
 	 * 
 	 * @return
 	 */
-	public EnumFacing getlookSide() {
+	public EnumFacing getLookSide() {
 		return lookSide;
 	}
 	
