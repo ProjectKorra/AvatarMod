@@ -59,7 +59,12 @@ public class AvatarUiRenderer extends Gui {
 		
 		Set<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();
 		for (StatusControl statusControl : statusControls) {
-			System.out.println(statusControl);
+			mc.getTextureManager().bindTexture(STATUS_CONTROL_ICONS);
+			int centerX = resolution.getScaledWidth() / 2;
+			int centerY = resolution.getScaledHeight() / 2;
+			int xOffset = 8;
+			int yOffset = 0;
+			drawTexturedModalRect(centerX - xOffset, centerY - yOffset, 0, 0, 16, 16);
 		}
 		
 	}
