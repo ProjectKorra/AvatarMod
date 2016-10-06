@@ -27,8 +27,12 @@ public enum StatusControl {
 	AIR_JUMP(ctx -> {
 		EntityPlayer player = ctx.getPlayerEntity();
 		
-		Vector velocity = Vector.fromEntityLook(player);
-		velocity.mul(5);
+		Vector rotations = new Vector(Math.toRadians((player.rotationPitch - 15) / 2),
+				Math.toRadians(player.rotationYaw), 0);
+		
+		Vector velocity = rotations.toRectangular();
+		velocity.mul(4);
+		velocity.setY(velocity.y() * 0.5);
 		player.addVelocity(velocity.x(), velocity.y(), velocity.z());
 		((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 		
