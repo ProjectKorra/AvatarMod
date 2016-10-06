@@ -75,10 +75,11 @@ public enum StatusControl {
 				
 				controller.post(new FloatingBlockEvent.BlockPlaced(floating, ctx.getPlayerEntity()));
 				
+				return true;
 			}
 		}
 		
-		return true;
+		return false;
 		
 	}, 1, AvatarControl.CONTROL_RIGHT_CLICK_DOWN),
 	
