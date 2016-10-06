@@ -67,6 +67,12 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	public void addStatusControl(StatusControl control) {}
 	
 	@Override
+	public void removeStatusControl(StatusControl control) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public Set<StatusControl> getAllStatusControls() {
 		return null;
 	}

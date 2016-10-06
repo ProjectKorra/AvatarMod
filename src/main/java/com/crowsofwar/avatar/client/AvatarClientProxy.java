@@ -136,6 +136,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 	
 	@Override
+	public void removeStatusControl(StatusControl control) {
+		statusControls.remove(control);
+	}
+	
+	@Override
 	public Set<StatusControl> getAllStatusControls() {
 		return statusControls;
 	}

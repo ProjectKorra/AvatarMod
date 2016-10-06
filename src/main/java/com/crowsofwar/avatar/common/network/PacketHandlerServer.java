@@ -112,8 +112,15 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while processing UseStatusControl packet");
 		
-		if (data != null) packet.getStatusControl().execute(
-				new AbilityContext(data, new Raytrace.Result(packet.getLookPos(), packet.getLookSide())));
+		if (data != null) {
+			if (packet.getStatusControl().execute(new AbilityContext(data,
+					new Raytrace.Result(packet.getLookPos(), packet.getLookSide())))) {
+				
+				data.removeStatusControl(packet.getStatusControl());
+				
+			}
+			
+		}
 		
 		return null;
 	}

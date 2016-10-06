@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
@@ -39,6 +40,9 @@ public class PacketHandlerClient implements IPacketHandler {
 		
 		if (packet instanceof PacketCStatusControl)
 			return handlePacketStatusControl((PacketCStatusControl) packet, ctx);
+		
+		if (packet instanceof PacketCRemoveStatusControl)
+			return handlePacketStatusControl((PacketCRemoveStatusControl) packet, ctx);
 		
 		AvatarLog.warn("Client recieved unknown packet from server:" + packet);
 		
@@ -82,6 +86,11 @@ public class PacketHandlerClient implements IPacketHandler {
 		// TODO add status image to crosshair...
 		System.out.println("Adding status control " + packet.getStatusControl());
 		AvatarMod.proxy.addStatusControl(packet.getStatusControl());
+		return null;
+	}
+	
+	private IMessage handlePacketStatusControl(PacketCRemoveStatusControl packet, MessageContext ctx) {
+		AvatarMod.proxy.removeStatusControl(packet.getStatusControl());
 		return null;
 	}
 	

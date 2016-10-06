@@ -67,6 +67,13 @@ public enum StatusControl {
 		return control;
 	}
 	
+	/**
+	 * Execute this status control in the given context.
+	 * 
+	 * @param ctx
+	 *            Information for status control
+	 * @return Whether to remove it
+	 */
 	public boolean execute(AbilityContext ctx) {
 		return callback.apply(ctx);
 	}

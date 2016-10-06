@@ -68,6 +68,8 @@ public interface AvatarCommonProxy {
 	
 	void addStatusControl(StatusControl control);
 	
+	void removeStatusControl(StatusControl control);
+	
 	Set<StatusControl> getAllStatusControls();
 	
 }
