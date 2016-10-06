@@ -1,9 +1,11 @@
 package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
@@ -117,6 +119,7 @@ public class PacketHandlerServer implements IPacketHandler {
 					new Raytrace.Result(packet.getLookPos(), packet.getLookSide())))) {
 				
 				data.removeStatusControl(packet.getStatusControl());
+				AvatarMod.network.sendTo(new PacketCRemoveStatusControl(packet.getStatusControl()), player);
 				
 			}
 			
