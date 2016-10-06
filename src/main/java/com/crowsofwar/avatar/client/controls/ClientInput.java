@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
@@ -176,7 +177,10 @@ public class ClientInput implements IControlsHandler {
 					StatusControl sc = sci.next();
 					if (pressed.contains(sc.getSubscribedControl())) {
 						System.out.println("Hit control " + sc);
-						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc));
+						
+						Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
+						
+						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
 						sci.remove();
 					}
 				}

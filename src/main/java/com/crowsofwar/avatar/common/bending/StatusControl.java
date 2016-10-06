@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending;
 import java.util.function.Consumer;
 
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,11 +42,18 @@ public enum StatusControl {
 	private final int texture;
 	private final Consumer<AbilityContext> callback;
 	private final AvatarControl control;
+	private final Raytrace.Info raytrace;
 	
 	private StatusControl(Consumer<AbilityContext> callback, int texture, AvatarControl subscribeTo) {
+		this(callback, texture, subscribeTo, new Raytrace.Info());
+	}
+	
+	private StatusControl(Consumer<AbilityContext> callback, int texture, AvatarControl subscribeTo,
+			Raytrace.Info raytrace) {
 		this.texture = texture;
 		this.callback = callback;
 		this.control = subscribeTo;
+		this.raytrace = raytrace;
 	}
 	
 	public int id() {
@@ -58,6 +66,10 @@ public enum StatusControl {
 	
 	public void execute(AbilityContext ctx) {
 		callback.accept(ctx);
+	}
+	
+	public Raytrace.Info getRaytrace() {
+		return raytrace;
 	}
 	
 	public static StatusControl lookup(int id) {

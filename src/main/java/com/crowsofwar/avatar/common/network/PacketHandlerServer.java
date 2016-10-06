@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -63,7 +64,8 @@ public class PacketHandlerServer implements IPacketHandler {
 			System.out.println("data not null.");
 			System.out.println("exec");
 			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
-			packet.getAbility().execute(new AbilityContext(data));
+			packet.getAbility().execute(new AbilityContext(data,
+					new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));
 			
 		}
 		
@@ -110,7 +112,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while processing UseStatusControl packet");
 		
-		if (data != null) packet.getStatusControl().execute(new AbilityContext(data));
+		if (data != null) packet.getStatusControl().execute(
+				new AbilityContext(data, new Raytrace.Result(packet.getLookPos(), packet.getLookSide())));
 		
 		return null;
 	}
