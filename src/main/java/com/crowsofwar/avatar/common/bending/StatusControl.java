@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.bending;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -37,18 +37,21 @@ public enum StatusControl {
 		player.addVelocity(velocity.x(), velocity.y(), velocity.z());
 		((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 		
+		return true;
+		
 	}, 0, AvatarControl.CONTROL_SPACE);
 	
 	private final int texture;
-	private final Consumer<AbilityContext> callback;
+	private final Function<AbilityContext, Boolean> callback;
 	private final AvatarControl control;
 	private final Raytrace.Info raytrace;
 	
-	private StatusControl(Consumer<AbilityContext> callback, int texture, AvatarControl subscribeTo) {
+	private StatusControl(Function<AbilityContext, Boolean> callback, int texture,
+			AvatarControl subscribeTo) {
 		this(callback, texture, subscribeTo, new Raytrace.Info());
 	}
 	
-	private StatusControl(Consumer<AbilityContext> callback, int texture, AvatarControl subscribeTo,
+	private StatusControl(Function<AbilityContext, Boolean> callback, int texture, AvatarControl subscribeTo,
 			Raytrace.Info raytrace) {
 		this.texture = texture;
 		this.callback = callback;
@@ -64,8 +67,8 @@ public enum StatusControl {
 		return control;
 	}
 	
-	public void execute(AbilityContext ctx) {
-		callback.accept(ctx);
+	public boolean execute(AbilityContext ctx) {
+		return callback.apply(ctx);
 	}
 	
 	public Raytrace.Info getRaytrace() {
