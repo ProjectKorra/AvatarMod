@@ -68,6 +68,7 @@ public class AvatarUiRenderer extends Gui {
 			
 			double scale = .5;
 			
+			GlStateManager.enableBlend();
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(scale, scale, scale);
 			drawTexturedModalRect((int) ((centerX - xOffset) / scale), (int) ((centerY - yOffset) / scale), 0,

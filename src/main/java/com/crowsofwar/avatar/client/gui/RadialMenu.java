@@ -133,6 +133,8 @@ public class RadialMenu extends Gui {
 		int width = resolution.getScaledWidth();
 		int height = resolution.getScaledHeight();
 		
+		GlStateManager.enableBlend();
+		
 		// Draw background & edge
 		GlStateManager.pushMatrix();
 			GlStateManager.translate(width / 2f, height / 2f, 0); 	// Re-center origin
