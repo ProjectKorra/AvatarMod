@@ -1,16 +1,21 @@
 package com.crowsofwar.avatar.client;
 
+import java.util.Set;
+
 import org.lwjgl.input.Mouse;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,12 +27,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author CrowsOfWar
  */
 @SideOnly(Side.CLIENT)
-public class BendingMenuHandler extends Gui {
+public class AvatarUiRenderer extends Gui {
 	
-	private RadialMenu currentGui;
+	private static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
+			"textures/gui/statusControl.png");
+	
+	private RadialMenu currentBendingMenu;
 	private final Minecraft mc;
 	
-	public BendingMenuHandler() {
+	public AvatarUiRenderer() {
 		mc = Minecraft.getMinecraft();
 	}
 	
@@ -40,13 +48,18 @@ public class BendingMenuHandler extends Gui {
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
 		
-		if (currentGui != null) {
-			if (currentGui.updateScreen(mouseX, mouseY, resolution)) {
-				currentGui = null;
+		if (currentBendingMenu != null) {
+			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {
+				currentBendingMenu = null;
 				mc.setIngameFocus();
 			} else {
-				currentGui.drawScreen(mouseX, mouseY, resolution);
+				currentBendingMenu.drawScreen(mouseX, mouseY, resolution);
 			}
+		}
+		
+		Set<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();
+		for (StatusControl statusControl : statusControls) {
+			System.out.println(statusControl);
 		}
 		
 	}
@@ -56,7 +69,7 @@ public class BendingMenuHandler extends Gui {
 		BendingController controller = BendingManager.getBending(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
-		this.currentGui = new RadialMenu(menu.getTheme(), menu.getKey(), menu.getButtons());
+		this.currentBendingMenu = new RadialMenu(menu.getTheme(), menu.getKey(), menu.getButtons());
 		mc.setIngameNotInFocus();
 		
 	}

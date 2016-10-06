@@ -15,7 +15,7 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.BendingMenuHandler;
+import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -47,7 +47,7 @@ public class ClientInput implements IControlsHandler {
 	private Map<String, KeyBinding> keybindings;
 	private boolean mouseLeft, mouseRight, mouseMiddle;
 	private boolean wasLeft, wasRight, wasMiddle;
-	private final BendingMenuHandler menuHandler;
+	private final AvatarUiRenderer menuHandler;
 	
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
@@ -56,7 +56,7 @@ public class ClientInput implements IControlsHandler {
 	
 	private boolean press;
 	
-	public ClientInput(BendingMenuHandler menuHandler) {
+	public ClientInput(AvatarUiRenderer menuHandler) {
 		gameSettings = Minecraft.getMinecraft().gameSettings;
 		mouseLeft = mouseRight = mouseMiddle = wasLeft = wasRight = wasMiddle = false;
 		mc = Minecraft.getMinecraft();

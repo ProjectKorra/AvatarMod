@@ -53,7 +53,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
-	private BendingMenuHandler menuHandler;
+	private AvatarUiRenderer menuHandler;
 	private Set<StatusControl> statusControls;
 	
 	@Override
@@ -61,7 +61,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		mc = Minecraft.getMinecraft();
 		
 		packetHandler = new PacketHandlerClient();
-		menuHandler = new BendingMenuHandler();
+		menuHandler = new AvatarUiRenderer();
 		
 		inputHandler = new ClientInput(menuHandler);
 		FMLCommonHandler.instance().bus().register(inputHandler);
