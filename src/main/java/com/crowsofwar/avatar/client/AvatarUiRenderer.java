@@ -15,6 +15,7 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -62,9 +63,16 @@ public class AvatarUiRenderer extends Gui {
 			mc.getTextureManager().bindTexture(STATUS_CONTROL_ICONS);
 			int centerX = resolution.getScaledWidth() / 2;
 			int centerY = resolution.getScaledHeight() / 2;
-			int xOffset = 8;
-			int yOffset = 0;
-			drawTexturedModalRect(centerX - xOffset, centerY - yOffset, 0, 0, 16, 16);
+			int xOffset = 14;
+			int yOffset = 4;
+			
+			double scale = .5;
+			
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(scale, scale, scale);
+			drawTexturedModalRect((int) ((centerX - xOffset) / scale), (int) ((centerY - yOffset) / scale), 0,
+					0, 16, 16);
+			GlStateManager.popMatrix();
 		}
 		
 	}
