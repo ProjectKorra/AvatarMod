@@ -42,6 +42,7 @@ public class AbilityContext {
 		this.playerEntity = data.getPlayerEntity();
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
+		System.out.println("player entity is : " + playerEntity);
 	}
 	
 	public AvatarPlayerData getData() {

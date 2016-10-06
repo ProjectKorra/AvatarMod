@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
@@ -93,6 +94,9 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 					
 					controller.post(new FloatingBlockEvent.BlockPickedUp(floating, player));
+					
+					ctx.addStatusControl(StatusControl.PLACE_BLOCK);
+					ctx.addStatusControl(StatusControl.THROW_BLOCK);
 					
 				} else {
 					world.playSound(null, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,

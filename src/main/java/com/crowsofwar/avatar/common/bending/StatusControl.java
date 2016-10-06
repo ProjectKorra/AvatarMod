@@ -154,6 +154,14 @@ public enum StatusControl {
 		return raytrace;
 	}
 	
+	public int getTextureU() {
+		return (texture * 16) % 256;
+	}
+	
+	public int getTextureV() {
+		return (texture / 16) * 16;
+	}
+	
 	public static StatusControl lookup(int id) {
 		return values()[id - 1];
 	}
