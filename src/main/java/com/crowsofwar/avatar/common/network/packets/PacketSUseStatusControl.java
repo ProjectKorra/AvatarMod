@@ -32,15 +32,30 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 	public void fromBytes(ByteBuf buf) {
 		// TODO Make sure client can't crash the server!
 		statusControl = StatusControl.lookup(buf.readInt());
-		lookPos = VectorI.fromBytes(buf);
-		lookSide = EnumFacing.values()[buf.readInt()];
+		
+		VectorI readPos = VectorI.fromBytes(buf);
+		int readSide = buf.readInt();
+		
+		if (readSide == -1) {
+			lookPos = null;
+			lookSide = null;
+		} else {
+			lookPos = readPos;
+			lookSide = EnumFacing.values()[readSide];
+		}
+		
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(statusControl.id());
-		lookPos.toBytes(buf);
-		buf.writeInt(lookSide.ordinal());
+		if (lookPos == null) {
+			new VectorI(0, 0, 0).toBytes(buf);
+			buf.writeInt(-1);
+		} else {
+			lookPos.toBytes(buf);
+			buf.writeInt(lookSide.ordinal());
+		}
 	}
 	
 	@Override
