@@ -32,11 +32,11 @@ public enum StatusControl {
 		
 		Vector velocity = rotations.toRectangular();
 		velocity.mul(4);
-		velocity.setY(velocity.y() * 0.5);
+		velocity.setY(velocity.y() * 0.8);
 		player.addVelocity(velocity.x(), velocity.y(), velocity.z());
 		((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 		
-	}, 0, AvatarControl.CONTROL_LEFT_CLICK); // TODO Add control_space
+	}, 0, AvatarControl.CONTROL_SPACE);
 	
 	private final int texture;
 	private final Consumer<AbilityContext> callback;

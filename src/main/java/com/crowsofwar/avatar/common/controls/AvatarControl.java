@@ -9,7 +9,10 @@ public enum AvatarControl {
 	/** No control is pressed */
 	NONE(""),
 	/** Default LeftAlt (will be changed) */
-	KEY_EARTHBENDING("RadialMenu"), KEY_FIREBENDING("Firebend"), KEY_WATERBENDING("Waterbend"), KEY_AIRBENDING("Airbend"),
+	KEY_EARTHBENDING("RadialMenu"),
+	KEY_FIREBENDING("Firebend"),
+	KEY_WATERBENDING("Waterbend"),
+	KEY_AIRBENDING("Airbend"),
 	/** Left mouse button is held down */
 	CONTROL_LEFT_CLICK("LeftClick"),
 	/** Right mouse button is held down */
@@ -21,7 +24,9 @@ public enum AvatarControl {
 	/** Right mouse button just got pressed */
 	CONTROL_RIGHT_CLICK_DOWN("RightClickDown"),
 	/** Middle mouse button just got pressed */
-	CONTROL_MIDDLE_CLICK_DOWN("MiddleClickDown");
+	CONTROL_MIDDLE_CLICK_DOWN("MiddleClickDown"),
+	/** Space key (not jump) is held */
+	CONTROL_SPACE("Space");
 	
 	private String name;
 	private boolean isKey;
@@ -65,7 +70,8 @@ public enum AvatarControl {
 	 *             If that Id refers to no control.
 	 */
 	public static AvatarControl findFromId(int id) {
-		if (id < 0 || id >= values().length) throw new IllegalArgumentException("AvatarControl Id '" + id + "' is invalid");
+		if (id < 0 || id >= values().length)
+			throw new IllegalArgumentException("AvatarControl Id '" + id + "' is invalid");
 		return values()[id];
 	}
 	

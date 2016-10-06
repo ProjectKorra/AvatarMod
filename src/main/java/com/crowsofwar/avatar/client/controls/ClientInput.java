@@ -45,7 +45,7 @@ public class ClientInput implements IControlsHandler {
 	private final Minecraft mc;
 	private GameSettings gameSettings;
 	private Map<String, KeyBinding> keybindings;
-	private boolean mouseLeft, mouseRight, mouseMiddle;
+	private boolean mouseLeft, mouseRight, mouseMiddle, space;
 	private boolean wasLeft, wasRight, wasMiddle;
 	private final AvatarUiRenderer menuHandler;
 	
@@ -102,6 +102,7 @@ public class ClientInput implements IControlsHandler {
 			if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;
 			if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
 			if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
+			if (control == CONTROL_SPACE) return space;
 			AvatarLog.warn("ClientInput- Unknown control: " + control);
 			return false;
 		}
@@ -154,6 +155,8 @@ public class ClientInput implements IControlsHandler {
 		} else {
 			mouseLeft = mouseRight = mouseMiddle = false;
 		}
+		
+		space = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
 		
 		EntityPlayer player = mc.thePlayer;
 		
