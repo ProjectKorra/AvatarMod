@@ -3,6 +3,11 @@ package com.crowsofwar.avatar.common.bending;
 import java.util.function.Consumer;
 
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.gorecore.util.Vector;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 
 /**
  * Describes a temporary effect where a callback listener is added to a control event. The listener
@@ -20,7 +25,13 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 public enum StatusControl {
 	
 	AIR_JUMP(ctx -> {
-		System.out.println("jump " + ctx.getPlayerEntity());
+		EntityPlayer player = ctx.getPlayerEntity();
+		
+		Vector velocity = Vector.fromEntityLook(player);
+		velocity.mul(5);
+		player.addVelocity(velocity.x(), velocity.y(), velocity.z());
+		((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
+		
 	}, 0, AvatarControl.CONTROL_LEFT_CLICK); // TODO Add control_space
 	
 	private final int texture;
