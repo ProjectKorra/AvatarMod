@@ -51,37 +51,42 @@ public enum StatusControl {
 		
 	}, 0, AvatarControl.CONTROL_SPACE, CrosshairPosition.BELOW_CROSSHAIR),
 	
-	PLACE_BLOCK(ctx -> {
-		
-		BendingController<EarthbendingState> controller = (BendingController<EarthbendingState>) BendingManager
-				.getBending(BendingType.EARTHBENDING);
-		
-		AvatarPlayerData data = ctx.getData();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
-		
-		EntityFloatingBlock floating = ebs.getPickupBlock();
-		if (floating != null) {
-			// TODO Verify look at block
-			VectorI looking = ctx.getClientLookBlock();
-			EnumFacing lookingSide = ctx.getLookSide();
-			if (looking != null && lookingSide != null) {
-				looking.offset(lookingSide);
+	PLACE_BLOCK(
+			ctx -> {
 				
-				floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
-				Vector force = looking.precision().minus(new Vector(floating));
-				force.normalize();
-				floating.velocity().add(force);
-				ebs.dropBlock();
+				BendingController<EarthbendingState> controller = (BendingController<EarthbendingState>) BendingManager
+						.getBending(BendingType.EARTHBENDING);
 				
-				controller.post(new FloatingBlockEvent.BlockPlaced(floating, ctx.getPlayerEntity()));
+				AvatarPlayerData data = ctx.getData();
+				EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
 				
-				return true;
-			}
-		}
-		
-		return false;
-		
-	}, 1, AvatarControl.CONTROL_RIGHT_CLICK_DOWN, CrosshairPosition.RIGHT_OF_CROSSHAIR),
+				EntityFloatingBlock floating = ebs.getPickupBlock();
+				if (floating != null) {
+					// TODO Verify look at block
+					VectorI looking = ctx.getClientLookBlock();
+					EnumFacing lookingSide = ctx.getLookSide();
+					if (looking != null && lookingSide != null) {
+						looking.offset(lookingSide);
+						
+						floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
+						Vector force = looking.precision().minus(new Vector(floating));
+						force.normalize();
+						floating.velocity().add(force);
+						ebs.dropBlock();
+						
+						controller.post(new FloatingBlockEvent.BlockPlaced(floating, ctx.getPlayerEntity()));
+						
+						return true;
+					}
+				}
+				
+				return false;
+				
+			},
+			1,
+			AvatarControl.CONTROL_RIGHT_CLICK_DOWN,
+			CrosshairPosition.RIGHT_OF_CROSSHAIR,
+			new Raytrace.Info(-1, true)),
 	
 	THROW_BLOCK(ctx -> {
 		
