@@ -46,6 +46,7 @@ public abstract class StatusControl {
 		this.raytrace = new Raytrace.Info();
 		this.position = position;
 		this.id = nextId++;
+		System.out.println("Assigned id " + id);
 		allControls.add(this);
 		
 	}
@@ -97,7 +98,8 @@ public abstract class StatusControl {
 	}
 	
 	public static StatusControl lookup(int id) {
-		return allControls.get(id - 1);
+		id--;
+		return id >= 0 && id < allControls.size() ? allControls.get(id) : null;
 	}
 	
 	public enum CrosshairPosition {

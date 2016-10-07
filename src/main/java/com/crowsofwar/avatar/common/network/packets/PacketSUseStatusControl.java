@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.network.packets;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -26,12 +27,19 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 		this.statusControl = control;
 		this.lookPos = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
+		System.out.println("SC: " + control.id());
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		// TODO Make sure client can't crash the server!
-		statusControl = StatusControl.lookup(buf.readInt());
+		int id = buf.readInt();
+		statusControl = StatusControl.lookup(id);
+		if (statusControl == null) {
+			AvatarLog
+					.warn("Player trying to crash the server?? While sending UseStatusControl packet, sent invalid id "
+							+ id);
+			return; // TODO Cancel packet processing
+		}
 		
 		VectorI readPos = VectorI.fromBytes(buf);
 		int readSide = buf.readInt();

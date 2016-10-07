@@ -54,6 +54,8 @@ public class StatCtrlThrowBlock extends StatusControl {
 			
 			controller.post(new FloatingBlockEvent.BlockThrown(floating, player));
 			
+			context.removeStatusControl(PLACE_BLOCK);
+			
 		}
 		
 		return true;
