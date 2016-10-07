@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.bending.statctrl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -33,38 +32,35 @@ public abstract class StatusControl {
 	private static List<StatusControl> allControls;
 	
 	private final int texture;
-	private final Function<AbilityContext, Boolean> callback;
 	private final AvatarControl control;
-	private final Raytrace.Info raytrace;
+	private Raytrace.Info raytrace;
 	private final CrosshairPosition position;
 	private final int id;
 	
-	public StatusControl(Function<AbilityContext, Boolean> callback, int texture, AvatarControl subscribeTo,
-			CrosshairPosition position) {
-		this(callback, texture, subscribeTo, position, new Raytrace.Info());
-	}
-	
-	public StatusControl(Function<AbilityContext, Boolean> callback, int texture, AvatarControl subscribeTo,
-			CrosshairPosition position, Raytrace.Info raytrace) {
+	public StatusControl(int texture, AvatarControl subscribeTo, CrosshairPosition position) {
 		
 		if (allControls == null) allControls = new ArrayList<>();
 		
 		this.texture = texture;
-		this.callback = callback;
 		this.control = subscribeTo;
-		this.raytrace = raytrace;
+		this.raytrace = new Raytrace.Info();
 		this.position = position;
 		this.id = nextId++;
 		allControls.add(this);
 		
 	}
 	
-	public int id() {
-		return id;
-	}
-	
-	public AvatarControl getSubscribedControl() {
-		return control;
+	/**
+	 * Require that a raytrace be cast client-side, which is sent to the server. It is then
+	 * accessible in {@link #execute(AbilityContext)}.
+	 * 
+	 * @param range
+	 *            Range to raytrace. -1 for player reach
+	 * @param raycastLiquids
+	 *            Whether to keep going when hit liquids
+	 */
+	protected void requireRaytrace(int range, boolean raycastLiquids) {
+		this.raytrace = new Raytrace.Info(range, raycastLiquids);
 	}
 	
 	/**
@@ -74,8 +70,14 @@ public abstract class StatusControl {
 	 *            Information for status control
 	 * @return Whether to remove it
 	 */
-	public boolean execute(AbilityContext ctx) {
-		return callback.apply(ctx);
+	public abstract boolean execute(AbilityContext context);
+	
+	public int id() {
+		return id;
+	}
+	
+	public AvatarControl getSubscribedControl() {
+		return control;
 	}
 	
 	public Raytrace.Info getRaytrace() {
