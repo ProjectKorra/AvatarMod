@@ -9,7 +9,7 @@ import com.crowsofwar.avatar.client.gui.RadialMenu;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 
 import net.minecraft.client.Minecraft;

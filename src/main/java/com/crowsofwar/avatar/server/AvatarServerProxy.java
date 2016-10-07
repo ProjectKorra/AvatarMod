@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.server;
 import java.util.Set;
 
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;

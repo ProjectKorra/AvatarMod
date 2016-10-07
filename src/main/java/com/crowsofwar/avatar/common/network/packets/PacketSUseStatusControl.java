@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.VectorI;
