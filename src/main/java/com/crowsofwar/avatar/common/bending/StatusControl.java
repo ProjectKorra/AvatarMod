@@ -49,7 +49,7 @@ public enum StatusControl {
 		
 		return true;
 		
-	}, 0, AvatarControl.CONTROL_SPACE),
+	}, 0, AvatarControl.CONTROL_SPACE, CrosshairPosition.BELOW_CROSSHAIR),
 	
 	PLACE_BLOCK(ctx -> {
 		
@@ -81,7 +81,7 @@ public enum StatusControl {
 		
 		return false;
 		
-	}, 1, AvatarControl.CONTROL_RIGHT_CLICK_DOWN),
+	}, 1, AvatarControl.CONTROL_RIGHT_CLICK_DOWN, CrosshairPosition.RIGHT_OF_CROSSHAIR),
 	
 	THROW_BLOCK(ctx -> {
 		
@@ -112,24 +112,26 @@ public enum StatusControl {
 		
 		return true;
 		
-	}, 2, AvatarControl.CONTROL_LEFT_CLICK_DOWN);
+	}, 2, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	
 	private final int texture;
 	private final Function<AbilityContext, Boolean> callback;
 	private final AvatarControl control;
 	private final Raytrace.Info raytrace;
+	private final CrosshairPosition position;
 	
-	private StatusControl(Function<AbilityContext, Boolean> callback, int texture,
-			AvatarControl subscribeTo) {
-		this(callback, texture, subscribeTo, new Raytrace.Info());
+	private StatusControl(Function<AbilityContext, Boolean> callback, int texture, AvatarControl subscribeTo,
+			CrosshairPosition position) {
+		this(callback, texture, subscribeTo, position, new Raytrace.Info());
 	}
 	
 	private StatusControl(Function<AbilityContext, Boolean> callback, int texture, AvatarControl subscribeTo,
-			Raytrace.Info raytrace) {
+			CrosshairPosition position, Raytrace.Info raytrace) {
 		this.texture = texture;
 		this.callback = callback;
 		this.control = subscribeTo;
 		this.raytrace = raytrace;
+		this.position = position;
 	}
 	
 	public int id() {
@@ -163,8 +165,36 @@ public enum StatusControl {
 		return (texture / 16) * 16;
 	}
 	
+	public CrosshairPosition getPosition() {
+		return position;
+	}
+	
 	public static StatusControl lookup(int id) {
 		return values()[id - 1];
+	}
+	
+	public enum CrosshairPosition {
+		
+		ABOVE_CROSSHAIR(0, -10),
+		LEFT_OF_CROSSHAIR(14, 4),
+		RIGHT_OF_CROSSHAIR(-14, 4),
+		BELOW_CROSSHAIR(0, 10);
+		
+		private final int x, y;
+		
+		private CrosshairPosition(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+		
+		public int xOffset() {
+			return x;
+		}
+		
+		public int yOffset() {
+			return y;
+		}
+		
 	}
 	
 }

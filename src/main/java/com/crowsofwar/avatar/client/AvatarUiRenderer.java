@@ -63,8 +63,8 @@ public class AvatarUiRenderer extends Gui {
 			mc.getTextureManager().bindTexture(STATUS_CONTROL_ICONS);
 			int centerX = resolution.getScaledWidth() / 2;
 			int centerY = resolution.getScaledHeight() / 2;
-			int xOffset = 14;
-			int yOffset = 4;
+			int xOffset = statusControl.getPosition().xOffset();
+			int yOffset = statusControl.getPosition().yOffset();
 			
 			double scale = .5;
 			
