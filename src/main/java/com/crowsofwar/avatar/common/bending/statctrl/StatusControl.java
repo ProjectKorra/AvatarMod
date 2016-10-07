@@ -21,7 +21,13 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  * 
  * @author CrowsOfWar
  */
-public class StatusControl {
+public abstract class StatusControl {
+	
+	public static StatusControl AIR_JUMP = new StatCtrlAirJump();
+	
+	public static StatusControl PLACE_BLOCK = new StatCtrlPlaceBlock();
+	
+	public static StatusControl THROW_BLOCK = new StatCtrlThrowBlock();
 	
 	private static int nextId = 1;
 	private static List<StatusControl> allControls;
