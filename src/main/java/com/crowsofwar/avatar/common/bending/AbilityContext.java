@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
@@ -119,6 +120,11 @@ public class AbilityContext {
 	public void addStatusControl(StatusControl control) {
 		AvatarMod.network.sendTo(new PacketCStatusControl(control), (EntityPlayerMP) playerEntity);
 		data.addStatusControl(control);
+	}
+	
+	public void removeStatusControl(StatusControl control) {
+		AvatarMod.network.sendTo(new PacketCRemoveStatusControl(control), (EntityPlayerMP) playerEntity);
+		data.removeStatusControl(control);
 	}
 	
 }
