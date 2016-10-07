@@ -50,12 +50,7 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController with that ID. Returns null if the given Id is invalid.
-	 * <p>
-	 * Recommended to use {@link #getBending(BendingType) BendingType abstraction} instead.
-	 * 
-	 * @param id
-	 * @return
+	 * @deprecated Use {@link #getBending(BendingType)} instead.
 	 */
 	@Deprecated
 	public static BendingController getBending(int id) {
@@ -63,7 +58,7 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController for that bending type.
+	 * Get the BendingController for that bending type. Returns null if invalid.
 	 * 
 	 * @param type
 	 *            Bending type to look for

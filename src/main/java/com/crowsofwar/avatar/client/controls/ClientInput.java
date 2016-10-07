@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.controls;
 
-import static com.crowsofwar.avatar.common.bending.BendingManager.*;
+import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
@@ -66,14 +67,14 @@ public class ClientInput implements IControlsHandler {
 		keybindings = new HashMap();
 		
 		keyboardBending = new ArrayList<>();
-		addBendingButton(BENDINGID_EARTHBENDING, Keyboard.KEY_Z);
-		addBendingButton(BENDINGID_FIREBENDING, Keyboard.KEY_X);
-		addBendingButton(BENDINGID_WATERBENDING, Keyboard.KEY_C);
-		addBendingButton(BENDINGID_AIRBENDING, Keyboard.KEY_F);
+		addBendingButton(BendingType.EARTHBENDING, Keyboard.KEY_Z);
+		addBendingButton(BendingType.FIREBENDING, Keyboard.KEY_X);
+		addBendingButton(BendingType.WATERBENDING, Keyboard.KEY_C);
+		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_F);
 		
 	}
 	
-	private void addBendingButton(int id, int keycode) {
+	private void addBendingButton(BendingType id, int keycode) {
 		BendingController controller = getBending(id);
 		addKeybinding(controller.getRadialMenu().getKey(), keycode, "main");
 		keyboardBending.add(controller);

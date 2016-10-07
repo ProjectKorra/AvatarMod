@@ -78,11 +78,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	}
 	
 	/**
-	 * @deprecated
-	 * 			
-	 * 			Get an identifier for this bending ability. Should be unique per-class. (not
-	 *             per-instance)
-	 * @see #getType()
+	 * @deprecated Use {@link #getType()} instead.
 	 */
 	@Deprecated
 	public abstract int getID();

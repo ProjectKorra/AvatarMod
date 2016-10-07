@@ -42,7 +42,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,7 +63,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		menuHandler = new AvatarUiRenderer();
 		
 		inputHandler = new ClientInput(menuHandler);
-		FMLCommonHandler.instance().bus().register(inputHandler);
 		MinecraftForge.EVENT_BUS.register(inputHandler);
 		MinecraftForge.EVENT_BUS.register(menuHandler);
 		
