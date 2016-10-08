@@ -1,7 +1,7 @@
-package com.crowsofwar.avatar.common.bending.statctrl;
+package com.crowsofwar.avatar.common.statctrl;
 
-import static com.crowsofwar.avatar.common.bending.statctrl.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
+import static com.crowsofwar.avatar.common.statctrl.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingController;

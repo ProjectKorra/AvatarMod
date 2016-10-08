@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
+import com.crowsofwar.avatar.common.statctrl.StatusControl;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;

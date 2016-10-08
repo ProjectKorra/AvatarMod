@@ -2,10 +2,10 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
+import com.crowsofwar.avatar.common.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.VectorI;

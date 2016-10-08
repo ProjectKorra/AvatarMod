@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.statctrl;
+package com.crowsofwar.avatar.common.statctrl;
 
 import java.util.ArrayList;
 import java.util.List;

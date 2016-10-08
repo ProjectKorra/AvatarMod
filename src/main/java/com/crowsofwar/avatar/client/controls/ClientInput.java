@@ -18,11 +18,11 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.client.Minecraft;

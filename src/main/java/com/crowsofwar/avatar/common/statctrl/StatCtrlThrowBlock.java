@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.statctrl;
+package com.crowsofwar.avatar.common.statctrl;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
