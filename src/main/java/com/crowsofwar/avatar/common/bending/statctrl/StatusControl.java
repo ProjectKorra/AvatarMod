@@ -28,7 +28,7 @@ public abstract class StatusControl {
 	
 	public static StatusControl THROW_BLOCK = new StatCtrlThrowBlock();
 	
-	private static int nextId = 1;
+	private static int nextId = 0;
 	private static List<StatusControl> allControls;
 	
 	private final int texture;
@@ -45,7 +45,7 @@ public abstract class StatusControl {
 		this.control = subscribeTo;
 		this.raytrace = new Raytrace.Info();
 		this.position = position;
-		this.id = nextId++;
+		this.id = ++nextId;
 		System.out.println("Assigned id " + id);
 		allControls.add(this);
 		
