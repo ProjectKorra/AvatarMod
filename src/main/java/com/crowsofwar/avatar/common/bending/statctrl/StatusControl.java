@@ -65,9 +65,9 @@ public abstract class StatusControl {
 	}
 	
 	/**
-	 * Execute this status control in the given context.
+	 * Execute this status control in the given context. Only called server-side.
 	 * 
-	 * @param ctx
+	 * @param context
 	 *            Information for status control
 	 * @return Whether to remove it
 	 */

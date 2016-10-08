@@ -14,8 +14,30 @@ public class AvatarLog {
 		System.err.println("[Error] " + s);
 	}
 	
+	/**
+	 * @deprecated Use {@link #warn(WarningType, String)}.
+	 */
+	@Deprecated
 	public static void warn(String s) {
-		System.err.println("[Warn] " + s);
+		warn(WarningType.UNKNOWN, s);
+	}
+	
+	/**
+	 * Output a warning with the given category.
+	 * 
+	 * @param type
+	 *            Type of warning
+	 * @param s
+	 *            String to print
+	 */
+	public static void warn(WarningType type, String s) {
+		System.err.println("[Warn/" + type + "] " + s);
+	}
+	
+	public enum WarningType {
+		UNKNOWN,
+		INVALID_SAVE,
+		POSSIBLE_HACKING;
 	}
 	
 }

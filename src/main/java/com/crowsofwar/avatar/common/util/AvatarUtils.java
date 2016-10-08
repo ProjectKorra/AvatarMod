@@ -1,11 +1,14 @@
 package com.crowsofwar.avatar.common.util;
 
+import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
@@ -84,7 +87,8 @@ public class AvatarUtils {
 	}
 	
 	/**
-	 * Clears the list(or collection), and adds items from the NBT list.
+	 * Clears the list(or collection), and adds items from the NBT list. Does not permit null
+	 * values.
 	 * 
 	 * 
 	 * @param itemProvider
@@ -103,7 +107,13 @@ public class AvatarUtils {
 		NBTTagList listTag = nbt.getTagList(listName, 10);
 		for (int i = 0; i < listTag.tagCount(); i++) {
 			NBTTagCompound item = listTag.getCompoundTagAt(i);
-			list.add(itemProvider.apply(item));
+			T read = itemProvider.apply(item);
+			if (read != null) {
+				list.add(read);
+			} else {
+				AvatarLog.warn(INVALID_SAVE,
+						"Invalid list " + listName + ", contains unknown value: " + item);
+			}
 		}
 		
 	}
