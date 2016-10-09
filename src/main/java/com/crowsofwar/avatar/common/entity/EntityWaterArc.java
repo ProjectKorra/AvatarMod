@@ -33,6 +33,12 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
+	}
+	
+	@Override
 	protected void onCollideWithBlock() {
 		
 		if (worldObj.isRemote) {
