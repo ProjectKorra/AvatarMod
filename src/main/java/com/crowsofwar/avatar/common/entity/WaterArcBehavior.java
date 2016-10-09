@@ -71,6 +71,10 @@ public abstract class WaterArcBehavior {
 		behaviorIdToClass = new HashMap<>();
 		classToBehaviorId = new HashMap<>();
 		
+		registerBehavior(1, PlayerControlled.class);
+		registerBehavior(2, Thrown.class);
+		registerBehavior(3, Idle.class);
+		
 	}
 	
 	protected EntityWaterArc water;
