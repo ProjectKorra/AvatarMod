@@ -69,7 +69,7 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 				water.setGravityEnabled(false);
 				bendingState.setWaterArc(water);
 				
-				water.setBehavior(new WaterArcBehavior.PlayerControlled(water));
+				water.setBehavior(new WaterArcBehavior.PlayerControlled(water, player));
 				
 				world.spawnEntityInWorld(water);
 				
