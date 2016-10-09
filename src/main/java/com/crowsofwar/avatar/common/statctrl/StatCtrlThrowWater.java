@@ -6,6 +6,8 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -16,13 +18,8 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class StatCtrlThrowWater extends StatusControl {
 	
-	/**
-	 * @param texture
-	 * @param subscribeTo
-	 * @param position
-	 */
-	public StatCtrlThrowWater(int texture, AvatarControl subscribeTo, CrosshairPosition position) {
-		super(texture, subscribeTo, position);
+	public StatCtrlThrowWater() {
+		super(3, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 	
 	@Override
@@ -31,14 +28,27 @@ public class StatCtrlThrowWater extends StatusControl {
 		EntityPlayer player = context.getPlayerEntity();
 		AvatarPlayerData data = context.getData();
 		
-		WaterbendingState waterState = (WaterbendingState) data
+		WaterbendingState bendingState = (WaterbendingState) data
 				.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
 		
-		if (waterState != null) {
+		if (bendingState.isBendingWater()) {
+			
+			EntityWaterArc water = bendingState.getWaterArc();
+			
+			Vector force = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+					Math.toRadians(player.rotationPitch));
+			force.mul(10);
+			water.velocity().add(force);
+			water.setGravityEnabled(true);
+			
+			bendingState.releaseWater();
+			data.sendBendingState(bendingState);
+			
+			return true;
 			
 		}
 		
-		return true;
+		return false;
 	}
 	
 }
