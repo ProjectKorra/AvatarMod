@@ -8,6 +8,8 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
@@ -15,6 +17,9 @@ import net.minecraft.world.World;
 public class EntityWaterArc extends EntityArc {
 	
 	private static final Vector GRAVITY = new Vector(0, -9.81 / 20, 0);
+	
+	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
 	
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
@@ -109,6 +114,14 @@ public class EntityWaterArc extends EntityArc {
 		worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
 				1.5f, false);
 		lastPlayedSplash = 0;
+	}
+	
+	public WaterArcBehavior getBehavior() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+	
+	public void setBehavior(WaterArcBehavior behavior) {
+		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
 	public static class WaterControlPoint extends EntityControlPoint {

@@ -5,9 +5,9 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
-import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
@@ -39,32 +39,7 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 	
 	@Override
 	public void update(AvatarPlayerData data) {
-		EntityPlayer player = data.getPlayerEntity();
-		World world = player.worldObj;
-		WaterbendingState bendingState = data.getBendingState(controller);
-		
-		System.out.println("--update");
-		if (bendingState.isBendingWater()) {
-			
-			EntityWaterArc water = bendingState.getWaterArc();
-			if (water != null) {
-				Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
-						Math.toRadians(player.rotationPitch));
-				Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
-				Vector motion = lookPos.minus(new Vector(water));
-				motion.normalize();
-				motion.mul(.15);
-				water.moveEntity(motion.x(), motion.y(), motion.z());
-				water.setOwner(player);
-				
-				if (water.worldObj.isRemote && water.canPlaySplash()) {
-					if (motion.sqrMagnitude() >= 0.004) water.playSplash();
-				}
-			} else {
-				if (!world.isRemote) bendingState.setWaterArc(null);
-			}
-			
-		}
+		// never called!
 	}
 	
 	@Override
@@ -93,6 +68,8 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setGravityEnabled(false);
 				bendingState.setWaterArc(water);
+				
+				water.setBehavior(new WaterArcBehavior.PlayerControlled(water));
 				
 				world.spawnEntityInWorld(water);
 				

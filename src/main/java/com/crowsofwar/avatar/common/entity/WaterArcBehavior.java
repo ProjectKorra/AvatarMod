@@ -73,16 +73,16 @@ public abstract class WaterArcBehavior {
 		
 	}
 	
-	protected EntityFloatingBlock water;
+	protected EntityWaterArc water;
 	
 	public WaterArcBehavior() {}
 	
-	public WaterArcBehavior(EntityFloatingBlock floating) {
-		setFloatingBlock(floating);
+	public WaterArcBehavior(EntityWaterArc water) {
+		setWaterArc(water);
 	}
 	
-	public void setFloatingBlock(EntityFloatingBlock floating) {
-		this.water = floating;
+	public void setWaterArc(EntityWaterArc water) {
+		this.water = water;
 	}
 	
 	public int getId() {
@@ -105,6 +105,12 @@ public abstract class WaterArcBehavior {
 	}
 	
 	public static class PlayerControlled extends WaterArcBehavior {
+		
+		public PlayerControlled() {}
+		
+		public PlayerControlled(EntityWaterArc arc) {
+			super(arc);
+		}
 		
 		@Override
 		public WaterArcBehavior onUpdate() {
@@ -130,7 +136,6 @@ public abstract class WaterArcBehavior {
 						motion.normalize();
 						motion.mul(.15);
 						water.moveEntity(motion.x(), motion.y(), motion.z());
-						water.setOwner(player);
 						
 						if (water.worldObj.isRemote && water.canPlaySplash()) {
 							if (motion.sqrMagnitude() >= 0.004) water.playSplash();
@@ -156,9 +161,36 @@ public abstract class WaterArcBehavior {
 	
 	public static class Thrown extends WaterArcBehavior {
 		
+		public Thrown() {}
+		
+		public Thrown(EntityWaterArc arc) {
+			super(arc);
+		}
+		
 		@Override
 		public WaterArcBehavior onUpdate() {
 			applyGravity();
+			return this;
+		}
+		
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void toBytes(PacketBuffer buf) {}
+		
+	}
+	
+	public static class Idle extends WaterArcBehavior {
+		
+		public Idle() {}
+		
+		public Idle(EntityWaterArc arc) {
+			super(arc);
+		}
+		
+		@Override
+		public WaterArcBehavior onUpdate() {
 			return this;
 		}
 		

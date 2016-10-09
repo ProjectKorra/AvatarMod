@@ -202,6 +202,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		saveChanges();
 	}
 	
+	/**
+	 * No longer used. Cannot activate new bending controllers.
+	 */
+	@Deprecated
 	public BendingController getActiveBendingController() {
 		return activeBending;
 	}
