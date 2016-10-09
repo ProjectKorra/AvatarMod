@@ -97,6 +97,7 @@ public class EntityWaterArc extends EntityArc {
 			lastPlayedSplash++;
 			if (lastPlayedSplash > 20) lastPlayedSplash = -1;
 		}
+		getBehavior().onUpdate();
 	}
 	
 	public static EntityWaterArc findFromId(World world, int id) {

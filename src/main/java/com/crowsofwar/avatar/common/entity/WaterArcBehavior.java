@@ -139,7 +139,6 @@ public abstract class WaterArcBehavior {
 				WaterbendingState bendingState = (WaterbendingState) data
 						.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
 				
-				System.out.println("--update");
 				if (bendingState.isBendingWater()) {
 					
 					EntityWaterArc water = bendingState.getWaterArc();
