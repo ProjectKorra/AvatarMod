@@ -24,12 +24,14 @@ public class StatCtrlAirJump extends StatusControl {
 		
 		EntityPlayer player = context.getPlayerEntity();
 		
-		Vector rotations = new Vector(Math.toRadians((player.rotationPitch - 15) / 2),
+		Vector rotations = new Vector(Math.toRadians((player.rotationPitch) / 1),
 				Math.toRadians(player.rotationYaw), 0);
 		
 		Vector velocity = rotations.toRectangular();
-		velocity.mul(4);
+		velocity.setY(Math.pow(velocity.y(), .1));
+		velocity.mul(10);
 		velocity.setY(velocity.y() * 0.8);
+		velocity.divide(20);
 		player.addVelocity(velocity.x(), velocity.y(), velocity.z());
 		((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 		
