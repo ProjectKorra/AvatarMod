@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.WaterArcBehavior;
+import com.crowsofwar.avatar.common.statctrl.StatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -74,6 +75,8 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 				world.spawnEntityInWorld(water);
 				
 				needsSync = true;
+				
+				ctx.addStatusControl(StatusControl.THROW_WATER);
 				
 			}
 		}
