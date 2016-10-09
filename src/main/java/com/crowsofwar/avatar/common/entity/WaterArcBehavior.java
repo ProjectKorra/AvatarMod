@@ -106,16 +106,27 @@ public abstract class WaterArcBehavior {
 	
 	public static class PlayerControlled extends WaterArcBehavior {
 		
+		private String playerName;
+		private EntityPlayer internalPlayer;
+		
 		public PlayerControlled() {}
 		
-		public PlayerControlled(EntityWaterArc arc) {
+		public PlayerControlled(EntityWaterArc arc, EntityPlayer player) {
 			super(arc);
+			this.internalPlayer = player;
+		}
+		
+		private EntityPlayer getPlayer() {
+			if (internalPlayer == null) {
+				internalPlayer = water.worldObj.getPlayerEntityByName(playerName);
+			}
+			return internalPlayer;
 		}
 		
 		@Override
 		public WaterArcBehavior onUpdate() {
 			
-			EntityPlayer player = water.getOwner();
+			EntityPlayer player = getPlayer();
 			World world = player.worldObj;
 			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
@@ -152,10 +163,14 @@ public abstract class WaterArcBehavior {
 		}
 		
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
+		public void fromBytes(PacketBuffer buf) {
+			playerName = buf.readStringFromBuffer(16);
+		}
 		
 		@Override
-		public void toBytes(PacketBuffer buf) {}
+		public void toBytes(PacketBuffer buf) {
+			buf.writeString(internalPlayer.getName());
+		}
 		
 	}
 	
