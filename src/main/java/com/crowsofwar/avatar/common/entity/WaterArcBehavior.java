@@ -105,7 +105,7 @@ public abstract class WaterArcBehavior {
 	public abstract void toBytes(PacketBuffer buf);
 	
 	protected void applyGravity() {
-		water.velocity().add(0, -9.81 / 20, 0);
+		water.velocity().add(0, -9.81 / 60, 0);
 	}
 	
 	public static class PlayerControlled extends WaterArcBehavior {
@@ -147,8 +147,7 @@ public abstract class WaterArcBehavior {
 								Math.toRadians(player.rotationPitch));
 						Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
 						Vector motion = lookPos.minus(new Vector(water));
-						motion.normalize();
-						motion.mul(.15);
+						motion.mul(.3);
 						water.moveEntity(motion.x(), motion.y(), motion.z());
 						
 						if (water.worldObj.isRemote && water.canPlaySplash()) {
