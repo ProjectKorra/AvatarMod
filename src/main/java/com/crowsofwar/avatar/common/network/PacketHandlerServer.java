@@ -63,6 +63,8 @@ public class PacketHandlerServer implements IPacketHandler {
 				"Error while processing UseAbility packet");
 		System.out.println("use ability...");
 		if (data != null) {
+			
+			// TODO Verify that the client can actually use that ability
 			System.out.println("data not null.");
 			System.out.println("exec");
 			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
