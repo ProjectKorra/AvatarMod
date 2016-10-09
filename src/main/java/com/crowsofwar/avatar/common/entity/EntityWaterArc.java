@@ -24,6 +24,7 @@ public class EntityWaterArc extends EntityArc {
 	public EntityWaterArc(World world) {
 		super(world);
 		this.lastPlayedSplash = -1;
+		System.out.println("Made arc");
 	}
 	
 	@Override

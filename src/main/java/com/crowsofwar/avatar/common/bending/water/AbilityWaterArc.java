@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -40,11 +39,11 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 	
 	@Override
 	public void update(AvatarPlayerData data) {
-		PlayerState state = data.getState();
 		EntityPlayer player = data.getPlayerEntity();
 		World world = player.worldObj;
 		WaterbendingState bendingState = data.getBendingState(controller);
 		
+		System.out.println("--update");
 		if (bendingState.isBendingWater()) {
 			
 			EntityWaterArc water = bendingState.getWaterArc();
@@ -73,7 +72,6 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 		WaterbendingState bendingState = ctx.getData().getBendingState(controller);
 		World world = ctx.getWorld();
 		EntityPlayer player = ctx.getPlayerEntity();
-		PlayerState state = ctx.getData().getState();
 		
 		boolean needsSync = false;
 		
@@ -84,12 +82,13 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 			needsSync = true;
 		}
 		
-		VectorI targetPos = state.getClientLookAtBlock();
+		VectorI targetPos = ctx.getClientLookBlock();
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
 				
 				EntityWaterArc water = new EntityWaterArc(world);
+				System.out.println("Made new water arc");
 				water.setOwner(player);
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setGravityEnabled(false);
