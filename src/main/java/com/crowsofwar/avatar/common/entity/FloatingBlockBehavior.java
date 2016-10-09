@@ -301,6 +301,9 @@ public abstract class FloatingBlockBehavior {
 		public FloatingBlockBehavior onUpdate() {
 			EntityPlayer controller = getControllingPlayer();
 			
+			// If player is null, skip. Packet probably didn't reach yet...
+			if (controller == null) return this;
+			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(controller,
 					"Could not get player data to update PlayerControlled Floating Block");
 			
