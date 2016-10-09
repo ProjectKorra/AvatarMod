@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyDataManager;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,16 +18,11 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.VARINT);
-	private static final DataParameter<Vector> SYNC_VELOCITY = EntityDataManager.createKey(EntityArc.class,
-			AvatarDataSerializers.SERIALIZER_VECTOR);
 	private static final DataParameter<Boolean> SYNC_GRAVITY = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.BOOLEAN);
 	
 	private static int nextId = 1;
 	private EntityControlPoint[] points;
-	
-	private Vector internalPos;
-	private EntityPropertyDataManager<Vector> velocity;
 	
 	protected EntityPlayer owner;
 	
@@ -43,9 +36,6 @@ public abstract class EntityArc extends AvatarEntity {
 			points[i] = createControlPoint(size);
 		}
 		
-		this.internalPos = new Vector(0, 0, 0);
-		this.velocity = new EntityPropertyDataManager<Vector>(this, EntityArc.class,
-				AvatarDataSerializers.SERIALIZER_VECTOR, new Vector());
 		if (!worldObj.isRemote) {
 			setId(nextId++);
 		}
