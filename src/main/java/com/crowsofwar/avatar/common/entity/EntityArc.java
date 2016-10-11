@@ -133,13 +133,6 @@ public abstract class EntityArc extends AvatarEntity {
 		}
 	}
 	
-	@Override
-	public void setDead() {
-		super.setDead();
-		for (ControlPoint point : points)
-			point.setDead();
-	}
-	
 	public ControlPoint[] getControlPoints() {
 		return points;
 	}
