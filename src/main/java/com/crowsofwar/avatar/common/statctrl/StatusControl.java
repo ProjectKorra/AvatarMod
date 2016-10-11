@@ -106,13 +106,21 @@ public abstract class StatusControl {
 	
 	public enum CrosshairPosition {
 		
-		ABOVE_CROSSHAIR(0, -10),
-		LEFT_OF_CROSSHAIR(14, 4),
-		RIGHT_OF_CROSSHAIR(-14, 4),
-		BELOW_CROSSHAIR(0, 10);
+		ABOVE_CROSSHAIR(4, 14),
+		LEFT_OF_CROSSHAIR(14, 3),
+		RIGHT_OF_CROSSHAIR(-6, 3),
+		BELOW_CROSSHAIR(4, -8);
 		
 		private final int x, y;
 		
+		/**
+		 * Some notes on coordinates:<br />
+		 * +y = up<br />
+		 * +x = left
+		 * 
+		 * @param x
+		 * @param y
+		 */
 		private CrosshairPosition(int x, int y) {
 			this.x = x;
 			this.y = y;
