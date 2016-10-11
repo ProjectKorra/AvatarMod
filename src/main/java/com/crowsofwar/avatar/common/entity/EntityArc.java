@@ -78,6 +78,9 @@ public abstract class EntityArc extends AvatarEntity {
 		getLeader().position().set(posX, posY, posZ);
 		getLeader().velocity().set(velocity());
 		
+		for (ControlPoint cp : points)
+			cp.onUpdate();
+		
 		if (isCollided) {
 			setDead();
 			onCollideWithBlock();
