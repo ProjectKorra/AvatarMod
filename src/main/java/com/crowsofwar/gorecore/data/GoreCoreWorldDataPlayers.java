@@ -74,7 +74,7 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 	 */
 	public T getPlayerDataWithoutCreate(UUID player) {
 		T data = (T) players.get(player);
-		if (data.getPlayerEntity() == null) {
+		if (data != null && data.getPlayerEntity() == null) {
 			data.setPlayerEntity(GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
 		}
 		return data;
