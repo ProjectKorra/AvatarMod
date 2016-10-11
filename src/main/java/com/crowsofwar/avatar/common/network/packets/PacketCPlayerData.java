@@ -51,8 +51,8 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeUUID(buf, player);
-		buf.writeInt(allControllers.length);
 		// Write bending controllers
+		buf.writeInt(allControllers.length);
 		for (int i = 0; i < allControllers.length; i++) {
 			buf.writeInt(allControllers[i]);
 		}

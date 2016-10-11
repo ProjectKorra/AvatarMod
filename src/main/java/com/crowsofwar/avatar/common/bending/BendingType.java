@@ -30,6 +30,7 @@ public enum BendingType {
 	 *             if the Id is invalid
 	 */
 	public static BendingType find(int id) {
+		id--;
 		if (id < 0 || id >= values().length)
 			throw new IllegalArgumentException("Cannot find BendingType with invalid id: " + id);
 		return values()[id];
