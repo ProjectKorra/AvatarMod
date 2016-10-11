@@ -30,7 +30,7 @@ public class ControlPoint {
 	private final World world;
 	private AxisAlignedBB hitbox;
 	
-	private final float size;
+	protected float size;
 	
 	public ControlPoint(EntityArc arc, float size, double x, double y, double z) {
 		internalPosition = new Vector();
@@ -56,7 +56,34 @@ public class ControlPoint {
 		return internalPosition;
 	}
 	
-	public void update() {
+	public double x() {
+		return position().x();
+	}
+	
+	public double y() {
+		return position().y();
+	}
+	
+	public double z() {
+		return position().z();
+	}
+	
+	/**
+	 * Remove the control point's arc.
+	 */
+	public void setDead() {
+		arc.setDead();
+	}
+	
+	public AxisAlignedBB getBoundingBox() {
+		return hitbox;
+	}
+	
+	public float size() {
+		return size;
+	}
+	
+	public void onUpdate() {
 		
 		double sizeHalfed = size / 2;
 		hitbox = new AxisAlignedBB(position().x() - sizeHalfed, position().y() - sizeHalfed,

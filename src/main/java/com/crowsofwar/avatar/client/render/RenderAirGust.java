@@ -2,8 +2,8 @@ package com.crowsofwar.avatar.client.render;
 
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.ControlPoint;
+import com.crowsofwar.avatar.common.entity.EntityArc;
 
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.EnumParticleTypes;
@@ -29,7 +29,7 @@ public class RenderAirGust extends RenderArc {
 	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
 		
 		World world = arc.worldObj;
-		AxisAlignedBB boundingBox = first.getEntityBoundingBox();
+		AxisAlignedBB boundingBox = first.getBoundingBox();
 		double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);

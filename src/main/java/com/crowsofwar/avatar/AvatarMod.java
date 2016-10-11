@@ -85,11 +85,8 @@ public class AvatarMod {
 	public void init(FMLInitializationEvent e) {
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
 		registerEntity(EntityFireArc.class, "FireArc");
-		registerEntity(EntityFireArc.FireControlPoint.class, "FireArcCP");
 		registerEntity(EntityWaterArc.class, "WaterArc");
-		registerEntity(EntityWaterArc.WaterControlPoint.class, "WaterArcCP");
 		registerEntity(EntityAirGust.class, "AirGust");
-		registerEntity(EntityAirGust.AirGustControlPoint.class, "AirGustCP");
 		registerEntity(EntityRavine.class, "Ravine");
 		registerEntity(EntityFlames.class, "Flames");
 		registerEntity(EntityWave.class, "Wave");

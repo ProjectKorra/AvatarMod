@@ -133,10 +133,6 @@ public class EntityWaterArc extends EntityArc {
 	
 	public static class WaterControlPoint extends ControlPoint {
 		
-		public WaterControlPoint(World world) {
-			super(world);
-		}
-		
 		public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
@@ -144,7 +140,7 @@ public class EntityWaterArc extends EntityArc {
 		@Override
 		protected void onCollision(Entity entity) {
 			if (entity == owner) return;
-			entity.addVelocity(this.posX - entity.posX, 0.2, this.posZ - entity.posZ);
+			entity.addVelocity(x() - entity.posX, 0.2, z() - entity.posZ);
 			if (entity instanceof EntityLivingBase) {
 				((EntityLivingBase) entity).attackEntityFrom(
 						AvatarDamageSource.causeWaterDamage((EntityWaterArc) arc, owner), 6);

@@ -76,10 +76,6 @@ public class EntityAirGust extends EntityArc {
 	
 	public static class AirGustControlPoint extends ControlPoint {
 		
-		public AirGustControlPoint(World world) {
-			super(world);
-		}
-		
 		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
@@ -88,17 +84,18 @@ public class EntityAirGust extends EntityArc {
 		protected void onCollision(Entity entity) {
 			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
 				double multiplier = 10;
-				entity.addVelocity((entity.posX - this.posX) * multiplier, 0.4,
-						(entity.posZ - this.posZ) * multiplier);
+				entity.addVelocity((entity.posX - this.x()) * multiplier, 0.4,
+						(entity.posZ - this.z()) * multiplier);
 				setDead();
 			}
 		}
 		
 		@Override
 		public void onUpdate() {
+			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {
 				float expansionRate = 1f / 20;
-				setSize(width + expansionRate, width + expansionRate);
+				size += expansionRate;
 			}
 		}
 		

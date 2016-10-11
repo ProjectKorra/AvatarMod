@@ -4,8 +4,8 @@ import org.joml.Matrix4d;
 import org.joml.Vector4d;
 import org.lwjgl.opengl.GL11;
 
-import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.ControlPoint;
+import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.client.Minecraft;
@@ -54,8 +54,8 @@ public abstract class RenderArc extends Render {
 		
 	}
 	
-	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point,
-			double renderPosX, double renderPosY, double renderPosZ) {
+	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point, double renderPosX,
+			double renderPosY, double renderPosZ) {
 		double x = leader.getXPos() - TileEntityRendererDispatcher.staticPlayerX;
 		double y = leader.getYPos() - TileEntityRendererDispatcher.staticPlayerY;
 		double z = leader.getZPos() - TileEntityRendererDispatcher.staticPlayerZ;
@@ -79,8 +79,8 @@ public abstract class RenderArc extends Render {
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		
 		// double size = arc.width / 2;
-		double sizeLeader = point.width / 2;
-		double sizePoint = leader.width / 2;
+		double sizeLeader = point.size() / 2;
+		double sizePoint = leader.size() / 2;
 		
 		double distance = to.sqrMagnitude();
 		double sizeMultiplier = distance < 1 ? -.7 * distance + 1.7 : 1 / Math.sqrt(distance);

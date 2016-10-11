@@ -64,7 +64,6 @@ public abstract class EntityArc extends AvatarEntity {
 		if (this.ticksExisted == 1) {
 			for (int i = 0; i < points.length; i++) {
 				points[i].setVecPosition(position());
-				worldObj.spawnEntityInWorld(points[i]);
 			}
 		}
 		
@@ -76,7 +75,7 @@ public abstract class EntityArc extends AvatarEntity {
 		
 		Vector velPerTick = velocity().dividedBy(20);
 		moveEntity(velPerTick.x(), velPerTick.y(), velPerTick.z());
-		getLeader().setPosition(posX, posY, posZ);
+		getLeader().position().set(posX, posY, posZ);
 		getLeader().velocity().set(velocity());
 		
 		if (isCollided) {
@@ -93,7 +92,7 @@ public abstract class EntityArc extends AvatarEntity {
 			
 			if (sqrDist > getControlPointTeleportDistanceSq()) {
 				
-				p.setPosition(leader.getXPos(), leader.getYPos(), leader.getZPos());
+				p.position().set(leader.getXPos(), leader.getYPos(), leader.getZPos());
 				
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 				
@@ -127,7 +126,7 @@ public abstract class EntityArc extends AvatarEntity {
 		super.setPosition(x, y, z);
 		// Set position - called from entity constructor, so points might be null
 		if (points != null) {
-			points[0].setPosition(x, y, z);
+			points[0].position().set(x, y, z);
 		}
 	}
 	
