@@ -19,8 +19,8 @@ public class EntityAirGust extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		EntityControlPoint first = getControlPoint(0);
-		EntityControlPoint second = getControlPoint(1);
+		ControlPoint first = getControlPoint(0);
+		ControlPoint second = getControlPoint(1);
 		if (first.position().sqrDist(second.position()) >= getControlPointMaxDistanceSq()) {
 			setDead();
 		}
@@ -53,7 +53,7 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	protected EntityControlPoint createControlPoint(float size) {
+	protected ControlPoint createControlPoint(float size) {
 		return new AirGustControlPoint(this, 0.1f, 0, 0, 0);
 	}
 	
@@ -74,7 +74,7 @@ public class EntityAirGust extends EntityArc {
 		return 200;
 	}
 	
-	public static class AirGustControlPoint extends EntityControlPoint {
+	public static class AirGustControlPoint extends ControlPoint {
 		
 		public AirGustControlPoint(World world) {
 			super(world);

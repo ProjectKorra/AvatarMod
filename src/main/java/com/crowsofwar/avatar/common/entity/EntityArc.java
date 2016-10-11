@@ -22,7 +22,7 @@ public abstract class EntityArc extends AvatarEntity {
 			DataSerializers.BOOLEAN);
 	
 	private static int nextId = 1;
-	private EntityControlPoint[] points;
+	private ControlPoint[] points;
 	
 	protected EntityPlayer owner;
 	
@@ -31,7 +31,7 @@ public abstract class EntityArc extends AvatarEntity {
 		float size = .2f;
 		setSize(size, size);
 		
-		this.points = new EntityControlPoint[getAmountOfControlPoints()];
+		this.points = new ControlPoint[getAmountOfControlPoints()];
 		for (int i = 0; i < points.length; i++) {
 			points[i] = createControlPoint(size);
 		}
@@ -47,8 +47,8 @@ public abstract class EntityArc extends AvatarEntity {
 	 * @param size
 	 * @return
 	 */
-	protected EntityControlPoint createControlPoint(float size) {
-		return new EntityControlPoint(this, size, 0, 0, 0);
+	protected ControlPoint createControlPoint(float size) {
+		return new ControlPoint(this, size, 0, 0, 0);
 	}
 	
 	@Override
@@ -86,8 +86,8 @@ public abstract class EntityArc extends AvatarEntity {
 		
 		for (int i = 1; i < points.length; i++) {
 			
-			EntityControlPoint leader = points[i - 1];
-			EntityControlPoint p = points[i];
+			ControlPoint leader = points[i - 1];
+			ControlPoint p = points[i];
 			Vector leadPos = i == 0 ? velocity() : getLeader(i).position();
 			double sqrDist = p.position().sqrDist(leadPos);
 			
@@ -134,29 +134,29 @@ public abstract class EntityArc extends AvatarEntity {
 	@Override
 	public void setDead() {
 		super.setDead();
-		for (EntityControlPoint point : points)
+		for (ControlPoint point : points)
 			point.setDead();
 	}
 	
-	public EntityControlPoint[] getControlPoints() {
+	public ControlPoint[] getControlPoints() {
 		return points;
 	}
 	
-	public EntityControlPoint getControlPoint(int index) {
+	public ControlPoint getControlPoint(int index) {
 		return points[index];
 	}
 	
 	/**
 	 * Get the first control point in this arc.
 	 */
-	public EntityControlPoint getLeader() {
+	public ControlPoint getLeader() {
 		return points[0];// EntityDragon
 	}
 	
 	/**
 	 * Get the leader of the specified control point.
 	 */
-	public EntityControlPoint getLeader(int index) {
+	public ControlPoint getLeader(int index) {
 		return points[index == 0 ? index : index - 1];
 	}
 	
@@ -201,7 +201,7 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	public void setOwner(EntityPlayer owner) {
 		this.owner = owner;
-		for (EntityControlPoint cp : points)
+		for (ControlPoint cp : points)
 			cp.setOwner(owner);
 	}
 	

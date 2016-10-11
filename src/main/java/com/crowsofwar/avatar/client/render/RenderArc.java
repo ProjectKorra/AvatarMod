@@ -5,7 +5,7 @@ import org.joml.Vector4d;
 import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityControlPoint;
+import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.client.Minecraft;
@@ -54,7 +54,7 @@ public abstract class RenderArc extends Render {
 		
 	}
 	
-	private void renderSegment(EntityArc arc, EntityControlPoint leader, EntityControlPoint point,
+	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point,
 			double renderPosX, double renderPosY, double renderPosZ) {
 		double x = leader.getXPos() - TileEntityRendererDispatcher.staticPlayerX;
 		double y = leader.getYPos() - TileEntityRendererDispatcher.staticPlayerY;
@@ -179,7 +179,7 @@ public abstract class RenderArc extends Render {
 	
 	protected abstract ResourceLocation getTexture();
 	
-	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
+	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
 		
 	}
 	

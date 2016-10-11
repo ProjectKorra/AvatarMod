@@ -109,7 +109,7 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected EntityControlPoint createControlPoint(float size) {
+	protected ControlPoint createControlPoint(float size) {
 		return new WaterControlPoint(this, size, 0, 0, 0);
 	}
 	
@@ -131,7 +131,7 @@ public class EntityWaterArc extends EntityArc {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
-	public static class WaterControlPoint extends EntityControlPoint {
+	public static class WaterControlPoint extends ControlPoint {
 		
 		public WaterControlPoint(World world) {
 			super(world);

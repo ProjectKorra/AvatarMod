@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.client.render;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityControlPoint;
+import com.crowsofwar.avatar.common.entity.ControlPoint;
 
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.EnumParticleTypes;
@@ -26,7 +26,7 @@ public class RenderAirGust extends RenderArc {
 	}
 	
 	@Override
-	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
+	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
 		
 		World world = arc.worldObj;
 		AxisAlignedBB boundingBox = first.getEntityBoundingBox();

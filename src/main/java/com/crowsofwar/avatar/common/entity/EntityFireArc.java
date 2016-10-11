@@ -62,11 +62,11 @@ public class EntityFireArc extends EntityArc {
 	}
 	
 	@Override
-	public EntityControlPoint createControlPoint(float size) {
+	public ControlPoint createControlPoint(float size) {
 		return new FireControlPoint(this, size, 0, 0, 0);
 	}
 	
-	public static class FireControlPoint extends EntityControlPoint {
+	public static class FireControlPoint extends ControlPoint {
 		
 		public FireControlPoint(World world) {
 			super(world);

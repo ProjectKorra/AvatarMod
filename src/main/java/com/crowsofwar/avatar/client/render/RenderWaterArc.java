@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityControlPoint;
+import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -27,7 +27,7 @@ public class RenderWaterArc extends RenderArc {
 	}
 	
 	@Override
-	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
+	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
 		// Parametric equation
 		
 		Vector from = new Vector(0, 0, 0);
