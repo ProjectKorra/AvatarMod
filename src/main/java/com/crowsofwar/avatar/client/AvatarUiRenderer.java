@@ -68,6 +68,8 @@ public class AvatarUiRenderer extends Gui {
 			
 			double scale = .5;
 			
+			GlStateManager.color(1, 1, 1);
+			
 			GlStateManager.enableBlend();
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(scale, scale, scale);
