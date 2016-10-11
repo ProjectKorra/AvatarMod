@@ -20,7 +20,6 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	private UUID player;
 	private int[] allControllers;
-	private int controllerID;
 	private List<IBendingState> states;
 	private ByteBuf buffer;
 	
@@ -32,7 +31,6 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		for (int i = 0; i < allControllers.length; i++) {
 			allControllers[i] = data.getBendingControllers().get(i).getID();
 		}
-		controllerID = data.isBending() ? data.getActiveBendingController().getID() : -1;
 		states = data.getAllBendingStates();
 		
 	}
@@ -40,7 +38,6 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		player = GoreCoreByteBufUtil.readUUID(buf);
-		controllerID = buf.readInt();
 		// Read bending controllers
 		allControllers = new int[buf.readInt()];
 		for (int i = 0; i < allControllers.length; i++) {
@@ -54,7 +51,6 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeUUID(buf, player);
-		buf.writeInt(controllerID);
 		buf.writeInt(allControllers.length);
 		// Write bending controllers
 		for (int i = 0; i < allControllers.length; i++) {
@@ -81,10 +77,6 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	 */
 	public int[] getAllControllersID() {
 		return allControllers;
-	}
-	
-	public int getCurrentBendingControllerID() {
-		return controllerID;
 	}
 	
 	public ByteBuf getBuf() {

@@ -84,6 +84,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 	}
 	
+	// TODO remove packet s usebendingcontroller
 	private IMessage handleUseBendingController(PacketSUseBendingController packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
@@ -94,7 +95,6 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			
 			if (data.hasBending(packet.getBendingControllerId())) {
-				data.setActiveBendingController(packet.getBendingControllerId());
 			} else {
 				AvatarLog.warn("Player '" + player.getName() + "' attempted to activate a BendingController "
 						+ "they don't have; hacking?");

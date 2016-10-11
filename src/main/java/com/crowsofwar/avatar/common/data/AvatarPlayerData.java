@@ -40,10 +40,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	private Map<Integer, BendingController> bendingControllers;
 	private List<BendingController> bendingControllerList;
-	/**
-	 * Bending controller currently in use, null if no ability is activated
-	 */
-	private BendingController activeBending;
 	
 	private Map<Integer, IBendingState> bendingStates;
 	private List<IBendingState> bendingStateList;
@@ -78,8 +74,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			bendingStates.put(state.getId(), state);
 		}
 		
-		activeBending = getBendingController(nbt.getInteger("ActiveBending"));
-		
 		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), nbt,
 				"StatusControls");
 		
@@ -90,7 +84,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		
 		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", BendingController.writer);
 		AvatarUtils.writeToNBT(bendingStateList, nbt, "BendingData", IBendingState.writer);
-		nbt.setInteger("ActiveBending", activeBending == null ? -1 : activeBending.getID());
 		AvatarUtils.writeList(statusControls, (nbtTag, control) -> nbtTag.setInteger("Id", control.id()), nbt,
 				"StatusControls");
 	}
@@ -142,7 +135,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			bendingStateList.remove(state);
 			bendingControllers.remove(bending.getID());
 			bendingControllerList.remove(bending);
-			if (activeBending == bending) activeBending = null;
 			saveChanges();
 		} else {
 			AvatarLog.warn(WarningType.INVALID_CODE, "Cannot remove BendingController '" + bending
@@ -178,40 +170,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			iterator.remove();
 			bendingStates.remove(bending.getID());
 			bendingStateList.remove(state);
-			if (activeBending == bending) activeBending = null;
 		}
 		saveChanges();
 		
-	}
-	
-	/**
-	 * Set the active bending controller to the one with that Id. Pass -1 to deactivate bending.
-	 */
-	public void setActiveBendingController(int controllerId) {
-		setActiveBendingController(controllerId == -1 ? null : BendingManager.getBending(controllerId));
-	}
-	
-	/**
-	 * Set the active bending controller. Pass null as the argument to deactivate bending.
-	 */
-	public void setActiveBendingController(BendingController controller) {
-		activeBending = controller;
-		saveChanges();
-	}
-	
-	/**
-	 * No longer used. Cannot activate new bending controllers.
-	 */
-	@Deprecated
-	public BendingController getActiveBendingController() {
-		return activeBending;
-	}
-	
-	/**
-	 * Returns whether the player is currently bending.
-	 */
-	public boolean isBending() {
-		return activeBending != null;
 	}
 	
 	public List<BendingController> getBendingControllers() {
