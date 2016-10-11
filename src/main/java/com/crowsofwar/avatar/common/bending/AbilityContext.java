@@ -83,11 +83,11 @@ public class AbilityContext {
 	 * Returns whether the player is looking at a block right now. Checks for hacking on the server.
 	 * If on client side, then no checks are made.
 	 * 
-	 * @see #verifyclientLookBlock(double, double)
+	 * @see #verifyClientLookBlock(double, double)
 	 */
 	public boolean isLookingAtBlock(double raycastDist, double maxDeviation) {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return isLookingAtBlock();
-		return lookSide != null && verifyclientLookBlock(raycastDist, maxDeviation) != null;
+		return lookSide != null && verifyClientLookBlock(raycastDist, maxDeviation) != null;
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class AbilityContext {
 	 * 
 	 * @see Raytrace#getTargetBlock(EntityPlayer, double)
 	 */
-	public VectorI verifyclientLookBlock(double raycastDist, double maxDeviation) {
+	public VectorI verifyClientLookBlock(double raycastDist, double maxDeviation) {
 		if (clientLookBlock == null) return null;
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookBlock;
 		Result res = Raytrace.getTargetBlock(playerEntity, raycastDist);
@@ -111,8 +111,8 @@ public class AbilityContext {
 		if (dist <= maxDeviation) {
 			return clientLookBlock;
 		} else {
-			AvatarLog.warn("Warning: PlayerState- Client sent too far location " + "to look at block. ("
-					+ dist + ") Hacking?");
+			AvatarLog.warnHacking("unknown player",
+					"Client sent too far location " + "to look at block. (" + dist + ")");
 			Thread.dumpStack();
 			return serverLookBlock;
 		}

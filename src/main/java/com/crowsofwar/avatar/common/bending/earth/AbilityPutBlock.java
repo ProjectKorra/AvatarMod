@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -33,22 +32,16 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public boolean requiresUpdateTick() {
-		return false;
-	}
-	
-	@Override
 	public void execute(AbilityContext ctx) {
 		
 		AvatarPlayerData data = ctx.getData();
 		EarthbendingState ebs = data.getBendingState(controller);
-		PlayerState state = data.getState();
 		
 		EntityFloatingBlock floating = ebs.getPickupBlock();
 		if (floating != null) {
 			// TODO Verify look at block
-			VectorI looking = state.getClientLookAtBlock();
-			EnumFacing lookingSide = state.getLookAtSide();
+			VectorI looking = ctx.getClientLookBlock();
+			EnumFacing lookingSide = ctx.getLookSide();
 			if (looking != null && lookingSide != null) {
 				looking.offset(lookingSide);
 				// if (world.getBlock(x, y, z) == Blocks.air) {

@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -111,10 +112,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		return bendingControllers.containsKey(id);
 	}
 	
-	public boolean isEarthbender() {
-		return hasBending(BendingManager.BENDINGID_EARTHBENDING);
-	}
-	
 	public void addBending(BendingController bending) {
 		if (!hasBending(bending.getID())) {
 			bendingControllers.put(bending.getID(), bending);
@@ -124,7 +121,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			bendingStateList.add(state);
 			saveChanges();
 		} else {
-			AvatarLog.warn(
+			AvatarLog.warn(WarningType.INVALID_CODE,
 					"Cannot add BendingController " + bending + "' because player already has instance.");
 		}
 	}
@@ -148,7 +145,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			if (activeBending == bending) activeBending = null;
 			saveChanges();
 		} else {
-			AvatarLog.warn("Cannot remove BendingController '" + bending
+			AvatarLog.warn(WarningType.INVALID_CODE, "Cannot remove BendingController '" + bending
 					+ "' because player does not have that instance.");
 		}
 	}
@@ -162,7 +159,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (hasBending(id)) {
 			removeBending(getBendingController(id));
 		} else {
-			AvatarLog.warn(
+			AvatarLog.warn(WarningType.INVALID_CODE,
 					"Cannot remove bending with ID '" + id + "' because player does not have that instance.");
 		}
 	}
@@ -242,7 +239,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public IBendingState getBendingState(int id) {
 		if (!hasBending(id)) {
-			AvatarLog.warn("Tried to access BendingState with Id " + id
+			AvatarLog.warn(WarningType.INVALID_CODE, "Tried to access BendingState with Id " + id
 					+ ", but player does not have the BendingController");
 		}
 		return hasBending(id) ? bendingStates.get(id) : null;

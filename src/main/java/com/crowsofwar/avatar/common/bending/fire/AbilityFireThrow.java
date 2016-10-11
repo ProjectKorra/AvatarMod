@@ -29,11 +29,6 @@ public class AbilityFireThrow extends BendingAbility<FirebendingState> {
 	}
 	
 	@Override
-	public boolean requiresUpdateTick() {
-		return false;
-	}
-	
-	@Override
 	public void execute(AbilityContext ctx) {
 		
 		EntityPlayer player = ctx.getPlayerEntity();

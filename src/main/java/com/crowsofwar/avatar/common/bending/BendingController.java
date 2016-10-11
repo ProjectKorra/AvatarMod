@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.util.event.EventNotifier;
@@ -103,17 +102,6 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	public STATE createState(AvatarPlayerData data) {
 		return null;
 	}
-	
-	/**
-	 * Get the ability to be executed for the given client input.
-	 * 
-	 * @param data
-	 *            Player data containing necessary information
-	 * @param input
-	 *            Input received from client
-	 * @return The ability to execute, or null for none.
-	 */
-	public abstract BendingAbility getAbility(AvatarPlayerData data, AvatarControl input);
 	
 	/**
 	 * Get information about this bending controller's radial menu.

@@ -31,11 +31,6 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public boolean requiresUpdateTick() {
-		return false;
-	}
-	
-	@Override
 	public void execute(AbilityContext data) {
 		
 		EntityPlayer player = data.getPlayerEntity();

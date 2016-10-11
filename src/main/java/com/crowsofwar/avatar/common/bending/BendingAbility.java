@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
@@ -24,20 +23,6 @@ public abstract class BendingAbility<STATE extends IBendingState> {
 		this.id = nextId++;
 		BendingManager.registerAbility(this);
 	}
-	
-	// TODO move requiresUpdateTick into an optionally implementable interface? such as Updatable
-	/**
-	 *
-	 * Returns whether this bending ability should be subscribed to an update tick event.
-	 */
-	public abstract boolean requiresUpdateTick();
-	
-	/**
-	 * Tick this bending ability. Only called if {@link #requiresUpdateTick()} is true. Called on
-	 * both server and client.
-	 */
-	// TODO remove this- use an interface...
-	public void update(AvatarPlayerData data) {}
 	
 	/**
 	 * Execute this ability. Only called on server.

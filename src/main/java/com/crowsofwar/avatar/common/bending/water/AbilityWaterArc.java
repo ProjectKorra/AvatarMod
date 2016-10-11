@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.WaterArcBehavior;
 import com.crowsofwar.avatar.common.statctrl.StatusControl;
@@ -31,16 +30,6 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 	public AbilityWaterArc(BendingController<WaterbendingState> controller) {
 		super(controller);
 		this.raytrace = new Raytrace.Info(-1, false);
-	}
-	
-	@Override
-	public boolean requiresUpdateTick() {
-		return true;
-	}
-	
-	@Override
-	public void update(AvatarPlayerData data) {
-		// never called!
 	}
 	
 	@Override

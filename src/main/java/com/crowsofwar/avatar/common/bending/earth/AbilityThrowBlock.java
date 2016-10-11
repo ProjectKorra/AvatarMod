@@ -29,11 +29,6 @@ public class AbilityThrowBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public boolean requiresUpdateTick() {
-		return false;
-	}
-	
-	@Override
 	public void execute(AbilityContext ctx) {
 		EarthbendingState ebs = (EarthbendingState) ctx.getData().getBendingState(controller);
 		EntityPlayer player = ctx.getPlayerEntity();

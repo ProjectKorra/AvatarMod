@@ -8,7 +8,6 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -52,14 +51,6 @@ public class Waterbending extends BendingController {
 	@Override
 	public IBendingState createState(AvatarPlayerData data) {
 		return new WaterbendingState(data);
-	}
-	
-	@Override
-	public BendingAbility<WaterbendingState> getAbility(AvatarPlayerData data, AvatarControl input) {
-		
-		if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return abilityWaterThrow;
-		
-		return null;
 	}
 	
 	@Override

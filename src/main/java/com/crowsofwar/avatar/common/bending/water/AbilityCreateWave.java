@@ -24,11 +24,6 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 	}
 	
 	@Override
-	public boolean requiresUpdateTick() {
-		return false;
-	}
-	
-	@Override
 	public void execute(AbilityContext data) {
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();

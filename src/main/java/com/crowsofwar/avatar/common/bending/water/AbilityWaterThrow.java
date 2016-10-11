@@ -28,12 +28,6 @@ public class AbilityWaterThrow extends BendingAbility<WaterbendingState> {
 	}
 	
 	@Override
-	public boolean requiresUpdateTick() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	@Override
 	public void execute(AbilityContext ctx) {
 		
 		WaterbendingState bendingState = ctx.getData().getBendingState(controller);

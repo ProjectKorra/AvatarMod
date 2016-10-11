@@ -28,21 +28,19 @@ public class BendingManager {
 	public static final int BENDINGID_EARTHBENDING = 1, BENDINGID_FIREBENDING = 2, BENDINGID_WATERBENDING = 3,
 			BENDINGID_AIRBENDING = 4;
 	
-	private static Map<Integer, BendingController> bending;
+	private static Map<BendingType, BendingController> bending;
 	private static Map<String, BendingController> bendingByName;
 	private static List<BendingController> allBending;
 	
 	private static Map<Integer, BendingAbility> abilities;
 	private static List<BendingAbility> allAbilities;
-	private static List<BendingAbility> updateAbilities;
 	
 	public static void init() {
-		bending = new HashMap<Integer, BendingController>();
+		bending = new HashMap<BendingType, BendingController>();
 		bendingByName = new HashMap<String, BendingController>();
 		allBending = new ArrayList<BendingController>();
 		abilities = new HashMap<>();
 		allAbilities = new ArrayList<>();
-		updateAbilities = new ArrayList<>();
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
 		registerBending(new Waterbending());
@@ -54,7 +52,7 @@ public class BendingManager {
 	 */
 	@Deprecated
 	public static BendingController getBending(int id) {
-		return bending.get(id);
+		return bending.get(BendingType.find(id));
 	}
 	
 	/**
@@ -64,7 +62,7 @@ public class BendingManager {
 	 *            Bending type to look for
 	 */
 	public static BendingController<?> getBending(BendingType type) {
-		return getBending(type.id());
+		return bending.get(type);
 	}
 	
 	/**
@@ -101,15 +99,8 @@ public class BendingManager {
 		return Collections.unmodifiableList(allAbilities);
 	}
 	
-	/**
-	 * Returns an unmodifiable view of all abilities which require update tick.
-	 */
-	public static List<BendingAbility> updatedAbilities() {
-		return Collections.unmodifiableList(updateAbilities);
-	}
-	
 	public static void registerBending(BendingController controller) {
-		bending.put(controller.getID(), controller);
+		bending.put(controller.getType(), controller);
 		bendingByName.put(controller.getControllerName(), controller);
 		allBending.add(controller);
 	}
@@ -117,7 +108,6 @@ public class BendingManager {
 	public static void registerAbility(BendingAbility ability) {
 		abilities.put(ability.getId(), ability);
 		allAbilities.add(ability);
-		if (ability.requiresUpdateTick()) updateAbilities.add(ability);
 	}
 	
 }

@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -30,19 +29,13 @@ public class AbilityLightFire extends BendingAbility<FirebendingState> {
 	}
 	
 	@Override
-	public boolean requiresUpdateTick() {
-		return false;
-	}
-	
-	@Override
 	public void execute(AbilityContext ctx) {
 		
-		PlayerState ps = ctx.getData().getState();
 		World world = ctx.getWorld();
 		
-		VectorI looking = ps.verifyClientLookAtBlock(-1, 5);
-		EnumFacing side = ps.getLookAtSide();
-		if (ps.isLookingAtBlock(-1, 5)) {
+		VectorI looking = ctx.verifyClientLookBlock(-1, 5);
+		EnumFacing side = ctx.getLookSide();
+		if (ctx.isLookingAtBlock(-1, 5)) {
 			VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
 			setAt.offset(side);
 			if (world.getBlockState(setAt.toBlockPos()).getBlock() == Blocks.AIR) {

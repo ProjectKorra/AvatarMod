@@ -59,19 +59,6 @@ public class Firebending extends BendingController {
 	}
 	
 	@Override
-	public BendingAbility<FirebendingState> getAbility(AvatarPlayerData data, AvatarControl input) {
-		if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) {
-			FirebendingState state = (FirebendingState) data.getBendingState(this);
-			if (state != null && state.isManipulatingFire()) return abilityFireThrow;
-		}
-		if (input == AvatarControl.CONTROL_RIGHT_CLICK) {
-			return abilityFlamethrower;
-		}
-		
-		return null;
-	}
-	
-	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}

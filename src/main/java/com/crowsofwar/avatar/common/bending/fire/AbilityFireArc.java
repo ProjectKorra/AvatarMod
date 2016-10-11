@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -30,14 +29,8 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 		this.raytrace = new Raytrace.Info();
 	}
 	
-	@Override
-	public boolean requiresUpdateTick() {
-		return true;
-	}
-	
-	@Override
+	// TODO Move into fire arc
 	public void update(AvatarPlayerData data) {
-		PlayerState state = data.getState();
 		EntityPlayer player = data.getPlayerEntity();
 		World world = player.worldObj;
 		FirebendingState fs = data.getBendingState(controller);

@@ -8,7 +8,6 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -47,30 +46,19 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public boolean requiresUpdateTick() {
-		return false;
-	}
-	
-	@Override
-	public void update(AvatarPlayerData data) {
-		
-	}
-	
-	@Override
 	public void execute(AbilityContext ctx) {
 		
 		AvatarPlayerData data = ctx.getData();
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();
-		PlayerState state = data.getState();
 		
 		if (ebs.getPickupBlock() != null) {
 			ebs.getPickupBlock().drop();
 			ebs.setPickupBlock(null);
 			AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
 		} else {
-			VectorI target = state.verifyClientLookAtBlock(-1, 5);
+			VectorI target = ctx.verifyClientLookBlock(-1, 5);
 			if (target != null) {
 				IBlockState ibs = world.getBlockState(target.toBlockPos());
 				Block block = ibs.getBlock();

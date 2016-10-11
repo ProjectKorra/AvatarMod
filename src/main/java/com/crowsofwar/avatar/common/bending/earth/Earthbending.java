@@ -10,16 +10,12 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.PlayerState;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 
 public class Earthbending extends BendingController {
 	
@@ -68,24 +64,6 @@ public class Earthbending extends BendingController {
 	@Override
 	public IBendingState createState(AvatarPlayerData data) {
 		return new EarthbendingState(data);
-	}
-	
-	@Override
-	public BendingAbility getAbility(AvatarPlayerData data, AvatarControl input) {
-		PlayerState state = data.getState();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(this);
-		EntityPlayer player = data.getPlayerEntity();
-		// TODO [1.10] How does dual wielding even work?? (lol i didn't really play 1.9 that much)
-		ItemStack holding = player.getActiveItemStack();
-		
-		if (ebs.getPickupBlock() != null) {
-			if (input == AvatarControl.CONTROL_LEFT_CLICK_DOWN) return abilityThrowBlock;
-			if (input == AvatarControl.CONTROL_RIGHT_CLICK_DOWN && holding == null
-					|| (holding != null && !(holding.getItem() instanceof ItemBlock)))
-				return abilityPutBlock;
-		}
-		
-		return null;
 	}
 	
 	@Override

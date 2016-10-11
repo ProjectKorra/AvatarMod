@@ -54,11 +54,6 @@ public class Airbending extends BendingController {
 	}
 	
 	@Override
-	public BendingAbility getAbility(AvatarPlayerData data, AvatarControl input) {
-		return null;
-	}
-	
-	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
