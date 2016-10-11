@@ -290,6 +290,7 @@ public abstract class FloatingBlockBehavior {
 		}
 		
 		private EntityPlayer getControllingPlayer() {
+			if (playerName == null) return null;
 			if (player != null) {
 				return player;
 			} else {
