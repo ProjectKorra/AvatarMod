@@ -38,6 +38,11 @@ public class ControlPoint {
 		this.arc = arc;
 		this.world = arc.worldObj;
 		this.size = size;
+		
+		double sizeHalfed = size / 2;
+		hitbox = new AxisAlignedBB(position().x() - sizeHalfed, position().y() - sizeHalfed,
+				position().z() - sizeHalfed, position().x() + sizeHalfed, position().y() + sizeHalfed,
+				position().z() + sizeHalfed);
 	}
 	
 	/**
