@@ -14,6 +14,7 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
@@ -34,6 +35,8 @@ import net.minecraft.world.World;
 public abstract class FloatingBlockBehavior {
 	
 	public static final DataSerializer<FloatingBlockBehavior> DATA_SERIALIZER = new DataSerializer<FloatingBlockBehavior>() {
+		
+		// FIXME research- why doesn't read/write get called every time that behavior changes???
 		
 		@Override
 		public void write(PacketBuffer buf, FloatingBlockBehavior value) {
@@ -279,6 +282,9 @@ public abstract class FloatingBlockBehavior {
 	
 	public static class PlayerControlled extends FloatingBlockBehavior {
 		
+		/**
+		 * always is null, since packet loading is broken...
+		 */
 		private String playerName;
 		private EntityPlayer player;
 		
@@ -286,11 +292,15 @@ public abstract class FloatingBlockBehavior {
 		
 		public PlayerControlled(EntityFloatingBlock floating, EntityPlayer player) {
 			super(floating);
+			
+			// FIXME Fix that Floating block behavior player always assumes ME.
+			// player is null on client side.
+			if (player == null) player = GoreCore.proxy.getClientSidePlayer();
+			
 			this.player = player;
 		}
 		
 		private EntityPlayer getControllingPlayer() {
-			if (playerName == null) return null;
 			if (player != null) {
 				return player;
 			} else {
@@ -323,6 +333,7 @@ public abstract class FloatingBlockBehavior {
 		@Override
 		public void fromBytes(PacketBuffer buf) {
 			playerName = buf.readStringFromBuffer(16);
+			System.out.println("RECIEVED playername: " + playerName);
 		}
 		
 		@Override

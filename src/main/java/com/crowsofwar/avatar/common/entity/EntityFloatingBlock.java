@@ -100,7 +100,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
-		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
+		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());//EntitySkeleton
 		
 	}
 	
@@ -254,6 +254,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setBehavior(new FloatingBlockBehavior.Fall());
 	}
 	
+	/**
+	 * Get owner. Null client-side!
+	 */
 	public EntityPlayer getOwner() {
 		return owner;
 	}
@@ -267,6 +270,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	public void setBehavior(FloatingBlockBehavior behavior) {
+		// FIXME research: why doesn't sync_Behavior cause an update to client?
+		if (behavior == null) throw new IllegalArgumentException("Cannot have null behavior");
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
