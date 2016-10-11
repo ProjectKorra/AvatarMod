@@ -82,6 +82,11 @@ public abstract class RenderArc extends Render {
 		double sizeLeader = point.width / 2;
 		double sizePoint = leader.width / 2;
 		
+		double distance = to.sqrMagnitude();
+		double sizeMultiplier = distance < 1 ? -.7 * distance + 1.7 : 1 / Math.sqrt(distance);
+		sizeLeader *= sizeMultiplier;
+		sizePoint *= sizeMultiplier;
+		
 		Vector lookingEuler = Vector.getRotations(from, to);
 		
 		double u1 = ((arc.ticksExisted / 20.0) % 1);
