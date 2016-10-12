@@ -11,7 +11,8 @@ import net.minecraft.util.EnumParticleTypes;
  */
 public enum AvatarParticleType {
 	
-	FLAMES(AvatarParticles.getParticleFlames());
+	FLAMES(AvatarParticles.getParticleFlames()),
+	AIR(AvatarParticles.getParticleAir());
 	
 	private final EnumParticleTypes vanillaType;
 	
