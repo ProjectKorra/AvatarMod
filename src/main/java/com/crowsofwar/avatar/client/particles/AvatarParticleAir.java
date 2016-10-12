@@ -29,8 +29,8 @@ public class AvatarParticleAir extends AvatarParticle {
 	 * @param velY
 	 * @param velZ
 	 */
-	protected AvatarParticleAir(World world, double x, double y, double z, double velX, double velY,
-			double velZ) {
+	public AvatarParticleAir(int particleID, World world, double x, double y, double z, double velX,
+			double velY, double velZ, int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
 	}
 	

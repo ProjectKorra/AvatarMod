@@ -34,8 +34,7 @@ public abstract class AvatarParticle extends Particle {
 	
 	private boolean additiveBlending;
 	
-	protected AvatarParticle(World world, double x, double y, double z, double velX, double velY,
-			double velZ) {
+	public AvatarParticle(World world, double x, double y, double z, double velX, double velY, double velZ) {
 		
 		super(world, x, y, z, velX, velY, velZ);
 		

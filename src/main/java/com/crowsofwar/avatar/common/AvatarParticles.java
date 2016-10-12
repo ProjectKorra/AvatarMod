@@ -10,12 +10,21 @@ import net.minecraftforge.common.util.EnumHelper;
  */
 public class AvatarParticles {
 	
-	private static EnumParticleTypes particleFlames;
+	private static EnumParticleTypes particleFlames, particleAir;
 	
 	public static void register() {
-		particleFlames = EnumHelper.addEnum(EnumParticleTypes.class, "AVATAR_FLAMES",
-				new Class<?>[] { String.class, int.class, boolean.class }, "avatarflame", nextParticleId(),
-				true);
+		particleFlames = addParticle("flames");
+		particleAir = addParticle("air");
+	}
+	
+	private static EnumParticleTypes addParticle(String particleName) {
+		
+		return EnumHelper.addEnum(EnumParticleTypes.class, "AVATAR_" + particleName.toUpperCase(),
+				new Class<?>[] { String.class, int.class, boolean.class },
+				"avatar" + particleName.substring(0, 1).toUpperCase()
+						+ particleName.substring(1).toLowerCase(),
+				nextParticleId(), true);
+		
 	}
 	
 	private static int nextParticleId() {
@@ -31,6 +40,10 @@ public class AvatarParticles {
 	
 	public static EnumParticleTypes getParticleFlames() {
 		return particleFlames;
+	}
+	
+	public static EnumParticleTypes getParticleAir() {
+		return particleAir;
 	}
 	
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.controls.ClientInput;
+import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
 import com.crowsofwar.avatar.client.render.RenderAirGust;
 import com.crowsofwar.avatar.client.render.RenderFireArc;
@@ -103,6 +104,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	public void init() {
 		Minecraft.getMinecraft().effectRenderer.registerParticle(
 				AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
+		mc.effectRenderer.registerParticle(AvatarParticles.getParticleAir().getParticleID(),
+				AvatarParticleAir::new);
 	}
 	
 	@Override
