@@ -33,7 +33,7 @@ public class NetworkParticleSpawner implements ParticleSpawner {
 		TargetPoint point = new TargetPoint(world.provider.getDimension(), x, y, z, 64);
 		
 		AvatarMod.network.sendToAllAround(new PacketCParticles(particle.vanilla(), minimum, maximum, x, y, z,
-				maxVelocityX, maxVelocityY, maxVelocityZ), point);
+				maxVelocityX / 20, maxVelocityY / 20, maxVelocityZ / 20), point);
 		
 	}
 	

@@ -32,6 +32,16 @@ public class AvatarParticleAir extends AvatarParticle {
 	public AvatarParticleAir(int particleID, World world, double x, double y, double z, double velX,
 			double velY, double velZ, int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
+		
+		width *= 30;
+		height *= 30;
+		
+		particleMaxAge *= 3;
+		
+		motionX = velX;
+		motionY = velY;
+		motionZ = velZ;
+		
 	}
 	
 	@Override

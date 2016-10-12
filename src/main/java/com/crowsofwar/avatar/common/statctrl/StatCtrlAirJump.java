@@ -39,7 +39,7 @@ public class StatCtrlAirJump extends StatusControl {
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(player.worldObj, AvatarParticleType.AIR, 2, 6, new Vector(player),
-					new Vector(1, 1, 1));
+					new Vector(1, 0, 1));
 			
 		}
 		
