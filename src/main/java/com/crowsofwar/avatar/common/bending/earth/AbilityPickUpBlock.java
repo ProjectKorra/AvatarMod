@@ -73,6 +73,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					floating.velocity().add(force);
 					floating.setBehavior(new FloatingBlockBehavior.PickUp(floating));
 					floating.setOwner(player);
+					System.out.println("Set owner to:: " + player);
 					
 					world.spawnEntityInWorld(floating);
 					

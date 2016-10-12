@@ -144,7 +144,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
 						double speed = entity.velocity().magnitude();
 						collided.attackEntityFrom(
-								AvatarDamageSource.causeFloatingBlockDamage(entity, entity.getOwner()),
+								AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
 								(float) (speed * blockDamage.currentValue()));
 						
 						Vector motion = new Vector(collided).minus(new Vector(entity));

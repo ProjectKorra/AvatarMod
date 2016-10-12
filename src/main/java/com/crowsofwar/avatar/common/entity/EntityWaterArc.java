@@ -143,8 +143,8 @@ public class EntityWaterArc extends EntityArc {
 			if (entity == owner) return;
 			entity.addVelocity(x() - entity.posX, 0.2, z() - entity.posZ);
 			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase) entity).attackEntityFrom(
-						AvatarDamageSource.causeWaterDamage((EntityWaterArc) arc, owner), 6);
+				((EntityLivingBase) entity)
+						.attackEntityFrom(AvatarDamageSource.causeWaterDamage(entity, owner), 6);
 			}
 		}
 		

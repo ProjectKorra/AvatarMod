@@ -40,7 +40,6 @@ public class StatCtrlThrowBlock extends StatusControl {
 		EntityFloatingBlock floating = ebs.getPickupBlock();
 		
 		if (floating != null) {
-			floating.setOwner(null);
 			
 			float yaw = (float) Math.toRadians(player.rotationYaw);
 			float pitch = (float) Math.toRadians(player.rotationPitch);

@@ -142,7 +142,7 @@ public class EntityRavine extends AvatarEntity {
 						
 						Vector push = velocity.copy().setY(1).mul(ravinePush.currentValue());
 						entity.addVelocity(push.x(), push.y(), push.z());
-						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(this, owner),
+						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
 								ravineDamage.currentValue());
 					}
 				}

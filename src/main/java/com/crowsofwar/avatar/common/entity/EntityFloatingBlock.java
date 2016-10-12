@@ -264,6 +264,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	public void setOwner(EntityPlayer owner) {
 		this.owner = owner;
+		System.out.println("Set owner to " + owner);
 	}
 	
 	public FloatingBlockBehavior getBehavior() {

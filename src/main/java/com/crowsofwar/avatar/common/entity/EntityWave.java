@@ -46,7 +46,7 @@ public class EntityWave extends Entity {
 				Vector motion = velocity().dividedBy(20).times(wavePush.currentValue());
 				motion.setY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
-				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(this, owner), waveDamage.currentValue());
+				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), waveDamage.currentValue());
 			}
 			if (!collided.isEmpty()) setDead();
 		}

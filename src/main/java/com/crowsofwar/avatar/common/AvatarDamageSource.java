@@ -1,10 +1,5 @@
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.entity.EntityRavine;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
-import com.crowsofwar.avatar.common.entity.EntityWave;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
@@ -19,51 +14,51 @@ public class AvatarDamageSource {
 	/**
 	 * Create a DamageSource for damage caused by a floating block.
 	 * 
-	 * @param floatingBlock
-	 *            The floating block
+	 * @param hit
+	 *            Who was hit by floating block
 	 * @param owner
 	 *            Who threw the floating block
 	 * @return DamageSource for the floating block
 	 */
-	public static DamageSource causeFloatingBlockDamage(EntityFloatingBlock floatingBlock, Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_earthbendBlock", floatingBlock, owner);
+	public static DamageSource causeFloatingBlockDamage(Entity hit, Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_earthbendBlock", hit, owner);
 	}
 	
 	/**
 	 * Create a DamageSource for damage caused by a water arc.
 	 * 
-	 * @param waterArc
-	 *            The water arc entity
+	 * @param hit
+	 *            Who was hit by the water arc
 	 * @param owner
 	 *            Who created the water arc
 	 * @return DamageSource for the water arc
 	 */
-	public static DamageSource causeWaterDamage(EntityWaterArc waterArc, Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_waterArc", waterArc, owner);
+	public static DamageSource causeWaterDamage(Entity hit, Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_waterArc", hit, owner);
 	}
 	
 	/**
 	 * Create a DamageSource for damage caused by a ravine.
 	 * 
-	 * @param ravine
-	 *            The ravine entity
+	 * @param hit
+	 *            Who was hit by the ravine
 	 * @param owner
 	 *            Who created the ravine
 	 */
-	public static DamageSource causeRavineDamage(EntityRavine ravine, Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_ravine", ravine, owner);
+	public static DamageSource causeRavineDamage(Entity hit, Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_ravine", hit, owner);
 	}
 	
 	/**
 	 * Create a DamageSource for damage caused by a wave.
 	 * 
-	 * @param wave
-	 *            The wave entity
+	 * @param hit
+	 *            Who was hit by the wave
 	 * @param owner
 	 *            Who created the wave
 	 */
-	public static DamageSource causeWaveDamage(EntityWave wave, Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_wave", wave, owner);
+	public static DamageSource causeWaveDamage(Entity hit, Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_wave", hit, owner);
 	}
 	
 }
