@@ -101,7 +101,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
-		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());//EntitySkeleton
+		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
 		
 	}
 	

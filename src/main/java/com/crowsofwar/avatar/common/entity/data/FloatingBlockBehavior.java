@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -29,7 +30,17 @@ import net.minecraft.world.World;
  */
 public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock> {
 	
-	public static final DataSerializer<FloatingBlockBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<FloatingBlockBehavior>();
+	public static final DataSerializer<FloatingBlockBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
+	
+	public static void register() {
+		DataSerializers.registerSerializer(DATA_SERIALIZER);
+		registerBehavior(DoNothing.class);
+		registerBehavior(Fall.class);
+		registerBehavior(PickUp.class);
+		registerBehavior(Place.class);
+		registerBehavior(PlayerControlled.class);
+		registerBehavior(Thrown.class);
+	}
 	
 	public FloatingBlockBehavior() {}
 	

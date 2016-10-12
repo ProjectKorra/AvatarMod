@@ -1,19 +1,14 @@
-package com.crowsofwar.avatar.common.entity;
+package com.crowsofwar.avatar.common.entity.data;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.world.World;
@@ -23,89 +18,27 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public abstract class WaterArcBehavior {
+public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	
-	public static final DataSerializer<WaterArcBehavior> DATA_SERIALIZER = new DataSerializer<WaterArcBehavior>() {
-		
-		@Override
-		public void write(PacketBuffer buf, WaterArcBehavior value) {
-			buf.writeInt(value.getId());
-			value.toBytes(buf);
-		}
-		
-		@Override
-		public WaterArcBehavior read(PacketBuffer buf) throws IOException {
-			try {
-				
-				WaterArcBehavior behavior = behaviorIdToClass.get(buf.readInt()).newInstance();
-				behavior.fromBytes(buf);
-				return behavior;
-				
-			} catch (Exception e) {
-				
-				AvatarLog.error("Error reading WaterArcBehavior from bytes");
-				e.printStackTrace();
-				return null;
-				
-			}
-		}
-		
-		@Override
-		public DataParameter<WaterArcBehavior> createKey(int id) {
-			return new DataParameter<>(id, this);
-		}
-	};
+	public static final DataSerializer<WaterArcBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 	
-	private static int nextId = 1;
-	private static final Map<Integer, Class<? extends WaterArcBehavior>> behaviorIdToClass;
-	private static final Map<Class<? extends WaterArcBehavior>, Integer> classToBehaviorId;
-	
-	private static void registerBehavior(int id, Class<? extends WaterArcBehavior> behaviorClass) {
-		behaviorIdToClass.put(id, behaviorClass);
-		classToBehaviorId.put(behaviorClass, id);
-	}
-	
-	static {
+	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		
-		behaviorIdToClass = new HashMap<>();
-		classToBehaviorId = new HashMap<>();
-		
-		registerBehavior(1, PlayerControlled.class);
-		registerBehavior(2, Thrown.class);
-		registerBehavior(3, Idle.class);
+		registerBehavior(PlayerControlled.class);
+		registerBehavior(Thrown.class);
+		registerBehavior(Idle.class);
 		
 	}
-	
-	protected EntityWaterArc water;
 	
 	public WaterArcBehavior() {}
 	
 	public WaterArcBehavior(EntityWaterArc water) {
-		setWaterArc(water);
+		super(water);
 	}
-	
-	public void setWaterArc(EntityWaterArc water) {
-		this.water = water;
-	}
-	
-	public int getId() {
-		return classToBehaviorId.get(getClass());
-	}
-	
-	/**
-	 * Called every update tick.
-	 * 
-	 * @return Next WaterArcBehavior. Return <code>this</code> to continue the WaterArcBehavior.
-	 */
-	public abstract WaterArcBehavior onUpdate();
-	
-	public abstract void fromBytes(PacketBuffer buf);
-	
-	public abstract void toBytes(PacketBuffer buf);
 	
 	protected void applyGravity() {
-		water.velocity().add(0, -9.81 / 60, 0);
+		entity.velocity().add(0, -9.81 / 60, 0);
 	}
 	
 	public static class PlayerControlled extends WaterArcBehavior {
@@ -122,7 +55,7 @@ public abstract class WaterArcBehavior {
 		
 		private EntityPlayer getPlayer() {
 			if (internalPlayer == null) {
-				internalPlayer = water.worldObj.getPlayerEntityByName(playerName);
+				internalPlayer = entity.worldObj.getPlayerEntityByName(playerName);
 			}
 			return internalPlayer;
 		}

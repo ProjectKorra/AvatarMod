@@ -15,6 +15,8 @@ import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWave;
+import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
@@ -80,6 +82,9 @@ public class AvatarMod {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
 		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
+		
+		FloatingBlockBehavior.register();
+		WaterArcBehavior.register();
 		
 	}
 	

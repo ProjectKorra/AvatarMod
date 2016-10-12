@@ -10,9 +10,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
 
 /**
- * Describes a synced behavior. See state design pattern
+ * Describes a synced behavior. They follow the state design pattern, in that each behavior should
+ * be switchable over an entity, and is responsible for an update tick. Typically, behaviors are
+ * static inner classes, where the outer class extends Behavior and is the superclass of the inner
+ * classes.
+ * <p>
+ * The custom behaviors must be registered via {@link #registerBehavior(Class)}. There also is
+ * probably a {@link BehaviorSerializer data serializer} to synchronize server and client, so the
+ * data serializer should be registed with
+ * {@link DataSerializers#registerSerializer(DataSerializer)}.
  * 
  * @param E
  *            Type of entity this behavior is for
@@ -25,7 +34,7 @@ public abstract class Behavior<E extends Entity> {
 	private static Map<Integer, Class<? extends Behavior>> behaviorIdToClass;
 	private static Map<Class<? extends Behavior>, Integer> classToBehaviorId;
 	
-	protected static void registerBehavior(Class<Behavior<?>> behaviorClass) {
+	protected static void registerBehavior(Class<? extends Behavior> behaviorClass) {
 		if (behaviorIdToClass == null) {
 			behaviorIdToClass = new HashMap<>();
 			classToBehaviorId = new HashMap<>();

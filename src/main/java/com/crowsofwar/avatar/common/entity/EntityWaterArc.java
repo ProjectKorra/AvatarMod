@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
