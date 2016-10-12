@@ -2,6 +2,9 @@ package com.crowsofwar.avatar.common.statctrl;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.particle.AvatarParticleType;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,6 +36,11 @@ public class StatCtrlAirJump extends StatusControl {
 			velocity.mul(1);
 			player.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
+			
+			ParticleSpawner spawner = new NetworkParticleSpawner();
+			spawner.spawnParticles(player.worldObj, AvatarParticleType.AIR, 2, 6, new Vector(player),
+					new Vector(1, 1, 1));
+			
 		}
 		
 		return player.onGround;
