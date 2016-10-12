@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -83,6 +84,7 @@ public class AvatarMod {
 		
 		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
 		
+		AvatarDataSerializers.register();
 		FloatingBlockBehavior.register();
 		WaterArcBehavior.register();
 		

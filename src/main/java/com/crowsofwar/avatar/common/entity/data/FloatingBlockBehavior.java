@@ -40,6 +40,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		registerBehavior(Place.class);
 		registerBehavior(PlayerControlled.class);
 		registerBehavior(Thrown.class);
+		System.out.println(
+				"+++++++++++ REGISTERED WITH ID: " + DataSerializers.getSerializerId(DATA_SERIALIZER));
 	}
 	
 	public FloatingBlockBehavior() {}

@@ -83,7 +83,7 @@ public abstract class Behavior<E extends Entity> {
 		// FIXME research- why doesn't read/write get called every time that behavior changes???
 		
 		@Override
-		public void write(PacketBuffer buf, Behavior value) {
+		public void write(PacketBuffer buf, B value) {
 			buf.writeInt(value.getId());
 			value.toBytes(buf);
 		}

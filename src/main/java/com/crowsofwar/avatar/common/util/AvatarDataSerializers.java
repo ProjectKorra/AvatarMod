@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.util;
 
-import static net.minecraft.network.datasync.DataSerializers.registerSerializer;
-
 import java.io.IOException;
 
 import com.crowsofwar.gorecore.util.Vector;
@@ -10,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
 
 /**
  * 
@@ -56,11 +55,14 @@ public class AvatarDataSerializers {
 		}
 	};
 	
+	public static void register() {
+		DataSerializers.registerSerializer(SERIALIZER_BLOCK);
+		DataSerializers.registerSerializer(SERIALIZER_VECTOR);
+	}
+	
 	private static abstract class AvatarSerializer<T> implements DataSerializer<T> {
 		
-		protected AvatarSerializer() {
-			registerSerializer(this);
-		}
+		protected AvatarSerializer() {}
 		
 	}
 	
