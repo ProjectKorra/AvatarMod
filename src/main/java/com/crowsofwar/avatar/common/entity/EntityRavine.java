@@ -75,7 +75,7 @@ public class EntityRavine extends AvatarEntity {
 	public void onEntityUpdate() {
 		
 		if (initialPosition == null) {
-			initialPosition = position();
+			initialPosition = position().copy();
 		}
 		
 		Vector position = position();
