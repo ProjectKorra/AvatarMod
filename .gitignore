@@ -10,6 +10,7 @@ eclipse/
 .project
 1.10_Client.launch
 1.10_Server.launch
+1.10_Client 2.launch
 gradlew
 gradlew.bat
 
