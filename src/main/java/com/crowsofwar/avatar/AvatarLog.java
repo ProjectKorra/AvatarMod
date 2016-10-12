@@ -61,7 +61,11 @@ public class AvatarLog {
 		/**
 		 * A client sent abnormal input which might try to exploit glitches
 		 */
-		POSSIBLE_HACKING;
+		POSSIBLE_HACKING,
+		/**
+		 * Server sent abnormal input which is not 'correct' on client
+		 */
+		WEIRD_PACKET;
 	}
 	
 }

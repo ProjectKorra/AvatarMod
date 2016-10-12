@@ -1,10 +1,14 @@
 package com.crowsofwar.avatar.client;
 
+import java.util.Random;
+
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
+import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
@@ -13,6 +17,7 @@ import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -43,7 +48,9 @@ public class PacketHandlerClient implements IPacketHandler {
 		if (packet instanceof PacketCRemoveStatusControl)
 			return handlePacketStatusControl((PacketCRemoveStatusControl) packet, ctx);
 		
-		AvatarLog.warn("Client recieved unknown packet from server:" + packet);
+		if (packet instanceof PacketCParticles) return handlePacketParticles((PacketCParticles) packet, ctx);
+		
+		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 		
 		return null;
 	}
@@ -88,6 +95,24 @@ public class PacketHandlerClient implements IPacketHandler {
 	
 	private IMessage handlePacketStatusControl(PacketCRemoveStatusControl packet, MessageContext ctx) {
 		AvatarMod.proxy.removeStatusControl(packet.getStatusControl());
+		return null;
+	}
+	
+	private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx) {
+		
+		EnumParticleTypes particle = packet.getParticle();
+		if (particle == null) {
+			AvatarLog.warn(WarningType.WEIRD_PACKET, "Unknown particle recieved from server");
+			return null;
+		}
+		
+		Random random = new Random();
+		
+		mc.theWorld.spawnParticle(particle, packet.getX(), packet.getY(), packet.getZ(),
+				packet.getMaxVelocityX() * random.nextGaussian(),
+				packet.getMaxVelocityY() * random.nextGaussian(),
+				packet.getMaxVelocityZ() * random.nextGaussian());
+		
 		return null;
 	}
 	
