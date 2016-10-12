@@ -63,9 +63,9 @@ public class PacketHandlerClient implements IPacketHandler {
 	private IMessage handlePacketPlayerData(PacketCPlayerData packet, MessageContext ctx) {
 		EntityPlayer player = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayer());
 		if (player == null) {
-			AvatarLog.warn(
+			AvatarLog.warn(WarningType.WEIRD_PACKET,
 					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
-			AvatarLog.warn("The player ID was: " + packet.getPlayer());
+			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayer());
 			return null;
 		}
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
