@@ -5,7 +5,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;

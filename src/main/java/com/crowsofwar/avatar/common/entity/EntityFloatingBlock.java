@@ -5,6 +5,7 @@ import static net.minecraft.network.datasync.EntityDataManager.createKey;
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;

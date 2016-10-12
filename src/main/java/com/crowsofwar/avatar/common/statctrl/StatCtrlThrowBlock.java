@@ -9,7 +9,7 @@ import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
 import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.entity.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.util.Vector;
 
