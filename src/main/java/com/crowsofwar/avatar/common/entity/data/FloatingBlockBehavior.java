@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -27,6 +28,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock> {
+	
+	public static final DataSerializer<FloatingBlockBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<FloatingBlockBehavior>();
 	
 	public FloatingBlockBehavior() {}
 	

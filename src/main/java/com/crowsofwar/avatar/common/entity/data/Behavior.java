@@ -10,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
 
 /**
  * Describes a synced behavior. See state design pattern
@@ -22,53 +21,12 @@ import net.minecraft.network.datasync.DataSerializers;
  */
 public abstract class Behavior<E extends Entity> {
 	
-	public static final DataSerializer<Behavior> DATA_SERIALIZER = new DataSerializer<Behavior>() {
-		
-		// FIXME research- why doesn't read/write get called every time that behavior changes???
-		
-		@Override
-		public void write(PacketBuffer buf, Behavior value) {
-			buf.writeInt(value.getId());
-			value.toBytes(buf);
-		}
-		
-		@Override
-		public Behavior read(PacketBuffer buf) throws IOException {
-			try {
-				
-				Behavior behavior = behaviorIdToClass.get(buf.readInt()).newInstance();
-				behavior.fromBytes(buf);
-				return behavior;
-				
-			} catch (Exception e) {
-				
-				AvatarLog.error("Error reading Behavior from bytes");
-				e.printStackTrace();
-				return null;
-				
-			}
-		}
-		
-		@Override
-		public DataParameter<Behavior> createKey(int id) {
-			return new DataParameter<>(id, this);
-		}
-	};
-	
 	private static int nextId = 1;
 	private static Map<Integer, Class<? extends Behavior>> behaviorIdToClass;
 	private static Map<Class<? extends Behavior>, Integer> classToBehaviorId;
 	
-	static {
-		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		
-		behaviorIdToClass = new HashMap<>();
-		classToBehaviorId = new HashMap<>();
-	}
-	
 	protected static void registerBehavior(Class<Behavior<?>> behaviorClass) {
 		if (behaviorIdToClass == null) {
-			DataSerializers.registerSerializer(DATA_SERIALIZER);
 			behaviorIdToClass = new HashMap<>();
 			classToBehaviorId = new HashMap<>();
 			nextId = 1;
@@ -109,5 +67,40 @@ public abstract class Behavior<E extends Entity> {
 	public abstract void fromBytes(PacketBuffer buf);
 	
 	public abstract void toBytes(PacketBuffer buf);
+	
+	public static class BehaviorSerializer<B extends Behavior<? extends Entity>>
+			implements DataSerializer<B> {
+		
+		// FIXME research- why doesn't read/write get called every time that behavior changes???
+		
+		@Override
+		public void write(PacketBuffer buf, Behavior value) {
+			buf.writeInt(value.getId());
+			value.toBytes(buf);
+		}
+		
+		@Override
+		public B read(PacketBuffer buf) throws IOException {
+			try {
+				
+				Behavior behavior = behaviorIdToClass.get(buf.readInt()).newInstance();
+				behavior.fromBytes(buf);
+				return (B) behavior;
+				
+			} catch (Exception e) {
+				
+				AvatarLog.error("Error reading Behavior from bytes");
+				e.printStackTrace();
+				return null;
+				
+			}
+		}
+		
+		@Override
+		public DataParameter<B> createKey(int id) {
+			return new DataParameter<>(id, this);
+		}
+		
+	}
 	
 }

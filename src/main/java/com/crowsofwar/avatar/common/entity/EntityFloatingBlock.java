@@ -217,8 +217,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		motionY = velocity().y() / 20;
 		motionZ = velocity().z() / 20;
 		
-		getBehavior().setFloatingBlock(this);
-		FloatingBlockBehavior nextBehavior = getBehavior().onUpdate();
+		getBehavior().setEntity(this);
+		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate();
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
 		
 	}
