@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.common.util.EnumHelper;
 
@@ -11,19 +14,25 @@ import net.minecraftforge.common.util.EnumHelper;
 public class AvatarParticles {
 	
 	private static EnumParticleTypes particleFlames, particleAir;
+	private static Map<Integer, EnumParticleTypes> lookup;
 	
 	public static void register() {
+		lookup = new HashMap<Integer, EnumParticleTypes>();
 		particleFlames = addParticle("flames");
 		particleAir = addParticle("air");
 	}
 	
 	private static EnumParticleTypes addParticle(String particleName) {
 		
-		return EnumHelper.addEnum(EnumParticleTypes.class, "AVATAR_" + particleName.toUpperCase(),
+		EnumParticleTypes particle = EnumHelper.addEnum(EnumParticleTypes.class,
+				"AVATAR_" + particleName.toUpperCase(),
 				new Class<?>[] { String.class, int.class, boolean.class },
 				"avatar" + particleName.substring(0, 1).toUpperCase()
 						+ particleName.substring(1).toLowerCase(),
 				nextParticleId(), true);
+		
+		lookup.put(particle.getParticleID(), particle);
+		return particle;
 		
 	}
 	
@@ -44,6 +53,13 @@ public class AvatarParticles {
 	
 	public static EnumParticleTypes getParticleAir() {
 		return particleAir;
+	}
+	
+	/**
+	 * Looks up that particle. Returns null if none found.
+	 */
+	public static EnumParticleTypes lookup(int id) {
+		return lookup.get(id);
 	}
 	
 }

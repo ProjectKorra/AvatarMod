@@ -17,6 +17,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
+import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
@@ -74,6 +75,7 @@ public class AvatarMod {
 		registerPacket(PacketCStatusControl.class, Side.CLIENT);
 		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
 		registerPacket(PacketCRemoveStatusControl.class, Side.CLIENT);
+		registerPacket(PacketCParticles.class, Side.CLIENT);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		

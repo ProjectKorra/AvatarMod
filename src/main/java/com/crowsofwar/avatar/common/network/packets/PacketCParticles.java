@@ -1,0 +1,120 @@
+package com.crowsofwar.avatar.common.network.packets;
+
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.network.PacketRedirector;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraftforge.fml.relauncher.Side;
+
+/**
+ * 
+ * 
+ * @author CrowsOfWar
+ */
+public class PacketCParticles extends AvatarPacket<PacketCParticles> {
+	
+	private EnumParticleTypes particle;
+	private int minimum, maximum;
+	private double x, y, z;
+	private double maxVelocityX, maxVelocityY, maxVelocityZ;
+	
+	public PacketCParticles() {}
+	
+	/**
+	 * @param particle
+	 * @param minimum
+	 * @param maximum
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param maxVelocityX
+	 * @param maxVelocityY
+	 * @param maxVelocityZ
+	 */
+	public PacketCParticles(EnumParticleTypes particle, int minimum, int maximum, double x, double y,
+			double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
+		this.particle = particle;
+		this.minimum = minimum;
+		this.maximum = maximum;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.maxVelocityX = maxVelocityX;
+		this.maxVelocityY = maxVelocityY;
+		this.maxVelocityZ = maxVelocityZ;
+	}
+	
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		particle = AvatarParticles.lookup(buf.readInt());
+		minimum = buf.readInt();
+		maximum = buf.readInt();
+		x = buf.readDouble();
+		y = buf.readDouble();
+		z = buf.readDouble();
+		maxVelocityX = buf.readDouble();
+		maxVelocityY = buf.readDouble();
+		maxVelocityZ = buf.readDouble();
+	}
+	
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(particle.getParticleID());
+		buf.writeInt(minimum);
+		buf.writeInt(maximum);
+		buf.writeDouble(x);
+		buf.writeDouble(y);
+		buf.writeDouble(z);
+		buf.writeDouble(maxVelocityX);
+		buf.writeDouble(maxVelocityY);
+		buf.writeDouble(maxVelocityZ);
+	}
+	
+	@Override
+	protected Side getRecievedSide() {
+		return Side.CLIENT;
+	}
+	
+	@Override
+	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCParticles> getPacketHandler() {
+		return PacketRedirector::redirectMessage;
+	}
+	
+	public EnumParticleTypes getParticle() {
+		return particle;
+	}
+	
+	public int getMinimum() {
+		return minimum;
+	}
+	
+	public int getMaximum() {
+		return maximum;
+	}
+	
+	public double getX() {
+		return x;
+	}
+	
+	public double getY() {
+		return y;
+	}
+	
+	public double getZ() {
+		return z;
+	}
+	
+	public double getMaxVelocityX() {
+		return maxVelocityX;
+	}
+	
+	public double getMaxVelocityY() {
+		return maxVelocityY;
+	}
+	
+	public double getMaxVelocityZ() {
+		return maxVelocityZ;
+	}
+	
+}
