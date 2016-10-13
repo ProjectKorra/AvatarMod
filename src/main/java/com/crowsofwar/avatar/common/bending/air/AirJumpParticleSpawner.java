@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.particle.AvatarParticleType.AIR;
-
+import com.crowsofwar.avatar.common.particle.AvatarParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -33,12 +32,13 @@ public class AirJumpParticleSpawner {
 		if (e.side == Side.SERVER && e.player == target) {
 			
 			EntityPlayer player = e.player;
+			Vector pos = Vector.getEntityPos(player);
+			pos.setY(pos.y() + 1.3);
 			
-			particles.spawnParticles(player.worldObj, AIR, 1, 1, Vector.getEntityPos(player),
+			particles.spawnParticles(player.worldObj, AvatarParticleType.AIR, 1, 1, pos,
 					new Vector(0.7, 0.2, 0.7));
 			
-			if (e.player.motionY < 0) {
-				System.out.println("Remove particle spawner");
+			if (e.player.onGround) {
 				MinecraftForge.EVENT_BUS.unregister(this);
 			}
 			
