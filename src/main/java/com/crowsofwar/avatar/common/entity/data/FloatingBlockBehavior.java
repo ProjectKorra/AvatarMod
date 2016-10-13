@@ -82,7 +82,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate() {
-			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
+			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY() + 0.25, placeAt.getZ() + 0.5);
 			Vector thisPos = new Vector(entity);
 			Vector force = placeAtVec.minus(thisPos);
 			force.normalize();
@@ -208,13 +208,6 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 	}
 	
-	/**
-	 * asnsakldnaskldn kalsdnklasndkslamklsam lkasdmklsamklsamkl asklmd lkasmd
-	 * lkasmd klmasklm kslamd lkasmd lkmsalkd lksamd lkasmlkd masklmd
-	 * 
-	 * 
-	 * @author CrowsOfWar
-	 */
 	public static class PlayerControlled extends FloatingBlockBehavior {
 		
 		public PlayerControlled() {}
@@ -231,7 +224,6 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		public FloatingBlockBehavior onUpdate() {
 			EntityPlayer controller = getControllingPlayer();
 			
-			// If player is null, skip. Packet probably didn't reach yet...
 			if (controller == null) return this;
 			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(controller,

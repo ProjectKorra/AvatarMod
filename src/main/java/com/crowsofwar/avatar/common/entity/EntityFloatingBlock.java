@@ -284,7 +284,10 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public EntityPlayer getOwner() {
 		
 		if (!worldObj.isRemote && ownerCached == null && getOwnerName() != null) {
-			setOwner(worldObj.getPlayerEntityByName(getOwnerName()));
+			// Slightly cosmetic, but only call setOwner(...) if the player was
+			// found
+			EntityPlayer player = worldObj.getPlayerEntityByName(getOwnerName());
+			if (player != null) setOwner(player);
 		}
 		
 		return ownerCached;
@@ -300,7 +303,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 */
 	public void setOwner(EntityPlayer owner) {
 		this.ownerCached = owner;
-		setOwnerName(owner != null ? owner.getName() : null);
+		setOwnerName(owner == null ? "" : owner.getName());
 		
 		if (owner != null) {
 			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetchPerformance(owner)
@@ -323,6 +326,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 * Set the owner name. Null is not accepted! Use "" instead.
 	 */
 	private void setOwnerName(String name) {
+		if (name == null) throw new NullPointerException("Can't set owner name to null...");
+		System.out.println("Set owner name to " + name);
 		dataManager.set(SYNC_OWNER_NAME, name);
 	}
 	
