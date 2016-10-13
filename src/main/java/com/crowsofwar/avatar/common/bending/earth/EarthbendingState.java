@@ -40,6 +40,7 @@ public class EarthbendingState implements IBendingState {
 	
 	public void setPickupBlock(EntityFloatingBlock pickupBlock) {
 		this.pickupBlock = pickupBlock;
+		System.out.println("Set pickup block to " + pickupBlock);
 	}
 	
 	public boolean isHoldingBlock() {
@@ -58,7 +59,8 @@ public class EarthbendingState implements IBendingState {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		int id = buf.readInt();
-		pickupBlock = id == -1 ? null : EntityFloatingBlock.getFromID(data.getState().getPlayerEntity().worldObj, id);
+		pickupBlock = id == -1 ? null
+				: EntityFloatingBlock.getFromID(data.getState().getPlayerEntity().worldObj, id);
 	}
 	
 	@Override

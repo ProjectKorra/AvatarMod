@@ -1,10 +1,13 @@
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
@@ -49,8 +52,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	private static int nextBlockID = 0;
 	
 	/**
-	 * Cached owner of this floating block. May not be accurate- use {@link #getOwner()} to use
-	 * updated version.
+	 * Cached owner of this floating block. May not be accurate- use
+	 * {@link #getOwner()} to use updated version.
 	 */
 	private EntityPlayer ownerCached;
 	/**
@@ -59,14 +62,14 @@ public class EntityFloatingBlock extends AvatarEntity {
 	private String ownerName;
 	
 	/**
-	 * Whether or not to drop an ItemBlock when the floating block has been destroyed. Does not
-	 * matter on client.
+	 * Whether or not to drop an ItemBlock when the floating block has been
+	 * destroyed. Does not matter on client.
 	 */
 	private boolean enableItemDrops;
 	
 	/**
-	 * The hitbox for this floating block, but slightly expanded to give more room for killing
-	 * things with.
+	 * The hitbox for this floating block, but slightly expanded to give more
+	 * room for killing things with.
 	 */
 	private AxisAlignedBB expandedHitbox;
 	
@@ -123,7 +126,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		ownerName = nbt.getString("Owner");
 		if (ownerName.equals("")) ownerName = null;
-		System.out.println("Read ownername to be: "  + ownerName);
+		getOwner(); // load owner from owner name
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
 	
@@ -272,19 +275,34 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	/**
 	 * Get owner. Null client-side!
+	 * <p>
+	 * Detail: If the cached owner is null, but owner name is not, attempts to look for a player in the world with that name. Will then call {@link #setOwner(EntityPlayer)}.
 	 */
 	public EntityPlayer getOwner() {
 		
 		if (!worldObj.isRemote && ownerCached == null && ownerName != null) {
-			ownerCached = worldObj.getPlayerEntityByName(ownerName);
+			setOwner(worldObj.getPlayerEntityByName(ownerName));
 		}
 		
 		return ownerCached;
 	}
 	
+	/**
+	 * Set the owner to the given player.
+	 * <p>
+	 * Also sets owner's BendingState FloatingBlock to this one.
+	 * 
+	 * @param owner Owner to set to. Can set to null...
+	 */
 	public void setOwner(EntityPlayer owner) {
 		this.ownerCached = owner;
 		this.ownerName = owner != null ? owner.getName() : null;
+		
+		if (owner != null) {
+			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetchPerformance(owner).getBendingState(EARTHBENDING.id());
+			state.setPickupBlock(this);
+		}
+		
 		System.out.println("Set owner to " + owner);
 	}
 	

@@ -263,7 +263,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public void toBytes(PacketBuffer buf) {
-			buf.writeString(entity.getOwner().getName());
+			buf.writeString(entity.getOwner() == null ? "" : entity.getOwner().getName());
 		}
 		
 	}
