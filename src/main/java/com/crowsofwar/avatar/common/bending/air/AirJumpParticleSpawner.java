@@ -7,6 +7,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,16 +32,29 @@ public class AirJumpParticleSpawner {
 	public void onTick(TickEvent.PlayerTickEvent e) {
 		if (e.side == Side.SERVER && e.player == target) {
 			
-			EntityPlayer player = e.player;
-			Vector pos = Vector.getEntityPos(player);
+			Vector pos = Vector.getEntityPos(target);
 			pos.setY(pos.y() + 1.3);
 			
-			particles.spawnParticles(player.worldObj, AvatarParticleType.AIR, 1, 1, pos,
+			particles.spawnParticles(target.worldObj, AvatarParticleType.AIR, 1, 1, pos,
 					new Vector(0.7, 0.2, 0.7));
 			
-			if (e.player.onGround) {
+			if (e.player.isInWater()) {
 				MinecraftForge.EVENT_BUS.unregister(this);
 			}
+			
+		}
+	}
+	
+	@SubscribeEvent
+	public void onFall(LivingFallEvent e) {
+		if (e.getEntity() == target) {
+			
+			System.out.println("REduce fall damage");
+			
+			e.setDamageMultiplier(e.getDamageMultiplier() / 3);
+			if (e.getDamageMultiplier() <= 0.5f) e.setCanceled(true);
+			
+			MinecraftForge.EVENT_BUS.unregister(this);
 			
 		}
 	}
