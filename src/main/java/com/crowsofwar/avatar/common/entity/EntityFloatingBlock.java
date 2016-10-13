@@ -49,6 +49,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
 			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
 	
+	private static final DataParameter<String> SYNC_OWNER_NAME = createKey(EntityFloatingBlock.class,
+			DataSerializers.STRING);
+	
 	private static int nextBlockID = 0;
 	
 	/**
@@ -56,10 +59,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 * {@link #getOwner()} to use updated version.
 	 */
 	private EntityPlayer ownerCached;
-	/**
-	 * Username of the owner.
-	 */
-	private String ownerName;
 	
 	/**
 	 * Whether or not to drop an ItemBlock when the floating block has been
@@ -93,9 +92,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setOwner(owner);
 	}
 	
-	//@formatter:off
 	@Override
 	protected Vector createInternalVelocity() {
+		//@formatter:off
 		return new BackedVector(
 				x -> dataManager.set(SYNC_VELOCITY, velocity().copy().setX(x)),
 				y -> dataManager.set(SYNC_VELOCITY, velocity().copy().setY(y)),
@@ -103,6 +102,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 				() -> dataManager.get(SYNC_VELOCITY).x(),
 				() -> dataManager.get(SYNC_VELOCITY).y(),
 				() -> dataManager.get(SYNC_VELOCITY).z());
+		//@formatter:on
 	}
 	
 	// Called from constructor of Entity class
@@ -114,6 +114,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		dataManager.register(SYNC_FRICTION, 1f);
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
 		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
+		dataManager.register(SYNC_OWNER_NAME, "");
 		
 	}
 	
@@ -124,8 +125,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
-		ownerName = nbt.getString("Owner");
-		if (ownerName.equals("")) ownerName = null;
+		setOwnerName(nbt.getString("Owner"));
 		getOwner(); // load owner from owner name
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
@@ -139,7 +139,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
-		nbt.setString("Owner", ownerName == null ? "" : ownerName);
+		nbt.setString("Owner", getOwnerName());
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 	
@@ -161,8 +161,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	/**
-	 * Get the ID of this floating block. Each instance has its own unique ID. Synced between client
-	 * and server.
+	 * Get the ID of this floating block. Each instance has its own unique ID.
+	 * Synced between client and server.
 	 */
 	public int getID() {
 		return dataManager.get(SYNC_ENTITY_ID);
@@ -182,8 +182,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	/**
-	 * Returns whether the floating block drops the block as an item when it is destroyed. Only used
-	 * on server-side. By default, is true.
+	 * Returns whether the floating block drops the block as an item when it is
+	 * destroyed. Only used on server-side. By default, is true.
 	 */
 	public boolean areItemDropsEnabled() {
 		return enableItemDrops;
@@ -274,14 +274,17 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	/**
-	 * Get owner. Null client-side!
+	 * Get owner. Null if player entity cannot be found. Only the owner's name
+	 * is synced, so may be null on client but not server.
 	 * <p>
-	 * Detail: If the cached owner is null, but owner name is not, attempts to look for a player in the world with that name. Will then call {@link #setOwner(EntityPlayer)}.
+	 * Detail: If the cached owner is null, but owner name is not, attempts to
+	 * look for a player in the world with that name. Will then call
+	 * {@link #setOwner(EntityPlayer)}.
 	 */
 	public EntityPlayer getOwner() {
 		
-		if (!worldObj.isRemote && ownerCached == null && ownerName != null) {
-			setOwner(worldObj.getPlayerEntityByName(ownerName));
+		if (!worldObj.isRemote && ownerCached == null && getOwnerName() != null) {
+			setOwner(worldObj.getPlayerEntityByName(getOwnerName()));
 		}
 		
 		return ownerCached;
@@ -292,18 +295,35 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 * <p>
 	 * Also sets owner's BendingState FloatingBlock to this one.
 	 * 
-	 * @param owner Owner to set to. Can set to null...
+	 * @param owner
+	 *            Owner to set to. Can set to null...
 	 */
 	public void setOwner(EntityPlayer owner) {
 		this.ownerCached = owner;
-		this.ownerName = owner != null ? owner.getName() : null;
+		setOwnerName(owner != null ? owner.getName() : null);
 		
 		if (owner != null) {
-			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetchPerformance(owner).getBendingState(EARTHBENDING.id());
+			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetchPerformance(owner)
+					.getBendingState(EARTHBENDING.id());
 			state.setPickupBlock(this);
 		}
 		
 		System.out.println("Set owner to " + owner);
+	}
+	
+	/**
+	 * Get the username of the owner. If there is no owner, returns "" (never
+	 * null).
+	 */
+	private String getOwnerName() {
+		return dataManager.get(SYNC_OWNER_NAME);
+	}
+	
+	/**
+	 * Set the owner name. Null is not accepted! Use "" instead.
+	 */
+	private void setOwnerName(String name) {
+		dataManager.set(SYNC_OWNER_NAME, name);
 	}
 	
 	public FloatingBlockBehavior getBehavior() {

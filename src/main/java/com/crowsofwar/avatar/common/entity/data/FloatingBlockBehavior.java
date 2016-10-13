@@ -11,7 +11,6 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
@@ -209,24 +208,19 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 	}
 	
+	/**
+	 * asnsakldnaskldn kalsdnklasndkslamklsam lkasdmklsamklsamkl asklmd lkasmd
+	 * lkasmd klmasklm kslamd lkasmd lkmsalkd lksamd lkasmlkd masklmd
+	 * 
+	 * 
+	 * @author CrowsOfWar
+	 */
 	public static class PlayerControlled extends FloatingBlockBehavior {
-		
-		/**
-		 * always is null, since packet loading is broken...
-		 */
-		private String playerName;
-		private EntityPlayer player;
 		
 		public PlayerControlled() {}
 		
 		public PlayerControlled(EntityFloatingBlock entity, EntityPlayer player) {
 			super(entity);
-			
-			// FIXME Fix that entity block behavior player always assumes ME.
-			// player is null on client side.
-			if (player == null) player = GoreCore.proxy.getClientSidePlayer();
-			
-			this.player = player;
 		}
 		
 		private EntityPlayer getControllingPlayer() {
@@ -256,15 +250,10 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		}
 		
 		@Override
-		public void fromBytes(PacketBuffer buf) {
-			playerName = buf.readStringFromBuffer(16);
-			System.out.println("RECIEVED playername: " + playerName);
-		}
+		public void fromBytes(PacketBuffer buf) {}
 		
 		@Override
-		public void toBytes(PacketBuffer buf) {
-			buf.writeString(entity.getOwner() == null ? "" : entity.getOwner().getName());
-		}
+		public void toBytes(PacketBuffer buf) {}
 		
 	}
 	
