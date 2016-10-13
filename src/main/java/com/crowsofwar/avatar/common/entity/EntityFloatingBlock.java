@@ -5,6 +5,7 @@ import static net.minecraft.network.datasync.EntityDataManager.createKey;
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.BackedVector;
@@ -47,7 +48,15 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	private static int nextBlockID = 0;
 	
-	private EntityPlayer owner;
+	/**
+	 * Cached owner of this floating block. May not be accurate- use {@link #getOwner()} to use
+	 * updated version.
+	 */
+	private EntityPlayer ownerCached;
+	/**
+	 * Username of the owner.
+	 */
+	private String ownerName;
 	
 	/**
 	 * Whether or not to drop an ItemBlock when the floating block has been destroyed. Does not
@@ -112,6 +121,10 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
+		ownerName = nbt.getString("Owner");
+		if (ownerName.equals("")) ownerName = null;
+		System.out.println("Read ownername to be: "  + ownerName);
+		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
 	
 	@Override
@@ -123,6 +136,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
+		nbt.setString("Owner", ownerName == null ? "" : ownerName);
+		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 	
 	public Block getBlock() {
@@ -259,11 +274,17 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 * Get owner. Null client-side!
 	 */
 	public EntityPlayer getOwner() {
-		return owner;
+		
+		if (!worldObj.isRemote && ownerCached == null && ownerName != null) {
+			ownerCached = worldObj.getPlayerEntityByName(ownerName);
+		}
+		
+		return ownerCached;
 	}
 	
 	public void setOwner(EntityPlayer owner) {
-		this.owner = owner;
+		this.ownerCached = owner;
+		this.ownerName = owner != null ? owner.getName() : null;
 		System.out.println("Set owner to " + owner);
 	}
 	

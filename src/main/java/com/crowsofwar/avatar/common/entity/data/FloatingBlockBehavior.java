@@ -32,14 +32,16 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 	
 	public static final DataSerializer<FloatingBlockBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 	
+	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLACE, ID_PLAYER_CONTROL, ID_THROWN;
+	
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		registerBehavior(DoNothing.class);
-		registerBehavior(Fall.class);
-		registerBehavior(PickUp.class);
-		registerBehavior(Place.class);
-		registerBehavior(PlayerControlled.class);
-		registerBehavior(Thrown.class);
+		ID_NOTHING = registerBehavior(DoNothing.class);
+		ID_FALL = registerBehavior(Fall.class);
+		ID_PICKUP = registerBehavior(PickUp.class);
+		ID_PLACE = registerBehavior(Place.class);
+		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
+		ID_THROWN = registerBehavior(Thrown.class);
 		System.out.println(
 				"+++++++++++ REGISTERED WITH ID: " + DataSerializers.getSerializerId(DATA_SERIALIZER));
 	}
@@ -228,11 +230,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		}
 		
 		private EntityPlayer getControllingPlayer() {
-			if (player != null) {
-				return player;
-			} else {
-				return player = entity.worldObj.getPlayerEntityByName(playerName);
-			}
+			return entity.getOwner();
 		}
 		
 		@Override
@@ -265,7 +263,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public void toBytes(PacketBuffer buf) {
-			buf.writeString(player.getName());
+			buf.writeString(entity.getOwner().getName());
 		}
 		
 	}

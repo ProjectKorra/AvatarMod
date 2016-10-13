@@ -34,7 +34,7 @@ public abstract class Behavior<E extends Entity> {
 	private static Map<Integer, Class<? extends Behavior>> behaviorIdToClass;
 	private static Map<Class<? extends Behavior>, Integer> classToBehaviorId;
 	
-	protected static void registerBehavior(Class<? extends Behavior> behaviorClass) {
+	protected static int registerBehavior(Class<? extends Behavior> behaviorClass) {
 		if (behaviorIdToClass == null) {
 			behaviorIdToClass = new HashMap<>();
 			classToBehaviorId = new HashMap<>();
@@ -43,6 +43,26 @@ public abstract class Behavior<E extends Entity> {
 		int id = nextId++;
 		behaviorIdToClass.put(id, behaviorClass);
 		classToBehaviorId.put(behaviorClass, id);
+		return id;
+	}
+	
+	/**
+	 * Looks up the behavior class by the given Id, then instantiates an instance with reflection.
+	 */
+	public static Behavior lookup(int id, Entity entity) {
+		try {
+			
+			Behavior behavior = behaviorIdToClass.get(id).newInstance();
+			behavior.entity = entity;
+			return behavior;
+			
+		} catch (Exception e) {
+			
+			AvatarLog.error("Error constructing behavior...");
+			e.printStackTrace();
+			return null;
+			
+		}
 	}
 	
 	/**
