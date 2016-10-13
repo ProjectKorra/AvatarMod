@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.statctrl;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.air.AirJumpParticleSpawner;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.particle.AvatarParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
@@ -40,6 +41,8 @@ public class StatCtrlAirJump extends StatusControl {
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(player.worldObj, AvatarParticleType.AIR, 2, 6, new Vector(player),
 					new Vector(1, 0, 1));
+			
+			AirJumpParticleSpawner.spawnParticles(player);
 			
 		}
 		
