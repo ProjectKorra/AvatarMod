@@ -39,7 +39,7 @@ public class AbilityAirGust extends BendingAbility<AirbendingState> {
 		Vector pos = Vector.getEyePos(player);
 		
 		EntityAirGust gust = new EntityAirGust(world);
-		gust.velocity().set(look.times(10));
+		gust.velocity().set(look.times(25));
 		gust.setPosition(pos.x(), pos.y(), pos.z());
 		gust.setOwner(player);
 		

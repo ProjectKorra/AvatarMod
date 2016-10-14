@@ -64,7 +64,7 @@ public class EntityAirGust extends EntityArc {
 	
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return 100; // 10
+		return 400; // 20
 	}
 	
 	@Override
@@ -83,9 +83,11 @@ public class EntityAirGust extends EntityArc {
 		@Override
 		protected void onCollision(Entity entity) {
 			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
-				double multiplier = 10;
-				entity.addVelocity((entity.posX - this.x()) * multiplier, 0.4,
-						(entity.posZ - this.z()) * multiplier);
+				
+				Vector velocity = velocity().times(0.3);
+				velocity.setY(1);
+				
+				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 				setDead();
 			}
 		}

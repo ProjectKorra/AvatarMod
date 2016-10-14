@@ -42,7 +42,8 @@ public abstract class EntityArc extends AvatarEntity {
 	}
 	
 	/**
-	 * Called from the EntityArc constructor to create a new control point entity.
+	 * Called from the EntityArc constructor to create a new control point
+	 * entity.
 	 * 
 	 * @param size
 	 * @return
@@ -63,7 +64,7 @@ public abstract class EntityArc extends AvatarEntity {
 		
 		if (this.ticksExisted == 1) {
 			for (int i = 0; i < points.length; i++) {
-				points[i].setVecPosition(position());
+				points[i].position().set(position());
 			}
 		}
 		
@@ -127,7 +128,8 @@ public abstract class EntityArc extends AvatarEntity {
 	@Override
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
-		// Set position - called from entity constructor, so points might be null
+		// Set position - called from entity constructor, so points might be
+		// null
 		if (points != null) {
 			points[0].position().set(x, y, z);
 		}
@@ -213,17 +215,17 @@ public abstract class EntityArc extends AvatarEntity {
 	}
 	
 	/**
-	 * Returns the maximum distance between control points, squared. Any control points beyond this
-	 * distance will follow their leader to get closer.
+	 * Returns the maximum distance between control points, squared. Any control
+	 * points beyond this distance will follow their leader to get closer.
 	 */
 	protected double getControlPointMaxDistanceSq() {
 		return 1;
 	}
 	
 	/**
-	 * Returns the distance between control points to be teleported to their leader, squared. If any
-	 * control point is more than this distance from its leader, then it is teleported to the
-	 * leader.
+	 * Returns the distance between control points to be teleported to their
+	 * leader, squared. If any control point is more than this distance from its
+	 * leader, then it is teleported to the leader.
 	 */
 	protected double getControlPointTeleportDistanceSq() {
 		return 36;
