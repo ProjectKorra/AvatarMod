@@ -1,16 +1,11 @@
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
-
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import java.util.function.Consumer;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 /**
@@ -24,17 +19,47 @@ public class OwnerAttribute {
 	private final DataParameter<String> sync;
 	private final Entity entity;
 	private final World world;
+	private final Consumer<EntityPlayer> setOwnerCallback;
 	
 	private EntityPlayer ownerCached;
 	
-	public OwnerAttribute(Entity entity, Class<? extends Entity> cls) {
+	/**
+	 * Create a new owner attribute.
+	 * 
+	 * @param entity
+	 *            Entity which has this attribute
+	 * @param sync
+	 *            Synchronization key. You don't have to register to entity's
+	 *            data manager.
+	 */
+	public OwnerAttribute(Entity entity, DataParameter<String> sync) {
+		this(entity, sync, player -> {
+		});
+	}
+	
+	/**
+	 * Create a new owner attribute.
+	 * 
+	 * @param entity
+	 *            Entity which has this attribute
+	 * @param sync
+	 *            Synchronization key. You don't have to register to entity's
+	 *            data manager.
+	 * @param setOwnerCallback
+	 *            Called when the owner has been changed.
+	 */
+	public OwnerAttribute(Entity entity, DataParameter<String> sync,
+			Consumer<EntityPlayer> setOwnerCallback) {
 		this.entity = entity;
-		this.sync = EntityDataManager.createKey(cls, DataSerializers.STRING);
+		this.sync = sync;
 		this.world = entity.worldObj;
+		this.setOwnerCallback = setOwnerCallback;
+		this.entity.getDataManager().register(sync, "");
 	}
 	
 	public void save(NBTTagCompound nbt) {
-		
+		setOwnerName(nbt.getString("Owner"));
+		getOwner(); // Look up owner in world
 	}
 	
 	public void load(NBTTagCompound nbt) {
@@ -82,9 +107,7 @@ public class OwnerAttribute {
 		setOwnerName(owner == null ? "" : owner.getName());
 		
 		if (owner != null) {
-			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetchPerformance(owner)
-					.getBendingState(EARTHBENDING.id());
-			state.setPickupBlock(entity);
+			setOwnerCallback.accept(owner);
 		}
 		
 		System.out.println("Set owner to " + owner);

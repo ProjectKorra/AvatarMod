@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
@@ -72,6 +73,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 */
 	private AxisAlignedBB expandedHitbox;
 	
+	private final OwnerAttribute ownerAttrib;
+	
 	public EntityFloatingBlock(World world) {
 		super(world);
 		setSize(0.95f, 0.95f);
@@ -79,6 +82,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 			setID(nextBlockID++);
 		}
 		this.enableItemDrops = true;
+		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, newOwner -> {
+			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher()
+					.fetchPerformance(newOwner).getBendingState(EARTHBENDING.id());
+			state.setPickupBlock(this);
+		});
 		
 	}
 	
@@ -114,7 +122,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		dataManager.register(SYNC_FRICTION, 1f);
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
 		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
-		dataManager.register(SYNC_OWNER_NAME, "");
 		
 	}
 	
@@ -125,9 +132,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
-		setOwnerName(nbt.getString("Owner"));
-		getOwner(); // load owner from owner name
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		ownerAttrib.load(nbt);
 	}
 	
 	@Override
@@ -139,8 +145,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
-		nbt.setString("Owner", getOwnerName());
 		nbt.setInteger("Behavior", getBehavior().getId());
+		ownerAttrib.save(nbt);
 	}
 	
 	public Block getBlock() {
@@ -273,62 +279,12 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setBehavior(new FloatingBlockBehavior.Fall());
 	}
 	
-	/**
-	 * Get owner. Null if player entity cannot be found. Only the owner's name
-	 * is synced, so may be null on client but not server.
-	 * <p>
-	 * Detail: If the cached owner is null, but owner name is not, attempts to
-	 * look for a player in the world with that name. Will then call
-	 * {@link #setOwner(EntityPlayer)}.
-	 */
 	public EntityPlayer getOwner() {
-		
-		if (!worldObj.isRemote && ownerCached == null && getOwnerName() != null) {
-			// Slightly cosmetic, but only call setOwner(...) if the player was
-			// found
-			EntityPlayer player = worldObj.getPlayerEntityByName(getOwnerName());
-			if (player != null) setOwner(player);
-		}
-		
-		return ownerCached;
+		return ownerAttrib.getOwner();
 	}
 	
-	/**
-	 * Set the owner to the given player.
-	 * <p>
-	 * Also sets owner's BendingState FloatingBlock to this one.
-	 * 
-	 * @param owner
-	 *            Owner to set to. Can set to null...
-	 */
 	public void setOwner(EntityPlayer owner) {
-		this.ownerCached = owner;
-		setOwnerName(owner == null ? "" : owner.getName());
-		
-		if (owner != null) {
-			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetchPerformance(owner)
-					.getBendingState(EARTHBENDING.id());
-			state.setPickupBlock(this);
-		}
-		
-		System.out.println("Set owner to " + owner);
-	}
-	
-	/**
-	 * Get the username of the owner. If there is no owner, returns "" (never
-	 * null).
-	 */
-	private String getOwnerName() {
-		return dataManager.get(SYNC_OWNER_NAME);
-	}
-	
-	/**
-	 * Set the owner name. Null is not accepted! Use "" instead.
-	 */
-	private void setOwnerName(String name) {
-		if (name == null) throw new NullPointerException("Can't set owner name to null...");
-		System.out.println("Set owner name to " + name);
-		dataManager.set(SYNC_OWNER_NAME, name);
+		ownerAttrib.setOwner(owner);
 	}
 	
 	public FloatingBlockBehavior getBehavior() {
