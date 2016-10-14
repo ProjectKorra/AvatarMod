@@ -84,6 +84,8 @@ public abstract class RenderArc extends Render {
 		
 		double distance = to.sqrMagnitude();
 		double sizeMultiplier = distance < 1 ? -.7 * distance + 1.7 : 1 / Math.sqrt(distance);
+		if (this instanceof RenderAirGust) sizeMultiplier = 1; // FIX BAD CODE
+																// AAARgh
 		sizeLeader *= sizeMultiplier;
 		sizePoint *= sizeMultiplier;
 		
@@ -147,10 +149,14 @@ public abstract class RenderArc extends Render {
 			t.draw();
 			
 			// t.startDrawingQuads();
-			// t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
-			// t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
-			// t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2); // 3
-			// t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, v1); // 4
+			// t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1);
+			// // 1
+			// t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2);
+			// // 2
+			// t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2);
+			// // 3
+			// t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, v1);
+			// // 4
 			// t.draw();
 		}
 		if (normal == 1 || normal == 2) {
@@ -163,10 +169,14 @@ public abstract class RenderArc extends Render {
 			t.draw();
 			
 			// t.startDrawingQuads();
-			// t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1); // 1
-			// t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, v1); // 4
-			// t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2); // 3
-			// t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2); // 2
+			// t.addVertexWithUV(pos1.xCoord, pos1.yCoord, pos1.zCoord, u2, v1);
+			// // 1
+			// t.addVertexWithUV(pos4.xCoord, pos4.yCoord, pos4.zCoord, u1, v1);
+			// // 4
+			// t.addVertexWithUV(pos3.xCoord, pos3.yCoord, pos3.zCoord, u1, v2);
+			// // 3
+			// t.addVertexWithUV(pos2.xCoord, pos2.yCoord, pos2.zCoord, u2, v2);
+			// // 2
 			// t.draw();
 		}
 	}
@@ -184,7 +194,8 @@ public abstract class RenderArc extends Render {
 	}
 	
 	/**
-	 * Render this arc to disregard the actual lighting and instead render with full brightness
+	 * Render this arc to disregard the actual lighting and instead render with
+	 * full brightness
 	 */
 	protected void enableFullBrightness() {
 		renderBright = true;
