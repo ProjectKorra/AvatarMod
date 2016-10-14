@@ -58,12 +58,12 @@ public class OwnerAttribute {
 	}
 	
 	public void save(NBTTagCompound nbt) {
-		setOwnerName(nbt.getString("Owner"));
-		getOwner(); // Look up owner in world
+		nbt.setString("Owner", getOwnerName());
 	}
 	
 	public void load(NBTTagCompound nbt) {
-		nbt.setString("Owner", getOwnerName());
+		setOwnerName(nbt.getString("Owner"));
+		getOwner(); // Look up owner in world
 	}
 	
 	private String getOwnerName() {
