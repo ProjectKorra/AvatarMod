@@ -165,7 +165,8 @@ public class ChatSender {
 			// If any formats changed, must re add all chat formats
 			if (recievedFormatInstruction) {
 				newText += TextFormatting.RESET;
-				newText += format.getColor(); // For some reason, color must come before bold
+				newText += format.getColor(); // For some reason, color must
+												// come before bold
 				newText += format.isBold() ? TextFormatting.BOLD : "";
 				newText += format.isItalic() ? TextFormatting.ITALIC : "";
 			} else {

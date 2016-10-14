@@ -15,7 +15,9 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
@@ -132,6 +134,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				entity.onCollision();
 				BendingManager.getBending(BendingType.EARTHBENDING)
 						.post(new FloatingBlockEvent.BlockThrownReached(entity));
+				
 			}
 			
 			applyGravity();
@@ -160,6 +163,16 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 						motion.setY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 					}
+					
+					if (!world.isRemote && entity.areItemDropsEnabled()) {
+						List<ItemStack> drops = entity.getBlock().getDrops(world, new BlockPos(entity),
+								entity.getBlockState(), 0);
+						for (ItemStack is : drops) {
+							EntityItem ei = new EntityItem(world, entity.posX, entity.posY, entity.posZ, is);
+							world.spawnEntityInWorld(ei);
+						}
+					}
+					
 				}
 			}
 			
