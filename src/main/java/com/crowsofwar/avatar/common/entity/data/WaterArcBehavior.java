@@ -61,9 +61,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		public WaterArcBehavior onUpdate() {
 			
 			EntityPlayer player = getPlayer();
-			World world = player.worldObj;
-			
 			if (player == null) return this;
+			World world = player.worldObj;
 			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
 			
