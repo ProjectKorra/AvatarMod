@@ -25,6 +25,11 @@ public class ChatSender {
 	private static final Map<String, ChatMessage> referenceToChatMessage;
 	private static final Map<String, ChatMessage> translateKeyToChatMessage;
 	
+	/**
+	 * Cause static block to be called
+	 */
+	public static void load() {}
+	
 	static {
 		instance = new ChatSender();
 		MinecraftForge.EVENT_BUS.register(instance);

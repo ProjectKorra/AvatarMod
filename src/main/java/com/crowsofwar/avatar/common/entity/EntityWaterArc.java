@@ -17,8 +17,6 @@ import net.minecraft.world.World;
 
 public class EntityWaterArc extends EntityArc {
 	
-	private static final Vector GRAVITY = new Vector(0, -9.81 / 20, 0);
-	
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
 	
@@ -88,7 +86,8 @@ public class EntityWaterArc extends EntityArc {
 	
 	@Override
 	protected Vector getGravityVector() {
-		return GRAVITY;
+		// Gravity is added in Behavior
+		return Vector.ZERO;
 	}
 	
 	@Override
