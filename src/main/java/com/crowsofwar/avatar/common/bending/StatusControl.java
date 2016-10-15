@@ -1,9 +1,12 @@
-package com.crowsofwar.avatar.common.statctrl;
+package com.crowsofwar.avatar.common.bending;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
+import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
+import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
+import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 

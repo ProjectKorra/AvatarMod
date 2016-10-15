@@ -1,14 +1,13 @@
-package com.crowsofwar.avatar.common.statctrl;
+package com.crowsofwar.avatar.common.bending.earth;
 
+import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.statctrl.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
-import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;

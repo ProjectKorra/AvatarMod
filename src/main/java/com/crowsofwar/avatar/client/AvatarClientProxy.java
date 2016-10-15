@@ -18,6 +18,7 @@ import com.crowsofwar.avatar.client.render.RenderWaterArc;
 import com.crowsofwar.avatar.client.render.RenderWave;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
@@ -31,7 +32,6 @@ import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
-import com.crowsofwar.avatar.common.statctrl.StatusControl;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 

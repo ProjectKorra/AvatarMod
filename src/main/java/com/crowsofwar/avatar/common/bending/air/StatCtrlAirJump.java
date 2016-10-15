@@ -1,7 +1,7 @@
-package com.crowsofwar.avatar.common.statctrl;
+package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.air.AirJumpParticleSpawner;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.particle.AvatarParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
