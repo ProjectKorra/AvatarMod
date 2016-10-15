@@ -54,10 +54,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		}
 		
 		private EntityPlayer getPlayer() {
-			if (internalPlayer == null) {
-				internalPlayer = entity.worldObj.getPlayerEntityByName(playerName);
-			}
-			return internalPlayer;
+			return entity.getOwner();
 		}
 		
 		@Override
@@ -65,6 +62,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			
 			EntityPlayer player = getPlayer();
 			World world = player.worldObj;
+			
+			if (player == null) return this;
 			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
 			

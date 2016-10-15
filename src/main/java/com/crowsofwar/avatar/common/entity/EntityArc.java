@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.function.Consumer;
+
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,11 +23,13 @@ public abstract class EntityArc extends AvatarEntity {
 			DataSerializers.VARINT);
 	private static final DataParameter<Boolean> SYNC_GRAVITY = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.BOOLEAN);
+	private static final DataParameter<String> SYNC_OWNER_NAME = EntityDataManager.createKey(EntityArc.class,
+			DataSerializers.STRING);
 	
 	private static int nextId = 1;
 	private ControlPoint[] points;
 	
-	protected EntityPlayer owner;
+	private final OwnerAttribute ownerAttrib;
 	
 	public EntityArc(World world) {
 		super(world);
@@ -39,6 +44,9 @@ public abstract class EntityArc extends AvatarEntity {
 		if (!worldObj.isRemote) {
 			setId(nextId++);
 		}
+		
+		ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, getNewOwnerCallback());
+		
 	}
 	
 	/**
@@ -50,6 +58,14 @@ public abstract class EntityArc extends AvatarEntity {
 	 */
 	protected ControlPoint createControlPoint(float size) {
 		return new ControlPoint(this, size, 0, 0, 0);
+	}
+	
+	/**
+	 * Get a callback which is called when the owner is changed.
+	 */
+	protected Consumer<EntityPlayer> getNewOwnerCallback() {
+		return newOwner -> {
+		};
 	}
 	
 	@Override
@@ -193,11 +209,11 @@ public abstract class EntityArc extends AvatarEntity {
 	}
 	
 	public EntityPlayer getOwner() {
-		return owner;
+		return ownerAttrib.getOwner();
 	}
 	
 	public void setOwner(EntityPlayer owner) {
-		this.owner = owner;
+		this.ownerAttrib.setOwner(owner);
 		for (ControlPoint cp : points)
 			cp.setOwner(owner);
 	}
