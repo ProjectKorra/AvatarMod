@@ -13,14 +13,14 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 
 /**
- * Describes a synced behavior. They follow the state design pattern, in that each behavior should
- * be switchable over an entity, and is responsible for an update tick. Typically, behaviors are
- * static inner classes, where the outer class extends Behavior and is the superclass of the inner
- * classes.
+ * Describes a synced behavior. They follow the state design pattern, in that
+ * each behavior should be switchable over an entity, and is responsible for an
+ * update tick. Typically, behaviors are static inner classes, where the outer
+ * class extends Behavior and is the superclass of the inner classes.
  * <p>
- * The custom behaviors must be registered via {@link #registerBehavior(Class)}. There also is
- * probably a {@link BehaviorSerializer data serializer} to synchronize server and client, so the
- * data serializer should be registed with
+ * The custom behaviors must be registered via {@link #registerBehavior(Class)}.
+ * There also is probably a {@link BehaviorSerializer data serializer} to
+ * synchronize server and client, so the data serializer should be registed with
  * {@link DataSerializers#registerSerializer(DataSerializer)}.
  * 
  * @param E
@@ -47,7 +47,8 @@ public abstract class Behavior<E extends Entity> {
 	}
 	
 	/**
-	 * Looks up the behavior class by the given Id, then instantiates an instance with reflection.
+	 * Looks up the behavior class by the given Id, then instantiates an
+	 * instance with reflection.
 	 */
 	public static Behavior lookup(int id, Entity entity) {
 		try {
@@ -89,7 +90,8 @@ public abstract class Behavior<E extends Entity> {
 	/**
 	 * Called every update tick.
 	 * 
-	 * @return Next Behavior. Return <code>this</code> to continue the Behavior. Never return null.
+	 * @return Next Behavior. Return <code>this</code> to continue the Behavior.
+	 *         Never return null.
 	 */
 	public abstract Behavior onUpdate();
 	
@@ -100,7 +102,8 @@ public abstract class Behavior<E extends Entity> {
 	public static class BehaviorSerializer<B extends Behavior<? extends Entity>>
 			implements DataSerializer<B> {
 		
-		// FIXME research- why doesn't read/write get called every time that behavior changes???
+		// FIXME research- why doesn't read/write get called every time that
+		// behavior changes???
 		
 		@Override
 		public void write(PacketBuffer buf, B value) {
