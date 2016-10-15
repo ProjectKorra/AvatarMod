@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar;
 
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
@@ -87,6 +88,8 @@ public class AvatarMod {
 		AvatarDataSerializers.register();
 		FloatingBlockBehavior.register();
 		WaterArcBehavior.register();
+		
+		AvatarChatMessages.loadAll();
 		
 	}
 	

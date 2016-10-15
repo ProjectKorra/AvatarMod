@@ -34,4 +34,9 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_FIREBENDING = newChatMessage(CFG, "avatar.firebending");
 	public static final ChatMessage MSG_WATERBENDING = newChatMessage(CFG, "avatar.waterbending");
 	
+	/**
+	 * Call the static initializers
+	 */
+	public static void loadAll() {}
+	
 }
