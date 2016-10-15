@@ -84,7 +84,7 @@ public class OwnerAttribute {
 	 */
 	public EntityPlayer getOwner() {
 		
-		if (!world.isRemote && ownerCached == null && getOwnerName() != null) {
+		if (ownerCached == null && getOwnerName() != null) {
 			// Slightly cosmetic, but only call setOwner(...) if the player was
 			// found
 			EntityPlayer player = world.getPlayerEntityByName(getOwnerName());
