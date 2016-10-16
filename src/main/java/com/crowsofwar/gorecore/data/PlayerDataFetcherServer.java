@@ -9,6 +9,16 @@ import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs.ResultOutcome;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+/**
+ * Manages player data fetching on the server instance.
+ * <p>
+ * This is done through world data, which is responsible for actually storing,
+ * saving, and instantiating data.
+ * 
+ * @param <T>
+ * 
+ * @author CrowsOfWar
+ */
 public class PlayerDataFetcherServer<T extends GoreCorePlayerData> implements PlayerDataFetcher<T> {
 	
 	private final WorldDataFetcher<? extends GoreCoreWorldDataPlayers<T>> worldDataFetcher;

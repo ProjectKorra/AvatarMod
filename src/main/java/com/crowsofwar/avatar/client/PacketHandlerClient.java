@@ -24,7 +24,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Handles packets addressed to the client. Packets like this have a C in their name.
+ * Handles packets addressed to the client. Packets like this have a C in their
+ * name.
  *
  */
 @SideOnly(Side.CLIENT)
@@ -68,6 +69,7 @@ public class PacketHandlerClient implements IPacketHandler {
 			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayer());
 			return null;
 		}
+		System.out.println("Packet for: " + player);
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while processing player data packet");
 		if (data != null) {

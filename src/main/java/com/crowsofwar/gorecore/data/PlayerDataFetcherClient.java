@@ -20,12 +20,20 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Manages player data fetching on a client
+ * 
+ * @param <T>
+ * 
+ * @author CrowsOfWar
+ */
 @SideOnly(Side.CLIENT)
 public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements PlayerDataFetcher<T> {
 	
 	private final Minecraft mc;
 	/**
-	 * Keeps track of client-side player data by mapping player UUID to player data.
+	 * Keeps track of client-side player data by mapping player UUID to player
+	 * data.
 	 */
 	private Map<UUID, T> playerData = new HashMap<UUID, T>();
 	private Class<T> dataClass;
@@ -52,8 +60,8 @@ public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements Pl
 	 * @param dataClass
 	 *            The class of your player data
 	 * @param onCreate
-	 *            A handler which will be invoked when a new instance of your player data was
-	 *            created.
+	 *            A handler which will be invoked when a new instance of your
+	 *            player data was created.
 	 */
 	public PlayerDataFetcherClient(Class<T> dataClass, PlayerDataCreationHandler<T> onCreate) {
 		this.mc = Minecraft.getMinecraft();
