@@ -84,7 +84,7 @@ public class OwnerAttribute {
 	 */
 	public EntityPlayer getOwner() {
 		
-		if (ownerCached == null && getOwnerName() != null) {
+		if ((ownerCached == null || ownerCached.isDead) && getOwnerName() != null) {
 			// Slightly cosmetic, but only call setOwner(...) if the player was
 			// found
 			EntityPlayer player = world.getPlayerEntityByName(getOwnerName());
