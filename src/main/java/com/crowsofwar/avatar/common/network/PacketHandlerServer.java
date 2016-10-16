@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.network;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
@@ -11,6 +13,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,8 +23,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Implements IPacketHandler. Acts as a packet handler for integrated and dedicated servers. Is a
- * singleton and is accessible via {@link #instance}.
+ * Implements IPacketHandler. Acts as a packet handler for integrated and
+ * dedicated servers. Is a singleton and is accessible via {@link #instance}.
  *
  */
 public class PacketHandlerServer implements IPacketHandler {
@@ -77,7 +80,21 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(ctx.getServerHandler().playerEntity,
+		
+		UUID id = packet.getAskedPlayer();
+		EntityPlayer player = GoreCorePlayerUUIDs
+				.findPlayerInWorldFromUUID(ctx.getServerHandler().playerEntity.worldObj, id);
+		
+		if (player == null) {
+			
+			AvatarLog.warnHacking(ctx.getServerHandler().playerEntity.getName(),
+					"Sent request data for a player with account '" + id
+							+ "', but that player is not in the world.");
+			return null;
+			
+		}
+		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while" + " processing RequestData packet");
 		
 		return data == null ? null : new PacketCPlayerData(data);

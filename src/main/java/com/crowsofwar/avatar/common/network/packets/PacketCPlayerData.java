@@ -12,7 +12,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Sent from server to client to notify the client of a player's current bending controller.
+ * Sent from server to client to notify the client of a player's current bending
+ * controller.
  *
  * @author CrowsOfWar
  */
@@ -26,6 +27,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	public PacketCPlayerData() {}
 	
 	public PacketCPlayerData(AvatarPlayerData data) {
+		System.out.println("Made a packet for " + data.getPlayerID());
 		player = data.getPlayerID();
 		allControllers = new int[data.getBendingControllers().size()];
 		for (int i = 0; i < allControllers.length; i++) {
