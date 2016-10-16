@@ -85,7 +85,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, newOwner -> {
 			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher()
 					.fetchPerformance(newOwner).getBendingState(EARTHBENDING.id());
-			state.setPickupBlock(this);
+			if (state != null) state.setPickupBlock(this);
 		});
 		
 	}
