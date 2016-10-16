@@ -76,7 +76,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				WaterbendingState bendingState = (WaterbendingState) data
 						.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
 				
-				if (bendingState.isBendingWater()) {
+				if (bendingState != null && bendingState.isBendingWater()) {
 					
 					EntityWaterArc water = bendingState.getWaterArc();
 					if (water != null) {
