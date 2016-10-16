@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -11,7 +10,6 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -144,14 +142,7 @@ public class EntityWaterArc extends EntityArc {
 		}
 		
 		@Override
-		protected void onCollision(Entity entity) {
-			if (entity == owner) return;
-			entity.addVelocity(x() - entity.posX, 0.2, z() - entity.posZ);
-			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase) entity)
-						.attackEntityFrom(AvatarDamageSource.causeWaterDamage(entity, owner), 6);
-			}
-		}
+		protected void onCollision(Entity entity) {}
 		
 	}
 	

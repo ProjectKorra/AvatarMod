@@ -47,7 +47,7 @@ public class AirJumpParticleSpawner {
 	
 	@SubscribeEvent
 	public void onFall(LivingFallEvent e) {
-		if (e.getEntity() == target) {
+		if (e.getEntity() == target && !e.getEntity().worldObj.isRemote) {
 			
 			System.out.println("REduce fall damage");
 			

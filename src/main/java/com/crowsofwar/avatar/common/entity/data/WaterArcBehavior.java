@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.common.entity.data;
 
+import java.util.List;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
@@ -7,6 +10,7 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
@@ -120,6 +124,18 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		@Override
 		public WaterArcBehavior onUpdate() {
 			applyGravity();
+			
+			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
+					EntityLivingBase.class, entity.getEntityBoundingBox().expandXyz(0.9),
+					collided -> collided != entity.getOwner());
+			
+			for (EntityLivingBase collided : collidedList) {
+				if (collided != entity.getOwner()) return this;
+				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
+				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
+						6);
+			}
+			
 			return this;
 		}
 		
