@@ -48,11 +48,10 @@ public class AirJumpParticleSpawner {
 		}
 	}
 	
+	// Note: not fired on survival mode
 	@SubscribeEvent
 	public void onFall(LivingFallEvent e) {
 		if (e.getEntity() == target && !e.getEntity().worldObj.isRemote) {
-			
-			System.out.println("REduce fall damage");
 			
 			e.setDamageMultiplier(e.getDamageMultiplier() / 3);
 			if (e.getDamageMultiplier() <= 0.5f) e.setCanceled(true);
@@ -62,6 +61,15 @@ public class AirJumpParticleSpawner {
 		}
 	}
 	
+	/**
+	 * Creates a new particle spawner for the given player. It then is
+	 * registered to the event bus to receive events. The particle spawner
+	 * automatically unsubscribes itself when it detects that the player hit the
+	 * ground.
+	 * 
+	 * @param player
+	 *            Player to spawn particles for
+	 */
 	public static void spawnParticles(EntityPlayer player) {
 		new AirJumpParticleSpawner(player);
 	}
