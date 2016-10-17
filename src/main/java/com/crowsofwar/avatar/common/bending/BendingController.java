@@ -17,17 +17,19 @@ import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * Base class for bending abilities. All bending classes extend this one. They can save data to NBT
- * if necessary. Functionality for bending should be in subclasses. Bending controllers are
- * singletons, but must be accessed through {@link BendingManager}.
+ * Base class for bending abilities. All bending classes extend this one. They
+ * can save data to NBT if necessary. Functionality for bending should be in
+ * subclasses. Bending controllers are singletons, but must be accessed through
+ * {@link BendingManager}.
  * <p>
- * For the sake of abstraction, you won't need to refer to bending controllers by their concrete
- * names.
+ * For the sake of abstraction, you won't need to refer to bending controllers
+ * by their concrete names.
  * <p>
- * Subclasses have access to client input via optionally* implementable hook methods.
+ * Subclasses have access to client input via optionally* implementable hook
+ * methods.
  * <p>
- * *Optionally = the subclass must declare the method, but does not need to put any code inside of
- * it.
+ * *Optionally = the subclass must declare the method, but does not need to put
+ * any code inside of it.
  *
  * @param <STATE>
  *            The IBendingState this controller is using
@@ -80,22 +82,23 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 * @deprecated Use {@link #getType()} instead.
 	 */
 	@Deprecated
-	public abstract int getID();
+	public final int getID() {
+		return getType().id();
+	}
 	
 	/**
 	 * Gets an identifier for this bending controller.
 	 */
-	public BendingType getType() {
-		return BendingType.values()[getID() - 1];
-	}
+	public abstract BendingType getType();
 	
 	/**
-	 * Called to create an IBendingState for the player. This allows the BendingController to store
-	 * specific metadata for each player, making things much easier. <br />
+	 * Called to create an IBendingState for the player. This allows the
+	 * BendingController to store specific metadata for each player, making
+	 * things much easier. <br />
 	 * <br />
-	 * Keep in mind - when loading a saved state, it will be read from NBT. However, when creating a
-	 * new bending state when an ability is activated, it will NOT read from NBT. So ensure that all
-	 * values are initialized.
+	 * Keep in mind - when loading a saved state, it will be read from NBT.
+	 * However, when creating a new bending state when an ability is activated,
+	 * it will NOT read from NBT. So ensure that all values are initialized.
 	 * 
 	 * @return
 	 */

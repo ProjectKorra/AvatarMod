@@ -1,10 +1,12 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.bending.BendingType.FIREBENDING;
+
 import java.awt.Color;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -49,8 +51,8 @@ public class Firebending extends BendingController {
 	}
 	
 	@Override
-	public int getID() {
-		return BendingManager.BENDINGID_FIREBENDING;
+	public BendingType getType() {
+		return FIREBENDING;
 	}
 	
 	@Override
