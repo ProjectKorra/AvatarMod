@@ -37,8 +37,17 @@ public class Earthbending extends BendingController {
 		bendableBlocks.add(Blocks.GRAVEL);
 		bendableBlocks.add(Blocks.BRICK_BLOCK);
 		bendableBlocks.add(Blocks.MOSSY_COBBLESTONE);
-		bendableBlocks.add(Blocks.NETHER_BRICK);
 		bendableBlocks.add(Blocks.STONEBRICK);
+		bendableBlocks.add(Blocks.CLAY);
+		bendableBlocks.add(Blocks.HARDENED_CLAY);
+		bendableBlocks.add(Blocks.STAINED_HARDENED_CLAY);
+		bendableBlocks.add(Blocks.COAL_ORE);
+		bendableBlocks.add(Blocks.IRON_ORE);
+		bendableBlocks.add(Blocks.EMERALD_ORE);
+		bendableBlocks.add(Blocks.GOLD_ORE);
+		bendableBlocks.add(Blocks.LAPIS_ORE);
+		bendableBlocks.add(Blocks.REDSTONE_ORE);
+		bendableBlocks.add(Blocks.RED_SANDSTONE);
 		
 		addAbility(this.abilityPickUpBlock = new AbilityPickUpBlock(this,
 				state -> bendableBlocks.contains(state.getBlock())));
