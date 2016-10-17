@@ -41,6 +41,9 @@ public class AirJumpParticleSpawner {
 			if (e.player.isInWater()) {
 				MinecraftForge.EVENT_BUS.unregister(this);
 			}
+			if (e.player.capabilities.isCreativeMode && e.player.onGround) {
+				MinecraftForge.EVENT_BUS.unregister(this);
+			}
 			
 		}
 	}
