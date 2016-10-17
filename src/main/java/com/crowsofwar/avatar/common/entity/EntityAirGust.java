@@ -54,7 +54,7 @@ public class EntityAirGust extends EntityArc {
 	
 	@Override
 	protected ControlPoint createControlPoint(float size) {
-		return new AirGustControlPoint(this, 0.1f, 0, 0, 0);
+		return new AirGustControlPoint(this, 0.5f, 0, 0, 0);
 	}
 	
 	@Override
