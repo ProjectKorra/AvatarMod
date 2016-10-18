@@ -93,7 +93,7 @@ public class AvatarMod {
 		
 		AvatarChatMessages.loadAll();
 		
-		MinecraftForge.EVENT_BUS.register(FirebendingUpdate.class);
+		MinecraftForge.EVENT_BUS.register(new FirebendingUpdate());
 		
 	}
 	
