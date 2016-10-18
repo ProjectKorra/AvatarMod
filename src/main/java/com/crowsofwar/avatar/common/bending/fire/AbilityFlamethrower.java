@@ -3,13 +3,9 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.entity.EntityFlames;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
-import com.crowsofwar.gorecore.util.Vector;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 /**
  * 
@@ -29,20 +25,8 @@ public class AbilityFlamethrower extends BendingAbility<FirebendingState> {
 	}
 	
 	@Override
-	public void execute(AbilityContext data) {
-		EntityPlayer player = data.getPlayerEntity();
-		
-		if (player.ticksExisted % 3 != 0) return;
-		
-		Vector look = Vector.fromEntityLook(player);
-		Vector eye = Vector.getEyePos(player);
-		
-		World world = data.getWorld();
-		
-		EntityFlames flames = new EntityFlames(world, player);
-		flames.velocity().set(look.times(10));
-		flames.setPosition(eye.x(), eye.y(), eye.z());
-		world.spawnEntityInWorld(flames);
+	public void execute(AbilityContext ctx) {
+		ctx.addStatusControl(StatusControl.START_FLAMETHROW);
 	}
 	
 	@Override

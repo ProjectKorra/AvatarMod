@@ -36,7 +36,7 @@ public class Firebending extends BendingController {
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_FIREBENDING,
-				abilityLightFire, abilityFireArc);
+				abilityLightFire, abilityFireArc, abilityFlamethrower);
 		
 	}
 	
