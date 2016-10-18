@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
+import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.AvatarConfig;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -31,6 +32,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -90,6 +92,8 @@ public class AvatarMod {
 		WaterArcBehavior.register();
 		
 		AvatarChatMessages.loadAll();
+		
+		MinecraftForge.EVENT_BUS.register(FirebendingUpdate.class);
 		
 	}
 	

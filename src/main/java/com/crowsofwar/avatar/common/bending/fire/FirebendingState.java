@@ -12,6 +12,7 @@ public class FirebendingState implements IBendingState {
 	
 	private EntityFireArc fireArc;
 	private AvatarPlayerData data;
+	private boolean isFlamethrowing;
 	
 	public FirebendingState(AvatarPlayerData data) {
 		fireArc = null;
@@ -38,14 +39,22 @@ public class FirebendingState implements IBendingState {
 		setFireArc(null);
 	}
 	
+	public boolean isFlamethrowing() {
+		return isFlamethrowing;
+	}
+	
+	public void setFlamethrowing(boolean flamethrowing) {
+		this.isFlamethrowing = flamethrowing;
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		// TODO Implement saving fire arcs
+		setFlamethrowing(nbt.getBoolean("Flamethrowing"));
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		
+		nbt.setBoolean("Flamethrowing", isFlamethrowing());
 	}
 	
 	@Override

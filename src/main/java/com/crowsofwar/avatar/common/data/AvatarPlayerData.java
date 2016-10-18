@@ -15,6 +15,7 @@ import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -61,7 +62,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
 		bendingControllerList = AvatarUtils.readFromNBT(BendingController.creator, nbt, "BendingAbilities");
-		// bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator, nbt, "BendingData");
+		// bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator,
+		// nbt, "BendingData");
 		bendingStateList = GoreCoreNBTUtil.readListFromNBT(nbt, "BendingData", IBendingState.creator, this);
 		
 		bendingControllers.clear();
@@ -105,6 +107,13 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		return bendingControllers.containsKey(id);
 	}
 	
+	/**
+	 * Check if the player has that type of bending
+	 */
+	public boolean hasBending(BendingType type) {
+		return hasBending(type.id());
+	}
+	
 	public void addBending(BendingController bending) {
 		if (!hasBending(bending.getID())) {
 			bendingControllers.put(bending.getID(), bending);
@@ -124,12 +133,13 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Remove the specified bending controller. Please note, this will be saved, so is permanent
-	 * (unless another bending controller is added).
+	 * Remove the specified bending controller. Please note, this will be saved,
+	 * so is permanent (unless another bending controller is added).
 	 */
 	public void removeBending(BendingController bending) {
 		if (hasBending(bending.getID())) {
-			// remove state before controller- getBendingState only works with controller present
+			// remove state before controller- getBendingState only works with
+			// controller present
 			IBendingState state = getBendingState(bending);
 			bendingStates.remove(bending.getID());
 			bendingStateList.remove(state);
@@ -180,8 +190,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Get the BendingController with that ID. Returns null if there is no bending controller for
-	 * that ID.
+	 * Get the BendingController with that ID. Returns null if there is no
+	 * bending controller for that ID.
 	 * 
 	 * @param id
 	 * @return
@@ -195,8 +205,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Gets extra metadata for the given bending controller with that ID, or null if there is no
-	 * bending controller.
+	 * Gets extra metadata for the given bending controller with that ID, or
+	 * null if there is no bending controller.
 	 */
 	public IBendingState getBendingState(int id) {
 		if (!hasBending(id)) {
@@ -207,7 +217,16 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Get extra metadata for the given bending controller, returns null if no Bending controller.
+	 * Gets extra metadata for the given bending controller with that ID, or
+	 * null if there is no bending controller.
+	 */
+	public IBendingState getBendingState(BendingType type) {
+		return getBendingState(type.id());
+	}
+	
+	/**
+	 * Get extra metadata for the given bending controller, returns null if no
+	 * Bending controller.
 	 */
 	public <STATE extends IBendingState> STATE getBendingState(BendingController<STATE> controller) {
 		return (STATE) getBendingState(controller.getID());
@@ -241,7 +260,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Sends a packet to update the client with information about this player data.
+	 * Sends a packet to update the client with information about this player
+	 * data.
 	 */
 	public void updateClient() {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && getPlayerEntity() != null) {
