@@ -6,20 +6,22 @@ import java.util.List;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
+import com.crowsofwar.avatar.common.bending.fire.StatCtrlStartFlamethrowing;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
- * Describes a temporary effect where a callback listener is added to a control event. The listener
- * then will perform certain actions associated with that control.
+ * Describes a temporary effect where a callback listener is added to a control
+ * event. The listener then will perform certain actions associated with that
+ * control.
  * <p>
- * For example, the player receives a place-block Status Control, which subscribes to right-click.
- * The status control receives a callback whenever the player uses the right-click control. Then,
- * the status control is removed.
+ * For example, the player receives a place-block Status Control, which
+ * subscribes to right-click. The status control receives a callback whenever
+ * the player uses the right-click control. Then, the status control is removed.
  * <p>
- * Status controls are stored in player-data, but are also sent to the client via packets, which
- * render over the crosshair.
+ * Status controls are stored in player-data, but are also sent to the client
+ * via packets, which render over the crosshair.
  * 
  * @author CrowsOfWar
  */
@@ -32,6 +34,8 @@ public abstract class StatusControl {
 	public static final StatusControl THROW_BLOCK = new StatCtrlThrowBlock();
 	
 	public static final StatusControl THROW_WATER = new StatCtrlThrowWater();
+	
+	public static final StatusControl START_FLAMETHROW = new StatCtrlStartFlamethrowing();
 	
 	private static int nextId = 0;
 	private static List<StatusControl> allControls;
@@ -57,8 +61,8 @@ public abstract class StatusControl {
 	}
 	
 	/**
-	 * Require that a raytrace be cast client-side, which is sent to the server. It is then
-	 * accessible in {@link #execute(AbilityContext)}.
+	 * Require that a raytrace be cast client-side, which is sent to the server.
+	 * It is then accessible in {@link #execute(AbilityContext)}.
 	 * 
 	 * @param range
 	 *            Range to raytrace. -1 for player reach
@@ -70,13 +74,14 @@ public abstract class StatusControl {
 	}
 	
 	/**
-	 * Execute this status control in the given context. Only called server-side.
+	 * Execute this status control in the given context. Only called
+	 * server-side.
 	 * 
-	 * @param context
+	 * @param ctx
 	 *            Information for status control
 	 * @return Whether to remove it
 	 */
-	public abstract boolean execute(AbilityContext context);
+	public abstract boolean execute(AbilityContext ctx);
 	
 	public int id() {
 		return id;
