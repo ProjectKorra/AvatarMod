@@ -37,8 +37,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Large class that manages input on the client-side. After input is received, it is sent to the
- * server using packets.
+ * Large class that manages input on the client-side. After input is received,
+ * it is sent to the server using packets.
  *
  */
 @SideOnly(Side.CLIENT)
@@ -105,6 +105,9 @@ public class ClientInput implements IControlsHandler {
 			if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
 			if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
 			if (control == CONTROL_SPACE) return space;
+			if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
+			if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
+			if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
 			AvatarLog.warn("ClientInput- Unknown control: " + control);
 			return false;
 		}
@@ -158,7 +161,8 @@ public class ClientInput implements IControlsHandler {
 		
 		if (player != null && player.worldObj != null) {
 			// Send any input to the server
-			// AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
+			// AvatarPlayerData data =
+			// AvatarPlayerDataFetcherClient.instance.getDataPerformance(
 			// Minecraft.getMinecraft().thePlayer);
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
 			

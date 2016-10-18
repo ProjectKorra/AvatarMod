@@ -8,7 +8,6 @@ public enum AvatarControl {
 	
 	/** No control is pressed */
 	NONE(""),
-	/** Default LeftAlt (will be changed) */
 	KEY_EARTHBENDING("RadialMenu"),
 	KEY_FIREBENDING("Firebend"),
 	KEY_WATERBENDING("Waterbend"),
@@ -26,7 +25,13 @@ public enum AvatarControl {
 	/** Middle mouse button just got pressed */
 	CONTROL_MIDDLE_CLICK_DOWN("MiddleClickDown"),
 	/** Space key (not jump) is held */
-	CONTROL_SPACE("Space");
+	CONTROL_SPACE("Space"),
+	/** Left mouse button was just released */
+	CONTROL_LEFT_CLICK_UP("LeftClickUp"),
+	/** Right mouse button was just released */
+	CONTROL_RIGHT_CLICK_UP("RightClickUp"),
+	/** Middle mouse button was just released */
+	CONTROL_MIDDLE_CLICK_UP("MiddleClickUp");
 	
 	private String name;
 	private boolean isKey;
