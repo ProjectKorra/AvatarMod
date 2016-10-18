@@ -77,7 +77,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	public EntityFloatingBlock(World world) {
 		super(world);
-		setSize(0.95f, 0.95f);
+		// For some reason, Entity#moveEntity doesn't work properly on
+		// client-side, when there is less than 1 size.
+		// TODO Investigate... why?
+		float size = !worldObj.isRemote ? 1 : 0.95f;
+		setSize(size, size);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
@@ -236,10 +240,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 		lastTickPosX = posX;
 		lastTickPosY = posY;
 		lastTickPosZ = posZ;
-		moveEntity(velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		motionX = velocity().x() / 20;
 		motionY = velocity().y() / 20;
 		motionZ = velocity().z() / 20;
+		
+		moveEntity(velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		
 		getBehavior().setEntity(this);
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate();

@@ -27,16 +27,16 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	/**
-	 * Get the velocity of this entity in m/s. Changes to this vector will be reflected in the
-	 * entity's actual velocity.
+	 * Get the velocity of this entity in m/s. Changes to this vector will be
+	 * reflected in the entity's actual velocity.
 	 */
 	public Vector velocity() {
 		return internalVelocity;
 	}
 	
 	/**
-	 * Get the position of this entity. Changes to this vector will be reflected in the entity's
-	 * actual position.
+	 * Get the position of this entity. Changes to this vector will be reflected
+	 * in the entity's actual position.
 	 */
 	public Vector position() {
 		return internalPosition;
