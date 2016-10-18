@@ -14,10 +14,13 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class StatCtrlStartFlamethrowing extends StatusControl {
+public class StatCtrlSetFlamethrowing extends StatusControl {
 	
-	public StatCtrlStartFlamethrowing() {
+	private final boolean setting;
+	
+	public StatCtrlSetFlamethrowing(boolean setting) {
 		super(4, AvatarControl.CONTROL_RIGHT_CLICK_DOWN, CrosshairPosition.RIGHT_OF_CROSSHAIR);
+		this.setting = setting;
 	}
 	
 	@Override
@@ -29,7 +32,7 @@ public class StatCtrlStartFlamethrowing extends StatusControl {
 		
 		if (data.hasBending(BendingType.FIREBENDING)) {
 			FirebendingState state = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
-			state.setFlamethrowing(true);
+			state.setFlamethrowing(setting);
 		}
 		
 		return true;

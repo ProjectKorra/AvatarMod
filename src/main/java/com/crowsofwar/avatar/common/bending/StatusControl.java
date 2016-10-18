@@ -6,7 +6,7 @@ import java.util.List;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
-import com.crowsofwar.avatar.common.bending.fire.StatCtrlStartFlamethrowing;
+import com.crowsofwar.avatar.common.bending.fire.StatCtrlSetFlamethrowing;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -35,7 +35,9 @@ public abstract class StatusControl {
 	
 	public static final StatusControl THROW_WATER = new StatCtrlThrowWater();
 	
-	public static final StatusControl START_FLAMETHROW = new StatCtrlStartFlamethrowing();
+	public static final StatusControl START_FLAMETHROW = new StatCtrlSetFlamethrowing(true);
+	
+	public static final StatusControl STOP_FLAMETHROW = new StatCtrlSetFlamethrowing(false);
 	
 	private static int nextId = 0;
 	private static List<StatusControl> allControls;
