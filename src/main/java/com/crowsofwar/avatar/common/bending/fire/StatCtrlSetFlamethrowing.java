@@ -19,7 +19,7 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 	private final boolean setting;
 	
 	public StatCtrlSetFlamethrowing(boolean setting) {
-		super(4, AvatarControl.CONTROL_RIGHT_CLICK_DOWN, CrosshairPosition.RIGHT_OF_CROSSHAIR);
+		super(setting ? 5 : 4, AvatarControl.CONTROL_RIGHT_CLICK_DOWN, CrosshairPosition.RIGHT_OF_CROSSHAIR);
 		this.setting = setting;
 	}
 	
