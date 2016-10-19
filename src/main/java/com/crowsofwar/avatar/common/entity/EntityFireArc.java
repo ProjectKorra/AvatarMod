@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -56,6 +58,15 @@ public class EntityFireArc extends EntityArc {
 	
 	public static EntityFireArc findFromId(World world, int id) {
 		return (EntityFireArc) EntityArc.findFromId(world, id);
+	}
+	
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (getOwner() != null) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(getOwner());
+			data.removeStatusControl(StatusControl.THROW_FIRE);
+		}
 	}
 	
 	@Override
