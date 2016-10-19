@@ -216,6 +216,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	@Override
+	public void setFire(int seconds) {}
+	
+	@Override
 	public void onUpdate() {
 		
 		if (ticksExisted == 1) {
