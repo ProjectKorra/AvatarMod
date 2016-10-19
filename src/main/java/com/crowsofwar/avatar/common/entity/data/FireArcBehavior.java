@@ -74,7 +74,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			
 			if (data != null) {
 				FirebendingState bendingState = (FirebendingState) data
-						.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
+						.getBendingState(BendingManager.getBending(BendingType.FIREBENDING));
 				
 				if (bendingState != null && bendingState.isManipulatingFire()) {
 					

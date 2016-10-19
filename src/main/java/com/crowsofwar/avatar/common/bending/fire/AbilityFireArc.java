@@ -35,12 +35,15 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 		World world = ctx.getWorld();
 		FirebendingState fs = ctx.getData().getBendingState(controller);
 		
+		System.out.println("Fire arc ability");
+		
 		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 				Math.toRadians(player.rotationPitch));
 		Vector lookPos = new Vector(player).plus(look.times(3));
 		EntityFireArc fire = new EntityFireArc(world);
 		fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
 		fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, player));
+		fire.setOwner(player);
 		
 		world.spawnEntityInWorld(fire);
 		
