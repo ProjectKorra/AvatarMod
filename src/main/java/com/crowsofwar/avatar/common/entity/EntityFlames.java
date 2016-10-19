@@ -66,8 +66,6 @@ public class EntityFlames extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		
-		super.onUpdate();
-		
 		Vector velocityPerTick = velocity().dividedBy(20);
 		moveEntity(velocityPerTick.x(), velocityPerTick.y(), velocityPerTick.z());
 		
@@ -91,6 +89,7 @@ public class EntityFlames extends AvatarEntity {
 			}
 		}
 		
+		handleWaterMovement();
 		if (inWater) {
 			setDead();
 			Random random = new Random();
