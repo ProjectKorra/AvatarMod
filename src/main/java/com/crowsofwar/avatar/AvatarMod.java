@@ -17,6 +17,7 @@ import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWave;
+import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -93,6 +94,7 @@ public class AvatarMod {
 		AvatarDataSerializers.register();
 		FloatingBlockBehavior.register();
 		WaterArcBehavior.register();
+		FireArcBehavior.register();
 		
 		AvatarChatMessages.loadAll();
 		
