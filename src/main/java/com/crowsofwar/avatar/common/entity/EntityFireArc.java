@@ -46,12 +46,8 @@ public class EntityFireArc extends EntityArc {
 							(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
 				}
 			}
-			// TODO [1.10] Where is "random.fizz" sound??
-			worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_ANVIL_BREAK, SoundCategory.PLAYERS, 1,
-					random.nextFloat() * 0.3f + 1.1f, false);
-			// worldObj.playSoundAtEntity(this, "random.fizz", 1.0f,
-			// random.nextFloat() * 0.3f +
-			// 1.1f);// BlockFire
+			worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+					SoundCategory.PLAYERS, 1, random.nextFloat() * 0.3f + 1.1f, false);
 		}
 		getBehavior().setEntity(this);
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate();

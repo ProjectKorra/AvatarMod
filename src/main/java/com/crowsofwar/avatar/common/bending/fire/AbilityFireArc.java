@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -48,7 +49,9 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 		world.spawnEntityInWorld(fire);
 		
 		fs.setFireArc(fire);
+		ctx.addStatusControl(StatusControl.THROW_FIRE);
 		ctx.getData().sendBendingState(fs);
+		
 	}
 	
 	@Override
