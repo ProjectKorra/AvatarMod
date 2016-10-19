@@ -107,27 +107,37 @@ public class EntityRavine extends AvatarEntity {
 		// Destroy non-solid blocks in the ravine
 		BlockPos inPos = getPosition();
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-			BendingManager.getBending(BendingType.EARTHBENDING)
-					.post(new RavineEvent.DestroyBlock(this, inBlock, inPos));
 			
-			for (int i = 0; i < 7; i++) {
-				worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
-						3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
-						3 * (rand.nextGaussian() - 0.5), Block.getStateId(inBlock));
-			}
-			worldObj.setBlockToAir(getPosition());
-			
-			if (!worldObj.isRemote) {
-				List<ItemStack> drops = inBlock.getBlock().getDrops(worldObj, inPos, inBlock, 0);
-				for (ItemStack stack : drops) {
-					EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
-					item.setDefaultPickupDelay();
-					item.motionX *= 2;
-					item.motionY *= 1.2;
-					item.motionZ *= 2;
-					worldObj.spawnEntityInWorld(item);
+			if (inBlock.getBlockHardness(worldObj, getPosition()) == 0) {
+				BendingManager.getBending(BendingType.EARTHBENDING)
+						.post(new RavineEvent.DestroyBlock(this, inBlock, inPos));
+				
+				for (int i = 0; i < 7; i++) {
+					worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
+							3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
+							3 * (rand.nextGaussian() - 0.5), Block.getStateId(inBlock));
 				}
+				worldObj.setBlockToAir(getPosition());
+				
+				if (!worldObj.isRemote) {
+					List<ItemStack> drops = inBlock.getBlock().getDrops(worldObj, inPos, inBlock, 0);
+					for (ItemStack stack : drops) {
+						EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
+						item.setDefaultPickupDelay();
+						item.motionX *= 2;
+						item.motionY *= 1.2;
+						item.motionZ *= 2;
+						worldObj.spawnEntityInWorld(item);
+					}
+				}
+				
+			} else {
+				
+				BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
+				setDead();
+				
 			}
+			
 		}
 		
 		// Push collided entities back

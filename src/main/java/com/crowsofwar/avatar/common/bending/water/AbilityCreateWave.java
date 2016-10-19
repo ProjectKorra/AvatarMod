@@ -56,7 +56,7 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 	
 	@Override
 	public int getIconIndex() {
-		return 10;
+		return 11;
 	}
 	
 	@Override
