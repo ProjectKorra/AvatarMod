@@ -97,6 +97,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	
 	private IMessage handlePacketStatusControl(PacketCRemoveStatusControl packet, MessageContext ctx) {
 		AvatarMod.proxy.removeStatusControl(packet.getStatusControl());
+		System.out.println("Removing status control");
 		return null;
 	}
 	
