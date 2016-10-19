@@ -63,6 +63,9 @@ public class AvatarMod {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+		
+		AvatarLog.log = e.getModLog();
+		
 		AvatarConfig.load();
 		
 		BendingManager.init();

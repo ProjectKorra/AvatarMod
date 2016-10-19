@@ -1,17 +1,21 @@
 package com.crowsofwar.avatar;
 
+import org.apache.logging.log4j.Logger;
+
 public class AvatarLog {
 	
+	static Logger log;
+	
 	public static void debug(String s) {
-		if (AvatarInfo.IS_DEV_BUILD) System.out.println("[Debug] " + s);
+		if (AvatarInfo.IS_DEV_BUILD) log.debug("[Debug] " + s);
 	}
 	
 	public static void info(String s) {
-		System.out.println("[Info] " + s);
+		log.info("[Info] " + s);
 	}
 	
 	public static void error(String s) {
-		System.err.println("[Error] " + s);
+		log.error("[Error] " + s);
 	}
 	
 	/**
@@ -31,7 +35,7 @@ public class AvatarLog {
 	 *            String to print
 	 */
 	public static void warn(WarningType type, String s) {
-		System.err.println("[Warn/" + type + "] " + s);
+		log.warn("[Warn/" + type + "] " + s);
 		if (type == WarningType.INVALID_CODE) {
 			Thread.dumpStack();
 		}
