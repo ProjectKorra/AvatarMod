@@ -5,6 +5,7 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 import java.util.HashSet;
 import java.util.Set;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.controls.ClientInput;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
@@ -67,7 +68,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		
 		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
-			System.out.println("--requesting data for " + data.getPlayerEntity() + "--");
+			AvatarLog.debug("--requesting data for " + data.getPlayerEntity() + "--");
 		});
 		
 		statusControls = new HashSet<>();

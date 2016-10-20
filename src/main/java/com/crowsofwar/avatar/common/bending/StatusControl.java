@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
@@ -60,7 +61,7 @@ public abstract class StatusControl {
 		this.raytrace = new Raytrace.Info();
 		this.position = position;
 		this.id = ++nextId;
-		System.out.println("Assigned id " + id);
+		AvatarLog.debug("Assigned id " + id);
 		allControls.add(this);
 		
 	}

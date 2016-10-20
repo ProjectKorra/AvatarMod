@@ -175,7 +175,7 @@ public class ClientInput implements IControlsHandler {
 				while (sci.hasNext()) {
 					StatusControl sc = sci.next();
 					if (pressed.contains(sc.getSubscribedControl())) {
-						System.out.println("Hit control " + sc);
+						AvatarLog.debug("Hit control " + sc);
 						
 						Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
 						

@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import java.util.function.Consumer;
 
+import com.crowsofwar.avatar.AvatarLog;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -110,7 +112,7 @@ public class OwnerAttribute {
 			setOwnerCallback.accept(owner);
 		}
 		
-		System.out.println("Set owner to " + owner);
+		AvatarLog.debug("Set owner to " + owner);
 	}
 	
 }

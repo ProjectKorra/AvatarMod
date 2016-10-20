@@ -64,12 +64,12 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while processing UseAbility packet");
-		System.out.println("use ability...");
+		AvatarLog.debug("use ability...");
 		if (data != null) {
 			
 			// TODO Verify that the client can actually use that ability
-			System.out.println("data not null.");
-			System.out.println("exec");
+			AvatarLog.debug("data not null.");
+			AvatarLog.debug("exec");
 			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
 			packet.getAbility().execute(new AbilityContext(data,
 					new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));

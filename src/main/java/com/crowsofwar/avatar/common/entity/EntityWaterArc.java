@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -31,7 +32,7 @@ public class EntityWaterArc extends EntityArc {
 	public EntityWaterArc(World world) {
 		super(world);
 		this.lastPlayedSplash = -1;
-		System.out.println("Made arc");
+		AvatarLog.debug("Made arc");
 	}
 	
 	@Override

@@ -27,7 +27,7 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 		this.statusControl = control;
 		this.lookPos = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
-		System.out.println("SC: " + control.id());
+		AvatarLog.debug("SC: " + control.id());
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.network.packets;
 import java.util.List;
 import java.util.UUID;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
@@ -27,7 +28,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	public PacketCPlayerData() {}
 	
 	public PacketCPlayerData(AvatarPlayerData data) {
-		System.out.println("Made a packet for " + data.getPlayerID());
+		AvatarLog.debug("Made a packet for " + data.getPlayerID());
 		player = data.getPlayerID();
 		allControllers = new int[data.getBendingControllers().size()];
 		for (int i = 0; i < allControllers.length; i++) {

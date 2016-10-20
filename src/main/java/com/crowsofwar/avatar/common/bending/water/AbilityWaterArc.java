@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
@@ -53,7 +54,7 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
 				
 				EntityWaterArc water = new EntityWaterArc(world);
-				System.out.println("Made new water arc");
+				AvatarLog.debug("Made new water arc");
 				water.setOwner(player);
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setGravityEnabled(false);

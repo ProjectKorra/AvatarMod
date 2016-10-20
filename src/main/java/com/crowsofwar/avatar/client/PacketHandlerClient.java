@@ -69,7 +69,7 @@ public class PacketHandlerClient implements IPacketHandler {
 			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayer());
 			return null;
 		}
-		System.out.println("Packet for: " + player);
+		AvatarLog.debug("Packet for: " + player);
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while processing player data packet");
 		if (data != null) {
@@ -90,14 +90,14 @@ public class PacketHandlerClient implements IPacketHandler {
 	
 	private IMessage handlePacketStatusControl(PacketCStatusControl packet, MessageContext ctx) {
 		// TODO add status image to crosshair...
-		System.out.println("Adding status control " + packet.getStatusControl());
+		AvatarLog.debug("Adding status control " + packet.getStatusControl());
 		AvatarMod.proxy.addStatusControl(packet.getStatusControl());
 		return null;
 	}
 	
 	private IMessage handlePacketStatusControl(PacketCRemoveStatusControl packet, MessageContext ctx) {
 		AvatarMod.proxy.removeStatusControl(packet.getStatusControl());
-		System.out.println("Removing status control");
+		AvatarLog.debug("Removing status control");
 		return null;
 	}
 	

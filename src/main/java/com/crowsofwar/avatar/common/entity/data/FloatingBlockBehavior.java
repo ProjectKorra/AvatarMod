@@ -5,6 +5,7 @@ import static com.crowsofwar.avatar.common.config.AvatarConfig.blockPush;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -41,7 +42,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		ID_PLACE = registerBehavior(Place.class);
 		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
 		ID_THROWN = registerBehavior(Thrown.class);
-		System.out.println(
+		AvatarLog.debug(
 				"+++++++++++ REGISTERED WITH ID: " + DataSerializers.getSerializerId(DATA_SERIALIZER));
 	}
 	

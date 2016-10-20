@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
@@ -28,7 +29,7 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();
 		
-		System.out.println("Execute...");
+		AvatarLog.debug("Execute...");
 		
 		Vector look = Vector.fromEntityLook(player);
 		look.setY(0);
@@ -38,12 +39,12 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 			
 			VectorI hitPos = result.getPos();
 			IBlockState hitBlockState = world.getBlockState(hitPos.toBlockPos());
-			System.out.println("Wave hit at " + hitPos);
+			AvatarLog.debug("Wave hit at " + hitPos);
 			
 			EntityWave wave = new EntityWave(world);
 			wave.setOwner(player);
 			wave.velocity().set(look.times(10));
-			System.out.println("set velocity to " + look);
+			AvatarLog.debug("set velocity to " + look);
 			wave.setPosition(hitPos.x() + 0.5, hitPos.y(), hitPos.z() + 0.5);
 			
 			wave.rotationYaw = (float) look.toSpherical().toDegrees().y();

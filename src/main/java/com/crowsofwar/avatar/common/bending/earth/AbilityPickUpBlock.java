@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.earth;
 import java.util.Random;
 import java.util.function.Predicate;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -73,7 +74,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					floating.velocity().add(force);
 					floating.setBehavior(new FloatingBlockBehavior.PickUp(floating));
 					floating.setOwner(player);
-					System.out.println("Set owner to:: " + player);
+					AvatarLog.debug("Set owner to:: " + player);
 					
 					world.spawnEntityInWorld(floating);
 					
