@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.AvatarConfig.waveDamage;
-import static com.crowsofwar.avatar.common.config.AvatarConfig.wavePush;
+import static com.crowsofwar.avatar.common.config.AvatarConfig2.waveDamage;
+import static com.crowsofwar.avatar.common.config.AvatarConfig2.wavePush;
 
 import java.util.List;
 

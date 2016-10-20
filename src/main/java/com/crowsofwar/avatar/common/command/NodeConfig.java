@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.yaml.snakeyaml.Yaml;
 
-import com.crowsofwar.avatar.common.config.AvatarConfig;
+import com.crowsofwar.avatar.common.config.AvatarConfig2;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
 import com.crowsofwar.gorecore.tree.CommandCall;
@@ -35,10 +35,10 @@ public class NodeConfig extends NodeFunctional {
 		String key = list.get(argKey);
 		String val = list.get(argVal);
 		if (key.equals("") || val.equals("")) {
-			AvatarConfig.load();
+			AvatarConfig2.load();
 		} else {
-			AvatarConfig.set(key, new Yaml().load(val));
-			AvatarConfig.save();
+			AvatarConfig2.set(key, new Yaml().load(val));
+			AvatarConfig2.save();
 		}
 		
 		return null;

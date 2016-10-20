@@ -16,7 +16,7 @@ public class DoubleProperty implements ConfigurableProperty<Double> {
 	 */
 	public DoubleProperty(String key) {
 		this.key = key;
-		AvatarConfig.allProperties.put(key, this);
+		AvatarConfig2.allProperties.put(key, this);
 	}
 	
 	@Override

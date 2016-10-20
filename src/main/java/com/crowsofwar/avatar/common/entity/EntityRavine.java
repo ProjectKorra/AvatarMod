@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.AvatarConfig.ravineDamage;
-import static com.crowsofwar.avatar.common.config.AvatarConfig.ravinePush;
+import static com.crowsofwar.avatar.common.config.AvatarConfig2.ravineDamage;
+import static com.crowsofwar.avatar.common.config.AvatarConfig2.ravinePush;
 
 import java.util.List;
 

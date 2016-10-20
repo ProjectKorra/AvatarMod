@@ -12,7 +12,7 @@ public class StrictProperty<T> implements ConfigurableProperty<T> {
 	
 	public StrictProperty(String key) {
 		this.key = key;
-		AvatarConfig.allProperties.put(key, (ConfigurableProperty<Object>) this);
+		AvatarConfig2.allProperties.put(key, (ConfigurableProperty<Object>) this);
 	}
 	
 	public String getKey() {

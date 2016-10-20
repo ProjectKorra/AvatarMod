@@ -19,8 +19,8 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
 /**
- * Represents a configuration, where String keys are mapped to {@link UnknownTypeProperty unknown
- * type values}.
+ * Represents a configuration, where String keys are mapped to
+ * {@link UnknownTypeProperty unknown type values}.
  * <p>
  * An instance of Configuration is obtained with {@link #from(String)}.
  * 
@@ -52,9 +52,10 @@ public class Configuration {
 	}
 	
 	/**
-	 * Load a property from this map. If the property is not defined in this configuration, defers
-	 * to other configurations to see if they have a mapping. If this configuration and the defaults
-	 * don't have a mapping, throws an IllegalArgumentException.
+	 * Load a property from this map. If the property is not defined in this
+	 * configuration, defers to other configurations to see if they have a
+	 * mapping. If this configuration and the defaults don't have a mapping,
+	 * throws an IllegalArgumentException.
 	 * 
 	 * @param key
 	 *            String key to load
@@ -129,11 +130,11 @@ public class Configuration {
 	}
 	
 	/**
-	 * If any mappings are not found when using {@link #load(String)}, the configuration will defer
-	 * to the configuration found at this path.
+	 * If any mappings are not found when using {@link #load(String)}, the
+	 * configuration will defer to the configuration found at this path.
 	 * <p>
-	 * Path is in the JAR file, relative to src/main/resources. If file does not exist, throws an
-	 * exception.
+	 * Path is in the JAR file, relative to src/main/resources. If file does not
+	 * exist, throws an exception.
 	 * 
 	 * @param path
 	 *            Path to default configuration.
@@ -178,7 +179,6 @@ public class Configuration {
 		try {
 			
 			String contents = "";
-			
 			File file = new File("config/" + path);
 			file.createNewFile();
 			
