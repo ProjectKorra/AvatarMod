@@ -59,9 +59,10 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				
 				return true;
 			}
+			return false;
 		}
 		
-		return false;
+		return true;
 		
 	}
 	

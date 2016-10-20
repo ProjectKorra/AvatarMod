@@ -77,7 +77,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	public EntityFloatingBlock(World world) {
 		super(world);
-		float size = 0.95f;
+		// TODO Re-shrink floating block size to .95, to allow squeezing through
+		// small spaces
+		float size = 1;
 		setSize(size, size);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
@@ -148,6 +150,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
 		ownerAttrib.save(nbt);
+	}
+	
+	@Override
+	public boolean canRenderOnFire() {
+		return false;
 	}
 	
 	public Block getBlock() {

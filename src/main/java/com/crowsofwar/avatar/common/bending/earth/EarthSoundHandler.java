@@ -8,7 +8,10 @@ import com.crowsofwar.avatar.common.util.event.Subject;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 /**
@@ -40,9 +43,10 @@ public class EarthSoundHandler {
 	
 	private static void onRavineDestroyBlock(RavineEvent.DestroyBlock e) {
 		EntityRavine ravine = e.getRavine();
-		SoundType sound = e.getBlockState().getBlock().getSoundType();
-		ravine.worldObj.playSound(null, e.getDestroyedAt(), sound.getBreakSound(), SoundCategory.BLOCKS, 1,
-				1);
+		Block destroyed = e.getBlockState().getBlock();
+		SoundEvent sound = destroyed == Blocks.FIRE ? SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE
+				: destroyed.getSoundType().getBreakSound();
+		ravine.worldObj.playSound(null, e.getDestroyedAt(), sound, SoundCategory.BLOCKS, 1, 1);
 	}
 	
 	public static void register() {
