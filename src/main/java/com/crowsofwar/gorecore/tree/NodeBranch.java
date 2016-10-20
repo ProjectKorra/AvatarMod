@@ -15,7 +15,8 @@ public class NodeBranch implements ICommandNode {
 	
 	public NodeBranch(ChatMessage infoMessage, String name, ICommandNode... nodes) {
 		this.nodes = nodes;
-		// this.argName = new ArgumentDirect<String>("node-name", ITypeConverter.CONVERTER_STRING);
+		// this.argName = new ArgumentDirect<String>("node-name",
+		// ITypeConverter.CONVERTER_STRING);
 		String[] possibilities = new String[nodes.length];
 		for (int i = 0; i < possibilities.length; i++)
 			possibilities[i] = nodes[i].getNodeName();
@@ -31,7 +32,6 @@ public class NodeBranch implements ICommandNode {
 		ArgumentList args = call.popArguments(argName);
 		String name = args.get(argName);
 		for (int i = 0; i < nodes.length; i++) {
-			System.out.println(nodes[i].getNodeName() + "/" + name);
 			if (nodes[i].getNodeName().equals(name)) return nodes[i];
 		}
 		throw new TreeCommandException(Reason.NO_BRANCH_NODE, name, getHelp());

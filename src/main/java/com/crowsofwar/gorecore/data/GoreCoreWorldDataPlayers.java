@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 
@@ -12,7 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.FMLLog;
 
 /**
- * A world data class which comes equipped with the ability to save and load player data.
+ * A world data class which comes equipped with the ability to save and load
+ * player data.
  * 
  * @param T
  *            The type of your player data
@@ -54,7 +56,6 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 				data.setPlayerEntity(GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
 			return data;
 		} else {
-			System.out.println("New player data for " + player);
 			T data = createNewPlayerData(player);
 			players.put(player, data);
 			if (getWorld() != null)
@@ -65,8 +66,8 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 	}
 	
 	/**
-	 * Gets the player data for the player. If the player data has not been created, then this will
-	 * return null.
+	 * Gets the player data for the player. If the player data has not been
+	 * created, then this will return null.
 	 * 
 	 * @param player
 	 *            The UUID of the player to get data for
@@ -87,7 +88,7 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 			
 			EntityPlayer playerEntity = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player);
 			if (playerEntity == null)
-				System.out.println("WARNING: playerEntity was null while creating new player data");
+				GoreCore.LOGGER.warn("WARNING: playerEntity was null while creating new player data");
 			GoreCorePlayerData data = playerDataClass()
 					.getConstructor(GoreCoreDataSaver.class, UUID.class, EntityPlayer.class)
 					.newInstance(this, player, playerEntity);

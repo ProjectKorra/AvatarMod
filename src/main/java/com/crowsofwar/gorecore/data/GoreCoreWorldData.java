@@ -15,20 +15,21 @@ public abstract class GoreCoreWorldData extends WorldSavedData implements GoreCo
 	/**
 	 * The world that this data belongs to.
 	 * <p>
-	 * If the world data was constructed because it was first loaded by vanilla, will still be null
-	 * until {@link #getDataForWorld(Class, String, World, boolean)} is called.
+	 * If the world data was constructed because it was first loaded by vanilla,
+	 * will still be null until
+	 * {@link #getDataForWorld(Class, String, World, boolean)} is called.
 	 */
 	private World world;
 	
 	/**
-	 * Data stored via the {@link GoreCoreDataSaver} methods. FIXME never saves...?
+	 * Data stored via the {@link GoreCoreDataSaver} methods. FIXME never
+	 * saves...?
 	 */
 	private GoreCoreDataSaverNBT storedData;
 	
 	public GoreCoreWorldData(String key) {
 		super(key);
 		this.storedData = new GoreCoreDataSaverNBT();
-		System.out.println("constructed from key");
 	}
 	
 	public World getWorld() {
@@ -63,7 +64,8 @@ public abstract class GoreCoreWorldData extends WorldSavedData implements GoreCo
 	 * @param world
 	 *            The world to get world data for
 	 * @param separatePerDimension
-	 *            Whether world data is saved for each dimension or for all dimensions
+	 *            Whether world data is saved for each dimension or for all
+	 *            dimensions
 	 * @return World data, retrieved using the specified options
 	 */
 	protected static <T extends GoreCoreWorldData> T getDataForWorld(Class<T> worldDataClass, String key,
@@ -73,8 +75,8 @@ public abstract class GoreCoreWorldData extends WorldSavedData implements GoreCo
 			T data = worldDataClass.cast(ms.getOrLoadData(worldDataClass, key));
 			
 			if (data == null) {
-				// TODO [1.10] Not sure if this is actually called anymore- need to check.
-				System.out.println("Data was null");
+				// TODO [1.10] Not sure if this is actually called anymore- need
+				// to check.
 				data = worldDataClass.getConstructor(String.class).newInstance(key);
 				data.setDirty(true);
 				ms.setData(key, data);

@@ -93,9 +93,6 @@ public class ChatSender {
 			String key = (String) getKey(translate);
 			ChatMessage cm = translateKeyToChatMessage.get(key);
 			
-			System.out.println("recieved " + key);
-			System.out.println("chat message is " + cm);
-			
 			if (cm != null) {
 				
 				result = processText(translate.getUnformattedText(), cm, translate.getFormatArgs());
@@ -110,12 +107,9 @@ public class ChatSender {
 	
 	private String processText(String text, ChatMessage cm, Object... formatArgs) {
 		MessageConfiguration cfg = cm.getConfig();
-		System.out.println("processing " + text);
 		
 		String[] translateArgs = cm.getTranslationArgs();
-		// System.out.println("Translate args length: " + translateArgs.length);
 		for (int i = 0; i < translateArgs.length; i++) {
-			System.out.println("Translate arg " + translateArgs[i]);
 			text = text.replace("${" + translateArgs[i] + "}", formatArgs[i].toString());
 		}
 		
