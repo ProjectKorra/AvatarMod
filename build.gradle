@@ -64,6 +64,8 @@ dependencies {
     
     compile files("../libs/joml/joml-1.8.1.jar")
 
+    compile files("../libs/yaml/snakeyaml-1.16.jar");
+
 }
 
 processResources
