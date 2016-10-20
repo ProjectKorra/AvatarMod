@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -41,7 +40,6 @@ public class EarthbendingState implements IBendingState {
 	
 	public void setPickupBlock(EntityFloatingBlock pickupBlock) {
 		this.pickupBlock = pickupBlock;
-		AvatarLog.debug("Set pickup block to " + pickupBlock);
 	}
 	
 	public boolean isHoldingBlock() {

@@ -68,7 +68,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		
 		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
-			AvatarLog.debug("--requesting data for " + data.getPlayerEntity() + "--");
+			AvatarLog.debug("Client: Requesting data for " + data.getPlayerEntity() + "");
 		});
 		
 		statusControls = new HashSet<>();

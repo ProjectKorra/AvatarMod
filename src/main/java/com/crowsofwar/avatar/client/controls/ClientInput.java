@@ -175,8 +175,6 @@ public class ClientInput implements IControlsHandler {
 				while (sci.hasNext()) {
 					StatusControl sc = sci.next();
 					if (pressed.contains(sc.getSubscribedControl())) {
-						AvatarLog.debug("Hit control " + sc);
-						
 						Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
 						
 						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));

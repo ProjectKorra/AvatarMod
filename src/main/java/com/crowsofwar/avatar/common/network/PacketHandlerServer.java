@@ -39,7 +39,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
-		AvatarLog.debug("Recieved packet");
+		AvatarLog.debug("Server: Received a packet");
 		
 		if (packet instanceof PacketSUseAbility) return handleKeypress((PacketSUseAbility) packet, ctx);
 		
@@ -64,12 +64,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while processing UseAbility packet");
-		AvatarLog.debug("use ability...");
 		if (data != null) {
 			
 			// TODO Verify that the client can actually use that ability
-			AvatarLog.debug("data not null.");
-			AvatarLog.debug("exec");
 			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
 			packet.getAbility().execute(new AbilityContext(data,
 					new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));

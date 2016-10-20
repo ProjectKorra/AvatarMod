@@ -61,7 +61,6 @@ public abstract class StatusControl {
 		this.raytrace = new Raytrace.Info();
 		this.position = position;
 		this.id = ++nextId;
-		AvatarLog.debug("Assigned id " + id);
 		allControls.add(this);
 		
 	}

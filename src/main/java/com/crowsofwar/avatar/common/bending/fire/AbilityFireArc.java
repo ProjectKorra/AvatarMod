@@ -37,8 +37,6 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 		World world = ctx.getWorld();
 		FirebendingState fs = ctx.getData().getBendingState(controller);
 		
-		AvatarLog.debug("Fire arc ability");
-		
 		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 				Math.toRadians(player.rotationPitch));
 		Vector lookPos = new Vector(player).plus(look.times(3));

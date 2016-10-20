@@ -112,7 +112,6 @@ public class OwnerAttribute {
 			setOwnerCallback.accept(owner);
 		}
 		
-		AvatarLog.debug("Set owner to " + owner);
 	}
 	
 }
