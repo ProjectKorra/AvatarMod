@@ -8,7 +8,6 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
-import com.crowsofwar.avatar.common.config.AvatarConfig2;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
@@ -66,8 +65,6 @@ public class AvatarMod {
 	public void preInit(FMLPreInitializationEvent e) {
 		
 		AvatarLog.log = e.getModLog();
-		
-		AvatarConfig2.load();
 		
 		BendingManager.init();
 		EarthSoundHandler.register();
