@@ -20,9 +20,12 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "1.0"
-group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+version = "AV_A1.0"
+group= "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "avatarmod"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
     version = "1.10.2-12.18.1.2011"
@@ -58,6 +61,8 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    
+    compile files("../libs/joml/joml-1.8.1.jar")
 
 }
 
@@ -79,4 +84,18 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+task deobfJar(type: Jar, dependsOn: 'jar') {
+    from sourceSets.main.output
+    classifier "deobf"
+}
+
+task sourceZip(type: Zip, dependsOn: 'classes') {
+  classifier "src"
+  from projectDir
+  include "src/**/*"
+  
+  destinationDir(new File(buildDir, "/libs"))
+
 }
