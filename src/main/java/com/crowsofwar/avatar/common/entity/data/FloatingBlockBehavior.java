@@ -1,8 +1,5 @@
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.config.AvatarConfig2.blockDamage;
-import static com.crowsofwar.avatar.common.config.AvatarConfig2.blockPush;
-
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
@@ -145,10 +142,10 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 						double speed = entity.velocity().magnitude();
 						collided.attackEntityFrom(
 								AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-								(float) (speed * blockDamage.currentValue()));
+								(float) (speed * 0.25));
 						
 						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion.mul(blockPush.currentValue());
+						motion.mul(1);
 						motion.setY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 						if (!world.isRemote) entity.setDead();
