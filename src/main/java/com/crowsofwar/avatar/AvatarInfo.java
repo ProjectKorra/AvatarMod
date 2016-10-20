@@ -17,7 +17,7 @@ package com.crowsofwar.avatar;
 public class AvatarInfo {
 	
 	public static final String MOD_ID = "avatarmod";
-	public static final String MOD_NAME = "Avatar Mod: Bringing Bending to Minecraft Players";
+	public static final String MOD_NAME = "Avatar Mod: Out of the Iceberg";
 	/**
 	 * True if development update.
 	 */
@@ -31,13 +31,13 @@ public class AvatarInfo {
 	 */
 	public static final int VERSION_PATCH = 0;
 	/**
-	 * "a" for alpha.
+	 * "A" for alpha.
 	 * <p>
-	 * "b" for beta.
+	 * "B" for beta.
 	 * <p>
 	 * "" for full release.
 	 */
-	public static final String DEV_STAGE = "a";
+	public static final String DEV_STAGE = "A";
 	public static final String MC_VERSION = "1.10.2";
 	public static final String VERSION = "AV_" + DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
 			+ (IS_DEV_BUILD ? "_dev" : "");

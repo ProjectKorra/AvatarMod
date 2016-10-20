@@ -1,16 +1,15 @@
-[
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "avatarmod",
+    "name": "Avatar Mod: Out of the Iceberg",
+    "description": "A large, work-in-progress expansion to Minecraft which will allow bending in Minecraft, inspired by the TV show Avatar: The Last Airbender.",
+    "version": "AV_A1.0",
+    "mcversion": "1.10.2",
+    "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598",
+    "updateUrl": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598",
+    "authorList": [ "CrowsOfWar" ],
+    "credits": "Code & art from CrowsOfWar, some ideas from Community",
+    "logoFile": "/"
+  }]
 }
-]
