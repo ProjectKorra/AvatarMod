@@ -28,6 +28,8 @@ public class ControlPoint {
 	private final Vector internalVelocity;
 	private final Vector internalPosition;
 	
+	private final Vector last;
+	
 	private final World world;
 	private AxisAlignedBB hitbox;
 	
