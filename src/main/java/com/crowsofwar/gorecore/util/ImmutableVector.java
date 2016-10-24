@@ -13,10 +13,14 @@ import net.minecraft.util.math.Vec3i;
  */
 public class ImmutableVector extends Vector {
 	
+	private final double x, y, z;
+	
 	/**
 	 * Create the zero vector.
 	 */
-	public ImmutableVector() {}
+	public ImmutableVector() {
+		this(0, 0, 0);
+	}
 	
 	/**
 	 * Creates using the coordinates (x, y, z).
@@ -29,7 +33,9 @@ public class ImmutableVector extends Vector {
 	 *            Z-position of the new vector
 	 */
 	public ImmutableVector(double x, double y, double z) {
-		super(x, y, z);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
 	/**
@@ -39,7 +45,9 @@ public class ImmutableVector extends Vector {
 	 *            Vector to copy
 	 */
 	public ImmutableVector(Vector vec) {
-		super(vec);
+		this.x = vec.x();
+		this.y = vec.y();
+		this.z = vec.z();
 	}
 	
 	/**
@@ -49,7 +57,9 @@ public class ImmutableVector extends Vector {
 	 *            Vector to copy
 	 */
 	public ImmutableVector(Vec3d vec) {
-		super(vec.xCoord, vec.yCoord, vec.zCoord);
+		this.x = vec.xCoord;
+		this.y = vec.yCoord;
+		this.z = vec.zCoord;
 	}
 	
 	/**
@@ -59,7 +69,9 @@ public class ImmutableVector extends Vector {
 	 *            The entity to use
 	 */
 	public ImmutableVector(Entity entity) {
-		super(entity.posX, entity.posY, entity.posZ);
+		this.x = entity.posX;
+		this.y = entity.posY;
+		this.z = entity.posZ;
 	}
 	
 	/**
@@ -69,15 +81,34 @@ public class ImmutableVector extends Vector {
 	 *            The vanilla blockPos
 	 */
 	public ImmutableVector(BlockPos blockPos) {
-		super(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+		this.x = blockPos.getX();
+		this.y = blockPos.getY();
+		this.z = blockPos.getZ();
 	}
 	
 	public ImmutableVector(Vec3i vec) {
-		super(vec.getX(), vec.getY(), vec.getZ());
+		this.x = vec.getX();
+		this.y = vec.getY();
+		this.z = vec.getZ();
 	}
 	
 	public ImmutableVector(EnumFacing facing) {
-		super(facing.getDirectionVec());
+		this(facing.getDirectionVec());
+	}
+	
+	@Override
+	public double x() {
+		return x;
+	}
+	
+	@Override
+	public double y() {
+		return y;
+	}
+	
+	@Override
+	public double z() {
+		return z;
 	}
 	
 	@Override
