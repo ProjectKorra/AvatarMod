@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
@@ -37,9 +36,8 @@ public class AbilityFireArc extends BendingAbility<FirebendingState> {
 		World world = ctx.getWorld();
 		FirebendingState fs = ctx.getData().getBendingState(controller);
 		
-		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
-				Math.toRadians(player.rotationPitch));
-		Vector lookPos = new Vector(player).plus(look.times(3));
+		Vector look = Vector.fromEntityLook(player);
+		Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
 		EntityFireArc fire = new EntityFireArc(world);
 		fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
 		fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, player));

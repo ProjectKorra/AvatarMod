@@ -43,7 +43,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 	}
 	
 	protected void applyGravity() {
-		entity.velocity().add(0, -9.81 / 4, 0);
+		entity.velocity().add(0, -9.81 / 60, 0);
 	}
 	
 	public static class PlayerControlled extends FireArcBehavior {
