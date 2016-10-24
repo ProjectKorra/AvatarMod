@@ -83,9 +83,13 @@ public abstract class RenderArc extends Render {
 		double sizePoint = leader.size() / 2;
 		
 		double distance = to.sqrMagnitude();
-		double sizeMultiplier = distance < 1 ? -.7 * distance + 1.7 : 1 / Math.sqrt(distance);
-		if (this instanceof RenderAirGust) sizeMultiplier = 1; // FIX BAD CODE
-																// AAARgh
+		// @formatter:off
+//		double sizeMultiplier = distance < 1 ? -.7 * distance + 1.7 : 1 / Math.sqrt(distance);
+//		if (this instanceof RenderAirGust) sizeMultiplier = 1; // FIX BAD CODE
+//																// AAARgh
+		double sizeMultiplier = 1;
+		// @formatter:on
+		
 		sizeLeader *= sizeMultiplier;
 		sizePoint *= sizeMultiplier;
 		
