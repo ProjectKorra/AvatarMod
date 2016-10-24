@@ -136,7 +136,7 @@ public class EntityWaterArc extends EntityArc {
 	
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
-		return 36;
+		return 9;
 	}
 	
 	public static class WaterControlPoint extends ControlPoint {

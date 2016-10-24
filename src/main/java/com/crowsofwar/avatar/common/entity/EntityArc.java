@@ -114,9 +114,13 @@ public abstract class EntityArc extends AvatarEntity {
 				
 				Vector toFollowerDir = p.position().minus(leader.position()).normalize();
 				
-				Vector revisedOffset = leader.position()
-						.add(toFollowerDir.times(Math.sqrt(getControlPointTeleportDistanceSq())));
+				double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
+				if (idealDist > 1) idealDist -= 1; // Make sure there is some
+													// room
+				
+				Vector revisedOffset = leader.position().add(toFollowerDir.times(idealDist));
 				p.position().set(revisedOffset);
+				p.velocity().set(Vector.ZERO);
 				
 				// Vector diff = leader.position().minus(p.position());
 				// double speed = leader.velocity().magnitude();

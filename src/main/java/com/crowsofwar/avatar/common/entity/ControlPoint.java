@@ -12,8 +12,9 @@ import net.minecraft.world.World;
 /**
  * A control point in an arc.
  * <p>
- * An arc is made up of multiple control points. This allows the arc to twist and turn. Segments are
- * drawn in-between control points, which creates a blocky arc.
+ * An arc is made up of multiple control points. This allows the arc to twist
+ * and turn. Segments are drawn in-between control points, which creates a
+ * blocky arc.
  * 
  * @author CrowsOfWar
  */
@@ -46,16 +47,16 @@ public class ControlPoint {
 	}
 	
 	/**
-	 * Get the velocity of this entity in m/s. Changes to this vector will be reflected in the
-	 * entity's actual velocity.
+	 * Get the velocity of this entity in m/s. Changes to this vector will be
+	 * reflected in the entity's actual velocity.
 	 */
 	public Vector velocity() {
 		return internalVelocity;
 	}
 	
 	/**
-	 * Get the position of this entity. Changes to this vector will be reflected in the entity's
-	 * actual position.
+	 * Get the position of this entity. Changes to this vector will be reflected
+	 * in the entity's actual position.
 	 */
 	public Vector position() {
 		return internalPosition;
@@ -120,18 +121,22 @@ public class ControlPoint {
 	}
 	
 	/**
-	 * Move this control point by the designated offset, not checking for collisions.
+	 * Move this control point by the designated offset, not checking for
+	 * collisions.
 	 * <p>
-	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}.
+	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}
+	 * .
 	 */
 	public void move(double x, double y, double z) {
 		position().add(x, y, z);
 	}
 	
 	/**
-	 * Move this control point by the designated offset, not checking for collisions.
+	 * Move this control point by the designated offset, not checking for
+	 * collisions.
 	 * <p>
-	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}.
+	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}
+	 * .
 	 */
 	public void move(Vector offset) {
 		move(offset.x(), offset.y(), offset.z());
@@ -171,8 +176,8 @@ public class ControlPoint {
 	}
 	
 	/**
-	 * "Attach" the arc to this control point, meaning that the control point now has a reference to
-	 * the given arc.
+	 * "Attach" the arc to this control point, meaning that the control point
+	 * now has a reference to the given arc.
 	 */
 	public void setArc(EntityArc arc) {
 		this.arc = arc;
