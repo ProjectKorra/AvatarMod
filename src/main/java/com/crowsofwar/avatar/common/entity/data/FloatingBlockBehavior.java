@@ -13,6 +13,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
@@ -63,6 +64,12 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public void toBytes(PacketBuffer buf) {}
 		
+		@Override
+		public void load(NBTTagCompound nbt) {}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {}
+		
 	}
 	
 	public static class Place extends FloatingBlockBehavior {
@@ -104,6 +111,19 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public void toBytes(PacketBuffer buf) {
 			buf.writeBlockPos(placeAt);
+		}
+		
+		@Override
+		public void load(NBTTagCompound nbt) {
+			placeAt = new BlockPos(nbt.getInteger("PlaceX"), nbt.getInteger("PlaceY"),
+					nbt.getInteger("PlaceZ"));
+		}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {
+			nbt.setInteger("PlaceX", placeAt.getX());
+			nbt.setInteger("PlaceY", placeAt.getY());
+			nbt.setInteger("PlaceZ", placeAt.getZ());
 		}
 		
 	}
@@ -170,6 +190,12 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public void toBytes(PacketBuffer buf) {}
 		
+		@Override
+		public void load(NBTTagCompound nbt) {}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {}
+		
 	}
 	
 	public static class PickUp extends FloatingBlockBehavior {
@@ -202,6 +228,12 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public void toBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void load(NBTTagCompound nbt) {}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {}
 		
 	}
 	
@@ -244,6 +276,12 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public void toBytes(PacketBuffer buf) {}
 		
+		@Override
+		public void load(NBTTagCompound nbt) {}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {}
+		
 	}
 	
 	public static class Fall extends FloatingBlockBehavior {
@@ -259,6 +297,12 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public void toBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void load(NBTTagCompound nbt) {}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {}
 		
 	}
 	

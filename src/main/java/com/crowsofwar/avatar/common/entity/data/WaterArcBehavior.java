@@ -12,6 +12,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
@@ -47,14 +48,10 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	
 	public static class PlayerControlled extends WaterArcBehavior {
 		
-		private String playerName;
-		private EntityPlayer internalPlayer;
-		
 		public PlayerControlled() {}
 		
 		public PlayerControlled(EntityWaterArc arc, EntityPlayer player) {
 			super(arc);
-			this.internalPlayer = player;
 		}
 		
 		private EntityPlayer getPlayer() {
@@ -102,14 +99,16 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		}
 		
 		@Override
-		public void fromBytes(PacketBuffer buf) {
-			playerName = buf.readStringFromBuffer(16);
-		}
+		public void fromBytes(PacketBuffer buf) {}
 		
 		@Override
-		public void toBytes(PacketBuffer buf) {
-			buf.writeString(internalPlayer.getName());
-		}
+		public void toBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void load(NBTTagCompound nbt) {}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {}
 		
 	}
 	
@@ -145,6 +144,12 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		@Override
 		public void toBytes(PacketBuffer buf) {}
 		
+		@Override
+		public void load(NBTTagCompound nbt) {}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {}
+		
 	}
 	
 	public static class Idle extends WaterArcBehavior {
@@ -165,6 +170,12 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		
 		@Override
 		public void toBytes(PacketBuffer buf) {}
+		
+		@Override
+		public void load(NBTTagCompound nbt) {}
+		
+		@Override
+		public void save(NBTTagCompound nbt) {}
 		
 	}
 	

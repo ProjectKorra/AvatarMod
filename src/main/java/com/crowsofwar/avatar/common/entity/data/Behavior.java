@@ -7,6 +7,7 @@ import java.util.Map;
 import com.crowsofwar.avatar.AvatarLog;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
@@ -98,6 +99,10 @@ public abstract class Behavior<E extends Entity> {
 	public abstract void fromBytes(PacketBuffer buf);
 	
 	public abstract void toBytes(PacketBuffer buf);
+	
+	public abstract void load(NBTTagCompound nbt);
+	
+	public abstract void save(NBTTagCompound nbt);
 	
 	public static class BehaviorSerializer<B extends Behavior<? extends Entity>>
 			implements DataSerializer<B> {
