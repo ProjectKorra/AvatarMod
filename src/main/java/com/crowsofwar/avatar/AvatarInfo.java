@@ -29,7 +29,7 @@ public class AvatarInfo {
 	/**
 	 * Incremented for minor bug fixes.
 	 */
-	public static final int VERSION_PATCH = 1;
+	public static final int VERSION_PATCH = 2;
 	/**
 	 * "A" for alpha.
 	 * <p>
