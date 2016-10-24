@@ -255,7 +255,7 @@ public abstract class EntityArc extends AvatarEntity {
 	 * leader, then it is teleported to the leader.
 	 */
 	protected double getControlPointTeleportDistanceSq() {
-		return 36;
+		return 16;
 	}
 	
 }
