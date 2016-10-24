@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -133,6 +132,11 @@ public class EntityWaterArc extends EntityArc {
 	
 	public void setBehavior(WaterArcBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	@Override
+	protected double getControlPointTeleportDistanceSq() {
+		return 36;
 	}
 	
 	public static class WaterControlPoint extends ControlPoint {

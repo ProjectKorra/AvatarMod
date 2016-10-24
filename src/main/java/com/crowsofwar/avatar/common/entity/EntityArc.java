@@ -112,7 +112,16 @@ public abstract class EntityArc extends AvatarEntity {
 			
 			if (sqrDist > getControlPointTeleportDistanceSq()) {
 				
-				p.position().set(leader.getXPos(), leader.getYPos(), leader.getZPos());
+				Vector toFollowerDir = p.position().minus(leader.position()).normalize();
+				
+				Vector revisedOffset = leader.position()
+						.add(toFollowerDir.times(Math.sqrt(getControlPointTeleportDistanceSq())));
+				p.position().set(revisedOffset);
+				
+				// Vector diff = leader.position().minus(p.position());
+				// double speed = leader.velocity().magnitude();
+				//
+				// p.velocity().set(diff.normalize().times(speed));
 				
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 				
