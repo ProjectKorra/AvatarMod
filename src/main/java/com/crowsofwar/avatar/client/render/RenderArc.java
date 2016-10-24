@@ -49,13 +49,14 @@ public abstract class RenderArc extends Render {
 		EntityArc arc = (EntityArc) entity;
 		
 		for (int i = 1; i < arc.getControlPoints().length; i++) {
-			renderSegment(arc, arc.getLeader(i), arc.getControlPoint(i), renderPosX, renderPosY, renderPosZ);
+			renderSegment(arc, arc.getLeader(i), arc.getControlPoint(i), renderPosX, renderPosY, renderPosZ,
+					partialTicks);
 		}
 		
 	}
 	
 	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point, double renderPosX,
-			double renderPosY, double renderPosZ) {
+			double renderPosY, double renderPosZ, float partialTicks) {
 		double x = leader.getXPos() - TileEntityRendererDispatcher.staticPlayerX;
 		double y = leader.getYPos() - TileEntityRendererDispatcher.staticPlayerY;
 		double z = leader.getZPos() - TileEntityRendererDispatcher.staticPlayerZ;

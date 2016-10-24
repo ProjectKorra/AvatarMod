@@ -14,11 +14,9 @@ import net.minecraft.util.math.Vec3i;
 public class ImmutableVector extends Vector {
 	
 	/**
-	 * Creates a new vector at the origin point.
+	 * Create the zero vector.
 	 */
-	public ImmutableVector() {
-		
-	}
+	public ImmutableVector() {}
 	
 	/**
 	 * Creates using the coordinates (x, y, z).
@@ -35,7 +33,7 @@ public class ImmutableVector extends Vector {
 	}
 	
 	/**
-	 * Creates a copy of the given vector.
+	 * Creates an immutable copy of the given vector.
 	 * 
 	 * @param vec
 	 *            Vector to copy
@@ -45,7 +43,7 @@ public class ImmutableVector extends Vector {
 	}
 	
 	/**
-	 * Creates a copy of the given Minecraft vector.
+	 * Creates an immutable copy of the given Minecraft vector.
 	 * 
 	 * @param vec
 	 *            Vector to copy
