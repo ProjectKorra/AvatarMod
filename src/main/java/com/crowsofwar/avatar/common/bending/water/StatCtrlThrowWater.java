@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,7 +40,7 @@ public class StatCtrlThrowWater extends StatusControl {
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
 			water.velocity().add(force);
-			water.setGravityEnabled(true);
+			water.setBehavior(new WaterArcBehavior.Thrown(water));
 			
 			bendingState.releaseWater();
 			data.sendBendingState(bendingState);

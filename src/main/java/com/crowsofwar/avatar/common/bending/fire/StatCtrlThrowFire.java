@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,13 +34,13 @@ public class StatCtrlThrowFire extends StatusControl {
 		
 		if (bendingState.isManipulatingFire()) {
 			
-			EntityFireArc water = bendingState.getFireArc();
+			EntityFireArc fire = bendingState.getFireArc();
 			
 			Vector force = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
-			water.velocity().add(force);
-			water.setGravityEnabled(true);
+			fire.velocity().add(force);
+			fire.setBehavior(new FireArcBehavior.Thrown(fire));
 			
 			bendingState.setNoFireArc();
 			data.sendBendingState(bendingState);
