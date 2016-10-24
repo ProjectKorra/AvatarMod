@@ -146,9 +146,7 @@ public abstract class EntityArc extends AvatarEntity {
 	}
 	
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		setDead();// IEntityMultiPart
-	}
+	protected void writeEntityToNBT(NBTTagCompound nbt) {}
 	
 	@Override
 	public void setPosition(double x, double y, double z) {
