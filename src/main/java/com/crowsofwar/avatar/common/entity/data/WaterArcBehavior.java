@@ -43,7 +43,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	}
 	
 	protected void applyGravity() {
-		entity.velocity().add(0, -9.81 / 4, 0);
+		entity.velocity().add(0, -9.81 / 50, 0);
 	}
 	
 	public static class PlayerControlled extends WaterArcBehavior {
