@@ -57,12 +57,19 @@ public abstract class RenderArc extends Render {
 	
 	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point, double renderPosX,
 			double renderPosY, double renderPosZ, float partialTicks) {
-		double x = leader.getXPos() - TileEntityRendererDispatcher.staticPlayerX;
-		double y = leader.getYPos() - TileEntityRendererDispatcher.staticPlayerY;
-		double z = leader.getZPos() - TileEntityRendererDispatcher.staticPlayerZ;
+		
+		// Interpolated positions
+		//@formatter:off
+		Vector leaderPos = leader.lastPosition() .plus (  (leader.position() .minus (leader.lastPosition()) ) .times(partialTicks)  );
+		Vector pointPos = point.lastPosition() .plus (  (point.position() .minus (point.lastPosition()) ) .times(partialTicks)  );
+		//@formatter:on
+		
+		double x = leaderPos.x() - TileEntityRendererDispatcher.staticPlayerX;
+		double y = leaderPos.y() - TileEntityRendererDispatcher.staticPlayerY;
+		double z = leaderPos.z() - TileEntityRendererDispatcher.staticPlayerZ;
 		
 		Vector from = new Vector();
-		Vector to = point.position().minus(leader.position());
+		Vector to = pointPos.minus(leaderPos);
 		
 		Vector diff = to.minus(from);
 		
