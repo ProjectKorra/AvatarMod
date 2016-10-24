@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.getOrCreateNestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 import java.util.List;
@@ -136,6 +137,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
 		ownerAttrib.load(nbt);
 	}
 	
@@ -149,6 +151,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
+		getBehavior().save(getOrCreateNestedCompound(nbt, "BehaviorData"));
 		ownerAttrib.save(nbt);
 	}
 	
