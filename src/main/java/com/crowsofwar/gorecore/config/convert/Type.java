@@ -3,6 +3,7 @@ package com.crowsofwar.gorecore.config.convert;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Describes a type which can be converted. E.g. an integer.
@@ -17,7 +18,8 @@ public enum Type {
 	ERROR(null),
 	INTEGER(Integer.class),
 	DOUBLE(Double.class),
-	LIST(List.class);
+	LIST(List.class),
+	SET(Set.class);
 	
 	private static final Map<Class<?>, Type> classToType;
 	private final Class<?> cls;

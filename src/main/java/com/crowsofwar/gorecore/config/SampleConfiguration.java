@@ -43,11 +43,12 @@ public class SampleConfiguration {
 		System.out.println(convertItD.convert(4));
 		
 		addConverter(List.class, Set.class, list -> new HashSet(list));
-		Converter<List, Set> convertLtS = getConverter(List.class, Set.class);
 		List<String> myList = new ArrayList<>();
 		myList.add("A");
 		myList.add("B");
 		myList.add("A");
+		
+		Converter<List, Set> convertLtS = findConverter(myList);
 		System.out.println(convertLtS.convert(myList));
 		
 		// ConfigLoader.load(SampleConfiguration.class, "annot-test.cfg");
@@ -56,6 +57,10 @@ public class SampleConfiguration {
 		// System.out.println("People: " + people);
 		// System.out.println("bob: " + bob);
 		// System.out.println("Fluffy: " + fluffy);
+	}
+	
+	private static <T> Converter<T, Set> findConverter(T obj) {
+		return (Converter<T, Set>) getConverter(obj.getClass(), Set.class);
 	}
 	
 }
