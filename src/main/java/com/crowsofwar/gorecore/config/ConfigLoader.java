@@ -156,11 +156,14 @@ public class ConfigLoader {
 				if (fromData == null) {
 					
 					// Nothing present- try to load default value
+					System.out.println(" -> Nothing present; trying default value");
 					
 					if (field.get(obj) != null) {
 						
 						setTo = field.get(obj);
 						values.put(field.getName(), setTo);
+						
+						System.out.println(" -> Found default " + setTo);
 						
 					} else {
 						throw new ConfigurationException.UserMistake(
@@ -172,9 +175,19 @@ public class ConfigLoader {
 					// Value present in configuration.
 					// Use the present value from map: fromData
 					
+					System.out.println(" -> Using from cfg.");
+					
 					Class<?> from = fromData.getClass();
 					Class<?> to = field.getType();
-					if (from.equals(to)) {
+					
+					// 3 possibilities. Done in this order:
+					//
+					// 1. from == to. So it is the right type already
+					// 2. There is a converter to convert from->to.
+					// 3. from is a map. to is not. This means, there is an
+					// object that must be loaded from map. Use a load method.
+					
+					if (from == to) {
 						
 					}
 					
