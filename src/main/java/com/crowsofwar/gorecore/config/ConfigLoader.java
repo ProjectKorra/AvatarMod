@@ -182,6 +182,8 @@ public class ConfigLoader {
 					Class<Object> from = (Class<Object>) fromData.getClass();
 					Class<?> to = field.getType();
 					
+					System.out.println(" -> Convert " + from + "-> " + to);
+					
 					// 3 possibilities. Done in this order:
 					//
 					// 1. from == to. So it is the right type already
@@ -192,14 +194,18 @@ public class ConfigLoader {
 					
 					if (from == to) {
 						
+						System.out.println(" -> Is already in the type we want.");
 						setTo = fromData;
 						
 					} else if (ConverterRegistry.isConverter(from, to)) {
 						
+						System.out.println(" -> Used a converter.");
 						setTo = ConverterRegistry.getConverter(from, to).convert(fromData);
 						
 					} else if (fromData instanceof Map<?, ?>
 							&& !field.getType().isAssignableFrom(Map.class)) {
+						
+						System.out.println(" -> Populating fields with reflection");
 						
 						try {
 							setTo = field.getType().newInstance();
