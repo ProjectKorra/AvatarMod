@@ -194,12 +194,11 @@ public class ConfigLoader {
 					if (loaderAnnotation != null)
 						loaderAnnotation.loaderClass().newInstance().load(null, instance);
 					
-				} catch (InstantiationException e) {
+				} catch (InstantiationException | IllegalAccessException e) {
 					
 					throw new ConfigurationException.ReflectionException(
 							"Couldn't create a loader class of loader "
-									+ loaderAnnotation.loaderClass().getName()
-									+ " as it has no empty constructor",
+									+ loaderAnnotation.loaderClass().getName(),
 							e);
 					
 				} catch (Exception e) {
