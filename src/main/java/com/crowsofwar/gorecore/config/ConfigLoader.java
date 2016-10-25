@@ -113,25 +113,35 @@ public class ConfigLoader {
 	 */
 	private void load(Class<?> cls, @Nullable Object obj, Map<String, ?> data) {
 		
-		try {
+		Field[] fields = cls.getDeclaredFields();
+		for (Field field : fields) {
 			
-			Field[] fields = cls.getDeclaredFields();
-			for (Field field : fields) {
-				
-				loadField();
-				
-			}
+			loadField(field, data, obj);
 			
-		} catch (ReflectiveOperationException e) {
-			throw new ConfigurationException.ReflectionException(
-					"Exception while setting values of configuration object", e);
 		}
 		
 	}
 	
-	private <T> void loadField(Field field, Map<String, ?> data, T obj, Class<T> cls) {
+	/**
+	 * Tries to load the field with the correct data.
+	 * <p>
+	 * If the field isn't marked with @Load, does nothing. Otherwise, will
+	 * attempt to set the field's value (with reflection) to the data set in the
+	 * map.
+	 * 
+	 * @param field
+	 *            The field to load
+	 * @param data
+	 *            The map containing the data of what to load.
+	 * @param obj
+	 *            The object which contains the field
+	 */
+	private <T> void loadField(Field field, Map<String, ?> data, T obj) {
+		
+		Class<?> cls = field.getDeclaringClass();
 		
 		try {
+			
 			if (field.getAnnotation(Load.class) != null) {
 				System.out.println("Should load " + field.getName());
 				// Should load this field
