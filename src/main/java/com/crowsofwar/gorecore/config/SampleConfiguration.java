@@ -51,6 +51,11 @@ public class SampleConfiguration {
 		Converter<List, Set> convertLtS = findConverter(myList);
 		System.out.println(convertLtS.convert(myList));
 		
+		addConverter(Animal.class, String.class, animal -> "Animal " + animal.name);
+		Gorilla kingKong = new Gorilla();
+		Converter<Gorilla, String> convertGtS = getConverter(Gorilla.class, String.class);
+		System.out.println(convertGtS.convert(kingKong));
+		
 		// ConfigLoader.load(SampleConfiguration.class, "annot-test.cfg");
 		// System.out.println("SettingA: " + settingA);
 		// System.out.println("SettingB: " + settingB);
