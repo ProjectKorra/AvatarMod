@@ -98,16 +98,6 @@ public class ConfigLoader {
 	}
 	
 	/**
-	 * Same as {@link #load(Object, String)}, but works for static fields.
-	 */
-	public static void load(Class<?> cls, String path) {
-		ConfigLoader loader = new ConfigLoader(path);
-		loader.values = loadMap(path);
-		loader.load(cls, null, loader.values);
-		loader.save();
-	}
-	
-	/**
 	 * Populate that object's fields marked with {@link Load} with data from the
 	 * configuration map.
 	 * 
@@ -140,6 +130,8 @@ public class ConfigLoader {
 					
 					if (fromData == null) {
 						
+						// Nothing present- try to load default value
+						
 						if (field.get(obj) != null) {
 							instance = field.get(obj);
 							values.put(field.getName(), instance);
@@ -149,10 +141,25 @@ public class ConfigLoader {
 						}
 						
 					} else {
+						
+						// Use the present value from map
+						
 						if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
-							instance = field.getType().newInstance();
+							// If the data is a map, try to load that object
+							// with reflection
+							
+							try {
+								instance = field.getType().newInstance();
+							} catch (Exception e) {
+								throw new ConfigurationException.ReflectionException(
+										"Couldn't create an object of " + field.getType()
+												+ ", as there is no empty constructor.",
+										e);
+							}
+							
 							if (loaderAnnotation.loadMarkedFields())
 								load(instance.getClass(), instance, (Map) fromData);
+							
 						} else {
 							instance = fromData;
 						}

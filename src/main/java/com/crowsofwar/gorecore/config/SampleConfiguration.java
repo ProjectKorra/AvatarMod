@@ -1,10 +1,7 @@
 package com.crowsofwar.gorecore.config;
 
-import static com.crowsofwar.gorecore.config.convert.ConverterRegistry.addConverter;
 import static com.crowsofwar.gorecore.config.convert.ConverterRegistry.getConverter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,34 +34,38 @@ public class SampleConfiguration {
 	
 	public static void main(String[] args) {
 		
-		addConverter(Integer.class, Double.class, inte -> inte.doubleValue());
+		SampleConfiguration cfg = new SampleConfiguration();
+		ConfigLoader.load(cfg, "annot-test.cfg");
 		
-		Converter<Integer, Double> convertItD = getConverter(Integer.class, Double.class);
-		System.out.println(convertItD.convert(4));
+		// addConverter(Integer.class, Double.class, inte ->
+		// inte.doubleValue());
+		//
+		// Converter<Integer, Double> convertItD = getConverter(Integer.class,
+		// Double.class);
+		// System.out.println(convertItD.convert(4));
+		//
+		// addConverter(List.class, Set.class, list -> new HashSet(list));
+		// List<String> myList = new ArrayList<>();
+		// myList.add("A");
+		// myList.add("B");
+		// myList.add("A");
+		//
+		// Converter<List, Set> convertLtS = findConverter(myList);
+		// System.out.println(convertLtS.convert(myList));
+		//
+		// addConverter(Animal.class, String.class, animal -> "Animal " +
+		// animal.name);
+		// Gorilla kingKong = new Gorilla();
+		// kingKong.name = "(get scared) KING KONG (get scared)";
+		// Converter<Gorilla, String> convertGtS = getConverter(Gorilla.class,
+		// String.class);
+		// System.out.println(convertGtS.convert(kingKong));
 		
-		addConverter(List.class, Set.class, list -> new HashSet(list));
-		List<String> myList = new ArrayList<>();
-		myList.add("A");
-		myList.add("B");
-		myList.add("A");
-		
-		Converter<List, Set> convertLtS = findConverter(myList);
-		System.out.println(convertLtS.convert(myList));
-		
-		addConverter(Animal.class, String.class, animal -> "Animal " + animal.name);
-		Gorilla kingKong = new Gorilla();
-		kingKong.name = "(get scared) KING KONG (get scared)";
-		Converter<Gorilla, String> convertGtS = getConverter(Gorilla.class, String.class);
-		System.out.println(convertGtS.convert(kingKong));
-		
-		// ConfigLoader.load(SampleConfiguration.class, "annot-test.cfg");
-		// System.out.println("SettingA: " + settingA);
-		// System.out.println("SettingB: " + settingB);
-		// System.out.println("People: " + people);
-		// System.out.println("bob: " + bob);
-		// System.out.println("Fluffy: " + fluffy);
 	}
 	
+	/**
+	 * Find a converter which converts the object into a Set.
+	 */
 	private static <T> Converter<T, Set> findConverter(T obj) {
 		return (Converter<T, Set>) getConverter(obj.getClass(), Set.class);
 	}

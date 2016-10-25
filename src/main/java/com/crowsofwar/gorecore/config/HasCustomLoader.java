@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the type has a {@link CustomObjectLoader} which will be used when the an object is
- * being loaded from config.
+ * Indicates that the type has a {@link CustomObjectLoader} which will be used
+ * when the an object is being loaded from config.
  * 
  * @author CrowsOfWar
  */
@@ -16,13 +16,18 @@ import java.lang.annotation.Target;
 public @interface HasCustomLoader {
 	
 	/**
-	 * Since we can't use lambdas in members, it creates a new instance of that CustomObjectLoader.
+	 * Get the class of the loader, which is called to actually load from
+	 * configuration.
+	 * <p>
+	 * Since we can't use lambdas in members, anything using this will create a
+	 * new instance of that CustomObjectLoader (reflection).
 	 */
 	Class<? extends CustomObjectLoader> loaderClass();
 	
 	/**
-	 * Whether to proceed to load any fields marked with {@link Load}, then leave the rest to the
-	 * {@link #loaderClass() custom loader}.
+	 * Whether to proceed to load any fields marked with {@link Load}, then
+	 * leave the rest to the {@link #loaderClass() custom loader}. If marked
+	 * false, will only load according the loader class.
 	 */
 	boolean loadMarkedFields() default true;
 	

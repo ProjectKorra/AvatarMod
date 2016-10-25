@@ -23,4 +23,11 @@ public class ConverterRegistry {
 		return converters.get(pair);
 	}
 	
+	public static void addDefaultConverters() {
+		addConverter(Integer.class, Double.class, integer -> integer.doubleValue());
+		addConverter(Double.class, Integer.class, dubbl -> dubbl.intValue());
+		addConverter(Integer.class, String.class, integer -> integer + "");
+		addConverter(Double.class, String.class, dubbl -> dubbl + "");
+	}
+	
 }
