@@ -146,19 +146,22 @@ public class ConfigLoader {
 				System.out.println("Should load " + field.getName());
 				// Should load this field
 				
-				HasCustomLoader loaderAnnotation = field.getType().getAnnotation(HasCustomLoader.class);
+				HasCustomLoader loaderAnnot = field.getType().getAnnotation(HasCustomLoader.class);
+				CustomLoaderSettings loaderInfo = loaderAnnot == null ? new CustomLoaderSettings()
+						: new CustomLoaderSettings(loaderAnnot);
 				
-				System.out.println("------------" + data);
 				Object fromData = data.get(field.getName());
-				Object instance;
+				Object setTo;
 				
 				if (fromData == null) {
 					
 					// Nothing present- try to load default value
 					
 					if (field.get(obj) != null) {
-						instance = field.get(obj);
-						values.put(field.getName(), instance);
+						
+						setTo = field.get(obj);
+						values.put(field.getName(), setTo);
+						
 					} else {
 						throw new ConfigurationException.UserMistake(
 								"No configured definition for " + field.getName() + ", no default value");
@@ -166,14 +169,19 @@ public class ConfigLoader {
 					
 				} else {
 					
-					// Use the present value from map
+					// Use the present value from map: fromData
+					Class<?> from = fromData.getClass();
+					Class<?> to = field.getType();
+					if (from.equals(to)) {
+						
+					}
 					
 					if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
 						// If the data is a map, try to load that object
 						// with reflection
 						
 						try {
-							instance = field.getType().newInstance();
+							setTo = field.getType().newInstance();
 						} catch (Exception e) {
 							throw new ConfigurationException.ReflectionException(
 									"Couldn't create an object of " + field.getType()
@@ -181,36 +189,37 @@ public class ConfigLoader {
 									e);
 						}
 						
-						if (loaderAnnotation.loadMarkedFields())
-							load(instance.getClass(), instance, (Map) fromData);
+						load(setTo.getClass(), setTo, (Map) fromData);
 						
 					} else {
-						instance = fromData;
+						setTo = fromData;
 					}
 				}
 				
+				// Try to apply custom loader
+				
 				try {
 					
-					if (loaderAnnotation != null)
-						loaderAnnotation.loaderClass().newInstance().load(null, instance);
+					if (loaderInfo.hasCustomLoader())
+						loaderInfo.customLoaderClass.newInstance().load(null, setTo);
 					
 				} catch (InstantiationException | IllegalAccessException e) {
 					
 					throw new ConfigurationException.ReflectionException(
 							"Couldn't create a loader class of loader "
-									+ loaderAnnotation.loaderClass().getName(),
+									+ loaderInfo.customLoaderClass.getName(),
 							e);
 					
 				} catch (Exception e) {
 					
 					throw new ConfigurationException.Unexpected(
 							"An unexpected error occurred while using a custom object loader from config. Offending loader is: "
-									+ loaderAnnotation.loaderClass(),
+									+ loaderInfo.customLoaderClass,
 							e);
 					
 				}
 				
-				field.set(obj, instance);
+				field.set(obj, setTo);
 				
 			}
 			
@@ -259,6 +268,38 @@ public class ConfigLoader {
 	 */
 	public static String yaml(Object obj) {
 		return null;
+	}
+	
+	/**
+	 * Keeps track of a custom loader
+	 * 
+	 * @author CrowsOfWar
+	 */
+	private static class CustomLoaderSettings {
+		
+		private final Class<? extends CustomObjectLoader> customLoaderClass;
+		private final boolean loadFields;
+		
+		/**
+		 * Create a custom loader info, where there is the defaults
+		 */
+		private CustomLoaderSettings() {
+			this.customLoaderClass = null;
+			this.loadFields = true;
+		}
+		
+		/**
+		 * Create a custom loader info using data from the annotation
+		 */
+		private CustomLoaderSettings(HasCustomLoader annot) {
+			this.customLoaderClass = annot.loaderClass();
+			this.loadFields = annot.loadMarkedFields();
+		}
+		
+		private boolean hasCustomLoader() {
+			return customLoaderClass != null;
+		}
+		
 	}
 	
 }

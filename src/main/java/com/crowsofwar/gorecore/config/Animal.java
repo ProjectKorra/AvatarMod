@@ -31,8 +31,6 @@ public class Animal {
 	
 	public static class Loader implements CustomObjectLoader<Animal> {
 		
-		private Loader() {}
-		
 		@Override
 		public void load(Object relevantConfigInfoWillGoHere, Animal obj) {
 			obj.isAwesome = obj.species.equals("Crow");
