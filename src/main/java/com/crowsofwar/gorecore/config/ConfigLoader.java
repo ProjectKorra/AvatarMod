@@ -197,9 +197,9 @@ public class ConfigLoader {
 				} catch (InstantiationException e) {
 					
 					throw new ConfigurationException.ReflectionException(
-							"Couldn't create a loader class for an object of " + field.getType()
-									+ " - which uses loader " + loaderAnnotation.loaderClass()
-									+ " - as it has no empty constructor",
+							"Couldn't create a loader class of loader "
+									+ loaderAnnotation.loaderClass().getName()
+									+ " as it has no empty constructor",
 							e);
 					
 				} catch (Exception e) {
@@ -217,8 +217,8 @@ public class ConfigLoader {
 			
 		} catch (Exception e) {
 			
-			throw new ConfigurationException.Unexpected("An unexpected error occurred while loading field "
-					+ field.getName() + " in class " + cls, e);
+			throw new ConfigurationException.Unexpected("An unexpected error occurred while loading field \""
+					+ field.getName() + "\" in class \"" + cls.getName() + "\"", e);
 			
 		}
 		

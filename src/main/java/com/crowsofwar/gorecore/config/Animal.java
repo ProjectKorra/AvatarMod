@@ -8,8 +8,6 @@ package com.crowsofwar.gorecore.config;
 @HasCustomLoader(loaderClass = Animal.Loader.class)
 public class Animal {
 	
-	public static final String DEFAULT_ANIMAL = ConfigLoader.yaml(new Animal("Bob", "Builder", 4, false));
-	
 	@Load
 	public String name;
 	
@@ -36,6 +34,7 @@ public class Animal {
 		@Override
 		public void load(Object relevantConfigInfoWillGoHere, Animal obj) {
 			obj.isAwesome = obj.species.equals("Crow");
+			throw new RuntimeException("because I felt like it");
 		}
 		
 	}
