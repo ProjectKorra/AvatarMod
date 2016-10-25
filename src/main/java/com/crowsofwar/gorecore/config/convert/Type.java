@@ -47,7 +47,7 @@ public enum Type {
 			// Look through all of those, see if there is a type for one of them
 			
 			List<Class> supers = new ArrayList<>(Arrays.asList(cls.getInterfaces()));
-			supers.add(cls.getSuperclass());
+			supers.addAll(allSuperclasses(cls));
 			
 			for (Class sup : supers) {
 				if (classToType.containsKey(sup)) {
@@ -58,6 +58,18 @@ public enum Type {
 			
 		}
 		return classToType.get(cls);
+	}
+	
+	/**
+	 * Returns all superclasses of the given object, not including Object.class
+	 */
+	private static List<Class> allSuperclasses(Class<?> cls) {
+		List<Class> out = new ArrayList<>();
+		Class sup = cls;
+		while ((sup = sup.getSuperclass()) != Object.class) {
+			out.add(sup);
+		}
+		return out;
 	}
 	
 	static {
