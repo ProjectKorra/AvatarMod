@@ -12,6 +12,8 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
+import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
+
 import jline.internal.Nullable;
 
 /**
@@ -177,7 +179,7 @@ public class ConfigLoader {
 					
 					System.out.println(" -> Using from cfg.");
 					
-					Class<?> from = fromData.getClass();
+					Class<Object> from = (Class<Object>) fromData.getClass();
 					Class<?> to = field.getType();
 					
 					// 3 possibilities. Done in this order:
@@ -186,14 +188,18 @@ public class ConfigLoader {
 					// 2. There is a converter to convert from->to.
 					// 3. from is a map. to is not. This means, there is an
 					// object that must be loaded from map. Use a load method.
+					// 4. *cry*
 					
 					if (from == to) {
 						
-					}
-					
-					if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
-						// If the data is a map, try to load that object
-						// with reflection
+						setTo = fromData;
+						
+					} else if (ConverterRegistry.isConverter(from, to)) {
+						
+						setTo = ConverterRegistry.getConverter(from, to).convert(fromData);
+						
+					} else if (fromData instanceof Map<?, ?>
+							&& !field.getType().isAssignableFrom(Map.class)) {
 						
 						try {
 							setTo = field.getType().newInstance();
@@ -207,8 +213,12 @@ public class ConfigLoader {
 						load(setTo.getClass(), setTo, (Map) fromData);
 						
 					} else {
-						setTo = fromData;
+						
+						throw new ConfigurationException.LoadingException(
+								"No way to convert " + from + " -> " + to);
+						
 					}
+					
 				}
 				
 				// Try to apply custom loader, if necessary

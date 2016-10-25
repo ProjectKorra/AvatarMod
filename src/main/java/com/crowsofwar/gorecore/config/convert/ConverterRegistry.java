@@ -23,6 +23,14 @@ public class ConverterRegistry {
 		return converters.get(pair);
 	}
 	
+	/**
+	 * Returns whether there is a converter to convert.
+	 */
+	public static boolean isConverter(Class<?> from, Class<?> to) {
+		Pair pair = Pair.of(from, to);
+		return converters.containsKey(pair);
+	}
+	
 	public static void addDefaultConverters() {
 		addConverter(Integer.class, Double.class, integer -> integer.doubleValue());
 		addConverter(Double.class, Integer.class, dubbl -> dubbl.intValue());

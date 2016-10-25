@@ -40,6 +40,10 @@ public class ConfigurationException extends RuntimeException {
 			super(message, cause);
 		}
 		
+		public LoadingException(String message) {
+			super(message);
+		}
+		
 	}
 	
 	/**
