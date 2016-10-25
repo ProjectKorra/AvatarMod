@@ -25,6 +25,13 @@ public class Pair {
 		return new Pair(Type.of(clsA), Type.of(clsB));
 	}
 	
+	/**
+	 * Returns whether a pair exists for the combination of those two types
+	 */
+	public static boolean exists(Class<?> clsA, Class<?> clsB) {
+		return Type.exists(clsA) && Type.exists(clsB);
+	}
+	
 	@Override
 	public int hashCode() {
 		return typeA.id() + typeB.id(); // is unique because ids are exps. of 2

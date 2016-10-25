@@ -27,6 +27,7 @@ public class ConverterRegistry {
 	 * Returns whether there is a converter to convert.
 	 */
 	public static boolean isConverter(Class<?> from, Class<?> to) {
+		if (!Pair.exists(from, to)) return false;
 		Pair pair = Pair.of(from, to);
 		return converters.containsKey(pair);
 	}

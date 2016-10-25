@@ -65,6 +65,28 @@ public enum Type {
 	}
 	
 	/**
+	 * Finds if there is a Type for the given class.
+	 */
+	public static boolean exists(Class<?> cls) {
+		if (!classToType.containsKey(cls)) {
+			// Try to find the correct superclass/interfaces for the object
+			// Look through all of those, see if there is a type for one of them
+			
+			List<Class> supers = new ArrayList<>(Arrays.asList(cls.getInterfaces()));
+			supers.addAll(allSuperclasses(cls));
+			
+			for (Class sup : supers) {
+				if (classToType.containsKey(sup)) {
+					return true;
+				}
+			}
+			return false;
+			
+		}
+		return true;
+	}
+	
+	/**
 	 * Returns all superclasses of the given object, not including Object.class
 	 */
 	private static List<Class> allSuperclasses(Class<?> cls) {
