@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.crowsofwar.gorecore.config.convert.Converter;
+import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 
 /**
  * 
@@ -33,6 +34,8 @@ public class SampleConfiguration {
 	public static List<String> people;
 	
 	public static void main(String[] args) {
+		
+		ConverterRegistry.addDefaultConverters();
 		
 		SampleConfiguration cfg = new SampleConfiguration();
 		ConfigLoader.load(cfg, "annot-test.cfg");
