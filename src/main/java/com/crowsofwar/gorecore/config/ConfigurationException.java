@@ -56,7 +56,7 @@ public class ConfigurationException extends RuntimeException {
 	}
 	
 	/**
-	 * An unexpected exception occurred
+	 * An exception occurred for some other reason, which we haven't explained
 	 * 
 	 * @author CrowsOfWar
 	 */
