@@ -62,20 +62,27 @@ public class ConfigLoader {
 		} catch (ClassCastException e) {
 			throw new ConfigurationException.UserMistake(
 					"Invalid configuration file at config/" + path + ": not a map");
+		} catch (Exception e) {
+			
+			// TODO use a logger
+			System.err.println("Error while loading config at 'config/" + path + "':");
+			throw e;
+			
 		}
 		
 	}
 	
 	/**
-	 * Populate the object's fields marked with with {@link Load} with data from the configuration
-	 * file.
+	 * Populate the object's fields marked with with {@link Load} with data from
+	 * the configuration file.
 	 * <p>
-	 * If fields are already set (i.e. not null), their current values will only be preserved if
-	 * there is not entry in configuration.
+	 * If fields are already set (i.e. not null), their current values will only
+	 * be preserved if there is not entry in configuration.
 	 * <p>
-	 * If an object is being loaded, ConfigLoader will attempt to load that object the same way that
-	 * <code>obj</code> is being loaded. If a {@link HasCustomLoader custom loader} is specified,
-	 * ConfigLoader will call that loader to perform any additional modifications after loading
+	 * If an object is being loaded, ConfigLoader will attempt to load that
+	 * object the same way that <code>obj</code> is being loaded. If a
+	 * {@link HasCustomLoader custom loader} is specified, ConfigLoader will
+	 * call that loader to perform any additional modifications after loading
 	 * the @Load fields.
 	 * 
 	 * @param obj
@@ -101,10 +108,12 @@ public class ConfigLoader {
 	}
 	
 	/**
-	 * Populate that object's fields marked with {@link Load} with data from the configuration map.
+	 * Populate that object's fields marked with {@link Load} with data from the
+	 * configuration map.
 	 * 
 	 * @param cls
-	 *            Class to get fields from. Normally it would be <code>obj.getClass()</code>.
+	 *            Class to get fields from. Normally it would be
+	 *            <code>obj.getClass()</code>.
 	 * @param obj
 	 *            Object to load
 	 * @param data
