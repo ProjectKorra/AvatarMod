@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.crowsofwar.gorecore.config.Animal;
+
 /**
  * Describes a type which can be converted. E.g. an integer.
  * <p>
@@ -21,7 +23,9 @@ public enum Type {
 	INTEGER(Integer.class),
 	DOUBLE(Double.class),
 	LIST(List.class),
-	SET(Set.class);
+	SET(Set.class),
+	ANIMAL(Animal.class),
+	STRING(String.class);
 	
 	private static final Map<Class<?>, Type> classToType;
 	private final Class<?> cls;

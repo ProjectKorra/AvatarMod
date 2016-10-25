@@ -53,6 +53,7 @@ public class SampleConfiguration {
 		
 		addConverter(Animal.class, String.class, animal -> "Animal " + animal.name);
 		Gorilla kingKong = new Gorilla();
+		kingKong.name = "(get scared) KING KONG (get scared)";
 		Converter<Gorilla, String> convertGtS = getConverter(Gorilla.class, String.class);
 		System.out.println(convertGtS.convert(kingKong));
 		
