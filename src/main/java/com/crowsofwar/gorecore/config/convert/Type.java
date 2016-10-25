@@ -1,5 +1,7 @@
 package com.crowsofwar.gorecore.config.convert;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +43,19 @@ public enum Type {
 	 */
 	public static Type of(Class<?> cls) {
 		if (!classToType.containsKey(cls)) {
+			// Try to find the correct superclass/interfaces for the object
+			// Look through all of those, see if there is a type for one of them
+			
+			List<Class> supers = new ArrayList<>(Arrays.asList(cls.getInterfaces()));
+			supers.add(cls.getSuperclass());
+			
+			for (Class sup : supers) {
+				if (classToType.containsKey(sup)) {
+					return classToType.get(sup);
+				}
+			}
 			throw new ConversionException("No type for class " + cls);
+			
 		}
 		return classToType.get(cls);
 	}
