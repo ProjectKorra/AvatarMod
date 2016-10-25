@@ -29,7 +29,8 @@ public class ConfigurationException extends RuntimeException {
 	}
 	
 	/**
-	 * An exception occurred while trying to access the configuration file on disk.
+	 * An exception occurred while trying to access the configuration file on
+	 * disk.
 	 * 
 	 * @author CrowsOfWar
 	 */
@@ -49,6 +50,19 @@ public class ConfigurationException extends RuntimeException {
 	public static class ReflectionException extends ConfigurationException {
 		
 		public ReflectionException(String message, Throwable cause) {
+			super(message, cause);
+		}
+		
+	}
+	
+	/**
+	 * An unexpected exception occurred
+	 * 
+	 * @author CrowsOfWar
+	 */
+	public static class Unexpected extends ConfigurationException {
+		
+		public Unexpected(String message, Throwable cause) {
 			super(message, cause);
 		}
 		

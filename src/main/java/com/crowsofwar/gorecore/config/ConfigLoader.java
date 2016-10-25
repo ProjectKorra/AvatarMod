@@ -118,65 +118,98 @@ public class ConfigLoader {
 			Field[] fields = cls.getDeclaredFields();
 			for (Field field : fields) {
 				
-				if (field.getAnnotation(Load.class) != null) {
-					System.out.println("Should load " + field.getName());
-					// Should load this field
-					
-					HasCustomLoader loaderAnnotation = field.getType().getAnnotation(HasCustomLoader.class);
-					
-					System.out.println("------------" + data);
-					Object fromData = data.get(field.getName());
-					Object instance;
-					
-					if (fromData == null) {
-						
-						// Nothing present- try to load default value
-						
-						if (field.get(obj) != null) {
-							instance = field.get(obj);
-							values.put(field.getName(), instance);
-						} else {
-							throw new ConfigurationException.UserMistake(
-									"No configured definition for " + field.getName() + ", no default value");
-						}
-						
-					} else {
-						
-						// Use the present value from map
-						
-						if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
-							// If the data is a map, try to load that object
-							// with reflection
-							
-							try {
-								instance = field.getType().newInstance();
-							} catch (Exception e) {
-								throw new ConfigurationException.ReflectionException(
-										"Couldn't create an object of " + field.getType()
-												+ ", as there is no empty constructor.",
-										e);
-							}
-							
-							if (loaderAnnotation.loadMarkedFields())
-								load(instance.getClass(), instance, (Map) fromData);
-							
-						} else {
-							instance = fromData;
-						}
-					}
-					
-					if (loaderAnnotation != null)
-						loaderAnnotation.loaderClass().newInstance().load(null, instance);
-					
-					field.set(obj, instance);
-					
-				}
+				loadField();
 				
 			}
 			
 		} catch (ReflectiveOperationException e) {
 			throw new ConfigurationException.ReflectionException(
 					"Exception while setting values of configuration object", e);
+		}
+		
+	}
+	
+	private <T> void loadField(Field field, Map<String, ?> data, T obj, Class<T> cls) {
+		
+		try {
+			if (field.getAnnotation(Load.class) != null) {
+				System.out.println("Should load " + field.getName());
+				// Should load this field
+				
+				HasCustomLoader loaderAnnotation = field.getType().getAnnotation(HasCustomLoader.class);
+				
+				System.out.println("------------" + data);
+				Object fromData = data.get(field.getName());
+				Object instance;
+				
+				if (fromData == null) {
+					
+					// Nothing present- try to load default value
+					
+					if (field.get(obj) != null) {
+						instance = field.get(obj);
+						values.put(field.getName(), instance);
+					} else {
+						throw new ConfigurationException.UserMistake(
+								"No configured definition for " + field.getName() + ", no default value");
+					}
+					
+				} else {
+					
+					// Use the present value from map
+					
+					if (fromData instanceof Map<?, ?> && !field.getType().isAssignableFrom(Map.class)) {
+						// If the data is a map, try to load that object
+						// with reflection
+						
+						try {
+							instance = field.getType().newInstance();
+						} catch (Exception e) {
+							throw new ConfigurationException.ReflectionException(
+									"Couldn't create an object of " + field.getType()
+											+ ", as there is no empty constructor.",
+									e);
+						}
+						
+						if (loaderAnnotation.loadMarkedFields())
+							load(instance.getClass(), instance, (Map) fromData);
+						
+					} else {
+						instance = fromData;
+					}
+				}
+				
+				try {
+					
+					if (loaderAnnotation != null)
+						loaderAnnotation.loaderClass().newInstance().load(null, instance);
+					
+				} catch (InstantiationException e) {
+					
+					throw new ConfigurationException.ReflectionException(
+							"Couldn't create a loader class for an object of " + field.getType()
+									+ " - which uses loader " + loaderAnnotation.loaderClass()
+									+ " - as it has no empty constructor",
+							e);
+					
+				} catch (Exception e) {
+					
+					throw new ConfigurationException.Unexpected(
+							"An unexpected error occurred while using a custom object loader from config. Offending loader is: "
+									+ loaderAnnotation.loaderClass(),
+							e);
+					
+				}
+				
+				field.set(obj, instance);
+				
+			}
+			
+		} catch (Exception e) {
+			
+			throw new ConfigurationException.Unexpected("An unexpected error occurred while loading field "
+					+ field.getName() + " in class " + cls, e);
+			
 		}
 		
 	}
