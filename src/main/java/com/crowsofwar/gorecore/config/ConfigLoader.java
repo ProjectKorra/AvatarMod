@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
@@ -141,6 +142,8 @@ public class ConfigLoader {
 	private <T> void loadField(Field field, Map<String, ?> data, T obj) {
 		
 		Class<?> cls = field.getDeclaringClass();
+		Class<?> fieldType = field.getType();
+		if (fieldType.isPrimitive()) fieldType = ClassUtils.primitiveToWrapper(fieldType);
 		
 		try {
 			
@@ -148,7 +151,7 @@ public class ConfigLoader {
 				System.out.println("Should load " + field.getName());
 				// Should load this field
 				
-				HasCustomLoader loaderAnnot = field.getType().getAnnotation(HasCustomLoader.class);
+				HasCustomLoader loaderAnnot = fieldType.getAnnotation(HasCustomLoader.class);
 				CustomLoaderSettings loaderInfo = loaderAnnot == null ? new CustomLoaderSettings()
 						: new CustomLoaderSettings(loaderAnnot);
 				
@@ -180,7 +183,7 @@ public class ConfigLoader {
 					System.out.println(" -> Using from cfg.");
 					
 					Class<Object> from = (Class<Object>) fromData.getClass();
-					Class<?> to = field.getType();
+					Class<?> to = fieldType;
 					
 					System.out.println(" -> Convert " + from + "-> " + to);
 					
@@ -202,16 +205,15 @@ public class ConfigLoader {
 						System.out.println(" -> Used a converter.");
 						setTo = ConverterRegistry.getConverter(from, to).convert(fromData);
 						
-					} else if (fromData instanceof Map<?, ?>
-							&& !field.getType().isAssignableFrom(Map.class)) {
+					} else if (fromData instanceof Map<?, ?> && !fieldType.isAssignableFrom(Map.class)) {
 						
 						System.out.println(" -> Populating fields with reflection");
 						
 						try {
-							setTo = field.getType().newInstance();
+							setTo = fieldType.newInstance();
 						} catch (Exception e) {
 							throw new ConfigurationException.ReflectionException(
-									"Couldn't create an object of " + field.getType()
+									"Couldn't create an object of " + fieldType
 											+ ", as there is no empty constructor.",
 									e);
 						}
