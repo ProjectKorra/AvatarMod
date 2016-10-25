@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ * Manages all {@link Converter converters} by keeping them in memory.
+ * Internally uses a Map using {@link Pair} as the key.
  * 
  * @author CrowsOfWar
  */

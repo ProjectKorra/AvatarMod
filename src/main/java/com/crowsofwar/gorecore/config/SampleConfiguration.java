@@ -3,7 +3,10 @@ package com.crowsofwar.gorecore.config;
 import static com.crowsofwar.gorecore.config.convert.ConverterRegistry.addConverter;
 import static com.crowsofwar.gorecore.config.convert.ConverterRegistry.getConverter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.crowsofwar.gorecore.config.convert.Converter;
 
@@ -36,8 +39,16 @@ public class SampleConfiguration {
 		
 		addConverter(Integer.class, Double.class, inte -> inte.doubleValue());
 		
-		Converter<Integer, Double> convert = getConverter(Integer.class, Double.class);
-		System.out.println(convert.convert(4));
+		Converter<Integer, Double> convertItD = getConverter(Integer.class, Double.class);
+		System.out.println(convertItD.convert(4));
+		
+		addConverter(List.class, Set.class, list -> new HashSet(list));
+		Converter<List, Set> convertLtS = getConverter(List.class, Set.class);
+		List<String> myList = new ArrayList<>();
+		myList.add("A");
+		myList.add("B");
+		myList.add("A");
+		System.out.println(convertLtS.convert(myList));
 		
 		// ConfigLoader.load(SampleConfiguration.class, "annot-test.cfg");
 		// System.out.println("SettingA: " + settingA);

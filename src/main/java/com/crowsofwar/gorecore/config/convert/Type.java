@@ -6,6 +6,9 @@ import java.util.Map;
 
 /**
  * Describes a type which can be converted. E.g. an integer.
+ * <p>
+ * Each type has a class associated with it; for example, the List type uses
+ * <code>List.class</code>.
  * 
  * @author CrowsOfWar
  */
@@ -35,6 +38,9 @@ public enum Type {
 	 * Finds an instance of Type which has the same class as the given one.
 	 */
 	public static Type of(Class<?> cls) {
+		if (!classToType.containsKey(cls)) {
+			throw new ConversionException("No type for class " + cls);
+		}
 		return classToType.get(cls);
 	}
 	

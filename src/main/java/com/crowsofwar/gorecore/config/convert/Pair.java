@@ -1,7 +1,8 @@
 package com.crowsofwar.gorecore.config.convert;
 
 /**
- * Used as a key in a map. Stores two Types.
+ * A pair of 2 {@link Type types}. Intended for use as a key in a map -
+ * generally useless otherwise.
  * 
  * @author CrowsOfWar
  */
@@ -18,6 +19,9 @@ public class Pair {
 	 * Returns a TypePair which has the same classes as the given ones.
 	 */
 	public static Pair of(Class<?> clsA, Class<?> clsB) {
+		if (clsA == null || clsB == null) {
+			throw new ConversionException("Cannot create a pair with a null class");
+		}
 		return new Pair(Type.of(clsA), Type.of(clsB));
 	}
 	
