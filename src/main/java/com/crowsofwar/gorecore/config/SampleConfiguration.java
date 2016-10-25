@@ -1,6 +1,11 @@
 package com.crowsofwar.gorecore.config;
 
+import static com.crowsofwar.gorecore.config.convert.ConverterRegistry.addConverter;
+import static com.crowsofwar.gorecore.config.convert.ConverterRegistry.getConverter;
+
 import java.util.List;
+
+import com.crowsofwar.gorecore.config.convert.Converter;
 
 /**
  * 
@@ -28,12 +33,18 @@ public class SampleConfiguration {
 	public static List<String> people;
 	
 	public static void main(String[] args) {
-		ConfigLoader.load(SampleConfiguration.class, "annot-test.cfg");
-		System.out.println("SettingA: " + settingA);
-		System.out.println("SettingB: " + settingB);
-		System.out.println("People: " + people);
-		System.out.println("bob: " + bob);
-		System.out.println("Fluffy: " + fluffy);
+		
+		addConverter(Integer.class, Double.class, inte -> inte.doubleValue());
+		
+		Converter<Integer, Double> convert = getConverter(Integer.class, Double.class);
+		System.out.println(convert.convert(4));
+		
+		// ConfigLoader.load(SampleConfiguration.class, "annot-test.cfg");
+		// System.out.println("SettingA: " + settingA);
+		// System.out.println("SettingB: " + settingB);
+		// System.out.println("People: " + people);
+		// System.out.println("bob: " + bob);
+		// System.out.println("Fluffy: " + fluffy);
 	}
 	
 }
