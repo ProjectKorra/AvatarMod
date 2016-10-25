@@ -214,6 +214,10 @@ public class ConfigLoader {
 				
 			}
 			
+		} catch (ConfigurationException e) {
+			
+			throw e;
+			
 		} catch (Exception e) {
 			
 			throw new ConfigurationException.Unexpected("An unexpected error occurred while loading field \""
