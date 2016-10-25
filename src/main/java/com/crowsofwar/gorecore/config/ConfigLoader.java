@@ -189,15 +189,22 @@ public class ConfigLoader {
 					
 					// 3 possibilities. Done in this order:
 					//
-					// 1. from == to. So it is the right type already
-					// 2. There is a converter to convert from->to.
-					// 3. from is a map. to is not. This means, there is an
+					// 1. from == to. So it is EXACTLY the right type already
+					// 2. from is instance of to (or vice versa), so no
+					// conversion is necessary
+					// 3. There is a converter to convert from->to.
+					// 4. from is a map. to is not. This means, there is an
 					// object that must be loaded from map. Use a load method.
-					// 4. *cry*
+					// 5. cry
 					
 					if (from == to) {
 						
 						System.out.println(" -> Is already in the type we want.");
+						setTo = fromData;
+						
+					} else if (from.isAssignableFrom(to) || to.isAssignableFrom(from)) {
+						
+						System.out.println(" -> Is a form of the type we want.");
 						setTo = fromData;
 						
 					} else if (ConverterRegistry.isConverter(from, to)) {
