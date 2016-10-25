@@ -169,7 +169,9 @@ public class ConfigLoader {
 					
 				} else {
 					
+					// Value present in configuration.
 					// Use the present value from map: fromData
+					
 					Class<?> from = fromData.getClass();
 					Class<?> to = field.getType();
 					if (from.equals(to)) {
@@ -196,7 +198,7 @@ public class ConfigLoader {
 					}
 				}
 				
-				// Try to apply custom loader
+				// Try to apply custom loader, if necessary
 				
 				try {
 					
@@ -219,7 +221,7 @@ public class ConfigLoader {
 					
 				}
 				
-				field.set(obj, setTo);
+				if (loaderInfo.loadFields) field.set(obj, setTo);
 				
 			}
 			
