@@ -51,7 +51,7 @@ public class ConfigLoader {
 	private ConfigLoader(String path, Object obj, Map<String, ?> data) {
 		this.path = path;
 		this.obj = obj;
-		this.data = data;
+		this.data = data == null ? new HashMap<>() : data;
 		this.usedValues = new HashMap<>();
 		this.representer = new Representer();
 	}
@@ -203,6 +203,12 @@ public class ConfigLoader {
 				}
 				usedValues.put(field.getName(), setTo);
 				
+				// If not a java class, probably custom; needs to NOT have the
+				// '!!' in front
+				if (!setTo.getClass().getName().startsWith("java")) {
+					representer.addClassTag(setTo.getClass(), Tag.MAP);
+				}
+				
 				// Try to apply custom loader, if necessary
 				
 				try {
@@ -314,8 +320,6 @@ public class ConfigLoader {
 				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name));
 				loader.load();
 				usedValues.put(name, loader.dump());
-				
-				representer.addClassTag(to, Tag.MAP);
 				
 			} catch (Exception e) {
 				throw new ConfigurationException.ReflectionException(
