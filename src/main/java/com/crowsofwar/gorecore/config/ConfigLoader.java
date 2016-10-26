@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -15,20 +16,39 @@ import org.yaml.snakeyaml.Yaml;
 
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 
-import jline.internal.Nullable;
-
 /**
- * 
+ * Each ConfigLoader is responsible for populating fields of an object with
+ * configuration values
  * 
  * @author CrowsOfWar
  */
 public class ConfigLoader {
 	
+	/**
+	 * Path to configuration file
+	 */
 	private final String path;
-	private Map<String, Object> values;
 	
-	private ConfigLoader(String path) {
+	/**
+	 * The data read from config. May need conversion.
+	 */
+	private final Map<String, ?> data;
+	
+	/**
+	 * The object which needs its fields populated
+	 */
+	private final Object obj;
+	
+	/**
+	 * A map of the values which were used
+	 */
+	private final Map<String, ?> values;
+	
+	private ConfigLoader(String path, Object obj, Map<String, ?> data) {
 		this.path = path;
+		this.obj = obj;
+		this.data = data;
+		this.values = new HashMap<>();
 	}
 	
 	/**
@@ -94,29 +114,19 @@ public class ConfigLoader {
 	 *            Path to the configuration file, from ".minecraft/config/"
 	 */
 	public static void load(Object obj, String path) {
-		ConfigLoader loader = new ConfigLoader(path);
-		loader.values = loadMap(path);
-		loader.load(obj.getClass(), obj, loader.values);
+		ConfigLoader loader = new ConfigLoader(path, obj, loadMap(path));
+		loader.load();
 		loader.save();
 	}
 	
 	/**
-	 * Populate that object's fields marked with {@link Load} with data from the
-	 * configuration map.
-	 * 
-	 * @param cls
-	 *            Class to get fields from. Normally it would be
-	 *            <code>obj.getClass()</code>.
-	 * @param obj
-	 *            Object to load
-	 * @param data
-	 *            Map containing configuration data
-	 * 
-	 * @throws ConfigurationException
+	 * Populate the {@link #obj object's} data with the information from the
+	 * {@link #data map}, converting as necessary.
 	 */
-	private void load(Class<?> cls, @Nullable Object obj, Map<String, ?> data) {
+	private void load() {
 		
-		Field[] fields = cls.getDeclaredFields();
+		// TODO Load declared fields of the superclass as well
+		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			
 			loadField(field, data, obj);
@@ -126,7 +136,8 @@ public class ConfigLoader {
 	}
 	
 	/**
-	 * Tries to load the field with the correct data.
+	 * Tries to load the field of the {@link #obj object} with the correct
+	 * {@link #data}.
 	 * <p>
 	 * If the field isn't marked with @Load, does nothing. Otherwise, will
 	 * attempt to set the field's value (with reflection) to the data set in the
@@ -134,12 +145,8 @@ public class ConfigLoader {
 	 * 
 	 * @param field
 	 *            The field to load
-	 * @param data
-	 *            The map containing the data of what to load.
-	 * @param obj
-	 *            The object which contains the field
 	 */
-	private <T> void loadField(Field field, Map<String, ?> data, T obj) {
+	private <T> void loadField(Field field) {
 		
 		Class<?> cls = field.getDeclaringClass();
 		Class<?> fieldType = field.getType();
