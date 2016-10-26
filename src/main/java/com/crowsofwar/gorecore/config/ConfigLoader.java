@@ -42,13 +42,13 @@ public class ConfigLoader {
 	/**
 	 * A map of the values which were used
 	 */
-	private final Map<String, ?> values;
+	private final Map<String, Object> usedValues;
 	
 	private ConfigLoader(String path, Object obj, Map<String, ?> data) {
 		this.path = path;
 		this.obj = obj;
 		this.data = data;
-		this.values = new HashMap<>();
+		this.usedValues = new HashMap<>();
 	}
 	
 	/**
@@ -121,7 +121,8 @@ public class ConfigLoader {
 	
 	/**
 	 * Populate the {@link #obj object's} data with the information from the
-	 * {@link #data map}, converting as necessary.
+	 * {@link #data map}, converting as necessary. Will also add any used values
+	 * to {@link #usedValues}.
 	 */
 	private void load() {
 		
@@ -173,7 +174,6 @@ public class ConfigLoader {
 					if (field.get(obj) != null) {
 						
 						setTo = field.get(obj);
-						// values.put(field.getName(), setTo);
 						
 						System.out.println(" -> Found default " + setTo);
 						
@@ -196,6 +196,7 @@ public class ConfigLoader {
 					setTo = convert(fromData, to, field.getName());
 					
 				}
+				usedValues.put(field.getName(), setTo);
 				
 				// Try to apply custom loader, if necessary
 				
@@ -292,6 +293,7 @@ public class ConfigLoader {
 				
 				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name));
 				loader.load();
+				usedValues.put(name, loader.dump());
 				
 			} catch (Exception e) {
 				throw new ConfigurationException.ReflectionException(
@@ -307,21 +309,27 @@ public class ConfigLoader {
 		}
 	}
 	
+	/**
+	 * Dumps all used values from {@link #load()} into a YAML string.
+	 */
+	private String dump() {
+		Yaml yaml = new Yaml();
+		
+		DumperOptions options = new DumperOptions();
+		options.setPrettyFlow(true);
+		options.setDefaultFlowStyle(FlowStyle.BLOCK);
+		
+		return yaml.dump(usedValues);
+		
+	}
+	
 	private void save() {
 		
 		try {
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config/" + path)));
 			
-			DumperOptions options = new DumperOptions();
-			options.setPrettyFlow(true);
-			options.setDefaultFlowStyle(FlowStyle.BLOCK);
-			
-			String asText = "";
-			Yaml yaml = new Yaml(options);
-			asText = yaml.dump(values);
-			
-			writer.write(asText);
+			writer.write(dump());
 			writer.close();
 			
 		} catch (IOException e) {
@@ -331,14 +339,6 @@ public class ConfigLoader {
 			
 		}
 		
-	}
-	
-	// TODO Implement
-	/**
-	 * Return a yaml representation of that object.
-	 */
-	public static String yaml(Object obj) {
-		return null;
 	}
 	
 	/**
