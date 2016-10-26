@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,8 +20,13 @@ import org.yaml.snakeyaml.representer.Representer;
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 
 /**
- * Each ConfigLoader is responsible for populating fields of an object with
- * configuration values
+ * A configuration loader. It populates the fields of an object, with data from
+ * disk, using reflection.
+ * <p>
+ * Each configuration loader may, in turn, create more objects which need to be
+ * loaded- a field may have a custom type.
+ * <p>
+ * Load an object by using {@link #load(Object, String)}.
  * 
  * @author CrowsOfWar
  */
@@ -108,7 +114,11 @@ public class ConfigLoader {
 	 * the configuration file.
 	 * <p>
 	 * If fields are already set (i.e. not null), their current values will only
-	 * be preserved if there is not entry in configuration.
+	 * be preserved if there is no entry in the configuration file.
+	 * <p>
+	 * To specify default values, simply set their current value. If the value
+	 * of the field is <code>null</code> when this method is called, there MUST
+	 * be an entry in configuration.
 	 * <p>
 	 * If an object is being loaded, ConfigLoader will attempt to load that
 	 * object the same way that <code>obj</code> is being loaded. If a
@@ -164,6 +174,17 @@ public class ConfigLoader {
 		try {
 			
 			if (field.getAnnotation(Load.class) != null) {
+				
+				if (Modifier.isStatic(field.getModifiers())) {
+					
+					System.out.println(
+							"[ConfigLoader] Warning: Not recommended to mark static fields with @Load, may work out weirdly.");
+					System.out.println(
+							"This field is " + field.getDeclaringClass().getName() + "#" + field.getName());
+					System.out.println("Use a singleton instead!");
+					
+				}
+				
 				System.out.println("Should load " + field.getName());
 				// Should load this field
 				

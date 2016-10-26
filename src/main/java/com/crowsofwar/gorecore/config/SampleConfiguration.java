@@ -35,7 +35,7 @@ public class SampleConfiguration {
 	public List<String> people = new ArrayList<>();
 	
 	@Load
-	public Rock rockA = new Rock(3);
+	public static Rock rockA = new Rock(3);
 	
 	@Load
 	public Rock rockB = new Rock(5);
