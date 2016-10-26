@@ -13,6 +13,8 @@ import org.apache.commons.lang3.ClassUtils;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.representer.Representer;
 
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 
@@ -44,11 +46,14 @@ public class ConfigLoader {
 	 */
 	private final Map<String, Object> usedValues;
 	
+	private final Representer representer;
+	
 	private ConfigLoader(String path, Object obj, Map<String, ?> data) {
 		this.path = path;
 		this.obj = obj;
 		this.data = data;
 		this.usedValues = new HashMap<>();
+		this.representer = new Representer();
 	}
 	
 	/**
@@ -240,6 +245,21 @@ public class ConfigLoader {
 	
 	/**
 	 * Attempt to convert one type to another.
+	 * <p>
+	 * There are 4 possible trials of loading the class...
+	 * <p>
+	 * <ol>
+	 * <li>The object's class is <code>to</code> already- no conversions needed.
+	 * So just return the object</li>
+	 * <li>The object's class is an instance of <code>to</code>, so just return
+	 * the object</li>
+	 * <li>A converter was found, to convert the object's type into the desired
+	 * type. See {@link ConverterRegistry}.</li>
+	 * <li>As a last resort, if the object is a Map, that means that it probably
+	 * represents data for a class. Will instantiate an instance of
+	 * <code>to</code> with reflection, then create a ConfigLoader and load it.
+	 * </li>
+	 * </ol>
 	 * 
 	 * @param object
 	 *            The object to convert
@@ -295,6 +315,8 @@ public class ConfigLoader {
 				loader.load();
 				usedValues.put(name, loader.dump());
 				
+				representer.addClassTag(to, Tag.MAP);
+				
 			} catch (Exception e) {
 				throw new ConfigurationException.ReflectionException(
 						"Couldn't create an object of " + to + " with reflection", e);
@@ -313,11 +335,11 @@ public class ConfigLoader {
 	 * Dumps all used values from {@link #load()} into a YAML string.
 	 */
 	private String dump() {
-		Yaml yaml = new Yaml();
-		
 		DumperOptions options = new DumperOptions();
 		options.setPrettyFlow(true);
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
+		
+		Yaml yaml = new Yaml(representer, options);
 		
 		return yaml.dump(usedValues);
 		

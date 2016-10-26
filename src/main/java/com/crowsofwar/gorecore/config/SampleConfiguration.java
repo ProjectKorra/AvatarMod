@@ -17,22 +17,28 @@ import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 public class SampleConfiguration {
 	
 	@Load
-	public static int settingA;
+	public int settingA;
 	
 	@Load
-	public static double settingB;
+	public double settingB;
 	
 	// @Load
-	public static Animal bob;
+	public Animal bob;
 	
 	@Load
-	public static Animal fluffy = new Animal("Fluffers", "Fluff ball", 4, true);
+	public Animal fluffy = new Animal("Fluffers", "Fluff ball", 4, true);
 	
 	// @Load
-	public static Animal notSoFluffy;
+	public Animal notSoFluffy;
 	
 	@Load
-	public static List<String> people = new ArrayList<>();
+	public List<String> people = new ArrayList<>();
+	
+	@Load
+	public Rock rockA = new Rock(3);
+	
+	@Load
+	public Rock rockB = new Rock(5);
 	
 	public static void main(String[] args) {
 		
@@ -41,8 +47,8 @@ public class SampleConfiguration {
 		SampleConfiguration cfg = new SampleConfiguration();
 		ConfigLoader.load(cfg, "annot-test.cfg");
 		
-		System.out.println("Fluffy: " + fluffy);
-		System.out.println("People: " + people);
+		System.out.println("Fluffy: " + cfg.fluffy);
+		System.out.println("People: " + cfg.people);
 		
 		// addConverter(Integer.class, Double.class, inte ->
 		// inte.doubleValue());
@@ -75,6 +81,19 @@ public class SampleConfiguration {
 	 */
 	private static <T> Converter<T, Set> findConverter(T obj) {
 		return (Converter<T, Set>) getConverter(obj.getClass(), Set.class);
+	}
+	
+	public static class Rock {
+		
+		@Load
+		public int size;
+		
+		public Rock() {}
+		
+		public Rock(int size) {
+			this.size = size;
+		}
+		
 	}
 	
 }
