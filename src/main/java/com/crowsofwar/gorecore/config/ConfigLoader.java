@@ -129,7 +129,7 @@ public class ConfigLoader {
 		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			
-			loadField(field, data, obj);
+			loadField(field);
 			
 		}
 		
@@ -173,7 +173,7 @@ public class ConfigLoader {
 					if (field.get(obj) != null) {
 						
 						setTo = field.get(obj);
-						values.put(field.getName(), setTo);
+						// values.put(field.getName(), setTo);
 						
 						System.out.println(" -> Found default " + setTo);
 						
@@ -187,59 +187,13 @@ public class ConfigLoader {
 					// Value present in configuration.
 					// Use the present value from map: fromData
 					
-					System.out.println(" -> Using from cfg.");
-					
 					Class<Object> from = (Class<Object>) fromData.getClass();
 					Class<?> to = fieldType;
 					
+					System.out.println(" -> Using from cfg.");
 					System.out.println(" -> Convert " + from + "-> " + to);
 					
-					// 3 possibilities. Done in this order:
-					//
-					// 1. from == to. So it is EXACTLY the right type already
-					// 2. from is instance of to (or vice versa), so no
-					// conversion is necessary
-					// 3. There is a converter to convert from->to.
-					// 4. from is a map. to is not. This means, there is an
-					// object that must be loaded from map. Use a load method.
-					// 5. cry
-					
-					if (from == to) {
-						
-						System.out.println(" -> Is already in the type we want.");
-						setTo = fromData;
-						
-					} else if (from.isAssignableFrom(to) || to.isAssignableFrom(from)) {
-						
-						System.out.println(" -> Is a form of the type we want.");
-						setTo = fromData;
-						
-					} else if (ConverterRegistry.isConverter(from, to)) {
-						
-						System.out.println(" -> Used a converter.");
-						setTo = ConverterRegistry.getConverter(from, to).convert(fromData);
-						
-					} else if (fromData instanceof Map<?, ?> && !fieldType.isAssignableFrom(Map.class)) {
-						
-						System.out.println(" -> Populating fields with reflection");
-						
-						try {
-							setTo = fieldType.newInstance();
-						} catch (Exception e) {
-							throw new ConfigurationException.ReflectionException(
-									"Couldn't create an object of " + fieldType
-											+ ", as there is no empty constructor.",
-									e);
-						}
-						
-						load(setTo.getClass(), setTo, (Map) fromData);
-						
-					} else {
-						
-						throw new ConfigurationException.LoadingException(
-								"No way to convert " + from + " -> " + to);
-						
-					}
+					setTo = convert(fromData, to, field.getName());
 					
 				}
 				
@@ -281,6 +235,76 @@ public class ConfigLoader {
 			
 		}
 		
+	}
+	
+	/**
+	 * Attempt to convert one type to another.
+	 * 
+	 * @param object
+	 *            The object to convert
+	 * @param to
+	 *            The type to convert to
+	 * @param name
+	 *            If there are no converters, a new object must be created
+	 *            and @Load fields are populated. Will then use map from
+	 *            {@link #data} with that name.
+	 * 
+	 * @param <T>
+	 *            The type which we must convert to
+	 */
+	private <T> T convert(Object object, Class<T> to, String name) {
+		
+		// 4 possibilities. Done in this order:
+		//
+		// 1. from == to. So it is EXACTLY the right type already
+		// 2. from is instance of to (or vice versa), so no
+		// conversion is necessary
+		// 3. There is a converter to convert from->to.
+		// 4. from is a map. to is not. This means, there is an
+		// object that must be loaded from map. Use a load method.
+		// 5. cry
+		
+		Class<Object> from = (Class<Object>) object.getClass();
+		
+		if (from == to) {
+			
+			System.out.println(" -> Is already in the type we want.");
+			return (T) object;
+			
+		} else if (from.isAssignableFrom(to) || to.isAssignableFrom(from)) {
+			
+			System.out.println(" -> Is a form of the type we want.");
+			return (T) object;
+			
+		} else if (ConverterRegistry.isConverter(from, to)) {
+			
+			System.out.println(" -> Used a converter.");
+			return ConverterRegistry.getConverter(from, to).convert(object);
+			
+		} else if (object instanceof Map<?, ?> && !to.isAssignableFrom(Map.class)) {
+			
+			System.out.println(" -> Populating fields with reflection");
+			
+			T loadedObject;
+			
+			try {
+				loadedObject = to.newInstance();
+				
+				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name));
+				loader.load();
+				
+			} catch (Exception e) {
+				throw new ConfigurationException.ReflectionException(
+						"Couldn't create an object of " + to + " with reflection", e);
+			}
+			
+			return loadedObject;
+			
+		} else {
+			
+			throw new ConfigurationException.LoadingException("No way to convert " + from + " -> " + to);
+			
+		}
 	}
 	
 	private void save() {
