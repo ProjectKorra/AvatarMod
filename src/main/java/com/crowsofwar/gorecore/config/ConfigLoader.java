@@ -343,7 +343,6 @@ public class ConfigLoader {
 	 */
 	private String dump() {
 		DumperOptions options = new DumperOptions();
-		options.setPrettyFlow(true);
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
 		
 		Yaml yaml = new Yaml(representer, options);
