@@ -2,6 +2,7 @@ package com.crowsofwar.gorecore.config;
 
 import static com.crowsofwar.gorecore.config.convert.ConverterRegistry.getConverter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class SampleConfiguration {
 	@Load
 	public static double settingB;
 	
-	@Load
+	// @Load
 	public static Animal bob;
 	
 	@Load
@@ -31,7 +32,7 @@ public class SampleConfiguration {
 	public static Animal notSoFluffy;
 	
 	@Load
-	public static List<String> people;
+	public static List<String> people = new ArrayList<>();
 	
 	public static void main(String[] args) {
 		
@@ -39,6 +40,9 @@ public class SampleConfiguration {
 		
 		SampleConfiguration cfg = new SampleConfiguration();
 		ConfigLoader.load(cfg, "annot-test.cfg");
+		
+		System.out.println("Fluffy: " + fluffy);
+		System.out.println("People: " + people);
 		
 		// addConverter(Integer.class, Double.class, inte ->
 		// inte.doubleValue());
