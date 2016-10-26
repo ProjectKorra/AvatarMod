@@ -88,8 +88,11 @@ public class ConfigLoader {
 			throw new ConfigurationException.LoadingException(
 					"Exception trying to load config file at config/" + path, e);
 		} catch (ClassCastException e) {
-			throw new ConfigurationException.UserMistake(
-					"Invalid configuration file at config/" + path + ": not a map");
+			
+			System.out
+					.println("ConfigLoader- warning: File at " + path + " was not a map; ignored contents.");
+			return new HashMap<>();
+			
 		} catch (Exception e) {
 			
 			// TODO use a logger
