@@ -10,54 +10,32 @@ import com.crowsofwar.gorecore.config.Load;
  */
 public class AvatarConfig {
 	
+	public static final AvatarConfig CONFIG = new AvatarConfig();
+	
 	@Load
-	private AttackSettings floatingBlockSettings = new AttackSettings(0.25, 1),
+	public AttackSettings floatingBlockSettings = new AttackSettings(0.25f, 1),
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(9, 6);
 	
-	public AttackSettings getFloatingBlockSettings() {
-		return floatingBlockSettings;
-	}
-	
-	public AttackSettings getRavineSettings() {
-		return ravineSettings;
-	}
-	
-	public AttackSettings getWaveSettings() {
-		return waveSettings;
-	}
-	
 	public static void load() {
 		
-		ConfigLoader.load(AvatarConfig.class, "avatar/balance.cfg");
+		ConfigLoader.load(CONFIG, "avatar/balance.cfg");
 		
 	}
 	
 	public static class AttackSettings {
 		
 		@Load
-		private double damageMultiplier;
+		public float damage;
 		
 		@Load
-		private double pushMultiplier;
+		public double push;
 		
 		public AttackSettings() {}
 		
-		public AttackSettings(double damage, double push) {
-			this.damageMultiplier = damage;
-			this.pushMultiplier = push;
-		}
-		
-		/**
-		 * Get the damage. For floating blocks, this is the damage multiplier
-		 * actually.
-		 */
-		public double getDamage() {
-			return damageMultiplier;
-		}
-		
-		public double getPush() {
-			return pushMultiplier;
+		private AttackSettings(float damage, double push) {
+			this.damage = damage;
+			this.push = push;
 		}
 		
 	}
