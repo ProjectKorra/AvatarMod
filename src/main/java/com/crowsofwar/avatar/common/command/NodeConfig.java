@@ -51,7 +51,8 @@ public class NodeConfig extends NodeFunctional {
 				
 				exception = true;
 				MSG_CONFIG_EXCEPTION_1.send(from);
-				MSG_CONFIG_EXCEPTION_2.send(from, e.toString());
+				MSG_CONFIG_EXCEPTION_2.send(from, e.getCause().toString());
+				e.printStackTrace();
 				
 			}
 			

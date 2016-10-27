@@ -16,6 +16,7 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
+import org.yaml.snakeyaml.scanner.ScannerException;
 
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 
@@ -98,6 +99,10 @@ public class ConfigLoader {
 			System.out
 					.println("ConfigLoader- warning: File at " + path + " was not a map; ignored contents.");
 			return new HashMap<>();
+			
+		} catch (ScannerException e) {
+			
+			throw new ConfigurationException.LoadingException("Malformed YAML file at config/" + path, e);
 			
 		} catch (Exception e) {
 			
