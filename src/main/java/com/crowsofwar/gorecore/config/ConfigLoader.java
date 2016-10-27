@@ -148,6 +148,7 @@ public class ConfigLoader {
 		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			
+			field.setAccessible(true);
 			loadField(field);
 			
 		}

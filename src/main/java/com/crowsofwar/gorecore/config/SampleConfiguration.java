@@ -17,7 +17,7 @@ import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 public class SampleConfiguration {
 	
 	@Load
-	public int settingA;
+	private int settingA;
 	
 	@Load
 	public double settingB;
