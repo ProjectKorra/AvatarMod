@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.crowsofwar.gorecore.chat.FormattingState.ChatFormat;
 
@@ -128,38 +130,60 @@ public class ChatSender {
 		FormattingState format = new FormattingState();
 		
 		String newText = "";
-		String[] split = text.split("[\\[\\]]");
-		for (int i = 0; i < split.length; i++) {
+		
+		// Separate the text by square brackets
+		// for demo, see http://regexr.com/, regex is: \[?\/?[^\[\]]+\]?
+		Matcher matcher = Pattern.compile("\\[?\\/?[^\\[\\]]+\\]?").matcher(text);
+		
+		System.out.println("Recieved " + text);
+		while (matcher.find()) {
 			
-			System.out.println("Tag" + split[i]);
+			// Item may be a tag, may not be
+			String item = matcher.group();
+			
+			System.out.println("Item '" + item + "'");
 			
 			boolean recievedFormatInstruction = false;
-			String item = split[i];
+			
 			if (item.equals("")) continue;
-			if (ChatFormat.isFormatFor(item)) {
+			
+			if (item.startsWith("[") && item.endsWith("]")) {
 				
-				format.pushFormat(ChatFormat.lookup(item));
+				// Is a tag
+				
+				String tag = item.substring(1, item.length() - 1);
 				recievedFormatInstruction = true;
 				
-			} else if (item.startsWith("/")) {
+				System.out.println(" - Is tag: " + tag);
 				
-				if (item.substring(1).equals(format.topFormat().getName())) {
+				if (ChatFormat.isFormatFor(tag)) {
 					
-					format.popFormat();
+					format.pushFormat(ChatFormat.lookup(tag));
+					recievedFormatInstruction = true;
+					
+				} else if (tag.startsWith("/")) {
+					
+					if (tag.substring(1).equals(format.topFormat().getName())) {
+						
+						System.out.println(" - Pop format");
+						format.popFormat();
+						
+					} else {
+						throw new ProcessingException(
+								"Error processing message; closing tag does not match last opened tag: "
+										+ text);
+					}
+					
+				} else if (tag.startsWith("translate=")) {
+					
+					String key = tag.substring("translate=".length());
+					tag = processText(I18n.format(key), cm, formatArgs);
 					
 				} else {
-					throw new ProcessingException(
-							"Error processing message; closing tag does not match last opened tag: " + text);
+					
+					throw new ProcessingException("String has invalid tag: [" + item + "]; text is " + text);
+					
 				}
-				
-			} else if (item.startsWith("translate=")) {
-				
-				String key = item.substring("translate=".length());
-				item = processText(I18n.format(key), cm, formatArgs);
-				
-			} else {
-				
-				throw new ProcessingException("String has invalid tag: [" + item + "]; text is " + text);
 				
 			}
 			
