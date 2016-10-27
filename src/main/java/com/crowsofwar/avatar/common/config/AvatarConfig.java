@@ -1,8 +1,5 @@
 package com.crowsofwar.avatar.common.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 
@@ -13,22 +10,10 @@ import com.crowsofwar.gorecore.config.Load;
  */
 public class AvatarConfig {
 	
-	static final Map<String, ConfigurableProperty<?>> allProperties;
-	
 	@Load
-	public static FloatingBlockSettings blockSettings = new FloatingBlockSettings();
-	
-	@Load
-	public static RavineSettings ravineSettings = new RavineSettings();
-	
-	@Load
-	public static WaveSettings waveSettings = new WaveSettings();
-	
-	static {
-		
-		allProperties = new HashMap<>();
-		
-	}
+	private AttackSettings floatingBlockSettings = new AttackSettings(0.25, 1),
+			ravineSettings = new AttackSettings(7, 0.25), //
+			waveSettings = new AttackSettings(9, 6);
 	
 	public static void load() {
 		
@@ -36,13 +21,20 @@ public class AvatarConfig {
 		
 	}
 	
-	public static class FloatingBlockSettings {
+	public static class AttackSettings {
 		
 		@Load
-		public double damageMultiplier = 0.25;
+		private double damageMultiplier = 0.25;
 		
 		@Load
-		public double pushMultiplier = 1;
+		private double pushMultiplier = 1;
+		
+		public AttackSettings() {}
+		
+		public AttackSettings(double damage, double push) {
+			this.damageMultiplier = damage;
+			this.pushMultiplier = push;
+		}
 		
 	}
 	

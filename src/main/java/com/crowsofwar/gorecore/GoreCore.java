@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 import com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy;
 import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
 import com.crowsofwar.gorecore.tree.test.TreeTest;
@@ -36,6 +37,7 @@ public class GoreCore {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		config = new GoreCoreModConfig(event);
+		ConverterRegistry.addDefaultConverters();
 		
 		GoreCorePlayerUUIDs.addUUIDsToCacheFromCacheFile();
 		
