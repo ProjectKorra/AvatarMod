@@ -130,6 +130,9 @@ public class ChatSender {
 		String newText = "";
 		String[] split = text.split("[\\[\\]]");
 		for (int i = 0; i < split.length; i++) {
+			
+			System.out.println("Tag" + split[i]);
+			
 			boolean recievedFormatInstruction = false;
 			String item = split[i];
 			if (item.equals("")) continue;
@@ -162,6 +165,12 @@ public class ChatSender {
 			
 			// If any formats changed, must re add all chat formats
 			if (recievedFormatInstruction) {
+				
+				System.out.println(" - adding styles");
+				System.out.println(" - all formats: " + format);
+				System.out.println(" - bold: " + format.isBold() + "; italic: " + format.isItalic());
+				System.out.println(" - color: " + format.getColor());
+				
 				newText += TextFormatting.RESET;
 				newText += format.getColor(); // For some reason, color must
 												// come before bold

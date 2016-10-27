@@ -63,6 +63,12 @@ public class FormattingState {
 		return color;
 	}
 	
+	@Override
+	
+	public String toString() {
+		return "FormattingState " + formats;
+	}
+	
 	/**
 	 * Represents a set of chat formatting settings
 	 * 
