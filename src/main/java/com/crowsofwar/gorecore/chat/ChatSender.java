@@ -142,6 +142,8 @@ public class ChatSender {
 				
 				if (item.substring(1).equals(format.topFormat().getName())) {
 					
+					format.popFormat();
+					
 				} else {
 					throw new ProcessingException(
 							"Error processing message; closing tag does not match last opened tag: " + text);
@@ -151,6 +153,10 @@ public class ChatSender {
 				
 				String key = item.substring("translate=".length());
 				item = processText(I18n.format(key), cm, formatArgs);
+				
+			} else {
+				
+				throw new ProcessingException("String has invalid tag: [" + item + "]; text is " + text);
 				
 			}
 			
