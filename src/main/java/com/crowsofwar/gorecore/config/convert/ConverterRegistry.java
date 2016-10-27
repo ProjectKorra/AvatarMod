@@ -37,6 +37,10 @@ public class ConverterRegistry {
 		addConverter(Double.class, Integer.class, dubbl -> dubbl.intValue());
 		addConverter(Integer.class, String.class, integer -> integer + "");
 		addConverter(Double.class, String.class, dubbl -> dubbl + "");
+		addConverter(Integer.class, Float.class, integer -> integer.floatValue());
+		addConverter(Float.class, Integer.class, floatt -> floatt.intValue());
+		addConverter(Double.class, Float.class, dubbl -> dubbl.floatValue());
+		addConverter(Float.class, Double.class, floatt -> floatt.doubleValue());
 	}
 	
 }
