@@ -25,7 +25,8 @@ public enum Type {
 	LIST(List.class),
 	SET(Set.class),
 	ANIMAL(Animal.class),
-	STRING(String.class);
+	STRING(String.class),
+	FLOAT(Float.class);
 	
 	private static final Map<Class<?>, Type> classToType;
 	private final Class<?> cls;
