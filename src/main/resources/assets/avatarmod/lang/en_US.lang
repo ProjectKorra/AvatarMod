@@ -32,6 +32,9 @@ avatar.cmd.bending.add.success=[bold][color=value]${player}[/color] is now a(n) 
 avatar.cmd.bending.remove.doesntHave=[color=error_value]${player}[/color][color=error] isn't a(n) [/color][color=error_value][translate=avatar.${bending}.demonym][/color].
 avatar.cmd.bending.remove.success=[bold]Took [color=value][translate=avatar.${bending}][/color] from [color=value]${player}[/color]![/bold]
 
+avatar.cmd.cfg.exception1=[color=error]An error occurred while trying to reload the configuration[/color]
+avatar.cmd.cfg.exception2=[color=error]Details: [color=value]${details}[/color]; see log for more[/color]
+
 death.attack.avatar_earthbendBlock=%2$s smashed %1$s with earthbending
 death.attack.avatar_waterArc=%2$s used waterbending to bring down %1$s
 death.attack.avatar_ravine=%2$s crushed %1$s in a ravine
