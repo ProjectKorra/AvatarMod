@@ -40,6 +40,9 @@ public class SampleConfiguration {
 	@Load
 	public Rock rockB = new Rock(5);
 	
+	@Load
+	public HandHoldingRock hand = new HandHoldingRock(rockB);
+	
 	public static void main(String[] args) {
 		
 		ConverterRegistry.addDefaultConverters();
@@ -92,6 +95,19 @@ public class SampleConfiguration {
 		
 		public Rock(int size) {
 			this.size = size;
+		}
+		
+	}
+	
+	public static class HandHoldingRock {
+		
+		@Load
+		public Rock myRock;
+		
+		public HandHoldingRock() {}
+		
+		public HandHoldingRock(Rock rock) {
+			myRock = rock;
 		}
 		
 	}
