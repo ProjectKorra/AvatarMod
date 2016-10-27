@@ -15,6 +15,18 @@ public class AvatarConfig {
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(9, 6);
 	
+	public AttackSettings getFloatingBlockSettings() {
+		return floatingBlockSettings;
+	}
+	
+	public AttackSettings getRavineSettings() {
+		return ravineSettings;
+	}
+	
+	public AttackSettings getWaveSettings() {
+		return waveSettings;
+	}
+	
 	public static void load() {
 		
 		ConfigLoader.load(AvatarConfig.class, "avatar/balance.cfg");
@@ -24,10 +36,10 @@ public class AvatarConfig {
 	public static class AttackSettings {
 		
 		@Load
-		private double damageMultiplier = 0.25;
+		private double damageMultiplier;
 		
 		@Load
-		private double pushMultiplier = 1;
+		private double pushMultiplier;
 		
 		public AttackSettings() {}
 		
@@ -36,25 +48,17 @@ public class AvatarConfig {
 			this.pushMultiplier = push;
 		}
 		
-	}
-	
-	public static class RavineSettings {
+		/**
+		 * Get the damage. For floating blocks, this is the damage multiplier
+		 * actually.
+		 */
+		public double getDamage() {
+			return damageMultiplier;
+		}
 		
-		@Load
-		public int damage = 7;
-		
-		@Load
-		public double pushMultiplier = 0.25;
-		
-	}
-	
-	public static class WaveSettings {
-		
-		@Load
-		public int damage = 9;
-		
-		@Load
-		public double pushMultiplier = 6;
+		public double getPush() {
+			return pushMultiplier;
+		}
 		
 	}
 	
