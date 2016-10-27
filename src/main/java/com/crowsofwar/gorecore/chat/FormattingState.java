@@ -28,8 +28,12 @@ public class FormattingState {
 		formats.push(format);
 	}
 	
-	public void popFormat(ChatFormat format) {
+	public void popFormat() {
 		formats.pop();
+	}
+	
+	public ChatFormat topFormat() {
+		return formats.peek();
 	}
 	
 	public boolean isBold() {
@@ -92,6 +96,10 @@ public class FormattingState {
 				}
 			}
 			return null;
+		}
+		
+		public static boolean isFormatFor(String name) {
+			return lookup(name) != null;
 		}
 		
 	}

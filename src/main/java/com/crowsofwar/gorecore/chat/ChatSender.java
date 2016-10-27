@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.crowsofwar.gorecore.chat.FormattingState.ChatFormat;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
@@ -95,7 +97,12 @@ public class ChatSender {
 			
 			if (cm != null) {
 				
-				result = processText(translate.getUnformattedText(), cm, translate.getFormatArgs());
+				try {
+					result = processText(translate.getUnformattedText(), cm, translate.getFormatArgs());
+				} catch (ProcessingException e) {
+					result = "Error processing text; see log for details";
+					e.printStackTrace();
+				}
 				
 			}
 			
@@ -118,7 +125,7 @@ public class ChatSender {
 			text = text.replace("${" + entry.getKey() + "}", entry.getValue());
 		}
 		
-		ChatFormat format = new ChatFormat();
+		FormattingState format = new FormattingState();
 		
 		String newText = "";
 		String[] split = text.split("[\\[\\]]");
@@ -126,33 +133,19 @@ public class ChatSender {
 			boolean recievedFormatInstruction = false;
 			String item = split[i];
 			if (item.equals("")) continue;
-			if (item.equals("bold")) {
+			if (ChatFormat.isFormatFor(item)) {
 				
-				format.setBold(true);
+				format.pushFormat(ChatFormat.lookup(item));
 				recievedFormatInstruction = true;
 				
-			} else if (item.equals("/bold")) {
+			} else if (item.startsWith("/")) {
 				
-				format.setBold(false);
-				recievedFormatInstruction = true;
-				
-			} else if (item.equals("italic")) {
-				
-				format.setItalic(true);
-				recievedFormatInstruction = true;
-				
-			} else if (item.equals("/italic")) {
-				
-				format.setItalic(false);
-				recievedFormatInstruction = true;
-				
-			} else if (item.equals("/color")) {
-				
-				recievedFormatInstruction = format.setColor(item);
-				
-			} else if (item.startsWith("color=")) {
-				
-				recievedFormatInstruction = format.setColor(cfg, item.substring("color=".length()));
+				if (item.substring(1).equals(format.topFormat().getName())) {
+					
+				} else {
+					throw new ProcessingException(
+							"Error processing message; closing tag does not match last opened tag: " + text);
+				}
 				
 			} else if (item.startsWith("translate=")) {
 				
@@ -180,6 +173,14 @@ public class ChatSender {
 	
 	static void send(ICommandSender sender, ChatMessage message, Object... args) {
 		sender.addChatMessage(message.getChatMessage(args));
+	}
+	
+	static class ProcessingException extends RuntimeException {
+		
+		public ProcessingException(String message) {
+			super(message);
+		}
+		
 	}
 	
 }
