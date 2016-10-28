@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.command;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -83,10 +84,17 @@ public class NodeAbilityExp extends NodeFunctional {
 		
 		if (operation.equals("set")) {
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher()
-					.fetchPerformance(call.getFrom().getEntityWorld(), player);
-			if (data != null) {
-				data.getAbilityData(ability).setXp(setXp);
+			if (setXp >= 0 && setXp <= 100) {
+				AvatarPlayerData data = AvatarPlayerData.fetcher()
+						.fetchPerformance(call.getFrom().getEntityWorld(), player);
+				if (data != null) {
+					
+					data.getAbilityData(ability).setXp(setXp);
+					AvatarChatMessages.MSG_ABILITY_GET.send(call.getFrom(), player,
+							ability.getClass().getSimpleName(), setXp);
+				}
+			} else {
+				AvatarChatMessages.MSG_ABILITY_SET_RANGE.send(call.getFrom());
 			}
 			
 		} else if (operation.equals("get")) {
@@ -96,6 +104,8 @@ public class NodeAbilityExp extends NodeFunctional {
 			if (data != null) {
 				
 				int xp = data.getAbilityData(ability).getXp();
+				AvatarChatMessages.MSG_ABILITY_GET.send(call.getFrom(), player,
+						ability.getClass().getSimpleName(), xp);
 				
 			}
 			

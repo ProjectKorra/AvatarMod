@@ -38,7 +38,10 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_CONFIG_EXCEPTION_2 = newChatMessage(CFG, "avatar.cmd.cfg.exception2", "details");
 	public static final ChatMessage MSG_CONFIG_SUCCESS = newChatMessage(CFG, "avatar.cmd.cfg.successful");
 	
-	public static i
+	public static final ChatMessage MSG_ABILITY_SET_RANGE = newChatMessage(CFG, "avatar.cmd.ability.set.range");
+	public static final ChatMessage MSG_ABILITY_SET_SUCCESS = newChatMessage(CFG, "avatar.cmd.ability.set.sucess", "player", "ability", "amount");
+	
+	public static final ChatMessage MSG_ABILITY_GET = newChatMessage(CFG, "avatar.cmd.ability.get", "player", "ability", "amount");
 	
 	/**
 	 * Call the static initializers
