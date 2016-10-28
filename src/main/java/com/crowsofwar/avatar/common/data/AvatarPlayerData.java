@@ -61,10 +61,33 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
-		bendingControllerList = AvatarUtils.readFromNBT(BendingController.creator, nbt, "BendingAbilities");
-		// bendingStateList = AvatarUtils.readFromNBT(IBendingState.creator,
-		// nbt, "BendingData");
-		bendingStateList = GoreCoreNBTUtil.readListFromNBT(nbt, "BendingData", IBendingState.creator, this);
+		
+		AvatarUtils.readList(bendingControllerList, compound -> {
+			int id = compound.getInteger("ControllerID");
+			try {
+				BendingController bc = BendingManager.getBending(id);
+				return bc;
+			} catch (Exception e) {
+				AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,
+						"Could not find bending controller from ID '" + id + "' - please check NBT data");
+				e.printStackTrace();
+				return null;
+			}
+		}, nbt, "BendingAbilities");
+		
+		AvatarPlayerData playerData = this;
+		AvatarUtils.readList(bendingStateList, compound -> {
+			BendingController controller = BendingManager.getBending(compound.getInteger("ControllerID"));
+			if (controller != null) {
+				IBendingState state = controller.createState(playerData);
+				state.readFromNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(compound, "StateData"));
+				return state;
+			} else {
+				AvatarLog.error("Could not create new bending state with using ControllerID "
+						+ compound.getInteger("ControllerID"));
+				return null;
+			}
+		}, nbt, "BendingData");
 		
 		bendingControllers.clear();
 		for (BendingController controller : bendingControllerList) {
