@@ -141,4 +141,18 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 		eventNotifier.post(e);
 	}
 	
+	public static BendingController find(int id) {
+		
+		try {
+			BendingController bc = BendingManager.getBending(id);
+			return bc;
+		} catch (Exception e) {
+			AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,
+					"Could not find bending controller from ID '" + id + "' - please check NBT data");
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
 }

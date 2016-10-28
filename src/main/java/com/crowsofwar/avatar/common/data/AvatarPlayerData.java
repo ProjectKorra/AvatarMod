@@ -25,7 +25,6 @@ import com.crowsofwar.gorecore.data.GoreCorePlayerData;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherServer;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherSided;
-import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -62,32 +61,13 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
 		
-		AvatarUtils.readList(bendingControllerList, compound -> {
-			int id = compound.getInteger("ControllerID");
-			try {
-				BendingController bc = BendingManager.getBending(id);
-				return bc;
-			} catch (Exception e) {
-				AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,
-						"Could not find bending controller from ID '" + id + "' - please check NBT data");
-				e.printStackTrace();
-				return null;
-			}
-		}, nbt, "BendingAbilities");
+		AvatarUtils.readList(bendingControllerList,
+				compound -> BendingController.find(compound.getInteger("ControllerID")), nbt,
+				"BendingAbilities");
 		
 		AvatarPlayerData playerData = this;
-		AvatarUtils.readList(bendingStateList, compound -> {
-			BendingController controller = BendingManager.getBending(compound.getInteger("ControllerID"));
-			if (controller != null) {
-				IBendingState state = controller.createState(playerData);
-				state.readFromNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(compound, "StateData"));
-				return state;
-			} else {
-				AvatarLog.error("Could not create new bending state with using ControllerID "
-						+ compound.getInteger("ControllerID"));
-				return null;
-			}
-		}, nbt, "BendingData");
+		AvatarUtils.readList(bendingStateList, compound -> IBendingState.find(nbt.getInteger("ControllerID"),
+				playerData, compound.getCompoundTag("StateData")), nbt, "BendingData");
 		
 		bendingControllers.clear();
 		for (BendingController controller : bendingControllerList) {
@@ -107,10 +87,14 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	@Override
 	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
 		
-		AvatarUtils.writeToNBT(bendingControllerList, nbt, "BendingAbilities", BendingController.writer);
-		AvatarUtils.writeToNBT(bendingStateList, nbt, "BendingData", IBendingState.writer);
+		AvatarUtils.writeList(bendingControllerList,
+				(compound, controller) -> compound.setInteger("ControllerID", controller.getID()), nbt,
+				"BendingAbilities");
+		AvatarUtils.writeList(bendingStateList, (compound, bendingState) -> bendingState.write(compound), nbt,
+				"BendingData");
 		AvatarUtils.writeList(statusControls, (nbtTag, control) -> nbtTag.setInteger("Id", control.id()), nbt,
 				"StatusControls");
+		
 	}
 	
 	@Override

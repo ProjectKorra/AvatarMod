@@ -12,11 +12,12 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 
 /**
- * Manages instances of bending controllers. Bending controllers can be retrieved via
- * {@link #getBending(BendingType)}. Contains constants which specify the IDs of bending. <br />
+ * Manages instances of bending controllers. Bending controllers can be
+ * retrieved via {@link #getBending(BendingType)}. Contains constants which
+ * specify the IDs of bending. <br />
  * <br />
- * Third-party mods can use {@link #registerBending(BendingController)} to enable custom bending
- * controllers.
+ * Third-party mods can use {@link #registerBending(BendingController)} to
+ * enable custom bending controllers.
  *
  */
 public class BendingManager {
@@ -49,6 +50,8 @@ public class BendingManager {
 	
 	/**
 	 * @deprecated Use {@link #getBending(BendingType)} instead.
+	 * @throws IllegalArgumentException
+	 *             if there is no bending with the ID
 	 */
 	@Deprecated
 	public static BendingController getBending(int id) {
@@ -56,17 +59,22 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController for that bending type. Returns null if invalid.
+	 * Get the BendingController for that bending type.
 	 * 
 	 * @param type
 	 *            Bending type to look for
+	 * @throws IllegalArgumentException
+	 *             If no bending controller for that type (shouldn't happen)
 	 */
 	public static BendingController<?> getBending(BendingType type) {
+		if (!bending.containsKey(type)) throw new IllegalArgumentException(
+				"No bending controller with type " + type + "... devs forgot to add a bending controller!");
 		return bending.get(type);
 	}
 	
 	/**
-	 * Get the BendingController with the given name. Returns null if the name is invalid.
+	 * Get the BendingController with the given name. Returns null if the name
+	 * is invalid.
 	 * 
 	 * @param name
 	 *            The name of the bending controller
