@@ -8,6 +8,7 @@ package com.crowsofwar.avatar.common.bending;
  */
 public enum BendingType {
 	
+	ERROR,
 	EARTHBENDING,
 	FIREBENDING,
 	WATERBENDING,
@@ -17,7 +18,7 @@ public enum BendingType {
 	 * Get the Id of this BendingType.
 	 */
 	public int id() {
-		return ordinal() + 1;
+		return ordinal();
 	}
 	
 	/**
@@ -30,7 +31,7 @@ public enum BendingType {
 	 *             if the Id is invalid
 	 */
 	public static BendingType find(int id) {
-		if (id < 1 || id > values().length)
+		if (id < 0 || id >= values().length)
 			throw new IllegalArgumentException("Cannot find BendingType with invalid id: " + id);
 		return values()[id];
 	}
