@@ -70,8 +70,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 				compound -> BendingController.find(compound.getInteger("ControllerID")), nbt,
 				"BendingAbilities");
 		
-		AvatarUtils.readList(bendingStateList, compound -> IBendingState.find(nbt.getInteger("ControllerID"),
-				playerData, compound.getCompoundTag("StateData")), nbt, "BendingData");
+		AvatarUtils.readList(bendingStateList, compound -> {
+			
+			return IBendingState.find(compound.getInteger("ControllerID"), playerData,
+					compound.getCompoundTag("StateData"));
+			
+		}, nbt, "BendingData");
 		
 		bendingControllers.clear();
 		for (BendingController controller : bendingControllerList) {
