@@ -13,6 +13,7 @@ import java.util.UUID;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -46,6 +47,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	private Set<StatusControl> statusControls;
 	
+	private Map<BendingAbility, AbilityData> abilityData;
+	
 	private PlayerState state;
 	
 	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer player) {
@@ -55,17 +58,18 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		bendingStates = new HashMap<Integer, IBendingState>();
 		bendingStateList = new ArrayList<IBendingState>();
 		statusControls = new HashSet<>();
+		abilityData = new HashMap<>();
 		state = new PlayerState();
 	}
 	
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
 		
+		AvatarPlayerData playerData = this;
 		AvatarUtils.readList(bendingControllerList,
 				compound -> BendingController.find(compound.getInteger("ControllerID")), nbt,
 				"BendingAbilities");
 		
-		AvatarPlayerData playerData = this;
 		AvatarUtils.readList(bendingStateList, compound -> IBendingState.find(nbt.getInteger("ControllerID"),
 				playerData, compound.getCompoundTag("StateData")), nbt, "BendingData");
 		
@@ -264,6 +268,16 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public void removeStatusControl(StatusControl control) {
 		statusControls.remove(control);
 		saveChanges();
+	}
+	
+	/**
+	 * Retrieves data about the given ability. Will create data if necessary.
+	 */
+	public AbilityData getAbilityData(BendingAbility<?> ability) {
+		if (!abilityData.containsKey(ability)) {
+			abilityData.put(ability, new AbilityData(ability));
+		}
+		return abilityData.get(ability);
 	}
 	
 	/**
