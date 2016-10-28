@@ -60,6 +60,7 @@ public interface IBendingState extends ReadableWritable {
 	 *            NBT containing additional information for the bending state
 	 */
 	public static IBendingState find(int id, AvatarPlayerData data, NBTTagCompound stateData) {
+		System.out.println("----- ID IS: " + id);
 		BendingController controller = BendingManager.getBending(id);
 		if (controller != null) {
 			IBendingState state = controller.createState(data);

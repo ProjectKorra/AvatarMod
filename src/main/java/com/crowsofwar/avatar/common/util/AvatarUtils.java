@@ -43,11 +43,12 @@ public class AvatarUtils {
 	}
 	
 	/**
-	 * Info parameter for the instantiator will be length of 1, containing a string. String is the
-	 * full class name of what to create
+	 * Info parameter for the instantiator will be length of 1, containing a
+	 * string. String is the full class name of what to create
 	 * 
 	 * @param instantiator
-	 *            Methodsextradata is an empty array. Extradata is passed in args
+	 *            Methodsextradata is an empty array. Extradata is passed in
+	 *            args
 	 * @param parent
 	 * @param listName
 	 * @param args
@@ -87,13 +88,13 @@ public class AvatarUtils {
 	}
 	
 	/**
-	 * Clears the list(or collection), and adds items from the NBT list. Does not permit null
-	 * values.
+	 * Clears the list(or collection), and adds items from the NBT list. Does
+	 * not permit null values.
 	 * 
 	 * 
 	 * @param itemProvider
-	 *            Loads items from the list. Takes an NBT for that item, and returns the actual item
-	 *            object.
+	 *            Loads items from the list. Takes an NBT for that item, and
+	 *            returns the actual item object.
 	 * @param nbt
 	 *            NBT compound to load the list from
 	 * @param listName
@@ -105,6 +106,7 @@ public class AvatarUtils {
 		list.clear();
 		
 		NBTTagList listTag = nbt.getTagList(listName, 10);
+		System.out.println("list tag: " + listTag.toString());
 		for (int i = 0; i < listTag.tagCount(); i++) {
 			NBTTagCompound item = listTag.getCompoundTagAt(i);
 			T read = itemProvider.apply(item);
@@ -124,8 +126,8 @@ public class AvatarUtils {
 	 * @param list
 	 *            The list to write
 	 * @param writer
-	 *            Responsible for actually writing the desired data to NBT. Takes the NBT to write
-	 *            to & the item.
+	 *            Responsible for actually writing the desired data to NBT.
+	 *            Takes the NBT to write to & the item.
 	 * @param nbt
 	 *            NBT compound to write list to
 	 * @param listName
