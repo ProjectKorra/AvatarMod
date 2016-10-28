@@ -51,7 +51,7 @@ test.buyVideogames.help=Buy video games.
 
 test.videogamesBranch.help=Manage and play your video games.
 
-test.chatSender=[bold]YOU[/bold] picked out a [special]${fruit}[/special] from the store. And you [italic]ATE IT[/italic]...
+test.chatSender=[bold]YOU[/bold] picked out [aqua]a [special]${fruit}[/special][/aqua] from the store. And you [italic]ATE IT[/italic]...
 test.chatSender.help=A test to see if the new ChatSender works.
 
 test.commandInfo=A test to make sure that tree commands work.
