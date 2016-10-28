@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.crowsofwar.gorecore.chat.FormattingState.ChatFormat;
+import com.crowsofwar.gorecore.chat.FormattingState.ChatFormatSet;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
@@ -116,6 +116,7 @@ public class ChatSender {
 	
 	private String processText(String text, ChatMessage cm, Object... formatArgs) {
 		MessageConfiguration cfg = cm.getConfig();
+		ChatFormatSet formatSet = new ChatFormatSet();
 		
 		String[] translateArgs = cm.getTranslationArgs();
 		for (int i = 0; i < translateArgs.length; i++) {
@@ -156,9 +157,9 @@ public class ChatSender {
 				
 				System.out.println(" - Is tag: " + tag);
 				
-				if (ChatFormat.isFormatFor(tag)) {
+				if (formatSet.isFormatFor(tag)) {
 					
-					format.pushFormat(ChatFormat.lookup(tag));
+					format.pushFormat(formatSet.lookup(tag));
 					recievedFormatInstruction = true;
 					
 				} else if (tag.startsWith("/")) {

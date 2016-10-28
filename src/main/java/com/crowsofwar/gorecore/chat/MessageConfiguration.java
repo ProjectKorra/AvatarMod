@@ -14,9 +14,10 @@ public class MessageConfiguration {
 	private final Map<String, TextFormatting> colors;
 	/**
 	 * Constants are variables which are applied to all ChatMessages using this
-	 * MessageConfiguration. They are applied once to the MessageConfiguration, then every
-	 * ChatMessage that uses this configuration will receive those constants as variables. Constants
-	 * are used in the same way as message-specific formatting arguments:
+	 * MessageConfiguration. They are applied once to the MessageConfiguration,
+	 * then every ChatMessage that uses this configuration will receive those
+	 * constants as variables. Constants are used in the same way as
+	 * message-specific formatting arguments:
 	 * <code>Constant: ${const_name}</code>.
 	 */
 	private final Map<String, String> constants;
@@ -47,13 +48,18 @@ public class MessageConfiguration {
 		return colors.containsKey(reference);
 	}
 	
+	public Map<String, TextFormatting> allColors() {
+		return new HashMap<>(colors);
+	}
+	
 	/**
 	 * Add a constant to this message configuration.
 	 * <p>
 	 * Constants are variables which are applied to all ChatMessages using this
-	 * MessageConfiguration. They are applied once to the MessageConfiguration, then every
-	 * ChatMessage that uses this configuration will receive those constants as variables. Constants
-	 * are used in the same way as message-specific formatting arguments:
+	 * MessageConfiguration. They are applied once to the MessageConfiguration,
+	 * then every ChatMessage that uses this configuration will receive those
+	 * constants as variables. Constants are used in the same way as
+	 * message-specific formatting arguments:
 	 * <code>Constant: ${const_name}</code>.
 	 * 
 	 * @param name
@@ -70,7 +76,8 @@ public class MessageConfiguration {
 	/**
 	 * Returns a set of the constants.
 	 * <p>
-	 * Each element in the set is an entry which maps constant name -> constant value.
+	 * Each element in the set is an entry which maps constant name -> constant
+	 * value.
 	 */
 	public Set<Map.Entry<String, String>> getAllConstants() {
 		return Collections.unmodifiableSet(constants.entrySet());

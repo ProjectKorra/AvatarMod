@@ -1,8 +1,9 @@
 package com.crowsofwar.gorecore.chat;
 
-import static com.crowsofwar.gorecore.chat.FormattingState.Setting.TRUE;
-import static com.crowsofwar.gorecore.chat.FormattingState.Setting.UNKNOWN;
+import static com.crowsofwar.gorecore.chat.FormattingState.Setting.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 import net.minecraft.util.text.TextFormatting;
@@ -74,10 +75,7 @@ public class FormattingState {
 	 * 
 	 * @author CrowsOfWar
 	 */
-	enum ChatFormat {
-		
-		WHITE("white", UNKNOWN, UNKNOWN, TextFormatting.WHITE),
-		BOLD("bold", TRUE, UNKNOWN, null);
+	static class ChatFormat {
 		
 		private final String name;
 		private final Setting isBold;
@@ -95,8 +93,40 @@ public class FormattingState {
 			return name;
 		}
 		
-		public static ChatFormat lookup(String name) {
-			for (ChatFormat format : values()) {
+	}
+	
+	/**
+	 * A set of chat formats, which contains the default ones, but you can also
+	 * add more.
+	 * 
+	 * @author CrowsOfWar
+	 */
+	static class ChatFormatSet {
+		
+		// set has better performance than list, and we don't need duplicate
+		// entries anyways
+		private final Set<ChatFormat> formats;
+		
+		public ChatFormatSet() {
+			formats = new HashSet<>();
+			
+			// add colors
+			for (TextFormatting tf : TextFormatting.values()) {
+				if (tf.isColor()) addFormat(tf.getFriendlyName(), tf, UNKNOWN, UNKNOWN);
+			}
+			// add special
+			addFormat("bold", null, TRUE, UNKNOWN);
+			addFormat("italic", null, UNKNOWN, TRUE);
+			addFormat("noformat", null, FALSE, FALSE);
+			
+		}
+		
+		public void addFormat(String name, TextFormatting color, Setting bold, Setting italic) {
+			formats.add(new ChatFormat(name, bold, italic, color));
+		}
+		
+		public ChatFormat lookup(String name) {
+			for (ChatFormat format : formats) {
 				if (format.name.equals(name)) {
 					return format;
 				}
@@ -104,7 +134,7 @@ public class FormattingState {
 			return null;
 		}
 		
-		public static boolean isFormatFor(String name) {
+		public boolean isFormatFor(String name) {
 			return lookup(name) != null;
 		}
 		
