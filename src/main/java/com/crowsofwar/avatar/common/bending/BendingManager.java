@@ -6,31 +6,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableList;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 
 /**
  * Manages instances of bending controllers. Bending controllers can be retrieved via
- * {@link #getBending(int)}. Contains constants which specify the IDs of bending. <br />
+ * {@link #getBending(BendingType)}. Contains constants which specify the IDs of bending. <br />
  * <br />
- * Third-party mods can use {@link #registerBending(IBendingController)} to enable custom bending
+ * Third-party mods can use {@link #registerBending(BendingController)} to enable custom bending
  * controllers.
  *
  */
 public class BendingManager {
 	
-	public static final int BENDINGID_EARTHBENDING = 1;
-	public static final int BENDINGID_FIREBENDING = 2;
-	public static final int BENDINGID_WATERBENDING = 3;
-	public static final int BENDINGID_AIRBENDING = 4;
+	/**
+	 * Use {@link BendingType} instead.
+	 */
+	@Deprecated
+	public static final int BENDINGID_EARTHBENDING = 1, BENDINGID_FIREBENDING = 2, BENDINGID_WATERBENDING = 3,
+			BENDINGID_AIRBENDING = 4;
 	
-	private static Map<Integer, IBendingController> bending;
-	private static Map<String, IBendingController> bendingByName;
-	private static List<IBendingController> allBending;
+	private static Map<BendingType, BendingController> bending;
+	private static Map<String, BendingController> bendingByName;
+	private static List<BendingController> allBending;
+	
+	private static Map<Integer, BendingAbility> abilities;
+	private static List<BendingAbility> allAbilities;
 	
 	public static void init() {
-		bending = new HashMap<Integer, IBendingController>();
-		bendingByName = new HashMap<String, IBendingController>();
-		allBending = new ArrayList<IBendingController>();
+		bending = new HashMap<BendingType, BendingController>();
+		bendingByName = new HashMap<String, BendingController>();
+		allBending = new ArrayList<BendingController>();
+		abilities = new HashMap<>();
+		allAbilities = new ArrayList<>();
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
 		registerBending(new Waterbending());
@@ -38,13 +48,21 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController with that ID. Returns null if the given Id is invalid.
-	 * 
-	 * @param id
-	 * @return
+	 * @deprecated Use {@link #getBending(BendingType)} instead.
 	 */
-	public static IBendingController getBending(int id) {
-		return bending.get(id);
+	@Deprecated
+	public static BendingController getBending(int id) {
+		return bending.get(BendingType.find(id));
+	}
+	
+	/**
+	 * Get the BendingController for that bending type. Returns null if invalid.
+	 * 
+	 * @param type
+	 *            Bending type to look for
+	 */
+	public static BendingController<?> getBending(BendingType type) {
+		return bending.get(type);
 	}
 	
 	/**
@@ -52,25 +70,44 @@ public class BendingManager {
 	 * 
 	 * @param name
 	 *            The name of the bending controller
-	 * @return
 	 */
-	public static IBendingController getBending(String name) {
+	public static BendingController getBending(String name) {
 		return bendingByName.get(name);
 	}
 	
 	/**
-	 * Get a list of all bending controllers. This cannot be modified.
-	 * 
-	 * @return
+	 * Get an unmodifiable list of all bending controllers.
 	 */
-	public static List<IBendingController> allBending() {
+	public static List<BendingController> allBending() {
 		return Collections.unmodifiableList(allBending);
 	}
 	
-	public static void registerBending(IBendingController controller) {
-		bending.put(controller.getID(), controller);
+	/**
+	 * Get the ability with the given Id, or null if the ability is undefined.
+	 * 
+	 * @param id
+	 *            The Id of the ability
+	 */
+	public static BendingAbility getAbility(int id) {
+		return abilities.get(id);
+	}
+	
+	/**
+	 * Returns an unmodifiable view of all abilities.
+	 */
+	public static List<BendingAbility> allAbilities() {
+		return Collections.unmodifiableList(allAbilities);
+	}
+	
+	public static void registerBending(BendingController controller) {
+		bending.put(controller.getType(), controller);
 		bendingByName.put(controller.getControllerName(), controller);
 		allBending.add(controller);
+	}
+	
+	public static void registerAbility(BendingAbility ability) {
+		abilities.put(ability.getId(), ability);
+		allAbilities.add(ability);
 	}
 	
 }

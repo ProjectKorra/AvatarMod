@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.client.gui;
 
+import net.minecraft.client.gui.ScaledResolution;
+
 /**
  * Holds information for the RadialMenu about a segment. Contains information on its rotation
  * (position), and whether it's clicked.
@@ -27,11 +29,12 @@ public class RadialSegment {
 	 * @param mouseY
 	 * @return
 	 */
-	public boolean isMouseHover(int mouseX, int mouseY) {
+	public boolean isMouseHover(int mouseX, int mouseY, ScaledResolution resolution) {
 		
-		int mouseCenteredX = mouseX - gui.width / 2;
-		int mouseCenteredY = mouseY - gui.height / 2;
-		double r = Math.sqrt(mouseCenteredX * mouseCenteredX + mouseCenteredY * mouseCenteredY) / RadialMenu.menuScale;
+		int mouseCenteredX = mouseX - resolution.getScaledWidth() / 2;
+		int mouseCenteredY = mouseY - resolution.getScaledHeight() / 2;
+		double r = Math.sqrt(mouseCenteredX * mouseCenteredX + mouseCenteredY * mouseCenteredY)
+				/ RadialMenu.menuScale;
 		double currentAngle = Math.toDegrees(Math.atan2(mouseCenteredY, mouseCenteredX)) + 90;
 		double minAngle = angle - 44;
 		if (minAngle < 0) minAngle += 360;
@@ -55,7 +58,7 @@ public class RadialSegment {
 	}
 	
 	public int getTextureV() {
-		return (icon / 32) * 32;
+		return (icon / 8) * 32;
 	}
 	
 }

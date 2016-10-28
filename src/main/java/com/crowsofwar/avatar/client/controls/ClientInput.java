@@ -1,20 +1,12 @@
 package com.crowsofwar.avatar.client.controls;
 
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_AIRBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_EARTHBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_FIREBENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.BENDINGID_WATERBENDING;
 import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_MIDDLE_CLICK;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_MIDDLE_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.NONE;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,31 +15,30 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarAbility;
-import com.crowsofwar.avatar.common.bending.IBendingController;
+import com.crowsofwar.avatar.client.AvatarUiRenderer;
+import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Large class that manages input on the client-side. After input is received, it is sent to the
- * server using packets.
+ * Large class that manages input on the client-side. After input is received,
+ * it is sent to the server using packets.
  *
  */
 @SideOnly(Side.CLIENT)
@@ -56,33 +47,35 @@ public class ClientInput implements IControlsHandler {
 	private final Minecraft mc;
 	private GameSettings gameSettings;
 	private Map<String, KeyBinding> keybindings;
-	private boolean mouseLeft, mouseRight, mouseMiddle;
+	private boolean mouseLeft, mouseRight, mouseMiddle, space;
 	private boolean wasLeft, wasRight, wasMiddle;
+	private final AvatarUiRenderer menuHandler;
 	
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
 	 */
-	private final List<IBendingController> keyboardBending;
+	private final List<BendingController> keyboardBending;
 	
 	private boolean press;
 	
-	public ClientInput() {
+	public ClientInput(AvatarUiRenderer menuHandler) {
 		gameSettings = Minecraft.getMinecraft().gameSettings;
 		mouseLeft = mouseRight = mouseMiddle = wasLeft = wasRight = wasMiddle = false;
 		mc = Minecraft.getMinecraft();
+		this.menuHandler = menuHandler;
 		
 		keybindings = new HashMap();
 		
 		keyboardBending = new ArrayList<>();
-		addBendingButton(BENDINGID_EARTHBENDING, Keyboard.KEY_Z);
-		addBendingButton(BENDINGID_FIREBENDING, Keyboard.KEY_X);
-		addBendingButton(BENDINGID_WATERBENDING, Keyboard.KEY_C);
-		addBendingButton(BENDINGID_AIRBENDING, Keyboard.KEY_F);
+		addBendingButton(BendingType.EARTHBENDING, Keyboard.KEY_Z);
+		addBendingButton(BendingType.FIREBENDING, Keyboard.KEY_X);
+		addBendingButton(BendingType.WATERBENDING, Keyboard.KEY_C);
+		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_F);
 		
 	}
 	
-	private void addBendingButton(int id, int keycode) {
-		IBendingController controller = getBending(id);
+	private void addBendingButton(BendingType id, int keycode) {
+		BendingController controller = getBending(id);
 		addKeybinding(controller.getRadialMenu().getKey(), keycode, "main");
 		keyboardBending.add(controller);
 	}
@@ -111,6 +104,10 @@ public class ClientInput implements IControlsHandler {
 			if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;
 			if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
 			if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
+			if (control == CONTROL_SPACE) return space;
+			if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
+			if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
+			if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
 			AvatarLog.warn("ClientInput- Unknown control: " + control);
 			return false;
 		}
@@ -128,7 +125,7 @@ public class ClientInput implements IControlsHandler {
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
 		
-		for (IBendingController controller : keyboardBending) {
+		for (BendingController controller : keyboardBending) {
 			openBendingMenu(controller);
 		}
 		
@@ -137,15 +134,11 @@ public class ClientInput implements IControlsHandler {
 	/**
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
-	private void openBendingMenu(IBendingController controller) {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer,
-				"Error while getting player data for open-bending-menu checks");
-		BendingMenuInfo menu = controller.getRadialMenu();
-		if (data.hasBending(controller.getID()) && isControlPressed(menu.getKey())) {
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			AvatarMod.network.sendToServer(new PacketSUseBendingController(controller.getID()));
-			player.openGui(AvatarMod.instance, menu.getGuiId(), player.worldObj, 0, 0, 0);
-		}
+	private void openBendingMenu(BendingController controller) {
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer);
+		if (isControlPressed(controller.getRadialMenu().getKey()) && data.hasBending(controller.getID()))
+			menuHandler.openBendingGui(controller.getType());
+		
 	}
 	
 	@SubscribeEvent
@@ -162,25 +155,32 @@ public class ClientInput implements IControlsHandler {
 			mouseLeft = mouseRight = mouseMiddle = false;
 		}
 		
+		space = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+		
 		EntityPlayer player = mc.thePlayer;
 		
-		if (player != null && true) {
+		if (player != null && player.worldObj != null) {
 			// Send any input to the server
-			// AvatarPlayerData data = AvatarPlayerDataFetcherClient.instance.getDataPerformance(
+			// AvatarPlayerData data =
+			// AvatarPlayerDataFetcherClient.instance.getDataPerformance(
 			// Minecraft.getMinecraft().thePlayer);
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
 			
-			if (data != null && data.getActiveBendingController() != null) {
-				List<AvatarControl> pressed = getAllPressed();
-				for (AvatarControl control : pressed) {
-					AvatarAbility ability = data.getActiveBendingController().getAbility(data, control);
-					if (ability != AvatarAbility.NONE) {
-						RaytraceResult raytrace = ability.needsRaytrace()
-								? Raytrace.getTargetBlock(player, ability.getRaytraceDistance(), ability.isRaycastLiquids()) : null;
-						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace != null ? raytrace.getPos() : null,
-								raytrace != null ? raytrace.getDirection() : null));
+			if (data != null) {
+				
+				Collection<AvatarControl> pressed = getAllPressed();
+				Collection<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();
+				
+				Iterator<StatusControl> sci = statusControls.iterator();
+				while (sci.hasNext()) {
+					StatusControl sc = sci.next();
+					if (pressed.contains(sc.getSubscribedControl())) {
+						Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
+						
+						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
 					}
 				}
+				
 			}
 		}
 		

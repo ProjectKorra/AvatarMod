@@ -1,19 +1,25 @@
 package com.crowsofwar.avatar.client.render;
 
-import static com.crowsofwar.avatar.common.util.VectorUtils.copy;
-import static com.crowsofwar.avatar.common.util.VectorUtils.minus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.plus;
-import static com.crowsofwar.avatar.common.util.VectorUtils.times;
-
+import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityControlPoint;
+import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 
 public class RenderWaterArc extends RenderArc {
 	
-	private static final ResourceLocation water = new ResourceLocation("avatarmod", "textures/entity/water-ribbon.png");
+	private static final ResourceLocation water = new ResourceLocation("avatarmod",
+			"textures/entity/water-ribbon.png");
+	
+	/**
+	 * @param renderManager
+	 */
+	public RenderWaterArc(RenderManager renderManager) {
+		super(renderManager);
+		// TODO Auto-generated constructor stub
+	}
 	
 	@Override
 	protected ResourceLocation getTexture() {
@@ -21,18 +27,19 @@ public class RenderWaterArc extends RenderArc {
 	}
 	
 	@Override
-	protected void onDrawSegment(EntityArc arc, EntityControlPoint first, EntityControlPoint second) {
+	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
 		// Parametric equation
-		Vec3 from = Vec3.createVectorHelper(0, 0, 0);
-		Vec3 to = minus(second.getPosition(), first.getPosition());
-		Vec3 diff = minus(to, from);
-		Vec3 offset = first.getPosition();
-		Vec3 direction = copy(diff);
+		
+		Vector from = new Vector(0, 0, 0);
+		Vector to = second.position().minus(first.position());
+		Vector diff = to.minus(from);
+		Vector offset = first.position();
+		Vector direction = diff.copy();
 		direction.normalize();
-		Vec3 spawnAt = plus(offset, times(direction, Math.random()));
-		Vec3 velocity = first.getVelocity();
-		arc.worldObj.spawnParticle("splash", spawnAt.xCoord, spawnAt.yCoord, spawnAt.zCoord, velocity.xCoord, velocity.yCoord,
-				velocity.zCoord);
+		Vector spawnAt = offset.plus(direction.times(Math.random()));
+		Vector velocity = first.velocity();
+		arc.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, spawnAt.x(), spawnAt.y(), spawnAt.z(),
+				velocity.x(), velocity.y(), velocity.z());
 	}
 	
 }

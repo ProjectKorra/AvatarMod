@@ -1,34 +1,32 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.AvatarAbility;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-import com.crowsofwar.avatar.common.util.BlockPos;
+import com.crowsofwar.gorecore.util.VectorI;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Packet which tells the server that the client pressed a control. The control is given to the
- * player's active bending controller.
+ * Packet which tells the server that the client pressed a control. The control
+ * is given to the player's active bending controller.
  * 
  * @see AvatarControl
  *
  */
-public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
+public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
-	private AvatarAbility ability;
-	private BlockPos target;
-	/** ID of ForgeDirection of the side of the block player is looking at */
-	private ForgeDirection side;
+	private BendingAbility ability;
+	private VectorI target;
+	/** ID of EnumFacing of the side of the block player is looking at */
+	private EnumFacing side;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(AvatarAbility ability, BlockPos target, ForgeDirection side) {
+	public PacketSUseAbility(BendingAbility ability, VectorI target, EnumFacing side) {
 		this.ability = ability;
 		this.target = target;
 		this.side = side;
@@ -36,10 +34,12 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		ability = AvatarAbility.fromId(buf.readInt());
-		target = buf.readBoolean() ? BlockPos.fromBytes(buf) : null;
-		side = ForgeDirection.getOrientation(buf.readInt());
-		if (side == ForgeDirection.UNKNOWN) side = null;
+		ability = BendingManager.getAbility(buf.readInt());
+		if (ability == null) {
+			throw new NullPointerException("Server sent invalid ability over network: ID " + ability);
+		}
+		target = buf.readBoolean() ? VectorI.fromBytes(buf) : null;
+		side = EnumFacing.getFront(buf.readInt());
 	}
 	
 	@Override
@@ -53,25 +53,25 @@ public class PacketSUseAbility implements IAvatarPacket<PacketSUseAbility> {
 	}
 	
 	@Override
-	public IMessage onMessage(PacketSUseAbility message, MessageContext ctx) {
-		return PacketRedirector.redirectMessage(message, ctx);
-	}
-	
-	@Override
 	public Side getRecievedSide() {
 		return Side.SERVER;
 	}
 	
-	public AvatarAbility getAbility() {
+	public BendingAbility getAbility() {
 		return ability;
 	}
 	
-	public BlockPos getTargetPos() {
+	public VectorI getTargetPos() {
 		return target;
 	}
 	
-	public ForgeDirection getSideHit() {
+	public EnumFacing getSideHit() {
 		return side;
+	}
+	
+	@Override
+	protected AvatarPacket.Handler<PacketSUseAbility> getPacketHandler() {
+		return PacketRedirector::redirectMessage;
 	}
 	
 }

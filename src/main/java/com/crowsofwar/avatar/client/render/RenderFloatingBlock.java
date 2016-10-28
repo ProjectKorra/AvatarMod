@@ -1,38 +1,42 @@
 package com.crowsofwar.avatar.client.render;
 
-import org.lwjgl.opengl.GL11;
-
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAnvil;
-import net.minecraft.block.BlockDragonEgg;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderFloatingBlock extends Render {
-	private final RenderBlocks field_147920_a = new RenderBlocks();
+	// [1.10] Find out substitution for Renderblocks- maybe ModelLoader?
 	private static final String __OBFID = "CL_00000994";
 	
-	public RenderFloatingBlock() {
+	public RenderFloatingBlock(RenderManager renderManager) {
+		super(renderManager);
 		this.shadowSize = 0.5F;
 	}
 	
 	/**
 	 * 
 	 */
-	public void doRender(EntityFloatingBlock entity, double x, double y, double z, float interpolatedYaw, float lerp) {
+	public void doRender(EntityFloatingBlock entity, double x, double y, double z, float entityYaw,
+			float lerp) {
 		World world = entity.worldObj;
 		Block block = entity.getBlock();
 		int i = MathHelper.floor_double(entity.posX);
@@ -44,44 +48,47 @@ public class RenderFloatingBlock extends Render {
 		// z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * ((lerp -
 		// entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) - RenderManager.renderPosZ;
 		
-		if (block != null && block != world.getBlock(i, j, k)) {
-			GL11.glPushMatrix();
-			GL11.glTranslatef((float) x, (float) y + 0.5f, (float) z);
-			this.bindEntityTexture(entity);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			Tessellator tessellator;
+		if (block != null) {
+			Tessellator tessellator = Tessellator.getInstance();
 			
-			// if (block instanceof BlockAnvil)
-			// {
-			// this.field_147920_a.blockAccess = world;
-			// tessellator = Tessellator.instance;
-			// tessellator.startDrawingQuads();
-			// tessellator.setTranslation((double)((float)(-i) - 0.5F), (double)((float)(-j) -
-			// 0.5F), (double)((float)(-k) - 0.5F));
-			// this.field_147920_a.renderBlockAnvilMetadata((BlockAnvil)block, i, j, k,
-			// p_76986_1_.field_145814_a);
-			// tessellator.setTranslation(0.0D, 0.0D, 0.0D);
-			// tessellator.draw();
-			// }
-			// else if (block instanceof BlockDragonEgg)
-			// {
-			// this.field_147920_a.blockAccess = world;
-			// tessellator = Tessellator.instance;
-			// tessellator.startDrawingQuads();
-			// tessellator.setTranslation((double)((float)(-i) - 0.5F), (double)((float)(-j) -
-			// 0.5F), (double)((float)(-k) - 0.5F));
-			// this.field_147920_a.renderBlockDragonEgg((BlockDragonEgg)block, i, j, k);
-			// tessellator.setTranslation(0.0D, 0.0D, 0.0D);
-			// tessellator.draw();
-			// }
-			// else
-			// {
-			this.field_147920_a.setRenderBoundsFromBlock(block);
-			this.field_147920_a.renderBlockSandFalling(block, world, i, j, k, entity.getMetadata());
-			// }
+			IBlockState iblockstate = entity.getBlockState();
 			
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glPopMatrix();
+			if (iblockstate.getRenderType() == EnumBlockRenderType.MODEL) {
+				
+				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
+					this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+					GlStateManager.pushMatrix();
+					GlStateManager.disableLighting();
+					VertexBuffer vertexbuffer = tessellator.getBuffer();
+					
+					if (this.renderOutlines) {
+						GlStateManager.enableColorMaterial();
+						GlStateManager.enableOutlineMode(this.getTeamColor(entity));
+					}
+					
+					vertexbuffer.begin(7, DefaultVertexFormats.BLOCK);
+					BlockPos blockpos = new BlockPos(entity.posX, entity.getEntityBoundingBox().maxY,
+							entity.posZ);
+					GlStateManager.translate(x - blockpos.getX() - 0.5, y - blockpos.getY(),
+							z - blockpos.getZ() - 0.5);
+					BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft()
+							.getBlockRendererDispatcher();
+					blockrendererdispatcher.getBlockModelRenderer().renderModel(world,
+							blockrendererdispatcher.getModelForState(iblockstate), iblockstate, blockpos,
+							vertexbuffer, false, 0);
+					tessellator.draw();
+					
+					if (this.renderOutlines) {
+						GlStateManager.disableOutlineMode();
+						GlStateManager.disableColorMaterial();
+					}
+					
+					GlStateManager.enableLighting();
+					GlStateManager.popMatrix();
+					super.doRender(entity, x, y, z, entityYaw, lerp);
+				}
+			}
+			
 		}
 	}
 	
@@ -90,7 +97,7 @@ public class RenderFloatingBlock extends Render {
 	 * Render.bindEntityTexture.
 	 */
 	protected ResourceLocation getEntityTexture(EntityFloatingBlock p_110775_1_) {
-		return TextureMap.locationBlocksTexture;
+		return TextureMap.LOCATION_BLOCKS_TEXTURE;
 	}
 	
 	/**
@@ -108,7 +115,9 @@ public class RenderFloatingBlock extends Render {
 	 * signature public void func_76986_a(T entity, double d, double d1, double d2, float f, float
 	 * f1). But JAD is pre 1.5 so doesn't do that.
 	 */
-	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-		this.doRender((EntityFloatingBlock) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_,
+			float p_76986_8_, float p_76986_9_) {
+		this.doRender((EntityFloatingBlock) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_,
+				p_76986_9_);
 	}
 }

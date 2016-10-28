@@ -1,15 +1,15 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityArc {
 	
-	public static final Vec3 ZERO = Vec3.createVectorHelper(0, 0, 0);
+	public static final Vector ZERO = new Vector(0, 0, 0);
 	
 	public EntityAirGust(World world) {
 		super(world);
@@ -19,12 +19,12 @@ public class EntityAirGust extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		EntityControlPoint first = getControlPoint(0);
-		EntityControlPoint second = getControlPoint(1);
-		if (first.getPosition().squareDistanceTo(second.getPosition()) >= getControlPointMaxDistanceSq()) {
+		ControlPoint first = getControlPoint(0);
+		ControlPoint second = getControlPoint(1);
+		if (first.position().sqrDist(second.position()) >= getControlPointMaxDistanceSq()
+				|| ticksExisted > 80) {
 			setDead();
 		}
-		if (ticksExisted > 80) setDead();
 	}
 	
 	@Override
@@ -48,13 +48,13 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	protected Vec3 getGravityVector() {
+	protected Vector getGravityVector() {
 		return ZERO;
 	}
 	
 	@Override
-	protected EntityControlPoint createControlPoint(float size) {
-		return new AirGustControlPoint(this, 0.1f, 0, 0, 0);
+	protected ControlPoint createControlPoint(float size) {
+		return new AirGustControlPoint(this, 0.5f, 0, 0, 0);
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class EntityAirGust extends EntityArc {
 	
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return 100; // 10
+		return 400; // 20
 	}
 	
 	@Override
@@ -74,11 +74,7 @@ public class EntityAirGust extends EntityArc {
 		return 200;
 	}
 	
-	public static class AirGustControlPoint extends EntityControlPoint {
-		
-		public AirGustControlPoint(World world) {
-			super(world);
-		}
+	public static class AirGustControlPoint extends ControlPoint {
 		
 		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
@@ -87,17 +83,21 @@ public class EntityAirGust extends EntityArc {
 		@Override
 		protected void onCollision(Entity entity) {
 			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
-				double multiplier = 10;
-				entity.addVelocity((entity.posX - this.posX) * multiplier, 0.4, (entity.posZ - this.posZ) * multiplier);
+				
+				Vector velocity = velocity().times(0.3);
+				velocity.setY(1);
+				
+				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 				setDead();
 			}
 		}
 		
 		@Override
 		public void onUpdate() {
+			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {
 				float expansionRate = 1f / 20;
-				setSize(width + expansionRate, width + expansionRate);
+				size += expansionRate;
 			}
 		}
 		

@@ -2,23 +2,20 @@ package com.crowsofwar.avatar.common.network.packets;
 
 import java.util.UUID;
 
-import com.crowsofwar.avatar.common.network.IAvatarPacket;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Sent from client to server to request data about a player.
  *
  */
-public class PacketSRequestData implements IAvatarPacket<PacketSRequestData> {
+public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	
 	private UUID asking;
 	
@@ -29,11 +26,11 @@ public class PacketSRequestData implements IAvatarPacket<PacketSRequestData> {
 	}
 	
 	public PacketSRequestData(EntityPlayer player) {
-		GetUUIDResult result = GoreCorePlayerUUIDs.getUUID(player.getCommandSenderName());
+		GetUUIDResult result = GoreCorePlayerUUIDs.getUUID(player.getName());
 		if (result.isResultSuccessful()) {
 			this.asking = result.getUUID();
 		} else {
-			System.err.println("Couldn't get UUID for player " + player.getCommandSenderName() + " to send Request");
+			System.err.println("Couldn't get UUID for player " + player.getName() + " to send Request");
 			result.logError();
 		}
 	}
@@ -49,17 +46,17 @@ public class PacketSRequestData implements IAvatarPacket<PacketSRequestData> {
 	}
 	
 	@Override
-	public IMessage onMessage(PacketSRequestData message, MessageContext ctx) {
-		return PacketRedirector.redirectMessage(message, ctx);
-	}
-	
-	@Override
 	public Side getRecievedSide() {
 		return Side.SERVER;
 	}
 	
 	public UUID getAskedPlayer() {
 		return asking;
+	}
+	
+	@Override
+	protected AvatarPacket.Handler<PacketSRequestData> getPacketHandler() {
+		return PacketRedirector::redirectMessage;
 	}
 	
 }

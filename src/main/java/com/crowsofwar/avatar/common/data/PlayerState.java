@@ -1,40 +1,43 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.util.BlockPos;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.RaytraceResult;
+import com.crowsofwar.avatar.common.util.Raytrace.Result;
+import com.crowsofwar.gorecore.util.VectorI;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Used by AvatarPlayerData. Holds information about the player right now, such as its position,
  * entity, and looking at block.
- *
+ * 
  */
+// TODO Move into AbilityContext
+@Deprecated
 public class PlayerState {
 	
 	private EntityPlayer playerEntity;
-	private BlockPos clientLookAtBlock;
-	private BlockPos serverLookAtBlock;
-	private ForgeDirection lookAtSide;
+	private VectorI clientLookAtBlock;
+	private VectorI serverLookAtBlock;
+	private EnumFacing lookAtSide;
 	
 	public PlayerState() {
 		
 	}
 	
-	public PlayerState(EntityPlayer playerEntity, BlockPos clientLookAtBlock, ForgeDirection lookAtSide) {
+	public PlayerState(EntityPlayer playerEntity, VectorI clientLookAtBlock, EnumFacing lookAtSide) {
 		update(playerEntity, clientLookAtBlock, lookAtSide);
 	}
 	
-	public void update(EntityPlayer playerEntity, RaytraceResult raytrace) {
-		update(playerEntity, raytrace == null ? null : raytrace.getPos(), raytrace == null ? null : raytrace.getDirection());
+	public void update(EntityPlayer playerEntity, Result raytrace) {
+		update(playerEntity, raytrace == null ? null : raytrace.getPos(),
+				raytrace == null ? null : raytrace.getSide());
 	}
 	
-	public void update(EntityPlayer playerEntity, BlockPos clientLookAtBlock, ForgeDirection lookAtSide) {
+	public void update(EntityPlayer playerEntity, VectorI clientLookAtBlock, EnumFacing lookAtSide) {
 		this.playerEntity = playerEntity;
 		this.clientLookAtBlock = clientLookAtBlock;
 		this.lookAtSide = lookAtSide;
@@ -50,7 +53,7 @@ public class PlayerState {
 		return playerEntity;
 	}
 	
-	public BlockPos getClientLookAtBlock() {
+	public VectorI getClientLookAtBlock() {
 		return clientLookAtBlock;
 	}
 	
@@ -59,7 +62,7 @@ public class PlayerState {
 	 * 
 	 * @return
 	 */
-	public ForgeDirection getLookAtSide() {
+	public EnumFacing getLookAtSide() {
 		return lookAtSide;
 	}
 	
@@ -93,17 +96,18 @@ public class PlayerState {
 	 * 
 	 * @see Raytrace#getTargetBlock(EntityPlayer, double)
 	 */
-	public BlockPos verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
+	public VectorI verifyClientLookAtBlock(double raycastDist, double maxDeviation) {
 		if (clientLookAtBlock == null) return null;
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookAtBlock;
-		RaytraceResult res = Raytrace.getTargetBlock(playerEntity, raycastDist);
-		if (res == null) return null;
+		Result res = Raytrace.getTargetBlock(playerEntity, raycastDist);
+		if (!res.hitSomething()) return null;
 		this.serverLookAtBlock = res.getPos();
 		double dist = serverLookAtBlock.dist(clientLookAtBlock);
 		if (dist <= maxDeviation) {
 			return clientLookAtBlock;
 		} else {
-			AvatarLog.warn("Warning: PlayerState- Client sent too far location " + "to look at block. (" + dist + ") Hacking?");
+			AvatarLog.warn("Warning: PlayerState- Client sent too far location " + "to look at block. ("
+					+ dist + ") Hacking?");
 			Thread.dumpStack();
 			return serverLookAtBlock;
 		}

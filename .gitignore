@@ -1,16 +1,27 @@
-.classpath
-.project
-AvatarMod.bat
-build.gradle
-gradlew
-gradlew.bat
-
 .gradle/
 .settings/
 bin/
-eclipse/
+build/
 gradle/
+run/
+eclipse/
 
-#src/main/resources/assets/gorecore/lang/en_US.lang
-swap_mc_versions.sh
+.classpath
+.project
+1.10_Client.launch
+1.10_Server.launch
+1.10_Client 2.launch
+gradlew
+gradlew.bat
 
+
+GoreCore_ClientUUIDCache.txt
+/config
+logs/
+options.txt
+saves/
+usercache.json
+usernamecache.json
+screenshots/
+
+crash-reports/

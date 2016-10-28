@@ -2,17 +2,39 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
 
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
+import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
+import com.crowsofwar.gorecore.util.Vector;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.Vec3;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityFireArc extends EntityArc {
 	
-	private static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 60, 0);
+	private static final Vector GRAVITY = new Vector(0, -9.81 / 60, 0);
+	
+	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
 	
 	public EntityFireArc(World world) {
 		super(world);
+	}
+	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_BEHAVIOR, new FireArcBehavior.Idle(this));
 	}
 	
 	@Override
@@ -24,16 +46,33 @@ public class EntityFireArc extends EntityArc {
 			if (worldObj.isRemote) {
 				int particles = random.nextInt(3) + 4;
 				for (int i = 0; i < particles; i++) {
-					worldObj.spawnParticle("cloud", posX, posY, posZ, (random.nextGaussian() - 0.5) * 0.05 + motionX / 10,
-							random.nextGaussian() * 0.08, (random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
+					worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
+							(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
+							(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
 				}
 			}
-			worldObj.playSoundAtEntity(this, "random.fizz", 1.0f, random.nextFloat() * 0.3f + 1.1f);// BlockFire
+			worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+					SoundCategory.PLAYERS, 1, random.nextFloat() * 0.3f + 1.1f, false);
 		}
+		getBehavior().setEntity(this);
+		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate();
+		if (getBehavior() != newBehavior) setBehavior(newBehavior);
 	}
 	
 	public static EntityFireArc findFromId(World world, int id) {
 		return (EntityFireArc) EntityArc.findFromId(world, id);
+	}
+	
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (getOwner() != null) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(getOwner());
+			data.removeStatusControl(StatusControl.THROW_FIRE);
+			if (!worldObj.isRemote)
+				AvatarMod.network.sendTo(new PacketCRemoveStatusControl(StatusControl.THROW_FIRE),
+						(EntityPlayerMP) getOwner());
+		}
 	}
 	
 	@Override
@@ -42,25 +81,29 @@ public class EntityFireArc extends EntityArc {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
-			worldObj.setBlock(x, y, z, Blocks.fire);
+			worldObj.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
 		}
 	}
 	
 	@Override
-	protected Vec3 getGravityVector() {
+	protected Vector getGravityVector() {
 		return GRAVITY;
 	}
 	
 	@Override
-	public EntityControlPoint createControlPoint(float size) {
+	public ControlPoint createControlPoint(float size) {
 		return new FireControlPoint(this, size, 0, 0, 0);
 	}
 	
-	public static class FireControlPoint extends EntityControlPoint {
-		
-		public FireControlPoint(World world) {
-			super(world);
-		}
+	public FireArcBehavior getBehavior() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+	
+	public void setBehavior(FireArcBehavior behavior) {
+		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	public static class FireControlPoint extends ControlPoint {
 		
 		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);

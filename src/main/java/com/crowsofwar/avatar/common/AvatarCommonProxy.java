@@ -1,13 +1,17 @@
 package com.crowsofwar.avatar.common;
 
+import java.util.Set;
+
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.IAvatarGui;
+import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 
 /**
@@ -41,10 +45,31 @@ public interface AvatarCommonProxy {
 	 */
 	double getPlayerReach();
 	
+	/**
+	 * Called during the FMLInitialization event
+	 */
 	void init();
 	
-	IAvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
+	AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 	
 	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
+	
+	/**
+	 * Get client-side IThreadListener, null on server
+	 * 
+	 * @return
+	 */
+	IThreadListener getClientThreadListener();
+	
+	/**
+	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
+	 */
+	int getParticleAmount();
+	
+	void addStatusControl(StatusControl control);
+	
+	void removeStatusControl(StatusControl control);
+	
+	Set<StatusControl> getAllStatusControls();
 	
 }

@@ -1,17 +1,27 @@
 package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.Vec3;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 public class EntityWaterArc extends EntityArc {
 	
-	private static final Vec3 GRAVITY = Vec3.createVectorHelper(0, -9.81 / 20, 0);
+	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
 	
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
@@ -21,6 +31,12 @@ public class EntityWaterArc extends EntityArc {
 	public EntityWaterArc(World world) {
 		super(world);
 		this.lastPlayedSplash = -1;
+	}
+	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
 	}
 	
 	@Override
@@ -59,8 +75,9 @@ public class EntityWaterArc extends EntityArc {
 			int particles = random.nextInt(3) + 4;
 			for (int i = 0; i < particles; i++) {
 				
-				worldObj.spawnParticle("splash", posX + random.nextGaussian() * offX, posY + random.nextGaussian() * offY + 0.2,
-						posZ + random.nextGaussian() * offZ, random.nextGaussian() * xVel, random.nextGaussian() * yVel,
+				worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX + random.nextGaussian() * offX,
+						posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
+						random.nextGaussian() * xVel, random.nextGaussian() * yVel,
 						random.nextGaussian() * zVel);
 				
 			}
@@ -70,8 +87,9 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vec3 getGravityVector() {
-		return GRAVITY;
+	protected Vector getGravityVector() {
+		// Gravity is added in Behavior
+		return Vector.ZERO;
 	}
 	
 	@Override
@@ -81,17 +99,20 @@ public class EntityWaterArc extends EntityArc {
 			lastPlayedSplash++;
 			if (lastPlayedSplash > 20) lastPlayedSplash = -1;
 		}
+		getBehavior().setEntity(this);
+		getBehavior().onUpdate();
 	}
 	
 	public static EntityWaterArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id) return (EntityWaterArc) obj;
+			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id)
+				return (EntityWaterArc) obj;
 		}
 		return null;
 	}
 	
 	@Override
-	protected EntityControlPoint createControlPoint(float size) {
+	protected ControlPoint createControlPoint(float size) {
 		return new WaterControlPoint(this, size, 0, 0, 0);
 	}
 	
@@ -100,29 +121,42 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	public void playSplash() {
-		worldObj.playSoundAtEntity(this, "game.neutral.swim.splash", 0.3f, 1.5f);
+		worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
+				1.5f, false);
 		lastPlayedSplash = 0;
 	}
 	
-	public static class WaterControlPoint extends EntityControlPoint {
-		
-		public WaterControlPoint(World world) {
-			super(world);
-		}
+	public WaterArcBehavior getBehavior() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+	
+	public void setBehavior(WaterArcBehavior behavior) {
+		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	@Override
+	protected double getControlPointTeleportDistanceSq() {
+		return 9;
+	}
+	
+	public static class WaterControlPoint extends ControlPoint {
 		
 		public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
 		
 		@Override
-		protected void onCollision(Entity entity) {
-			if (entity == owner) return;
-			entity.addVelocity(this.posX - entity.posX, 0.2, this.posZ - entity.posZ);
-			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase) entity).attackEntityFrom(AvatarDamageSource.causeWaterDamage((EntityWaterArc) arc, entity), 6);
-			}
-		}
+		protected void onCollision(Entity entity) {}
 		
+	}
+	
+	@Override
+	protected Consumer<EntityPlayer> getNewOwnerCallback() {
+		return newOwner -> {
+			WaterbendingState state = (WaterbendingState) AvatarPlayerData.fetcher()
+					.fetchPerformance(newOwner).getBendingState(BendingType.WATERBENDING.id());
+			state.setWaterArc(this);
+		};
 	}
 	
 }
