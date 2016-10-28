@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.crowsofwar.gorecore.chat.FormattingState.ChatFormatSet;
+import com.crowsofwar.gorecore.chat.FormattingState.Setting;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
@@ -117,6 +118,13 @@ public class ChatSender {
 	private String processText(String text, ChatMessage cm, Object... formatArgs) {
 		MessageConfiguration cfg = cm.getConfig();
 		ChatFormatSet formatSet = new ChatFormatSet();
+		
+		System.out.println("All colors: " + cfg.allColors());
+		
+		for (Map.Entry<String, TextFormatting> color : cfg.allColors().entrySet()) {
+			System.out.println("Adding entry: " + color.getKey() + " -> " + color.getValue());
+			formatSet.addFormat(color.getKey(), color.getValue(), Setting.UNKNOWN, Setting.UNKNOWN);
+		}
 		
 		String[] translateArgs = cm.getTranslationArgs();
 		for (int i = 0; i < translateArgs.length; i++) {
