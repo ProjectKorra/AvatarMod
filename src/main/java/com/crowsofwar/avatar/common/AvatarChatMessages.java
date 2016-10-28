@@ -38,6 +38,8 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_CONFIG_EXCEPTION_2 = newChatMessage(CFG, "avatar.cmd.cfg.exception2", "details");
 	public static final ChatMessage MSG_CONFIG_SUCCESS = newChatMessage(CFG, "avatar.cmd.cfg.successful");
 	
+	public static i
+	
 	/**
 	 * Call the static initializers
 	 */

@@ -11,9 +11,19 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 public class AbilityData {
 	
 	private final BendingAbility ability;
+	private int xp;
 	
 	public AbilityData(BendingAbility ability) {
 		this.ability = ability;
+		this.xp = 0;
+	}
+	
+	public int getXp() {
+		return xp;
+	}
+	
+	public void setXp(int xp) {
+		this.xp = xp;
 	}
 	
 }
