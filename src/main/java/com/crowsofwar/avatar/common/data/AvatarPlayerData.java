@@ -63,11 +63,11 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	@Override
-	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
+	protected void readPlayerDataFromNBT(NBTTagCompound readFrom) {
 		
 		AvatarPlayerData playerData = this;
 		AvatarUtils.readList(bendingControllerList,
-				compound -> BendingController.find(compound.getInteger("ControllerID")), nbt,
+				compound -> BendingController.find(compound.getInteger("ControllerID")), readFrom,
 				"BendingAbilities");
 		
 		AvatarUtils.readList(bendingStateList, compound -> {
@@ -75,7 +75,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			return IBendingState.find(compound.getInteger("ControllerID"), playerData,
 					compound.getCompoundTag("StateData"));
 			
-		}, nbt, "BendingData");
+		}, readFrom, "BendingData");
 		
 		bendingControllers.clear();
 		for (BendingController controller : bendingControllerList) {
@@ -87,7 +87,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			bendingStates.put(state.getId(), state);
 		}
 		
-		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), nbt,
+		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), readFrom,
 				"StatusControls");
 		
 	}
