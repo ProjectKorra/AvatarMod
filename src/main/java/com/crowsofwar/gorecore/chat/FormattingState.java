@@ -37,6 +37,10 @@ public class FormattingState {
 		return formats.peek();
 	}
 	
+	public boolean hasFormat() {
+		return !formats.isEmpty();
+	}
+	
 	public boolean isBold() {
 		boolean bold = false;
 		for (int i = 0; i < formats.size(); i++) {
@@ -65,7 +69,6 @@ public class FormattingState {
 	}
 	
 	@Override
-	
 	public String toString() {
 		return "FormattingState " + formats;
 	}

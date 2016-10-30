@@ -144,13 +144,10 @@ public class ChatSender {
 		// for demo, see http://regexr.com/, regex is: \[?\/?[^\[\]]+\]?
 		Matcher matcher = Pattern.compile("\\[?\\/?[^\\[\\]]+\\]?").matcher(text);
 		
-		System.out.println("Recieved " + text);
 		while (matcher.find()) {
 			
 			// Item may be a tag, may not be
 			String item = matcher.group();
-			
-			System.out.println("Item '" + item + "'");
 			
 			boolean recievedFormatInstruction = false;
 			
@@ -163,8 +160,6 @@ public class ChatSender {
 				String tag = item.substring(1, item.length() - 1);
 				recievedFormatInstruction = true;
 				
-				System.out.println(" - Is tag: " + tag);
-				
 				if (formatSet.isFormatFor(tag)) {
 					
 					format.pushFormat(formatSet.lookup(tag));
@@ -174,7 +169,6 @@ public class ChatSender {
 					
 					if (tag.substring(1).equals(format.topFormat().getName())) {
 						
-						System.out.println(" - Pop format");
 						format.popFormat();
 						
 					} else {
@@ -198,12 +192,6 @@ public class ChatSender {
 			
 			// If any formats changed, must re add all chat formats
 			if (recievedFormatInstruction) {
-				
-				System.out.println(" - adding styles");
-				System.out.println(" - all formats: " + format);
-				System.out.println(" - bold: " + format.isBold() + "; italic: " + format.isItalic());
-				System.out.println(" - color: " + format.getColor());
-				
 				newText += TextFormatting.RESET;
 				newText += format.getColor(); // For some reason, color must
 												// come before bold
@@ -214,6 +202,12 @@ public class ChatSender {
 			}
 			
 		}
+		
+		if (format.hasFormat()) {
+			throw new ProcessingException(
+					"Unclosed tag [" + format.topFormat().getName() + "] in text " + text);
+		}
+		
 		text = newText;
 		
 		return newText;
