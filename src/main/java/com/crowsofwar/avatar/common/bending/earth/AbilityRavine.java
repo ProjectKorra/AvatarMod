@@ -31,10 +31,12 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	}
 	
 	@Override
-	public void execute(AbilityContext data) {
+	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = data.getPlayerEntity();
-		World world = data.getWorld();
+		System.out.println("Skill is: " + ctx.getData().getAbilityData(this).getXp());
+		
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = ctx.getWorld();
 		
 		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw), 0);
 		
