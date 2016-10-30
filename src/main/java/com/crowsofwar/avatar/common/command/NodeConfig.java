@@ -28,14 +28,14 @@ public class NodeConfig extends NodeFunctional {
 	
 	public NodeConfig() {
 		super("config", true);
-		this.argKey = new ArgumentDirect<>("key", ITypeConverter.CONVERTER_STRING, "");
-		this.argVal = new ArgumentDirect<>("value", ITypeConverter.CONVERTER_STRING, "");
+		this.argKey = addArgument(new ArgumentDirect<>("key", ITypeConverter.CONVERTER_STRING, ""));
+		this.argVal = addArgument(new ArgumentDirect<>("value", ITypeConverter.CONVERTER_STRING, ""));
 	}
 	
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		
-		ArgumentList list = call.popArguments(argKey, argVal);
+		ArgumentList list = call.popArguments(this);
 		String key = list.get(argKey);
 		String val = list.get(argVal);
 		if (key.equals("") || val.equals("")) {

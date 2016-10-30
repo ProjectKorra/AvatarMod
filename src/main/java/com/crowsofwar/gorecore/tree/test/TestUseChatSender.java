@@ -17,13 +17,14 @@ public class TestUseChatSender extends NodeFunctional {
 	
 	public TestUseChatSender() {
 		super("chatsender", false);
-		this.argFruit = new ArgumentOptions<String>(ITypeConverter.CONVERTER_STRING, "fruit", "pineapple", "banana", "strawberry");
-		addArguments(argFruit);
+		this.argFruit = new ArgumentOptions<String>(ITypeConverter.CONVERTER_STRING, "fruit", "pineapple",
+				"banana", "strawberry");
+		addArgument(argFruit);
 	}
 	
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		ArgumentList args = call.popArguments(argFruit);
+		ArgumentList args = call.popArguments(this);
 		String fruit = args.get(argFruit);
 		TestMessages.MSG_FRUIT.send(call.getFrom(), fruit);
 		return null;

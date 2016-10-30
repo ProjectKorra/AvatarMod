@@ -19,13 +19,14 @@ public class TestNode2 extends NodeFunctional {
 	public TestNode2() {
 		super("node2", false);
 		argTemp = new ArgumentDirect("temperature", ITypeConverter.CONVERTER_DOUBLE, 3);
-		addArguments(argTemp);
+		addArgument(argTemp);
 	}
 	
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		ArgumentList args = call.popArguments(argTemp);
-		call.getFrom().addChatMessage(new TextComponentTranslation("The temperature is " + args.get(argTemp)));
+		ArgumentList args = call.popArguments(this);
+		call.getFrom()
+				.addChatMessage(new TextComponentTranslation("The temperature is " + args.get(argTemp)));
 		return null;
 	}
 	

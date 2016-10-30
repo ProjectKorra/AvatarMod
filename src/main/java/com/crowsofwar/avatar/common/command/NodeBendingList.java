@@ -22,7 +22,7 @@ public class NodeBendingList extends NodeFunctional {
 	public NodeBendingList() {
 		super("list", true);
 		this.argPlayerName = new ArgumentPlayerName("player");
-		addArguments(argPlayerName);
+		addArgument(argPlayerName);
 	}
 	
 	@Override
@@ -31,7 +31,7 @@ public class NodeBendingList extends NodeFunctional {
 		ICommandSender sender = call.getFrom();
 		World world = sender.getEntityWorld();
 		
-		ArgumentList args = call.popArguments(argPlayerName);
+		ArgumentList args = call.popArguments(this);
 		String playerName = args.get(argPlayerName);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName,

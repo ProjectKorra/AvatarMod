@@ -19,12 +19,12 @@ public class TestBuyVideogames extends NodeFunctional {
 	
 	public TestBuyVideogames() {
 		super("buy", true);
-		addArguments(argAmount = new ArgumentDirect<Integer>("amount", ITypeConverter.CONVERTER_INTEGER, 1));
+		argAmount = addArgument(new ArgumentDirect<Integer>("amount", ITypeConverter.CONVERTER_INTEGER, 1));
 	}
 	
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		ArgumentList args = call.popArguments(argAmount);
+		ArgumentList args = call.popArguments(this);
 		int amount = args.get(argAmount);
 		call.getFrom().addChatMessage(new TextComponentTranslation("test.buyVideogames", amount));
 		return null;

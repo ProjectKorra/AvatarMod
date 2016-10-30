@@ -70,13 +70,13 @@ public class NodeAbilityExp extends NodeFunctional {
 				new ArgumentOptions<>(ITypeConverter.CONVERTER_STRING, "operation", "get", "set"));
 		argPlayer = addArgument(new ArgumentPlayerName("player"));
 		argAbility = addArgument(new ArgumentOptions<>(convertAbility, "ability", allAbilities));
-		argSetTo = addArguments(new ArgumentDirect<Integer>("value", ITypeConverter.CONVERTER_INTEGER, -1));
+		argSetTo = addArgument(new ArgumentDirect<Integer>("value", ITypeConverter.CONVERTER_INTEGER, -1));
 	}
 	
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		
-		ArgumentList args = call.popArguments(argOperation, argPlayer, argAbility, argSetTo);
+		ArgumentList args = call.popArguments(this);
 		String operation = args.get(argOperation);
 		String player = args.get(argPlayer);
 		BendingAbility ability = args.get(argAbility);

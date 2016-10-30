@@ -29,7 +29,7 @@ public class NodeBranch implements ICommandNode {
 	
 	@Override
 	public ICommandNode execute(CommandCall call, List<String> options) {
-		ArgumentList args = call.popArguments(argName);
+		ArgumentList args = call.popArguments(this);
 		String name = args.get(argName);
 		for (int i = 0; i < nodes.length; i++) {
 			if (nodes[i].getNodeName().equals(name)) return nodes[i];

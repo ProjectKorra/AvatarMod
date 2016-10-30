@@ -30,7 +30,8 @@ public class NodeBendingRemove extends NodeFunctional {
 		this.argBendingController = new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING,
 				"bending", BendingManager.allBending().toArray(new BendingController[0]));
 		
-		this.addArguments(argPlayerName, argBendingController);
+		this.addArgument(argPlayerName);
+		this.addArgument(argBendingController);
 		
 	}
 	
@@ -40,7 +41,7 @@ public class NodeBendingRemove extends NodeFunctional {
 		ICommandSender sender = call.getFrom();
 		World world = sender.getEntityWorld();
 		
-		ArgumentList args = call.popArguments(argPlayerName, argBendingController);
+		ArgumentList args = call.popArguments(this);
 		
 		String playerName = args.get(argPlayerName);
 		BendingController controller = args.get(argBendingController);

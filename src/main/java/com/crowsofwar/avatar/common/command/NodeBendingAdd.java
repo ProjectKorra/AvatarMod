@@ -26,11 +26,10 @@ public class NodeBendingAdd extends NodeFunctional {
 	public NodeBendingAdd() {
 		super("add", true);
 		
-		this.argPlayerName = new ArgumentPlayerName("player");
-		this.argBendingController = new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING,
-				"bending", BendingManager.allBending().toArray(new BendingController[0]));
-		
-		this.addArguments(argPlayerName, argBendingController);
+		this.argPlayerName = addArgument(new ArgumentPlayerName("player"));
+		this.argBendingController = addArgument(
+				new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING, "bending",
+						BendingManager.allBending().toArray(new BendingController[0])));
 		
 	}
 	
@@ -40,7 +39,7 @@ public class NodeBendingAdd extends NodeFunctional {
 		ICommandSender sender = call.getFrom();
 		World world = sender.getEntityWorld();
 		
-		ArgumentList args = call.popArguments(argPlayerName, argBendingController);
+		ArgumentList args = call.popArguments(this);
 		
 		String playerName = args.get(argPlayerName);
 		BendingController controller = args.get(argBendingController);
