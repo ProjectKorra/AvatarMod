@@ -5,6 +5,8 @@ import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -147,6 +149,71 @@ public class AvatarUtils {
 		}
 		
 		nbt.setTag(listName, listTag);
+		
+	}
+	
+	/**
+	 * Clears the map and adds the saved entries. Permits null values.
+	 * 
+	 * @param map
+	 *            Map to read into
+	 * @param keyProvider
+	 *            Creates a key object from a given NBT. The NBT is only used by
+	 *            the key.
+	 * @param valueProvider
+	 *            Creates a value object from a given NBT. The NBT is only used
+	 *            by the value.
+	 * @param nbt
+	 *            NBT to read from
+	 * @param mapName
+	 *            Name to store it as
+	 */
+	public static <K, V> void readMap(Map<K, V> map, Function<NBTTagCompound, K> keyProvider,
+			Function<NBTTagCompound, V> valueProvider, NBTTagCompound nbt, String mapName) {
+		
+		map.clear();
+		
+		NBTTagList listTag = nbt.getTagList(mapName, 10);
+		for (int i = 0; i < listTag.tagCount(); i++) {
+			NBTTagCompound item = listTag.getCompoundTagAt(i);
+			map.put(keyProvider.apply(nbt.getCompoundTag("Key")),
+					valueProvider.apply(nbt.getCompoundTag("Value")));
+		}
+		
+	}
+	
+	/**
+	 * Writes the map's entries to the NBT. Permits null values.
+	 * 
+	 * @param map
+	 *            Map to write
+	 * @param keyWriter
+	 *            Given a key object & NBT, writes the key to disk.
+	 * @param valueWriter
+	 *            Given a value object & NBT, writes the value to disk.
+	 * @param nbt
+	 *            NBT to read from
+	 * @param mapName
+	 *            Name to store map as
+	 */
+	public static <K, V> void writeMap(Map<K, V> map, BiConsumer<NBTTagCompound, K> keyWriter,
+			BiConsumer<NBTTagCompound, V> valueWriter, NBTTagCompound nbt, String mapName) {
+		
+		NBTTagList listTag = new NBTTagList();
+		Set<Map.Entry<K, V>> entries = map.entrySet();
+		
+		for (Map.Entry<K, V> entry : entries) {
+			NBTTagCompound item = new NBTTagCompound();
+			NBTTagCompound keyNbt = new NBTTagCompound();
+			NBTTagCompound valNbt = new NBTTagCompound();
+			keyWriter.accept(keyNbt, entry.getKey());
+			valueWriter.accept(valNbt, entry.getValue());
+			item.setTag("Key", keyNbt);
+			item.setTag("Value", valNbt);
+			listTag.appendTag(item);
+		}
+		
+		nbt.setTag(mapName, listTag);
 		
 	}
 	

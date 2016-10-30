@@ -87,21 +87,34 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			bendingStates.put(state.getId(), state);
 		}
 		
-		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), readFrom,
-				"StatusControls");
+		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")),
+				readFrom, "StatusControls");
+		
+		AvatarUtils.readMap(abilityData, nbt -> BendingManager.getAbility(nbt.getInteger("Id")), nbt -> {
+			BendingAbility ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
+			AbilityData data = new AbilityData(ability, xp -> saveChanges());
+			data.setXp(nbt.getInteger("Xp"));
+			return data;
+		}, readFrom, "AbilityData");
 		
 	}
 	
 	@Override
-	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
+	protected void writePlayerDataToNBT(NBTTagCompound writeTo) {
 		
 		AvatarUtils.writeList(bendingControllerList,
-				(compound, controller) -> compound.setInteger("ControllerID", controller.getID()), nbt,
+				(compound, controller) -> compound.setInteger("ControllerID", controller.getID()), writeTo,
 				"BendingAbilities");
-		AvatarUtils.writeList(bendingStateList, (compound, bendingState) -> bendingState.write(compound), nbt,
-				"BendingData");
-		AvatarUtils.writeList(statusControls, (nbtTag, control) -> nbtTag.setInteger("Id", control.id()), nbt,
-				"StatusControls");
+		AvatarUtils.writeList(bendingStateList, (compound, bendingState) -> bendingState.write(compound),
+				writeTo, "BendingData");
+		AvatarUtils.writeList(statusControls, (nbtTag, control) -> nbtTag.setInteger("Id", control.id()),
+				writeTo, "StatusControls");
+		
+		AvatarUtils.writeMap(abilityData, (nbt, ability) -> nbt.setInteger("Id", ability.getId()),
+				(nbt, data) -> {
+					nbt.setInteger("AbilityId", data.getAbility().getId());
+					nbt.setInteger("Xp", data.getXp());
+				}, writeTo, "AbilityData");
 		
 	}
 	
@@ -279,7 +292,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public AbilityData getAbilityData(BendingAbility<?> ability) {
 		if (!abilityData.containsKey(ability)) {
-			abilityData.put(ability, new AbilityData(ability));
+			abilityData.put(ability, new AbilityData(ability, xp -> saveChanges()));
 		}
 		return abilityData.get(ability);
 	}

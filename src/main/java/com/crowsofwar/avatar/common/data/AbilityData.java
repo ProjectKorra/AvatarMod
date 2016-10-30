@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.data;
 
+import java.util.function.Consumer;
+
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
 /**
@@ -11,11 +13,17 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 public class AbilityData {
 	
 	private final BendingAbility ability;
+	private final Consumer<Integer> changeListener;
 	private int xp;
 	
-	public AbilityData(BendingAbility ability) {
+	public AbilityData(BendingAbility ability, Consumer<Integer> onChange) {
 		this.ability = ability;
 		this.xp = 0;
+		this.changeListener = onChange;
+	}
+	
+	BendingAbility getAbility() {
+		return ability;
 	}
 	
 	public int getXp() {
@@ -24,6 +32,7 @@ public class AbilityData {
 	
 	public void setXp(int xp) {
 		this.xp = xp;
+		changeListener.accept(xp);
 	}
 	
 }
