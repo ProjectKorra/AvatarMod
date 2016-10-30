@@ -96,7 +96,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			data.setXp(nbt.getInteger("Xp"));
 			return data;
 		}, readFrom, "AbilityData");
-		System.out.println("Read ability data: " + abilityData);
 		
 	}
 	
@@ -116,7 +115,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 					nbt.setInteger("AbilityId", data.getAbility().getId());
 					nbt.setInteger("Xp", data.getXp());
 				}, writeTo, "AbilityData");
-		System.out.println("Wrote ability data: " + abilityData);
 		
 	}
 	

@@ -90,7 +90,7 @@ public class NodeAbilityExp extends NodeFunctional {
 				if (data != null) {
 					
 					data.getAbilityData(ability).setXp(setXp);
-					AvatarChatMessages.MSG_ABILITY_GET.send(call.getFrom(), player,
+					AvatarChatMessages.MSG_ABILITY_SET_SUCCESS.send(call.getFrom(), player,
 							ability.getClass().getSimpleName(), setXp);
 				}
 			} else {
