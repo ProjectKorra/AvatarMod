@@ -153,7 +153,8 @@ public class AvatarUtils {
 	}
 	
 	/**
-	 * Clears the map and adds the saved entries. Permits null values.
+	 * Clears the map and adds the saved entries. Does not permit null keys or
+	 * values.
 	 * 
 	 * @param map
 	 *            Map to read into
@@ -176,14 +177,22 @@ public class AvatarUtils {
 		NBTTagList listTag = nbt.getTagList(mapName, 10);
 		for (int i = 0; i < listTag.tagCount(); i++) {
 			NBTTagCompound item = listTag.getCompoundTagAt(i);
-			map.put(keyProvider.apply(nbt.getCompoundTag("Key")),
-					valueProvider.apply(nbt.getCompoundTag("Value")));
+			
+			K key = keyProvider.apply(item.getCompoundTag("Key"));
+			V value = valueProvider.apply(item.getCompoundTag("Value"));
+			
+			if (key == null) throw new DiskException(
+					"readMap- cannot have null key: " + item.getCompoundTag("Key") + " in compound " + nbt);
+			if (value == null) throw new DiskException("readMap- cannot have null value: "
+					+ item.getCompoundTag("Value") + " in compound " + nbt);
+			
+			map.put(key, value);
 		}
 		
 	}
 	
 	/**
-	 * Writes the map's entries to the NBT. Permits null values.
+	 * Writes the map's entries to the NBT. Does not permit null keys or values.
 	 * 
 	 * @param map
 	 *            Map to write
@@ -203,6 +212,12 @@ public class AvatarUtils {
 		Set<Map.Entry<K, V>> entries = map.entrySet();
 		
 		for (Map.Entry<K, V> entry : entries) {
+			
+			if (entry.getKey() == null)
+				throw new DiskException("writeMap- does not permit null keys in map " + map);
+			if (entry.getValue() == null)
+				throw new DiskException("writeMap- does not permit null values in map " + map);
+			
 			NBTTagCompound item = new NBTTagCompound();
 			NBTTagCompound keyNbt = new NBTTagCompound();
 			NBTTagCompound valNbt = new NBTTagCompound();
@@ -214,6 +229,19 @@ public class AvatarUtils {
 		}
 		
 		nbt.setTag(mapName, listTag);
+		
+	}
+	
+	/**
+	 * An exception thrown by reading/writing methods for NBT
+	 * 
+	 * @author CrowsOfWar
+	 */
+	public static class DiskException extends RuntimeException {
+		
+		private DiskException(String message) {
+			super(message);
+		}
 		
 	}
 	
