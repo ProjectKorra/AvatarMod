@@ -119,10 +119,7 @@ public class ChatSender {
 		MessageConfiguration cfg = cm.getConfig();
 		ChatFormatSet formatSet = new ChatFormatSet();
 		
-		System.out.println("All colors: " + cfg.allColors());
-		
 		for (Map.Entry<String, TextFormatting> color : cfg.allColors().entrySet()) {
-			System.out.println("Adding entry: " + color.getKey() + " -> " + color.getValue());
 			formatSet.addFormat(color.getKey(), color.getValue(), Setting.UNKNOWN, Setting.UNKNOWN);
 		}
 		
