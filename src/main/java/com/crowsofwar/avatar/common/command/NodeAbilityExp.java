@@ -66,11 +66,11 @@ public class NodeAbilityExp extends NodeFunctional {
 	 */
 	public NodeAbilityExp() {
 		super("ability", true);
-		addArguments(argOperation = new ArgumentOptions<>(ITypeConverter.CONVERTER_STRING, "operation", "get",
-				"set"));
-		addArguments(argPlayer = new ArgumentPlayerName("player"));
-		addArguments(argAbility = new ArgumentOptions<>(convertAbility, "ability", allAbilities));
-		addArguments(argSetTo = new ArgumentDirect<Integer>("value", ITypeConverter.CONVERTER_INTEGER, -1));
+		argOperation = addArgument(
+				new ArgumentOptions<>(ITypeConverter.CONVERTER_STRING, "operation", "get", "set"));
+		argPlayer = addArgument(new ArgumentPlayerName("player"));
+		argAbility = addArgument(new ArgumentOptions<>(convertAbility, "ability", allAbilities));
+		argSetTo = addArguments(new ArgumentDirect<Integer>("value", ITypeConverter.CONVERTER_INTEGER, -1));
 	}
 	
 	@Override

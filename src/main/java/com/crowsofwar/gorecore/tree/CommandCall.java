@@ -21,7 +21,8 @@ public class CommandCall {
 		
 	}
 	
-	public ArgumentList popArguments(IArgument<?>... arguments) {
+	public ArgumentList popArguments(ICommandNode node) {
+		IArgument<?>[] arguments = node.getArgumentList();
 		String[] poppedArray = Arrays.copyOfRange(passedArgs, argumentIndex, passedArgs.length);
 		argumentIndex += arguments.length;
 		return new ArgumentList(poppedArray, arguments);
