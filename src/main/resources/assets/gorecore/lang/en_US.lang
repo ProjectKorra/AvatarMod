@@ -10,7 +10,7 @@ gc.tree.error.notOption=The value %1$s for argument %2$s is not an option.
 
 gc.tree.cmdhelp.top=     [title]---- [bold]Help for [/color][value]${name}[/color][/bold][title] ----[/color]
 gc.tree.cmdhelp.desc=[bold]Description:[/bold] ${descr}
-gc.tree.cmdhelp.nodes.item=[value]${node}[/color]
+gc.tree.cmdhelp.nodes.item=[value]${node}[/value]
 gc.tree.cmdhelp.nodes.separator=, 
 gc.tree.cmdhelp.nodes.separatorLast=, and 
 gc.tree.cmdhelp.nodes=[bold]Valid sub-nodes: [/bold]
@@ -25,7 +25,7 @@ gc.tree.branchHelp.options.separator=,
 gc.tree.branchHelp.options.separatorLast=, or 
 gc.tree.branchHelp.example=[bold]Example:[/bold] ${path} [value]${node-name}[/value] --help
 
-gc.tree.nodeHelp.top=    [title]---- [bold]Help for [/color][value]${name}[/color][/bold][title] ----[/color]
+gc.tree.nodeHelp.top=    [title]---- [bold]Help for [value]${name}[/value][/bold] ----[/title]
 gc.tree.nodeHelp.desc=[bold]Description: [/bold]
 gc.tree.nodeHelp.args=[bold]Arguments:[/bold]
 gc.tree.nodeHelp.args.item= ${argument}

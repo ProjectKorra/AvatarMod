@@ -24,7 +24,7 @@ avatar.cmd.bending=Manage a player's bending controllers.
 avatar.cmd.bending.list.noData=[color=error_value]${player}[/color][color=error] is not a registered account.[/color]
 avatar.cmd.bending.list.nonbender=[italic][color=value]${player}[/color] is a non-bender.[/italic]
 avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
-avatar.cmd.bending.list.top=[bold]Listing [color=value]${amount}[/color] bending controllers for [color=value]${player}[/color]:
+avatar.cmd.bending.list.top=[bold]Listing [value]${amount}[/value] bending controllers for [value]${player}[/value]:
 
 avatar.cmd.bending.add.alreadyHas=[color=error_value]${player}[/color][color=error] is already a(n) [/color][color=error_value][translate=avatar.${bending}.demonym][/color].
 avatar.cmd.bending.add.success=[bold][color=value]${player}[/color] is now a(n) [color=value][translate=avatar.${bending}.demonym][/color]![/bold]
