@@ -136,6 +136,9 @@ public abstract class TreeCommand implements ICommand {
 				nodeIndex++;
 			} else {
 				IArgument<?>[] nodeArgs = node.getArgumentList();
+				System.out.println("Node args: " + Arrays.asList(node.getArgumentList()));
+				System.out.println("All sent:  " + Arrays.asList(sentArgs));
+				System.out.println("Node index:" + nodeIndex);
 				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
 				return nodeArgs[sentArgs.length - 1 - nodeIndex].getCompletionSuggestions(sender,
 						sentArgs[sentArgs.length - 1]);
@@ -212,8 +215,8 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	/**
-	 * Called to instantiate all subclass Command Nodes. Return the ones that should be added to the
-	 * root branch.
+	 * Called to instantiate all subclass Command Nodes. Return the ones that
+	 * should be added to the root branch.
 	 */
 	protected abstract ICommandNode[] addCommands();
 	
