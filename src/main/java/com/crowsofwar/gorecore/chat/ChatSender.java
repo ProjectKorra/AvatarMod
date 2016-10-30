@@ -180,7 +180,8 @@ public class ChatSender {
 				} else if (tag.startsWith("translate=")) {
 					
 					String key = tag.substring("translate=".length());
-					tag = processText(I18n.format(key), cm, formatArgs);
+					item = processText(I18n.format(key), cm, formatArgs);
+					recievedFormatInstruction = false;
 					
 				} else {
 					
