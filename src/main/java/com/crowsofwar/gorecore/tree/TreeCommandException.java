@@ -6,7 +6,7 @@ public class TreeCommandException extends RuntimeException {
 	private final Object[] format;
 	
 	public TreeCommandException(Reason reason, Object... format) {
-		this(reason.getMessage());
+		this(reason.getMessage(), format);
 	}
 	
 	public TreeCommandException(String message, Object... format) {
