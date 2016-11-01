@@ -9,7 +9,8 @@ import com.crowsofwar.gorecore.tree.TreeCommandException.Reason;
 import net.minecraft.command.ICommandSender;
 
 /**
- * An argument which allows the user to specify one of several values. Supports tab completion.
+ * An argument which allows the user to specify one of several values. Supports
+ * tab completion.
  * 
  * @param <T>
  *            The type of value
@@ -61,18 +62,18 @@ public class ArgumentOptions<T> implements IArgument<T> {
 	
 	@Override
 	public String getHelpString() {
-		String help = isOptional() ? "[" : "<";
+		String help = isOptional() ? "\\[" : "<";
 		for (int i = 0; i < options.size(); i++) {
 			help += (i == 0 ? "" : "|") + convert.toString(options.get(i));
 		}
-		help += isOptional() ? "]" : ">";
+		help += isOptional() ? "\\]" : ">";
 		return help;
 	}
 	
 	@Override
 	public String getSpecificationString() {
-		String start = isOptional() ? "[" : "<";
-		String end = isOptional() ? "]" : ">";
+		String start = isOptional() ? "\\[" : "<";
+		String end = isOptional() ? "\\]" : ">";
 		return start + getArgumentName() + end;
 	}
 	
@@ -89,7 +90,8 @@ public class ArgumentOptions<T> implements IArgument<T> {
 			return str1.compareTo(str2);
 		});
 		
-		// Make sure that there are tab completions for what user has typed so far
+		// Make sure that there are tab completions for what user has typed so
+		// far
 		// If not, don't give any suggestions
 		if (!out.get(0).startsWith(currentInput)) {
 			return new ArrayList<>();
