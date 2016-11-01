@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.client.gui;
 
+import static com.crowsofwar.avatar.AvatarMod.proxy;
+
 import org.lwjgl.input.Keyboard;
 
 import com.crowsofwar.avatar.AvatarMod;
@@ -100,10 +102,11 @@ public class RadialMenu extends Gui {
 	 * @return Whether to close the screen
 	 */
 	public boolean updateScreen(int mouseX, int mouseY, ScaledResolution resolution) {
-		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing))
+		
+		boolean closeGui = !Keyboard.isKeyDown(proxy.getKeyHandler().getKeyCode(pressing))
 				|| AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK);
 		
-		if (!pressed) {
+		if (closeGui) {
 			
 			for (int i = 0; i < segments.length; i++) {
 				if (controls[i] == null) continue;
@@ -119,7 +122,7 @@ public class RadialMenu extends Gui {
 			}
 			
 		}
-		return !pressed;
+		return closeGui;
 	}
 	
 	/**
