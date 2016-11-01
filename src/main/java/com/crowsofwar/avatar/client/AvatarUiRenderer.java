@@ -18,6 +18,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,6 +43,8 @@ public class AvatarUiRenderer extends Gui {
 	
 	@SubscribeEvent
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
+		
+		if (e.getType() != ElementType.EXPERIENCE) return;
 		
 		ScaledResolution resolution = e.getResolution();
 		
