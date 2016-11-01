@@ -50,8 +50,9 @@ public class RadialMenu extends Gui {
 	 * @param pressing
 	 *            The key which must be pressed to keep the GUI open.
 	 * @param controls
-	 *            A 8-element array of controls. If the arguments passed are less than 8, then the
-	 *            array is filled with null. The arguments can only be a maximum of 8.
+	 *            A 8-element array of controls. If the arguments passed are
+	 *            less than 8, then the array is filled with null. The arguments
+	 *            can only be a maximum of 8.
 	 */
 	public RadialMenu(MenuTheme theme, AvatarControl pressing, BendingAbility... controls) {
 		this.theme = theme;
@@ -99,7 +100,9 @@ public class RadialMenu extends Gui {
 	 * @return Whether to close the screen
 	 */
 	public boolean updateScreen(int mouseX, int mouseY, ScaledResolution resolution) {
-		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing));
+		boolean pressed = Keyboard.isKeyDown(AvatarMod.proxy.getKeyHandler().getKeyCode(pressing))
+				|| AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK);
+		
 		if (!pressed) {
 			
 			for (int i = 0; i < segments.length; i++) {

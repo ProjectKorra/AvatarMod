@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.client.controls;
+package com.crowsofwar.avatar.client;
 
 import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
@@ -15,7 +15,6 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
