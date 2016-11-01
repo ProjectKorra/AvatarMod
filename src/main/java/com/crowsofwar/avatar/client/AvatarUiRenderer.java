@@ -67,7 +67,13 @@ public class AvatarUiRenderer extends Gui {
 			}
 		}
 		if (fadingSegment != null) {
-			
+			float timeToFade = 500;
+			long timeSinceStart = System.currentTimeMillis() - timeFadeStart;
+			if (timeSinceStart > timeToFade) {
+				fadingSegment = null;
+			} else {
+				fadingSegment.draw(true, resolution, 1 - timeSinceStart / timeToFade);
+			}
 		}
 		
 		Set<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();

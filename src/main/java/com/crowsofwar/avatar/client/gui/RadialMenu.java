@@ -5,6 +5,7 @@ import static com.crowsofwar.avatar.AvatarMod.proxy;
 import org.lwjgl.input.Keyboard;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -115,6 +116,7 @@ public class RadialMenu extends Gui {
 							controls[i].getRaytrace());
 					AvatarMod.network.sendToServer(
 							new PacketSUseAbility(controls[i], raytrace.getPos(), raytrace.getSide()));
+					AvatarUiRenderer.fade(segments[i]);
 					break;
 					
 				}

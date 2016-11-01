@@ -82,6 +82,10 @@ public class RadialSegment extends Gui {
 	 */
 	//@formatter:off
 	public void draw(boolean hover, ScaledResolution resolution) {
+		draw(hover, resolution, 1);
+	}
+	
+	public void draw(boolean hover, ScaledResolution resolution, float alpha) {
 		
 		int width = resolution.getScaledWidth();
 		int height = resolution.getScaledHeight();
@@ -98,12 +102,12 @@ public class RadialSegment extends Gui {
 																	// center point
 			// Draw background
 			GlStateManager.color(theme.getBackground().getRed(hover) / 255f,
-					theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f);
+					theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f, alpha);
 			mc.getTextureManager().bindTexture(radialMenu);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			// Draw edge
 			GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
-					theme.getEdge().getBlue(hover) / 255f);
+					theme.getEdge().getBlue(hover) / 255f, alpha);
 			mc.getTextureManager().bindTexture(edge);
 //			GlStateManager.translate(0, 0, 1);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
@@ -124,7 +128,7 @@ public class RadialSegment extends Gui {
 			
 			// Color to icon RGB
 			GlStateManager.color(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
-					theme.getIcon().getBlue(hover) / 255f);
+					theme.getIcon().getBlue(hover) / 255f, alpha);
 			
 			GlStateManager.translate(0, 0, 2); // Ensure icon is not overlapped
 			GlStateManager.scale(iconScale, iconScale, iconScale); // Scale the icon's recentering
