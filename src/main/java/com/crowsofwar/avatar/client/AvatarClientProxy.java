@@ -51,7 +51,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
-	private AvatarUiRenderer menuHandler;
 	private Set<StatusControl> statusControls;
 	
 	@Override
@@ -59,11 +58,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		mc = Minecraft.getMinecraft();
 		
 		packetHandler = new PacketHandlerClient();
-		menuHandler = new AvatarUiRenderer();
+		AvatarUiRenderer.instance = new AvatarUiRenderer();
 		
-		inputHandler = new ClientInput(menuHandler);
+		inputHandler = new ClientInput();
 		MinecraftForge.EVENT_BUS.register(inputHandler);
-		MinecraftForge.EVENT_BUS.register(menuHandler);
+		MinecraftForge.EVENT_BUS.register(AvatarUiRenderer.instance);
 		
 		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));

@@ -48,7 +48,6 @@ public class ClientInput implements IControlsHandler {
 	private Map<String, KeyBinding> keybindings;
 	private boolean mouseLeft, mouseRight, mouseMiddle, space;
 	private boolean wasLeft, wasRight, wasMiddle;
-	private final AvatarUiRenderer menuHandler;
 	
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
@@ -57,11 +56,10 @@ public class ClientInput implements IControlsHandler {
 	
 	private boolean press;
 	
-	public ClientInput(AvatarUiRenderer menuHandler) {
+	public ClientInput() {
 		gameSettings = Minecraft.getMinecraft().gameSettings;
 		mouseLeft = mouseRight = mouseMiddle = wasLeft = wasRight = wasMiddle = false;
 		mc = Minecraft.getMinecraft();
-		this.menuHandler = menuHandler;
 		
 		keybindings = new HashMap();
 		
@@ -136,7 +134,7 @@ public class ClientInput implements IControlsHandler {
 	private void openBendingMenu(BendingController controller) {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer);
 		if (isControlPressed(controller.getRadialMenu().getKey()) && data.hasBending(controller.getID()))
-			menuHandler.openBendingGui(controller.getType());
+			AvatarUiRenderer.openBendingGui(controller.getType());
 		
 	}
 	

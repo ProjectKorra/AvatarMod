@@ -6,6 +6,7 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
+import com.crowsofwar.avatar.client.gui.RadialSegment;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -34,11 +35,16 @@ public class AvatarUiRenderer extends Gui {
 	private static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
 			"textures/gui/statusControl.png");
 	
+	public static AvatarUiRenderer instance;
+	
 	private RadialMenu currentBendingMenu;
+	private RadialSegment fadingSegment;
+	private long timeFadeStart;
 	private final Minecraft mc;
 	
 	public AvatarUiRenderer() {
 		mc = Minecraft.getMinecraft();
+		instance = this;
 	}
 	
 	@SubscribeEvent
@@ -59,6 +65,9 @@ public class AvatarUiRenderer extends Gui {
 			} else {
 				currentBendingMenu.drawScreen(mouseX, mouseY, resolution);
 			}
+		}
+		if (fadingSegment != null) {
+			
 		}
 		
 		Set<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();
@@ -83,14 +92,19 @@ public class AvatarUiRenderer extends Gui {
 		
 	}
 	
-	public void openBendingGui(BendingType bending) {
+	public static void openBendingGui(BendingType bending) {
 		
 		BendingController controller = BendingManager.getBending(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
-		this.currentBendingMenu = new RadialMenu(menu.getTheme(), menu.getKey(), menu.getButtons());
-		mc.setIngameNotInFocus();
+		instance.currentBendingMenu = new RadialMenu(menu.getTheme(), menu.getKey(), menu.getButtons());
+		instance.mc.setIngameNotInFocus();
 		
+	}
+	
+	public static void fade(RadialSegment segment) {
+		instance.fadingSegment = segment;
+		instance.timeFadeStart = System.currentTimeMillis();
 	}
 	
 }
