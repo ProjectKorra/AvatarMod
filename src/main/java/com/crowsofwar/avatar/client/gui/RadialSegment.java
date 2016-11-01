@@ -73,15 +73,15 @@ public class RadialSegment extends Gui {
 	}
 	
 	/**
-	 * Draw the radial segment at that angle and with the specified color.
+	 * Draw this radial segment.
 	 * 
-	 * @param segment
-	 *            Radial segment to draw
-	 * @param background
+	 * @param hover
+	 *            Whether mouse is over it
 	 * @param resolution
+	 *            Resolution MC is at
 	 */
 	//@formatter:off
-	public void draw(RadialSegment segment, boolean hover, ScaledResolution resolution) {
+	public void draw(boolean hover, ScaledResolution resolution) {
 		
 		int width = resolution.getScaledWidth();
 		int height = resolution.getScaledHeight();
@@ -132,7 +132,7 @@ public class RadialSegment extends Gui {
 			// image
 			GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
 			mc.getTextureManager().bindTexture(RadialMenu.icons);
-			drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
+			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
 			
 		GlStateManager.popMatrix();
 		

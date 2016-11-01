@@ -73,7 +73,8 @@ public class RadialMenu extends Gui {
 		this.controls = ctrl;
 		
 		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new RadialSegment(this, i, controls[i] == null ? -1 : controls[i].getIconIndex());
+			segments[i] = new RadialSegment(this, theme, i,
+					controls[i] == null ? -1 : controls[i].getIconIndex());
 		}
 		
 		ScaledResolution resolution = new ScaledResolution(mc);
@@ -85,7 +86,7 @@ public class RadialMenu extends Gui {
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
-			drawRadialSegment(segments[i], hover, resolution);
+			segments[i].draw(hover, resolution);
 		}
 		
 	}
