@@ -47,7 +47,10 @@ public class AvatarCommand extends TreeCommand {
 		NodeBranch branchBending = new NodeBranch(AvatarChatMessages.MSG_BENDING_BRANCH_INFO, "bending",
 				bendingList, bendingAdd, bendingRemove);
 		
-		return new ICommandNode[] { branchBending, new NodeConfig(), new NodeAbilityExp() };
+		NodeBranch branchAbility = new NodeBranch(branchHelpDefault, "ability", new NodeAbilityGet(),
+				new NodeAbilitySet());
+		
+		return new ICommandNode[] { branchBending, new NodeConfig(), branchAbility };
 		
 	}
 	
