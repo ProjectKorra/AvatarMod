@@ -2,17 +2,21 @@ package com.crowsofwar.gorecore.tree;
 
 public class TreeCommandException extends RuntimeException {
 	
-	private final Reason reason;
+	private final String reason;
 	private final Object[] format;
 	
 	public TreeCommandException(Reason reason, Object... format) {
-		super(reason.getMessage());
-		this.reason = reason;
+		this(reason.getMessage());
+	}
+	
+	public TreeCommandException(String message, Object... format) {
+		super(message);
+		this.reason = message;
 		this.format = format;
 	}
 	
 	public String getMessage() {
-		return reason.getMessage();
+		return reason;
 	}
 	
 	public Object[] getFormattingArgs() {
@@ -20,8 +24,11 @@ public class TreeCommandException extends RuntimeException {
 	}
 	
 	public static enum Reason {
-		ARGUMENT_MISSING("gc.tree.error.missingArgs"), NO_BRANCH_NODE("gc.tree.error.noBranchNode"), CANT_CONVERT(
-				"gc.tree.error.cantConvert"), NO_PERMISSION("gc.tree.error.needsOp"), NOT_OPTION("gc.tree.error.notOption");
+		ARGUMENT_MISSING("gc.tree.error.missingArgs"),
+		NO_BRANCH_NODE("gc.tree.error.noBranchNode"),
+		CANT_CONVERT("gc.tree.error.cantConvert"),
+		NO_PERMISSION("gc.tree.error.needsOp"),
+		NOT_OPTION("gc.tree.error.notOption");
 		
 		private final String message;
 		

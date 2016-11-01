@@ -7,6 +7,8 @@ gc.tree.error.noBranchNode=No subcommand "%1$s". Usage: %2$s
 gc.tree.error.cantConvert=Cannot convert "%1$s" to a %2$s.
 gc.tree.error.needsOp=You need to be an operator to use that subcommand.
 gc.tree.error.notOption=The value %1$s for argument %2$s is not an option.
+gc.tree.error.rangeInt=The argument %1$d is only from %2$d-%3$d.
+gc.tree.error.rangeDouble=The argument %1$f is only from %2$f-%3$f.
 
 gc.tree.cmdhelp.top=     [title]---- [bold]Help for [value]${name}[/value][/bold] ----[/title]
 gc.tree.cmdhelp.desc=[bold]Description:[/bold] ${descr}

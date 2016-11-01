@@ -46,7 +46,11 @@ public class ArgumentRangeInteger implements IArgument<Integer> {
 	
 	@Override
 	public Integer convert(String input) {
-		return ITypeConverter.CONVERTER_INTEGER.convert(input);
+		int value = ITypeConverter.CONVERTER_INTEGER.convert(input);
+		if (value < min || value > max) {
+			throw new TreeCommandException("gc.tree.error.rangeInt", name, min, max);
+		}
+		return value;
 	}
 	
 	@Override

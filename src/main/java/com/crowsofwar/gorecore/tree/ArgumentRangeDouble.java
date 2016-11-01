@@ -46,7 +46,11 @@ public class ArgumentRangeDouble implements IArgument<Double> {
 	
 	@Override
 	public Double convert(String input) {
-		return ITypeConverter.CONVERTER_DOUBLE.convert(input);
+		double value = ITypeConverter.CONVERTER_DOUBLE.convert(input);
+		if (value < min || value > max) {
+			throw new TreeCommandException("gc.tree.error.rangeDouble", name, min, max);
+		}
+		return value;
 	}
 	
 	@Override

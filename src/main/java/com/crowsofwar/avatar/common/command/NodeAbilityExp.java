@@ -6,10 +6,10 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
 import com.crowsofwar.gorecore.tree.ArgumentOptions;
 import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
+import com.crowsofwar.gorecore.tree.ArgumentRangeInteger;
 import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.IArgument;
 import com.crowsofwar.gorecore.tree.ICommandNode;
@@ -70,7 +70,7 @@ public class NodeAbilityExp extends NodeFunctional {
 				new ArgumentOptions<>(ITypeConverter.CONVERTER_STRING, "operation", "get", "set"));
 		argPlayer = addArgument(new ArgumentPlayerName("player"));
 		argAbility = addArgument(new ArgumentOptions<>(convertAbility, "ability", allAbilities));
-		argSetTo = addArgument(new ArgumentDirect<Integer>("value", ITypeConverter.CONVERTER_INTEGER, -1));
+		argSetTo = addArgument(new ArgumentRangeInteger("value", 0, 100));
 	}
 	
 	@Override
