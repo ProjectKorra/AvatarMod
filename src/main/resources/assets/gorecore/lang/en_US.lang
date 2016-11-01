@@ -8,7 +8,7 @@ gc.tree.error.cantConvert=Cannot convert "%1$s" to a %2$s.
 gc.tree.error.needsOp=You need to be an operator to use that subcommand.
 gc.tree.error.notOption=The value %1$s for argument %2$s is not an option.
 
-gc.tree.cmdhelp.top=     [title]---- [bold]Help for [/color][value]${name}[/color][/bold][title] ----[/color]
+gc.tree.cmdhelp.top=     [title]---- [bold]Help for [value]${name}[/value][/bold] ----[/title]
 gc.tree.cmdhelp.desc=[bold]Description:[/bold] ${descr}
 gc.tree.cmdhelp.nodes.item=[value]${node}[/value]
 gc.tree.cmdhelp.nodes.separator=, 
