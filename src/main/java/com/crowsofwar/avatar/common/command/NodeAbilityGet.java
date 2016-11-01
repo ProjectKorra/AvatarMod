@@ -62,7 +62,7 @@ public class NodeAbilityGet extends NodeFunctional {
 	 * @param op
 	 */
 	public NodeAbilityGet() {
-		super("ability", true);
+		super("get", true);
 		argPlayer = addArgument(new ArgumentPlayerName("player"));
 		argAbility = addArgument(new ArgumentOptions<>(convertAbility, "ability", allAbilities));
 	}
