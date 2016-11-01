@@ -138,8 +138,8 @@ public class ChatSender {
 		String newText = "";
 		
 		// Separate the text by square brackets
-		// for demo, see http://regexr.com/, regex is: \[?\/?[^\[\]]+\]?
-		Matcher matcher = Pattern.compile("\\[?\\/?[^\\[\\]]+\\]?").matcher(text);
+		// for demo, see http://regexr.com/, regex is: \\?\[?\/?[^\[\]]+\]?
+		Matcher matcher = Pattern.compile("\\\\?\\[?\\/?[^\\[\\]]+\\]?").matcher(text);
 		
 		while (matcher.find()) {
 			
