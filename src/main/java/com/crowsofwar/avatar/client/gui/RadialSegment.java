@@ -1,25 +1,36 @@
 package com.crowsofwar.avatar.client.gui;
 
+import static com.crowsofwar.avatar.client.gui.RadialMenu.*;
+
+import com.crowsofwar.avatar.common.gui.MenuTheme;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
- * Holds information for the RadialMenu about a segment. Contains information on its rotation
- * (position), and whether it's clicked.
+ * Holds information for the RadialMenu about a segment. Contains information on
+ * its rotation (position), and whether it's clicked.
  *
  */
-public class RadialSegment {
+public class RadialSegment extends Gui {
 	
 	private final RadialMenu gui;
+	private final MenuTheme theme;
+	private final Minecraft mc;
 	private final float angle;
 	private final int index;
 	private final int icon;
 	
-	public RadialSegment(RadialMenu gui, int index, int icon) {
+	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, int icon) {
 		this.gui = gui;
 		this.angle = 22.5f + index * 45;
 		this.index = index;
 		if (icon == -1) icon = 255;
 		this.icon = icon;
+		this.theme = theme;
+		this.mc = Minecraft.getMinecraft();
 	}
 	
 	/**
@@ -60,5 +71,72 @@ public class RadialSegment {
 	public int getTextureV() {
 		return (icon / 8) * 32;
 	}
+	
+	/**
+	 * Draw the radial segment at that angle and with the specified color.
+	 * 
+	 * @param segment
+	 *            Radial segment to draw
+	 * @param background
+	 * @param resolution
+	 */
+	//@formatter:off
+	public void draw(RadialSegment segment, boolean hover, ScaledResolution resolution) {
+		
+		int width = resolution.getScaledWidth();
+		int height = resolution.getScaledHeight();
+		
+		GlStateManager.enableBlend();
+		
+		// Draw background & edge
+		GlStateManager.pushMatrix();
+			GlStateManager.translate(width / 2f, height / 2f, 0); 	// Re-center origin
+			GlStateManager.scale(menuScale, menuScale, menuScale); 	// Scale all following arguments
+			GlStateManager.rotate(this.getAngle(), 0, 0, 1);		// All transform operations and the
+																	// image are rotated
+			GlStateManager.translate(-segmentX, -segmentY, 0);		// Offset the image to the correct
+																	// center point
+			// Draw background
+			GlStateManager.color(theme.getBackground().getRed(hover) / 255f,
+					theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f);
+			mc.getTextureManager().bindTexture(radialMenu);
+			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			// Draw edge
+			GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
+					theme.getEdge().getBlue(hover) / 255f);
+			mc.getTextureManager().bindTexture(edge);
+//			GlStateManager.translate(0, 0, 1);
+			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		GlStateManager.popMatrix();
+		
+		// Draw icon
+		GlStateManager.pushMatrix();
+			float iconScale = .8f;
+			float angle = this.getAngle() + 45f;
+			angle %= 360;
+			
+			GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
+			GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
+			GlStateManager.translate(-59, -27, 0); // Translate into correct position
+			GlStateManager.rotate(-angle, 0, 0, 1); // Icon is now at desired position, rotate the
+													// image back
+			// to regular
+			
+			// Color to icon RGB
+			GlStateManager.color(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
+					theme.getIcon().getBlue(hover) / 255f);
+			
+			GlStateManager.translate(0, 0, 2); // Ensure icon is not overlapped
+			GlStateManager.scale(iconScale, iconScale, iconScale); // Scale the icon's recentering
+																	// and actual
+			// image
+			GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
+			mc.getTextureManager().bindTexture(RadialMenu.icons);
+			drawTexturedModalRect(0, 0, segment.getTextureU(), segment.getTextureV(), 32, 32);
+			
+		GlStateManager.popMatrix();
+		
+	}
+	//@formatter:on
 	
 }
