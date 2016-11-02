@@ -13,8 +13,10 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 
 public class RadialMenu extends Gui {
@@ -42,6 +44,11 @@ public class RadialMenu extends Gui {
 	private AvatarControl pressing;
 	private BendingAbility[] controls;
 	private MenuTheme theme;
+	
+	/**
+	 * Current radial segment that the mouse is over, null for none.
+	 */
+	private RadialSegment prevMouseover;
 	
 	private final Minecraft mc = Minecraft.getMinecraft();
 	
@@ -92,6 +99,11 @@ public class RadialMenu extends Gui {
 		
 	}
 	
+	private void playClickSound(float pitch) {
+		mc.getSoundHandler()
+				.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, pitch));
+	}
+	
 	/**
 	 * Handle key release. Triggers new abilities if possible.
 	 * 
@@ -106,6 +118,20 @@ public class RadialMenu extends Gui {
 		boolean closeGui = !Keyboard.isKeyDown(proxy.getKeyHandler().getKeyCode(pressing))
 				|| AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK);
 		
+		RadialSegment currentMouseover = null;
+		
+		for (RadialSegment segment : segments) {
+			if (segment.isMouseHover(mouseX, mouseY, resolution)) {
+				currentMouseover = segment;
+				break;
+			}
+		}
+		
+		if (currentMouseover != null && currentMouseover != prevMouseover) {
+			playClickSound(1.3f);
+		}
+		prevMouseover = currentMouseover;
+		
 		if (closeGui) {
 			
 			for (int i = 0; i < segments.length; i++) {
@@ -117,6 +143,7 @@ public class RadialMenu extends Gui {
 					AvatarMod.network.sendToServer(
 							new PacketSUseAbility(controls[i], raytrace.getPos(), raytrace.getSide()));
 					AvatarUiRenderer.fade(segments[i]);
+					playClickSound(0.8f);
 					break;
 					
 				}
