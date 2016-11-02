@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -90,6 +91,10 @@ public class EntityRavine extends AvatarEntity {
 		
 		BlockPos above = getPosition().offset(EnumFacing.UP);
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		
+		if (ticksExisted % 3 == 0) worldObj.playSound(posX, posY, posZ,
+				worldObj.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+				SoundCategory.PLAYERS, 1, 1, false);
 		
 		if (!worldObj.getBlockState(below).isNormalCube()) {
 			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
