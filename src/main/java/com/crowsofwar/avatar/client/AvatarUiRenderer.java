@@ -64,6 +64,7 @@ public class AvatarUiRenderer extends Gui {
 				mc.setIngameFocus();
 			} else {
 				currentBendingMenu.drawScreen(mouseX, mouseY, resolution);
+				mc.setIngameNotInFocus();
 			}
 		}
 		if (fadingSegment != null) {
