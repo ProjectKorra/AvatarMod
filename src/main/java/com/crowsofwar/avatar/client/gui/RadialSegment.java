@@ -80,12 +80,25 @@ public class RadialSegment extends Gui {
 	 * @param resolution
 	 *            Resolution MC is at
 	 */
-	//@formatter:off
 	public void draw(boolean hover, ScaledResolution resolution) {
-		draw(hover, resolution, 1);
+		draw(hover, resolution, 1, 1);
 	}
 	
-	public void draw(boolean hover, ScaledResolution resolution, float alpha) {
+	/**
+	 * Draw this radial segment.
+	 * 
+	 * @param hover
+	 *            Whether mouse is over it
+	 * @param resolution
+	 *            Resolution MC is at
+	 * @param alpha
+	 *            Alpha of the image; 0 for completely transparent and 1 for
+	 *            completely opaque
+	 * @param scale
+	 *            Scale of the image, 1 for no change
+	 */
+	//@formatter:off
+	public void draw(boolean hover, ScaledResolution resolution, float alpha, float scale) {
 		
 		int width = resolution.getScaledWidth();
 		int height = resolution.getScaledHeight();
@@ -96,8 +109,8 @@ public class RadialSegment extends Gui {
 		GlStateManager.pushMatrix();
 			GlStateManager.translate(width / 2f, height / 2f, 0); 	// Re-center origin
 			GlStateManager.scale(menuScale, menuScale, menuScale); 	// Scale all following arguments
-			GlStateManager.rotate(this.getAngle(), 0, 0, 1);		// All transform operations and the
-																	// image are rotated
+			GlStateManager.rotate(this.getAngle(), 0, 0, 1);		// All transform operations and the image are rotated
+			GlStateManager.scale(scale, scale, scale);
 			GlStateManager.translate(-segmentX, -segmentY, 0);		// Offset the image to the correct
 																	// center point
 			// Draw background
@@ -121,6 +134,7 @@ public class RadialSegment extends Gui {
 			
 			GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
 			GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
+			GlStateManager.scale(scale, scale, scale);
 			GlStateManager.translate(-59, -27, 0); // Translate into correct position
 			GlStateManager.rotate(-angle, 0, 0, 1); // Icon is now at desired position, rotate the
 													// image back

@@ -73,7 +73,8 @@ public class AvatarUiRenderer extends Gui {
 			if (timeSinceStart > timeToFade) {
 				fadingSegment = null;
 			} else {
-				fadingSegment.draw(true, resolution, 1 - timeSinceStart / timeToFade);
+				float scale = (float) (1 + Math.sqrt(timeSinceStart / 10000f));
+				fadingSegment.draw(true, resolution, 1 - timeSinceStart / timeToFade, scale);
 			}
 		}
 		
