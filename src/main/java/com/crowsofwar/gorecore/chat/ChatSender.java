@@ -28,7 +28,7 @@ public class ChatSender {
 	private static final ChatSender instance;
 	
 	private static final Map<String, ChatMessage> referenceToChatMessage;
-	private static final Map<String, ChatMessage> translateKeyToChatMessage;
+	static final Map<String, ChatMessage> translateKeyToChatMessage;
 	
 	/**
 	 * Cause static block to be called
@@ -43,17 +43,6 @@ public class ChatSender {
 	}
 	
 	private ChatSender() {}
-	
-	public static ChatMessage newChatMessage(String translateKey, String... translateArgs) {
-		return newChatMessage(MessageConfiguration.DEFAULT, translateKey, translateArgs);
-	}
-	
-	public static ChatMessage newChatMessage(MessageConfiguration config, String translateKey,
-			String... translateArgs) {
-		ChatMessage cm = new ChatMessage(config, translateKey, translateArgs);
-		translateKeyToChatMessage.put(translateKey, cm);
-		return cm;
-	}
 	
 	private Object[] getFormatArgs(TextComponentTranslation message) {
 		return ObfuscationReflectionHelper.getPrivateValue(TextComponentTranslation.class, message, 1);

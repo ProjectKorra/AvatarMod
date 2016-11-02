@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -19,7 +18,7 @@ public abstract class NodeFunctional implements ICommandNode {
 	
 	private static final ChatMessage DEFAULT_INFO;
 	static {
-		DEFAULT_INFO = ChatSender.newChatMessage("gc.tree.node.defaultInfo");
+		DEFAULT_INFO = ChatMessage.newChatMessage("gc.tree.node.defaultInfo");
 	}
 	
 	private final String name;

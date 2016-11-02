@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common;
 
-import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
+import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.MessageConfiguration;

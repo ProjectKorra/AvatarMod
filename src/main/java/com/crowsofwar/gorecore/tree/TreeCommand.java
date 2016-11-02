@@ -1,6 +1,6 @@
 package com.crowsofwar.gorecore.tree;
 
-import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
+import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
