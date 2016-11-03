@@ -22,7 +22,7 @@ public class AbilityData {
 		this.changeListener = onChange;
 	}
 	
-	BendingAbility getAbility() {
+	public BendingAbility getAbility() {
 		return ability;
 	}
 	

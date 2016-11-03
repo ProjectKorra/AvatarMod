@@ -1,9 +1,12 @@
 package com.crowsofwar.avatar.common.network.packets;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
@@ -22,6 +25,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	private UUID player;
 	private int[] allControllers;
 	private List<IBendingState> states;
+	private List<AbilityData> abilities;
 	private ByteBuf buffer;
 	
 	public PacketCPlayerData() {}
@@ -44,6 +48,15 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		for (int i = 0; i < allControllers.length; i++) {
 			allControllers[i] = buf.readInt();
 		}
+		// Read ability data
+		abilities = new ArrayList<>();
+		int abilitiesAmount = buf.readInt();
+		for (int i = 0; i < abilitiesAmount; i++) {
+			AbilityData abilityData = new AbilityData(BendingManager.getAbility(buf.readInt()), xp -> {
+			});
+			abilityData.setXp(buf.readInt());
+			abilities.add(abilityData);
+		}
 		
 		// Reading bending states is done elsewhere
 		buffer = buf;
@@ -56,6 +69,12 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		buf.writeInt(allControllers.length);
 		for (int i = 0; i < allControllers.length; i++) {
 			buf.writeInt(allControllers[i]);
+		}
+		// Write ability data
+		buf.writeInt(abilities.size());
+		for (int i = 0; i < abilities.size(); i++) {
+			buf.writeInt(abilities.get(i).getAbility().getId());
+			buf.writeInt(abilities.get(i).getXp());
 		}
 		// Write bending states
 		for (int i = 0; i < states.size(); i++) {
