@@ -95,8 +95,17 @@ public class RadialMenu extends Gui {
 			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
 			segments[i].draw(hover, resolution);
+			
+			if (hover && controls[i] != null) {
+				displaySegmentDetails(controls[i], resolution);
+			}
 		}
 		
+	}
+	
+	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
+		drawCenteredString(mc.fontRendererObj, ability.getName(), resolution.getScaledWidth() / 2,
+				resolution.getScaledHeight() / 2, 0xffffff);
 	}
 	
 	private void playClickSound(float pitch) {
