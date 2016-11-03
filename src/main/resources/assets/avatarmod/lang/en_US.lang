@@ -42,6 +42,19 @@ avatar.cmd.cfg.exception2=[error]Details: [error_value]${details}[/error_value] 
 
 avatar.cmd.cfg.successful=[bold]Successfully reloaded configuration values[/bold]
 
+avatar.ability.pickup_block=Pick Up Block
+avatar.ability.ravine=Ravine
+
+avatar.ability.light_fire=Light Fire
+avatar.ability.fire_arc=Fire Arc
+avatar.ability.flamethrower=Flamethrower
+
+avatar.ability.water_arc=Water Arc
+avatar.ability.wave=Wave
+
+avatar.ability.air_gust=Air Gust
+avatar.ability.air_jump=Air Jump
+
 death.attack.avatar_earthbendBlock=%2$s smashed %1$s with earthbending
 death.attack.avatar_waterArc=%2$s used waterbending to bring down %1$s
 death.attack.avatar_ravine=%2$s crushed %1$s in a ravine

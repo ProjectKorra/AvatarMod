@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 
@@ -104,7 +105,8 @@ public class RadialMenu extends Gui {
 	}
 	
 	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
-		drawCenteredString(mc.fontRendererObj, ability.getName(), resolution.getScaledWidth() / 2,
+		String translated = I18n.format("avatar.ability." + ability.getName());
+		drawCenteredString(mc.fontRendererObj, translated, resolution.getScaledWidth() / 2,
 				resolution.getScaledHeight() / 2, 0xffffff);
 	}
 	
