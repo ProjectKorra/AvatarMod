@@ -26,7 +26,7 @@ public class AbilityPutBlock extends BendingAbility<EarthbendingState> {
 	 * @param controller
 	 */
 	public AbilityPutBlock(BendingController<EarthbendingState> controller) {
-		super(controller);
+		super(controller, "place_block");
 		
 		this.raytrace = new Raytrace.Info(-1, true);
 	}

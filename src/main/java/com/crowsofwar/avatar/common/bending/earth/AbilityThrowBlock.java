@@ -25,7 +25,7 @@ public class AbilityThrowBlock extends BendingAbility<EarthbendingState> {
 	 * @param controller
 	 */
 	public AbilityThrowBlock(BendingController<EarthbendingState> controller) {
-		super(controller);
+		super(controller, "throw_block");
 	}
 	
 	@Override

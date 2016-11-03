@@ -18,7 +18,7 @@ public class AbilityAirJump extends BendingAbility<AirbendingState> {
 	 * @param controller
 	 */
 	public AbilityAirJump(BendingController<AirbendingState> controller) {
-		super(controller);
+		super(controller, "air_jump");
 	}
 	
 	@Override

@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.earth;
 import java.util.Random;
 import java.util.function.Predicate;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -40,7 +39,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 	
 	public AbilityPickUpBlock(BendingController<EarthbendingState> controller,
 			Predicate<IBlockState> bendableCallback) {
-		super(controller);
+		super(controller, "pickup_block");
 		this.bendableCallback = bendableCallback;
 		this.random = new Random();
 		this.raytrace = new Raytrace.Info(-1, true);

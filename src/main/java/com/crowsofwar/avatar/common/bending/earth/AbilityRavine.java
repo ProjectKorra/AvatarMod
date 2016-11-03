@@ -26,7 +26,7 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	 * @param controller
 	 */
 	public AbilityRavine(BendingController<EarthbendingState> controller) {
-		super(controller);
+		super(controller, "ravine");
 		this.raytrace = new Raytrace.Info();
 	}
 	

@@ -20,7 +20,7 @@ public class AbilityFlamethrower extends BendingAbility<FirebendingState> {
 	 * @param controller
 	 */
 	public AbilityFlamethrower(BendingController<FirebendingState> controller) {
-		super(controller);
+		super(controller, "flamethrower");
 		this.raytrace = new Raytrace.Info();
 	}
 	

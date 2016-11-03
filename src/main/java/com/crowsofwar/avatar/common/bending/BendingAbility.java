@@ -3,8 +3,8 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
- * Encapsulates all logic required for a bending ability. There is 1 instance of a bending ability
- * for each ability present - similar to BendingController.
+ * Encapsulates all logic required for a bending ability. There is 1 instance of
+ * a bending ability for each ability present - similar to BendingController.
  * 
  * @param <STATE>
  *            The IBendingState this ability uses
@@ -17,10 +17,12 @@ public abstract class BendingAbility<STATE extends IBendingState> {
 	
 	protected final BendingController<STATE> controller;
 	protected final int id;
+	private final String name;
 	
-	public BendingAbility(BendingController<STATE> controller) {
+	public BendingAbility(BendingController<STATE> controller, String name) {
 		this.controller = controller;
 		this.id = nextId++;
+		this.name = name;
 		BendingManager.registerAbility(this);
 	}
 	
@@ -55,5 +57,12 @@ public abstract class BendingAbility<STATE extends IBendingState> {
 	 * Get a request for a raytrace.
 	 */
 	public abstract Raytrace.Info getRaytrace();
+	
+	/**
+	 * Gets the name of this ability. Will be all lowercase with no spaces.
+	 */
+	public String getName() {
+		return name;
+	}
 	
 }

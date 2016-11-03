@@ -24,7 +24,7 @@ public class AbilityAirGust extends BendingAbility<AirbendingState> {
 	 * @param controller
 	 */
 	public AbilityAirGust(BendingController<AirbendingState> controller) {
-		super(controller);
+		super(controller, "air_gust");
 		this.raytrace = new Raytrace.Info();
 	}
 	

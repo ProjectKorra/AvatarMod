@@ -19,7 +19,7 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 	private final Raytrace.Info raytrace;
 	
 	public AbilityCreateWave(BendingController<WaterbendingState> controller) {
-		super(controller);
+		super(controller, "wave");
 		this.raytrace = new Raytrace.Info();
 	}
 	

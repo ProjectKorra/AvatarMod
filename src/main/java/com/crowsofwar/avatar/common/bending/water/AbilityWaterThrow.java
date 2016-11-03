@@ -23,7 +23,7 @@ public class AbilityWaterThrow extends BendingAbility<WaterbendingState> {
 	 * @param controller
 	 */
 	public AbilityWaterThrow(BendingController<WaterbendingState> controller) {
-		super(controller);
+		super(controller, "water_throw");
 		this.raytrace = new Raytrace.Info();
 	}
 	
