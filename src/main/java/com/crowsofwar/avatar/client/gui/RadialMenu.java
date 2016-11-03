@@ -106,8 +106,9 @@ public class RadialMenu extends Gui {
 	
 	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
 		String translated = I18n.format("avatar.ability." + ability.getName());
-		drawCenteredString(mc.fontRendererObj, translated, resolution.getScaledWidth() / 2,
-				resolution.getScaledHeight() / 2, 0xffffff);
+		int x = resolution.getScaledWidth() / 2;
+		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
+		drawCenteredString(mc.fontRendererObj, translated, x, y, 0xffffff);
 	}
 	
 	private void playClickSound(float pitch) {
