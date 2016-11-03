@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -109,6 +110,16 @@ public class RadialMenu extends Gui {
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
 		drawCenteredString(mc.fontRendererObj, translated, x, y, 0xffffff);
+		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer);
+		if (data != null) {
+			int xp = data.getAbilityData(ability).getXp();
+			String xpMessage = I18n.format("avatar.radial.xp", xp);
+			drawCenteredString(mc.fontRendererObj, xpMessage, x,
+					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),
+					0xffffff);
+		}
+		
 	}
 	
 	private void playClickSound(float pitch) {
