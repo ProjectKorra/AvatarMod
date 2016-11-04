@@ -26,6 +26,7 @@ import com.crowsofwar.gorecore.data.GoreCorePlayerData;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherServer;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherSided;
+import com.google.common.collect.ImmutableList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -295,6 +296,20 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			abilityData.put(ability, new AbilityData(ability, xp -> saveChanges()));
 		}
 		return abilityData.get(ability);
+	}
+	
+	/**
+	 * Gets a list of all ability data contained in this player data.
+	 */
+	public List<AbilityData> getAllAbilityData() {
+		return ImmutableList.copyOf(abilityData.values());
+	}
+	
+	public void setAbilityData(List<AbilityData> abilities) {
+		this.abilityData.clear();
+		for (AbilityData ability : abilities) {
+			this.abilityData.put(ability.getAbility(), ability);
+		}
 	}
 	
 	/**

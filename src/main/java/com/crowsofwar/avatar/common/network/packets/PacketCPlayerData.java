@@ -37,7 +37,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 			allControllers[i] = data.getBendingControllers().get(i).getID();
 		}
 		states = data.getAllBendingStates();
-		
+		abilities = data.getAllAbilityData();
 	}
 	
 	@Override
@@ -105,6 +105,10 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	public int getIndex() {
 		return buffer.readerIndex();
+	}
+	
+	public List<AbilityData> getAbilityData() {
+		return abilities;
 	}
 	
 	@Override

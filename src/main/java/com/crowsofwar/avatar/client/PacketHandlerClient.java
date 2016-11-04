@@ -79,6 +79,7 @@ public class PacketHandlerClient implements IPacketHandler {
 				data.addBending(packet.getAllControllersID()[i]);
 				data.getState().update(player, Raytrace.getTargetBlock(player, -1));
 			}
+			data.setAbilityData(packet.getAbilityData());
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {
 				IBendingState state = data.getBendingState(packet.getBuf().readInt());
 				state.fromBytes(packet.getBuf());
