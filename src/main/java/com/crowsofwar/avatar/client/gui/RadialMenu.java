@@ -52,6 +52,8 @@ public class RadialMenu extends Gui {
 	 */
 	private RadialSegment prevMouseover;
 	
+	private int ticksExisted;
+	
 	private final Minecraft mc = Minecraft.getMinecraft();
 	
 	/**
@@ -68,6 +70,7 @@ public class RadialMenu extends Gui {
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
+		this.ticksExisted = 0;
 		
 		if (controls == null) {
 			throw new IllegalArgumentException("Controls is null");
@@ -87,16 +90,16 @@ public class RadialMenu extends Gui {
 					controls[i] == null ? -1 : controls[i].getIconIndex());
 		}
 		
-		ScaledResolution resolution = new ScaledResolution(mc);
-		
 	}
 	
 	public void drawScreen(int mouseX, int mouseY, ScaledResolution resolution) {
 		
+		float scale = ticksExisted <= 10 ? 0.5f + (float) Math.sqrt(ticksExisted / 40f) : 1;
+		
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
-			segments[i].draw(hover, resolution);
+			segments[i].draw(hover, resolution, scale, scale);
 			
 			if (hover && controls[i] != null) {
 				displaySegmentDetails(controls[i], resolution);
@@ -137,6 +140,8 @@ public class RadialMenu extends Gui {
 	 * @return Whether to close the screen
 	 */
 	public boolean updateScreen(int mouseX, int mouseY, ScaledResolution resolution) {
+		
+		ticksExisted++;
 		
 		boolean closeGui = !Keyboard.isKeyDown(proxy.getKeyHandler().getKeyCode(pressing))
 				|| AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK);
