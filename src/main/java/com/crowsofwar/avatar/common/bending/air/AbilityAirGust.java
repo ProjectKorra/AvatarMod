@@ -18,6 +18,8 @@ import net.minecraft.world.World;
  */
 public class AbilityAirGust extends BendingAbility<AirbendingState> {
 	
+	public static BendingAbility<AirbendingState> INSTANCE;
+	
 	private final Raytrace.Info raytrace;
 	
 	/**
@@ -26,6 +28,7 @@ public class AbilityAirGust extends BendingAbility<AirbendingState> {
 	public AbilityAirGust(BendingController<AirbendingState> controller) {
 		super(controller, "air_gust");
 		this.raytrace = new Raytrace.Info();
+		INSTANCE = this;
 	}
 	
 	@Override

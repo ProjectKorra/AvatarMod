@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -84,11 +87,20 @@ public class EntityAirGust extends EntityArc {
 		protected void onCollision(Entity entity) {
 			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
 				
-				Vector velocity = velocity().times(0.3);
+				AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(owner);
+				int xp = 0;
+				if (data != null) {
+					AbilityData abilityData = data.getAbilityData(AbilityAirGust.INSTANCE);
+					xp = abilityData.getXp();
+					abilityData.addXp(1);
+				}
+				
+				Vector velocity = velocity().times(0.3).times(1 + xp / 200.0);
 				velocity.setY(1);
 				
 				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 				setDead();
+				
 			}
 		}
 		

@@ -31,8 +31,14 @@ public class AbilityData {
 	}
 	
 	public void setXp(int xp) {
+		if (xp < 0) xp = 0;
+		if (xp > 100) xp = 100;
 		this.xp = xp;
 		changeListener.accept(xp);
+	}
+	
+	public void addXp(int xp) {
+		setXp(this.xp + xp);
 	}
 	
 }
