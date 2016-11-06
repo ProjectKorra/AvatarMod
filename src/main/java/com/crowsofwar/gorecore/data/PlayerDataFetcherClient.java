@@ -145,6 +145,7 @@ public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements Pl
 	
 	@Override
 	public T fetchPerformance(EntityPlayer player) {
+		if (player == null) return null;
 		return fetchPerformance(player.worldObj, player.getName());
 	}
 	
