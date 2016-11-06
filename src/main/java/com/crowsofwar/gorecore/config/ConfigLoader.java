@@ -6,7 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -56,12 +58,19 @@ public class ConfigLoader {
 	
 	private final Representer representer;
 	
+	/**
+	 * A list of class tags added to the representer, for debugging if something
+	 * goes wrong.
+	 */
+	private final List<Class<?>> classTags;
+	
 	private ConfigLoader(String path, Object obj, Map<String, ?> data) {
 		this.path = path;
 		this.obj = obj;
 		this.data = data == null ? new HashMap<>() : data;
 		this.usedValues = new HashMap<>();
 		this.representer = new Representer();
+		this.classTags = new ArrayList<>();
 	}
 	
 	/**
@@ -162,6 +171,7 @@ public class ConfigLoader {
 				// '!!' in front
 				if (!setTo.getClass().getName().startsWith("java")) {
 					representer.addClassTag(setTo.getClass(), Tag.MAP);
+					classTags.add(setTo.getClass());
 				}
 				
 				// Try to apply custom loader, if necessary
@@ -303,7 +313,7 @@ public class ConfigLoader {
 			return yaml.dump(usedValues);
 		} catch (YAMLException e) {
 			throw new ConfigurationException.Unexpected(
-					"Unexpected error while trying to convert values to YAML: representer " + representer
+					"Unexpected error while trying to convert values to YAML: classTags " + classTags
 							+ ", values " + usedValues,
 					e);
 		}
