@@ -14,6 +14,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.scanner.ScannerException;
@@ -298,7 +299,12 @@ public class ConfigLoader {
 		
 		Yaml yaml = new Yaml(representer, options);
 		
-		return yaml.dump(usedValues);
+		try {
+			return yaml.dump(usedValues);
+		} catch (YAMLException e) {
+			throw new ConfigurationException.Unexpected(
+					"Unexpected error while trying to convert values to YAML: " + usedValues, e);
+		}
 		
 	}
 	
