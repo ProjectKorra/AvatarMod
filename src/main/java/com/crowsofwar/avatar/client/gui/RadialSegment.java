@@ -57,7 +57,7 @@ public class RadialSegment extends Gui {
 		}
 		if (addCurrentAngle) currentAngle += 360;
 		
-		return r >= 100 && r <= 200 && currentAngle >= minAngle && currentAngle <= maxAngle;
+		return r >= 100 && r <= 300 && currentAngle >= minAngle && currentAngle <= maxAngle;
 	}
 	
 	public float getAngle() {
