@@ -1,10 +1,9 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
+import static com.crowsofwar.avatar.common.config.AvatarConfig.CONFIG;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
@@ -16,41 +15,16 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-
 public class Earthbending extends BendingController {
 	
 	private final BendingMenuInfo menu;
-	private final List<Block> bendableBlocks;
 	
 	private final BendingAbility abilityPickUpBlock, abilityThrowBlock, abilityPutBlock, abilityRavine;
 	
 	public Earthbending() {
 		
-		bendableBlocks = new ArrayList<Block>();
-		bendableBlocks.add(Blocks.STONE);
-		bendableBlocks.add(Blocks.SAND);
-		bendableBlocks.add(Blocks.SANDSTONE);
-		bendableBlocks.add(Blocks.COBBLESTONE);
-		bendableBlocks.add(Blocks.DIRT);
-		bendableBlocks.add(Blocks.GRAVEL);
-		bendableBlocks.add(Blocks.BRICK_BLOCK);
-		bendableBlocks.add(Blocks.MOSSY_COBBLESTONE);
-		bendableBlocks.add(Blocks.STONEBRICK);
-		bendableBlocks.add(Blocks.CLAY);
-		bendableBlocks.add(Blocks.HARDENED_CLAY);
-		bendableBlocks.add(Blocks.STAINED_HARDENED_CLAY);
-		bendableBlocks.add(Blocks.COAL_ORE);
-		bendableBlocks.add(Blocks.IRON_ORE);
-		bendableBlocks.add(Blocks.EMERALD_ORE);
-		bendableBlocks.add(Blocks.GOLD_ORE);
-		bendableBlocks.add(Blocks.LAPIS_ORE);
-		bendableBlocks.add(Blocks.REDSTONE_ORE);
-		bendableBlocks.add(Blocks.RED_SANDSTONE);
-		
 		addAbility(this.abilityPickUpBlock = new AbilityPickUpBlock(this,
-				state -> bendableBlocks.contains(state.getBlock())));
+				state -> CONFIG.bendableBlocks.contains(state.getBlock())));
 		addAbility(this.abilityThrowBlock = new AbilityThrowBlock(this));
 		addAbility(this.abilityPutBlock = new AbilityPutBlock(this));
 		addAbility(this.abilityRavine = new AbilityRavine(this));
