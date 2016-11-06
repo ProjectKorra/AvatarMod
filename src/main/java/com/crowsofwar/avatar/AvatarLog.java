@@ -69,7 +69,11 @@ public class AvatarLog {
 		/**
 		 * Server sent abnormal input which is not 'correct' on client
 		 */
-		WEIRD_PACKET;
+		WEIRD_PACKET,
+		/**
+		 * Miswritten configuration files
+		 */
+		CONFIGURATION;
 	}
 	
 }

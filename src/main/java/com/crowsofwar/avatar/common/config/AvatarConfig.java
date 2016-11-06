@@ -5,6 +5,8 @@ import static net.minecraft.init.Blocks.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 
@@ -46,9 +48,17 @@ public class AvatarConfig {
 	
 	private void loadBendableBlocks() {
 		bendableBlocks = new ArrayList<>();
-		bendableBlocksNames.forEach(
-				blockName -> bendableBlocks.add(Block.REGISTRY.getObject(new ResourceLocation(blockName))));
-		System.out.println("Bendable blocks: " + bendableBlocks);
+		
+		for (String blockName : bendableBlocksNames) {
+			Block b = Block.REGISTRY.getObject(new ResourceLocation(blockName));
+			if (b == null) {
+				AvatarLog.warn(WarningType.CONFIGURATION,
+						"Invalid bendable blocks entry: " + blockName + "; does not exist");
+			} else {
+				bendableBlocks.add(b);
+			}
+		}
+		
 	}
 	
 	public static void load() {

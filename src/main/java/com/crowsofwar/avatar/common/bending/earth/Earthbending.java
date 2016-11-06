@@ -24,7 +24,7 @@ public class Earthbending extends BendingController {
 	public Earthbending() {
 		
 		addAbility(this.abilityPickUpBlock = new AbilityPickUpBlock(this,
-				state -> CONFIG.bendableBlocksNames.contains(state.getBlock())));
+				state -> CONFIG.bendableBlocks.contains(state.getBlock())));
 		addAbility(this.abilityThrowBlock = new AbilityThrowBlock(this));
 		addAbility(this.abilityPutBlock = new AbilityPutBlock(this));
 		addAbility(this.abilityRavine = new AbilityRavine(this));
