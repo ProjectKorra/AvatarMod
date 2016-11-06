@@ -303,7 +303,9 @@ public class ConfigLoader {
 			return yaml.dump(usedValues);
 		} catch (YAMLException e) {
 			throw new ConfigurationException.Unexpected(
-					"Unexpected error while trying to convert values to YAML: " + usedValues, e);
+					"Unexpected error while trying to convert values to YAML: representer " + representer
+							+ ", values " + usedValues,
+					e);
 		}
 		
 	}
