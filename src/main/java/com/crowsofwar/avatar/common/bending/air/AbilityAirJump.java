@@ -14,11 +14,14 @@ import com.crowsofwar.avatar.common.util.Raytrace.Info;
  */
 public class AbilityAirJump extends BendingAbility<AirbendingState> {
 	
+	public static BendingAbility<AirbendingState> INSTANCE;
+	
 	/**
 	 * @param controller
 	 */
 	public AbilityAirJump(BendingController<AirbendingState> controller) {
 		super(controller, "air_jump");
+		INSTANCE = this;
 	}
 	
 	@Override

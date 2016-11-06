@@ -3,6 +3,8 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.particle.AvatarParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -29,12 +31,21 @@ public class StatCtrlAirJump extends StatusControl {
 		EntityPlayer player = context.getPlayerEntity();
 		
 		if (player.onGround) {
+			
+			int xp = 0;
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
+			if (data != null) {
+				AbilityData abilityData = data.getAbilityData(AbilityAirJump.INSTANCE);
+				xp = abilityData.getXp();
+				abilityData.addXp(2);
+			}
+			
 			Vector rotations = new Vector(Math.toRadians((player.rotationPitch) / 1),
 					Math.toRadians(player.rotationYaw), 0);
 			
 			Vector velocity = rotations.toRectangular();
 			velocity.setY(Math.pow(velocity.y(), .1));
-			velocity.mul(1);
+			velocity.mul(1 + xp / 250.0);
 			player.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 			
