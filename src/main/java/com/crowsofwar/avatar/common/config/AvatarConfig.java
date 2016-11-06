@@ -1,7 +1,11 @@
 package com.crowsofwar.avatar.common.config;
 
+import java.util.List;
+
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
+
+import net.minecraft.block.state.IBlockState;
 
 /**
  * 
@@ -16,6 +20,9 @@ public class AvatarConfig {
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.25f, 1),
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(9, 6);
+	
+	@Load
+	public List<IBlockState> bendableBlocks;
 	
 	public static void load() {
 		

@@ -64,88 +64,12 @@ public class ConfigLoader {
 	}
 	
 	/**
-	 * Load a Map containing the YAML configurations at that path.
-	 * 
-	 * @param path
-	 *            Path starting at ".minecraft/config/"
-	 * 
-	 * @throws ConfigurationException
-	 *             when an error occurs while trying to read the file
-	 */
-	private static Map<String, Object> loadMap(String path) {
-		
-		try {
-			
-			String contents = "";
-			
-			File file = new File("config/" + path);
-			file.createNewFile();
-			
-			Scanner scanner = new Scanner(file);
-			while (scanner.hasNextLine())
-				contents += scanner.nextLine() + "\n";
-			scanner.close();
-			
-			Yaml yaml = new Yaml();
-			Map<String, Object> map = (Map) yaml.load(contents);
-			
-			return map;
-			
-		} catch (IOException e) {
-			throw new ConfigurationException.LoadingException(
-					"Exception trying to load config file at config/" + path, e);
-		} catch (ClassCastException e) {
-			
-			System.out
-					.println("ConfigLoader- warning: File at " + path + " was not a map; ignored contents.");
-			return new HashMap<>();
-			
-		} catch (ScannerException e) {
-			
-			throw new ConfigurationException.LoadingException("Malformed YAML file at config/" + path, e);
-			
-		} catch (Exception e) {
-			
-			// TODO use a logger
-			System.err.println("Error while loading config at 'config/" + path + "':");
-			throw e;
-			
-		}
-		
-	}
-	
-	/**
-	 * Populate the object's fields marked with with {@link Load} with data from
-	 * the configuration file.
-	 * <p>
-	 * If fields are already set (i.e. not null), their current values will only
-	 * be preserved if there is no entry in the configuration file.
-	 * <p>
-	 * To specify default values, simply set their current value. If the value
-	 * of the field is <code>null</code> when this method is called, there MUST
-	 * be an entry in configuration.
-	 * <p>
-	 * If an object is being loaded, ConfigLoader will attempt to load that
-	 * object the same way that <code>obj</code> is being loaded. If a
-	 * {@link HasCustomLoader custom loader} is specified, ConfigLoader will
-	 * call that loader to perform any additional modifications after loading
-	 * the @Load fields.
-	 * 
-	 * @param obj
-	 *            Object to load
-	 * @param path
-	 *            Path to the configuration file, from ".minecraft/config/"
-	 */
-	public static void load(Object obj, String path) {
-		ConfigLoader loader = new ConfigLoader(path, obj, loadMap(path));
-		loader.load();
-		loader.save();
-	}
-	
-	/**
 	 * Populate the {@link #obj object's} data with the information from the
 	 * {@link #data map}, converting as necessary. Will also add any used values
 	 * to {@link #usedValues}.
+	 * 
+	 * Not to be confused with {@link #load(Object, String)}, which creates a
+	 * ConfigLoader then calls load on it.
 	 */
 	private void load() {
 		
@@ -394,6 +318,85 @@ public class ConfigLoader {
 			
 		}
 		
+	}
+	
+	/**
+	 * Load a Map containing the YAML configurations at that path.
+	 * 
+	 * @param path
+	 *            Path starting at ".minecraft/config/"
+	 * 
+	 * @throws ConfigurationException
+	 *             when an error occurs while trying to read the file
+	 */
+	private static Map<String, Object> loadMap(String path) {
+		
+		try {
+			
+			String contents = "";
+			
+			File file = new File("config/" + path);
+			file.createNewFile();
+			
+			Scanner scanner = new Scanner(file);
+			while (scanner.hasNextLine())
+				contents += scanner.nextLine() + "\n";
+			scanner.close();
+			
+			Yaml yaml = new Yaml();
+			Map<String, Object> map = (Map) yaml.load(contents);
+			
+			return map;
+			
+		} catch (IOException e) {
+			throw new ConfigurationException.LoadingException(
+					"Exception trying to load config file at config/" + path, e);
+		} catch (ClassCastException e) {
+			
+			System.out
+					.println("ConfigLoader- warning: File at " + path + " was not a map; ignored contents.");
+			return new HashMap<>();
+			
+		} catch (ScannerException e) {
+			
+			throw new ConfigurationException.LoadingException("Malformed YAML file at config/" + path, e);
+			
+		} catch (Exception e) {
+			
+			// TODO use a logger
+			System.err.println("Error while loading config at 'config/" + path + "':");
+			throw e;
+			
+		}
+		
+	}
+	
+	/**
+	 * Populate the object's fields marked with with {@link Load} with data from
+	 * the configuration file.
+	 * <p>
+	 * If fields are already set (i.e. not null), their current values will only
+	 * be preserved if there is no entry in the configuration file.
+	 * <p>
+	 * To specify default values, simply set their current value. If the value
+	 * of the field is <code>null</code> when this method is called, there MUST
+	 * be an entry in configuration.
+	 * <p>
+	 * If an object is being loaded, ConfigLoader will attempt to load that
+	 * object the same way that <code>obj</code> is being loaded. If a
+	 * {@link HasCustomLoader custom loader} is specified, ConfigLoader will
+	 * call that loader to perform any additional modifications after loading
+	 * the @Load fields.
+	 * 
+	 * @param obj
+	 *            Object to load
+	 * @param path
+	 *            Path to the configuration file, from ".minecraft/config/"
+	 */
+	public static void load(Object obj, String path) {
+		ConfigLoader loader = new ConfigLoader(path, obj, loadMap(path));
+		loader.load();
+		loader.save();
 	}
 	
 	/**
