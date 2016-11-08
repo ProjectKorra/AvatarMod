@@ -44,6 +44,10 @@ public class BendingManager {
 		allAbilities = new ArrayList<>();
 	}
 	
+	/**
+	 * Register all bending controllers. Initialization of the BendingManager is
+	 * done in a static block. Requires BendingAbilities to be created.
+	 */
 	public static void init() {
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
