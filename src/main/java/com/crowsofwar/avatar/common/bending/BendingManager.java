@@ -36,12 +36,15 @@ public class BendingManager {
 	private static Map<Integer, BendingAbility> abilities;
 	private static List<BendingAbility> allAbilities;
 	
-	public static void init() {
+	static {
 		bending = new HashMap<BendingType, BendingController>();
 		bendingByName = new HashMap<String, BendingController>();
 		allBending = new ArrayList<BendingController>();
 		abilities = new HashMap<>();
 		allAbilities = new ArrayList<>();
+	}
+	
+	public static void init() {
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
 		registerBending(new Waterbending());
