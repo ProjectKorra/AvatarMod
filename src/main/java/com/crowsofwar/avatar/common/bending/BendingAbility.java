@@ -7,6 +7,8 @@ import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
+import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
@@ -34,6 +36,8 @@ public abstract class BendingAbility {
 		ABILITY_LIGHT_FIRE = new AbilityLightFire();
 		ABILITY_FIRE_ARC = new AbilityFireArc();
 		ABILITY_FLAMETHROWER = new AbilityFlamethrower();
+		ABILITY_WATER_ARC = new AbilityWaterArc();
+		ABILITY_WAVE = new AbilityCreateWave();
 	}
 	
 	private static int nextId = 1;
