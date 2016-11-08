@@ -229,6 +229,10 @@ public class EntityFloatingBlock extends AvatarEntity {
 		return damageMult;
 	}
 	
+	public void setDamageMult(float mult) {
+		this.damageMult = mult;
+	}
+	
 	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
 		worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
 				Block.getStateId(getBlockState()));

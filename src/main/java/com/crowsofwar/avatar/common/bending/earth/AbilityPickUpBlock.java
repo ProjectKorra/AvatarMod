@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
@@ -67,6 +68,9 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 				Block block = ibs.getBlock();
 				if (bendableCallback.test(ibs)) {
 					
+					AbilityData abilityData = data.getAbilityData(this);
+					float xp = abilityData.getXp();
+					
 					EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 					floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);
 					floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
@@ -76,6 +80,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					floating.velocity().add(force);
 					floating.setBehavior(new FloatingBlockBehavior.PickUp(floating));
 					floating.setOwner(player);
+					floating.setDamageMult(.75f + xp / 100);
 					
 					world.spawnEntityInWorld(floating);
 					
