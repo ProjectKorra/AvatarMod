@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -16,15 +14,15 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityLightFire extends BendingAbility {
+public class AbilityLightFire extends FireAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityLightFire(BendingController controller) {
-		super(controller, "light_fire");
+	public AbilityLightFire() {
+		super("light_fire");
 		this.raytrace = new Raytrace.Info(-1, false);
 	}
 	

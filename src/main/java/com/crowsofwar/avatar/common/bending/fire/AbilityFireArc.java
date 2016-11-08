@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
@@ -18,15 +16,15 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityFireArc extends BendingAbility {
+public class AbilityFireArc extends FireAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityFireArc(BendingController controller) {
-		super(controller, "fire_arc");
+	public AbilityFireArc() {
+		super("fire_arc");
 		this.raytrace = new Raytrace.Info();
 	}
 	

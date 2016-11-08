@@ -4,6 +4,9 @@ import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
+import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
@@ -17,13 +20,17 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  */
 public abstract class BendingAbility {
 	
-	public static BendingAbility ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE;
+	public static BendingAbility ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE,
+			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER;
 	
 	public static void registerAbilities() {
 		ABILITY_AIR_GUST = new AbilityAirGust();
 		ABILITY_AIR_JUMP = new AbilityAirJump();
 		ABILITY_PICK_UP_BLOCK = new AbilityPickUpBlock();
 		ABILITY_RAVINE = new AbilityRavine();
+		ABILITY_LIGHT_FIRE = new AbilityLightFire();
+		ABILITY_FIRE_ARC = new AbilityFireArc();
+		ABILITY_FLAMETHROWER = new AbilityFlamethrower();
 	}
 	
 	private static int nextId = 1;
