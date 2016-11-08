@@ -24,11 +24,11 @@ import com.crowsofwar.gorecore.tree.TreeCommandException.Reason;
  */
 public class NodeAbilityGet extends NodeFunctional {
 	
-	static final ITypeConverter<BendingAbility<?>> convertAbility = new ITypeConverter<BendingAbility<?>>() {
+	static final ITypeConverter<BendingAbility> convertAbility = new ITypeConverter<BendingAbility>() {
 		@Override
-		public BendingAbility<?> convert(String str) {
+		public BendingAbility convert(String str) {
 			List<BendingAbility> allAbilities = BendingManager.allAbilities();
-			for (BendingAbility<?> ability : allAbilities) {
+			for (BendingAbility ability : allAbilities) {
 				if (ability.getClass().getSimpleName().equals(str)) return ability;
 			}
 			
@@ -36,7 +36,7 @@ public class NodeAbilityGet extends NodeFunctional {
 		}
 		
 		@Override
-		public String toString(BendingAbility<?> obj) {
+		public String toString(BendingAbility obj) {
 			return obj.getClass().getSimpleName();
 		}
 		
@@ -55,7 +55,7 @@ public class NodeAbilityGet extends NodeFunctional {
 	}
 	
 	private final IArgument<String> argPlayer;
-	private final IArgument<BendingAbility<?>> argAbility;
+	private final IArgument<BendingAbility> argAbility;
 	
 	/**
 	 * @param name

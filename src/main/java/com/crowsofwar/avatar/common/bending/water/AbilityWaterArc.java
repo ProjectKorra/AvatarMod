@@ -20,14 +20,14 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
+public class AbilityWaterArc extends BendingAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityWaterArc(BendingController<WaterbendingState> controller) {
+	public AbilityWaterArc(BendingController controller) {
 		super(controller, "water_arc");
 		this.raytrace = new Raytrace.Info(-1, false);
 	}

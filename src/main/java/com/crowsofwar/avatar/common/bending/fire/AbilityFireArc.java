@@ -18,14 +18,14 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityFireArc extends BendingAbility<FirebendingState> {
+public class AbilityFireArc extends BendingAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityFireArc(BendingController<FirebendingState> controller) {
+	public AbilityFireArc(BendingController controller) {
 		super(controller, "fire_arc");
 		this.raytrace = new Raytrace.Info();
 	}

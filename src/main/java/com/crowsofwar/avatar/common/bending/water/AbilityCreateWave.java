@@ -14,11 +14,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
-public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
+public class AbilityCreateWave extends BendingAbility {
 	
 	private final Raytrace.Info raytrace;
 	
-	public AbilityCreateWave(BendingController<WaterbendingState> controller) {
+	public AbilityCreateWave(BendingController controller) {
 		super(controller, "wave");
 		this.raytrace = new Raytrace.Info();
 	}

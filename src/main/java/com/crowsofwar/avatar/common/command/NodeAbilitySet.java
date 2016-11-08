@@ -25,7 +25,7 @@ import com.crowsofwar.gorecore.tree.NodeFunctional;
 public class NodeAbilitySet extends NodeFunctional {
 	
 	private final IArgument<String> argPlayer;
-	private final IArgument<BendingAbility<?>> argAbility;
+	private final IArgument<BendingAbility> argAbility;
 	private final IArgument<Integer> argSetTo;
 	
 	public NodeAbilitySet() {

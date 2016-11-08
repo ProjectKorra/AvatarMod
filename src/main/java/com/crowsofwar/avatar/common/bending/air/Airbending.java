@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Airbending extends BendingController {
 	
 	private BendingMenuInfo menu;
-	private final BendingAbility<AirbendingState> abilityAirGust, abilityAirJump;
+	private final BendingAbility abilityAirGust, abilityAirJump;
 	
 	public Airbending() {
 		addAbility(this.abilityAirGust = new AbilityAirGust(this));

@@ -66,7 +66,7 @@ public class BendingManager {
 	 * @throws IllegalArgumentException
 	 *             If no bending controller for that type (shouldn't happen)
 	 */
-	public static BendingController<?> getBending(BendingType type) {
+	public static BendingController getBending(BendingType type) {
 		if (!bending.containsKey(type)) throw new IllegalArgumentException(
 				"No bending controller with type " + type + "... devs forgot to add a bending controller!");
 		return bending.get(type);

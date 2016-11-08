@@ -30,7 +30,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 	@Override
 	public boolean execute(AbilityContext context) {
 		
-		BendingController<EarthbendingState> controller = (BendingController<EarthbendingState>) BendingManager
+		BendingController controller = (BendingController) BendingManager
 				.getBending(BendingType.EARTHBENDING);
 		
 		EarthbendingState ebs = (EarthbendingState) context.getData().getBendingState(controller);

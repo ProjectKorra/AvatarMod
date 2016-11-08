@@ -12,14 +12,14 @@ import com.crowsofwar.avatar.common.util.Raytrace.Info;
  * 
  * @author CrowsOfWar
  */
-public class AbilityFlamethrower extends BendingAbility<FirebendingState> {
+public class AbilityFlamethrower extends BendingAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityFlamethrower(BendingController<FirebendingState> controller) {
+	public AbilityFlamethrower(BendingController controller) {
 		super(controller, "flamethrower");
 		this.raytrace = new Raytrace.Info();
 	}

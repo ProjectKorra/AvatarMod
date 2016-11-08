@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Waterbending extends BendingController {
 	
 	private BendingMenuInfo menu;
-	private final BendingAbility<WaterbendingState> abilityWaterArc, abilityWaterThrow, abilityWave;
+	private final BendingAbility abilityWaterArc, abilityWaterThrow, abilityWave;
 	
 	public Waterbending() {
 		addAbility(this.abilityWaterArc = new AbilityWaterArc(this));

@@ -16,16 +16,16 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirGust extends BendingAbility<AirbendingState> {
+public class AbilityAirGust extends BendingAbility {
 	
-	public static BendingAbility<AirbendingState> INSTANCE;
+	public static BendingAbility INSTANCE;
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityAirGust(BendingController<AirbendingState> controller) {
+	public AbilityAirGust(BendingController controller) {
 		super(controller, "air_gust");
 		this.raytrace = new Raytrace.Info();
 		INSTANCE = this;

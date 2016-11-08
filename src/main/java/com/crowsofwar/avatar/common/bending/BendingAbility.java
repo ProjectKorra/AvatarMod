@@ -11,15 +11,15 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  * 
  * @author CrowsOfWar
  */
-public abstract class BendingAbility<STATE extends IBendingState> {
+public abstract class BendingAbility {
 	
 	private static int nextId = 1;
 	
-	protected final BendingController<STATE> controller;
+	protected final BendingController controller;
 	protected final int id;
 	private final String name;
 	
-	public BendingAbility(BendingController<STATE> controller, String name) {
+	public BendingAbility(BendingController controller, String name) {
 		this.controller = controller;
 		this.id = nextId++;
 		this.name = name;

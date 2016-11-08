@@ -35,7 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
  *            The IBendingState this controller is using
  * 
  */
-public abstract class BendingController<STATE extends IBendingState> implements ReadableWritable, Subject {
+public abstract class BendingController implements ReadableWritable, Subject {
 	
 	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
 		@Override
@@ -66,7 +66,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 */
 	public static final Random random = new Random();
 	
-	private final List<BendingAbility<STATE>> abilities;
+	private final List<BendingAbility> abilities;
 	private final Subject eventNotifier;
 	
 	public BendingController() {
@@ -74,7 +74,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 		this.eventNotifier = new EventNotifier();
 	}
 	
-	protected void addAbility(BendingAbility<STATE> ability) {
+	protected void addAbility(BendingAbility ability) {
 		this.abilities.add(ability);
 	}
 	
@@ -102,7 +102,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 * 
 	 * @return
 	 */
-	public STATE createState(AvatarPlayerData data) {
+	public IBendingState createState(AvatarPlayerData data) {
 		return null;
 	}
 	
@@ -116,7 +116,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 */
 	public abstract String getControllerName();
 	
-	public List<BendingAbility<STATE>> getAllAbilities() {
+	public List<BendingAbility> getAllAbilities() {
 		return this.abilities;
 	}
 	

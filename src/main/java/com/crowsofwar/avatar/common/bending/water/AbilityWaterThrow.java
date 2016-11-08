@@ -15,14 +15,14 @@ import net.minecraft.entity.player.EntityPlayer;
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterThrow extends BendingAbility<WaterbendingState> {
+public class AbilityWaterThrow extends BendingAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityWaterThrow(BendingController<WaterbendingState> controller) {
+	public AbilityWaterThrow(BendingController controller) {
 		super(controller, "water_throw");
 		this.raytrace = new Raytrace.Info();
 	}

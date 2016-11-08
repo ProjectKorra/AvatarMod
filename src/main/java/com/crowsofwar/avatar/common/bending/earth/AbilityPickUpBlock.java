@@ -32,7 +32,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
+public class AbilityPickUpBlock extends BendingAbility {
 	
 	public static AbilityPickUpBlock INSTANCE;
 	
@@ -40,7 +40,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 	private final Random random;
 	private final Raytrace.Info raytrace;
 	
-	public AbilityPickUpBlock(BendingController<EarthbendingState> controller,
+	public AbilityPickUpBlock(BendingController controller,
 			Predicate<IBlockState> bendableCallback) {
 		super(controller, "pickup_block");
 		this.bendableCallback = bendableCallback;

@@ -16,14 +16,14 @@ import net.minecraft.entity.player.EntityPlayer;
  * 
  * @author CrowsOfWar
  */
-public class AbilityFireThrow extends BendingAbility<FirebendingState> {
+public class AbilityFireThrow extends BendingAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityFireThrow(BendingController<FirebendingState> controller) {
+	public AbilityFireThrow(BendingController controller) {
 		super(controller, "fire_arc_throw");
 		this.raytrace = new Raytrace.Info();
 	}

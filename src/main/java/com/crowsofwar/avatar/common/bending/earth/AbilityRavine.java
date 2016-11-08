@@ -19,7 +19,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityRavine extends BendingAbility<EarthbendingState> {
+public class AbilityRavine extends BendingAbility {
 	
 	public static AbilityRavine INSTANCE;
 	
@@ -28,7 +28,7 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	/**
 	 * @param controller
 	 */
-	public AbilityRavine(BendingController<EarthbendingState> controller) {
+	public AbilityRavine(BendingController controller) {
 		super(controller, "ravine");
 		this.raytrace = new Raytrace.Info();
 		INSTANCE = this;

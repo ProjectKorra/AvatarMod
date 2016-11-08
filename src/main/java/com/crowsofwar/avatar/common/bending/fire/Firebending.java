@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Firebending extends BendingController {
 	
 	private final BendingMenuInfo menu;
-	private final BendingAbility<FirebendingState> abilityLightFire, abilityFireArc, abilityFireThrow,
+	private final BendingAbility abilityLightFire, abilityFireArc, abilityFireThrow,
 			abilityFlamethrower;
 	
 	public Firebending() {

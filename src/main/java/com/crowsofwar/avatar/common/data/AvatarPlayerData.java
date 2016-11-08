@@ -260,7 +260,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Get extra metadata for the given bending controller, returns null if no
 	 * Bending controller.
 	 */
-	public <STATE extends IBendingState> STATE getBendingState(BendingController<STATE> controller) {
+	public <STATE extends IBendingState> STATE getBendingState(BendingController controller) {
 		return (STATE) getBendingState(controller.getID());
 	}
 	
@@ -294,7 +294,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
-	public AbilityData getAbilityData(BendingAbility<?> ability) {
+	public AbilityData getAbilityData(BendingAbility ability) {
 		if (!abilityData.containsKey(ability)) {
 			abilityData.put(ability, new AbilityData(this, ability));
 		}
