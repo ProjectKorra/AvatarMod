@@ -64,6 +64,8 @@ public class AvatarConfig {
 	public static void load() {
 		ConfigLoader.load(CONFIG, "avatar/balance.cfg");
 		CONFIG.loadBendableBlocks();
+		
+		ConfigSkills.load();
 	}
 	
 	public static class AttackSettings {
