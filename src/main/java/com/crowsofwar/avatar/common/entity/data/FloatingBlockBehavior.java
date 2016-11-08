@@ -1,12 +1,14 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import static com.crowsofwar.avatar.common.config.AvatarConfig.CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
@@ -177,15 +179,30 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		}
 		
 		private void collision(EntityLivingBase collided) {
+			// Add damage
 			double speed = entity.velocity().magnitude();
 			collided.attackEntityFrom(
 					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
 					(float) (speed * CONFIG.floatingBlockSettings.damage));
 			
+			// Push entity
 			Vector motion = new Vector(collided).minus(new Vector(entity));
 			motion.mul(CONFIG.floatingBlockSettings.push);
 			motion.setY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
+			
+			// Add XP
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(entity.getOwner());
+			if (data != null) {
+				float xp = SKILLS_CONFIG.blockThrowHit;
+				if (collided.getHealth() < 0) {
+					System.out.println("That's a confirmed kill");
+					xp = SKILLS_CONFIG.blockKill;
+				}
+				data.getAbilityData(AbilityPickUpBlock.INSTANCE).addXp(xp);
+			}
+			
+			// Remove the floating block & spawn particles
 			if (!entity.worldObj.isRemote) entity.setDead();
 			entity.onCollision();
 		}
