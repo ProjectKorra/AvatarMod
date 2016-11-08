@@ -69,8 +69,9 @@ public class AvatarMod {
 		AvatarLog.log = e.getModLog();
 		AvatarConfig.load();
 		
-		BendingManager.init();
 		BendingAbility.registerAbilities();
+		BendingManager.init();
+		
 		EarthSoundHandler.register();
 		
 		AvatarParticles.register();

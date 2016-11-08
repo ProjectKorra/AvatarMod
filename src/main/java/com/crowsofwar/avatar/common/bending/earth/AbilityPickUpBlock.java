@@ -46,7 +46,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 	public void execute(AbilityContext ctx) {
 		
 		AvatarPlayerData data = ctx.getData();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
+		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller());
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();
 		
@@ -82,7 +82,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 					
 					world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 					
-					controller.post(new FloatingBlockEvent.BlockPickedUp(floating, player));
+					controller().post(new FloatingBlockEvent.BlockPickedUp(floating, player));
 					
 					ctx.addStatusControl(StatusControl.PLACE_BLOCK);
 					ctx.addStatusControl(StatusControl.THROW_BLOCK);

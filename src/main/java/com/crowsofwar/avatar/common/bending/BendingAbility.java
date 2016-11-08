@@ -26,7 +26,7 @@ public abstract class BendingAbility {
 			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER, ABILITY_WATER_ARC, ABILITY_WAVE;
 	
 	/**
-	 * Creates all abilities. Note: BendingControllers should be ready first.
+	 * Creates all abilities. Done before bending controllers are created.
 	 */
 	public static void registerAbilities() {
 		ABILITY_AIR_GUST = new AbilityAirGust();
@@ -42,15 +42,19 @@ public abstract class BendingAbility {
 	
 	private static int nextId = 1;
 	
-	protected final BendingController controller;
+	private final BendingType type;
 	protected final int id;
 	private final String name;
 	
-	public BendingAbility(BendingController controller, String name) {
-		this.controller = controller;
+	public BendingAbility(BendingType bendingType, String name) {
+		this.type = bendingType;
 		this.id = nextId++;
 		this.name = name;
 		BendingManager.registerAbility(this);
+	}
+	
+	protected BendingController controller() {
+		return BendingManager.getBending(type);
 	}
 	
 	/**

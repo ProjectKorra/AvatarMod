@@ -32,7 +32,7 @@ public class AbilityFireArc extends FireAbility {
 	public void execute(AbilityContext ctx) {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
-		FirebendingState fs = ctx.getData().getBendingState(controller);
+		FirebendingState fs = ctx.getData().getBendingState(controller());
 		
 		Vector look = Vector.fromEntityLook(player);
 		Vector lookPos = Vector.getEyePos(player).plus(look.times(3));

@@ -32,7 +32,7 @@ public class AbilityWaterArc extends WaterAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		WaterbendingState bendingState = ctx.getData().getBendingState(controller);
+		WaterbendingState bendingState = ctx.getData().getBendingState(controller());
 		World world = ctx.getWorld();
 		EntityPlayer player = ctx.getPlayerEntity();
 		
