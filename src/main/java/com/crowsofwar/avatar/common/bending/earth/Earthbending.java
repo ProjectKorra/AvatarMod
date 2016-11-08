@@ -1,7 +1,8 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_PICK_UP_BLOCK;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_RAVINE;
 import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
-import static com.crowsofwar.avatar.common.config.AvatarConfig.CONFIG;
 
 import java.awt.Color;
 
@@ -23,9 +24,8 @@ public class Earthbending extends BendingController {
 	
 	public Earthbending() {
 		
-		addAbility(this.abilityPickUpBlock = new AbilityPickUpBlock(this,
-				state -> CONFIG.bendableBlocks.contains(state.getBlock())));
-		addAbility(this.abilityRavine = new AbilityRavine(this));
+		addAbility(this.abilityPickUpBlock = ABILITY_PICK_UP_BLOCK);
+		addAbility(this.abilityRavine = ABILITY_RAVINE);
 		
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);

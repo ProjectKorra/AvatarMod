@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
+import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
@@ -15,8 +17,14 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  */
 public abstract class BendingAbility {
 	
-	public static final BendingAbility ABILITY_AIR_GUST = new AbilityAirGust();
-	public static final BendingAbility ABILITY_AIR_JUMP = new AbilityAirJump();
+	public static BendingAbility ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE;
+	
+	public static void registerAbilities() {
+		ABILITY_AIR_GUST = new AbilityAirGust();
+		ABILITY_AIR_JUMP = new AbilityAirJump();
+		ABILITY_PICK_UP_BLOCK = new AbilityPickUpBlock();
+		ABILITY_RAVINE = new AbilityRavine();
+	}
 	
 	private static int nextId = 1;
 	

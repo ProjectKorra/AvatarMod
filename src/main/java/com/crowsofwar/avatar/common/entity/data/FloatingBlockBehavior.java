@@ -6,9 +6,9 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
@@ -200,7 +200,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 					System.out.println("That's a confirmed kill");
 					xp = SKILLS_CONFIG.blockKill;
 				}
-				data.getAbilityData(AbilityPickUpBlock.INSTANCE).addXp(xp);
+				data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK).addXp(xp);
 			}
 			
 			// Remove the floating block & spawn particles

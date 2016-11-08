@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -19,19 +17,16 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityRavine extends BendingAbility {
-	
-	public static AbilityRavine INSTANCE;
+public class AbilityRavine extends EarthAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityRavine(BendingController controller) {
-		super(controller, "ravine");
+	public AbilityRavine() {
+		super("ravine");
 		this.raytrace = new Raytrace.Info();
-		INSTANCE = this;
 	}
 	
 	@Override

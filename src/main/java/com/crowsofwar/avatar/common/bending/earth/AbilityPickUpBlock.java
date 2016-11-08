@@ -1,12 +1,11 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
+import static com.crowsofwar.avatar.common.config.AvatarConfig.CONFIG;
+
 import java.util.Random;
-import java.util.function.Predicate;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -32,21 +31,15 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityPickUpBlock extends BendingAbility {
+public class AbilityPickUpBlock extends EarthAbility {
 	
-	public static AbilityPickUpBlock INSTANCE;
-	
-	private final Predicate<IBlockState> bendableCallback;
 	private final Random random;
 	private final Raytrace.Info raytrace;
 	
-	public AbilityPickUpBlock(BendingController controller,
-			Predicate<IBlockState> bendableCallback) {
-		super(controller, "pickup_block");
-		this.bendableCallback = bendableCallback;
+	public AbilityPickUpBlock() {
+		super("pickup_block");
 		this.random = new Random();
 		this.raytrace = new Raytrace.Info(-1, true);
-		INSTANCE = this;
 	}
 	
 	@Override
@@ -66,7 +59,7 @@ public class AbilityPickUpBlock extends BendingAbility {
 			if (target != null) {
 				IBlockState ibs = world.getBlockState(target.toBlockPos());
 				Block block = ibs.getBlock();
-				if (bendableCallback.test(ibs)) {
+				if (CONFIG.bendableBlocks.contains(block)) {
 					
 					AbilityData abilityData = data.getAbilityData(this);
 					float xp = abilityData.getXp();
