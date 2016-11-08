@@ -1,13 +1,16 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.AvatarConfig.CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
 import com.crowsofwar.avatar.common.bending.earth.RavineEvent;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
@@ -168,6 +171,13 @@ public class EntityRavine extends AvatarEntity {
 								CONFIG.ravineSettings.damage * damageMult);
 					}
 				}
+			}
+		}
+		
+		if (!worldObj.isRemote && owner != null) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(owner);
+			if (data != null) {
+				data.getAbilityData(AbilityRavine.INSTANCE).addXp(SKILLS_CONFIG.ravineHit);
 			}
 		}
 		

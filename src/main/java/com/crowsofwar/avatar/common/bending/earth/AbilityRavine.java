@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -20,6 +21,8 @@ import net.minecraft.world.World;
  */
 public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	
+	public static AbilityRavine INSTANCE;
+	
 	private final Raytrace.Info raytrace;
 	
 	/**
@@ -28,12 +31,14 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	public AbilityRavine(BendingController<EarthbendingState> controller) {
 		super(controller, "ravine");
 		this.raytrace = new Raytrace.Info();
+		INSTANCE = this;
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		float xp = ctx.getData().getAbilityData(this).getXp();
+		AbilityData abilityData = ctx.getData().getAbilityData(this);
+		float xp = abilityData.getXp();
 		
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
