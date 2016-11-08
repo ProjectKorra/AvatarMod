@@ -20,13 +20,12 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Firebending extends BendingController {
 	
 	private final BendingMenuInfo menu;
-	private final BendingAbility abilityLightFire, abilityFireArc, abilityFireThrow, abilityFlamethrower;
+	private final BendingAbility abilityLightFire, abilityFireArc, abilityFlamethrower;
 	
 	public Firebending() {
 		
 		addAbility(this.abilityLightFire = ABILITY_LIGHT_FIRE);
 		addAbility(this.abilityFireArc = ABILITY_FIRE_ARC);
-		addAbility(this.abilityFireThrow = new AbilityFireThrow(this));
 		addAbility(this.abilityFlamethrower = ABILITY_FLAMETHROWER);
 		
 		Color light = new Color(244, 240, 187);
