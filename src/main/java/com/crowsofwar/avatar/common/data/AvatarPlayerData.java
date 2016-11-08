@@ -293,23 +293,21 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public AbilityData getAbilityData(BendingAbility<?> ability) {
 		if (!abilityData.containsKey(ability)) {
-			abilityData.put(ability, new AbilityData(ability, xp -> saveChanges()));
+			abilityData.put(ability, new AbilityData(this, ability));
 		}
 		return abilityData.get(ability);
 	}
 	
 	/**
-	 * Gets a list of all ability data contained in this player data.
+	 * Gets a list of all ability data contained in this player data. The list
+	 * is immutable.
 	 */
 	public List<AbilityData> getAllAbilityData() {
 		return ImmutableList.copyOf(abilityData.values());
 	}
 	
-	public void setAbilityData(List<AbilityData> abilities) {
-		this.abilityData.clear();
-		for (AbilityData ability : abilities) {
-			this.abilityData.put(ability.getAbility(), ability);
-		}
+	public void clearAbilityData() {
+		abilityData.clear();
 	}
 	
 	/**

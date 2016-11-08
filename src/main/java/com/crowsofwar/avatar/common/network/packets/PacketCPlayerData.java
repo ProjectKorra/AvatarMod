@@ -1,10 +1,8 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -48,16 +46,8 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		for (int i = 0; i < allControllers.length; i++) {
 			allControllers[i] = buf.readInt();
 		}
-		// Read ability data
-		abilities = new ArrayList<>();
-		int abilitiesAmount = buf.readInt();
-		for (int i = 0; i < abilitiesAmount; i++) {
-			AbilityData abilityData = new AbilityData(BendingManager.getAbility(buf.readInt()), xp -> {
-			});
-			abilityData.setXp(buf.readFloat());
-			abilities.add(abilityData);
-		}
 		
+		// Reading ability data is done elsewhere
 		// Reading bending states is done elsewhere
 		buffer = buf;
 	}

@@ -5,7 +5,9 @@ import java.util.Random;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
@@ -15,6 +17,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
@@ -73,13 +76,24 @@ public class PacketHandlerClient implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while processing player data packet");
 		if (data != null) {
-			// Add bending controllers & bending states
+			
+			// Add bending controllers
 			data.takeBending();
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {
 				data.addBending(packet.getAllControllersID()[i]);
 				data.getState().update(player, Raytrace.getTargetBlock(player, -1));
 			}
-			data.setAbilityData(packet.getAbilityData());
+			
+			// Read ability data
+			data.clearAbilityData();
+			ByteBuf buf = packet.getBuf();
+			int abilitiesAmount = buf.readInt();
+			for (int i = 0; i < abilitiesAmount; i++) {
+				AbilityData abilityData = data.getAbilityData(BendingManager.getAbility(buf.readInt()));
+				abilityData.setXp(buf.readFloat());
+			}
+			
+			// Read bending states
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {
 				IBendingState state = data.getBendingState(packet.getBuf().readInt());
 				state.fromBytes(packet.getBuf());
