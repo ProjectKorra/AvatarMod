@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -37,7 +39,7 @@ public class StatCtrlAirJump extends StatusControl {
 			if (data != null) {
 				AbilityData abilityData = data.getAbilityData(AbilityAirJump.INSTANCE);
 				xp = abilityData.getXp();
-				abilityData.addXp(2);
+				abilityData.addXp(SKILLS_CONFIG.airJump);
 			}
 			
 			Vector rotations = new Vector(Math.toRadians((player.rotationPitch) / 1),

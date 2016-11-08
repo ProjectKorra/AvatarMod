@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -92,7 +94,7 @@ public class EntityAirGust extends EntityArc {
 				if (data != null) {
 					AbilityData abilityData = data.getAbilityData(AbilityAirGust.INSTANCE);
 					xp = abilityData.getXp();
-					abilityData.addXp(1);
+					abilityData.addXp(SKILLS_CONFIG.airGustHit);
 				}
 				
 				Vector velocity = velocity().times(0.3).times(1 + xp / 200.0);
