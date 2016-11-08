@@ -54,7 +54,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		for (int i = 0; i < abilitiesAmount; i++) {
 			AbilityData abilityData = new AbilityData(BendingManager.getAbility(buf.readInt()), xp -> {
 			});
-			abilityData.setXp(buf.readInt());
+			abilityData.setXp(buf.readFloat());
 			abilities.add(abilityData);
 		}
 		
@@ -74,7 +74,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		buf.writeInt(abilities.size());
 		for (int i = 0; i < abilities.size(); i++) {
 			buf.writeInt(abilities.get(i).getAbility().getId());
-			buf.writeInt(abilities.get(i).getXp());
+			buf.writeFloat(abilities.get(i).getXp());
 		}
 		// Write bending states
 		for (int i = 0; i < states.size(); i++) {
