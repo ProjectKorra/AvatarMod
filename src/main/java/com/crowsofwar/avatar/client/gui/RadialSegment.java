@@ -151,6 +151,13 @@ public class RadialSegment extends Gui {
 			mc.getTextureManager().bindTexture(RadialMenu.icons);
 			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
 			
+			float darkenBy = 0.05f;
+			float r = theme.getIcon().getRed(hover) / 255f - darkenBy;
+			float g = theme.getIcon().getGreen(hover) / 255f - darkenBy;
+			float b = theme.getIcon().getBlue(hover) / 255f - darkenBy;
+			float avg = (r + g + b) / 3;
+			GlStateManager.color(avg, avg,
+					avg, alpha);
 			mc.getTextureManager().bindTexture(RadialMenu.blurredIcons);
 			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
 			
