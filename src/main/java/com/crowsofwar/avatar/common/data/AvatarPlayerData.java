@@ -122,7 +122,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	@Override
 	protected void saveChanges() {
 		super.saveChanges();
-		updateClient();
+		if (getPlayerEntity() == null || !getPlayerEntity().worldObj.isRemote) {
+			updateClient();
+			System.out.println("saving");
+		}
 	}
 	
 	public boolean isBender() {
