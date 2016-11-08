@@ -145,11 +145,13 @@ public class RadialSegment extends Gui {
 					theme.getIcon().getBlue(hover) / 255f, alpha);
 			
 			GlStateManager.translate(0, 0, 2); // Ensure icon is not overlapped
-			GlStateManager.scale(iconScale, iconScale, iconScale); // Scale the icon's recentering
-																	// and actual
-			// image
+			GlStateManager.scale(iconScale, iconScale, iconScale);  // Scale the icon's recentering
+																	// and actual image
 			GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
 			mc.getTextureManager().bindTexture(RadialMenu.icons);
+			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
+			
+			mc.getTextureManager().bindTexture(RadialMenu.blurredIcons);
 			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
 			
 		GlStateManager.popMatrix();

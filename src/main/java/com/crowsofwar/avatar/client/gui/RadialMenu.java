@@ -28,6 +28,8 @@ public class RadialMenu extends Gui {
 	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
 	static final ResourceLocation edge = new ResourceLocation("avatarmod",
 			"textures/gui/radial_segment_edge_thicker.png");
+	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
+			"textures/gui/blurred_icons.png");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png
