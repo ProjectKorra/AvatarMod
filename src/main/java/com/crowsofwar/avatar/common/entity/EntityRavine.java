@@ -155,6 +155,9 @@ public class EntityRavine extends AvatarEntity {
 			
 		}
 		
+		// amount of entities which were successfully attacked
+		int attacked = 0;
+		
 		// Push collided entities back
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
@@ -167,8 +170,9 @@ public class EntityRavine extends AvatarEntity {
 						
 						Vector push = velocity.copy().setY(1).mul(CONFIG.ravineSettings.push);
 						entity.addVelocity(push.x(), push.y(), push.z());
-						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
-								CONFIG.ravineSettings.damage * damageMult);
+						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
+								CONFIG.ravineSettings.damage * damageMult))
+							attacked++;
 					}
 				}
 			}
@@ -177,7 +181,7 @@ public class EntityRavine extends AvatarEntity {
 		if (!worldObj.isRemote && owner != null) {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(owner);
 			if (data != null) {
-				data.getAbilityData(AbilityRavine.INSTANCE).addXp(SKILLS_CONFIG.ravineHit);
+				data.getAbilityData(AbilityRavine.INSTANCE).addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}
 		}
 		
