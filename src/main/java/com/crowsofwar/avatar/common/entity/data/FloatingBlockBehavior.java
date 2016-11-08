@@ -161,17 +161,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						double speed = entity.velocity().magnitude();
-						collided.attackEntityFrom(
-								AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-								(float) (speed * CONFIG.floatingBlockSettings.damage));
-						
-						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion.mul(CONFIG.floatingBlockSettings.push);
-						motion.setY(0.08);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
-						if (!world.isRemote) entity.setDead();
-						entity.onCollision();
+						collision((EntityLivingBase) collided);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
 						motion.mul(0.3);
@@ -184,6 +174,20 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			return this;
 			
+		}
+		
+		private void collision(EntityLivingBase collided) {
+			double speed = entity.velocity().magnitude();
+			collided.attackEntityFrom(
+					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
+					(float) (speed * CONFIG.floatingBlockSettings.damage));
+			
+			Vector motion = new Vector(collided).minus(new Vector(entity));
+			motion.mul(CONFIG.floatingBlockSettings.push);
+			motion.setY(0.08);
+			collided.addVelocity(motion.x(), motion.y(), motion.z());
+			if (!entity.worldObj.isRemote) entity.setDead();
+			entity.onCollision();
 		}
 		
 		@Override

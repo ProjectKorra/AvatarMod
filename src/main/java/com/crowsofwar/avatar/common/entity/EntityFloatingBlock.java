@@ -262,7 +262,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	/**
-	 * Called when the block collides with the ground, but not other entities
+	 * Called when the block collides with the ground as well as other entities
 	 */
 	public void onCollision() {
 		// Spawn particles
