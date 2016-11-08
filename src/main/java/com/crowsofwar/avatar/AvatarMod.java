@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
@@ -69,6 +70,7 @@ public class AvatarMod {
 		AvatarConfig.load();
 		
 		BendingManager.init();
+		BendingAbility.registerAbilities();
 		EarthSoundHandler.register();
 		
 		AvatarParticles.register();
