@@ -46,11 +46,11 @@ public class AbilityData {
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
-		nbt.setFloat("Xp", xp);
+		xp = nbt.getFloat("Xp");
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
-		xp = nbt.getFloat("Xp");
+		nbt.setFloat("Xp", xp);
 	}
 	
 }
