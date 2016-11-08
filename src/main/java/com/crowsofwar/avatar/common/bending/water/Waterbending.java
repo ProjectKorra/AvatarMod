@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WATER_ARC;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WAVE;
 import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_WATERBENDING;
 
@@ -19,12 +21,11 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Waterbending extends BendingController {
 	
 	private BendingMenuInfo menu;
-	private final BendingAbility abilityWaterArc, abilityWaterThrow, abilityWave;
+	private final BendingAbility abilityWaterArc, abilityWave;
 	
 	public Waterbending() {
-		addAbility(this.abilityWaterArc = new AbilityWaterArc(this));
-		addAbility(this.abilityWaterThrow = new AbilityWaterThrow(this));
-		addAbility(this.abilityWave = new AbilityCreateWave(this));
+		addAbility(this.abilityWaterArc = ABILITY_WATER_ARC);
+		addAbility(this.abilityWave = ABILITY_WAVE);
 		
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);

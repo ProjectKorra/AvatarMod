@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
@@ -20,15 +18,15 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterArc extends BendingAbility {
+public class AbilityWaterArc extends WaterAbility {
 	
 	private final Raytrace.Info raytrace;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityWaterArc(BendingController controller) {
-		super(controller, "water_arc");
+	public AbilityWaterArc() {
+		super("water_arc");
 		this.raytrace = new Raytrace.Info(-1, false);
 	}
 	

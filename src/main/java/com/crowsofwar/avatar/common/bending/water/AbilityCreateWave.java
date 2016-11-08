@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -14,12 +12,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
-public class AbilityCreateWave extends BendingAbility {
+public class AbilityCreateWave extends WaterAbility {
 	
 	private final Raytrace.Info raytrace;
 	
-	public AbilityCreateWave(BendingController controller) {
-		super(controller, "wave");
+	public AbilityCreateWave() {
+		super("wave");
 		this.raytrace = new Raytrace.Info();
 	}
 	

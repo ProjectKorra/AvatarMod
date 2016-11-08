@@ -21,7 +21,7 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 public abstract class BendingAbility {
 	
 	public static BendingAbility ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE,
-			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER;
+			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER, ABILITY_WATER_ARC, ABILITY_WAVE;
 	
 	public static void registerAbilities() {
 		ABILITY_AIR_GUST = new AbilityAirGust();
