@@ -15,7 +15,7 @@ public class ConfigSkills {
 	private ConfigSkills() {}
 	
 	@Load
-	public float blockPlaced, blockThrowHit, blockKill;
+	public float blockPlaced = 1, blockThrowHit = 2, blockKill = 3;
 	
 	public static void load() {
 		ConfigLoader.load(SKILLS_CONFIG, "avatar/skills.yml");

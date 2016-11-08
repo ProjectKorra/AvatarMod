@@ -193,7 +193,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			// Add XP
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(entity.getOwner());
-			if (data != null) {
+			if (!collided.worldObj.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.blockThrowHit;
 				if (collided.getHealth() < 0) {
 					System.out.println("That's a confirmed kill");
