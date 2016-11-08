@@ -19,14 +19,12 @@ public class Earthbending extends BendingController {
 	
 	private final BendingMenuInfo menu;
 	
-	private final BendingAbility abilityPickUpBlock, abilityThrowBlock, abilityPutBlock, abilityRavine;
+	private final BendingAbility abilityPickUpBlock, abilityRavine;
 	
 	public Earthbending() {
 		
 		addAbility(this.abilityPickUpBlock = new AbilityPickUpBlock(this,
 				state -> CONFIG.bendableBlocks.contains(state.getBlock())));
-		addAbility(this.abilityThrowBlock = new AbilityThrowBlock(this));
-		addAbility(this.abilityPutBlock = new AbilityPutBlock(this));
 		addAbility(this.abilityRavine = new AbilityRavine(this));
 		
 		Color light = new Color(225, 225, 225);
