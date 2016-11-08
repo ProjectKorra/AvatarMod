@@ -94,7 +94,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		AvatarUtils.readMap(abilityData, nbt -> BendingManager.getAbility(nbt.getInteger("Id")), nbt -> {
 			BendingAbility ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
 			AbilityData data = new AbilityData(ability, xp -> saveChanges());
-			data.setXp(nbt.getInteger("Xp"));
+			data.readFromNbt(nbt);
 			return data;
 		}, readFrom, "AbilityData");
 		
@@ -114,7 +114,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		AvatarUtils.writeMap(abilityData, (nbt, ability) -> nbt.setInteger("Id", ability.getId()),
 				(nbt, data) -> {
 					nbt.setInteger("AbilityId", data.getAbility().getId());
-					nbt.setInteger("Xp", data.getXp());
+					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");
 		
 	}
