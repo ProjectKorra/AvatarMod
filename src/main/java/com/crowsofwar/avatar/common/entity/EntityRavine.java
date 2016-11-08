@@ -37,6 +37,8 @@ public class EntityRavine extends AvatarEntity {
 	private Vector initialPosition;
 	private EntityPlayer owner;
 	
+	private float damageMult;
+	
 	/**
 	 * @param world
 	 */
@@ -46,6 +48,12 @@ public class EntityRavine extends AvatarEntity {
 		this.propVelocity = new EntityPropertyMotion(this);
 		setSize(1, 1);
 		
+		this.damageMult = 1;
+		
+	}
+	
+	public void setDamageMult(float mult) {
+		this.damageMult = mult;
 	}
 	
 	public void setOwner(EntityPlayer owner) {
@@ -157,7 +165,7 @@ public class EntityRavine extends AvatarEntity {
 						Vector push = velocity.copy().setY(1).mul(CONFIG.ravineSettings.push);
 						entity.addVelocity(push.x(), push.y(), push.z());
 						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
-								CONFIG.ravineSettings.damage);
+								CONFIG.ravineSettings.damage * damageMult);
 					}
 				}
 			}

@@ -33,7 +33,7 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		System.out.println("Skill is: " + ctx.getData().getAbilityData(this).getXp());
+		float xp = ctx.getData().getAbilityData(this).getXp();
 		
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
@@ -44,6 +44,7 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 		ravine.setOwner(player);
 		ravine.setPosition(player.posX, player.posY, player.posZ);
 		ravine.velocity().set(look.times(10));
+		ravine.setDamageMult(.75f + xp / 100);
 		world.spawnEntityInWorld(ravine);
 		
 		BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, player));
