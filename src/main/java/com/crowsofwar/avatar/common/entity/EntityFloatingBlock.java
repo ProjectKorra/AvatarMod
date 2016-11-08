@@ -74,6 +74,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 */
 	private AxisAlignedBB expandedHitbox;
 	
+	private float damageMult;
+	
 	private final OwnerAttribute ownerAttrib;
 	
 	public EntityFloatingBlock(World world) {
@@ -91,6 +93,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 					.fetchPerformance(newOwner).getBendingState(EARTHBENDING.id());
 			if (state != null) state.setPickupBlock(this);
 		});
+		this.damageMult = 1;
 		
 	}
 	
@@ -138,6 +141,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
+		damageMult = nbt.getFloat("DamageMultiplier");
 		ownerAttrib.load(nbt);
 	}
 	
@@ -152,6 +156,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
 		getBehavior().save(getOrCreateNestedCompound(nbt, "BehaviorData"));
+		nbt.setFloat("DamageMultiplier", damageMult);
 		ownerAttrib.save(nbt);
 	}
 	
@@ -218,6 +223,10 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 */
 	public void disableItemDrops() {
 		setItemDropsEnabled(false);
+	}
+	
+	public float getDamageMult() {
+		return damageMult;
 	}
 	
 	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
