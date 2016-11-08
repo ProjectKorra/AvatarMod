@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_GUST;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.bending.BendingType.AIRBENDING;
 
 import java.awt.Color;
@@ -22,8 +24,8 @@ public class Airbending extends BendingController {
 	private final BendingAbility abilityAirGust, abilityAirJump;
 	
 	public Airbending() {
-		addAbility(this.abilityAirGust = new AbilityAirGust(this));
-		addAbility(this.abilityAirJump = new AbilityAirJump(this));
+		addAbility(this.abilityAirGust = ABILITY_AIR_GUST);
+		addAbility(this.abilityAirJump = ABILITY_AIR_JUMP);
 		
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);

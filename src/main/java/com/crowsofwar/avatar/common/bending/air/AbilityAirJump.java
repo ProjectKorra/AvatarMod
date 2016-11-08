@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -12,15 +11,15 @@ import com.crowsofwar.avatar.common.util.Raytrace.Info;
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirJump extends BendingAbility {
+public class AbilityAirJump extends AirAbility {
 	
 	public static BendingAbility INSTANCE;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityAirJump(BendingController controller) {
-		super(controller, "air_jump");
+	public AbilityAirJump() {
+		super("air_jump");
 		INSTANCE = this;
 	}
 	

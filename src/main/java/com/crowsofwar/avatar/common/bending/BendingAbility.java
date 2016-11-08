@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
@@ -12,6 +14,9 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  * @author CrowsOfWar
  */
 public abstract class BendingAbility {
+	
+	public static final BendingAbility ABILITY_AIR_GUST = new AbilityAirGust();
+	public static final BendingAbility ABILITY_AIR_JUMP = new AbilityAirJump();
 	
 	private static int nextId = 1;
 	

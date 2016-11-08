@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
@@ -16,7 +15,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirGust extends BendingAbility {
+public class AbilityAirGust extends AirAbility {
 	
 	public static BendingAbility INSTANCE;
 	
@@ -25,8 +24,8 @@ public class AbilityAirGust extends BendingAbility {
 	/**
 	 * @param controller
 	 */
-	public AbilityAirGust(BendingController controller) {
-		super(controller, "air_gust");
+	public AbilityAirGust() {
+		super("air_gust");
 		this.raytrace = new Raytrace.Info();
 		INSTANCE = this;
 	}
