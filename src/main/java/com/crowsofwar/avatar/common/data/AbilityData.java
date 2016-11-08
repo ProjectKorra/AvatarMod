@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.data;
 
-import java.util.function.Consumer;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,14 +12,14 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class AbilityData {
 	
+	private final AvatarPlayerData data;
 	private final BendingAbility ability;
-	private final Consumer<Float> changeListener;
 	private float xp;
 	
-	public AbilityData(BendingAbility ability, Consumer<Float> onChange) {
+	public AbilityData(AvatarPlayerData data, BendingAbility ability) {
+		this.data = data;
 		this.ability = ability;
 		this.xp = 0;
-		this.changeListener = onChange;
 	}
 	
 	public BendingAbility getAbility() {
@@ -32,11 +30,15 @@ public class AbilityData {
 		return xp;
 	}
 	
+	/**
+	 * Sets the XP level to the given amount, clamping from 0-100. Will also
+	 * save the AvatarPlayerData.
+	 */
 	public void setXp(float xp) {
 		if (xp < 0) xp = 0;
 		if (xp > 100) xp = 100;
 		this.xp = xp;
-		changeListener.accept(xp);
+		data.saveChanges();
 	}
 	
 	public void addXp(float xp) {
