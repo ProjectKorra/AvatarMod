@@ -192,6 +192,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			// Add XP
+			System.out.println("Adding XP");
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(entity.getOwner());
 			if (!collided.worldObj.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.blockThrowHit;
