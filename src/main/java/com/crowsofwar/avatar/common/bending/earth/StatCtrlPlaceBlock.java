@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
@@ -56,6 +57,8 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				controller.post(new FloatingBlockEvent.BlockPlaced(floating, context.getPlayerEntity()));
 				
 				context.removeStatusControl(THROW_BLOCK);
+				
+				data.getAbilityData(AbilityPickUpBlock.INSTANCE).addXp(SKILLS_CONFIG.blockPlaced);
 				
 				return true;
 			}

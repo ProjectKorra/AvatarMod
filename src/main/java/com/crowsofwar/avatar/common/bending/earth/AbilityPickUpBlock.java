@@ -33,6 +33,8 @@ import net.minecraft.world.World;
  */
 public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 	
+	public static AbilityPickUpBlock INSTANCE;
+	
 	private final Predicate<IBlockState> bendableCallback;
 	private final Random random;
 	private final Raytrace.Info raytrace;
@@ -43,6 +45,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 		this.bendableCallback = bendableCallback;
 		this.random = new Random();
 		this.raytrace = new Raytrace.Info(-1, true);
+		INSTANCE = this;
 	}
 	
 	@Override
