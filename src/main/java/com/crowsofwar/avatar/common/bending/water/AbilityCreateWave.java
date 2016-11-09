@@ -39,6 +39,7 @@ public class AbilityCreateWave extends WaterAbility {
 			wave.setOwner(player);
 			wave.velocity().set(look.times(10));
 			wave.setPosition(hitPos.x() + 0.5, hitPos.y(), hitPos.z() + 0.5);
+			wave.setDamageMultiplier(1 + data.getData().getAbilityData(this).getXp() / 100f);
 			
 			wave.rotationYaw = (float) look.toSpherical().toDegrees().y();
 			

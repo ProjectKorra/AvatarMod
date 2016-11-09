@@ -1,10 +1,13 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.AvatarConfig.CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -21,6 +24,8 @@ public class EntityWave extends Entity {
 	
 	private EntityPlayer owner;
 	
+	private float damageMult;
+	
 	public EntityWave(World world) {
 		super(world);
 		//@formatter:off
@@ -30,6 +35,10 @@ public class EntityWave extends Entity {
 		
 		setSize(2f, 2);
 		
+	}
+	
+	public void setDamageMultiplier(float damageMult) {
+		this.damageMult = damageMult;
 	}
 	
 	@Override
@@ -45,7 +54,13 @@ public class EntityWave extends Entity {
 				Vector motion = velocity().dividedBy(20).times(CONFIG.waveSettings.push);
 				motion.setY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
-				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), CONFIG.waveSettings.damage);
+				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), CONFIG.waveSettings.damage * damageMult);
+			}
+			if (!collided.isEmpty()) {
+				AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(owner);
+				if (data != null) {
+					data.getAbilityData(BendingAbility.ABILITY_WAVE).addXp(SKILLS_CONFIG.waveHit);
+				}
 			}
 		}
 		

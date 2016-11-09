@@ -16,7 +16,7 @@ public class ConfigSkills {
 	
 	@Load
 	public float blockPlaced = 1, blockThrowHit = 2, blockKill = 3, airJump = 0.5f, airGustHit = 1,
-			ravineHit = 1.5f;
+			ravineHit = 1.5f, waveHit = 2f;
 	
 	public static void load() {
 		ConfigLoader.load(SKILLS_CONFIG, "avatar/skills.yml");
