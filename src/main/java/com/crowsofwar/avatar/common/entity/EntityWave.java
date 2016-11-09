@@ -47,7 +47,6 @@ public class EntityWave extends Entity {
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
 				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), CONFIG.waveSettings.damage);
 			}
-			if (!collided.isEmpty()) setDead();
 		}
 		
 		if (ticksExisted > 7000 || worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) setDead();
