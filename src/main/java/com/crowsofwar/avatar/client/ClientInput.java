@@ -67,7 +67,7 @@ public class ClientInput implements IControlsHandler {
 		addBendingButton(BendingType.EARTHBENDING, Keyboard.KEY_Z);
 		addBendingButton(BendingType.FIREBENDING, Keyboard.KEY_X);
 		addBendingButton(BendingType.WATERBENDING, Keyboard.KEY_C);
-		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_F);
+		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_G);
 		
 	}
 	
