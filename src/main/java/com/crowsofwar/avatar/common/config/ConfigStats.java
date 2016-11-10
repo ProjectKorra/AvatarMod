@@ -19,9 +19,9 @@ import net.minecraft.util.ResourceLocation;
  * 
  * @author CrowsOfWar
  */
-public class AvatarConfig {
+public class ConfigStats {
 	
-	public static final AvatarConfig CONFIG = new AvatarConfig();
+	public static final ConfigStats STATS_CONFIG = new ConfigStats();
 	
 	@Load
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.25f, 1),
@@ -33,7 +33,7 @@ public class AvatarConfig {
 	
 	public List<Block> bendableBlocks;
 	
-	private AvatarConfig() {
+	private ConfigStats() {
 		bendableBlocksNames = new ArrayList<String>();
 		bendableBlocksNames.add(Blocks.STONE.toString());
 		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
@@ -62,10 +62,8 @@ public class AvatarConfig {
 	}
 	
 	public static void load() {
-		ConfigLoader.load(CONFIG, "avatar/balance.cfg");
-		CONFIG.loadBendableBlocks();
-		
-		ConfigSkills.load();
+		ConfigLoader.load(STATS_CONFIG, "avatar/stats.yml");
+		STATS_CONFIG.loadBendableBlocks();
 	}
 	
 	public static class AttackSettings {

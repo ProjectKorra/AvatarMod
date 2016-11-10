@@ -4,7 +4,7 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.config.AvatarConfig;
+import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.gorecore.config.ConfigurationException;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
@@ -45,7 +45,7 @@ public class NodeConfig extends NodeFunctional {
 			
 			try {
 				
-				AvatarConfig.load();
+				ConfigStats.load();
 				
 			} catch (ConfigurationException e) {
 				

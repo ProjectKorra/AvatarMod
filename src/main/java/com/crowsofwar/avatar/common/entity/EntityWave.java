@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.AvatarConfig.CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 import java.util.List;
@@ -53,10 +53,10 @@ public class EntityWave extends Entity {
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
-				Vector motion = velocity().dividedBy(20).times(CONFIG.waveSettings.push);
+				Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);
 				motion.setY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
-				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), CONFIG.waveSettings.damage * damageMult);
+				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), STATS_CONFIG.waveSettings.damage * damageMult);
 			}
 			if (!collided.isEmpty()) {
 				AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(owner);

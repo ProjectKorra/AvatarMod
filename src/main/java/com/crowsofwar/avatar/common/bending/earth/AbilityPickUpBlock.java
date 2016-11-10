@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.config.AvatarConfig.CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.Random;
 
@@ -59,7 +59,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 			if (target != null) {
 				IBlockState ibs = world.getBlockState(target.toBlockPos());
 				Block block = ibs.getBlock();
-				if (CONFIG.bendableBlocks.contains(block)) {
+				if (STATS_CONFIG.bendableBlocks.contains(block)) {
 					
 					AbilityData abilityData = data.getAbilityData(this);
 					float xp = abilityData.getXp();
