@@ -124,7 +124,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		super.saveChanges();
 		if (getPlayerEntity() == null || !getPlayerEntity().worldObj.isRemote) {
 			updateClient();
-			System.out.println("saving");
 		}
 	}
 	

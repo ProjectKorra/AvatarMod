@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
@@ -131,12 +132,16 @@ public class PacketHandlerServer implements IPacketHandler {
 				"Error while processing UseStatusControl packet");
 		
 		if (data != null) {
-			if (packet.getStatusControl().execute(new AbilityContext(data,
-					new Raytrace.Result(packet.getLookPos(), packet.getLookSide())))) {
-				
-				data.removeStatusControl(packet.getStatusControl());
-				AvatarMod.network.sendTo(new PacketCRemoveStatusControl(packet.getStatusControl()), player);
-				
+			StatusControl sc = packet.getStatusControl();
+			if (data.hasStatusControl(sc)) {
+				if (sc.execute(new AbilityContext(data,
+						new Raytrace.Result(packet.getLookPos(), packet.getLookSide())))) {
+					
+					data.removeStatusControl(packet.getStatusControl());
+					AvatarMod.network.sendTo(new PacketCRemoveStatusControl(packet.getStatusControl()),
+							player);
+					
+				}
 			}
 			
 		}
