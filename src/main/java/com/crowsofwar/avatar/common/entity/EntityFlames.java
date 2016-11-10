@@ -100,7 +100,8 @@ public class EntityFlames extends AvatarEntity {
 				entity.setFire((int) (3 * 1 + abilityData.getXp() / 100f));
 			}
 			
-			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit);
+			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
+			if (!collided.isEmpty()) setDead();
 		}
 		
 		handleWaterMovement();
