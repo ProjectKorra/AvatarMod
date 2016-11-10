@@ -55,6 +55,7 @@ public class AbilityWaterArc extends WaterAbility {
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setGravityEnabled(false);
 				bendingState.setWaterArc(water);
+				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
 				
 				water.setBehavior(new WaterArcBehavior.PlayerControlled(water, player));
 				

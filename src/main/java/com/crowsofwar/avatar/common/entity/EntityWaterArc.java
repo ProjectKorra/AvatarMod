@@ -28,9 +28,20 @@ public class EntityWaterArc extends EntityArc {
 	 */
 	private int lastPlayedSplash;
 	
+	private float damageMult;
+	
 	public EntityWaterArc(World world) {
 		super(world);
 		this.lastPlayedSplash = -1;
+		this.damageMult = 1;
+	}
+	
+	public float getDamageMult() {
+		return damageMult;
+	}
+	
+	public void setDamageMult(float mult) {
+		this.damageMult = mult;
 	}
 	
 	@Override

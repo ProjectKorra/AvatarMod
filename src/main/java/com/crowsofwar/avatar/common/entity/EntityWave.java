@@ -35,6 +35,8 @@ public class EntityWave extends Entity {
 		
 		setSize(2f, 2);
 		
+		damageMult = 1;
+		
 	}
 	
 	public void setDamageMultiplier(float damageMult) {
