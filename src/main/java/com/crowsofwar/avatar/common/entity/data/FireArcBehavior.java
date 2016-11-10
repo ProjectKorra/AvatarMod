@@ -3,9 +3,11 @@ package com.crowsofwar.avatar.common.entity.data;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingState;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.gorecore.util.Vector;
@@ -130,7 +132,16 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				if (collided != entity.getOwner()) return this;
 				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
-						6);
+						6 * entity.getDamageMult());
+				
+				if (!entity.worldObj.isRemote) {
+					AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(entity.getOwner());
+					if (data != null) {
+						data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC)
+								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
+					}
+				}
+				
 			}
 			
 			return this;

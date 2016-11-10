@@ -27,8 +27,11 @@ public class EntityFireArc extends EntityArc {
 	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
 	
+	private float damageMult;
+	
 	public EntityFireArc(World world) {
 		super(world);
+		this.damageMult = 1;
 	}
 	
 	@Override
@@ -101,6 +104,14 @@ public class EntityFireArc extends EntityArc {
 	
 	public void setBehavior(FireArcBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	public float getDamageMult() {
+		return damageMult;
+	}
+	
+	public void setDamageMult(float damageMult) {
+		this.damageMult = damageMult;
 	}
 	
 	public static class FireControlPoint extends ControlPoint {
