@@ -1,8 +1,13 @@
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -13,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -81,12 +87,20 @@ public class EntityFlames extends AvatarEntity {
 		}
 		
 		if (!worldObj.isRemote) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(owner);
+			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FLAMETHROWER);
+			
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != owner && !(entity instanceof EntityFlames));
 			
 			for (Entity entity : collided) {
-				entity.setFire(3);
+				if (abilityData.getXp() >= 50) {
+					entity.attackEntityFrom(DamageSource.inFire, 2 + (abilityData.getXp() - 50) / 25);
+				}
+				entity.setFire((int) (3 * 1 + abilityData.getXp() / 100f));
 			}
+			
+			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit);
 		}
 		
 		handleWaterMovement();
