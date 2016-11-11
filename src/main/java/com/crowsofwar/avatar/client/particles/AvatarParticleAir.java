@@ -33,8 +33,8 @@ public class AvatarParticleAir extends AvatarParticle {
 			double velY, double velZ, int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
 		
-		particleScale = 6f;
-		particleMaxAge *= 3;
+		particleScale = 4f;
+		particleMaxAge *= 1;
 		
 		motionX = velX;
 		motionY = velY;
