@@ -11,12 +11,11 @@ import net.minecraft.nbt.NBTTagCompound;
 public class FirebendingState extends BendingState {
 	
 	private EntityFireArc fireArc;
-	private AvatarPlayerData data;
 	private boolean isFlamethrowing;
 	
 	public FirebendingState(AvatarPlayerData data) {
+		super(data);
 		fireArc = null;
-		this.data = data;
 	}
 	
 	public int getFireArcId() {

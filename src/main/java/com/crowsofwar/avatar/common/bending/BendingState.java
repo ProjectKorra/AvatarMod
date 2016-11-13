@@ -31,9 +31,11 @@ public abstract class BendingState implements ReadableWritable {
 		}
 	};
 	
+	protected final AvatarPlayerData data;
 	private int progressionPoints;
 	
-	public BendingState() {
+	public BendingState(AvatarPlayerData data) {
+		this.data = data;
 		this.progressionPoints = 0;
 	}
 	

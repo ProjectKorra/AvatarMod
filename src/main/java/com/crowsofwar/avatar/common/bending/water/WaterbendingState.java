@@ -12,12 +12,10 @@ import net.minecraft.world.World;
 
 public class WaterbendingState extends BendingState {
 	
-	private final AvatarPlayerData data;
-	
 	private EntityWaterArc waterArc;
 	
 	public WaterbendingState(AvatarPlayerData data) {
-		this.data = data;
+		super(data);
 		this.waterArc = null;
 	}
 	

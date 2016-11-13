@@ -10,11 +10,10 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class EarthbendingState extends BendingState {
 	
-	private AvatarPlayerData data;
 	private EntityFloatingBlock pickupBlock;
 	
 	public EarthbendingState(AvatarPlayerData data) {
-		this.data = data;
+		super(data);
 	}
 	
 	@Override

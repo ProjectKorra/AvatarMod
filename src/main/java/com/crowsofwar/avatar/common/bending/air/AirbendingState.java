@@ -2,14 +2,15 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingState;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class AirbendingState extends BendingState {
 	
-	public AirbendingState() {
-		
+	public AirbendingState(AvatarPlayerData data) {
+		super(data);
 	}
 	
 	@Override
