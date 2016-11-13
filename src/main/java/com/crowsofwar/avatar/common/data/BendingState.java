@@ -97,6 +97,11 @@ public abstract class BendingState {
 		this.writeToNBT(nbt);
 	}
 	
+	public final void read(NBTTagCompound nbt) {
+		progressionPoints = nbt.getInteger("ProgressPoints");
+		readFromNBT(nbt);
+	}
+	
 	protected abstract void writeToNBT(NBTTagCompound nbt);
 	
 	protected abstract void readFromNBT(NBTTagCompound nbt);
@@ -117,7 +122,7 @@ public abstract class BendingState {
 		BendingController controller = BendingManager.getBending(id);
 		if (controller != null) {
 			BendingState state = controller.createState(data);
-			state.readFromNBT(stateData);
+			state.read(stateData);
 			return state;
 		} else {
 			AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,
