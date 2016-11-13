@@ -51,12 +51,12 @@ public class EarthbendingState extends BendingState {
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void writeBytes(ByteBuf buf) {
 		buf.writeInt(pickupBlock == null ? -1 : pickupBlock.getID());
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void readBytes(ByteBuf buf) {
 		int id = buf.readInt();
 		pickupBlock = id == -1 ? null
 				: EntityFloatingBlock.getFromID(data.getState().getPlayerEntity().worldObj, id);

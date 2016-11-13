@@ -23,12 +23,12 @@ public class AirbendingState extends BendingState {
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void writeBytes(ByteBuf buf) {
 		
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void readBytes(ByteBuf buf) {
 		
 	}
 	

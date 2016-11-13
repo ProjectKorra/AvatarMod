@@ -58,12 +58,12 @@ public class FirebendingState extends BendingState {
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void writeBytes(ByteBuf buf) {
 		buf.writeInt(getFireArcId());
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void readBytes(ByteBuf buf) {
 		fireArc = EntityFireArc.findFromId(data.getState().getPlayerEntity().worldObj, buf.readInt());
 	}
 	

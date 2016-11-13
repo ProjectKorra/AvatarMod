@@ -31,9 +31,33 @@ public abstract class BendingState implements ReadableWritable {
 		}
 	};
 	
-	public abstract void toBytes(ByteBuf buf);
+	private int progressionPoints;
 	
-	public abstract void fromBytes(ByteBuf buf);
+	public BendingState() {
+		this.progressionPoints = 0;
+	}
+	
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(progressionPoints);
+		writeBytes(buf);
+	}
+	
+	public void fromBytes(ByteBuf buf) {
+		progressionPoints = buf.readInt();
+		readBytes(buf);
+	}
+	
+	/**
+	 * Subclass dependent networking method. Writes the bending state into the
+	 * ByteBuf.
+	 */
+	protected abstract void writeBytes(ByteBuf buf);
+	
+	/**
+	 * Subclass dependent networking method. Reads the bending state from the
+	 * ByteBuf.
+	 */
+	protected abstract void readBytes(ByteBuf buf);
 	
 	/**
 	 * Get the Id of the bending state's BendingController. Should be unique
