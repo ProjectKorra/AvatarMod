@@ -242,6 +242,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			AvatarLog.warn(WarningType.INVALID_CODE, "Tried to access BendingState with Id " + id
 					+ ", but player does not have the BendingController");
 		}
+		if (hasBending(id) && !bendingStates.containsKey(id)) {
+			bendingStates.put(id, getBendingController(id).createState(this));
+		}
 		return hasBending(id) ? bendingStates.get(id) : null;
 	}
 	
