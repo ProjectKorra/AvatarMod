@@ -2,7 +2,7 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 
@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class WaterbendingState implements IBendingState {
+public class WaterbendingState extends BendingState {
 	
 	private final AvatarPlayerData data;
 	

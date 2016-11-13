@@ -1,14 +1,14 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class FirebendingState implements IBendingState {
+public class FirebendingState extends BendingState {
 	
 	private EntityFireArc fireArc;
 	private AvatarPlayerData data;

@@ -10,7 +10,7 @@ import java.awt.Color;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -51,7 +51,7 @@ public class Waterbending extends BendingController {
 	}
 	
 	@Override
-	public IBendingState createState(AvatarPlayerData data) {
+	public BendingState createState(AvatarPlayerData data) {
 		return new WaterbendingState(data);
 	}
 	

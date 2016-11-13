@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Allows an BendingController to store additional information about a player's
  * state. Each BendingController can have its own implementation of this
- * interface. One IBendingState is attached to each player, which is initialized
+ * interface. One BendingState is attached to each player, which is initialized
  * using the bending controller's
  * {@link BendingController#createState(com.crowsofwar.avatar.common.data.AvatarPlayerData)
  * createState method}. After the player's bending controller is deactivated,
@@ -20,20 +20,20 @@ import net.minecraft.nbt.NBTTagCompound;
  * NBT in case the game saves while the player is bending.
  *
  */
-public interface IBendingState extends ReadableWritable {
+public abstract class BendingState implements ReadableWritable {
 	
-	public static WriteToNBT<IBendingState> writer = new WriteToNBT<IBendingState>() {
+	public static WriteToNBT<BendingState> writer = new WriteToNBT<BendingState>() {
 		@Override
-		public void write(NBTTagCompound nbt, IBendingState object, Object[] methodsExtraData,
+		public void write(NBTTagCompound nbt, BendingState object, Object[] methodsExtraData,
 				Object[] extraData) {
 			nbt.setInteger("ControllerID", object.getId());
 			object.writeToNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "StateData"));
 		}
 	};
 	
-	void toBytes(ByteBuf buf);
+	public abstract void toBytes(ByteBuf buf);
 	
-	void fromBytes(ByteBuf buf);
+	public abstract void fromBytes(ByteBuf buf);
 	
 	/**
 	 * Get the Id of the bending state's BendingController. Should be unique
@@ -41,9 +41,9 @@ public interface IBendingState extends ReadableWritable {
 	 * 
 	 * @see BendingController#getID()
 	 */
-	int getId();
+	public abstract int getId();
 	
-	default void write(NBTTagCompound nbt) {
+	public final void write(NBTTagCompound nbt) {
 		nbt.setInteger("ControllerID", getId());
 		this.writeToNBT(nbt);
 	}
@@ -59,11 +59,11 @@ public interface IBendingState extends ReadableWritable {
 	 * @param stateData
 	 *            NBT containing additional information for the bending state
 	 */
-	public static IBendingState find(int id, AvatarPlayerData data, NBTTagCompound stateData) {
+	public static BendingState find(int id, AvatarPlayerData data, NBTTagCompound stateData) {
 		System.out.println("----- ID IS: " + id);
 		BendingController controller = BendingManager.getBending(id);
 		if (controller != null) {
-			IBendingState state = controller.createState(data);
+			BendingState state = controller.createState(data);
 			state.readFromNBT(stateData);
 			return state;
 		} else {

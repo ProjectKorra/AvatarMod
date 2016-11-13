@@ -32,7 +32,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * any code inside of it.
  *
  * @param <STATE>
- *            The IBendingState this controller is using
+ *            The BendingState this controller is using
  * 
  */
 public abstract class BendingController implements ReadableWritable, Subject {
@@ -92,7 +92,7 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	public abstract BendingType getType();
 	
 	/**
-	 * Called to create an IBendingState for the player. This allows the
+	 * Called to create an BendingState for the player. This allows the
 	 * BendingController to store specific metadata for each player, making
 	 * things much easier. <br />
 	 * <br />
@@ -102,7 +102,7 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	 * 
 	 * @return
 	 */
-	public IBendingState createState(AvatarPlayerData data) {
+	public BendingState createState(AvatarPlayerData data) {
 		return null;
 	}
 	

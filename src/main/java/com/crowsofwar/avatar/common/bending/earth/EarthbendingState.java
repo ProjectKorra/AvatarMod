@@ -1,14 +1,14 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class EarthbendingState implements IBendingState {
+public class EarthbendingState extends BendingState {
 	
 	private AvatarPlayerData data;
 	private EntityFloatingBlock pickupBlock;

@@ -17,7 +17,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -43,8 +43,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	private Map<Integer, BendingController> bendingControllers;
 	private List<BendingController> bendingControllerList;
 	
-	private Map<Integer, IBendingState> bendingStates;
-	private List<IBendingState> bendingStateList;
+	private Map<Integer, BendingState> bendingStates;
+	private List<BendingState> bendingStateList;
 	
 	private Set<StatusControl> statusControls;
 	
@@ -56,8 +56,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		super(dataSaver, playerID, player);
 		bendingControllers = new HashMap<Integer, BendingController>();
 		bendingControllerList = new ArrayList<BendingController>();
-		bendingStates = new HashMap<Integer, IBendingState>();
-		bendingStateList = new ArrayList<IBendingState>();
+		bendingStates = new HashMap<Integer, BendingState>();
+		bendingStateList = new ArrayList<BendingState>();
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
 		state = new PlayerState();
@@ -73,7 +73,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		
 		AvatarUtils.readList(bendingStateList, compound -> {
 			
-			return IBendingState.find(compound.getInteger("ControllerID"), playerData,
+			return BendingState.find(compound.getInteger("ControllerID"), playerData,
 					compound.getCompoundTag("StateData"));
 			
 		}, readFrom, "BendingData");
@@ -84,7 +84,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		}
 		
 		bendingStates.clear();
-		for (IBendingState state : bendingStateList) {
+		for (BendingState state : bendingStateList) {
 			bendingStates.put(state.getId(), state);
 		}
 		
@@ -149,7 +149,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (!hasBending(bending.getID())) {
 			bendingControllers.put(bending.getID(), bending);
 			bendingControllerList.add(bending);
-			IBendingState state = bending.createState(this);
+			BendingState state = bending.createState(this);
 			bendingStates.put(bending.getID(), state);
 			bendingStateList.add(state);
 			saveChanges();
@@ -171,7 +171,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (hasBending(bending.getID())) {
 			// remove state before controller- getBendingState only works with
 			// controller present
-			IBendingState state = getBendingState(bending);
+			BendingState state = getBendingState(bending);
 			bendingStates.remove(bending.getID());
 			bendingStateList.remove(state);
 			bendingControllers.remove(bending.getID());
@@ -206,7 +206,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		while (iterator.hasNext()) {
 			BendingController bending = iterator.next();
 			
-			IBendingState state = getBendingState(bending);
+			BendingState state = getBendingState(bending);
 			bendingControllers.remove(bending.getID());
 			iterator.remove();
 			bendingStates.remove(bending.getID());
@@ -239,7 +239,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Gets extra metadata for the given bending controller with that ID, or
 	 * null if there is no bending controller.
 	 */
-	public IBendingState getBendingState(int id) {
+	public BendingState getBendingState(int id) {
 		if (!hasBending(id)) {
 			AvatarLog.warn(WarningType.INVALID_CODE, "Tried to access BendingState with Id " + id
 					+ ", but player does not have the BendingController");
@@ -251,7 +251,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Gets extra metadata for the given bending controller with that ID, or
 	 * null if there is no bending controller.
 	 */
-	public IBendingState getBendingState(BendingType type) {
+	public BendingState getBendingState(BendingType type) {
 		return getBendingState(type.id());
 	}
 	
@@ -259,15 +259,15 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Get extra metadata for the given bending controller, returns null if no
 	 * Bending controller.
 	 */
-	public <STATE extends IBendingState> STATE getBendingState(BendingController controller) {
+	public <STATE extends BendingState> STATE getBendingState(BendingController controller) {
 		return (STATE) getBendingState(controller.getID());
 	}
 	
-	public List<IBendingState> getAllBendingStates() {
+	public List<BendingState> getAllBendingStates() {
 		return bendingStateList;
 	}
 	
-	public void setBendingState(IBendingState state) {
+	public void setBendingState(BendingState state) {
 		bendingStates.put(state.getId(), state);
 		bendingStateList.add(state);
 	}
@@ -325,7 +325,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	/**
 	 * Send the given bending state to the client.
 	 */
-	public void sendBendingState(IBendingState state) {
+	public void sendBendingState(BendingState state) {
 		updateClient(); // TODO send optimized packet only about bending state
 	}
 	

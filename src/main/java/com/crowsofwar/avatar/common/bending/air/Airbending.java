@@ -9,7 +9,7 @@ import java.awt.Color;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -53,7 +53,7 @@ public class Airbending extends BendingController {
 	}
 	
 	@Override
-	public IBendingState createState(AvatarPlayerData data) {
+	public BendingState createState(AvatarPlayerData data) {
 		return new AirbendingState();
 	}
 	

@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.common.network.packets;
 import java.util.List;
 import java.util.UUID;
 
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
@@ -22,7 +22,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	private UUID player;
 	private int[] allControllers;
-	private List<IBendingState> states;
+	private List<BendingState> states;
 	private List<AbilityData> abilities;
 	private ByteBuf buffer;
 	

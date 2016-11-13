@@ -6,7 +6,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
@@ -95,7 +95,7 @@ public class PacketHandlerClient implements IPacketHandler {
 			
 			// Read bending states
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {
-				IBendingState state = data.getBendingState(packet.getBuf().readInt());
+				BendingState state = data.getBendingState(packet.getBuf().readInt());
 				state.fromBytes(packet.getBuf());
 			}
 			
