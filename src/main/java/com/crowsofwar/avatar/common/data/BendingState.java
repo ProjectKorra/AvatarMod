@@ -1,11 +1,10 @@
 package com.crowsofwar.avatar.common.data;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.getOrCreateNestedCompound;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
-import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,15 +21,6 @@ import net.minecraft.nbt.NBTTagCompound;
  *
  */
 public abstract class BendingState {
-	
-	public static WriteToNBT<BendingState> writer = new WriteToNBT<BendingState>() {
-		@Override
-		public void write(NBTTagCompound nbt, BendingState object, Object[] methodsExtraData,
-				Object[] extraData) {
-			nbt.setInteger("ControllerID", object.getId());
-			object.writeToNBT(GoreCoreNBTUtil.getOrCreateNestedCompound(nbt, "StateData"));
-		}
-	};
 	
 	protected final AvatarPlayerData data;
 	private int progressionPoints;
@@ -91,15 +81,28 @@ public abstract class BendingState {
 		data.saveChanges();
 	}
 	
+	/**
+	 * Write to the NBT. Should be parent of StateData compound
+	 */
 	public final void write(NBTTagCompound nbt) {
+		System.out.println("Saving: " + nbt);
+		
 		nbt.setInteger("ControllerID", getId());
-		nbt.setInteger("ProgressPoints", progressionPoints);
-		this.writeToNBT(nbt);
+		NBTTagCompound stateData = getOrCreateNestedCompound(nbt, "StateData");
+		stateData.setInteger("ProgressPoints", progressionPoints);
+		this.writeToNBT(stateData);
+		
 	}
 	
+	/**
+	 * Read the NBT. Should be parent of StateData compound
+	 */
 	public final void read(NBTTagCompound nbt) {
-		progressionPoints = nbt.getInteger("ProgressPoints");
-		readFromNBT(nbt);
+		System.out.println("Read: " + nbt);
+		
+		NBTTagCompound stateData = getOrCreateNestedCompound(nbt, "StateData");
+		progressionPoints = stateData.getInteger("ProgressPoints");
+		readFromNBT(stateData);
 	}
 	
 	protected abstract void writeToNBT(NBTTagCompound nbt);
@@ -110,19 +113,20 @@ public abstract class BendingState {
 	 * Creates and initializes a bending state with the given ID. Null if there
 	 * was an error.
 	 * 
-	 * @param id
-	 *            The ID of the bending state. See {@link BendingType}.
 	 * @param data
 	 *            The player data which uses the bending state
-	 * @param stateData
-	 *            NBT containing additional information for the bending state
+	 * @param nbt
+	 *            Parent of the StateData compound. Contains additional
+	 *            information for the bending state, as well as the ID of which
+	 *            BendingState to use.
 	 */
-	public static BendingState find(int id, AvatarPlayerData data, NBTTagCompound stateData) {
+	public static BendingState find(AvatarPlayerData data, NBTTagCompound nbt) {
+		int id = nbt.getInteger("ControllerID");
 		System.out.println("----- ID IS: " + id);
 		BendingController controller = BendingManager.getBending(id);
 		if (controller != null) {
 			BendingState state = controller.createState(data);
-			state.read(stateData);
+			state.read(nbt);
 			return state;
 		} else {
 			AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,
