@@ -244,6 +244,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		}
 		if (hasBending(id) && !bendingStates.containsKey(id)) {
 			bendingStates.put(id, getBendingController(id).createState(this));
+			saveChanges();
 		}
 		return hasBending(id) ? bendingStates.get(id) : null;
 	}
