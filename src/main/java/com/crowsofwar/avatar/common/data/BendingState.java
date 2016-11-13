@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 
@@ -22,7 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * NBT in case the game saves while the player is bending.
  *
  */
-public abstract class BendingState implements ReadableWritable {
+public abstract class BendingState {
 	
 	public static WriteToNBT<BendingState> writer = new WriteToNBT<BendingState>() {
 		@Override
@@ -94,8 +93,13 @@ public abstract class BendingState implements ReadableWritable {
 	
 	public final void write(NBTTagCompound nbt) {
 		nbt.setInteger("ControllerID", getId());
+		nbt.setInteger("ProgressPoints", progressionPoints);
 		this.writeToNBT(nbt);
 	}
+	
+	protected abstract void writeToNBT(NBTTagCompound nbt);
+	
+	protected abstract void readFromNBT(NBTTagCompound nbt);
 	
 	/**
 	 * Creates and initializes a bending state with the given ID. Null if there
