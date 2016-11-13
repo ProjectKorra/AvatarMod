@@ -50,7 +50,10 @@ public class AvatarCommand extends TreeCommand {
 		NodeBranch branchAbility = new NodeBranch(branchHelpDefault, "ability", new NodeAbilityGet(),
 				new NodeAbilitySet());
 		
-		return new ICommandNode[] { branchBending, new NodeConfig(), branchAbility };
+		NodeBranch branchPps = new NodeBranch(branchHelpDefault, "pps", new NodeProgressPoints.Get(),
+				new NodeProgressPoints.Set(), new NodeProgressPoints.Add());
+		
+		return new ICommandNode[] { branchBending, new NodeConfig(), branchAbility, branchPps };
 		
 	}
 	

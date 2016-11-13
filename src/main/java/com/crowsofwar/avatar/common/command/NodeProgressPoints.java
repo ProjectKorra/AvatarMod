@@ -93,8 +93,8 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 		/**
 		 * @param name
 		 */
-		public Set(String name) {
-			super(name);
+		public Set() {
+			super("set");
 			addArgument(this.argAmount = new ArgumentDirect("amount", ITypeConverter.CONVERTER_INTEGER));
 		}
 		
