@@ -46,14 +46,14 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 				playerName);
 		if (data != null) {
 			BendingState bs = data.getBendingState(bending.getType());
-			execute(data, call.getFrom(), bs, playerName, argList);
+			execute(data, call.getFrom(), bs, playerName, argList, bending);
 		}
 		
 		return null;
 	}
 	
 	protected abstract void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending,
-			String player, ArgumentList args);
+			String player, ArgumentList args, BendingController bc);
 	
 	public static class Add extends NodeProgressPoints {
 		
@@ -63,9 +63,10 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 		
 		@Override
 		protected void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending,
-				String player, ArgumentList args) {
+				String player, ArgumentList args, BendingController bc) {
 			bending.addProgressPoint();
-			AvatarChatMessages.MSG_PROGRESS_POINT_ADDED.send(sender, player, bending.getProgressPoints());
+			AvatarChatMessages.MSG_PROGRESS_POINT_ADDED.send(sender, player, bending.getProgressPoints(),
+					bc.getControllerName());
 		}
 		
 	}
@@ -78,9 +79,10 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 		
 		@Override
 		protected void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending,
-				String player, ArgumentList args) {
+				String player, ArgumentList args, BendingController bc) {
 			
-			AvatarChatMessages.MSG_PROGRESS_POINT_GET.send(sender, player, bending.getProgressPoints());
+			AvatarChatMessages.MSG_PROGRESS_POINT_GET.send(sender, player, bending.getProgressPoints(),
+					bc.getControllerName());
 			
 		}
 		
@@ -100,12 +102,13 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 		
 		@Override
 		protected void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending,
-				String player, ArgumentList args) {
+				String player, ArgumentList args, BendingController bc) {
 			
 			int amount = args.get(argAmount);
 			if (amount > 0) {
 				bending.setProgressPoints(amount);
-				AvatarChatMessages.MSG_PROGRESS_POINT_SET.send(sender, player, amount);
+				AvatarChatMessages.MSG_PROGRESS_POINT_SET.send(sender, player, amount,
+						bc.getControllerName());
 			} else {
 				AvatarChatMessages.MSG_PROGRESS_POINT_SET_RANGE.send(sender);
 			}
