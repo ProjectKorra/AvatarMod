@@ -37,12 +37,12 @@ public abstract class BendingState implements ReadableWritable {
 		this.progressionPoints = 0;
 	}
 	
-	public void toBytes(ByteBuf buf) {
+	public final void toBytes(ByteBuf buf) {
 		buf.writeInt(progressionPoints);
 		writeBytes(buf);
 	}
 	
-	public void fromBytes(ByteBuf buf) {
+	public final void fromBytes(ByteBuf buf) {
 		progressionPoints = buf.readInt();
 		readBytes(buf);
 	}
@@ -66,6 +66,23 @@ public abstract class BendingState implements ReadableWritable {
 	 * @see BendingController#getID()
 	 */
 	public abstract int getId();
+	
+	public int getProgressPoints() {
+		return progressionPoints;
+	}
+	
+	public void setProgressPoints(int pps) {
+		this.progressionPoints = pps;
+	}
+	
+	public void addProgressPoint() {
+		progressionPoints++;
+	}
+	
+	public void removeProgressPoint() {
+		progressionPoints--;
+		if (progressionPoints < 0) progressionPoints = 0;
+	}
 	
 	public final void write(NBTTagCompound nbt) {
 		nbt.setInteger("ControllerID", getId());
