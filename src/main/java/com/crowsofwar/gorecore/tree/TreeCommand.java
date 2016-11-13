@@ -5,6 +5,7 @@ import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.MessageConfiguration;
@@ -140,8 +141,14 @@ public abstract class TreeCommand implements ICommand {
 				System.out.println("All sent:  " + Arrays.asList(sentArgs));
 				System.out.println("Node index:" + nodeIndex);
 				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
-				return nodeArgs[sentArgs.length - 1 - nodeIndex].getCompletionSuggestions(sender,
-						sentArgs[sentArgs.length - 1]);
+				List<String> suggestions = nodeArgs[sentArgs.length - 1 - nodeIndex]
+						.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1]);
+				
+				String lastArg = sentArgs[sentArgs.length - 1];
+				List<String> ret = suggestions.stream().filter(suggestion -> suggestion.startsWith(lastArg))
+						.collect(Collectors.toList());
+				return ret;
+				
 			}
 			
 		}
