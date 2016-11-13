@@ -3,9 +3,9 @@ package com.crowsofwar.avatar.common.network.packets;
 import java.util.List;
 import java.util.UUID;
 
-import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 

@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
 import io.netty.buffer.ByteBuf;
@@ -33,12 +33,14 @@ public class EarthbendingState extends BendingState {
 	public EntityFloatingBlock getPickupBlock() {
 		if (pickupBlock != null && pickupBlock.isDead) {
 			pickupBlock = null;
+			save();
 		}
 		return pickupBlock;
 	}
 	
 	public void setPickupBlock(EntityFloatingBlock pickupBlock) {
 		this.pickupBlock = pickupBlock;
+		save();
 	}
 	
 	public boolean isHoldingBlock() {
@@ -46,7 +48,7 @@ public class EarthbendingState extends BendingState {
 	}
 	
 	public void dropBlock() {
-		pickupBlock = null;
+		setPickupBlock(null);
 	}
 	
 	@Override

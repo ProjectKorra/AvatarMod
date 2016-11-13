@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.util.event.EventNotifier;
 import com.crowsofwar.avatar.common.util.event.Observer;

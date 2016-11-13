@@ -1,7 +1,9 @@
-package com.crowsofwar.avatar.common.bending;
+package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
@@ -75,15 +77,19 @@ public abstract class BendingState implements ReadableWritable {
 	
 	public void setProgressPoints(int pps) {
 		this.progressionPoints = pps;
+		save();
 	}
 	
 	public void addProgressPoint() {
-		progressionPoints++;
+		setProgressPoints(progressionPoints + 1);
 	}
 	
 	public void removeProgressPoint() {
-		progressionPoints--;
-		if (progressionPoints < 0) progressionPoints = 0;
+		setProgressPoints(progressionPoints <= 0 ? 0 : progressionPoints - 1);
+	}
+	
+	protected void save() {
+		data.saveChanges();
 	}
 	
 	public final void write(NBTTagCompound nbt) {

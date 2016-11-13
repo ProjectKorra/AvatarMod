@@ -2,8 +2,8 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 
 import io.netty.buffer.ByteBuf;
@@ -29,6 +29,7 @@ public class WaterbendingState extends BendingState {
 	
 	public void setWaterArc(EntityWaterArc waterArc) {
 		this.waterArc = waterArc;
+		save();
 	}
 	
 	public boolean isBendingWater() {
@@ -36,7 +37,7 @@ public class WaterbendingState extends BendingState {
 	}
 	
 	public void releaseWater() {
-		this.waterArc = null;
+		setWaterArc(null);
 	}
 	
 	@Override

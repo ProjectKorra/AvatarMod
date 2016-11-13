@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 
 import io.netty.buffer.ByteBuf;
@@ -32,6 +32,7 @@ public class FirebendingState extends BendingState {
 	
 	public void setFireArc(EntityFireArc arc) {
 		fireArc = arc;
+		save();
 	}
 	
 	public void setNoFireArc() {
@@ -44,6 +45,7 @@ public class FirebendingState extends BendingState {
 	
 	public void setFlamethrowing(boolean flamethrowing) {
 		this.isFlamethrowing = flamethrowing;
+		save();
 	}
 	
 	@Override
