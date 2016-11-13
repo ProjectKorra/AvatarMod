@@ -2,14 +2,17 @@ package com.crowsofwar.avatar.common.command;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
+import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
 import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
 import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.IArgument;
 import com.crowsofwar.gorecore.tree.ICommandNode;
+import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 
 import net.minecraft.command.ICommandSender;
@@ -29,8 +32,8 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 	 */
 	public NodeProgressPoints(String name) {
 		super(name, true);
-		this.argPlayerName = new ArgumentPlayerName("player");
-		this.argBending = new ArgumentBendingController("bending");
+		addArgument(this.argPlayerName = new ArgumentPlayerName("player"));
+		addArgument(this.argBending = new ArgumentBendingController("bending"));
 	}
 	
 	@Override
@@ -43,13 +46,14 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 				playerName);
 		if (data != null) {
 			BendingState bs = data.getBendingState(bending.getType());
-			execute(data, call.getFrom(), bs);
+			execute(data, call.getFrom(), bs, playerName, argList);
 		}
 		
 		return null;
 	}
 	
-	protected abstract void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending);
+	protected abstract void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending,
+			String player, ArgumentList args);
 	
 	public static class Add extends NodeProgressPoints {
 		
@@ -58,8 +62,54 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 		}
 		
 		@Override
-		protected void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending) {
+		protected void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending,
+				String player, ArgumentList args) {
 			bending.addProgressPoint();
+			AvatarChatMessages.MSG_PROGRESS_POINT_ADDED.send(sender, player, bending.getProgressPoints());
+		}
+		
+	}
+	
+	public static class Get extends NodeProgressPoints {
+		
+		public Get() {
+			super("get");
+		}
+		
+		@Override
+		protected void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending,
+				String player, ArgumentList args) {
+			
+			AvatarChatMessages.MSG_PROGRESS_POINT_GET.send(sender, player, bending.getProgressPoints());
+			
+		}
+		
+	}
+	
+	public static class Set extends NodeProgressPoints {
+		
+		private final IArgument<Integer> argAmount;
+		
+		/**
+		 * @param name
+		 */
+		public Set(String name) {
+			super(name);
+			addArgument(this.argAmount = new ArgumentDirect("amount", ITypeConverter.CONVERTER_INTEGER));
+		}
+		
+		@Override
+		protected void execute(AvatarPlayerData data, ICommandSender sender, BendingState bending,
+				String player, ArgumentList args) {
+			
+			int amount = args.get(argAmount);
+			if (amount > 0) {
+				bending.setProgressPoints(amount);
+				AvatarChatMessages.MSG_PROGRESS_POINT_SET.send(sender, player, amount);
+			} else {
+				AvatarChatMessages.MSG_PROGRESS_POINT_SET_RANGE.send(sender);
+			}
+			
 		}
 		
 	}

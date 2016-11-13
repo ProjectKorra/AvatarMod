@@ -45,6 +45,7 @@ avatar.cmd.cfg.successful=[bold]Successfully reloaded configuration values[/bold
 avatar.cmd.pp.add=Incremented [value]${player}'s[/value] progression points to [value]${pps}[/value].
 avatar.cmd.pp.get=[value]${player}[/value] currently has [value]${pps}[/value] progression points.
 avatar.cmd.pp.set=Set [value]${player}[/value]'s progression points to [value]${pps}[/value].
+avatar.cmd.pp.set.range=[error]Progression points must be more than 0.[/error]
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.ravine=Ravine
