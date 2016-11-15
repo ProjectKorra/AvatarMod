@@ -33,20 +33,24 @@ public class AbilityCard extends Gui {
 	// @formatter:off
 	public void render(ScaledResolution res, int index) {
 		
+		// NOTE! Minecraft has automatic icon scaling; can be found via res.getScaleFactor()
+		// To counteract this, normally you would use
+		//   GlStateManager.scale(1f / res.getScaleFactor, 1f / res.getScaleFactor(), 1)
+		// HOWEVER, since this is calculating scale already, I don't need to use that
+		
 		AbilityIcon icon = ability.getIcon();
 		
-		int width = (int) (res.getScaledWidth() / 2.0);
+		int width = (int) (res.getScaledWidth() / 15.0);
 		int height = (int) (res.getScaledHeight() * 0.6);
 		
-		float scale = width / 80;
+		float scale = width / 32f;
 		
 		int xPos = (int) (index * res.getScaledWidth() / 10f);
 		int yPos = (res.getScaledHeight() - height) / 2;
 		
 		GlStateManager.pushMatrix();
 			GlStateManager.translate(xPos, yPos, 0);
-			GlStateManager.scale(1f / res.getScaleFactor(), 1f / res.getScaleFactor(), 1);
-//			GlStateManager.scale(scale, scale, 1);
+			GlStateManager.scale(scale, scale, 1);
 			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
 			drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
 			
