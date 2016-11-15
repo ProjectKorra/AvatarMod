@@ -38,11 +38,15 @@ public class AbilityCard extends Gui {
 		int width = 250;
 		int height = (int) (res.getScaledHeight() * 0.6);
 		
+		int yPos = (res.getScaledHeight() - height) / 2;
+		
 		GlStateManager.pushMatrix();
-			GlStateManager.translate(xPos, (res.getScaledHeight() - height) / 2, 0);
+			GlStateManager.translate(xPos, yPos, 0);
 			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
 			drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
+			
 		GlStateManager.popMatrix();
+		drawString(mc.fontRendererObj, ((int) data.getAbilityData(ability).getXp()) + "%", xPos, yPos + 40, 0xffffff);
 		
 	}
 	// @formatter:on
