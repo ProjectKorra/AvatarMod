@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.client.gui;
 
+import static net.minecraft.client.renderer.GlStateManager.popMatrix;
+import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AbilityIcon;
@@ -38,13 +41,17 @@ public class AbilityCard extends Gui {
 		//   GlStateManager.scale(1f / res.getScaleFactor, 1f / res.getScaleFactor(), 1)
 		// HOWEVER, since this is calculating scale already, I don't need to use that
 		
+		// There are 2 types of pixels here.
+		// SCREEN PIXELS - The actual pixels of the screen. Requires resolution to make sure everything is proportioned.
+		// CARD PIXELS   - Using scaling seen below, the card is now 100px x ??px (height depends on resolution).
+		
 		AbilityIcon icon = ability.getIcon();
 		
 		int spacing = (int) (res.getScaledWidth() / 8.5); // Spacing between each card
-		int width = (int) (res.getScaledWidth() / 10.0);  // Width of each card
-		int height = (int) (res.getScaledHeight() * 0.6); // Height of each card
+		int width = (int) (res.getScaledWidth() / 10.0);  // Width of each card;  1/10 of total width
+		int height = (int) (res.getScaledHeight() * 0.6); // Height of each card; about 1/2 of total height
 		
-		float scale = width / 32f;
+		float scale = width / 100f;
 		
 		float minX = (int) (index * (width + spacing));
 		float minY = (res.getScaledHeight() - height) / 2;
@@ -53,21 +60,33 @@ public class AbilityCard extends Gui {
 		float midX = (minX + maxX) / 2;
 		float midY = (minY + maxY) / 2;
 		
+		float iconX = 10;
+		float iconY = 5;
+		float iconWidth = 80;
+		float iconHeight = 80;
+		
 		// Draw card background
-		GlStateManager.pushMatrix();
+		pushMatrix();
 			GlStateManager.translate(minX, minY, 0);
 			GlStateManager.scale(width, height, 1);
 			mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
 			drawTexturedModalRect(0, 0, 0, 0, 1, 1);
-		GlStateManager.popMatrix();
+		popMatrix();
 		
-		GlStateManager.pushMatrix();
+		pushMatrix();
 			GlStateManager.translate(minX, minY, 0);
 			GlStateManager.scale(scale, scale, 1);
-			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
-			drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
+			// Now is translated & scaled to size of 100px width (height is variable)
 			
-		GlStateManager.popMatrix();
+			// draw icon
+			pushMatrix();
+				GlStateManager.translate(iconX, iconY, 0);
+				GlStateManager.scale(iconWidth / 32, iconHeight / 32, 1);
+				mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
+				drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
+			popMatrix();
+			
+		popMatrix();
 		
 		drawString(mc.fontRendererObj, ((int) data.getAbilityData(ability).getXp()) + "%", (int) minX, (int) minY + 40, 0xffffff);
 		
