@@ -12,6 +12,7 @@ public enum AvatarControl {
 	KEY_FIREBENDING("Firebend"),
 	KEY_WATERBENDING("Waterbend"),
 	KEY_AIRBENDING("Airbend"),
+	KEY_SKILLS("Skills"),
 	/** Left mouse button is held down */
 	CONTROL_LEFT_CLICK("LeftClick"),
 	/** Right mouse button is held down */
