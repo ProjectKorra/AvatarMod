@@ -16,5 +16,6 @@ public class AvatarUiTextures {
 			"textures/gui/radial_segment_edge_thicker.png");
 	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
 			"textures/gui/blurred_icons.png");
+	static final ResourceLocation skillsGui = new ResourceLocation("avatarmod", "textures/gui/skillmenu.png");
 	
 }

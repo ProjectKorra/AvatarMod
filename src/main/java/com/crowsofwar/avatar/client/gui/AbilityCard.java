@@ -59,6 +59,16 @@ public class AbilityCard extends Gui {
 			drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
 			
 		GlStateManager.popMatrix();
+		
+		GlStateManager.pushMatrix();
+		
+			GlStateManager.translate(minX, minY, 0);
+			GlStateManager.scale(width, height, 1);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
+			drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+		
+		GlStateManager.popMatrix();
+		
 		drawString(mc.fontRendererObj, ((int) data.getAbilityData(ability).getXp()) + "%", minX, minY + 40, 0xffffff);
 		
 	}
