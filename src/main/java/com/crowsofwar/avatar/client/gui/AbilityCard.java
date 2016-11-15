@@ -35,13 +35,17 @@ public class AbilityCard extends Gui {
 		
 		AbilityIcon icon = ability.getIcon();
 		
-		int width = 250;
+		
+		int width = (int) (res.getScaledWidth() / 2.0);
 		int height = (int) (res.getScaledHeight() * 0.6);
+		
+		float scale = width / 250f;
 		
 		int yPos = (res.getScaledHeight() - height) / 2;
 		
 		GlStateManager.pushMatrix();
 			GlStateManager.translate(xPos, yPos, 0);
+//			GlStateManager.scale(scale, scale, 1);
 			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
 			drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
 			
