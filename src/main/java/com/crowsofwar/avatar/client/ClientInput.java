@@ -15,6 +15,7 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.SkillsGui;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -125,6 +126,9 @@ public class ClientInput implements IControlsHandler {
 		
 		for (BendingController controller : keyboardBending) {
 			openBendingMenu(controller);
+		}
+		if (isControlPressed(AvatarControl.KEY_SKILLS)) {
+			mc.displayGuiScreen(new SkillsGui());
 		}
 		
 	}
