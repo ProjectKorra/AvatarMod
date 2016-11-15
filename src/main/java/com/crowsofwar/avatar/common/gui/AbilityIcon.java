@@ -17,6 +17,8 @@ public class AbilityIcon {
 	 * go left-to-right. 0 is the first icon, 1 is the second, etc...
 	 */
 	public AbilityIcon(int index) {
+		if (index < 0 || index > 255)
+			throw new IndexOutOfBoundsException("Icons must be between 0 and 255, inclusive");
 		this.u = (index * 32) % 256;
 		this.v = (index / 8) * 32;
 	}

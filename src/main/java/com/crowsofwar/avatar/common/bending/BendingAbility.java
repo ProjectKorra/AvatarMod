@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
 import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
+import com.crowsofwar.avatar.common.gui.AbilityIcon;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
@@ -45,12 +46,14 @@ public abstract class BendingAbility {
 	private final BendingType type;
 	protected final int id;
 	private final String name;
+	private final AbilityIcon icon;
 	
 	public BendingAbility(BendingType bendingType, String name) {
 		this.type = bendingType;
 		this.id = nextId++;
 		this.name = name;
 		BendingManager.registerAbility(this);
+		this.icon = new AbilityIcon(getIconIndex() == -1 ? 255 : getIconIndex());
 	}
 	
 	protected BendingController controller() {
@@ -76,6 +79,13 @@ public abstract class BendingAbility {
 	 * Get the texture index of this bending ability. -1 for no texture.
 	 */
 	public abstract int getIconIndex();
+	
+	/**
+	 * Get the icon for this ability; null for no icon
+	 */
+	public AbilityIcon getIcon() {
+		return icon;
+	}
 	
 	/**
 	 * Returns whether this bending ability has an icon.
