@@ -2,10 +2,12 @@ package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.gui.AbilityIcon;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * 
@@ -28,13 +30,21 @@ public class AbilityCard extends Gui {
 		return ability;
 	}
 	
+	// @formatter:off
 	public void render(ScaledResolution res, int xPos) {
+		
+		AbilityIcon icon = ability.getIcon();
 		
 		int width = 250;
 		int height = (int) (res.getScaledHeight() * 0.6);
 		
-		mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
-		drawTexturedModalRect(xPos, (res.getScaledHeight() - height) / 2, 0, 16, 0, 16);
+		GlStateManager.pushMatrix();
+			GlStateManager.translate(xPos, (res.getScaledHeight() - height) / 2, 0);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
+			drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
+		GlStateManager.popMatrix();
+		
 	}
+	// @formatter:on
 	
 }
