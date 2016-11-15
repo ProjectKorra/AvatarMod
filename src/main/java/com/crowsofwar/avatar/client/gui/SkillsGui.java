@@ -21,6 +21,8 @@ public class SkillsGui extends GuiScreen {
 	public SkillsGui() {
 		this.cards = new ArrayList<>();
 		cards.add(new AbilityCard(BendingAbility.ABILITY_AIR_JUMP));
+		cards.add(new AbilityCard(BendingAbility.ABILITY_FIRE_ARC));
+		cards.add(new AbilityCard(BendingAbility.ABILITY_RAVINE));
 	}
 	
 	@Override
@@ -33,7 +35,7 @@ public class SkillsGui extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		for (int i = 0; i < cards.size(); i++) {
-			cards.get(i).render(res, 30 + i * 40);
+			cards.get(i).render(res, i);
 		}
 		
 	}

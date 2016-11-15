@@ -31,16 +31,16 @@ public class AbilityCard extends Gui {
 	}
 	
 	// @formatter:off
-	public void render(ScaledResolution res, int xPos) {
+	public void render(ScaledResolution res, int index) {
 		
 		AbilityIcon icon = ability.getIcon();
-		
 		
 		int width = (int) (res.getScaledWidth() / 2.0);
 		int height = (int) (res.getScaledHeight() * 0.6);
 		
 		float scale = width / 250f;
 		
+		int xPos = (int) (index * res.getScaledWidth() / 10f);
 		int yPos = (res.getScaledHeight() - height) / 2;
 		
 		GlStateManager.pushMatrix();
