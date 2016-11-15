@@ -40,12 +40,13 @@ public class AbilityCard extends Gui {
 		
 		AbilityIcon icon = ability.getIcon();
 		
-		int width = (int) (res.getScaledWidth() / 15.0);
-		int height = (int) (res.getScaledHeight() * 0.6);
+		int spacing = (int) (res.getScaledWidth() / 8.5); // Spacing between each card
+		int width = (int) (res.getScaledWidth() / 10.0);  // Width of each card
+		int height = (int) (res.getScaledHeight() * 0.6); // Height of each card
 		
 		float scale = width / 32f;
 		
-		int minX = (int) (index * res.getScaledWidth() / 10f);
+		int minX = (int) (index * (width + spacing));
 		int minY = (res.getScaledHeight() - height) / 2;
 		int maxX = minX + width;
 		int maxY = minY + height;
