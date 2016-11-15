@@ -19,17 +19,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
 
 public class RadialMenu extends Gui {
-	
-	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
-			"textures/gui/radial_segment_cut.png");
-	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
-	static final ResourceLocation edge = new ResourceLocation("avatarmod",
-			"textures/gui/radial_segment_edge_thicker.png");
-	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
-			"textures/gui/blurred_icons.png");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png

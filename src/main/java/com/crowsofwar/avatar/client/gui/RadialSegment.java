@@ -116,12 +116,12 @@ public class RadialSegment extends Gui {
 			// Draw background
 			GlStateManager.color(theme.getBackground().getRed(hover) / 255f,
 					theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f, alpha);
-			mc.getTextureManager().bindTexture(radialMenu);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.radialMenu);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			// Draw edge
 			GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
 					theme.getEdge().getBlue(hover) / 255f, alpha);
-			mc.getTextureManager().bindTexture(edge);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.edge);
 //			GlStateManager.translate(0, 0, 1);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GlStateManager.popMatrix();
@@ -148,7 +148,7 @@ public class RadialSegment extends Gui {
 			GlStateManager.scale(iconScale, iconScale, iconScale);  // Scale the icon's recentering
 																	// and actual image
 			GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
-			mc.getTextureManager().bindTexture(RadialMenu.icons);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
 			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
 			
 			float darkenBy = 0.05f;
@@ -158,7 +158,7 @@ public class RadialSegment extends Gui {
 			float avg = (r + g + b) / 3;
 			GlStateManager.color(avg, avg,
 					avg, alpha);
-			mc.getTextureManager().bindTexture(RadialMenu.blurredIcons);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.blurredIcons);
 			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
 			
 		GlStateManager.popMatrix();
