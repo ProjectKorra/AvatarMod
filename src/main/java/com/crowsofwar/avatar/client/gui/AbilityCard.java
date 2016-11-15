@@ -45,17 +45,21 @@ public class AbilityCard extends Gui {
 		
 		float scale = width / 32f;
 		
-		int xPos = (int) (index * res.getScaledWidth() / 10f);
-		int yPos = (res.getScaledHeight() - height) / 2;
+		int minX = (int) (index * res.getScaledWidth() / 10f);
+		int minY = (res.getScaledHeight() - height) / 2;
+		int maxX = minX + width;
+		int maxY = minY + height;
+		int midX = (minX + maxX) / 2;
+		int midY = (minY + maxY) / 2;
 		
 		GlStateManager.pushMatrix();
-			GlStateManager.translate(xPos, yPos, 0);
+			GlStateManager.translate(minX, minY, 0);
 			GlStateManager.scale(scale, scale, 1);
 			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
 			drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
 			
 		GlStateManager.popMatrix();
-		drawString(mc.fontRendererObj, ((int) data.getAbilityData(ability).getXp()) + "%", xPos, yPos + 40, 0xffffff);
+		drawString(mc.fontRendererObj, ((int) data.getAbilityData(ability).getXp()) + "%", minX, minY + 40, 0xffffff);
 		
 	}
 	// @formatter:on
