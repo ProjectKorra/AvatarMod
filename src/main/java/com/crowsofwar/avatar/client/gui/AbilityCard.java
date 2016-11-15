@@ -46,12 +46,12 @@ public class AbilityCard extends Gui {
 		
 		float scale = width / 32f;
 		
-		int minX = (int) (index * (width + spacing));
-		int minY = (res.getScaledHeight() - height) / 2;
-		int maxX = minX + width;
-		int maxY = minY + height;
-		int midX = (minX + maxX) / 2;
-		int midY = (minY + maxY) / 2;
+		float minX = (int) (index * (width + spacing));
+		float minY = (res.getScaledHeight() - height) / 2;
+		float maxX = minX + width;
+		float maxY = minY + height;
+		float midX = (minX + maxX) / 2;
+		float midY = (minY + maxY) / 2;
 		
 		// Draw card background
 		GlStateManager.pushMatrix();
@@ -69,7 +69,7 @@ public class AbilityCard extends Gui {
 			
 		GlStateManager.popMatrix();
 		
-		drawString(mc.fontRendererObj, ((int) data.getAbilityData(ability).getXp()) + "%", minX, minY + 40, 0xffffff);
+		drawString(mc.fontRendererObj, ((int) data.getAbilityData(ability).getXp()) + "%", (int) minX, (int) minY + 40, 0xffffff);
 		
 	}
 	// @formatter:on
