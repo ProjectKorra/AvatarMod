@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.client.gui;
 
-import static net.minecraft.client.renderer.GlStateManager.popMatrix;
-import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -65,6 +64,10 @@ public class AbilityCard extends Gui {
 		float iconWidth = 80;
 		float iconHeight = 80;
 		
+		float textMinX = 5;
+		float textMaxX = 95;
+		float textY = 100;
+		
 		// Draw card background
 		pushMatrix();
 			GlStateManager.translate(minX, minY, 0);
@@ -75,7 +78,7 @@ public class AbilityCard extends Gui {
 		
 		pushMatrix();
 			GlStateManager.translate(minX, minY, 0);
-			GlStateManager.scale(scale, scale, 1);
+			scale(scale, scale, 1);
 			// Now is translated & scaled to size of 100px width (height is variable)
 			
 			// draw icon
@@ -88,7 +91,18 @@ public class AbilityCard extends Gui {
 			
 		popMatrix();
 		
-		drawString(mc.fontRendererObj, ((int) data.getAbilityData(ability).getXp()) + "%", (int) minX, (int) minY + 40, 0xffffff);
+		pushMatrix();
+			
+			String draw = ((int) data.getAbilityData(ability).getXp()) + "%";
+			
+			translate(minX, minY, 0);
+			scale(scale, scale, 1);
+			
+			translate((textMaxX - mc.fontRendererObj.getStringWidth(draw)) / 2f, textY, 0);
+			scale(5f / res.getScaleFactor(), 5f / res.getScaleFactor(), 1);
+			drawString(mc.fontRendererObj, draw, 0, 0, 0xffffff);
+			
+		popMatrix();
 		
 	}
 	// @formatter:on
