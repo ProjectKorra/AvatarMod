@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * 
@@ -72,8 +73,7 @@ public class AbilityCard extends Gui {
 		pushMatrix();
 			GlStateManager.translate(minX, minY, 0);
 			GlStateManager.scale(width, height, 1);
-			mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
-			drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+			renderImage(AvatarUiTextures.skillsGui, 0, 0, 1, 1);
 		popMatrix();
 		
 		pushMatrix();
@@ -85,8 +85,7 @@ public class AbilityCard extends Gui {
 			pushMatrix();
 				GlStateManager.translate(iconX, iconY, 0);
 				GlStateManager.scale(iconWidth / 32, iconHeight / 32, 1);
-				mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
-				drawTexturedModalRect(0, 0, icon.getMinU(), icon.getMinV(), 32, 32);
+				renderImage(AvatarUiTextures.icons, icon.getMinU(), icon.getMinV(), 32, 32);
 			popMatrix();
 			
 		popMatrix();
@@ -106,5 +105,25 @@ public class AbilityCard extends Gui {
 		
 	}
 	// @formatter:on
+	
+	/**
+	 * Draws the image. Any transformations (e.g. transformation) should be
+	 * performed with OpenGL functions.
+	 * 
+	 * @param texture
+	 *            The texture to draw
+	 * @param u
+	 *            Leftmost U coordinate
+	 * @param v
+	 *            Uppermost V coordinate
+	 * @param width
+	 *            Width in pixels from texture
+	 * @param height
+	 *            Height in pixels from texture
+	 */
+	private void renderImage(ResourceLocation texture, int u, int v, int width, int height) {
+		mc.renderEngine.bindTexture(texture);
+		drawTexturedModalRect(0, 0, u, v, width, height);
+	}
 	
 }
