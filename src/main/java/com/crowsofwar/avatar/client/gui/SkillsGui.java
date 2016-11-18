@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.client.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +64,12 @@ public class SkillsGui extends GuiScreen {
 		} else {
 			wasMouseDown = false;
 		}
+	}
+	
+	@Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+		scroll += Mouse.getDWheel() / 3;
 	}
 	
 	private int getMouseX() {
