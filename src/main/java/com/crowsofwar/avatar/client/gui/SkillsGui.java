@@ -20,7 +20,10 @@ public class SkillsGui extends GuiScreen {
 	private final List<AbilityCard> cards;
 	private ScaledResolution res;
 	
-	private int scroll, mouseDownX;
+	private int scroll;
+	private int startScroll;
+	private int progressScroll;
+	
 	private boolean wasMouseDown;
 	
 	public SkillsGui() {
@@ -51,13 +54,28 @@ public class SkillsGui extends GuiScreen {
 		if (Mouse.isButtonDown(0)) {
 			if (!wasMouseDown) {
 				wasMouseDown = true;
-				mouseDownX = Mouse.getX();
+				startScroll = getMouseScroll();
+				System.out.println("start @ " + startScroll);
 			}
 			
-			scroll = Mouse.getX() - mouseDownX;
+			// scroll += Mouse.getDX();
+			progressScroll += getMouseScroll() - startScroll;
+			startScroll = getMouseScroll();
+			
 		} else {
+			if (wasMouseDown) {
+				scroll = progressScroll;
+			}
 			wasMouseDown = false;
 		}
+	}
+	
+	private int getMouseX() {
+		return Mouse.getX();
+	}
+	
+	public int getMouseScroll() {
+		return scroll + getMouseX();
 	}
 	
 }
