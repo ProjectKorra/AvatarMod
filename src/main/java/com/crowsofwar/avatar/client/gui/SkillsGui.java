@@ -21,8 +21,7 @@ public class SkillsGui extends GuiScreen {
 	private ScaledResolution res;
 	
 	private int scroll;
-	private int startScroll;
-	private int progressScroll;
+	private int startScroll, startX;
 	
 	private boolean wasMouseDown;
 	
@@ -54,18 +53,14 @@ public class SkillsGui extends GuiScreen {
 		if (Mouse.isButtonDown(0)) {
 			if (!wasMouseDown) {
 				wasMouseDown = true;
-				startScroll = getMouseScroll();
-				System.out.println("start @ " + startScroll);
+				startScroll = scroll;
+				startX = getMouseX();
 			}
 			
 			// scroll += Mouse.getDX();
-			progressScroll += getMouseScroll() - startScroll;
-			startScroll = getMouseScroll();
+			scroll = startScroll + getMouseX() - startX;
 			
 		} else {
-			if (wasMouseDown) {
-				scroll = progressScroll;
-			}
 			wasMouseDown = false;
 		}
 	}
