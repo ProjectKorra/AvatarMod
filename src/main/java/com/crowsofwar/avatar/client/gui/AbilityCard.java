@@ -49,15 +49,16 @@ public class AbilityCard extends Gui {
 		
 		AbilityIcon icon = ability.getIcon();
 		
-		int spacing = (int) (res.getScaledWidth() / 8.5); // Spacing between each card
-		int width = (int) (res.getScaledWidth() / 10.0);  // Width of each card;  1/10 of total width
-		int height = (int) (res.getScaledHeight() * 0.6); // Height of each card; about 1/2 of total height
+		float spacing = res.getScaledWidth() / 8.5f; // Spacing between each card
+		float actualWidth = res.getScaledWidth() / 10f;  // Width of each card;  1/10 of total width
+		float height = res.getScaledHeight() * 0.6f; // Height of each card; about 1/2 of total height
+		float scaledWidth = 100;
 		
-		float scale = width / 100f;
+		float scale = actualWidth / scaledWidth;
 		
-		float minX = (int) (index * (width + spacing));
+		float minX = (int) (index * (actualWidth + spacing));
 		float minY = (res.getScaledHeight() - height) / 2;
-		float maxX = minX + width;
+		float maxX = minX + actualWidth;
 		float maxY = minY + height;
 		float midX = (minX + maxX) / 2;
 		float midY = (minY + maxY) / 2;
@@ -65,6 +66,7 @@ public class AbilityCard extends Gui {
 		float padding = 10;
 		float leftX = minX + padding;
 		float rightX = maxX - padding;
+		float innerWidth = scaledWidth - 2 * padding;
 		
 		float iconY = 5;
 		float iconWidth = 80;
@@ -72,12 +74,14 @@ public class AbilityCard extends Gui {
 		
 		float textMinX = 5;
 		float textMaxX = 95;
-		float textY = 100;
+		float textY = 103;
+		
+		float progressY = 100;
 		
 		// Draw card background
 		pushMatrix();
 			translate(minX, minY, 0);
-			scale(width, height, 1);
+			scale(actualWidth, height, 1);
 			renderImage(AvatarUiTextures.skillsGui, 0, 0, 1, 1);
 		popMatrix();
 		
@@ -93,11 +97,12 @@ public class AbilityCard extends Gui {
 				renderImage(AvatarUiTextures.icons, icon.getMinU(), icon.getMinV(), 32, 32);
 			popMatrix();
 			
+			// draw progress bar
 			pushMatrix();
-				translate(10, 150, 0);
+				translate(10, progressY, 0);
 				scale(iconWidth / 40, iconWidth / 40, 1);
 				renderImage(AvatarUiTextures.skillsGui, 0, 1, 40, 13);
-				renderImage(AvatarUiTextures.skillsGui, 0, 14, (int) (data.getAbilityData(ability).getXp() / 100 * 40), 13);
+				renderImage(AvatarUiTextures.skillsGui, 0, 14, (int) (data.getAbilityData(ability).getXp() / scaledWidth * 40), 13);
 			popMatrix();
 			
 		popMatrix();
@@ -105,12 +110,13 @@ public class AbilityCard extends Gui {
 		pushMatrix();
 			
 			String draw = ((int) data.getAbilityData(ability).getXp()) + "%";
+			float strScale = 5f / res.getScaleFactor();
 			
 			translate(minX, minY, 0);
 			scale(scale, scale, 1);
 			
-			translate((textMaxX - mc.fontRendererObj.getStringWidth(draw)) / 2f, textY, 0);
-			scale(5f / res.getScaleFactor(), 5f / res.getScaleFactor(), 1);
+			translate(padding + (innerWidth - mc.fontRendererObj.getStringWidth(draw) * strScale) / 2, textY, 0);
+			scale(strScale, strScale, 1);
 			drawString(mc.fontRendererObj, draw, 0, 0, 0xffffff);
 			
 		popMatrix();
