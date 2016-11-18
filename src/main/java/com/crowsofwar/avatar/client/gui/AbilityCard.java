@@ -81,10 +81,12 @@ public class AbilityCard extends Gui {
 		
 		// Draw Gui Background
 		pushMatrix();
-		scale(1f / res.getScaleFactor(), 1f / res.getScaleFactor(), 1);
+//			translate(128 / res.getScaleFactor(), 0, 0);
+			scale(1f / res.getScaleFactor(), 1f / res.getScaleFactor(), 1);
+			translate(-mc.displayWidth / 2 + scroll / 4, -mc.displayHeight / 2, 0);
 			scale(mc.displayWidth / 256f, mc.displayHeight / 256f, 1);
+			scale(2, 2, 1);
 			translate(0, 0, -1);
-			color(1, 1, 1, 0.65f);
 			renderImage(AvatarUiTextures.waterBg, 0, 0, 256, 256);
 		popMatrix();
 		
