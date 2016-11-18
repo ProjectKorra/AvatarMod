@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.client.gui;
 
+import static net.minecraft.client.renderer.GlStateManager.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,16 @@ public class SkillsGui extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		// Draw Gui Background
+		pushMatrix();
+		scale(1f / res.getScaleFactor(), 1f / res.getScaleFactor(), 1);
+		translate(-mc.displayWidth / 2 + scroll / 4, -mc.displayHeight / 2, 0);
+		scale(mc.displayWidth / 256f, mc.displayHeight / 256f, 1);
+		scale(2, 2, 1);
+		mc.renderEngine.bindTexture(AvatarUiTextures.waterBg);
+		drawTexturedModalRect(0, 0, 256, 256, width, height);
+		popMatrix();
 		
 		for (int i = 0; i < cards.size(); i++) {
 			cards.get(i).render(res, i, scroll);
