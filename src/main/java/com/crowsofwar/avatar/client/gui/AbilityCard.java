@@ -35,7 +35,7 @@ public class AbilityCard extends Gui {
 	}
 	
 	// @formatter:off
-	public void render(ScaledResolution res, int index) {
+	public void render(ScaledResolution res, int index, int scroll) {
 		
 		// NOTE! Minecraft has automatic icon scaling; can be found via res.getScaleFactor()
 		// To counteract this, normally you would use
@@ -57,7 +57,7 @@ public class AbilityCard extends Gui {
 		
 		float scale = actualWidth / scaledWidth;
 		
-		float minX = (int) (index * (actualWidth + spacing));
+		float minX = (int) (index * (actualWidth + spacing)) + (float) scroll / res.getScaleFactor();
 		float minY = (res.getScaledHeight() - height) / 2;
 		float maxX = minX + actualWidth;
 		float maxY = minY + height;
