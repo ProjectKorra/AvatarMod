@@ -3,10 +3,12 @@ package com.crowsofwar.avatar.client.gui;
 import static com.crowsofwar.avatar.AvatarMod.proxy;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -39,6 +41,7 @@ public class RadialMenu extends Gui {
 	private AvatarControl pressing;
 	private BendingAbility[] controls;
 	private MenuTheme theme;
+	private final BendingController controller;
 	
 	/**
 	 * Current radial segment that the mouse is over, null for none.
@@ -59,7 +62,9 @@ public class RadialMenu extends Gui {
 	 *            less than 8, then the array is filled with null. The arguments
 	 *            can only be a maximum of 8.
 	 */
-	public RadialMenu(MenuTheme theme, AvatarControl pressing, BendingAbility... controls) {
+	public RadialMenu(BendingController controller, MenuTheme theme, AvatarControl pressing,
+			BendingAbility... controls) {
+		this.controller = controller;
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
 		this.pressing = pressing;
@@ -152,6 +157,15 @@ public class RadialMenu extends Gui {
 			playClickSound(1.3f);
 		}
 		prevMouseover = currentMouseover;
+		
+		if (Mouse.isButtonDown(0)) {
+			int centeredX = mouseX - resolution.getScaledWidth() / 2;
+			int centeredY = mouseY - resolution.getScaledHeight() / 2;
+			if (Math.sqrt(centeredX * centeredX + centeredY * centeredY) / menuScale < 100) {
+				mc.displayGuiScreen(new SkillsGui(controller));
+				return true;
+			}
+		}
 		
 		if (closeGui) {
 			

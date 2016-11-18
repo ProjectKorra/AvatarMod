@@ -9,6 +9,7 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingController;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -36,9 +37,17 @@ public class SkillsGui extends GuiScreen {
 		this.scroll = 0;
 	}
 	
+	public SkillsGui(BendingController controller) {
+		this.cards = new ArrayList<>();
+		for (BendingAbility ability : controller.getAllAbilities()) {
+			cards.add(new AbilityCard(ability));
+		}
+	}
+	
 	@Override
 	public void initGui() {
 		this.res = new ScaledResolution(mc);
+		System.out.println("INIT");
 	}
 	
 	@Override

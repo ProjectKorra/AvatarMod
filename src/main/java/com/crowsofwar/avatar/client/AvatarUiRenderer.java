@@ -7,6 +7,7 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
 import com.crowsofwar.avatar.client.gui.RadialSegment;
+import com.crowsofwar.avatar.client.gui.SkillsGui;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -61,7 +62,7 @@ public class AvatarUiRenderer extends Gui {
 		if (currentBendingMenu != null) {
 			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {
 				currentBendingMenu = null;
-				mc.setIngameFocus();
+				if (!(mc.currentScreen instanceof SkillsGui)) mc.setIngameFocus();
 			} else {
 				currentBendingMenu.drawScreen(mouseX, mouseY, resolution);
 				mc.setIngameNotInFocus();
@@ -105,7 +106,8 @@ public class AvatarUiRenderer extends Gui {
 		BendingController controller = BendingManager.getBending(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
-		instance.currentBendingMenu = new RadialMenu(menu.getTheme(), menu.getKey(), menu.getButtons());
+		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getKey(),
+				menu.getButtons());
 		instance.mc.setIngameNotInFocus();
 		
 	}
