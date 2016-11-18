@@ -10,9 +10,11 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingType;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * 
@@ -29,15 +31,10 @@ public class SkillsGui extends GuiScreen {
 	
 	private boolean wasMouseDown;
 	
-	public SkillsGui() {
-		this.cards = new ArrayList<>();
-		cards.add(new AbilityCard(BendingAbility.ABILITY_AIR_JUMP));
-		cards.add(new AbilityCard(BendingAbility.ABILITY_FIRE_ARC));
-		cards.add(new AbilityCard(BendingAbility.ABILITY_RAVINE));
-		this.scroll = 0;
-	}
+	private final BendingController controller;
 	
 	public SkillsGui(BendingController controller) {
+		this.controller = controller;
 		this.cards = new ArrayList<>();
 		for (BendingAbility ability : controller.getAllAbilities()) {
 			cards.add(new AbilityCard(ability));
@@ -60,7 +57,14 @@ public class SkillsGui extends GuiScreen {
 		translate(-mc.displayWidth / 2 + scroll / 4, -mc.displayHeight / 2, 0);
 		scale(mc.displayWidth / 256f, mc.displayHeight / 256f, 1);
 		scale(2, 2, 1);
-		mc.renderEngine.bindTexture(AvatarUiTextures.waterBg);
+		
+		ResourceLocation background = AvatarUiTextures.bgAir;
+		BendingType type = controller.getType();
+		if (type == BendingType.EARTHBENDING) background = AvatarUiTextures.bgEarth;
+		if (type == BendingType.FIREBENDING) background = AvatarUiTextures.bgFire;
+		if (type == BendingType.WATERBENDING) background = AvatarUiTextures.bgWater;
+		
+		mc.renderEngine.bindTexture(background);
 		drawTexturedModalRect(0, 0, 256, 256, width, height);
 		popMatrix();
 		
