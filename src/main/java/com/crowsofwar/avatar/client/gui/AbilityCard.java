@@ -79,6 +79,15 @@ public class AbilityCard extends Gui {
 		
 		float progressY = 120;
 		
+		// Draw Gui Background
+		pushMatrix();
+		scale(1f / res.getScaleFactor(), 1f / res.getScaleFactor(), 1);
+			scale(mc.displayWidth / 256f, mc.displayHeight / 256f, 1);
+			translate(0, 0, -1);
+			color(1, 1, 1, 0.65f);
+			renderImage(AvatarUiTextures.waterBg, 0, 0, 256, 256);
+		popMatrix();
+		
 		// Draw card background
 		pushMatrix();
 			translate(minX, minY, 0);

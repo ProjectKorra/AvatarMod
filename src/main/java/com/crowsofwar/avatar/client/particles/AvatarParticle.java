@@ -19,8 +19,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * A custom particle in the avatar mod.
  * <p>
- * Particles have multiple frames; they must instantiate an array of ParticleFrames. These contain
- * the information for the ResourceLocation, u, v, etc.
+ * Particles have multiple frames; they must instantiate an array of
+ * ParticleFrames. These contain the information for the ResourceLocation, u, v,
+ * etc.
  * 
  * @author CrowsOfWar
  */
@@ -127,7 +128,8 @@ public abstract class AvatarParticle extends Particle {
 	}
 	
 	/**
-	 * Enable additive blending for a "glowing" effect when there are many particles.
+	 * Enable additive blending for a "glowing" effect when there are many
+	 * particles.
 	 */
 	protected void enableAdditiveBlending() {
 		additiveBlending = true;
@@ -152,8 +154,9 @@ public abstract class AvatarParticle extends Particle {
 		 * @param texture
 		 *            The texture location
 		 * @param textureSize
-		 *            Size of your spritesheet (width/height) in pixels. Spritesheet is assumed to
-		 *            be square, so 64 = 64x64 pixels, etc.
+		 *            Size of your spritesheet (width/height) in pixels.
+		 *            Spritesheet is assumed to be square, so 64 = 64x64 pixels,
+		 *            etc.
 		 * @param minU
 		 *            Minimum x-coordinate on texture
 		 * @param minV
