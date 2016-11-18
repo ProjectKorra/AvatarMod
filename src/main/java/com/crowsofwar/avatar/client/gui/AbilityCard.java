@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -115,7 +116,7 @@ public class AbilityCard extends Gui {
 			scale(scale, scale, 1);
 			
 			renderCenteredString(draw, textY, 2.5f);
-			renderCenteredString("HELLO", 10, 3f);
+			renderCenteredString(I18n.format("avatar.ability." + ability.getName()), 10, 1.5f);
 			
 		popMatrix();
 		
