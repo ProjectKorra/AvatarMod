@@ -50,7 +50,7 @@ public class AbilityCard extends Gui {
 		AbilityIcon icon = ability.getIcon();
 		
 		float spacing = res.getScaledWidth() / 8.5f; // Spacing between each card
-		float actualWidth = res.getScaledWidth() / 10f;  // Width of each card;  1/10 of total width
+		float actualWidth = res.getScaledWidth() / 7f;  // Width of each card;  1/10 of total width
 		float height = res.getScaledHeight() * 0.6f; // Height of each card; about 1/2 of total height
 		float scaledWidth = 100;
 		
@@ -68,15 +68,15 @@ public class AbilityCard extends Gui {
 		float rightX = maxX - padding;
 		float innerWidth = scaledWidth - 2 * padding;
 		
-		float iconY = 5;
+		float iconY = 25;
 		float iconWidth = 80;
 		float iconHeight = 80;
 		
 		float textMinX = 5;
 		float textMaxX = 95;
-		float textY = 103;
+		float textY = 123;
 		
-		float progressY = 100;
+		float progressY = 120;
 		
 		// Draw card background
 		pushMatrix();
@@ -110,14 +110,12 @@ public class AbilityCard extends Gui {
 		pushMatrix();
 			
 			String draw = ((int) data.getAbilityData(ability).getXp()) + "%";
-			float strScale = 5f / res.getScaleFactor();
 			
 			translate(minX, minY, 0);
 			scale(scale, scale, 1);
 			
-			translate(padding + (innerWidth - mc.fontRendererObj.getStringWidth(draw) * strScale) / 2, textY, 0);
-			scale(strScale, strScale, 1);
-			drawString(mc.fontRendererObj, draw, 0, 0, 0xffffff);
+			renderCenteredString(draw, textY, 2.5f);
+			renderCenteredString("HELLO", 10, 3f);
 			
 		popMatrix();
 		
@@ -142,6 +140,27 @@ public class AbilityCard extends Gui {
 	private void renderImage(ResourceLocation texture, int u, int v, int width, int height) {
 		mc.renderEngine.bindTexture(texture);
 		drawTexturedModalRect(0, 0, u, v, width, height);
+	}
+	
+	/**
+	 * Draws a centered string at the given y-position. Assumes that has already
+	 * been transformed to the top-left corner of card (without padding), and
+	 * the card is 100px wide. Padding is 10px.
+	 * 
+	 * @param str
+	 *            String to draw
+	 * @param y
+	 *            Y position to draw at
+	 * @param scale
+	 *            Scale of text
+	 */
+	private void renderCenteredString(String str, float y, float scale) {
+		pushMatrix();
+		// assume padding is 10, innerWidth is 80
+		translate(10 + (80 - mc.fontRendererObj.getStringWidth(str) * scale) / 2, y, 0);
+		scale(scale, scale, 1);
+		drawString(mc.fontRendererObj, str, 0, 0, 0xffffff);
+		popMatrix();
 	}
 	
 }
