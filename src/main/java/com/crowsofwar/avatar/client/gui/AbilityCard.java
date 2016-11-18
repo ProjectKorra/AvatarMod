@@ -9,7 +9,6 @@ import com.crowsofwar.avatar.common.gui.AbilityIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -60,7 +59,10 @@ public class AbilityCard extends Gui {
 		float midX = (minX + maxX) / 2;
 		float midY = (minY + maxY) / 2;
 		
-		float iconX = 10;
+		float padding = 10;
+		float leftX = minX + padding;
+		float rightX = maxX - padding;
+		
 		float iconY = 5;
 		float iconWidth = 80;
 		float iconHeight = 80;
@@ -71,21 +73,28 @@ public class AbilityCard extends Gui {
 		
 		// Draw card background
 		pushMatrix();
-			GlStateManager.translate(minX, minY, 0);
-			GlStateManager.scale(width, height, 1);
+			translate(minX, minY, 0);
+			scale(width, height, 1);
 			renderImage(AvatarUiTextures.skillsGui, 0, 0, 1, 1);
 		popMatrix();
 		
 		pushMatrix();
-			GlStateManager.translate(minX, minY, 0);
+			translate(minX, minY, 0);
 			scale(scale, scale, 1);
 			// Now is translated & scaled to size of 100px width (height is variable)
 			
 			// draw icon
 			pushMatrix();
-				GlStateManager.translate(iconX, iconY, 0);
-				GlStateManager.scale(iconWidth / 32, iconHeight / 32, 1);
+				translate(padding, iconY, 0);
+				scale(iconWidth / 32, iconHeight / 32, 1);
 				renderImage(AvatarUiTextures.icons, icon.getMinU(), icon.getMinV(), 32, 32);
+			popMatrix();
+			
+			pushMatrix();
+				translate(10, 150, 0);
+				scale(iconWidth / 40, iconWidth / 40, 1);
+				renderImage(AvatarUiTextures.skillsGui, 0, 1, 40, 13);
+				renderImage(AvatarUiTextures.skillsGui, 0, 14, (int) (data.getAbilityData(ability).getXp() / 100 * 40), 13);
 			popMatrix();
 			
 		popMatrix();
