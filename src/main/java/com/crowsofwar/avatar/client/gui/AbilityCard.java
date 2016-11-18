@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.gui.AbilityIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -43,6 +44,8 @@ public class AbilityCard extends Gui {
 		// There are 2 types of pixels here.
 		// SCREEN PIXELS - The actual pixels of the screen. Requires resolution to make sure everything is proportioned.
 		// CARD PIXELS   - Using scaling seen below, the card is now 100px x ??px (height depends on resolution).
+		
+		GlStateManager.enableBlend();
 		
 		AbilityIcon icon = ability.getIcon();
 		
