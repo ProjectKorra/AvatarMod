@@ -32,8 +32,6 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	public PacketCPlayerData() {}
 	
 	public PacketCPlayerData(AvatarPlayerData data) {
-		System.out.println("SENDING DATA");
-		Thread.dumpStack();
 		player = data.getPlayerID();
 		allControllers = new int[data.getBendingControllers().size()];
 		for (int i = 0; i < allControllers.length; i++) {
