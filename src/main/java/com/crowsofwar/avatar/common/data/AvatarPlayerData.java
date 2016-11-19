@@ -68,13 +68,13 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		AvatarPlayerData playerData = this;
 		AvatarUtils.readList(bendingControllerList,
 				compound -> BendingController.find(compound.getInteger("ControllerID")), readFrom,
-				"BendingAbilities");
+				"BendingControllers");
 		
 		AvatarUtils.readList(bendingStateList, compound -> {
 			
 			return BendingState.find(playerData, compound);
 			
-		}, readFrom, "BendingData");
+		}, readFrom, "BendingStates");
 		
 		bendingControllers.clear();
 		for (BendingController controller : bendingControllerList) {
@@ -103,9 +103,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		
 		AvatarUtils.writeList(bendingControllerList,
 				(compound, controller) -> compound.setInteger("ControllerID", controller.getID()), writeTo,
-				"BendingAbilities");
+				"BendingControllers");
 		AvatarUtils.writeList(bendingStateList, (compound, bendingState) -> bendingState.write(compound),
-				writeTo, "BendingData");
+				writeTo, "BendingStates");
 		AvatarUtils.writeList(statusControls, (nbtTag, control) -> nbtTag.setInteger("Id", control.id()),
 				writeTo, "StatusControls");
 		
