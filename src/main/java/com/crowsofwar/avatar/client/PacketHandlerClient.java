@@ -94,9 +94,13 @@ public class PacketHandlerClient implements IPacketHandler {
 			}
 			
 			// Read bending states
+			int lastIndex = buf.readerIndex();
 			for (int i = 0; i < packet.getAllControllersID().length; i++) {
 				BendingState state = data.getBendingState(packet.getBuf().readInt());
 				state.fromBytes(packet.getBuf());
+				System.out
+						.println("State: " + state + ": read  " + (buf.readerIndex() - lastIndex) + " bytes");
+				lastIndex = buf.readerIndex();
 			}
 			
 		}

@@ -67,9 +67,13 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 			buf.writeFloat(abilities.get(i).getXp());
 		}
 		// Write bending states
+		int lastIndex = buf.writerIndex();
 		for (int i = 0; i < states.size(); i++) {
 			buf.writeInt(states.get(i).getId());
 			states.get(i).toBytes(buf);
+			System.out.println(
+					"State: " + states.get(i) + ": wrote " + (buf.writerIndex() - lastIndex) + " bytes");
+			lastIndex = buf.writerIndex();
 		}
 	}
 	

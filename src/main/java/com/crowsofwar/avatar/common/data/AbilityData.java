@@ -35,6 +35,7 @@ public class AbilityData {
 	 * save the AvatarPlayerData.
 	 */
 	public void setXp(float xp) {
+		if (xp == this.xp) return;
 		if (xp < 0) xp = 0;
 		if (xp > 100) xp = 100;
 		this.xp = xp;
@@ -42,6 +43,7 @@ public class AbilityData {
 	}
 	
 	public void addXp(float xp) {
+		if (xp == 0) return;
 		setXp(this.xp + xp);
 	}
 	

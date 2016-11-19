@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -67,10 +68,19 @@ public class PacketHandlerServer implements IPacketHandler {
 				"Error while processing UseAbility packet");
 		if (data != null) {
 			
-			// TODO Verify that the client can actually use that ability
-			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
-			packet.getAbility().execute(new AbilityContext(data,
-					new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));
+			BendingAbility ability = packet.getAbility();
+			double chance = ability.getFailureChance(data.getAbilityData(ability).getXp());
+			System.out.println("Failure chance: " + chance);
+			double rand = Math.random();
+			System.out.println("Random        : " + rand);
+			if (rand > chance) {
+				// TODO Verify that the client can actually use that ability
+				data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
+				ability.execute(new AbilityContext(data,
+						new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));
+			} else {
+				System.out.println("Failure");
+			}
 			
 		}
 		
