@@ -60,6 +60,11 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
 		state = new PlayerState();
+		
+		networker.register(bendingControllers, Transmitters.CONTROLLER_LIST, TRANSMIT_BENDING_CONTROLLERS);
+		// ...
+		networker.markChanged(TRANSMIT_BENDING_CONTROLLERS);
+		
 	}
 	
 	@Override
