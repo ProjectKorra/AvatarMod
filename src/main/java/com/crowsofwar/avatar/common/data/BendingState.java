@@ -5,6 +5,7 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.getOrCreateNestedComp
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -56,8 +57,16 @@ public abstract class BendingState {
 	 * Get the Id of the bending state's BendingController. Should be unique
 	 * per-class (not per-instance).
 	 * 
-	 * @see BendingController#getID()
+	 * @see BendingController#getType()
 	 */
+	public BendingType getType() {
+		return BendingType.find(getId());
+	}
+	
+	/**
+	 * @deprecated Use {@link #getType()} instead
+	 */
+	@Deprecated
 	public abstract int getId();
 	
 	public int getProgressPoints() {

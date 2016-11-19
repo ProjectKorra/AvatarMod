@@ -39,10 +39,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
-	private Map<Integer, BendingController> bendingControllers;
+	private Map<BendingType, BendingController> bendingControllers;
 	private List<BendingController> bendingControllerList;
 	
-	private Map<Integer, BendingState> bendingStates;
+	private Map<BendingType, BendingState> bendingStates;
 	private List<BendingState> bendingStateList;
 	
 	private Set<StatusControl> statusControls;
@@ -53,9 +53,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
-		bendingControllers = new HashMap<Integer, BendingController>();
+		bendingControllers = new HashMap<BendingType, BendingController>();
 		bendingControllerList = new ArrayList<BendingController>();
-		bendingStates = new HashMap<Integer, BendingState>();
+		bendingStates = new HashMap<BendingType, BendingState>();
 		bendingStateList = new ArrayList<BendingState>();
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
@@ -78,12 +78,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		
 		bendingControllers.clear();
 		for (BendingController controller : bendingControllerList) {
-			bendingControllers.put(controller.getID(), controller);
+			bendingControllers.put(controller.getType(), controller);
 		}
 		
 		bendingStates.clear();
 		for (BendingState state : bendingStateList) {
-			bendingStates.put(state.getId(), state);
+			bendingStates.put(state.getType(), state);
 		}
 		
 		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")),
@@ -131,48 +131,72 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	/**
 	 * Check if the player has that type of bending
+	 * 
+	 * @deprecated Use {@link #hasBending(BendingType)}
 	 */
+	@Deprecated
 	public boolean hasBending(int id) {
-		return bendingControllers.containsKey(id);
+		return hasBending(BendingType.find(id));
 	}
 	
 	/**
 	 * Check if the player has that type of bending
 	 */
 	public boolean hasBending(BendingType type) {
-		return hasBending(type.id());
+		return bendingControllers.containsKey(type);
 	}
 	
+	/**
+	 * If the bending controller is not already present, adds the bending
+	 * controller.
+	 */
 	public void addBending(BendingController bending) {
-		if (!hasBending(bending.getID())) {
-			bendingControllers.put(bending.getID(), bending);
+		if (!hasBending(bending.getType())) {
+			bendingControllers.put(bending.getType(), bending);
 			bendingControllerList.add(bending);
-			BendingState state = bending.createState(this);
-			bendingStates.put(bending.getID(), state);
-			bendingStateList.add(state);
 			saveChanges();
 		} else {
 			AvatarLog.warn(WarningType.INVALID_CODE,
 					"Cannot add BendingController " + bending + "' because player already has instance.");
 		}
+		
+		if (!hasBendingState(bending)) {
+			addBendingState(bending.createState(this));
+			saveChanges();
+		}
 	}
 	
+	/**
+	 * If the bending controller is not already present, adds the bending
+	 * controller.
+	 */
+	public void addBending(BendingType type) {
+		addBending(BendingManager.getBending(type));
+	}
+	
+	/**
+	 * If the bending controller is not already present, adds the bending
+	 * controller.
+	 * 
+	 * @deprecated Use {@link #addBending(BendingType)}
+	 */
+	@Deprecated
 	public void addBending(int bendingID) {
 		addBending(BendingManager.getBending(bendingID));
 	}
 	
 	/**
-	 * Remove the specified bending controller. Please note, this will be saved,
-	 * so is permanent (unless another bending controller is added).
+	 * Remove the specified bending controller and its associated state. Please
+	 * note, this will be saved, so is permanent (unless another bending
+	 * controller is added).
 	 */
 	public void removeBending(BendingController bending) {
-		if (hasBending(bending.getID())) {
+		if (hasBending(bending.getType())) {
 			// remove state before controller- getBendingState only works with
 			// controller present
 			BendingState state = getBendingState(bending);
-			bendingStates.remove(bending.getID());
-			bendingStateList.remove(state);
-			bendingControllers.remove(bending.getID());
+			removeBendingState(state);
+			bendingControllers.remove(bending.getType());
 			bendingControllerList.remove(bending);
 			saveChanges();
 		} else {
@@ -182,17 +206,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Remove the bending controller with that ID. This will be saved.
+	 * Remove the bending controller and its state with that type.
 	 * 
-	 * @param id
+	 * @see #removeBending(BendingController)
 	 */
-	public void removeBending(int id) {
-		if (hasBending(id)) {
-			removeBending(getBendingController(id));
-		} else {
-			AvatarLog.warn(WarningType.INVALID_CODE,
-					"Cannot remove bending with ID '" + id + "' because player does not have that instance.");
-		}
+	public void removeBending(BendingType type) {
+		removeBending(getBendingController(type));
 	}
 	
 	/**
@@ -203,12 +222,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		Iterator<BendingController> iterator = bendingControllerList.iterator();
 		while (iterator.hasNext()) {
 			BendingController bending = iterator.next();
-			
-			BendingState state = getBendingState(bending);
-			bendingControllers.remove(bending.getID());
-			iterator.remove();
-			bendingStates.remove(bending.getID());
-			bendingStateList.remove(state);
+			removeBending(iterator.next());
 		}
 		saveChanges();
 		
@@ -222,11 +236,22 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Get the BendingController with that ID. Returns null if there is no
 	 * bending controller for that ID.
 	 * 
+	 * @deprecated Use {@link #getBendingController(BendingType)}.
+	 * 
 	 * @param id
 	 * @return
 	 */
+	@Deprecated
 	public BendingController getBendingController(int id) {
-		return bendingControllers.get(id);
+		return getBendingController(BendingType.find(id));
+	}
+	
+	/**
+	 * Get the BendingController with that type. Returns null if there is no
+	 * bending controller for that type.
+	 */
+	public BendingController getBendingController(BendingType type) {
+		return bendingControllers.get(type);
 	}
 	
 	public PlayerState getState() {
@@ -234,44 +259,70 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Gets extra metadata for the given bending controller with that ID, or
+	 * Gets extra metadata for the given bending controller with that type, or
 	 * null if there is no bending controller.
 	 */
-	public BendingState getBendingState(int id) {
-		if (!hasBending(id)) {
-			AvatarLog.warn(WarningType.INVALID_CODE, "Tried to access BendingState with Id " + id
+	public BendingState getBendingState(BendingType type) {
+		if (!hasBending(type)) {
+			AvatarLog.warn(WarningType.INVALID_CODE, "Tried to access BendingState with Type " + type
 					+ ", but player does not have the BendingController");
 		}
-		if (hasBending(id) && !bendingStates.containsKey(id)) {
-			bendingStates.put(id, getBendingController(id).createState(this));
+		if (hasBending(type) && !hasBendingState(BendingManager.getBending(type))) {
+			bendingStates.put(type, getBendingController(type).createState(this));
 			saveChanges();
 		}
-		return hasBending(id) ? bendingStates.get(id) : null;
+		return hasBending(type) ? bendingStates.get(type) : null;
 	}
 	
 	/**
 	 * Gets extra metadata for the given bending controller with that ID, or
 	 * null if there is no bending controller.
+	 * 
+	 * @deprecated Use {@link #getBendingState(BendingType)}
 	 */
-	public BendingState getBendingState(BendingType type) {
-		return getBendingState(type.id());
+	@Deprecated
+	public BendingState getBendingState(int id) {
+		return getBendingState(BendingType.find(id));
 	}
 	
 	/**
 	 * Get extra metadata for the given bending controller, returns null if no
 	 * Bending controller.
+	 * 
+	 * @see #getBendingState(BendingType)
 	 */
-	public <STATE extends BendingState> STATE getBendingState(BendingController controller) {
-		return (STATE) getBendingState(controller.getID());
+	public BendingState getBendingState(BendingController controller) {
+		return getBendingState(controller.getType());
+	}
+	
+	/**
+	 * Returns whether a bending state for the bending controller is present.
+	 * Does not add one if necessary.
+	 */
+	public boolean hasBendingState(BendingController controller) {
+		return bendingStates.containsKey(controller);
 	}
 	
 	public List<BendingState> getAllBendingStates() {
 		return bendingStateList;
 	}
 	
-	public void setBendingState(BendingState state) {
-		bendingStates.put(state.getId(), state);
+	/**
+	 * Adds the bending state to this player data, replacing the existing one of
+	 * that type if necessary.
+	 */
+	public void addBendingState(BendingState state) {
+		bendingStates.put(state.getType(), state);
 		bendingStateList.add(state);
+	}
+	
+	/**
+	 * Removes that bending state from this player data. Note: Must be the exact
+	 * instance already present to successfully occur.
+	 */
+	public void removeBendingState(BendingState state) {
+		bendingStates.remove(state.getType());
+		bendingStateList.remove(state);
 	}
 	
 	public Set<StatusControl> getActiveStatusControls() {
