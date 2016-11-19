@@ -268,7 +268,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 					+ ", but player does not have the BendingController");
 		}
 		if (hasBending(type) && !hasBendingState(BendingManager.getBending(type))) {
-			bendingStates.put(type, getBendingController(type).createState(this));
+			addBendingState(getBendingController(type).createState(this));
 			saveChanges();
 		}
 		return hasBending(type) ? bendingStates.get(type) : null;
@@ -300,7 +300,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Does not add one if necessary.
 	 */
 	public boolean hasBendingState(BendingController controller) {
-		return bendingStates.containsKey(controller);
+		return bendingStates.containsKey(controller.getType());
 	}
 	
 	public List<BendingState> getAllBendingStates() {

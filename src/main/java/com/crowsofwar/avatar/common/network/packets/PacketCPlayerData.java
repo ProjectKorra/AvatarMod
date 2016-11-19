@@ -1,7 +1,10 @@
 package com.crowsofwar.avatar.common.network.packets;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -29,6 +32,8 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	public PacketCPlayerData() {}
 	
 	public PacketCPlayerData(AvatarPlayerData data) {
+		System.out.println("SENDING DATA");
+		Thread.dumpStack();
 		player = data.getPlayerID();
 		allControllers = new int[data.getBendingControllers().size()];
 		for (int i = 0; i < allControllers.length; i++) {
@@ -54,6 +59,11 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
+		
+		System.out.println("=================== WRITING");
+		System.out.println("All controllers: " + Arrays.asList(ArrayUtils.toObject(allControllers)));
+		System.out.println("All states     : " + states);
+		
 		GoreCoreByteBufUtil.writeUUID(buf, player);
 		// Write bending controllers
 		buf.writeInt(allControllers.length);
