@@ -57,7 +57,7 @@ public class WaterbendingState extends BendingState {
 	
 	@Override
 	public void readBytes(ByteBuf buf) {
-		World world = data.getState().getPlayerEntity().worldObj;
+		World world = data.getPlayerEntity().worldObj;
 		int id = buf.readInt();
 		EntityWaterArc waterArc = null;
 		if (id > -1) {
