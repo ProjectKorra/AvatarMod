@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * 
  * @author CrowsOfWar
  */
-public class PacketCNewPd extends PacketModularData {
+public class PacketCNewPd extends PacketModularData<PacketCNewPd> {
 	
 	private UUID playerId;
 	
@@ -46,7 +46,7 @@ public class PacketCNewPd extends PacketModularData {
 	}
 	
 	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketModularData> getPacketHandler() {
+	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCNewPd> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
 	
