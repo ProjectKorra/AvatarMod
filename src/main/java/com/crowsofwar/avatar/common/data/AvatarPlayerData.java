@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -227,10 +226,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public void takeBending() {
 		
-		Iterator<BendingController> iterator = bendingControllerList.iterator();
-		while (iterator.hasNext()) {
-			BendingController bending = iterator.next();
-			removeBending(iterator.next());
+		List<BendingController> copy = new ArrayList<>(bendingControllerList);
+		for (BendingController controller : copy) {
+			removeBending(controller);
 		}
 		networker.changeAndSync(KEY_CONTROLLERS, bendingControllerList);
 		saveChanges();

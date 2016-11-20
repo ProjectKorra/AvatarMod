@@ -169,6 +169,7 @@ public class PacketHandlerClient implements IPacketHandler {
 			Map<Networker.Key, Object> readData = packet.interpretData(data.getNetworker());
 			if (readData.containsKey(KEY_CONTROLLERS)) {
 				data.takeBending();
+				System.out.println("Currently all are " + data.getBendingControllers());
 				List<BendingController> bending = (List<BendingController>) readData.get(KEY_CONTROLLERS);
 				for (BendingController controller : bending) {
 					data.addBending(controller);
