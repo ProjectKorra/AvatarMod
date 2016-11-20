@@ -59,8 +59,10 @@ public class Transmitters {
 		@Override
 		public void write(ByteBuf buf, List<BendingState> t) {
 			buf.writeInt(t.size());
-			for (BendingState state : t)
+			for (BendingState state : t) {
+				buf.writeInt(state.getType().id());
 				state.toBytes(buf);
+			}
 		}
 		
 		@Override
