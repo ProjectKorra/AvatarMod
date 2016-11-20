@@ -104,8 +104,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while" + " processing RequestData packet");
 		
+		if (data != null) data.getNetworker().sendAll();
 		return null;
-		// return data == null ? null : new PacketCPlayerData(data);
 		
 	}
 	
