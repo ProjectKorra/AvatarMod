@@ -36,6 +36,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	// TODO change player data lists into sets, when applicable
 	
 	public static final Networker.Key KEY_CONTROLLERS = () -> 1;
+	public static final Networker.Key KEY_ONE_STATE = () -> 2;
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
@@ -376,8 +377,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Send the given bending state to the client.
 	 */
 	public void sendBendingState(BendingState state) {
-		// updateClient(); // TODO send optimized packet only about bending
-		// state
+		networker.changeAndSync(KEY_ONE_STATE, state);
 	}
 	
 	public Networker getNetworker() {

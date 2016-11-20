@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client;
 
 import static com.crowsofwar.avatar.common.data.AvatarPlayerData.KEY_CONTROLLERS;
+import static com.crowsofwar.avatar.common.data.AvatarPlayerData.KEY_ONE_STATE;
 
 import java.util.List;
 import java.util.Map;
@@ -175,6 +176,10 @@ public class PacketHandlerClient implements IPacketHandler {
 					data.addBending(controller);
 					System.out.println("Add " + controller);
 				}
+			}
+			
+			if (readData.containsKey(KEY_ONE_STATE)) {
+				data.addBendingState((BendingState) readData.get(KEY_ONE_STATE));
 			}
 			
 		}
