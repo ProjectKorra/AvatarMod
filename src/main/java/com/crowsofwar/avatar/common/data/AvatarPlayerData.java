@@ -18,9 +18,12 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.network.Networker;
+import com.crowsofwar.avatar.common.network.Transmitters;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.GoreCoreDataSaver;
+import com.crowsofwar.gorecore.data.GoreCoreDataSaverDontSave;
 import com.crowsofwar.gorecore.data.GoreCorePlayerData;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherServer;
@@ -37,6 +40,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	// TODO change player data lists into sets, when applicable
 	
+	private static final Networker.Key KEY_CONTROLLERS = new Networker.Key() {
+	};
+	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
 	private Map<BendingType, BendingController> bendingControllers;
@@ -51,8 +57,12 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	private PlayerState state;
 	
+	private final Networker networker;
+	private final boolean isClient;
+	
 	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
+		isClient = dataSaver instanceof GoreCoreDataSaverDontSave;
 		bendingControllers = new HashMap<BendingType, BendingController>();
 		bendingControllerList = new ArrayList<BendingController>();
 		bendingStates = new HashMap<BendingType, BendingState>();
@@ -61,9 +71,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		abilityData = new HashMap<>();
 		state = new PlayerState();
 		
-		networker.register(bendingControllers, Transmitters.CONTROLLER_LIST, TRANSMIT_BENDING_CONTROLLERS);
+		networker = new Networker(!isClient);
+		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
 		// ...
-		networker.markChanged(TRANSMIT_BENDING_CONTROLLERS);
+		networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
 		
 	}
 	
