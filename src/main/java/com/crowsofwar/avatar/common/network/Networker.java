@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.crowsofwar.avatar.AvatarMod;
 
@@ -21,14 +22,18 @@ public class Networker {
 	final Set<Key> allKeys;
 	private final boolean server;
 	private final Class<? extends PacketModularData> packet;
+	private final Function<Networker, ? extends PacketModularData> packetCreator;
 	
-	public Networker(boolean server, Class<? extends PacketModularData> dataPacket) {
+	public <P extends PacketModularData> Networker(boolean server, Class<P> dataPacket,
+			Function<Networker, P> packetCreator) {
 		transmitters = new HashMap<>();
 		currentData = new HashMap<>();
 		changed = new HashSet<>();
 		allKeys = new HashSet<>();
 		this.server = server;
 		this.packet = dataPacket;
+		this.packetCreator = packetCreator;
+		System.out.println("New networker, server? " + server);
 	}
 	
 	/**
@@ -53,22 +58,24 @@ public class Networker {
 		if (!allKeys.contains(key))
 			throw new IllegalArgumentException("Invalid key- no data was registered with Key " + key);
 		if (server) {
+			System.out.println("marked " + key + " changed to " + data);
 			changed.add(key);
 			currentData.put(key, data);
 		}
 	}
 	
+	public <T> void changeAndSync(Key key, T data) {
+		markChanged(key, data);
+		sendUpdated();
+	}
+	
 	public void sendUpdated() {
 		// somehow send packet here...
 		if (server) {
-			try {
-				
-				PacketModularData packet = this.packet.getConstructor(Networker.class).newInstance(this);
-				AvatarMod.network.sendToAll(packet);
-				
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
-			}
+			
+			PacketModularData packet = packetCreator.apply(this);
+			AvatarMod.network.sendToAll(packet);
+			
 		}
 	}
 	

@@ -66,10 +66,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		abilityData = new HashMap<>();
 		state = new PlayerState();
 		
-		networker = new Networker(!isClient, PacketCNewPd.class);
+		networker = new Networker(!isClient, PacketCNewPd.class, net -> new PacketCNewPd(net, playerID));
 		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
-		// ...
-		networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
 		
 	}
 	
@@ -162,7 +160,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (!hasBending(bending.getType())) {
 			bendingControllers.put(bending.getType(), bending);
 			bendingControllerList.add(bending);
-			networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
+			networker.changeAndSync(KEY_CONTROLLERS, bendingControllerList);
 			saveChanges();
 		} else {
 			AvatarLog.warn(WarningType.INVALID_CODE,
@@ -207,7 +205,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			removeBendingState(state);
 			bendingControllers.remove(bending.getType());
 			bendingControllerList.remove(bending);
-			networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
+			networker.changeAndSync(KEY_CONTROLLERS, bendingControllerList);
 			saveChanges();
 		} else {
 			AvatarLog.warn(WarningType.INVALID_CODE, "Cannot remove BendingController '" + bending
@@ -234,7 +232,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			BendingController bending = iterator.next();
 			removeBending(iterator.next());
 		}
-		networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
+		networker.changeAndSync(KEY_CONTROLLERS, bendingControllerList);
 		saveChanges();
 		
 	}
