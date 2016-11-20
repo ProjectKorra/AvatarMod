@@ -17,7 +17,7 @@ import io.netty.buffer.ByteBuf;
  */
 public abstract class PacketModularData<MSG extends PacketModularData> extends AvatarPacket<MSG> {
 	
-	private Set<Networker.Key> changed;
+	Set<Networker.Key> changed;
 	private Map<Networker.Key, DataTransmitter> transmitters;
 	private Map<Networker.Key, Object> currentData;
 	

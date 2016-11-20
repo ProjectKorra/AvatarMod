@@ -70,12 +70,19 @@ public class Networker {
 	}
 	
 	public void sendUpdated() {
-		// somehow send packet here...
 		if (server) {
 			
 			PacketModularData packet = packetCreator.apply(this);
 			AvatarMod.network.sendToAll(packet);
 			
+		}
+	}
+	
+	public void sendAll() {
+		if (server) {
+			PacketModularData packet = packetCreator.apply(this);
+			packet.changed = allKeys;
+			AvatarMod.network.sendToAll(packet);
 		}
 	}
 	
