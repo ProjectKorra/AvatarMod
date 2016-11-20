@@ -1,15 +1,22 @@
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.data.AvatarPlayerData.KEY_CONTROLLERS;
+
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
+import com.crowsofwar.avatar.common.network.Networker;
+import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
@@ -53,6 +60,8 @@ public class PacketHandlerClient implements IPacketHandler {
 			return handlePacketStatusControl((PacketCRemoveStatusControl) packet, ctx);
 		
 		if (packet instanceof PacketCParticles) return handlePacketParticles((PacketCParticles) packet, ctx);
+		
+		if (packet instanceof PacketCNewPd) return handlePacketNewPlayerData((PacketCNewPd) packet, ctx);
 		
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 		
@@ -134,6 +143,39 @@ public class PacketHandlerClient implements IPacketHandler {
 					packet.getMaxVelocityX() * random.nextGaussian(),
 					packet.getMaxVelocityY() * random.nextGaussian(),
 					packet.getMaxVelocityZ() * random.nextGaussian());
+		}
+		
+		return null;
+	}
+	
+	/**
+	 */
+	private IMessage handlePacketNewPlayerData(PacketCNewPd packet, MessageContext ctx) {
+		
+		EntityPlayer player = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld,
+				packet.getPlayerId());
+		if (player == null) {
+			AvatarLog.warn(WarningType.WEIRD_PACKET,
+					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
+			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayerId());
+			return null;
+		}
+		AvatarLog.debug("Client: Received data packet for " + player);
+		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
+				"Error while processing player data packet");
+		if (data != null) {
+			
+			Map<Networker.Key, Object> readData = packet.interpretData(data.getNetworker());
+			if (readData.containsKey(KEY_CONTROLLERS)) {
+				data.takeBending();
+				List<BendingController> bending = (List<BendingController>) readData.get(KEY_CONTROLLERS);
+				for (BendingController controller : bending) {
+					data.addBending(controller);
+					System.out.println("Add " + controller);
+				}
+			}
+			
 		}
 		
 		return null;

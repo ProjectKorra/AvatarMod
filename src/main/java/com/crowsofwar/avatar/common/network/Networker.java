@@ -73,6 +73,16 @@ public class Networker {
 	}
 	
 	public interface Key {
+		/**
+		 * Gets the ID of this key.
+		 * <p>
+		 * IDs of each key should NOT be instance determined (e.g. with
+		 * <code>hashCode()</code>) but instead pre-determined based off of the
+		 * keys that might be sent at the same time. Therefore, it's OK to have
+		 * 2 keys with the same ID, as long as they are never both used in 1
+		 * networker.
+		 */
+		int id();
 	}
 	
 }

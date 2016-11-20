@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.Transmitters;
+import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.GoreCoreDataSaver;
@@ -40,8 +41,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	// TODO change player data lists into sets, when applicable
 	
-	private static final Networker.Key KEY_CONTROLLERS = new Networker.Key() {
-	};
+	public static final Networker.Key KEY_CONTROLLERS = () -> 1;
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
@@ -71,7 +71,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		abilityData = new HashMap<>();
 		state = new PlayerState();
 		
-		networker = new Networker(!isClient);
+		networker = new Networker(!isClient, PacketCNewPd.class);
 		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
 		// ...
 		networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
@@ -396,6 +396,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public void sendBendingState(BendingState state) {
 		updateClient(); // TODO send optimized packet only about bending state
+	}
+	
+	public Networker getNetworker() {
+		return networker;
 	}
 	
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
