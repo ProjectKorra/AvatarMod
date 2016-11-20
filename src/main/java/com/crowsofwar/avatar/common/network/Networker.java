@@ -48,7 +48,7 @@ public class Networker {
 	 * @param transmitter
 	 * @param key
 	 */
-	public <T> void register(T data, DataTransmitter<T> transmitter, Key key) {
+	public <T> void register(T data, DataTransmitter<T, ?> transmitter, Key key) {
 		transmitters.put(key, transmitter);
 		currentData.put(key, data);
 		allKeys.add(key);

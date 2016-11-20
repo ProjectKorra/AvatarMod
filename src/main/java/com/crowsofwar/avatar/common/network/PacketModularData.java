@@ -40,11 +40,21 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 		this.currentData = networker.currentData;
 	}
 	
+	public Map<Networker.Key, Object> interpretData(Networker networker) {
+		return interpretData(networker, null);
+	}
+	
 	/**
 	 * Uses the networker's transmitters to read the data. Returns the
 	 * interpreted data as a map.
+	 * 
+	 * @param networker
+	 *            the networker
+	 * @param context
+	 *            the context object. All transmitters are passed this context,
+	 *            so make sure that they each have the same context requirement
 	 */
-	public Map<Networker.Key, Object> interpretData(Networker networker) {
+	public Map<Networker.Key, Object> interpretData(Networker networker, Context context) {
 		Map<Networker.Key, Object> out = new HashMap<>();
 		Map<Networker.Key, DataTransmitter> transmitters = networker.transmitters;
 		
@@ -59,7 +69,7 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 					.collect(Collectors.toList()).get(0); // Find Key with the
 															// id of keyId
 			System.out.println("key " + key);
-			Object read = transmitters.get(key).read(buf);
+			Object read = transmitters.get(key).read(buf, context);
 			System.out.println("got " + read);
 			out.put(key, read);
 		}

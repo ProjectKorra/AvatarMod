@@ -8,7 +8,7 @@ import io.netty.buffer.ByteBuf;
  * 
  * @author CrowsOfWar
  */
-public interface DataTransmitter<T> {
+public interface DataTransmitter<T, C extends Context> {
 	
 	/**
 	 * Writes the <code>T</code> to network
@@ -18,6 +18,6 @@ public interface DataTransmitter<T> {
 	/**
 	 * Creates a new <code>T</code> and reads data from the network
 	 */
-	T read(ByteBuf buf);
+	T read(ByteBuf buf, C ctx);
 	
 }
