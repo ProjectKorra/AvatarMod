@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.crowsofwar.avatar.AvatarMod;
+
 /**
  * Used by player data to keep track of which data changed and needs to be sent
  * across network. Only used server-side.
@@ -13,18 +15,20 @@ import java.util.Set;
  */
 public class Networker {
 	
-	private final Map<Key, DataTransmitter> transmitters;
-	private final Map<Key, Object> currentData;
-	private final Set<Key> changed;
-	private final Set<Key> allKeys;
+	final Map<Key, DataTransmitter> transmitters;
+	final Map<Key, Object> currentData;
+	final Set<Key> changed;
+	final Set<Key> allKeys;
 	private final boolean server;
+	private final Class<? extends PacketModularData> packet;
 	
-	public Networker(boolean server) {
+	public Networker(boolean server, Class<? extends PacketModularData> dataPacket) {
 		transmitters = new HashMap<>();
 		currentData = new HashMap<>();
 		changed = new HashSet<>();
 		allKeys = new HashSet<>();
 		this.server = server;
+		this.packet = dataPacket;
 	}
 	
 	/**
@@ -57,7 +61,14 @@ public class Networker {
 	public void sendUpdated() {
 		// somehow send packet here...
 		if (server) {
-			
+			try {
+				
+				PacketModularData packet = this.packet.getConstructor(Networker.class).newInstance(this);
+				AvatarMod.network.sendToAll(packet);
+				
+			} catch (ReflectiveOperationException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
