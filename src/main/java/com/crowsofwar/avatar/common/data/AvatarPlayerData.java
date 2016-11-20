@@ -36,7 +36,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	// TODO change player data lists into sets, when applicable
 	
 	public static final Networker.Key KEY_CONTROLLERS = () -> 1;
-	public static final Networker.Key KEY_ONE_STATE = () -> 2;
+	public static final Networker.Key KEY_STATES = () -> 2;
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
@@ -68,6 +68,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		
 		networker = new Networker(!isClient, PacketCNewPd.class, net -> new PacketCNewPd(net, playerID));
 		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
+		networker.register(bendingStateList, Transmitters.STATE_LIST, KEY_STATES);
 		
 	}
 	
@@ -315,6 +316,11 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		return bendingStateList;
 	}
 	
+	public void clearBendingStates() {
+		bendingStateList.clear();
+		bendingStates.clear();
+	}
+	
 	/**
 	 * Adds the bending state to this player data, replacing the existing one of
 	 * that type if necessary.
@@ -322,6 +328,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public void addBendingState(BendingState state) {
 		bendingStates.put(state.getType(), state);
 		bendingStateList.add(state);
+		networker.changeAndSync(KEY_STATES, bendingStateList);
 	}
 	
 	/**
@@ -331,6 +338,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public void removeBendingState(BendingState state) {
 		bendingStates.remove(state.getType());
 		bendingStateList.remove(state);
+		networker.changeAndSync(KEY_STATES, bendingStateList);
 	}
 	
 	public Set<StatusControl> getActiveStatusControls() {
@@ -377,7 +385,8 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Send the given bending state to the client.
 	 */
 	public void sendBendingState(BendingState state) {
-		networker.changeAndSync(KEY_ONE_STATE, state);
+		// networker.changeAndSync(KEY_ONE_STATE, state);
+		networker.changeAndSync(KEY_STATES, bendingStateList);
 	}
 	
 	public Networker getNetworker() {

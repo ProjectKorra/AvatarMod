@@ -47,9 +47,33 @@ public class Transmitters {
 		
 		@Override
 		public BendingState read(ByteBuf buf, PlayerDataContext ctx) {
-			BendingState state = BendingManager.getBending(buf.readInt()).createState(ctx.getData());
+			BendingState state = BendingManager.getBending(BendingType.find(buf.readInt()))
+					.createState(ctx.getData());
 			state.fromBytes(buf);
 			return state;
+		}
+	};
+	
+	public static final DataTransmitter<List<BendingState>, PlayerDataContext> STATE_LIST = new DataTransmitter<List<BendingState>, PlayerDataContext>() {
+		
+		@Override
+		public void write(ByteBuf buf, List<BendingState> t) {
+			buf.writeInt(t.size());
+			for (BendingState state : t)
+				state.toBytes(buf);
+		}
+		
+		@Override
+		public List<BendingState> read(ByteBuf buf, PlayerDataContext ctx) {
+			int size = buf.readInt();
+			ArrayList out = new ArrayList<>(size);
+			for (int i = 0; i < size; i++) {
+				BendingState state = BendingManager.getBending(BendingType.find(buf.readInt()))
+						.createState(ctx.getData());
+				state.fromBytes(buf);
+				out.add(state);
+			}
+			return out;
 		}
 	};
 	
