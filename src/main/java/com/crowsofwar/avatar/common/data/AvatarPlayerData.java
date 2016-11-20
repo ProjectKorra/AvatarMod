@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -21,7 +20,6 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.Transmitters;
 import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.GoreCoreDataSaver;
 import com.crowsofwar.gorecore.data.GoreCoreDataSaverDontSave;
@@ -32,10 +30,7 @@ import com.crowsofwar.gorecore.data.PlayerDataFetcherSided;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class AvatarPlayerData extends GoreCorePlayerData {
 	
@@ -136,9 +131,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	@Override
 	protected void saveChanges() {
 		super.saveChanges();
-		if (getPlayerEntity() == null || !getPlayerEntity().worldObj.isRemote) {
-			updateClient();
-		}
 	}
 	
 	public boolean isBender() {
@@ -170,6 +162,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (!hasBending(bending.getType())) {
 			bendingControllers.put(bending.getType(), bending);
 			bendingControllerList.add(bending);
+			networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
 			saveChanges();
 		} else {
 			AvatarLog.warn(WarningType.INVALID_CODE,
@@ -214,6 +207,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			removeBendingState(state);
 			bendingControllers.remove(bending.getType());
 			bendingControllerList.remove(bending);
+			networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
 			saveChanges();
 		} else {
 			AvatarLog.warn(WarningType.INVALID_CODE, "Cannot remove BendingController '" + bending
@@ -240,6 +234,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			BendingController bending = iterator.next();
 			removeBending(iterator.next());
 		}
+		networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
 		saveChanges();
 		
 	}
@@ -382,20 +377,11 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	}
 	
 	/**
-	 * Sends a packet to update the client with information about this player
-	 * data.
-	 */
-	public void updateClient() {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && getPlayerEntity() != null) {
-			AvatarMod.network.sendTo(new PacketCPlayerData(this), (EntityPlayerMP) getPlayerEntity());
-		}
-	}
-	
-	/**
 	 * Send the given bending state to the client.
 	 */
 	public void sendBendingState(BendingState state) {
-		updateClient(); // TODO send optimized packet only about bending state
+		// updateClient(); // TODO send optimized packet only about bending
+		// state
 	}
 	
 	public Networker getNetworker() {
