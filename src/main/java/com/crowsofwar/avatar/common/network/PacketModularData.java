@@ -48,6 +48,10 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 		Map<Networker.Key, Object> out = new HashMap<>();
 		Map<Networker.Key, DataTransmitter> transmitters = networker.transmitters;
 		
+		System.out.println("======== INTERPRETING");
+		System.out.println("Transmitters: " + transmitters);
+		System.out.println();
+		
 		int size = buf.readInt();
 		for (int i = 0; i < size; i++) {
 			int keyId = buf.readInt();

@@ -33,7 +33,7 @@ public class Transmitters {
 			for (int i = 0; i < size; i++) {
 				out.add(getBending(BendingType.find(buf.readInt())));
 			}
-			return null;
+			return out;
 		}
 	};
 	
