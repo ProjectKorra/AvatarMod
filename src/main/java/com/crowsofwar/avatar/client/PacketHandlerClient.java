@@ -17,6 +17,7 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.Networker;
+import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -167,7 +168,8 @@ public class PacketHandlerClient implements IPacketHandler {
 				"Error while processing player data packet");
 		if (data != null) {
 			
-			Map<Networker.Key, Object> readData = packet.interpretData(data.getNetworker());
+			Map<Networker.Key, Object> readData = packet.interpretData(data.getNetworker(),
+					new PlayerDataContext(data));
 			if (readData.containsKey(KEY_CONTROLLERS)) {
 				data.takeBending();
 				System.out.println("Currently all are " + data.getBendingControllers());
