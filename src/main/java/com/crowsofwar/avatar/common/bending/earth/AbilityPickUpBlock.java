@@ -4,14 +4,12 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.Random;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
@@ -20,7 +18,6 @@ import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
@@ -53,7 +50,8 @@ public class AbilityPickUpBlock extends EarthAbility {
 		if (ebs.getPickupBlock() != null) {
 			ebs.getPickupBlock().drop();
 			ebs.setPickupBlock(null);
-			AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
+			// AvatarMod.network.sendTo(new PacketCPlayerData(data),
+			// (EntityPlayerMP) player);
 		} else {
 			VectorI target = ctx.verifyClientLookBlock(-1, 5);
 			if (target != null) {

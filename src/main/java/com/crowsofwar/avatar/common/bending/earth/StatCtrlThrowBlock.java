@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -9,11 +8,9 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 /**
@@ -48,7 +45,8 @@ public class StatCtrlThrowBlock extends StatusControl {
 			floating.velocity().add(lookDir.times(20));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown(floating));
 			ebs.setPickupBlock(null);
-			AvatarMod.network.sendTo(new PacketCPlayerData(context.getData()), (EntityPlayerMP) player);
+			// AvatarMod.network.sendTo(new
+			// PacketCPlayerData(context.getData()), (EntityPlayerMP) player);
 			
 			controller.post(new FloatingBlockEvent.BlockThrown(floating, player));
 			

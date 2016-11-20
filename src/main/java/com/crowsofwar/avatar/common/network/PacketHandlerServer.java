@@ -8,7 +8,6 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -105,7 +104,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
 				"Error while" + " processing RequestData packet");
 		
-		return data == null ? null : new PacketCPlayerData(data);
+		return null;
+		// return data == null ? null : new PacketCPlayerData(data);
 		
 	}
 	
