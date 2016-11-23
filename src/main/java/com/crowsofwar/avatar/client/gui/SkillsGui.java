@@ -30,7 +30,7 @@ public class SkillsGui extends GuiScreen {
 	private ScaledResolution res;
 	
 	private int scroll;
-	private int startScroll, startX, lastScroll;
+	private int startScroll, startX, lastX;
 	private Queue<Integer> recentVelocity = EvictingQueue.create(10);
 	
 	private float maxX;
@@ -45,7 +45,7 @@ public class SkillsGui extends GuiScreen {
 		for (BendingAbility ability : controller.getAllAbilities()) {
 			cards.add(new AbilityCard(ability));
 		}
-		lastScroll = Mouse.getX();
+		lastX = Mouse.getX();
 	}
 	
 	@Override
@@ -91,7 +91,7 @@ public class SkillsGui extends GuiScreen {
 				startX = getMouseX();
 			}
 			
-			currentVelocity = Mouse.getX() - lastScroll;
+			currentVelocity = Mouse.getX() - lastX;
 			
 		} else {
 			wasMouseDown = false;
@@ -114,7 +114,7 @@ public class SkillsGui extends GuiScreen {
 		
 		scroll += (avg + currentVelocity) / 2;
 		
-		lastScroll = Mouse.getX();
+		lastX = Mouse.getX();
 		recentVelocity.add(currentVelocity);
 	}
 	
