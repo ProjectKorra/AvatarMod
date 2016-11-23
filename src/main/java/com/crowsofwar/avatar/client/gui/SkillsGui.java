@@ -29,6 +29,8 @@ public class SkillsGui extends GuiScreen {
 	private int scroll;
 	private int startScroll, startX;
 	
+	private float maxX;
+	
 	private boolean wasMouseDown;
 	
 	private final BendingController controller;
@@ -44,7 +46,6 @@ public class SkillsGui extends GuiScreen {
 	@Override
 	public void initGui() {
 		this.res = new ScaledResolution(mc);
-		System.out.println("INIT");
 	}
 	
 	@Override
@@ -69,8 +70,9 @@ public class SkillsGui extends GuiScreen {
 		popMatrix();
 		
 		for (int i = 0; i < cards.size(); i++) {
-			cards.get(i).render(res, i, scroll);
+			maxX = cards.get(i).render(res, i, scroll) - (float) scroll / res.getScaleFactor();
 		}
+		// maxX is now the last card's maxX
 		
 	}
 	
@@ -89,6 +91,9 @@ public class SkillsGui extends GuiScreen {
 		} else {
 			wasMouseDown = false;
 		}
+		// Positive: scroll left, Negative: scroll right
+		if (scroll > 50) scroll = 50;
+		if (scroll < -maxX - 50) scroll = (int) (-maxX - 50);
 	}
 	
 	@Override

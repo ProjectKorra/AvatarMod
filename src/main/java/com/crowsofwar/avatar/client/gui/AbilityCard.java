@@ -34,8 +34,11 @@ public class AbilityCard extends Gui {
 		return ability;
 	}
 	
+	/**
+	 * @return right most X position of the card
+	 */
 	// @formatter:off
-	public void render(ScaledResolution res, int index, int scroll) {
+	public float render(ScaledResolution res, int index, int scroll) {
 		
 		// NOTE! Minecraft has automatic icon scaling; can be found via res.getScaleFactor()
 		// To counteract this, normally you would use
@@ -119,6 +122,8 @@ public class AbilityCard extends Gui {
 			renderCenteredString(I18n.format("avatar.ability." + ability.getName()), 10, 1.5f);
 			
 		popMatrix();
+		
+		return maxX;
 		
 	}
 	// @formatter:on
