@@ -21,6 +21,8 @@ avatar.waterbending.demonym=Waterbender
 avatar.airbending=Airbending
 avatar.airbending.demonym=Airbender
 
+avatar.ui.openSkillsMenu=Click to open
+
 avatar.cmd.bending=Manage a player's bending controllers.
 avatar.cmd.bending.list.noData=[error][error_value]${player}[/error_value] is not a registered account.[/error]
 avatar.cmd.bending.list.nonbender=[italic][value]${player}[/value] is a non-bender.[/italic]
