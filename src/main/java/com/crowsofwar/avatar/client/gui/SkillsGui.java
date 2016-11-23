@@ -96,10 +96,6 @@ public class SkillsGui extends GuiScreen {
 		} else {
 			wasMouseDown = false;
 		}
-		// Positive: scroll left, Negative: scroll right
-		// if (scroll > 50) scroll = 50;
-		// if (scroll < -maxX - 50) scroll = (int) (-maxX - 50);
-		// lastScroll = scroll;
 		
 		float avg = 0;
 		
@@ -113,6 +109,15 @@ public class SkillsGui extends GuiScreen {
 		}
 		
 		scroll += (avg + currentVelocity) / 2;
+		// Positive: scroll left, Negative: scroll right
+		if (scroll > 50) {
+			scroll = 50;
+			currentVelocity = 0;
+		}
+		if (scroll < -maxX - 50) {
+			scroll = (int) (-maxX - 50);
+			currentVelocity = 0;
+		}
 		
 		lastX = Mouse.getX();
 		recentVelocity.add(currentVelocity);
