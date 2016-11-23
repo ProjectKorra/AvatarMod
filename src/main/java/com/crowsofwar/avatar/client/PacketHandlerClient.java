@@ -1,15 +1,16 @@
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.data.AvatarPlayerData.KEY_CONTROLLERS;
-import static com.crowsofwar.avatar.common.data.AvatarPlayerData.KEY_STATES;
+import static com.crowsofwar.avatar.common.data.AvatarPlayerData.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -184,6 +185,15 @@ public class PacketHandlerClient implements IPacketHandler {
 				data.clearBendingStates();
 				for (BendingState state : (List<BendingState>) readData.get(KEY_STATES))
 					data.addBendingState(state);
+			}
+			
+			if (readData.containsKey(KEY_ABILITY_DATA)) {
+				data.clearAbilityData();
+				Set<Map.Entry<BendingAbility, AbilityData>> entries = ((Map<BendingAbility, AbilityData>) readData
+						.get(KEY_ABILITY_DATA)).entrySet();
+				for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
+					data.getAbilityData(entry.getKey()).setXp(entry.getValue().getXp());
+				}
 			}
 			
 		}
