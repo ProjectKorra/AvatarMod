@@ -21,6 +21,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.text.TextFormatting;
 
 public class RadialMenu extends Gui {
 	
@@ -144,8 +145,8 @@ public class RadialMenu extends Gui {
 		boolean closeGui = !Keyboard.isKeyDown(proxy.getKeyHandler().getKeyCode(pressing))
 				|| AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK);
 		
+		// Find current mouse over
 		RadialSegment currentMouseover = null;
-		
 		for (RadialSegment segment : segments) {
 			if (segment.isMouseHover(mouseX, mouseY, resolution)) {
 				currentMouseover = segment;
@@ -157,6 +158,16 @@ public class RadialMenu extends Gui {
 			playClickSound(1.3f);
 		}
 		prevMouseover = currentMouseover;
+		if (currentMouseover == null) {
+			
+			int centerX = resolution.getScaledWidth() / 2, centerY = resolution.getScaledHeight() / 2;
+			
+			MenuTheme theme = controller.getRadialMenu().getTheme();
+			
+			drawCenteredString(mc.fontRendererObj, "" + TextFormatting.AQUA + TextFormatting.BOLD + "test",
+					centerX, centerY - mc.fontRendererObj.FONT_HEIGHT, 0xffffff);
+			
+		}
 		
 		if (Mouse.isButtonDown(0)) {
 			int centeredX = mouseX - resolution.getScaledWidth() / 2;

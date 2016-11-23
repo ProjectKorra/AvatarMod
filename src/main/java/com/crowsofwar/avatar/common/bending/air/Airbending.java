@@ -33,7 +33,7 @@ public class Airbending extends BendingController {
 		ThemeColor background = new ThemeColor(light, dark);
 		ThemeColor edge = new ThemeColor(dark, dark);
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
-		MenuTheme theme = new MenuTheme(background, edge, icon);
+		MenuTheme theme = new MenuTheme(background, edge, icon, 0xD8E8ED);
 		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, abilityAirGust, abilityAirJump);
 	}
 	
