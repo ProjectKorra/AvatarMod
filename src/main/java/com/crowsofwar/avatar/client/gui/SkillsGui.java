@@ -5,12 +5,14 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.google.common.collect.EvictingQueue;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -27,7 +29,8 @@ public class SkillsGui extends GuiScreen {
 	private ScaledResolution res;
 	
 	private int scroll;
-	private int startScroll, startX;
+	private int startScroll, startX, lastScroll;
+	private Queue<Integer> recentVelocity = EvictingQueue.create(5);
 	
 	private float maxX;
 	
@@ -78,6 +81,7 @@ public class SkillsGui extends GuiScreen {
 	
 	@Override
 	public void updateScreen() {
+		int currentVelocity = 0;
 		if (Mouse.isButtonDown(0)) {
 			if (!wasMouseDown) {
 				wasMouseDown = true;
@@ -85,15 +89,23 @@ public class SkillsGui extends GuiScreen {
 				startX = getMouseX();
 			}
 			
-			// scroll += Mouse.getDX();
-			scroll = startScroll + getMouseX() - startX;
+			currentVelocity = Mouse.getX() - lastScroll;
 			
 		} else {
 			wasMouseDown = false;
 		}
 		// Positive: scroll left, Negative: scroll right
-		if (scroll > 50) scroll = 50;
-		if (scroll < -maxX - 50) scroll = (int) (-maxX - 50);
+		// if (scroll > 50) scroll = 50;
+		// if (scroll < -maxX - 50) scroll = (int) (-maxX - 50);
+		// lastScroll = scroll;
+		
+		float avg = 0;
+		for (int velocity : recentVelocity)
+			avg += velocity / 5;
+		scroll += avg + currentVelocity / 2;
+		
+		lastScroll = Mouse.getX();
+		recentVelocity.add(currentVelocity);
 	}
 	
 	@Override
