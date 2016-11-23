@@ -106,13 +106,12 @@ public class SkillsGui extends GuiScreen {
 		Iterator<Integer> it = recentVelocity.iterator();
 		while (it.hasNext()) {
 			int velocity = it.next();
-			double mult = (Math.pow(1.2, recentVelocity.size() - i - 1))
-					/ (Math.pow(1.2, recentVelocity.size()) - 1);
-			avg += velocity / 10 * mult;
+			double mult = (Math.pow(1.2, i)) / (Math.pow(1.2, recentVelocity.size()) - 1);
+			avg += velocity * 1.2 * mult;
 			i++;
 		}
 		
-		scroll += avg + currentVelocity / 2;
+		scroll += avg + currentVelocity / 3;
 		
 		lastScroll = Mouse.getX();
 		recentVelocity.add(currentVelocity);
