@@ -3,9 +3,12 @@ package com.crowsofwar.avatar.common.network;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingState;
 
 import io.netty.buffer.ByteBuf;
@@ -74,6 +77,32 @@ public class Transmitters {
 						.createState(ctx.getData());
 				state.fromBytes(buf);
 				out.add(state);
+			}
+			return out;
+		}
+	};
+	
+	public static final DataTransmitter<List<AbilityData>, PlayerDataContext> ABILITY_DATA_LIST = new DataTransmitter<List<AbilityData>, PlayerDataContext>() {
+		
+		@Override
+		public void write(ByteBuf buf, List<AbilityData> t) {
+			buf.writeInt(t.size());
+			for (AbilityData data : t) {
+				data.toBytes(buf);
+			}
+		}
+		
+		@Override
+		public List<AbilityData> read(ByteBuf buf, PlayerDataContext ctx) {
+			int size = buf.readInt();
+			List<AbilityData> out = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				AbilityData data = AbilityData.createFromBytes(buf, ctx.getData());
+				if (data == null) {
+					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
+				} else {
+					out.add(data);
+				}
 			}
 			return out;
 		}
