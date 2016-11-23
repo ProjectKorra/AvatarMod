@@ -4,6 +4,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 
@@ -30,7 +31,7 @@ public class SkillsGui extends GuiScreen {
 	
 	private int scroll;
 	private int startScroll, startX, lastScroll;
-	private Queue<Integer> recentVelocity = EvictingQueue.create(5);
+	private Queue<Integer> recentVelocity = EvictingQueue.create(10);
 	
 	private float maxX;
 	
@@ -100,8 +101,17 @@ public class SkillsGui extends GuiScreen {
 		// lastScroll = scroll;
 		
 		float avg = 0;
-		for (int velocity : recentVelocity)
-			avg += velocity / 5;
+		
+		int i = 0;
+		Iterator<Integer> it = recentVelocity.iterator();
+		while (it.hasNext()) {
+			int velocity = it.next();
+			double mult = (Math.pow(1.2, recentVelocity.size() - i - 1))
+					/ (Math.pow(1.2, recentVelocity.size()) - 1);
+			avg += velocity / 10 * mult;
+			i++;
+		}
+		
 		scroll += avg + currentVelocity / 2;
 		
 		lastScroll = Mouse.getX();
@@ -111,7 +121,8 @@ public class SkillsGui extends GuiScreen {
 	@Override
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
-		scroll += Mouse.getDWheel() / 3;
+		// scroll += Mouse.getDWheel() / 3;
+		recentVelocity.add(Mouse.getDWheel() / 1);
 	}
 	
 	private int getMouseX() {
