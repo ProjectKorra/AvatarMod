@@ -42,6 +42,7 @@ public class AbilityData {
 		if (xp > 100) xp = 100;
 		this.xp = xp;
 		data.saveChanges();
+		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
 	}
 	
 	public void addXp(float xp) {

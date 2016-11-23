@@ -37,6 +37,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	public static final Networker.Key KEY_CONTROLLERS = () -> 1;
 	public static final Networker.Key KEY_STATES = () -> 2;
+	public static final Networker.Key KEY_ABILITY_DATA = () -> 3;
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
@@ -69,6 +70,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		networker = new Networker(!isClient, PacketCNewPd.class, net -> new PacketCNewPd(net, playerID));
 		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
 		networker.register(bendingStateList, Transmitters.STATE_LIST, KEY_STATES);
+		networker.register(abilityData, Transmitters.ABILITY_DATA_MAP, KEY_ABILITY_DATA);
 		
 	}
 	
@@ -375,6 +377,14 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 */
 	public List<AbilityData> getAllAbilityData() {
 		return ImmutableList.copyOf(abilityData.values());
+	}
+	
+	/**
+	 * Gets the map of ability data. <b>This is the exact instance used
+	 * internally...</b>
+	 */
+	Map<BendingAbility, AbilityData> abilityData() {
+		return abilityData;
 	}
 	
 	public void clearAbilityData() {

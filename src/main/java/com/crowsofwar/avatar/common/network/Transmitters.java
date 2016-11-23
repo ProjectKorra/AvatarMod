@@ -1,10 +1,14 @@
 package com.crowsofwar.avatar.common.network;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -82,26 +86,27 @@ public class Transmitters {
 		}
 	};
 	
-	public static final DataTransmitter<List<AbilityData>, PlayerDataContext> ABILITY_DATA_LIST = new DataTransmitter<List<AbilityData>, PlayerDataContext>() {
+	public static final DataTransmitter<Map<BendingAbility, AbilityData>, PlayerDataContext> ABILITY_DATA_MAP = new DataTransmitter<Map<BendingAbility, AbilityData>, PlayerDataContext>() {
 		
 		@Override
-		public void write(ByteBuf buf, List<AbilityData> t) {
-			buf.writeInt(t.size());
-			for (AbilityData data : t) {
-				data.toBytes(buf);
+		public void write(ByteBuf buf, Map<BendingAbility, AbilityData> t) {
+			Set<Map.Entry<BendingAbility, AbilityData>> entries = t.entrySet();
+			buf.writeInt(entries.size());
+			for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
+				entry.getValue().toBytes(buf);
 			}
 		}
 		
 		@Override
-		public List<AbilityData> read(ByteBuf buf, PlayerDataContext ctx) {
+		public Map<BendingAbility, AbilityData> read(ByteBuf buf, PlayerDataContext ctx) {
+			Map<BendingAbility, AbilityData> out = new HashMap<>();
 			int size = buf.readInt();
-			List<AbilityData> out = new ArrayList<>();
 			for (int i = 0; i < size; i++) {
 				AbilityData data = AbilityData.createFromBytes(buf, ctx.getData());
 				if (data == null) {
 					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
 				} else {
-					out.add(data);
+					out.put(data.getAbility(), data);
 				}
 			}
 			return out;
