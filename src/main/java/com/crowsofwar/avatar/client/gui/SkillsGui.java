@@ -45,6 +45,7 @@ public class SkillsGui extends GuiScreen {
 		for (BendingAbility ability : controller.getAllAbilities()) {
 			cards.add(new AbilityCard(ability));
 		}
+		lastScroll = Mouse.getX();
 	}
 	
 	@Override
