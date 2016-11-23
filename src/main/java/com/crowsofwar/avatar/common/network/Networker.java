@@ -16,10 +16,10 @@ import com.crowsofwar.avatar.AvatarMod;
  */
 public class Networker {
 	
-	final Map<Key, DataTransmitter> transmitters;
-	final Map<Key, Object> currentData;
-	final Set<Key> changed;
-	final Set<Key> allKeys;
+	final Map<Property, DataTransmitter> transmitters;
+	final Map<Property, Object> currentData;
+	final Set<Property> changed;
+	final Set<Property> allKeys;
 	private final boolean server;
 	private final Class<? extends PacketModularData> packet;
 	private final Function<Networker, ? extends PacketModularData> packetCreator;
@@ -39,7 +39,7 @@ public class Networker {
 	/**
 	 * Registers the key to this networker, along with its current data and
 	 * transmitter. The data must be marked changed by calling
-	 * {@link #markChanged(Key)}.
+	 * {@link #markChanged(Property)}.
 	 * <p>
 	 * In order to properly call markChanged later, the instance of the key must
 	 * not be changed, but the actual data can be a different object.
@@ -48,13 +48,13 @@ public class Networker {
 	 * @param transmitter
 	 * @param key
 	 */
-	public <T> void register(T data, DataTransmitter<T, ?> transmitter, Key key) {
+	public <T> void register(T data, DataTransmitter<T, ?> transmitter, Property<T> key) {
 		transmitters.put(key, transmitter);
 		currentData.put(key, data);
 		allKeys.add(key);
 	}
 	
-	public <T> void markChanged(Key key, T data) {
+	public <T> void markChanged(Property<T> key, T data) {
 		if (!allKeys.contains(key))
 			throw new IllegalArgumentException("Invalid key- no data was registered with Key " + key);
 		if (server) {
@@ -64,7 +64,7 @@ public class Networker {
 		}
 	}
 	
-	public <T> void changeAndSync(Key key, T data) {
+	public <T> void changeAndSync(Property<T> key, T data) {
 		markChanged(key, data);
 		sendUpdated();
 	}
@@ -86,7 +86,14 @@ public class Networker {
 		}
 	}
 	
-	public interface Key {
+	public static class Property<T> {
+		
+		private final int id;
+		
+		public Property(int id) {
+			this.id = id;
+		}
+		
 		/**
 		 * Gets the ID of this key.
 		 * <p>
@@ -96,7 +103,10 @@ public class Networker {
 		 * 2 keys with the same ID, as long as they are never both used in 1
 		 * networker.
 		 */
-		int id();
+		public int id() {
+			return id;
+		}
+		
 	}
 	
 }

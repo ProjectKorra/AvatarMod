@@ -17,6 +17,7 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.Networker;
+import com.crowsofwar.avatar.common.network.Networker.Property;
 import com.crowsofwar.avatar.common.network.Transmitters;
 import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -35,9 +36,10 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	// TODO change player data lists into sets, when applicable
 	
-	public static final Networker.Key KEY_CONTROLLERS = () -> 1;
-	public static final Networker.Key KEY_STATES = () -> 2;
-	public static final Networker.Key KEY_ABILITY_DATA = () -> 3;
+	public static final Networker.Property<List<BendingController>> KEY_CONTROLLERS = new Property<>(1);
+	public static final Networker.Property<List<BendingState>> KEY_STATES = new Property<>(2);
+	public static final Networker.Property<Map<BendingAbility, AbilityData>> KEY_ABILITY_DATA = new Property<>(
+			3);
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	

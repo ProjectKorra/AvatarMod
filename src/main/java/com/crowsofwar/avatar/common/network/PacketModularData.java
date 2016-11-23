@@ -17,9 +17,9 @@ import io.netty.buffer.ByteBuf;
  */
 public abstract class PacketModularData<MSG extends PacketModularData> extends AvatarPacket<MSG> {
 	
-	Set<Networker.Key> changed;
-	private Map<Networker.Key, DataTransmitter> transmitters;
-	private Map<Networker.Key, Object> currentData;
+	Set<Networker.Property> changed;
+	private Map<Networker.Property, DataTransmitter> transmitters;
+	private Map<Networker.Property, Object> currentData;
 	
 	private ByteBuf buf;
 	
@@ -40,7 +40,7 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 		this.currentData = networker.currentData;
 	}
 	
-	public Map<Networker.Key, Object> interpretData(Networker networker) {
+	public Map<Networker.Property, Object> interpretData(Networker networker) {
 		return interpretData(networker, null);
 	}
 	
@@ -54,9 +54,9 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 	 *            the context object. All transmitters are passed this context,
 	 *            so make sure that they each have the same context requirement
 	 */
-	public Map<Networker.Key, Object> interpretData(Networker networker, Context context) {
-		Map<Networker.Key, Object> out = new HashMap<>();
-		Map<Networker.Key, DataTransmitter> transmitters = networker.transmitters;
+	public Map<Networker.Property, Object> interpretData(Networker networker, Context context) {
+		Map<Networker.Property, Object> out = new HashMap<>();
+		Map<Networker.Property, DataTransmitter> transmitters = networker.transmitters;
 		
 		System.out.println("======== INTERPRETING");
 		System.out.println("Transmitters: " + transmitters);
@@ -65,7 +65,7 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 		int size = buf.readInt();
 		for (int i = 0; i < size; i++) {
 			int keyId = buf.readInt();
-			Networker.Key key = networker.allKeys.stream().filter(candidate -> candidate.id() == keyId)
+			Networker.Property key = networker.allKeys.stream().filter(candidate -> candidate.id() == keyId)
 					.collect(Collectors.toList()).get(0); // Find Key with the
 															// id of keyId
 			System.out.println("key " + key);
@@ -84,7 +84,7 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(changed.size());
-		for (Networker.Key key : changed) {
+		for (Networker.Property key : changed) {
 			buf.writeInt(key.id());
 			transmitters.get(key).write(buf, currentData.get(key));
 		}

@@ -169,7 +169,7 @@ public class PacketHandlerClient implements IPacketHandler {
 				"Error while processing player data packet");
 		if (data != null) {
 			
-			Map<Networker.Key, Object> readData = packet.interpretData(data.getNetworker(),
+			Map<Networker.Property, Object> readData = packet.interpretData(data.getNetworker(),
 					new PlayerDataContext(data));
 			if (readData.containsKey(KEY_CONTROLLERS)) {
 				data.takeBending();
