@@ -111,7 +111,7 @@ public class SkillsGui extends GuiScreen {
 			i++;
 		}
 		
-		scroll += avg + currentVelocity / 3;
+		scroll += (avg + currentVelocity) / 2;
 		
 		lastScroll = Mouse.getX();
 		recentVelocity.add(currentVelocity);
