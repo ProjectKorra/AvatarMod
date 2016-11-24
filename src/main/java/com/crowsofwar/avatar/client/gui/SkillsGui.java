@@ -65,14 +65,16 @@ public class SkillsGui extends GuiScreen {
 			// Don't need to negate GUI scale...
 			// Already at 1600x900
 //			GlStateManager.translate(-300, -300, 0);
-		
+			
 			int zoomPixels = 300;
+			float scaledWidth = (1600 + 16f/9 * zoomPixels);
+			float scaledHeight = (900 + zoomPixels);
 			
 			float scaleX = width / 1600f, scaleY = height / 900f, scale = scaleX > scaleY ? scaleX : scaleY;
-			GlStateManager.scale(width / 1600f, height / 900f, 1);
+			GlStateManager.scale(scale, scale, 1);
 			GlStateManager.translate(scroll / 30f, 0, 0);
 			GlStateManager.translate(-zoomPixels, -zoomPixels, 0);
-			GlStateManager.scale((1600 + 2f * zoomPixels) / 1600, (900 + 2f * zoomPixels) / 900, 1);
+			GlStateManager.scale(scaledWidth / 1600, scaledHeight / 900, 1);
 			
 			ResourceLocation background = AvatarUiTextures.bgAir;
 			BendingType type = controller.getType();
