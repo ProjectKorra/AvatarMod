@@ -45,7 +45,12 @@ public class AbilityData {
 		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
 	}
 	
+	/**
+	 * Add XP to this ability data. However, the added experience will be
+	 * multiplied by a number to add exponential progression.
+	 */
 	public void addXp(float xp) {
+		xp *= 1 - 0.95 * Math.sqrt(this.xp / 100);
 		if (xp == 0) return;
 		setXp(this.xp + xp);
 	}
