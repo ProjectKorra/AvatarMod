@@ -68,18 +68,10 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			
 			BendingAbility ability = packet.getAbility();
-			double chance = ability.getFailureChance(data.getAbilityData(ability).getXp());
-			System.out.println("Failure chance: " + chance);
-			double rand = Math.random();
-			System.out.println("Random        : " + rand);
-			if (rand > chance) {
-				// TODO Verify that the client can actually use that ability
-				data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
-				ability.execute(new AbilityContext(data,
-						new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));
-			} else {
-				System.out.println("Failure");
-			}
+			// TODO Verify that the client can actually use that ability
+			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
+			ability.execute(new AbilityContext(data,
+					new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));
 			
 		}
 		

@@ -106,12 +106,4 @@ public abstract class BendingAbility {
 		return name;
 	}
 	
-	/**
-	 * Returns the % chance (0-1) that the ability will not work, given the
-	 * skill % from 0-100.
-	 */
-	public double getFailureChance(double skill) {
-		return -Math.pow(skill / 350, 1 / 1.8) + 0.5;
-	}
-	
 }
