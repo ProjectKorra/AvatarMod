@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client.gui;
 
-import static net.minecraft.client.renderer.GlStateManager.*;
+import static net.minecraft.client.renderer.GlStateManager.popMatrix;
+import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import com.google.common.collect.EvictingQueue;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -53,25 +55,34 @@ public class SkillsGui extends GuiScreen {
 		this.res = new ScaledResolution(mc);
 	}
 	
+	//@formatter:off
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		// Draw Gui Background
 		pushMatrix();
-		scale(1f / res.getScaleFactor(), 1f / res.getScaleFactor(), 1);
-		translate(-mc.displayWidth / 2 + scroll / 4, -mc.displayHeight / 2, 0);
-		scale(mc.displayWidth / 256f, mc.displayHeight / 256f, 1);
-		scale(2, 2, 1);
+			// Don't need to negate GUI scale...
+			// Already at 1600x900
+//			GlStateManager.translate(-300, -300, 0);
 		
-		ResourceLocation background = AvatarUiTextures.bgAir;
-		BendingType type = controller.getType();
-		if (type == BendingType.EARTHBENDING) background = AvatarUiTextures.bgEarth;
-		if (type == BendingType.FIREBENDING) background = AvatarUiTextures.bgFire;
-		if (type == BendingType.WATERBENDING) background = AvatarUiTextures.bgWater;
-		
-		mc.renderEngine.bindTexture(background);
-		drawTexturedModalRect(0, 0, 256, 256, width, height);
+			int zoomPixels = 300;
+			
+			float scaleX = width / 1600f, scaleY = height / 900f, scale = scaleX > scaleY ? scaleX : scaleY;
+			GlStateManager.scale(width / 1600f, height / 900f, 1);
+			GlStateManager.translate(scroll / 30f, 0, 0);
+			GlStateManager.translate(-zoomPixels, -zoomPixels, 0);
+			GlStateManager.scale((1600 + 2f * zoomPixels) / 1600, (900 + 2f * zoomPixels) / 900, 1);
+			
+			ResourceLocation background = AvatarUiTextures.bgAir;
+			BendingType type = controller.getType();
+			if (type == BendingType.EARTHBENDING) background = AvatarUiTextures.bgEarth;
+			if (type == BendingType.FIREBENDING) background = AvatarUiTextures.bgFire;
+			if (type == BendingType.WATERBENDING) background = AvatarUiTextures.bgWater;
+			
+			mc.renderEngine.bindTexture(background);
+//			drawTexturedModalRect(0, 0, 256, 256, width, height);
+			drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 1600, 900, 1600, 900);
 		popMatrix();
 		
 		for (int i = 0; i < cards.size(); i++) {
@@ -80,6 +91,7 @@ public class SkillsGui extends GuiScreen {
 		// maxX is now the last card's maxX
 		
 	}
+	//@formatter:on
 	
 	@Override
 	public void updateScreen() {
