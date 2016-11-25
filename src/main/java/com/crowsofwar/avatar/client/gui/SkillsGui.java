@@ -17,8 +17,7 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import static net.minecraft.client.renderer.GlStateManager.popMatrix;
-import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import com.google.common.collect.EvictingQueue;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -83,15 +81,20 @@ public class SkillsGui extends GuiScreen {
 			// Already at 1600x900
 //			GlStateManager.translate(-300, -300, 0);
 			
-			int zoomPixels = 300;
-			float scaledWidth = (1600 + 16f/9 * zoomPixels);
-			float scaledHeight = (900 + zoomPixels);
+			float zoom = 1.2f;
 			
-			float scaleX = width / 1600f, scaleY = height / 900f, scale = scaleX > scaleY ? scaleX : scaleY;
-			GlStateManager.scale(scale, scale, 1);
-			GlStateManager.translate(scroll / 30f, 0, 0);
-			GlStateManager.translate(-zoomPixels, -zoomPixels, 0);
-			GlStateManager.scale(scaledWidth / 1600, scaledHeight / 900, 1);
+			float scaleX = width / 1600f, scaleY = height / 900f;
+			float scale = scaleX > scaleY ? scaleX : scaleY;
+			translate(scroll / 30f, 0, 0);
+//			scale(2, 2, 1);
+			
+			float imgWidth = scale * 1600f, imgHeight = scale * 900f * zoom;
+//			System.out.println(imgWidth + ", " + width);
+			translate((width - imgWidth) / 2, (height - imgHeight) / 2, 0);
+			scale(zoom, zoom, 1);
+			scale(scale, scale, 1);
+			
+//			GlStateManager.scale(scaledWidth / 1600, scaledHeight / 900, 1);
 			
 			ResourceLocation background = AvatarUiTextures.bgAir;
 			BendingType type = controller.getType();
@@ -100,7 +103,6 @@ public class SkillsGui extends GuiScreen {
 			if (type == BendingType.WATERBENDING) background = AvatarUiTextures.bgWater;
 			
 			mc.renderEngine.bindTexture(background);
-//			drawTexturedModalRect(0, 0, 256, 256, width, height);
 			drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 1600, 900, 1600, 900);
 		popMatrix();
 		
