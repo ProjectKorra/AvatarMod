@@ -49,18 +49,25 @@ public class AbilityCreateWave extends WaterAbility {
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
 			
-			VectorI hitPos = result.getPos();
-			IBlockState hitBlockState = world.getBlockState(hitPos.toBlockPos());
+			VectorI pos = result.getPos();
+			IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
+			IBlockState up = world.getBlockState(pos.toBlockPos().up());
 			
-			EntityWave wave = new EntityWave(world);
-			wave.setOwner(player);
-			wave.velocity().set(look.times(10));
-			wave.setPosition(hitPos.x() + 0.5, hitPos.y(), hitPos.z() + 0.5);
-			wave.setDamageMultiplier(1 + data.getData().getAbilityData(this).getXp() / 100f);
-			
-			wave.rotationYaw = (float) look.toSpherical().toDegrees().y();
-			
-			world.spawnEntityInWorld(wave);
+			for (int i = 0; i < 3; i++) {
+				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
+					EntityWave wave = new EntityWave(world);
+					wave.setOwner(player);
+					wave.velocity().set(look.times(10));
+					wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
+					wave.setDamageMultiplier(1 + data.getData().getAbilityData(this).getXp() / 100f);
+					
+					wave.rotationYaw = (float) look.toSpherical().toDegrees().y();
+					
+					world.spawnEntityInWorld(wave);
+					break;
+				}
+				pos.add(0, 1, 0);
+			}
 			
 		}
 		
