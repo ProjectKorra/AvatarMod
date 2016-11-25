@@ -63,7 +63,10 @@ avatar.ability.wave=Wave
 avatar.ability.air_gust=Air Gust
 avatar.ability.air_jump=Air Jump
 
+avatar.ability.undefined=???
+
 avatar.radial.xp=%1$f%%
+avatar.radial.undefined=Coming soon!
 
 death.attack.avatar_earthbendBlock=%2$s smashed %1$s with earthbending
 death.attack.avatar_waterArc=%2$s used waterbending to bring down %1$s

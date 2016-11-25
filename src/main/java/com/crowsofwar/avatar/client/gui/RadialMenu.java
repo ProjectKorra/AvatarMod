@@ -117,7 +117,7 @@ public class RadialMenu extends Gui {
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
 			segments[i].draw(hover, resolution, scale, scale);
 			
-			if (hover && controls[i] != null) {
+			if (hover) {
 				displaySegmentDetails(controls[i], resolution);
 			}
 		}
@@ -125,16 +125,17 @@ public class RadialMenu extends Gui {
 	}
 	
 	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
-		String translated = I18n.format("avatar.ability." + ability.getName());
+		String translated = I18n
+				.format(ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName());
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
 		drawCenteredString(mc.fontRendererObj, translated, x, y, 0xffffff);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer);
 		if (data != null) {
-			int xp = (int) data.getAbilityData(ability).getXp();
-			String xpMessage = I18n.format("avatar.radial.xp", xp);
-			drawCenteredString(mc.fontRendererObj, xpMessage, x,
+			String second = I18n.format(ability == null ? "avatar.radial.undefined" : "avatar.radial.xp",
+					data.getAbilityData(ability).getXp());
+			drawCenteredString(mc.fontRendererObj, second, x,
 					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),
 					0xffffff);
 		}
