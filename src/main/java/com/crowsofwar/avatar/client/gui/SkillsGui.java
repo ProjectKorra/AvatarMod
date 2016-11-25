@@ -34,7 +34,10 @@ import com.google.common.collect.EvictingQueue;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * 
@@ -75,6 +78,19 @@ public class SkillsGui extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
+		{
+		pushMatrix();
+			float scl = 2.5f;
+			String str = TextFormatting.BOLD + I18n.format("avatar." + controller.getControllerName());
+			translate((width - fontRendererObj.getStringWidth(str) * scl) / 2, 5, 0);
+			scale(scl, scl, 1);
+			translate(0, 0, 1);
+			drawString(fontRendererObj, str, 0, 0, controller.getRadialMenu().getTheme().getText());
+			GlStateManager.color(1, 1, 1, 1);
+			
+		popMatrix();
+		}
+		
 		// Draw Gui Background
 		pushMatrix();
 			// Don't need to negate GUI scale...
@@ -88,7 +104,7 @@ public class SkillsGui extends GuiScreen {
 			translate(scroll / 30f, 0, 0);
 //			scale(2, 2, 1);
 			
-			float imgWidth = scale * 1600f, imgHeight = scale * 900f * zoom;
+			float imgWidth = scale * 1600f * zoom, imgHeight = scale * 900f * zoom;
 //			System.out.println(imgWidth + ", " + width);
 			translate((width - imgWidth) / 2, (height - imgHeight) / 2, 0);
 			scale(zoom, zoom, 1);
