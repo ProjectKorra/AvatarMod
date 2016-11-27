@@ -153,6 +153,9 @@ public class EntityWaterArc extends EntityArc {
 		// }
 	}
 	
+	@Override
+	public void setFire(int seconds) {}
+	
 	public static EntityWaterArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
 			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id)
