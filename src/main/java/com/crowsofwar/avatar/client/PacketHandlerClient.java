@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
@@ -210,6 +211,14 @@ public class PacketHandlerClient implements IPacketHandler {
 						.get(KEY_ABILITY_DATA)).entrySet();
 				for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
 					data.getAbilityData(entry.getKey()).setXp(entry.getValue().getXp());
+				}
+			}
+			
+			if (readData.containsKey(KEY_STATUS_CONTROLS)) {
+				data.clearStatusControls();
+				Set<StatusControl> controls = (Set<StatusControl>) readData.get(KEY_STATUS_CONTROLS);
+				for (StatusControl control : controls) {
+					data.addStatusControl(control);
 				}
 			}
 			

@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingState;
 
@@ -130,4 +132,28 @@ public class Transmitters {
 		}
 	};
 	
+	public static final DataTransmitter<Set<StatusControl>, PlayerDataContext> STATUS_CONTROLS = new DataTransmitter<Set<StatusControl>, PlayerDataContext>() {
+		
+		@Override
+		public void write(ByteBuf buf, Set<StatusControl> t) {
+			buf.writeInt(t.size());
+			for (StatusControl sc : t) {
+				buf.writeInt(sc.id());
+			}
+		}
+		
+		@Override
+		public Set<StatusControl> read(ByteBuf buf, PlayerDataContext ctx) {
+			int size = buf.readInt();
+			Set<StatusControl> out = new HashSet<>();
+			for (int i = 0; i < size; i++) {
+				StatusControl sc = StatusControl.lookup(i);
+				if (sc == null)
+					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid status control id");
+				else
+					out.add(sc);
+			}
+			return out;
+		}
+	};
 }

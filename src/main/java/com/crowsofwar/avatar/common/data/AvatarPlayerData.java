@@ -57,6 +57,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public static final Networker.Property<List<BendingState>> KEY_STATES = new Property<>(2);
 	public static final Networker.Property<Map<BendingAbility, AbilityData>> KEY_ABILITY_DATA = new Property<>(
 			3);
+	public static final Networker.Property<Set<StatusControl>> KEY_STATUS_CONTROLS = new Property<>(4);
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
@@ -90,6 +91,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
 		networker.register(bendingStateList, Transmitters.STATE_LIST, KEY_STATES);
 		networker.register(abilityData, Transmitters.ABILITY_DATA_MAP, KEY_ABILITY_DATA);
+		networker.register(statusControls, Transmitters.STATUS_CONTROLS, KEY_STATUS_CONTROLS);
 		
 	}
 	
@@ -390,6 +392,11 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	public void removeStatusControl(StatusControl control) {
 		statusControls.remove(control);
+		saveChanges();
+	}
+	
+	public void clearStatusControls() {
+		statusControls.clear();
 		saveChanges();
 	}
 	
