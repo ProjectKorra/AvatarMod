@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.particle.AvatarParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -70,8 +72,23 @@ public class AirJumpParticleSpawner {
 	public void onFall(LivingFallEvent e) {
 		if (e.getEntity() == target && !e.getEntity().worldObj.isRemote) {
 			
-			e.setDamageMultiplier(e.getDamageMultiplier() / 3);
-			if (e.getDamageMultiplier() <= 0.5f) e.setCanceled(true);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(target);
+			float xp = data.getAbilityData(BendingAbility.ABILITY_AIR_JUMP).getXp();
+			
+			// Find approximate maximum distance. In actuality, a bit less, due
+			// to max velocity and drag
+			// Using kinematic equation, gravity for players is 32 m/s
+			float maxDist;
+			{
+				float h = (5 + xp / 50) / 8f;
+				float v = 20 * (1 + xp / 250f);
+				maxDist = v * h - 16 * h * h;
+			}
+			maxDist -= 2; // compensate that it may be a bit extra
+			
+			e.setDistance(e.getDistance() - maxDist);
+			if (e.getDistance() < 0) e.setDistance(0);
+			System.out.println("Distance is now " + e.getDistance());
 			
 			MinecraftForge.EVENT_BUS.unregister(this);
 			
