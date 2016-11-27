@@ -23,6 +23,8 @@ import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -56,6 +58,9 @@ public class FirebendingUpdate {
 					flames.velocity().set(look.times(10));
 					flames.setPosition(eye.x(), eye.y(), eye.z());
 					world.spawnEntityInWorld(flames);
+					
+					if (player.ticksExisted % 3 == 0) world.playSound(null, player.getPosition(),
+							SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.2f, 0.8f);
 					
 				}
 			}
