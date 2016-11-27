@@ -24,6 +24,8 @@ import static net.minecraft.network.datasync.EntityDataManager.createKey;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -44,9 +46,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -97,9 +102,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	public EntityFloatingBlock(World world) {
 		super(world);
-		// TODO Re-shrink floating block size to .95, to allow squeezing through
-		// small spaces
-		float size = 1;
+		float size = .9f;
 		setSize(size, size);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
@@ -355,6 +358,18 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double d) {
 		return true;
+	}
+	
+	@Override
+	public boolean processInitialInteract(EntityPlayer player, @Nullable ItemStack stack, EnumHand hand) {
+		System.out.println("Interacted");
+		return true;
+	}
+	
+	@Override
+	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, @Nullable ItemStack stack,
+			EnumHand hand) {
+		return EnumActionResult.SUCCESS;
 	}
 	
 }
