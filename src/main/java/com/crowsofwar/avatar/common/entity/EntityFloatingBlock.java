@@ -362,7 +362,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, @Nullable ItemStack stack, EnumHand hand) {
-		System.out.println("Interacted");
+		System.out.println("Interacted");// EntityPig
 		return true;
 	}
 	
@@ -370,6 +370,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, @Nullable ItemStack stack,
 			EnumHand hand) {
 		return EnumActionResult.SUCCESS;
+	}
+	
+	@Override
+	public boolean canBeCollidedWith() {
+		return false;
 	}
 	
 }
