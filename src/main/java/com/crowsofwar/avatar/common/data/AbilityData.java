@@ -51,7 +51,7 @@ public class AbilityData {
 	
 	/**
 	 * Sets the XP level to the given amount, clamping from 0-100. Will also
-	 * save the AvatarPlayerData.
+	 * save the AvatarPlayerData. Does not sync new XP.
 	 */
 	public void setXp(float xp) {
 		if (xp == this.xp) return;
@@ -64,12 +64,14 @@ public class AbilityData {
 	
 	/**
 	 * Add XP to this ability data. However, the added experience will be
-	 * multiplied by a number to add exponential progression.
+	 * multiplied by a number to add exponential progression. Also syncs the new
+	 * XP.
 	 */
 	public void addXp(float xp) {
 		xp *= 1 - 0.95 * Math.sqrt(this.xp / 100);
 		if (xp == 0) return;
 		setXp(this.xp + xp);
+		data.sync();
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {

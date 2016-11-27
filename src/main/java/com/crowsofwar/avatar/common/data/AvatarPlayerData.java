@@ -153,6 +153,13 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		super.saveChanges();
 	}
 	
+	/**
+	 * Synchronizes all <b>changed</b> values with the client.
+	 */
+	public void sync() {
+		networker.sendUpdated();
+	}
+	
 	public boolean isBender() {
 		return !bendingControllers.isEmpty();
 	}
@@ -177,12 +184,14 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	/**
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
+	 * <p>
+	 * Also adds the state if it isn't present.
 	 */
 	public void addBending(BendingController bending) {
 		if (!hasBending(bending.getType())) {
 			bendingControllers.put(bending.getType(), bending);
 			bendingControllerList.add(bending);
-			networker.changeAndSync(KEY_CONTROLLERS, bendingControllerList);
+			networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
 			saveChanges();
 		} else {
 			AvatarLog.warn(WarningType.INVALID_CODE,
@@ -227,7 +236,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 			removeBendingState(state);
 			bendingControllers.remove(bending.getType());
 			bendingControllerList.remove(bending);
-			networker.changeAndSync(KEY_CONTROLLERS, bendingControllerList);
+			networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
 			saveChanges();
 		} else {
 			AvatarLog.warn(WarningType.INVALID_CODE, "Cannot remove BendingController '" + bending
@@ -253,7 +262,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		for (BendingController controller : copy) {
 			removeBending(controller);
 		}
-		networker.changeAndSync(KEY_CONTROLLERS, bendingControllerList);
+		networker.markChanged(KEY_CONTROLLERS, bendingControllerList);
 		saveChanges();
 		
 	}
@@ -291,6 +300,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	/**
 	 * Gets extra metadata for the given bending controller with that type, or
 	 * null if there is no bending controller.
+	 * <p>
+	 * Will automatically create a state and sync changes if the controller is
+	 * present.
 	 */
 	public BendingState getBendingState(BendingType type) {
 		if (!hasBending(type)) {
@@ -300,6 +312,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		if (hasBending(type) && !hasBendingState(BendingManager.getBending(type))) {
 			addBendingState(getBendingController(type).createState(this));
 			saveChanges();
+			sync();
 		}
 		return hasBending(type) ? bendingStates.get(type) : null;
 	}
@@ -349,7 +362,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public void addBendingState(BendingState state) {
 		bendingStates.put(state.getType(), state);
 		bendingStateList.add(state);
-		networker.changeAndSync(KEY_STATES, bendingStateList);
+		networker.markChanged(KEY_STATES, bendingStateList);
 	}
 	
 	/**
@@ -359,7 +372,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	public void removeBendingState(BendingState state) {
 		bendingStates.remove(state.getType());
 		bendingStateList.remove(state);
-		networker.changeAndSync(KEY_STATES, bendingStateList);
+		networker.markChanged(KEY_STATES, bendingStateList);
 	}
 	
 	public Set<StatusControl> getActiveStatusControls() {
@@ -414,7 +427,6 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	 * Send the given bending state to the client.
 	 */
 	public void sendBendingState(BendingState state) {
-		// networker.changeAndSync(KEY_ONE_STATE, state);
 		networker.changeAndSync(KEY_STATES, bendingStateList);
 	}
 	

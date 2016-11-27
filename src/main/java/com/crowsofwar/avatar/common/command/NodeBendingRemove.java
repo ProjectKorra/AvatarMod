@@ -74,6 +74,7 @@ public class NodeBendingRemove extends NodeFunctional {
 			if (data.hasBending(controller.getID())) {
 				
 				data.removeBending(controller);
+				data.sync();
 				MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getControllerName());
 				
 			} else {

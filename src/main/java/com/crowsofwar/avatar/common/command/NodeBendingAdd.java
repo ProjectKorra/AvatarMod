@@ -77,6 +77,7 @@ public class NodeBendingAdd extends NodeFunctional {
 			} else {
 				
 				data.addBending(controller);
+				data.sync();
 				MSG_BENDING_ADD_SUCCESS.send(sender, playerName, controller.getControllerName());
 				
 			}
