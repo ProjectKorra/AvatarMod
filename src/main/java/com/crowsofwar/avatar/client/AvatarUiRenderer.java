@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.lwjgl.input.Mouse;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
 import com.crowsofwar.avatar.client.gui.RadialSegment;
 import com.crowsofwar.avatar.client.gui.SkillsGui;
@@ -29,6 +28,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 
 import net.minecraft.client.Minecraft;
@@ -96,7 +96,8 @@ public class AvatarUiRenderer extends Gui {
 			}
 		}
 		
-		Set<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();
+		Set<StatusControl> statusControls = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer)
+				.getActiveStatusControls();
 		for (StatusControl statusControl : statusControls) {
 			mc.getTextureManager().bindTexture(STATUS_CONTROL_ICONS);
 			int centerX = resolution.getScaledWidth() / 2;

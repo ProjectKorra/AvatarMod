@@ -184,7 +184,7 @@ public class ClientInput implements IControlsHandler {
 			if (data != null) {
 				
 				Collection<AvatarControl> pressed = getAllPressed();
-				Collection<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();
+				Collection<StatusControl> statusControls = data.getActiveStatusControls();
 				
 				Iterator<StatusControl> sci = statusControls.iterator();
 				while (sci.hasNext()) {

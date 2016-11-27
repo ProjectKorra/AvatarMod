@@ -19,9 +19,6 @@ package com.crowsofwar.avatar.client;
 
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
@@ -35,7 +32,6 @@ import com.crowsofwar.avatar.client.render.RenderWaterArc;
 import com.crowsofwar.avatar.client.render.RenderWave;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
@@ -68,7 +64,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
-	private Set<StatusControl> statusControls;
 	
 	@Override
 	public void preInit() {
@@ -85,8 +80,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 			AvatarLog.debug("Client: Requesting data for " + data.getPlayerEntity() + "");
 		});
-		
-		statusControls = new HashSet<>();
 		
 		registerEntityRenderingHandler(EntityFloatingBlock.class, RenderFloatingBlock::new);
 		registerEntityRenderingHandler(EntityFireArc.class, RenderFireArc::new);
@@ -143,21 +136,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public int getParticleAmount() {
 		return mc.gameSettings.particleSetting;
-	}
-	
-	@Override
-	public void addStatusControl(StatusControl control) {
-		statusControls.add(control);
-	}
-	
-	@Override
-	public void removeStatusControl(StatusControl control) {
-		statusControls.remove(control);
-	}
-	
-	@Override
-	public Set<StatusControl> getAllStatusControls() {
-		return statusControls;
 	}
 	
 }

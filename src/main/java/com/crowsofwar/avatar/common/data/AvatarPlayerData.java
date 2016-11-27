@@ -387,16 +387,19 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	
 	public void addStatusControl(StatusControl control) {
 		statusControls.add(control);
+		networker.markChanged(KEY_STATUS_CONTROLS, statusControls);
 		saveChanges();
 	}
 	
 	public void removeStatusControl(StatusControl control) {
 		statusControls.remove(control);
+		networker.markChanged(KEY_STATUS_CONTROLS, statusControls);
 		saveChanges();
 	}
 	
 	public void clearStatusControls() {
 		statusControls.clear();
+		networker.markChanged(KEY_STATUS_CONTROLS, statusControls);
 		saveChanges();
 	}
 	

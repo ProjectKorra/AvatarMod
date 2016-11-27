@@ -131,14 +131,4 @@ public class AbilityContext {
 		}
 	}
 	
-	public void addStatusControl(StatusControl control) {
-		data.addStatusControl(control);
-		data.sync();
-	}
-	
-	public void removeStatusControl(StatusControl control) {
-		data.removeStatusControl(control);
-		data.sync();
-	}
-	
 }

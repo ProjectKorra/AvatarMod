@@ -54,7 +54,10 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 		if (data.hasBending(BendingType.FIREBENDING)) {
 			FirebendingState state = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
 			state.setFlamethrowing(setting);
-			if (setting) ctx.addStatusControl(STOP_FLAMETHROW);
+			if (setting) {
+				data.addStatusControl(STOP_FLAMETHROW);
+				data.sync();
+			}
 		}
 		
 		return true;

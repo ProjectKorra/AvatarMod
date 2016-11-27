@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -42,15 +43,16 @@ public class StatCtrlThrowBlock extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext context) {
+	public boolean execute(AbilityContext ctx) {
 		
 		BendingController controller = (BendingController) BendingManager
 				.getBending(BendingType.EARTHBENDING);
 		
-		EarthbendingState ebs = (EarthbendingState) context.getData().getBendingState(controller);
-		EntityPlayer player = context.getPlayerEntity();
+		EarthbendingState ebs = (EarthbendingState) ctx.getData().getBendingState(controller);
+		EntityPlayer player = ctx.getPlayerEntity();
 		World world = player.worldObj;
 		EntityFloatingBlock floating = ebs.getPickupBlock();
+		AvatarPlayerData data = ctx.getData();
 		
 		if (floating != null) {
 			
@@ -62,12 +64,11 @@ public class StatCtrlThrowBlock extends StatusControl {
 			floating.velocity().add(lookDir.times(20));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown(floating));
 			ebs.setPickupBlock(null);
-			// AvatarMod.network.sendTo(new
-			// PacketCPlayerData(context.getData()), (EntityPlayerMP) player);
 			
 			controller.post(new FloatingBlockEvent.BlockThrown(floating, player));
 			
-			context.removeStatusControl(PLACE_BLOCK);
+			data.removeStatusControl(PLACE_BLOCK);
+			data.sync();
 			
 		}
 		

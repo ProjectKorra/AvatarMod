@@ -74,7 +74,8 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				
 				controller.post(new FloatingBlockEvent.BlockPlaced(floating, context.getPlayerEntity()));
 				
-				context.removeStatusControl(THROW_BLOCK);
+				data.removeStatusControl(THROW_BLOCK);
+				data.sync();
 				
 				data.getAbilityData(ABILITY_PICK_UP_BLOCK).addXp(SKILLS_CONFIG.blockPlaced);
 				

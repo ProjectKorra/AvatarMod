@@ -80,7 +80,8 @@ public class AbilityWaterArc extends WaterAbility {
 				
 				needsSync = true;
 				
-				ctx.addStatusControl(StatusControl.THROW_WATER);
+				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
+				ctx.getData().sync();
 				
 			}
 		}

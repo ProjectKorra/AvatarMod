@@ -99,8 +99,9 @@ public class AbilityPickUpBlock extends EarthAbility {
 					
 					controller().post(new FloatingBlockEvent.BlockPickedUp(floating, player));
 					
-					ctx.addStatusControl(StatusControl.PLACE_BLOCK);
-					ctx.addStatusControl(StatusControl.THROW_BLOCK);
+					data.addStatusControl(StatusControl.PLACE_BLOCK);
+					data.addStatusControl(StatusControl.THROW_BLOCK);
+					data.sync();
 					
 				} else {
 					world.playSound(null, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,

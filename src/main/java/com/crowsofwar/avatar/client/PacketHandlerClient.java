@@ -26,7 +26,6 @@ import java.util.Set;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -138,12 +137,10 @@ public class PacketHandlerClient implements IPacketHandler {
 	}
 	
 	private IMessage handlePacketStatusControl(PacketCStatusControl packet, MessageContext ctx) {
-		AvatarMod.proxy.addStatusControl(packet.getStatusControl());
 		return null;
 	}
 	
 	private IMessage handlePacketStatusControl(PacketCRemoveStatusControl packet, MessageContext ctx) {
-		AvatarMod.proxy.removeStatusControl(packet.getStatusControl());
 		return null;
 	}
 	
