@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -38,13 +37,8 @@ import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
-import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
@@ -70,15 +64,6 @@ public class PacketHandlerClient implements IPacketHandler {
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		
-		if (packet instanceof PacketCPlayerData)
-			return handlePacketPlayerData((PacketCPlayerData) packet, ctx);
-		
-		if (packet instanceof PacketCStatusControl)
-			return handlePacketStatusControl((PacketCStatusControl) packet, ctx);
-		
-		if (packet instanceof PacketCRemoveStatusControl)
-			return handlePacketStatusControl((PacketCRemoveStatusControl) packet, ctx);
-		
 		if (packet instanceof PacketCParticles) return handlePacketParticles((PacketCParticles) packet, ctx);
 		
 		if (packet instanceof PacketCNewPd) return handlePacketNewPlayerData((PacketCNewPd) packet, ctx);
@@ -91,57 +76,6 @@ public class PacketHandlerClient implements IPacketHandler {
 	@Override
 	public Side getSide() {
 		return Side.CLIENT;
-	}
-	
-	private IMessage handlePacketPlayerData(PacketCPlayerData packet, MessageContext ctx) {
-		EntityPlayer player = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayer());
-		if (player == null) {
-			AvatarLog.warn(WarningType.WEIRD_PACKET,
-					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
-			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayer());
-			return null;
-		}
-		AvatarLog.debug("Client: Received data packet for " + player);
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing player data packet");
-		if (data != null) {
-			
-			// Add bending controllers
-			data.takeBending();
-			for (int i = 0; i < packet.getAllControllersID().length; i++) {
-				data.addBending(packet.getAllControllersID()[i]);
-				data.getState().update(player, Raytrace.getTargetBlock(player, -1));
-			}
-			
-			// Read ability data
-			data.clearAbilityData();
-			ByteBuf buf = packet.getBuf();
-			int abilitiesAmount = buf.readInt();
-			for (int i = 0; i < abilitiesAmount; i++) {
-				AbilityData abilityData = data.getAbilityData(BendingManager.getAbility(buf.readInt()));
-				abilityData.setXp(buf.readFloat());
-			}
-			
-			// Read bending states
-			int lastIndex = buf.readerIndex();
-			for (int i = 0; i < packet.getAllControllersID().length; i++) {
-				BendingState state = data.getBendingState(packet.getBuf().readInt());
-				state.fromBytes(packet.getBuf());
-				System.out
-						.println("State: " + state + ": read  " + (buf.readerIndex() - lastIndex) + " bytes");
-				lastIndex = buf.readerIndex();
-			}
-			
-		}
-		return null;
-	}
-	
-	private IMessage handlePacketStatusControl(PacketCStatusControl packet, MessageContext ctx) {
-		return null;
-	}
-	
-	private IMessage handlePacketStatusControl(PacketCRemoveStatusControl packet, MessageContext ctx) {
-		return null;
 	}
 	
 	private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx) {

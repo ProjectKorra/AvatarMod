@@ -19,15 +19,12 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -89,9 +86,10 @@ public class EntityFireArc extends EntityArc {
 		if (getOwner() != null) {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(getOwner());
 			data.removeStatusControl(StatusControl.THROW_FIRE);
-			if (!worldObj.isRemote)
-				AvatarMod.network.sendTo(new PacketCRemoveStatusControl(StatusControl.THROW_FIRE),
-						(EntityPlayerMP) getOwner());
+			if (!worldObj.isRemote) {
+				data.removeStatusControl(StatusControl.THROW_FIRE);
+				data.sync();
+			}
 		}
 	}
 	

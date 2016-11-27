@@ -43,9 +43,6 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
-import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
@@ -102,11 +99,8 @@ public class AvatarMod {
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
 		registerPacket(PacketSUseAbility.class, Side.SERVER);
 		registerPacket(PacketSRequestData.class, Side.SERVER);
-		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		registerPacket(PacketSUseBendingController.class, Side.SERVER);
-		registerPacket(PacketCStatusControl.class, Side.CLIENT);
 		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
-		registerPacket(PacketCRemoveStatusControl.class, Side.CLIENT);
 		registerPacket(PacketCParticles.class, Side.CLIENT);
 		registerPacket(PacketCNewPd.class, Side.CLIENT);
 		
