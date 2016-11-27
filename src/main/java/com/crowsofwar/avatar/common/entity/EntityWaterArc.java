@@ -28,11 +28,13 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityWaterArc extends EntityArc {
@@ -49,6 +51,7 @@ public class EntityWaterArc extends EntityArc {
 	
 	public EntityWaterArc(World world) {
 		super(world);
+		setSize(.5f, .5f);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 	}
@@ -129,6 +132,25 @@ public class EntityWaterArc extends EntityArc {
 		}
 		getBehavior().setEntity(this);
 		getBehavior().onUpdate();
+		
+		for (int x = 0; x <= 1; x++) {
+			for (int z = 0; z <= 1; z++) {
+				BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
+				if (worldObj.getBlockState(pos).getBlock() == Blocks.FIRE) {
+					worldObj.setBlockToAir(pos);
+					worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+							SoundCategory.PLAYERS, 1, 1, false);
+				}
+			}
+		}
+		
+		// if (worldObj.getBlockState(getPosition()).getBlock() == Blocks.FIRE)
+		// {
+		// worldObj.setBlockToAir(getPosition());
+		// worldObj.playSound(posX, posY, posZ,
+		// SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 1,
+		// 1, false);
+		// }
 	}
 	
 	public static EntityWaterArc findFromId(World world, int id) {
