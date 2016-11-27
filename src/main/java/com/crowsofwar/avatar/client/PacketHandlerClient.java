@@ -35,7 +35,7 @@ import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.PlayerDataContext;
-import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
+import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
 
@@ -66,7 +66,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		
 		if (packet instanceof PacketCParticles) return handlePacketParticles((PacketCParticles) packet, ctx);
 		
-		if (packet instanceof PacketCNewPd) return handlePacketNewPlayerData((PacketCNewPd) packet, ctx);
+		if (packet instanceof PacketCPlayerData) return handlePacketNewPlayerData((PacketCPlayerData) packet, ctx);
 		
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 		
@@ -102,7 +102,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	
 	/**
 	 */
-	private IMessage handlePacketNewPlayerData(PacketCNewPd packet, MessageContext ctx) {
+	private IMessage handlePacketNewPlayerData(PacketCPlayerData packet, MessageContext ctx) {
 		
 		EntityPlayer player = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld,
 				packet.getPlayerId());

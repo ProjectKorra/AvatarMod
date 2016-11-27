@@ -36,7 +36,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.Networker.Property;
 import com.crowsofwar.avatar.common.network.Transmitters;
-import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
+import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.GoreCoreDataSaver;
 import com.crowsofwar.gorecore.data.GoreCoreDataSaverDontSave;
@@ -87,7 +87,7 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 		abilityData = new HashMap<>();
 		state = new PlayerState();
 		
-		networker = new Networker(!isClient, PacketCNewPd.class, net -> new PacketCNewPd(net, playerID));
+		networker = new Networker(!isClient, PacketCPlayerData.class, net -> new PacketCPlayerData(net, playerID));
 		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
 		networker.register(bendingStateList, Transmitters.STATE_LIST, KEY_STATES);
 		networker.register(abilityData, Transmitters.ABILITY_DATA_MAP, KEY_ABILITY_DATA);

@@ -41,7 +41,7 @@ import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
-import com.crowsofwar.avatar.common.network.packets.PacketCNewPd;
+import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -102,7 +102,7 @@ public class AvatarMod {
 		registerPacket(PacketSUseBendingController.class, Side.SERVER);
 		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
 		registerPacket(PacketCParticles.class, Side.CLIENT);
-		registerPacket(PacketCNewPd.class, Side.CLIENT);
+		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
