@@ -82,6 +82,7 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 		int size = buf.readInt();
 		for (int i = 0; i < size; i++) {
 			int keyId = buf.readInt();
+			System.out.println("keyID " + keyId);
 			Networker.Property key = networker.allKeys.stream().filter(candidate -> candidate.id() == keyId)
 					.collect(Collectors.toList()).get(0); // Find Key with the
 															// id of keyId

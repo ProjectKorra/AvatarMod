@@ -147,7 +147,7 @@ public class Transmitters {
 			int size = buf.readInt();
 			Set<StatusControl> out = new HashSet<>();
 			for (int i = 0; i < size; i++) {
-				StatusControl sc = StatusControl.lookup(i);
+				StatusControl sc = StatusControl.lookup(buf.readInt());
 				if (sc == null)
 					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid status control id");
 				else

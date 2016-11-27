@@ -18,16 +18,12 @@
 package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
-import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -88,16 +84,16 @@ public class AbilityContext {
 	}
 	
 	/**
-	 * Returns whether the player is looking at a block right now without verifying if the client is
-	 * correct.
+	 * Returns whether the player is looking at a block right now without
+	 * verifying if the client is correct.
 	 */
 	public boolean isLookingAtBlock() {
 		return lookSide != null && clientLookBlock != null;
 	}
 	
 	/**
-	 * Returns whether the player is looking at a block right now. Checks for hacking on the server.
-	 * If on client side, then no checks are made.
+	 * Returns whether the player is looking at a block right now. Checks for
+	 * hacking on the server. If on client side, then no checks are made.
 	 * 
 	 * @see #verifyClientLookBlock(double, double)
 	 */
@@ -107,8 +103,9 @@ public class AbilityContext {
 	}
 	
 	/**
-	 * Ensure that the client's targeted block is within range of the server's targeted block. (To
-	 * avoid hacking) On client side, simply returns the client's targeted block.
+	 * Ensure that the client's targeted block is within range of the server's
+	 * targeted block. (To avoid hacking) On client side, simply returns the
+	 * client's targeted block.
 	 * 
 	 * @param raycastDist
 	 *            How far away can the block be?
@@ -135,13 +132,13 @@ public class AbilityContext {
 	}
 	
 	public void addStatusControl(StatusControl control) {
-		AvatarMod.network.sendTo(new PacketCStatusControl(control), (EntityPlayerMP) playerEntity);
 		data.addStatusControl(control);
+		data.sync();
 	}
 	
 	public void removeStatusControl(StatusControl control) {
-		AvatarMod.network.sendTo(new PacketCRemoveStatusControl(control), (EntityPlayerMP) playerEntity);
 		data.removeStatusControl(control);
+		data.sync();
 	}
 	
 }
