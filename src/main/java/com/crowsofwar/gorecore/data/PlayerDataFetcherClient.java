@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.PlayerUUIDs;
@@ -48,13 +49,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerDataFetcher<T> {
 	
 	private final Minecraft mc;
+	
 	/**
 	 * Keeps track of client-side player data by mapping player UUID to player
 	 * data.
 	 */
 	private Map<UUID, T> playerData = new HashMap<UUID, T>();
 	private Class<T> dataClass;
-	private PlayerDataCreationHandler<T> onCreate;
+	private Consumer<T> onCreate;
+	
 	/**
 	 * Amount of ticks until check if player data can unload.
 	 */
@@ -67,8 +70,8 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 	 *            The class of your player data
 	 */
 	public PlayerDataFetcherClient(Class<T> dataClass) {
-		this(dataClass, (data) -> {
-		});// TODO fix newline when eclipse allows option to do that
+		this(dataClass, t -> {
+		});
 	}
 	
 	/**
@@ -76,14 +79,14 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 	 * 
 	 * @param dataClass
 	 *            The class of your player data
-	 * @param onCreate
+	 * @param callback
 	 *            A handler which will be invoked when a new instance of your
-	 *            player data was created.
+	 *            player data was created
 	 */
-	public PlayerDataFetcherClient(Class<T> dataClass, PlayerDataCreationHandler<T> onCreate) {
+	public PlayerDataFetcherClient(Class<T> dataClass, Consumer<T> callback) {
 		this.mc = Minecraft.getMinecraft();
 		this.dataClass = dataClass;
-		this.onCreate = onCreate;
+		this.onCreate = callback;
 		this.ticksUntilCheck = 20;
 		MinecraftForge.EVENT_BUS.register(this);
 	}
@@ -108,7 +111,7 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 		if (data == null) {
 			data = createPlayerData(dataClass, playerID);
 			playerData.put(playerID, data);
-			if (onCreate != null) onCreate.onClientPlayerDataCreated(data);
+			if (onCreate != null) onCreate.accept(data);
 		}
 		
 		data.setPlayerEntity(PlayerUUIDs.findPlayerInWorldFromUUID(world, playerID));
