@@ -26,3 +26,6 @@ screenshots/
 
 crash-reports/
 resourcepacks/
+
+Client.launch
+Server.launch
