@@ -23,7 +23,7 @@ import java.util.UUID;
 
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
+import com.crowsofwar.gorecore.util.PlayerUUIDs;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -70,13 +70,13 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 		if (players.containsKey(player)) {
 			T data = getPlayerDataWithoutCreate(player);
 			if (getWorld() != null)
-				data.setPlayerEntity(GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
+				data.setPlayerEntity(PlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
 			return data;
 		} else {
 			T data = createNewPlayerData(player);
 			players.put(player, data);
 			if (getWorld() != null)
-				data.setPlayerEntity(GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
+				data.setPlayerEntity(PlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
 			saveChanges();
 			return data;
 		}
@@ -93,7 +93,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	public T getPlayerDataWithoutCreate(UUID player) {
 		T data = (T) players.get(player);
 		if (data != null && data.getPlayerEntity() == null) {
-			data.setPlayerEntity(GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
+			data.setPlayerEntity(PlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
 		}
 		return data;
 	}
@@ -103,7 +103,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	private T createNewPlayerData(UUID player) {
 		try {
 			
-			EntityPlayer playerEntity = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player);
+			EntityPlayer playerEntity = PlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player);
 			if (playerEntity == null)
 				GoreCore.LOGGER.warn("WARNING: playerEntity was null while creating new player data");
 			PlayerData data = playerDataClass()

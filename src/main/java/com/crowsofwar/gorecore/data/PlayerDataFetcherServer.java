@@ -20,8 +20,8 @@ package com.crowsofwar.gorecore.data;
 import java.util.UUID;
 
 import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs.ResultOutcome;
+import com.crowsofwar.gorecore.util.PlayerUUIDs;
+import com.crowsofwar.gorecore.util.PlayerUUIDs.Outcome;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -52,23 +52,23 @@ public class PlayerDataFetcherServer<T extends PlayerData> implements PlayerData
 	@Override
 	public T fetch(World world, String playerName, String errorMessage) {
 		T data;
-		GoreCorePlayerUUIDs.ResultOutcome error;
+		PlayerUUIDs.Outcome error;
 		
-		GoreCorePlayerUUIDs.GetUUIDResult getUUID = GoreCorePlayerUUIDs.getUUID(playerName);
+		PlayerUUIDs.Result getUUID = PlayerUUIDs.getUUID(playerName);
 		if (getUUID.isResultSuccessful()) {
 			
 			data = worldDataFetcher.fetch(world).getPlayerData(getUUID.getUUID());
-			error = getUUID.getResult();
+			error = getUUID.getOutcome();
 			
 		} else {
 			
 			getUUID.logError();
 			data = null;
-			error = getUUID.getResult();
+			error = getUUID.getOutcome();
 			
 		}
 		
-		if (error == ResultOutcome.SUCCESS) {
+		if (error == Outcome.SUCCESS) {
 			data.setPlayerEntity(world.getPlayerEntityByName(playerName));
 			return data;
 		} else {
@@ -104,7 +104,7 @@ public class PlayerDataFetcherServer<T extends PlayerData> implements PlayerData
 	
 	@Override
 	public T fetchPerformance(World world, String playerName) {
-		UUID res = GoreCorePlayerUUIDs.getUUIDPerformance(playerName);
+		UUID res = PlayerUUIDs.getUUIDPerformance(playerName);
 		return res == null ? null : worldDataFetcher.fetch(world).getPlayerData(res);
 	}
 	

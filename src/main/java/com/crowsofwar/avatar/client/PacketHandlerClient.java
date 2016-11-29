@@ -37,7 +37,7 @@ import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
+import com.crowsofwar.gorecore.util.PlayerUUIDs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -104,7 +104,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	 */
 	private IMessage handlePacketNewPlayerData(PacketCPlayerData packet, MessageContext ctx) {
 		
-		EntityPlayer player = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld,
+		EntityPlayer player = PlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld,
 				packet.getPlayerId());
 		if (player == null) {
 			AvatarLog.warn(WarningType.WEIRD_PACKET,

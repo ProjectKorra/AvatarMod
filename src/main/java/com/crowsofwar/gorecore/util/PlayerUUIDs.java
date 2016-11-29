@@ -51,7 +51,7 @@ import net.minecraftforge.fml.common.FMLLog;
  * 
  * @author CrowsOfWar
  */
-public final class GoreCorePlayerUUIDs {
+public final class PlayerUUIDs {
 	
 	/**
 	 * A cache of UUIDs for quick use. It is saved via a UUID cache file. The
@@ -200,16 +200,16 @@ public final class GoreCorePlayerUUIDs {
 	 * 
 	 * <p>
 	 * The UUID found can be extracted from the UUID-result via
-	 * {@link GetUUIDResult#getUUID()} as long as an error has not occurred.
+	 * {@link Result#getUUID()} as long as an error has not occurred.
 	 * </p>
 	 * 
 	 * @param username
 	 *            The username to get the UUID for
 	 * @return The UUID result of the getting
 	 */
-	public static GoreCorePlayerUUIDs.GetUUIDResult getUUID(String username) {
+	public static PlayerUUIDs.Result getUUID(String username) {
 		if (playerNameToUUID.containsKey(username)) {
-			return new GetUUIDResult(playerNameToUUID.get(username), ResultOutcome.SUCCESS);
+			return new Result(playerNameToUUID.get(username), Outcome.SUCCESS);
 		} else {
 			try {
 				String url = "https://api.mojang.com/users/profiles/minecraft/" + username;
@@ -236,13 +236,13 @@ public final class GoreCorePlayerUUIDs {
 				String result = response.toString();
 				
 				if (responseCode == 204) {
-					return new GetUUIDResult(null, ResultOutcome.USERNAME_DOES_NOT_EXIST);
+					return new Result(null, Outcome.USERNAME_DOES_NOT_EXIST);
 				}
 				
 				if (responseCode != 200) {
 					FMLLog.warning("GoreCore> Attempted to get a UUID for player " + username
 							+ ", but the response code was unexpected (" + responseCode + ")");
-					return new GetUUIDResult(null, ResultOutcome.BAD_HTTP_CODE);
+					return new Result(null, Outcome.BAD_HTTP_CODE);
 				}
 				
 				String resultOfExtraction = result.replace("{", "");
@@ -261,12 +261,12 @@ public final class GoreCorePlayerUUIDs {
 				UUID uuidResult = UUID.fromString(uuidCleaned);
 				
 				cacheResults(username, uuidResult);
-				return new GetUUIDResult(uuidResult, ResultOutcome.SUCCESS);
+				return new Result(uuidResult, Outcome.SUCCESS);
 				
 			} catch (Exception e) {
 				FMLLog.severe("GoreCore> Error getting player UUID for username " + username);
 				e.printStackTrace();
-				return new GetUUIDResult(null, ResultOutcome.EXCEPTION_OCCURED);
+				return new Result(null, Outcome.EXCEPTION_OCCURED);
 			}
 		}
 	}
@@ -367,16 +367,16 @@ public final class GoreCorePlayerUUIDs {
 	
 	/**
 	 * GetUUIDResult shows the result of getting UUIDs from player names through
-	 * {@link GoreCorePlayerUUIDs#getUUID(String)}. It has a UUID for the result
-	 * and a {@link ResultOutcome} that describes what happened.
+	 * {@link PlayerUUIDs#getUUID(String)}. It has a UUID for the result
+	 * and a {@link Outcome} that describes what happened.
 	 * 
 	 * @author CrowsOfWar
 	 */
-	public static class GetUUIDResult {
+	public static class Result {
 		private final UUID uuid;
-		private final ResultOutcome outcome;
+		private final Outcome outcome;
 		
-		public GetUUIDResult(UUID uuid, ResultOutcome outcome) {
+		public Result(UUID uuid, Outcome outcome) {
 			this.uuid = uuid;
 			this.outcome = outcome;
 		}
@@ -392,7 +392,7 @@ public final class GoreCorePlayerUUIDs {
 		/**
 		 * Gets the outcome of the result.
 		 */
-		public ResultOutcome getResult() {
+		public Outcome getOutcome() {
 			return outcome;
 		}
 		
@@ -402,7 +402,7 @@ public final class GoreCorePlayerUUIDs {
 		 * any errors.
 		 */
 		public boolean isResultSuccessful() {
-			return outcome == ResultOutcome.SUCCESS && uuid != null;
+			return outcome == Outcome.SUCCESS && uuid != null;
 		}
 		
 		/**
@@ -411,11 +411,11 @@ public final class GoreCorePlayerUUIDs {
 		public void logError() {
 			if (!isResultSuccessful()) {
 				String text = "There's a bug with the error warning code! o_o";
-				if (outcome == ResultOutcome.USERNAME_DOES_NOT_EXIST)
+				if (outcome == Outcome.USERNAME_DOES_NOT_EXIST)
 					text = "The player was not registered on Minecraft.net - are you using a cracked launcher?";
-				if (outcome == ResultOutcome.EXCEPTION_OCCURED)
+				if (outcome == Outcome.EXCEPTION_OCCURED)
 					text = "An unexpected error (specifically, an exception) occured while getting the player's UUID";
-				if (outcome == ResultOutcome.BAD_HTTP_CODE) text = "Got an unexpected HTTP code";
+				if (outcome == Outcome.BAD_HTTP_CODE) text = "Got an unexpected HTTP code";
 				FMLLog.warning("GoreCore> Attempted to get a player's UUID but failed: " + text);
 			}
 		}
@@ -434,7 +434,7 @@ public final class GoreCorePlayerUUIDs {
 	 * 
 	 * @author CrowsOfWar
 	 */
-	public static enum ResultOutcome {
+	public static enum Outcome {
 		/**
 		 * No errors were encountered while getting the UUID.
 		 */
