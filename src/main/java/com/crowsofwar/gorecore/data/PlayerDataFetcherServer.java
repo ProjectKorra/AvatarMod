@@ -18,12 +18,10 @@
 package com.crowsofwar.gorecore.data;
 
 import java.util.UUID;
+import java.util.function.Function;
 
-import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.PlayerUUIDs;
-import com.crowsofwar.gorecore.util.PlayerUUIDs.Outcome;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
@@ -38,80 +36,17 @@ import net.minecraft.world.World;
  */
 public class PlayerDataFetcherServer<T extends PlayerData> implements PlayerDataFetcher<T> {
 	
-	private final WorldDataFetcher<? extends WorldDataPlayers<T>> worldDataFetcher;
+	private final Function<World, WorldDataPlayers<T>> worldDataFetcher;
 	
-	public PlayerDataFetcherServer(WorldDataFetcher<? extends WorldDataPlayers<T>> worldDataFetcher) {
+	public PlayerDataFetcherServer(Function<World, WorldDataPlayers<T>> worldDataFetcher) {
 		this.worldDataFetcher = worldDataFetcher;
 	}
 	
 	@Override
-	public T fetch(EntityPlayer player, String errorMessage) {
-		return fetch(player.worldObj, player.getName(), errorMessage);
-	}
-	
-	@Override
-	public T fetch(World world, String playerName, String errorMessage) {
-		T data;
-		PlayerUUIDs.Outcome error;
-		
-		PlayerUUIDs.Result getUUID = PlayerUUIDs.getUUID(playerName);
-		if (getUUID.isResultSuccessful()) {
-			
-			data = worldDataFetcher.fetch(world).getPlayerData(getUUID.getUUID());
-			error = getUUID.getOutcome();
-			
-		} else {
-			
-			getUUID.logError();
-			data = null;
-			error = getUUID.getOutcome();
-			
-		}
-		
-		if (error == Outcome.SUCCESS) {
-			data.setPlayerEntity(world.getPlayerEntityByName(playerName));
-			return data;
-		} else {
-			if (errorMessage != null)
-				GoreCore.LOGGER.error("Error while retrieving player data- " + errorMessage);
-			String log;
-			switch (error) {
-				case BAD_HTTP_CODE:
-					log = "Unexpected HTTP code";
-					break;
-				case EXCEPTION_OCCURED:
-					log = "Unexpected exception occurred";
-					break;
-				case USERNAME_DOES_NOT_EXIST:
-					log = "Account is not registered";
-					break;
-				default:
-					log = "Unexpected error: " + error;
-					break;
-				
-			}
-			
-			return null;
-			
-		}
-		
-	}
-	
-	@Override
-	public T fetchPerformance(EntityPlayer player) {
-		return fetchPerformance(player.worldObj, player.getName());
-	}
-	
-	@Override
-	public T fetchPerformance(World world, String playerName) {
-		UUID res = PlayerUUIDs.getUUIDPerformance(playerName);
-		return res == null ? null : worldDataFetcher.fetch(world).getPlayerData(res);
-	}
-	
-	public static interface WorldDataFetcher<T extends WorldData> {
-		
-		T fetch(World world);
-		
+	public T fetch(World world, UUID accountId) {
+		T data = worldDataFetcher.apply(world).getPlayerData(accountId);
+		data.setPlayerEntity(PlayerUUIDs.findPlayerInWorldFromUUID(world, accountId));
+		return data;
 	}
 	
 }
