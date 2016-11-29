@@ -385,7 +385,8 @@ public class ConfigLoader {
 			
 		} catch (IOException e) {
 			throw new ConfigurationException.LoadingException(
-					"Exception trying to load config file at config/" + path, e);
+					"Exception trying to load config file at " + new File("config/" + path).getAbsolutePath(),
+					e);
 		} catch (ClassCastException e) {
 			
 			System.out
