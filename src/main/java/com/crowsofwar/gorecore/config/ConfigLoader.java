@@ -371,6 +371,7 @@ public class ConfigLoader {
 			String contents = "";
 			
 			File file = new File("config/" + path);
+			file.getParentFile().mkdirs();
 			file.createNewFile();
 			
 			Scanner scanner = new Scanner(file);
