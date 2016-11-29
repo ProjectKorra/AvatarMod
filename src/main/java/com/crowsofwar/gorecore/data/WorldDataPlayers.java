@@ -38,24 +38,24 @@ import net.minecraftforge.fml.common.FMLLog;
  * 
  * @author CrowsOfWar
  */
-public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> extends GoreCoreWorldData {
+public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	
-	private Map<UUID, GoreCorePlayerData> players;
+	private Map<UUID, PlayerData> players;
 	
-	public GoreCoreWorldDataPlayers(String key) {
+	public WorldDataPlayers(String key) {
 		super(key);
-		this.players = new HashMap<UUID, GoreCorePlayerData>();
+		this.players = new HashMap<UUID, PlayerData>();
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		this.players = GoreCoreNBTUtil.readMapFromNBT(nbt, GoreCorePlayerData.MAP_USER, "PlayerData",
+		this.players = GoreCoreNBTUtil.readMapFromNBT(nbt, PlayerData.MAP_USER, "PlayerData",
 				new Object[] {}, new Object[] { playerDataClass(), this });
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		GoreCoreNBTUtil.writeMapToNBT(nbt, players, GoreCorePlayerData.MAP_USER, "PlayerData");
+		GoreCoreNBTUtil.writeMapToNBT(nbt, players, PlayerData.MAP_USER, "PlayerData");
 		return nbt;
 	}
 	
@@ -98,7 +98,7 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 		return data;
 	}
 	
-	public abstract Class<? extends GoreCorePlayerData> playerDataClass();
+	public abstract Class<? extends PlayerData> playerDataClass();
 	
 	private T createNewPlayerData(UUID player) {
 		try {
@@ -106,8 +106,8 @@ public abstract class GoreCoreWorldDataPlayers<T extends GoreCorePlayerData> ext
 			EntityPlayer playerEntity = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(getWorld(), player);
 			if (playerEntity == null)
 				GoreCore.LOGGER.warn("WARNING: playerEntity was null while creating new player data");
-			GoreCorePlayerData data = playerDataClass()
-					.getConstructor(GoreCoreDataSaver.class, UUID.class, EntityPlayer.class)
+			PlayerData data = playerDataClass()
+					.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
 					.newInstance(this, player, playerEntity);
 			return (T) data;
 			

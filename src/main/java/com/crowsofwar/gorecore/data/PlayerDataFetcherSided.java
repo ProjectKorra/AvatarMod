@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
  * 
  * @author CrowsOfWar
  */
-public class PlayerDataFetcherSided<T extends GoreCorePlayerData> implements PlayerDataFetcher<T> {
+public class PlayerDataFetcherSided<T extends PlayerData> implements PlayerDataFetcher<T> {
 	
 	private PlayerDataFetcher<T> clientDelegate, serverDelegate;
 	

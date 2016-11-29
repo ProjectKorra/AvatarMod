@@ -17,13 +17,13 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.gorecore.data.GoreCorePlayerData;
-import com.crowsofwar.gorecore.data.GoreCoreWorldDataPlayers;
+import com.crowsofwar.gorecore.data.PlayerData;
+import com.crowsofwar.gorecore.data.WorldDataPlayers;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
 
 import net.minecraft.world.World;
 
-public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> {
+public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
 	public static final WorldDataFetcher<AvatarWorldData> FETCHER = new WorldDataFetcher<AvatarWorldData>() {
 		@Override
@@ -44,7 +44,7 @@ public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> 
 	}
 	
 	@Override
-	public Class<? extends GoreCorePlayerData> playerDataClass() {
+	public Class<? extends PlayerData> playerDataClass() {
 		return AvatarPlayerData.class;
 	}
 	

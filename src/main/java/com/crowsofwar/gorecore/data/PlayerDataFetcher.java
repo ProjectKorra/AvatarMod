@@ -20,7 +20,7 @@ package com.crowsofwar.gorecore.data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public interface PlayerDataFetcher<T extends GoreCorePlayerData> {
+public interface PlayerDataFetcher<T extends PlayerData> {
 	
 	T fetch(EntityPlayer player, String errorMessage);
 	

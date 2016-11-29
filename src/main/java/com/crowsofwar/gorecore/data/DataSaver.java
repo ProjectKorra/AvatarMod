@@ -20,7 +20,7 @@ package com.crowsofwar.gorecore.data;
 /**
  * Specifications for anything that is used to save data.
  */
-public interface GoreCoreDataSaver {
+public interface DataSaver {
 	
 	int getInt(String key);
 	

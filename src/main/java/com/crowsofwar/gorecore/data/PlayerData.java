@@ -28,19 +28,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
 
-public abstract class GoreCorePlayerData implements GoreCoreNBTInterfaces.ReadableWritable {
+public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritable {
 	
-	public static final MapUser<UUID, GoreCorePlayerData> MAP_USER = new MapUser<UUID, GoreCorePlayerData>() {
+	public static final MapUser<UUID, PlayerData> MAP_USER = new MapUser<UUID, PlayerData>() {
 		@Override
 		public UUID createK(NBTTagCompound nbt, Object[] constructArgsK) {
 			return GoreCoreNBTUtil.readUUIDFromNBT(nbt, "KeyUUID");
 		}
 		
 		@Override
-		public GoreCorePlayerData createV(NBTTagCompound nbt, UUID key, Object[] constructArgsV) {
+		public PlayerData createV(NBTTagCompound nbt, UUID key, Object[] constructArgsV) {
 			try {
-				GoreCorePlayerData data = ((Class<? extends GoreCorePlayerData>) constructArgsV[0])
-						.getConstructor(GoreCoreDataSaver.class, UUID.class, EntityPlayer.class)
+				PlayerData data = ((Class<? extends PlayerData>) constructArgsV[0])
+						.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
 						.newInstance(constructArgsV[1], key, null);
 				data.readFromNBT(nbt);
 				return data;
@@ -57,13 +57,13 @@ public abstract class GoreCorePlayerData implements GoreCoreNBTInterfaces.Readab
 		}
 		
 		@Override
-		public void writeV(NBTTagCompound nbt, GoreCorePlayerData obj) {
+		public void writeV(NBTTagCompound nbt, PlayerData obj) {
 			obj.writeToNBT(nbt);
 		}
 	};
 	
 	protected UUID playerID;
-	protected GoreCoreDataSaver dataSaver;
+	protected DataSaver dataSaver;
 	/**
 	 * The player entity this player-data is attached to.
 	 * <p>
@@ -87,14 +87,14 @@ public abstract class GoreCorePlayerData implements GoreCoreNBTInterfaces.Readab
 	 * @param playerEntity
 	 *            The player entity. May be null.
 	 */
-	public GoreCorePlayerData(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer playerEntity) {
+	public PlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer playerEntity) {
 		construct(dataSaver, playerID, playerEntity);
 	}
 	
 	/**
 	 * Called from constructor to initialize data. Override to change constructor.
 	 */
-	protected void construct(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer playerEntity) {
+	protected void construct(DataSaver dataSaver, UUID playerID, EntityPlayer playerEntity) {
 		if (dataSaver == null)
 			FMLLog.severe("GoreCore> Player data was created with a null dataSaver - this is a bug! Debug:");
 		if (playerID == null)

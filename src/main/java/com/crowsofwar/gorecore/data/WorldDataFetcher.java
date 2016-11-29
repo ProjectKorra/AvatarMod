@@ -24,7 +24,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public interface GoreCoreWorldDataFetcher<T extends GoreCoreWorldData> {
+public interface WorldDataFetcher<T extends WorldData> {
 	
 	/**
 	 * Get world data for that world.

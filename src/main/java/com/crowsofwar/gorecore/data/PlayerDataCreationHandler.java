@@ -25,7 +25,7 @@ package com.crowsofwar.gorecore.data;
  * 
  * @author CrowsOfWar
  */
-public interface PlayerDataCreationHandler<T extends GoreCorePlayerData> {
+public interface PlayerDataCreationHandler<T extends PlayerData> {
 	
 	/**
 	 * Called when client player data is created

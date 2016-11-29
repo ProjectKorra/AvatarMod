@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.FMLLog;
  * 
  * @author CrowsOfWar
  */
-public abstract class GoreCoreWorldData extends WorldSavedData implements GoreCoreDataSaver {
+public abstract class WorldData extends WorldSavedData implements DataSaver {
 	
 	/**
 	 * The world that this data belongs to.
@@ -39,14 +39,14 @@ public abstract class GoreCoreWorldData extends WorldSavedData implements GoreCo
 	private World world;
 	
 	/**
-	 * Data stored via the {@link GoreCoreDataSaver} methods. FIXME never
+	 * Data stored via the {@link DataSaver} methods. FIXME never
 	 * saves...?
 	 */
-	private GoreCoreDataSaverNBT storedData;
+	private DataSaverNBT storedData;
 	
-	public GoreCoreWorldData(String key) {
+	public WorldData(String key) {
 		super(key);
-		this.storedData = new GoreCoreDataSaverNBT();
+		this.storedData = new DataSaverNBT();
 	}
 	
 	public World getWorld() {
@@ -85,7 +85,7 @@ public abstract class GoreCoreWorldData extends WorldSavedData implements GoreCo
 	 *            dimensions
 	 * @return World data, retrieved using the specified options
 	 */
-	protected static <T extends GoreCoreWorldData> T getDataForWorld(Class<T> worldDataClass, String key,
+	protected static <T extends WorldData> T getDataForWorld(Class<T> worldDataClass, String key,
 			World world, boolean separatePerDimension) {
 		try {
 			MapStorage ms = separatePerDimension ? world.getPerWorldStorage() : world.getMapStorage();

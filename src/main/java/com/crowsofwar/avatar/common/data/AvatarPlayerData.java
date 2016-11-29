@@ -38,9 +38,9 @@ import com.crowsofwar.avatar.common.network.Networker.Property;
 import com.crowsofwar.avatar.common.network.Transmitters;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.data.GoreCoreDataSaver;
-import com.crowsofwar.gorecore.data.GoreCoreDataSaverDontSave;
-import com.crowsofwar.gorecore.data.GoreCorePlayerData;
+import com.crowsofwar.gorecore.data.DataSaver;
+import com.crowsofwar.gorecore.data.DataSaverDontSave;
+import com.crowsofwar.gorecore.data.PlayerData;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherServer;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherSided;
@@ -49,7 +49,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class AvatarPlayerData extends GoreCorePlayerData {
+public class AvatarPlayerData extends PlayerData {
 	
 	// TODO change player data lists into sets, when applicable
 	
@@ -76,9 +76,9 @@ public class AvatarPlayerData extends GoreCorePlayerData {
 	private final Networker networker;
 	private final boolean isClient;
 	
-	public AvatarPlayerData(GoreCoreDataSaver dataSaver, UUID playerID, EntityPlayer player) {
+	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
-		isClient = dataSaver instanceof GoreCoreDataSaverDontSave;
+		isClient = dataSaver instanceof DataSaverDontSave;
 		bendingControllers = new HashMap<BendingType, BendingController>();
 		bendingControllerList = new ArrayList<BendingController>();
 		bendingStates = new HashMap<BendingType, BendingState>();

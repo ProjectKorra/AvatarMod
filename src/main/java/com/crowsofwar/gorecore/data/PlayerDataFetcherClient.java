@@ -45,7 +45,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author CrowsOfWar
  */
 @SideOnly(Side.CLIENT)
-public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements PlayerDataFetcher<T> {
+public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerDataFetcher<T> {
 	
 	private final Minecraft mc;
 	/**
@@ -92,8 +92,8 @@ public class PlayerDataFetcherClient<T extends GoreCorePlayerData> implements Pl
 		try {
 			
 			EntityPlayer player = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld, playerID);
-			return dataClass.getConstructor(GoreCoreDataSaver.class, UUID.class, EntityPlayer.class)
-					.newInstance(new GoreCoreDataSaverDontSave(), playerID, player);
+			return dataClass.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
+					.newInstance(new DataSaverDontSave(), playerID, player);
 			
 		} catch (Exception e) {
 			GoreCore.LOGGER.warn("Found an error when trying to make new client-side player data!");

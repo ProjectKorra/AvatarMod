@@ -17,80 +17,52 @@
 
 package com.crowsofwar.gorecore.data;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 /**
- * Wraps NBTTagCompounds to be usable with {@link GoreCoreDataSaver}.
+ * An implementation of {@link DataSaver DataSaver} where data is not stored anywhere.
  * 
  * @author CrowsOfWar
  */
-public class GoreCoreDataSaverNBT implements GoreCoreDataSaver {
-	
-	private NBTTagCompound nbt;
-	
-	/**
-	 * Creates a new NBTTagCompound DataSaver wrapper using a new NBTTagCompound.
-	 */
-	public GoreCoreDataSaverNBT() {
-		this(new NBTTagCompound());
-	}
-	
-	/**
-	 * Creates a new NBTTagCompound DataSaver wrapper using the specified NBTTagCompound.
-	 */
-	public GoreCoreDataSaverNBT(NBTTagCompound nbt) {
-		this.nbt = nbt;
-	}
+public class DataSaverDontSave implements DataSaver {
 	
 	@Override
 	public int getInt(String key) {
-		return nbt.getInteger(key);
+		return 0;
 	}
 	
 	@Override
-	public void setInt(String key, int value) {
-		nbt.setInteger(key, value);
-	}
+	public void setInt(String key, int value) {}
 	
 	@Override
 	public String getString(String key) {
-		return nbt.getString(key);
+		return null;
 	}
 	
 	@Override
-	public void setString(String key, String value) {
-		nbt.setString(key, value);
-	}
+	public void setString(String key, String value) {}
 	
 	@Override
 	public float getFloat(String key) {
-		return nbt.getFloat(key);
+		return 0;
 	}
 	
 	@Override
-	public void setFloat(String key, float value) {
-		nbt.setFloat(key, value);
-	}
+	public void setFloat(String key, float value) {}
 	
 	@Override
 	public double getDouble(String key) {
-		return nbt.getDouble(key);
+		return 0;
 	}
 	
 	@Override
-	public void setDouble(String key, double value) {
-		nbt.setDouble(key, value);
-	}
+	public void setDouble(String key, double value) {}
 	
 	@Override
 	public long getLong(String key) {
-		return nbt.getLong(key);
+		return 0;
 	}
 	
 	@Override
-	public void setLong(String key, long value) {
-		nbt.setLong(key, value);
-	}
+	public void setLong(String key, long value) {}
 	
 	@Override
 	public void saveChanges() {}

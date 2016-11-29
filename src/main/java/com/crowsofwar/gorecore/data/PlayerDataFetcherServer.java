@@ -36,11 +36,11 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class PlayerDataFetcherServer<T extends GoreCorePlayerData> implements PlayerDataFetcher<T> {
+public class PlayerDataFetcherServer<T extends PlayerData> implements PlayerDataFetcher<T> {
 	
-	private final WorldDataFetcher<? extends GoreCoreWorldDataPlayers<T>> worldDataFetcher;
+	private final WorldDataFetcher<? extends WorldDataPlayers<T>> worldDataFetcher;
 	
-	public PlayerDataFetcherServer(WorldDataFetcher<? extends GoreCoreWorldDataPlayers<T>> worldDataFetcher) {
+	public PlayerDataFetcherServer(WorldDataFetcher<? extends WorldDataPlayers<T>> worldDataFetcher) {
 		this.worldDataFetcher = worldDataFetcher;
 	}
 	
@@ -108,7 +108,7 @@ public class PlayerDataFetcherServer<T extends GoreCorePlayerData> implements Pl
 		return res == null ? null : worldDataFetcher.fetch(world).getPlayerData(res);
 	}
 	
-	public static interface WorldDataFetcher<T extends GoreCoreWorldData> {
+	public static interface WorldDataFetcher<T extends WorldData> {
 		
 		T fetch(World world);
 		
