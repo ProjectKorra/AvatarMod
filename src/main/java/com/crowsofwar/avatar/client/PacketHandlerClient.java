@@ -35,8 +35,8 @@ import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.PlayerDataContext;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
+import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.util.PlayerUUIDs;
 
 import net.minecraft.client.Minecraft;
@@ -66,7 +66,8 @@ public class PacketHandlerClient implements IPacketHandler {
 		
 		if (packet instanceof PacketCParticles) return handlePacketParticles((PacketCParticles) packet, ctx);
 		
-		if (packet instanceof PacketCPlayerData) return handlePacketNewPlayerData((PacketCPlayerData) packet, ctx);
+		if (packet instanceof PacketCPlayerData)
+			return handlePacketNewPlayerData((PacketCPlayerData) packet, ctx);
 		
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 		
@@ -104,8 +105,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	 */
 	private IMessage handlePacketNewPlayerData(PacketCPlayerData packet, MessageContext ctx) {
 		
-		EntityPlayer player = PlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld,
-				packet.getPlayerId());
+		EntityPlayer player = PlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayerId());
 		if (player == null) {
 			AvatarLog.warn(WarningType.WEIRD_PACKET,
 					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
@@ -114,8 +114,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		}
 		AvatarLog.debug("Client: Received data packet for " + player);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing player data packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data != null) {
 			
 			Map<Networker.Property, Object> readData = packet.interpretData(data.getNetworker(),

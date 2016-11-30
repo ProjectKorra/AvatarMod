@@ -87,7 +87,8 @@ public class AvatarPlayerData extends PlayerData {
 		abilityData = new HashMap<>();
 		state = new PlayerState();
 		
-		networker = new Networker(!isClient, PacketCPlayerData.class, net -> new PacketCPlayerData(net, playerID));
+		networker = new Networker(!isClient, PacketCPlayerData.class,
+				net -> new PacketCPlayerData(net, playerID));
 		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
 		networker.register(bendingStateList, Transmitters.STATE_LIST, KEY_STATES);
 		networker.register(abilityData, Transmitters.ABILITY_DATA_MAP, KEY_ABILITY_DATA);
@@ -446,7 +447,7 @@ public class AvatarPlayerData extends PlayerData {
 	
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
 		fetcher = new PlayerDataFetcherSided<AvatarPlayerData>(clientFetcher,
-				new PlayerDataFetcherServer<AvatarPlayerData>(AvatarWorldData.FETCHER));
+				new PlayerDataFetcherServer<AvatarPlayerData>(AvatarWorldData::getDataFromWorld));
 	}
 	
 	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {

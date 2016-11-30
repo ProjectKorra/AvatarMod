@@ -63,8 +63,7 @@ public class NodeBendingRemove extends NodeFunctional {
 		String playerName = args.get(argPlayerName);
 		BendingController controller = args.get(argBendingController);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName,
-				"Error while getting player data for /avatar bending remove");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName);
 		if (data == null) {
 			
 			MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);

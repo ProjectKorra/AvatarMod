@@ -78,8 +78,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing UseAbility packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data != null) {
 			
 			BendingAbility ability = packet.getAbility();
@@ -108,8 +107,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			
 		}
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while" + " processing RequestData packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		
 		if (data != null) data.getNetworker().sendAll();
 		return null;
@@ -121,8 +119,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		World world = player.worldObj;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing" + " UseBendingController packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		
 		if (data != null) {
 			
@@ -145,8 +142,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing UseStatusControl packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();

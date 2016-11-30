@@ -17,8 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.List;
 
@@ -292,17 +292,16 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate() {
-			EntityPlayer controller = getControllingPlayer();
+			EntityPlayer player = getControllingPlayer();
 			
-			if (controller == null) return this;
+			if (player == null) return this;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(controller,
-					"Could not get player data to update PlayerControlled entity Block");
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
-			double yaw = Math.toRadians(controller.rotationYaw);
-			double pitch = Math.toRadians(controller.rotationPitch);
+			double yaw = Math.toRadians(player.rotationYaw);
+			double pitch = Math.toRadians(player.rotationPitch);
 			Vector forward = Vector.fromYawPitch(yaw, pitch);
-			Vector eye = Vector.getEyePos(controller);
+			Vector eye = Vector.getEyePos(player);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);
