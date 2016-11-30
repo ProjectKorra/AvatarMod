@@ -104,7 +104,7 @@ public class EntityFlames extends AvatarEntity {
 		}
 		
 		if (!worldObj.isRemote) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(owner);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
 			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FLAMETHROWER);
 			
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),

@@ -86,7 +86,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			World world = player.worldObj;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
 			if (data != null) {
 				WaterbendingState bendingState = (WaterbendingState) data
@@ -154,7 +154,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						6 * entity.getDamageMult());
 				
 				if (!entity.worldObj.isRemote) {
-					AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(entity.getOwner());
+					AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
 					if (data != null) {
 						data.getAbilityData(BendingAbility.ABILITY_WATER_ARC)
 								.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);

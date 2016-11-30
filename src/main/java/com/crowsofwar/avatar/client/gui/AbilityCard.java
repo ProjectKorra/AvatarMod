@@ -44,7 +44,7 @@ public class AbilityCard extends Gui {
 	public AbilityCard(BendingAbility ability) {
 		this.mc = Minecraft.getMinecraft();
 		this.ability = ability;
-		this.data = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer);
+		this.data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 	}
 	
 	public BendingAbility getAbility() {

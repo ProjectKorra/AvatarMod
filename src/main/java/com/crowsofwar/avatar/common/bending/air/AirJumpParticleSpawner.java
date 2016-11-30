@@ -72,7 +72,7 @@ public class AirJumpParticleSpawner {
 	public void onFall(LivingFallEvent e) {
 		if (e.getEntity() == target && !e.getEntity().worldObj.isRemote) {
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(target);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(target);
 			float xp = data.getAbilityData(BendingAbility.ABILITY_AIR_JUMP).getXp();
 			
 			// Find approximate maximum distance. In actuality, a bit less, due

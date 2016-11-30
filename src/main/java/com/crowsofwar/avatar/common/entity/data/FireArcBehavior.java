@@ -86,7 +86,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			}
 			World world = player.worldObj;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
 			if (data != null) {
 				FirebendingState bendingState = (FirebendingState) data
@@ -152,7 +152,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 						6 * entity.getDamageMult());
 				
 				if (!entity.worldObj.isRemote) {
-					AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(entity.getOwner());
+					AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
 					if (data != null) {
 						data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC)
 								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);

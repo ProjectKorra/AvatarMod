@@ -150,7 +150,7 @@ public class ClientInput implements IControlsHandler {
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void openBendingMenu(BendingController controller) {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		if (isControlPressed(controller.getRadialMenu().getKey()) && data.hasBending(controller.getID()))
 			AvatarUiRenderer.openBendingGui(controller.getType());
 		
@@ -179,7 +179,7 @@ public class ClientInput implements IControlsHandler {
 			// AvatarPlayerData data =
 			// AvatarPlayerDataFetcherClient.instance.getDataPerformance(
 			// Minecraft.getMinecraft().thePlayer);
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
 			if (data != null) {
 				

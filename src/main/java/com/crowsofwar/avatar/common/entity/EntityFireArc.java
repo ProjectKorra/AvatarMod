@@ -84,7 +84,7 @@ public class EntityFireArc extends EntityArc {
 	public void setDead() {
 		super.setDead();
 		if (getOwner() != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(getOwner());
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
 			data.removeStatusControl(StatusControl.THROW_FIRE);
 			if (!worldObj.isRemote) {
 				data.removeStatusControl(StatusControl.THROW_FIRE);

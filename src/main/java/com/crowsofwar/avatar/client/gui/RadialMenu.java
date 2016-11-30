@@ -131,7 +131,7 @@ public class RadialMenu extends Gui {
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
 		drawCenteredString(mc.fontRendererObj, translated, x, y, 0xffffff);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		if (data != null) {
 			String second = I18n.format(ability == null ? "avatar.radial.undefined" : "avatar.radial.xp",
 					(int) data.getAbilityData(ability).getXp());

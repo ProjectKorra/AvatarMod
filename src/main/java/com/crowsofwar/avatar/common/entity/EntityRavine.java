@@ -196,7 +196,7 @@ public class EntityRavine extends AvatarEntity {
 		}
 		
 		if (!worldObj.isRemote && owner != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(owner);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
 			if (data != null) {
 				data.getAbilityData(ABILITY_RAVINE).addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}

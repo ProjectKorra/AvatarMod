@@ -96,7 +96,7 @@ public class AvatarUiRenderer extends Gui {
 			}
 		}
 		
-		Set<StatusControl> statusControls = AvatarPlayerData.fetcher().fetchPerformance(mc.thePlayer)
+		Set<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.thePlayer)
 				.getActiveStatusControls();
 		for (StatusControl statusControl : statusControls) {
 			mc.getTextureManager().bindTexture(STATUS_CONTROL_ICONS);

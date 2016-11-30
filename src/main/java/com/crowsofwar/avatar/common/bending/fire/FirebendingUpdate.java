@@ -44,7 +44,7 @@ public class FirebendingUpdate {
 	public void playerTick(PlayerTickEvent e) {
 		EntityPlayer player = e.player;
 		if (!player.worldObj.isRemote) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			if (data != null && data.hasBending(BendingType.FIREBENDING)) {
 				FirebendingState fs = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
 				if (fs.isFlamethrowing() && player.ticksExisted % 3 < 2) {

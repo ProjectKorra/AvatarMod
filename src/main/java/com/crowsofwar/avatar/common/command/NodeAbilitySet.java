@@ -62,7 +62,7 @@ public class NodeAbilitySet extends NodeFunctional {
 		
 		if (setXp >= 0 && setXp <= 100) {
 			AvatarPlayerData data = AvatarPlayerData.fetcher()
-					.fetchPerformance(call.getFrom().getEntityWorld(), player);
+					.fetch(call.getFrom().getEntityWorld(), player);
 			if (data != null) {
 				
 				data.getAbilityData(ability).setXp(setXp);

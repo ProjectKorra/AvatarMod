@@ -27,7 +27,7 @@ public class AvatarPlayerTick {
 	
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
-		if (e.side == Side.CLIENT) AvatarPlayerData.fetcher().fetchPerformance(e.player);
+		if (e.side == Side.CLIENT) AvatarPlayerData.fetcher().fetch(e.player);
 	}
 	
 }

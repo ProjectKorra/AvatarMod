@@ -52,7 +52,7 @@ public class StatCtrlAirJump extends StatusControl {
 		if (player.onGround) {
 			
 			float xp = 0;
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			if (data != null) {
 				AbilityData abilityData = data.getAbilityData(AbilityAirJump.INSTANCE);
 				xp = abilityData.getXp();

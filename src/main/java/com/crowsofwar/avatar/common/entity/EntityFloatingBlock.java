@@ -110,7 +110,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		this.enableItemDrops = true;
 		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, newOwner -> {
 			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher()
-					.fetchPerformance(newOwner).getBendingState(EARTHBENDING);
+					.fetch(newOwner).getBendingState(EARTHBENDING);
 			if (state != null) state.setPickupBlock(this);
 		});
 		this.damageMult = 1;

@@ -207,7 +207,7 @@ public class EntityWaterArc extends EntityArc {
 	protected Consumer<EntityPlayer> getNewOwnerCallback() {
 		return newOwner -> {
 			WaterbendingState state = (WaterbendingState) AvatarPlayerData.fetcher()
-					.fetchPerformance(newOwner).getBendingState(BendingType.WATERBENDING.id());
+					.fetch(newOwner).getBendingState(BendingType.WATERBENDING.id());
 			state.setWaterArc(this);
 		};
 	}

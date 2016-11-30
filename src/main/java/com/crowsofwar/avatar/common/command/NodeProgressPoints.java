@@ -59,7 +59,7 @@ public abstract class NodeProgressPoints extends NodeFunctional {
 		String playerName = argList.get(argPlayerName);
 		BendingController bending = argList.get(argBending);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(call.getFrom().getEntityWorld(),
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(call.getFrom().getEntityWorld(),
 				playerName);
 		if (data != null) {
 			BendingState bs = data.getBendingState(bending.getType());
