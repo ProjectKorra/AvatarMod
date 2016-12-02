@@ -101,12 +101,12 @@ public abstract class AvatarParticle extends Particle {
 				new Vec3d((double) (rotationX * f4 - rotationXY * f4), (double) (-rotationZ * f4),
 						(double) (rotationYZ * f4 - rotationXZ * f4)) };
 		
-		if (this.field_190014_F != 0.0F) {
-			float f8 = this.field_190014_F + (this.field_190014_F - this.field_190015_G) * partialTicks;
+		if (this.particleAngle != 0.0F) {
+			float f8 = this.particleAngle + (this.particleAngle - this.prevParticleAngle) * partialTicks;
 			float f9 = MathHelper.cos(f8 * 0.5F);
-			float f10 = MathHelper.sin(f8 * 0.5F) * (float) field_190016_K.xCoord;
-			float f11 = MathHelper.sin(f8 * 0.5F) * (float) field_190016_K.yCoord;
-			float f12 = MathHelper.sin(f8 * 0.5F) * (float) field_190016_K.zCoord;
+			float f10 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.xCoord;
+			float f11 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.yCoord;
+			float f12 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.zCoord;
 			Vec3d vec3d = new Vec3d((double) f10, (double) f11, (double) f12);
 			
 			for (int l = 0; l < 4; ++l) {

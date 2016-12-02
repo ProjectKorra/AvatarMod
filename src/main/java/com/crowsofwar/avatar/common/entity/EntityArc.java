@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -108,7 +109,7 @@ public abstract class EntityArc extends AvatarEntity {
 		}
 		
 		Vector velPerTick = velocity().dividedBy(20);
-		moveEntity(velPerTick.x(), velPerTick.y(), velPerTick.z());
+		moveEntity(MoverType.SELF, velPerTick.x(), velPerTick.y(), velPerTick.z());
 		getLeader().position().set(posX, posY, posZ);
 		getLeader().velocity().set(velocity());
 		

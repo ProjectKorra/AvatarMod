@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -101,7 +102,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
 						Vector motion = lookPos.minus(new Vector(water));
 						motion.mul(.3);
-						water.moveEntity(motion.x(), motion.y(), motion.z());
+						water.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
 						
 						if (water.worldObj.isRemote && water.canPlaySplash()) {
 							if (motion.sqrMagnitude() >= 0.004) water.playSplash();

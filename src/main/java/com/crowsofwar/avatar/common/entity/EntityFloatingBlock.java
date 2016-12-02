@@ -24,8 +24,6 @@ import static net.minecraft.network.datasync.EntityDataManager.createKey;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -39,6 +37,7 @@ import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -46,12 +45,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -109,8 +105,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		}
 		this.enableItemDrops = true;
 		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, newOwner -> {
-			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher()
-					.fetch(newOwner).getBendingState(EARTHBENDING);
+			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetch(newOwner)
+					.getBendingState(EARTHBENDING);
 			if (state != null) state.setPickupBlock(this);
 		});
 		this.damageMult = 1;
@@ -286,7 +282,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		motionY = velocity().y() / 20;
 		motionZ = velocity().z() / 20;
 		
-		moveEntity(velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
+		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		
 		getBehavior().setEntity(this);
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate();
@@ -358,18 +354,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double d) {
 		return true;
-	}
-	
-	@Override
-	public boolean processInitialInteract(EntityPlayer player, @Nullable ItemStack stack, EnumHand hand) {
-		System.out.println("Interacted");// EntityPig
-		return true;
-	}
-	
-	@Override
-	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, @Nullable ItemStack stack,
-			EnumHand hand) {
-		return EnumActionResult.SUCCESS;
 	}
 	
 	@Override
