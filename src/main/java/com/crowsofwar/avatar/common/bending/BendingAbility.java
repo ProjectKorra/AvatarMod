@@ -113,6 +113,16 @@ public abstract class BendingAbility {
 		return getIconIndex() > -1;
 	}
 	
+	/**
+	 * Require that a raycast be sent prior to {@link #execute(AbilityContext)}.
+	 * Information for the raytrace will then be available through the
+	 * {@link AbilityContext}.
+	 * 
+	 * @param range
+	 *            Range to raycast. -1 for player's reach.
+	 * @param raycastLiquids
+	 *            Whether to keep going on hit liquids
+	 */
 	protected void requireRaytrace(double range, boolean raycastLiquids) {
 		this.raytrace = new Raytrace.Info(range, raycastLiquids);
 	}

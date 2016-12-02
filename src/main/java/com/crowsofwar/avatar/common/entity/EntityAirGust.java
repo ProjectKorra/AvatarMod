@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.GoreCore;
@@ -109,7 +109,7 @@ public class EntityAirGust extends EntityArc {
 				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
 				float xp = 0;
 				if (data != null) {
-					AbilityData abilityData = data.getAbilityData(AbilityAirGust.INSTANCE);
+					AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_GUST);
 					xp = abilityData.getXp();
 					abilityData.addXp(SKILLS_CONFIG.airGustHit);
 				}

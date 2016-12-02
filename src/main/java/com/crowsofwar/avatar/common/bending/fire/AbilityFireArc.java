@@ -39,6 +39,7 @@ public class AbilityFireArc extends FireAbility {
 	 */
 	public AbilityFireArc() {
 		super("fire_arc");
+		requireRaytrace(-1, false);
 	}
 	
 	@Override

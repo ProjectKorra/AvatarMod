@@ -36,15 +36,16 @@ public class Raytrace {
 	private Raytrace() {}
 	
 	/**
-	 * Returns the position of the block the player is looking at. Null if the player is not
-	 * targeting anything in range. This does not raycast liquids.
+	 * Returns the position of the block the player is looking at. Null if the
+	 * player is not targeting anything in range. This does not raycast liquids.
 	 * 
 	 * @param player
 	 *            Player entity (works both client-side and server-side)
 	 * @param range
-	 *            How far to raytrace. If -1, then it is how far the player can reach.
-	 * @return The position of the block that the player is looking at. May differ between server
-	 *         and client.
+	 *            How far to raytrace. If -1, then it is how far the player can
+	 *            reach.
+	 * @return The position of the block that the player is looking at. May
+	 *         differ between server and client.
 	 */
 	public static Result getTargetBlock(EntityPlayer player, double range) {
 		
@@ -54,8 +55,8 @@ public class Raytrace {
 	
 	/**
 	 * Returns the position of the block the player is looking at.
-	 * {@link Raytrace.Result#hitSomething() No hit} if the player is not targeting anything in
-	 * range, or the information doesn't require raytrace.
+	 * {@link Raytrace.Result#hitSomething() No hit} if the player is not
+	 * targeting anything in range, or the information doesn't require raytrace.
 	 * 
 	 * @param info
 	 *            Information of this raytrace
@@ -74,11 +75,12 @@ public class Raytrace {
 	 * @param player
 	 *            Player entity (works both client-side and server-side)
 	 * @param range
-	 *            How far to raytrace. If -1, then it is how far the player can reach.
+	 *            How far to raytrace. If -1, then it is how far the player can
+	 *            reach.
 	 * @param raycastLiquids
 	 *            Whether liquids are detected in the raycast.
-	 * @return The position of the block that the player is looking at. May differ between server
-	 *         and client.
+	 * @return The position of the block that the player is looking at. May
+	 *         differ between server and client.
 	 */
 	public static Result getTargetBlock(EntityPlayer player, double range, boolean raycastLiquids) {
 		
@@ -140,9 +142,9 @@ public class Raytrace {
 	}
 	
 	/**
-	 * Custom raytrace which allows you to specify a (Bi)Predicate to determine if the block has
-	 * been hit. Unfortunately, this implementation does not correctly report the side hit (always
-	 * is {@link EnumFacing#DOWN}).
+	 * Custom raytrace which allows you to specify a (Bi)Predicate to determine
+	 * if the block has been hit. Unfortunately, this implementation does not
+	 * correctly report the side hit (always is {@link EnumFacing#DOWN}).
 	 * 
 	 * @param world
 	 *            The world
@@ -235,7 +237,8 @@ public class Raytrace {
 		}
 		
 		/**
-		 * Constructs a raytrace information requesting a raytrace with the designated parameters.
+		 * Constructs a raytrace information requesting a raytrace with the
+		 * designated parameters.
 		 * 
 		 * @param range
 		 *            Range of raytrace. If -1, how far player can reach.

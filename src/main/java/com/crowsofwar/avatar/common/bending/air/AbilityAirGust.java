@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -32,14 +31,11 @@ import net.minecraft.world.World;
  */
 public class AbilityAirGust extends AirAbility {
 	
-	public static BendingAbility INSTANCE;
-	
 	/**
 	 * @param controller
 	 */
 	public AbilityAirGust() {
 		super("air_gust");
-		INSTANCE = this;
 	}
 	
 	@Override
