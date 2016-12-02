@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.PlayerUUIDs;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,9 +82,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			
 			BendingAbility ability = packet.getAbility();
 			// TODO Verify that the client can actually use that ability
-			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
-			ability.execute(new AbilityContext(data,
-					new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));
+			ability.execute(new AbilityContext(data, packet.getRaytrace()));
 			
 		}
 		
@@ -147,8 +144,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
 			if (data.hasStatusControl(sc)) {
-				if (sc.execute(new AbilityContext(data,
-						new Raytrace.Result(packet.getLookPos(), packet.getLookSide())))) {
+				if (sc.execute(new AbilityContext(data, packet.getRaytrace()))) {
 					
 					data.removeStatusControl(packet.getStatusControl());
 					data.sync();

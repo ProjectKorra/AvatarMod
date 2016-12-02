@@ -69,7 +69,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		return ability;
 	}
 	
-	public Raytrace getRaytrace() {
+	public Raytrace.Result getRaytrace() {
 		return raytrace;
 	}
 	

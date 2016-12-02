@@ -18,13 +18,12 @@
 package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.VectorI;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -35,15 +34,13 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusControl> {
 	
 	private StatusControl statusControl;
-	private VectorI lookPos;
-	private EnumFacing lookSide;
+	private Raytrace.Result raytrace;
 	
 	public PacketSUseStatusControl() {}
 	
 	public PacketSUseStatusControl(StatusControl control, Raytrace.Result raytrace) {
 		this.statusControl = control;
-		this.lookPos = raytrace.getPos();
-		this.lookSide = raytrace.getSide();
+		this.raytrace = raytrace;
 	}
 	
 	@Override
@@ -51,35 +48,19 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 		int id = buf.readInt();
 		statusControl = StatusControl.lookup(id);
 		if (statusControl == null) {
-			AvatarLog
-					.warn("Player trying to crash the server?? While sending UseStatusControl packet, sent invalid id "
+			AvatarLog.warn(WarningType.POSSIBLE_HACKING,
+					"Player trying to crash the server?? While sending UseStatusControl packet, sent invalid id "
 							+ id);
 			return; // TODO Cancel packet processing
 		}
 		
-		VectorI readPos = VectorI.fromBytes(buf);
-		int readSide = buf.readInt();
-		
-		if (readSide == -1) {
-			lookPos = null;
-			lookSide = null;
-		} else {
-			lookPos = readPos;
-			lookSide = EnumFacing.values()[readSide];
-		}
-		
+		raytrace = Raytrace.Result.fromBytes(buf);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(statusControl.id());
-		if (lookPos == null) {
-			new VectorI(0, 0, 0).toBytes(buf);
-			buf.writeInt(-1);
-		} else {
-			lookPos.toBytes(buf);
-			buf.writeInt(lookSide.ordinal());
-		}
+		raytrace.toBytes(buf);
 	}
 	
 	@Override
@@ -96,12 +77,7 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 		return statusControl;
 	}
 	
-	public VectorI getLookPos() {
-		return lookPos;
+	public Raytrace.Result getRaytrace() {
+		return raytrace;
 	}
-	
-	public EnumFacing getLookSide() {
-		return lookSide;
-	}
-	
 }
