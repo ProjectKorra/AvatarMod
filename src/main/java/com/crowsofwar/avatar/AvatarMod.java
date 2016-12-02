@@ -50,6 +50,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -62,6 +63,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:GoreCore", useMetadata = false)
@@ -145,10 +147,8 @@ public class AvatarMod {
 	}
 	
 	private void registerEntity(Class<? extends Entity> entity, String name) {
-		// FIXME Entities not registered!! Wait for Forge to add entity
-		// registration back
-		// EntityRegistry.registerModEntity(entity, name, nextEntityID++, this,
-		// 64, 20, true);
+		EntityRegistry.registerModEntity(new ResourceLocation("avatar", name), entity, name, nextEntityID++,
+				this, 64, 20, true);
 	}
 	
 }
