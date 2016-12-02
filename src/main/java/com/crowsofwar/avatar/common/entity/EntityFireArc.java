@@ -57,7 +57,7 @@ public class EntityFireArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (inWater) {
+		if (inWater || worldObj.isRainingAt(getPosition())) {
 			setDead();
 			Random random = new Random();
 			if (worldObj.isRemote) {
