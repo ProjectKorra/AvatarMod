@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
@@ -31,11 +30,8 @@ import net.minecraft.world.World;
 
 public class AbilityCreateWave extends WaterAbility {
 	
-	private final Raytrace.Info raytrace;
-	
 	public AbilityCreateWave() {
 		super("wave");
-		this.raytrace = new Raytrace.Info();
 	}
 	
 	@Override
@@ -76,11 +72,6 @@ public class AbilityCreateWave extends WaterAbility {
 	@Override
 	public int getIconIndex() {
 		return 11;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

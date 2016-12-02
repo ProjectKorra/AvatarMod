@@ -21,8 +21,6 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 
 /**
  * 
@@ -51,11 +49,6 @@ public class AbilityAirJump extends AirAbility {
 	@Override
 	public int getIconIndex() {
 		return 10;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return new Raytrace.Info();
 	}
 	
 }

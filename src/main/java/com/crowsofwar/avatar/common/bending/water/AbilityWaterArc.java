@@ -21,8 +21,6 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
@@ -37,14 +35,12 @@ import net.minecraft.world.World;
  */
 public class AbilityWaterArc extends WaterAbility {
 	
-	private final Raytrace.Info raytrace;
-	
 	/**
 	 * @param controller
 	 */
 	public AbilityWaterArc() {
 		super("water_arc");
-		this.raytrace = new Raytrace.Info(-1, false);
+		requireRaytrace(-1, false);
 	}
 	
 	@Override
@@ -92,11 +88,6 @@ public class AbilityWaterArc extends WaterAbility {
 	@Override
 	public int getIconIndex() {
 		return 4;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

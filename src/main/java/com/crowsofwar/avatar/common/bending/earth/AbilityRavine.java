@@ -22,8 +22,6 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,14 +34,11 @@ import net.minecraft.world.World;
  */
 public class AbilityRavine extends EarthAbility {
 	
-	private final Raytrace.Info raytrace;
-	
 	/**
 	 * @param controller
 	 */
 	public AbilityRavine() {
 		super("ravine");
-		this.raytrace = new Raytrace.Info();
 	}
 	
 	@Override
@@ -71,11 +66,6 @@ public class AbilityRavine extends EarthAbility {
 	@Override
 	public int getIconIndex() {
 		return 8;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

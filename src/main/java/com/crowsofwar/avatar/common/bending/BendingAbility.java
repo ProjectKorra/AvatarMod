@@ -64,6 +64,7 @@ public abstract class BendingAbility {
 	protected final int id;
 	private final String name;
 	private final AbilityIcon icon;
+	private Raytrace.Info raytrace;
 	
 	public BendingAbility(BendingType bendingType, String name) {
 		this.type = bendingType;
@@ -71,6 +72,7 @@ public abstract class BendingAbility {
 		this.name = name;
 		BendingManager.registerAbility(this);
 		this.icon = new AbilityIcon(getIconIndex() == -1 ? 255 : getIconIndex());
+		this.raytrace = new Raytrace.Info();
 	}
 	
 	protected BendingController controller() {
@@ -111,10 +113,16 @@ public abstract class BendingAbility {
 		return getIconIndex() > -1;
 	}
 	
+	protected void requireRaytrace(double range, boolean raycastLiquids) {
+		this.raytrace = new Raytrace.Info(range, raycastLiquids);
+	}
+	
 	/**
-	 * Get a request for a raytrace.
+	 * Get the request raytrace requirements for when the ability is activated.
 	 */
-	public abstract Raytrace.Info getRaytrace();
+	public final Raytrace.Info getRaytrace() {
+		return raytrace;
+	}
 	
 	/**
 	 * Gets the name of this ability. Will be all lowercase with no spaces.

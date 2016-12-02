@@ -22,8 +22,6 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,14 +34,11 @@ import net.minecraft.world.World;
  */
 public class AbilityFireArc extends FireAbility {
 	
-	private final Raytrace.Info raytrace;
-	
 	/**
 	 * @param controller
 	 */
 	public AbilityFireArc() {
 		super("fire_arc");
-		this.raytrace = new Raytrace.Info();
 	}
 	
 	@Override
@@ -74,11 +69,6 @@ public class AbilityFireArc extends FireAbility {
 	@Override
 	public int getIconIndex() {
 		return 3;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

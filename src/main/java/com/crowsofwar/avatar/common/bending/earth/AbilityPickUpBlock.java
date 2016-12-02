@@ -27,8 +27,6 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
@@ -48,12 +46,11 @@ import net.minecraft.world.World;
 public class AbilityPickUpBlock extends EarthAbility {
 	
 	private final Random random;
-	private final Raytrace.Info raytrace;
 	
 	public AbilityPickUpBlock() {
 		super("pickup_block");
 		this.random = new Random();
-		this.raytrace = new Raytrace.Info(-1, true);
+		requireRaytrace(-1, true);
 	}
 	
 	@Override
@@ -115,11 +112,6 @@ public class AbilityPickUpBlock extends EarthAbility {
 	@Override
 	public int getIconIndex() {
 		return 0;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

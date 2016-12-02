@@ -18,8 +18,6 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.init.Blocks;
@@ -33,14 +31,12 @@ import net.minecraft.world.World;
  */
 public class AbilityLightFire extends FireAbility {
 	
-	private final Raytrace.Info raytrace;
-	
 	/**
 	 * @param controller
 	 */
 	public AbilityLightFire() {
 		super("light_fire");
-		this.raytrace = new Raytrace.Info(-1, false);
+		requireRaytrace(-1, false);
 	}
 	
 	@Override
@@ -62,11 +58,6 @@ public class AbilityLightFire extends FireAbility {
 	@Override
 	public int getIconIndex() {
 		return 2;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

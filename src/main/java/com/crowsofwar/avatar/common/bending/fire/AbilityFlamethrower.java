@@ -20,8 +20,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 
 /**
  * 
@@ -30,14 +28,11 @@ import com.crowsofwar.avatar.common.util.Raytrace.Info;
  */
 public class AbilityFlamethrower extends FireAbility {
 	
-	private final Raytrace.Info raytrace;
-	
 	/**
 	 * @param controller
 	 */
 	public AbilityFlamethrower() {
 		super("flamethrower");
-		this.raytrace = new Raytrace.Info();
 	}
 	
 	@Override
@@ -50,11 +45,6 @@ public class AbilityFlamethrower extends FireAbility {
 	@Override
 	public int getIconIndex() {
 		return 9;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }
