@@ -93,7 +93,7 @@ public class Raytrace {
 				!raycastLiquids, raycastLiquids, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
-			return new Result(new VectorI(res.getBlockPos()), res.sideHit);
+			return new Result(new VectorI(res.getBlockPos()), res.sideHit, new Vector(res.hitVec));
 		} else {
 			return new Result();
 		}
@@ -135,7 +135,7 @@ public class Raytrace {
 				start.plus(direction.times(range)).toMinecraft(), !raycastLiquids, raycastLiquids, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
-			return new Result(new VectorI(res.getBlockPos()), res.sideHit);
+			return new Result(new VectorI(res.getBlockPos()), res.sideHit, new Vector(res.hitVec));
 		} else {
 			return new Result();
 		}
@@ -167,7 +167,7 @@ public class Raytrace {
 			BlockPos pos = currentPosition.toBlockPos();
 			IBlockState blockState = world.getBlockState(pos);
 			if (verify.test(pos, blockState)) {
-				return new Result(new VectorI(pos), EnumFacing.DOWN);
+				return new Result(new VectorI(pos), EnumFacing.DOWN, currentPosition);
 			}
 			
 			currentPosition.add(increment);
@@ -182,15 +182,17 @@ public class Raytrace {
 		private final boolean hit;
 		private final VectorI pos;
 		private final EnumFacing side;
+		private final Vector hitPrecision;
 		
 		public Result() {
-			this(null, null);
+			this(null, null, null);
 		}
 		
-		public Result(VectorI pos, EnumFacing side) {
+		public Result(VectorI pos, EnumFacing side, Vector posPrecise) {
 			this.pos = pos;
 			this.side = side;
 			this.hit = pos != null;
+			this.hitPrecision = posPrecise;
 		}
 		
 		/**
@@ -212,6 +214,10 @@ public class Raytrace {
 		 */
 		public boolean hitSomething() {
 			return hit;
+		}
+		
+		public Vector getPosPrecise() {
+			return hitPrecision;
 		}
 		
 	}
