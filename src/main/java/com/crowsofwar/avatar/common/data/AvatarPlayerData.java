@@ -71,8 +71,6 @@ public class AvatarPlayerData extends PlayerData {
 	
 	private Map<BendingAbility, AbilityData> abilityData;
 	
-	private PlayerState state;
-	
 	private final Networker networker;
 	private final boolean isClient;
 	
@@ -85,7 +83,6 @@ public class AvatarPlayerData extends PlayerData {
 		bendingStateList = new ArrayList<BendingState>();
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
-		state = new PlayerState();
 		
 		networker = new Networker(!isClient, PacketCPlayerData.class,
 				net -> new PacketCPlayerData(net, playerID));
@@ -294,10 +291,6 @@ public class AvatarPlayerData extends PlayerData {
 	 */
 	public BendingController getBendingController(BendingType type) {
 		return bendingControllers.get(type);
-	}
-	
-	public PlayerState getState() {
-		return state;
 	}
 	
 	/**
