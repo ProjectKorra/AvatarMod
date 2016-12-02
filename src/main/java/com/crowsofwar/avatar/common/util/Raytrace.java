@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -182,7 +183,7 @@ public class Raytrace {
 		private final boolean hit;
 		private final VectorI pos;
 		private final EnumFacing side;
-		private final Vector hitPrecision;
+		private final Vector posPrecise;
 		
 		public Result() {
 			this(null, null, null);
@@ -192,7 +193,7 @@ public class Raytrace {
 			this.pos = pos;
 			this.side = side;
 			this.hit = pos != null;
-			this.hitPrecision = posPrecise;
+			this.posPrecise = posPrecise;
 		}
 		
 		/**
@@ -217,7 +218,29 @@ public class Raytrace {
 		}
 		
 		public Vector getPosPrecise() {
-			return hitPrecision;
+			return posPrecise;
+		}
+		
+		public static Raytrace.Result fromBytes(ByteBuf buf) {
+			boolean hit = buf.readBoolean();
+			EnumFacing side = null;
+			VectorI pos = null;
+			Vector posPrecise = null;
+			if (hit) {
+				side = EnumFacing.values()[buf.readInt()];
+				pos = VectorI.fromBytes(buf);
+				posPrecise = Vector.fromBytes(buf);
+			}
+			return new Result(pos, side, posPrecise);
+		}
+		
+		public void toBytes(ByteBuf buf) {
+			buf.writeBoolean(hit);
+			if (hit) {
+				buf.writeInt(side.ordinal());
+				pos.toBytes(buf);
+				posPrecise.toBytes(buf);
+			}
 		}
 		
 	}

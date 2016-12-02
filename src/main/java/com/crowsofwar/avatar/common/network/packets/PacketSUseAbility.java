@@ -21,10 +21,9 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-import com.crowsofwar.gorecore.util.VectorI;
+import com.crowsofwar.avatar.common.util.Raytrace;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -37,16 +36,13 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
 	private BendingAbility ability;
-	private VectorI target;
-	/** ID of EnumFacing of the side of the block player is looking at */
-	private EnumFacing side;
+	private Raytrace.Result raytrace;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(BendingAbility ability, VectorI target, EnumFacing side) {
+	public PacketSUseAbility(BendingAbility ability, Raytrace.Result raytrace) {
 		this.ability = ability;
-		this.target = target;
-		this.side = side;
+		this.raytrace = raytrace;
 	}
 	
 	@Override
@@ -55,18 +51,13 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		if (ability == null) {
 			throw new NullPointerException("Server sent invalid ability over network: ID " + ability);
 		}
-		target = buf.readBoolean() ? VectorI.fromBytes(buf) : null;
-		side = EnumFacing.getFront(buf.readInt());
+		raytrace = Raytrace.Result.fromBytes(buf);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(ability.getId());
-		buf.writeBoolean(target != null);
-		if (target != null) {
-			target.toBytes(buf);
-		}
-		buf.writeInt(side == null ? -1 : side.ordinal());
+		raytrace.toBytes(buf);
 	}
 	
 	@Override
@@ -78,12 +69,8 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		return ability;
 	}
 	
-	public VectorI getTargetPos() {
-		return target;
-	}
-	
-	public EnumFacing getSideHit() {
-		return side;
+	public Raytrace getRaytrace() {
+		return raytrace;
 	}
 	
 	@Override

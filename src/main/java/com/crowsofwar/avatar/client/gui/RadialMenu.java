@@ -207,8 +207,7 @@ public class RadialMenu extends Gui {
 					
 					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer,
 							controls[i].getRaytrace());
-					AvatarMod.network.sendToServer(
-							new PacketSUseAbility(controls[i], raytrace.getPos(), raytrace.getSide()));
+					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], raytrace));
 					AvatarUiRenderer.fade(segments[i]);
 					playClickSound(0.8f);
 					break;
