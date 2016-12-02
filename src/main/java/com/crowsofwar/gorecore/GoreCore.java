@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 @Mod(modid = GoreCore.MOD_ID, name = GoreCore.MOD_NAME, version = GoreCore.MOD_VERSION)
 public class GoreCore {
 	
-	public static final String MOD_ID = "GoreCore";
+	public static final String MOD_ID = "gorecore";
 	public static final String MOD_NAME = "GoreCore";
 	public static final String MOD_VERSION = "1.10-0.10.0";
 	
