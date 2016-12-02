@@ -123,18 +123,25 @@ public class EntityFlames extends AvatarEntity {
 		}
 		
 		handleWaterMovement();
-		if (inWater) {
+		if (inWater || worldObj.isRainingAt(getPosition())) {
 			setDead();
-			Random random = new Random();
-			if (worldObj.isRemote) {
-				worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
-						(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
-						(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
-			}
-			worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-					SoundCategory.PLAYERS, 0.3f, random.nextFloat() * 0.3f + 1.1f, false);
+			showExtinguished();
 		}
 		
+	}
+	
+	/**
+	 * Plays an extinguishing sound and particles
+	 */
+	private void showExtinguished() {
+		Random random = new Random();
+		if (worldObj.isRemote) {
+			worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
+					(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
+					(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
+		}
+		worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+				SoundCategory.PLAYERS, 0.3f, random.nextFloat() * 0.3f + 1.1f, false);
 	}
 	
 	@Override
