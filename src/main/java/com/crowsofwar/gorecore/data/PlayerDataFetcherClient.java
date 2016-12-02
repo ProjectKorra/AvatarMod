@@ -107,6 +107,10 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 	
 	@Override
 	public T fetch(World world, UUID playerID) {
+		if (world == null) throw new IllegalArgumentException("Cannot get client player data for null world");
+		if (playerID == null)
+			throw new IllegalArgumentException("Cannot get client player data for null player ID");
+		
 		T data = playerData.get(playerID);
 		if (data == null) {
 			data = createPlayerData(dataClass, playerID);

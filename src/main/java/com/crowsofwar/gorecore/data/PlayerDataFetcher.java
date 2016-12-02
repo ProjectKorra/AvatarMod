@@ -60,6 +60,9 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 	 *            UUID of the player
 	 */
 	default T fetch(World world, String playerName) {
+		if (world == null) throw new IllegalArgumentException("Cannot get player-data with null World");
+		if (playerName == null)
+			throw new IllegalArgumentException("Cannot get player-data with null player name");
 		PlayerUUIDs.Result result = PlayerUUIDs.getUUID(playerName);
 		if (result.isResultSuccessful()) {
 			return fetch(world, result.getUUID());
@@ -80,6 +83,7 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 	 *            UUID of the player
 	 */
 	default T fetch(EntityPlayer player) {
+		if (player == null) throw new IllegalArgumentException("Cannot get Player-Data for null player");
 		return fetch(player.worldObj, player.getName());
 	}
 	

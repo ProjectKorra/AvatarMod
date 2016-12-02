@@ -44,6 +44,11 @@ public class PlayerDataFetcherServer<T extends PlayerData> implements PlayerData
 	
 	@Override
 	public T fetch(World world, UUID accountId) {
+		
+		if (world == null) throw new IllegalArgumentException("Cannot get client player data for null world");
+		if (accountId == null)
+			throw new IllegalArgumentException("Cannot get client player data for null player ID");
+		
 		T data = worldDataFetcher.apply(world).getPlayerData(accountId);
 		data.setPlayerEntity(PlayerUUIDs.findPlayerInWorldFromUUID(world, accountId));
 		return data;
