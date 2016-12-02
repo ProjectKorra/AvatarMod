@@ -104,7 +104,8 @@ public class EntityAirGust extends EntityArc {
 		
 		@Override
 		protected void onCollision(Entity entity) {
-			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
+			if (entity.worldObj.isRemote && entity != owner
+					&& entity != GoreCore.proxy.getClientSidePlayer()) {
 				
 				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
 				float xp = 0;
