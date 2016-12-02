@@ -49,8 +49,14 @@ public class AbilityFireArc extends FireAbility {
 		FirebendingState fs = (FirebendingState) ctx.getData().getBendingState(controller());
 		AvatarPlayerData data = ctx.getData();
 		
-		Vector look = Vector.fromEntityLook(player);
-		Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
+		Vector lookPos;
+		if (ctx.isLookingAtBlock()) {
+			lookPos = ctx.getLookPos();
+		} else {
+			Vector look = Vector.fromEntityLook(player);
+			lookPos = Vector.getEyePos(player).plus(look.times(3));
+		}
+		
 		EntityFireArc fire = new EntityFireArc(world);
 		fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
 		fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, player));

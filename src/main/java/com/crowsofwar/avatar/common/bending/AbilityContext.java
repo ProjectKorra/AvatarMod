@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
+import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,6 +43,7 @@ public class AbilityContext {
 	private final VectorI clientLookBlock;
 	private VectorI serverLookBlock;
 	private final EnumFacing lookSide;
+	private final Vector lookPos;
 	
 	/**
 	 * Create context for ability execution.
@@ -49,13 +51,14 @@ public class AbilityContext {
 	 * @param data
 	 *            Player data instance.
 	 * @param raytrace
-	 *            Result of the raytrace
+	 *            Result of the raytrace, from client
 	 */
 	public AbilityContext(AvatarPlayerData data, Raytrace.Result raytrace) {
 		this.data = data;
 		this.playerEntity = data.getPlayerEntity();
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
+		this.lookPos = raytrace.getPosPrecise();
 	}
 	
 	public AvatarPlayerData getData() {
@@ -89,6 +92,15 @@ public class AbilityContext {
 	 */
 	public boolean isLookingAtBlock() {
 		return lookSide != null && clientLookBlock != null;
+	}
+	
+	/**
+	 * Get the lookPos, unverified
+	 * 
+	 * @return
+	 */
+	public Vector getLookPos() {
+		return lookPos;
 	}
 	
 	/**
