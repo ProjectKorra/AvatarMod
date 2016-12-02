@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.lwjgl.input.Mouse;
 
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
 import com.crowsofwar.avatar.client.gui.RadialSegment;
 import com.crowsofwar.avatar.client.gui.SkillsGui;
@@ -35,7 +36,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -49,9 +49,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class AvatarUiRenderer extends Gui {
-	
-	private static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
-			"textures/gui/statusControl.png");
 	
 	public static AvatarUiRenderer instance;
 	
@@ -99,7 +96,7 @@ public class AvatarUiRenderer extends Gui {
 		Set<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.thePlayer)
 				.getActiveStatusControls();
 		for (StatusControl statusControl : statusControls) {
-			mc.getTextureManager().bindTexture(STATUS_CONTROL_ICONS);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.STATUS_CONTROL_ICONS);
 			int centerX = resolution.getScaledWidth() / 2;
 			int centerY = resolution.getScaledHeight() / 2;
 			int xOffset = statusControl.getPosition().xOffset();

@@ -42,5 +42,7 @@ public class AvatarUiTextures {
 	static final ResourceLocation bgAir = new ResourceLocation("avatarmod", "textures/gui/bg_air_screen.png");
 	static final ResourceLocation bgEarth = new ResourceLocation("avatarmod",
 			"textures/gui/bg_earth_screen.png");
+	public static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
+	"textures/gui/status_controls.png");
 	
 }
