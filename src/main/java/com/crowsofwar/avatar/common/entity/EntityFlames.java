@@ -123,9 +123,13 @@ public class EntityFlames extends AvatarEntity {
 		}
 		
 		handleWaterMovement();
-		if (inWater || worldObj.isRainingAt(getPosition())) {
+		if (inWater) {
 			setDead();
 			showExtinguished();
+		}
+		if (worldObj.isRainingAt(getPosition())) {
+			setDead();
+			if (Math.random() < 0.3) showExtinguished();
 		}
 		
 	}
