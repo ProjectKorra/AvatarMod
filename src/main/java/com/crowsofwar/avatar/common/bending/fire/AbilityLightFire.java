@@ -18,10 +18,17 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.particle.AvatarParticleType;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -31,12 +38,15 @@ import net.minecraft.world.World;
  */
 public class AbilityLightFire extends FireAbility {
 	
+	private final ParticleSpawner particles;
+	
 	/**
 	 * @param controller
 	 */
 	public AbilityLightFire() {
 		super("light_fire");
 		requireRaytrace(-1, false);
+		particles = new NetworkParticleSpawner();
 	}
 	
 	@Override
@@ -49,8 +59,18 @@ public class AbilityLightFire extends FireAbility {
 		if (ctx.isLookingAtBlock(-1, 5)) {
 			VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
 			setAt.offset(side);
-			if (world.getBlockState(setAt.toBlockPos()).getBlock() == Blocks.AIR) {
-				world.setBlockState(setAt.toBlockPos(), Blocks.FIRE.getDefaultState());
+			BlockPos blockPos = setAt.toBlockPos();
+			
+			if (world.isRainingAt(blockPos)) {
+				
+				particles.spawnParticles(world, AvatarParticleType.CLOUD, 3, 7, setAt.precision(),
+						new Vector(0.05, 0.05, 0.05));
+				world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+						SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS, 1,
+						(float) Math.random() * 0.3f + 1.1f, false);
+				
+			} else if (world.getBlockState(blockPos).getBlock() == Blocks.AIR) {
+				world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
 			}
 		}
 	}

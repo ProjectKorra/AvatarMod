@@ -22,14 +22,16 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import net.minecraft.util.EnumParticleTypes;
 
 /**
- * 
+ * Particles used by AvatarMod. They include custom particles and regular
+ * particles.
  * 
  * @author CrowsOfWar
  */
 public enum AvatarParticleType {
 	
 	FLAMES(AvatarParticles.getParticleFlames()),
-	AIR(AvatarParticles.getParticleAir());
+	AIR(AvatarParticles.getParticleAir()),
+	CLOUD(EnumParticleTypes.CLOUD);
 	
 	private final EnumParticleTypes vanillaType;
 	
