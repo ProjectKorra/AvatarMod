@@ -63,8 +63,8 @@ public class AbilityLightFire extends FireAbility {
 			
 			if (world.isRainingAt(blockPos)) {
 				
-				particles.spawnParticles(world, ParticleType.CLOUD, 3, 7, setAt.precision(),
-						new Vector(0.05, 0.05, 0.05));
+				particles.spawnParticles(world, ParticleType.CLOUD, 3, 7, ctx.getLookPos(),
+						new Vector(0.5f, 0.75f, 0.5f));
 				
 				world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
 						SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS,
