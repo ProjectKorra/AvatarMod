@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.particle.AvatarParticleType;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -63,7 +63,7 @@ public class AbilityLightFire extends FireAbility {
 			
 			if (world.isRainingAt(blockPos)) {
 				
-				particles.spawnParticles(world, AvatarParticleType.CLOUD, 3, 7, setAt.precision(),
+				particles.spawnParticles(world, ParticleType.CLOUD, 3, 7, setAt.precision(),
 						new Vector(0.05, 0.05, 0.05));
 				world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(),
 						SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS, 1,

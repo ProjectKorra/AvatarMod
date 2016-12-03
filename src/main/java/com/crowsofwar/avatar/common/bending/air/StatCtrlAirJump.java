@@ -25,7 +25,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.particle.AvatarParticleType;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -70,7 +70,7 @@ public class StatCtrlAirJump extends StatusControl {
 			((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(player.worldObj, AvatarParticleType.AIR, 2, 6, new Vector(player),
+			spawner.spawnParticles(player.worldObj, ParticleType.AIR, 2, 6, new Vector(player),
 					new Vector(1, 0, 1));
 			
 			AirJumpParticleSpawner.spawnParticles(player);

@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.particle.AvatarParticleType;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -54,7 +54,7 @@ public class AirJumpParticleSpawner {
 			Vector pos = Vector.getEntityPos(target);
 			pos.setY(pos.y() + 1.3);
 			
-			particles.spawnParticles(target.worldObj, AvatarParticleType.AIR, 1, 1, pos,
+			particles.spawnParticles(target.worldObj, ParticleType.AIR, 1, 1, pos,
 					new Vector(0.7, 0.2, 0.7));
 			
 			if (e.player.isInWater()) {

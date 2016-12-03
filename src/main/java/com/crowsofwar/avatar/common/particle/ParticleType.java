@@ -27,7 +27,7 @@ import net.minecraft.util.EnumParticleTypes;
  * 
  * @author CrowsOfWar
  */
-public enum AvatarParticleType {
+public enum ParticleType {
 	
 	FLAMES(AvatarParticles.getParticleFlames()),
 	AIR(AvatarParticles.getParticleAir()),
@@ -35,12 +35,18 @@ public enum AvatarParticleType {
 	
 	private final EnumParticleTypes vanillaType;
 	
-	private AvatarParticleType(EnumParticleTypes vanillaType) {
+	private ParticleType(EnumParticleTypes vanillaType) {
 		this.vanillaType = vanillaType;
 	}
 	
 	public EnumParticleTypes vanilla() {
 		return vanillaType;
+	}
+	
+	public static ParticleType lookup(int id) {
+		if (id < 0 || id >= values().length)
+			throw new IllegalArgumentException("Cannot lookup invalid particle with ID: " + id);
+		return values()[id];
 	}
 	
 }

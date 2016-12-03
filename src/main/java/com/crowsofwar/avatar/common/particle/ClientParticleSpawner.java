@@ -33,7 +33,7 @@ import net.minecraft.world.World;
 public class ClientParticleSpawner implements ParticleSpawner {
 	
 	@Override
-	public void spawnOneParticle(World world, AvatarParticleType particle, double x, double y, double z,
+	public void spawnOneParticle(World world, ParticleType particle, double x, double y, double z,
 			double velocityX, double velocityY, double velocityZ, int... parameters) {
 		
 		if (world.isRemote) {
@@ -46,7 +46,7 @@ public class ClientParticleSpawner implements ParticleSpawner {
 	}
 	
 	@Override
-	public void spawnParticles(World world, AvatarParticleType particle, int minimum, int maximum, double x,
+	public void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x,
 			double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
 			int... parameters) {
 		

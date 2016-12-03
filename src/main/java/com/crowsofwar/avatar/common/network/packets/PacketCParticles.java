@@ -17,8 +17,8 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumParticleTypes;
@@ -64,7 +64,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		particle = AvatarParticles.lookup(buf.readInt());
+		particle = ParticleType.lookup(buf.readInt()).vanilla();
 		minimum = buf.readInt();
 		maximum = buf.readInt();
 		x = buf.readDouble();

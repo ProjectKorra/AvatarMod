@@ -24,7 +24,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.common.util.EnumHelper;
 
 /**
- * 
+ * Manages registration of custom particles
  * 
  * @author CrowsOfWar
  */
