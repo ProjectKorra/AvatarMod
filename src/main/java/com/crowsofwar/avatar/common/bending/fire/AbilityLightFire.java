@@ -70,8 +70,12 @@ public class AbilityLightFire extends FireAbility {
 						SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS,
 						0.4f + (float) Math.random() * 0.2f, 0.9f + (float) Math.random() * 0.2f);
 				
-			} else if (world.getBlockState(blockPos).getBlock() == Blocks.AIR) {
+			} else if (world.getBlockState(blockPos).getBlock() == Blocks.AIR
+					&& Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
 				world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
+				world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+						SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS,
+						0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
 			}
 		}
 	}
