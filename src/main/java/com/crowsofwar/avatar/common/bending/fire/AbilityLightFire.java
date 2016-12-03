@@ -18,9 +18,9 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
@@ -65,9 +65,10 @@ public class AbilityLightFire extends FireAbility {
 				
 				particles.spawnParticles(world, ParticleType.CLOUD, 3, 7, setAt.precision(),
 						new Vector(0.05, 0.05, 0.05));
-				world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-						SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS, 1,
-						(float) Math.random() * 0.3f + 1.1f, false);
+				
+				world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+						SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS,
+						0.4f + (float) Math.random() * 0.2f, 0.9f + (float) Math.random() * 0.2f);
 				
 			} else if (world.getBlockState(blockPos).getBlock() == Blocks.AIR) {
 				world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
