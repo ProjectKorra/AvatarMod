@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -97,9 +98,18 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					
 					EntityWaterArc water = bendingState.getWaterArc();
 					if (water != null) {
-						Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
-								Math.toRadians(player.rotationPitch));
-						Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
+						
+						Raytrace.Result res = Raytrace.getTargetBlock(player, 3, false);
+						
+						Vector lookPos;
+						if (res.hitSomething()) {
+							lookPos = res.getPosPrecise();
+						} else {
+							Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+									Math.toRadians(player.rotationPitch));
+							lookPos = Vector.getEyePos(player).plus(look.times(3));
+						}
+						
 						Vector motion = lookPos.minus(new Vector(water));
 						motion.mul(.3);
 						water.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());

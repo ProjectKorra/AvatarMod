@@ -125,6 +125,7 @@ public class EntityWaterArc extends EntityArc {
 	
 	@Override
 	public void onUpdate() {
+		
 		super.onUpdate();
 		if (lastPlayedSplash > -1) {
 			lastPlayedSplash++;
@@ -146,8 +147,8 @@ public class EntityWaterArc extends EntityArc {
 		
 		if (inWater) {
 			// try to go upwards
-			for (int i = 1; i <= 3; i++) {
-				BlockPos pos = getPosition().up(i);
+			for (double i = 0.1; i <= 3; i += 0.05) {
+				BlockPos pos = new Vector(this).add(0, i, 0).toBlockPos();
 				if (worldObj.getBlockState(pos).getBlock() == Blocks.AIR) {
 					setPosition(posX, posY + i, posZ);
 					inWater = false;
