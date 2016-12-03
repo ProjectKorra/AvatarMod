@@ -22,8 +22,8 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import net.minecraft.util.EnumParticleTypes;
 
 /**
- * Particles used by AvatarMod. They include custom particles and regular
- * particles.
+ * Not to be confused with the vanilla {@link EnumParticleTypes}. Particles used
+ * by AvatarMod. They include custom particles and regular particles.
  * 
  * @author CrowsOfWar
  */
@@ -41,6 +41,10 @@ public enum ParticleType {
 	
 	public EnumParticleTypes vanilla() {
 		return vanillaType;
+	}
+	
+	public int id() {
+		return ordinal();
 	}
 	
 	public static ParticleType lookup(int id) {

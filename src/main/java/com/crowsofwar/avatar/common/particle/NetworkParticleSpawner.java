@@ -24,8 +24,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 /**
- * A particle spawner which operates on the server thread. It sends packets to clients about
- * particles.
+ * A particle spawner which operates on the server thread. It sends packets to
+ * clients about particles.
  * <p>
  * Avoid using spawnOneParticle as velocity might be unpredicted.
  * 
@@ -37,7 +37,8 @@ public class NetworkParticleSpawner implements ParticleSpawner {
 	public void spawnOneParticle(World world, ParticleType particle, double x, double y, double z,
 			double velocityX, double velocityY, double velocityZ, int... parameters) {
 		
-		// Velocity -> max velocity... results in not expected velocity client side.
+		// Velocity -> max velocity... results in not expected velocity client
+		// side.
 		spawnParticles(world, particle, 1, 1, x, y, z, velocityX, velocityY, velocityZ, parameters);
 		
 	}
@@ -49,7 +50,7 @@ public class NetworkParticleSpawner implements ParticleSpawner {
 		
 		TargetPoint point = new TargetPoint(world.provider.getDimension(), x, y, z, 64);
 		
-		AvatarMod.network.sendToAllAround(new PacketCParticles(particle.vanilla(), minimum, maximum, x, y, z,
+		AvatarMod.network.sendToAllAround(new PacketCParticles(particle, minimum, maximum, x, y, z,
 				maxVelocityX / 20, maxVelocityY / 20, maxVelocityZ / 20), point);
 		
 	}
