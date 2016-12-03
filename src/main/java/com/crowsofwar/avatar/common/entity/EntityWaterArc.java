@@ -144,6 +144,18 @@ public class EntityWaterArc extends EntityArc {
 			}
 		}
 		
+		if (inWater) {
+			// try to go upwards
+			for (int i = 1; i <= 3; i++) {
+				BlockPos pos = getPosition().up(i);
+				if (worldObj.getBlockState(pos).getBlock() == Blocks.AIR) {
+					setPosition(posX, posY + i, posZ);
+					inWater = false;
+					break;
+				}
+			}
+		}
+		
 		// if (worldObj.getBlockState(getPosition()).getBlock() == Blocks.FIRE)
 		// {
 		// worldObj.setBlockToAir(getPosition());
@@ -206,8 +218,8 @@ public class EntityWaterArc extends EntityArc {
 	@Override
 	protected Consumer<EntityPlayer> getNewOwnerCallback() {
 		return newOwner -> {
-			WaterbendingState state = (WaterbendingState) AvatarPlayerData.fetcher()
-					.fetch(newOwner).getBendingState(BendingType.WATERBENDING.id());
+			WaterbendingState state = (WaterbendingState) AvatarPlayerData.fetcher().fetch(newOwner)
+					.getBendingState(BendingType.WATERBENDING.id());
 			state.setWaterArc(this);
 		};
 	}
