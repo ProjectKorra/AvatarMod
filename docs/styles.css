@@ -77,6 +77,8 @@ h1 {
   font-family: Source Sans Pro;
   padding: 0 0 0 2em;
   height: 1.5em;
+  /* Inner navbar-link els are position:absolute */
+  position: relative;
 }
 #navbar-logo {
   background-image: url("av2_water_fire-white.png");
@@ -95,16 +97,26 @@ h1 {
   text-decoration: none;
   margin: 0 1em;
   height: 100%;
-  position: relative;
-  top: -10px;
+  position: absolute;
+}
+.navbar-link[href~='#dev'] {
+  left: 25%;
+}
+.navbar-link[href~='#contact'] {
+  left: 50%;
 }
 #navbar-download {
   background-color: #c44061;
   float: right;
   margin-right: 0;
   height: 100%;
-  top: 0px;
   padding: 0px 20px;
+  box-shadow: 0px -2px 5px #b32f50 inset;
+  right: 0;
+}
+#navbar-download span {
+  position: relative;
+  top: 10px;
 }
 @media (max-width: 800px) {
   #homepage span {
@@ -120,12 +132,15 @@ h1 {
   }
   #navbar {
     font-size: 2em;
-    padding: 0.15em 2em;
+    padding: 0 2em;
     height: 1em;
   }
   #navbar-logo {
     background-size: 64px;
     background-position: 64px 12px;
     height: 1em;
+  }
+  #navbar-download span {
+    top: 0px;
   }
 }
