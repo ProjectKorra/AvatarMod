@@ -25,8 +25,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Redirect a packet to the correct sided packet handler. Contains a single method,
- * {@link #redirectMessage(IMessage, MessageContext)}. Not to be instantiated.
+ * Redirect a packet to the correct sided packet handler. Contains a single
+ * method, {@link #redirectMessage(IMessage, MessageContext)}. Not to be
+ * instantiated.
  *
  */
 public class PacketRedirector {

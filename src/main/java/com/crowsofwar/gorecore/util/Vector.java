@@ -102,7 +102,8 @@ public class Vector {
 	 */
 	public Vector(Entity entity) {
 		this(entity.posX, entity.posY, entity.posZ);
-		// if (entity instanceof EntityPlayer && entity.worldObj.isRemote) setY(y - 1.62);
+		// if (entity instanceof EntityPlayer && entity.worldObj.isRemote)
+		// setY(y - 1.62);
 	}
 	
 	/**
@@ -131,7 +132,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Set the x-coordinate of this vector. Returns <code>this</code> for method chaining.
+	 * Set the x-coordinate of this vector. Returns <code>this</code> for method
+	 * chaining.
 	 * 
 	 * @param x
 	 *            X-coordinate
@@ -150,7 +152,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Set the y-coordinate of this vector. Returns <code>this</code> for method chaining.
+	 * Set the y-coordinate of this vector. Returns <code>this</code> for method
+	 * chaining.
 	 * 
 	 * @param y
 	 *            Y-coordinate
@@ -169,7 +172,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Set the z-coordinate of this vector. Returns <code>this</code> for method chaining.
+	 * Set the z-coordinate of this vector. Returns <code>this</code> for method
+	 * chaining.
 	 * 
 	 * @param z
 	 *            Z-coordinate
@@ -254,7 +258,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Creates a new vector from the sub of this vector and the vector defined by (x, y, z).
+	 * Creates a new vector from the sub of this vector and the vector defined
+	 * by (x, y, z).
 	 * 
 	 * @param x
 	 *            X-coordinate of other vector
@@ -304,7 +309,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Creates a new vector from this vector minus the vector defined by (x,y,z).
+	 * Creates a new vector from this vector minus the vector defined by
+	 * (x,y,z).
 	 * 
 	 * @param x
 	 *            X-coordinate to subtract
@@ -318,8 +324,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Multiply this vector by the given scalar, and returns the result. Modifies the original
-	 * vector.
+	 * Multiply this vector by the given scalar, and returns the result.
+	 * Modifies the original vector.
 	 * 
 	 * @param scalar
 	 *            The scalar to multiply this vector by
@@ -340,7 +346,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Divide this vector by the given scalar, and returns the result. Modifies the original vector.
+	 * Divide this vector by the given scalar, and returns the result. Modifies
+	 * the original vector.
 	 * 
 	 * @param scalar
 	 *            The scalar to divide this vector by
@@ -479,7 +486,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Returns the cross product with the vector defined by (x, y, z). This creates a new vector.
+	 * Returns the cross product with the vector defined by (x, y, z). This
+	 * creates a new vector.
 	 * 
 	 * @param x
 	 *            X-coordinate of other vector
@@ -494,7 +502,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Returns the angle between the other vector, in radians. (result is ranged 0-PI).
+	 * Returns the angle between the other vector, in radians. (result is ranged
+	 * 0-PI).
 	 * 
 	 * @param vec
 	 *            Other vector
@@ -505,8 +514,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Returns this vector reflected across the given normal. Does not modify this vector or the
-	 * normal.
+	 * Returns this vector reflected across the given normal. Does not modify
+	 * this vector or the normal.
 	 * 
 	 * @param normal
 	 *            Must be normalized
@@ -518,8 +527,9 @@ public class Vector {
 	}
 	
 	/**
-	 * <strong>Assuming</strong> this vector represents spherical coordinates (in radians), returns
-	 * a unit vector in Cartesian space which has the rotations of this vector.
+	 * <strong>Assuming</strong> this vector represents spherical coordinates
+	 * (in radians), returns a unit vector in Cartesian space which has the
+	 * rotations of this vector.
 	 * <p>
 	 * Does not modify this vector.
 	 */
@@ -528,8 +538,8 @@ public class Vector {
 	}
 	
 	/**
-	 * <strong>Assuming</strong> this vector represents rectangular coordinates, returns the
-	 * rotations (in radians) for this vector.
+	 * <strong>Assuming</strong> this vector represents rectangular coordinates,
+	 * returns the rotations (in radians) for this vector.
 	 * <p>
 	 * Does not modify this vector.
 	 */
@@ -538,16 +548,16 @@ public class Vector {
 	}
 	
 	/**
-	 * <strong>Assuming</strong> this vector represents spherical coordinates in degrees, returns a
-	 * new spherical coordinate vector which is in radians.
+	 * <strong>Assuming</strong> this vector represents spherical coordinates in
+	 * degrees, returns a new spherical coordinate vector which is in radians.
 	 */
 	public Vector toRadians() {
 		return new Vector(Math.toRadians(x()), Math.toRadians(y()), Math.toRadians(z()));
 	}
 	
 	/**
-	 * <strong>Assuming</strong> this vector represents spherical coordinates in radians, returns a
-	 * new spherical coordinate vector which is in degrees.
+	 * <strong>Assuming</strong> this vector represents spherical coordinates in
+	 * radians, returns a new spherical coordinate vector which is in degrees.
 	 */
 	public Vector toDegrees() {
 		return new Vector(Math.toDegrees(x()), Math.toDegrees(y()), Math.toDegrees(z()));
@@ -568,7 +578,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Returns an integer vector of this vector by casting each component to an integer.
+	 * Returns an integer vector of this vector by casting each component to an
+	 * integer.
 	 */
 	public VectorI cast() {
 		return new VectorI((int) x(), (int) y(), (int) z());
@@ -620,7 +631,8 @@ public class Vector {
 	/**
 	 * Returns the euler angles from position 1 to position 2.
 	 * <p>
-	 * The returned vector has Y for yaw, and X for pitch. Measurements are in radians.
+	 * The returned vector has Y for yaw, and X for pitch. Measurements are in
+	 * radians.
 	 * 
 	 * @param pos1
 	 *            Where we are
@@ -654,8 +666,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Get the pitch to lob a projectile in radians. Example: pitch to target can be used in
-	 * {@link #fromYawPitch(double, double)}
+	 * Get the pitch to lob a projectile in radians. Example: pitch to target
+	 * can be used in {@link #fromYawPitch(double, double)}
 	 * 
 	 * @param v
 	 *            Force of the projectile, going FORWARDS
@@ -680,8 +692,8 @@ public class Vector {
 	/**
 	 * Create a unit vector based from the direction of the entity's head.
 	 * <p>
-	 * This equivalent to calling {@link #fromYawPitch(double, double)} using entity's rotations as
-	 * inputs.
+	 * This equivalent to calling {@link #fromYawPitch(double, double)} using
+	 * entity's rotations as inputs.
 	 * 
 	 * @param entity
 	 *            The entity to use
@@ -691,7 +703,8 @@ public class Vector {
 	}
 	
 	/**
-	 * Create a unit vector from the given euler angles. Measurements should be in radians.
+	 * Create a unit vector from the given euler angles. Measurements should be
+	 * in radians.
 	 */
 	public static Vector fromDirection(Vector euler) {
 		return fromYawPitch(euler.y(), euler.x());

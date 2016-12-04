@@ -24,7 +24,8 @@ import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.world.World;
 
 /**
- * An implementation of {@link ParticleSpawner} which spawns particles client-side.
+ * An implementation of {@link ParticleSpawner} which spawns particles
+ * client-side.
  * <p>
  * This can be used on either side
  * 

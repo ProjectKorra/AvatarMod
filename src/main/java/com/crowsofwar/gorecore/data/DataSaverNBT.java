@@ -29,14 +29,16 @@ public class DataSaverNBT implements DataSaver {
 	private NBTTagCompound nbt;
 	
 	/**
-	 * Creates a new NBTTagCompound DataSaver wrapper using a new NBTTagCompound.
+	 * Creates a new NBTTagCompound DataSaver wrapper using a new
+	 * NBTTagCompound.
 	 */
 	public DataSaverNBT() {
 		this(new NBTTagCompound());
 	}
 	
 	/**
-	 * Creates a new NBTTagCompound DataSaver wrapper using the specified NBTTagCompound.
+	 * Creates a new NBTTagCompound DataSaver wrapper using the specified
+	 * NBTTagCompound.
 	 */
 	public DataSaverNBT(NBTTagCompound nbt) {
 		this.nbt = nbt;

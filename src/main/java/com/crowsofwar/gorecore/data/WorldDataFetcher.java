@@ -20,7 +20,8 @@ package com.crowsofwar.gorecore.data;
 import net.minecraft.world.World;
 
 /**
- * Gets world data for a given world. This will be moved into the dedicated GoreCore project soon.
+ * Gets world data for a given world. This will be moved into the dedicated
+ * GoreCore project soon.
  * 
  * @author CrowsOfWar
  */

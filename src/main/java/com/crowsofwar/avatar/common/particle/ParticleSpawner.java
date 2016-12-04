@@ -52,13 +52,13 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	void spawnOneParticle(World world, ParticleType particle, double x, double y, double z,
-			double velocityX, double velocityY, double velocityZ, int... parameters);
+	void spawnOneParticle(World world, ParticleType particle, double x, double y, double z, double velocityX,
+			double velocityY, double velocityZ, int... parameters);
 	
 	/**
 	 * Spawn a particle in the world manually. It's generally recommended to
-	 * {@link #spawnParticles(World, ParticleType, int, Vector, Vector, int...) spawn multiple
-	 * particles}.
+	 * {@link #spawnParticles(World, ParticleType, int, Vector, Vector, int...)
+	 * spawn multiple particles}.
 	 * 
 	 * @param world
 	 *            The world
@@ -78,8 +78,8 @@ public interface ParticleSpawner {
 	}
 	
 	/**
-	 * Spawn multiple particles in the world. This is better than spawning particles manually since
-	 * it can be optimized for different settings.
+	 * Spawn multiple particles in the world. This is better than spawning
+	 * particles manually since it can be optimized for different settings.
 	 * 
 	 * @param world
 	 *            The world
@@ -104,13 +104,12 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x,
-			double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
-			int... parameters);
+	void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x, double y,
+			double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ, int... parameters);
 	
 	/**
-	 * Spawn multiple particles in the world. This is better than spawning particles manually since
-	 * it can be optimized for different settings.
+	 * Spawn multiple particles in the world. This is better than spawning
+	 * particles manually since it can be optimized for different settings.
 	 * 
 	 * @param world
 	 *            The world
@@ -127,8 +126,8 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	default void spawnParticles(World world, ParticleType particle, int minimum, int maximum,
-			Vector position, Vector maxVelocity, int... parameters) {
+	default void spawnParticles(World world, ParticleType particle, int minimum, int maximum, Vector position,
+			Vector maxVelocity, int... parameters) {
 		spawnParticles(world, particle, minimum, maximum, position.x(), position.y(), position.z(),
 				maxVelocity.x(), maxVelocity.y(), maxVelocity.z(), parameters);
 	}

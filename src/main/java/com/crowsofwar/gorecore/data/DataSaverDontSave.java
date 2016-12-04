@@ -18,7 +18,8 @@
 package com.crowsofwar.gorecore.data;
 
 /**
- * An implementation of {@link DataSaver DataSaver} where data is not stored anywhere.
+ * An implementation of {@link DataSaver DataSaver} where data is not stored
+ * anywhere.
  * 
  * @author CrowsOfWar
  */

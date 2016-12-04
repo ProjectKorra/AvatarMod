@@ -64,14 +64,16 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 	protected abstract Side getRecievedSide();
 	
 	/**
-	 * Get a packet handler which contains the logic for when this packet is received.
+	 * Get a packet handler which contains the logic for when this packet is
+	 * received.
 	 */
 	protected abstract Handler<MSG> getPacketHandler();
 	
 	/**
 	 * An interface to handle the packet being received.
 	 * <p>
-	 * Method must be implemented: {@link #onMessageRecieved(MSG, MessageContext)}.
+	 * Method must be implemented:
+	 * {@link #onMessageRecieved(MSG, MessageContext)}.
 	 * 
 	 * @param <MSG>
 	 *            The type of the message to receive
@@ -85,14 +87,14 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 		 * Called to handle the packet being received.
 		 * 
 		 * @param message
-		 *            The actual instance of the received packet. You use this instance to retrieve
-		 *            the necessary data.
+		 *            The actual instance of the received packet. You use this
+		 *            instance to retrieve the necessary data.
 		 * @param ctx
-		 *            The context of the message. Can be used to obtain necessary objects such as a
-		 *            player entity.
+		 *            The context of the message. Can be used to obtain
+		 *            necessary objects such as a player entity.
 		 * 
-		 * @return The follow-up packet, null for none. Note: doesn't actually use default
-		 *         SimpleImpl follow ups.
+		 * @return The follow-up packet, null for none. Note: doesn't actually
+		 *         use default SimpleImpl follow ups.
 		 */
 		IMessage onMessageRecieved(MSG message, MessageContext ctx);
 		

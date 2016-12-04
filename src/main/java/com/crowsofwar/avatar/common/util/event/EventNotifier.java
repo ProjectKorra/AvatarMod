@@ -26,7 +26,8 @@ import java.util.Set;
 import org.apache.http.annotation.ThreadSafe;
 
 /**
- * An implementation of {@link Subject} which allows you to notify subjects of events.
+ * An implementation of {@link Subject} which allows you to notify subjects of
+ * events.
  * <p>
  * Designed to use with delegation.
  * <p>

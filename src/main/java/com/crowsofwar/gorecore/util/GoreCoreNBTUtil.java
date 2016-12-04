@@ -51,8 +51,8 @@ public final class GoreCoreNBTUtil {
 		}
 	}
 	
-	public static <T> List<T> readListFromNBT(NBTTagCompound nbt, String key, GoreCoreNBTInterfaces.CreateFromNBT<T> creator,
-			Object... extraData) {
+	public static <T> List<T> readListFromNBT(NBTTagCompound nbt, String key,
+			GoreCoreNBTInterfaces.CreateFromNBT<T> creator, Object... extraData) {
 		List<T> result = new ArrayList<T>();
 		
 		NBTTagList nbtList = nbt.getTagList(key, 10);
@@ -71,15 +71,16 @@ public final class GoreCoreNBTUtil {
 	 * @param key
 	 *            The list's identifier
 	 * @param writer
-	 *            Used to write items in the list to NBT. methodsExtraData is an empty array.
+	 *            Used to write items in the list to NBT. methodsExtraData is an
+	 *            empty array.
 	 * @param list
 	 *            The list to write
 	 * @param extraData
-	 *            Extra data to be passed in to writer#write, is applied for each call to
-	 *            writer#write
+	 *            Extra data to be passed in to writer#write, is applied for
+	 *            each call to writer#write
 	 */
-	public static <T> void writeListToNBT(NBTTagCompound nbt, String key, GoreCoreNBTInterfaces.WriteToNBT<T> writer, List<T> list,
-			Object... extraData) {
+	public static <T> void writeListToNBT(NBTTagCompound nbt, String key,
+			GoreCoreNBTInterfaces.WriteToNBT<T> writer, List<T> list, Object... extraData) {
 		NBTTagList nbtList = new NBTTagList();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -99,23 +100,23 @@ public final class GoreCoreNBTUtil {
 	 * @param key
 	 *            The key
 	 * @param createKey
-	 *            The creator for objects which will act as keys. methodsExtraData will be an empty
-	 *            array.
+	 *            The creator for objects which will act as keys.
+	 *            methodsExtraData will be an empty array.
 	 * @param createVal
-	 *            The creator for objects which will act as values. methodsExtraData will be an
-	 *            array containing only the key.
+	 *            The creator for objects which will act as values.
+	 *            methodsExtraData will be an array containing only the key.
 	 * @param extraDataKey
-	 *            Extra data passed in for createKey, is specific for each implementation of
-	 *            CreateFromNBT
+	 *            Extra data passed in for createKey, is specific for each
+	 *            implementation of CreateFromNBT
 	 * @param extraDataVal
-	 *            Extra data passed in for createVal, is specific for each implementation of
-	 *            CreateFromNBT
+	 *            Extra data passed in for createVal, is specific for each
+	 *            implementation of CreateFromNBT
 	 * @return A HashMap filled with all of the data stored via
 	 *         {@link #writeMapToNBT(NBTTagCompound, String, com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT, com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT, Object[], Object[], Map)}
 	 *         . The load factor is 0.75.
 	 */
-	public static <K, V> Map<K, V> readMapFromNBT(NBTTagCompound nbt, MapUser<K, V> mapUser, String key, Object[] constructArgsK,
-			Object[] constructArgsV) {
+	public static <K, V> Map<K, V> readMapFromNBT(NBTTagCompound nbt, MapUser<K, V> mapUser, String key,
+			Object[] constructArgsK, Object[] constructArgsV) {
 		Map<K, V> result = new HashMap<K, V>();
 		
 		NBTTagList nbtList = nbt.getTagList(key, 10);
@@ -137,14 +138,17 @@ public final class GoreCoreNBTUtil {
 	 * @param nbt
 	 * @param key
 	 * @param writeKey
-	 *            The writer for the keys. methodsExtraData will be an empty array.
+	 *            The writer for the keys. methodsExtraData will be an empty
+	 *            array.
 	 * @param writeVal
-	 *            The writer for the values. methodsExtraData will be an empty array.
+	 *            The writer for the values. methodsExtraData will be an empty
+	 *            array.
 	 * @param extraDataKey
 	 * @param extraDataVal
 	 * @param map
 	 */
-	public static <K, V> void writeMapToNBT(NBTTagCompound nbt, Map<K, V> map, MapUser<K, V> mapUser, String key) {
+	public static <K, V> void writeMapToNBT(NBTTagCompound nbt, Map<K, V> map, MapUser<K, V> mapUser,
+			String key) {
 		NBTTagList nbtList = new NBTTagList();
 		
 		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());

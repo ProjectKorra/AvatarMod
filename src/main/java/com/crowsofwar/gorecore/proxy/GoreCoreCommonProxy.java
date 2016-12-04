@@ -49,8 +49,8 @@ public class GoreCoreCommonProxy {
 	}
 	
 	/**
-	 * Returns whether that person is currently walking. This only works for the person who is
-	 * playing Minecraft.
+	 * Returns whether that person is currently walking. This only works for the
+	 * person who is playing Minecraft.
 	 */
 	public boolean isPlayerWalking(EntityPlayer player) {
 		return false;

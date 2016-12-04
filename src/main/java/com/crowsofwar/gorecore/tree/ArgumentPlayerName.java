@@ -24,8 +24,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.world.World;
 
 /**
- * An argument for a player's username. Supports tab completion if the player is currently in the
- * world. However, players not in the world can be specified.
+ * An argument for a player's username. Supports tab completion if the player is
+ * currently in the world. However, players not in the world can be specified.
  * 
  * @author CrowsOfWar
  */

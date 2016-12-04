@@ -79,7 +79,8 @@ public class FloatingBlockEvent {
 	}
 	
 	/**
-	 * The floating block was placed, and reached its destination. Called from both sides.
+	 * The floating block was placed, and reached its destination. Called from
+	 * both sides.
 	 *
 	 * @author CrowsOfWar
 	 */

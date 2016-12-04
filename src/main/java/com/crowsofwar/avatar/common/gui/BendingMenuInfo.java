@@ -21,8 +21,8 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 
 /**
- * Encapsulates information about an BendingController's radial menu- the control and
- * AvatarAbilities which will be included in the Gui.
+ * Encapsulates information about an BendingController's radial menu- the
+ * control and AvatarAbilities which will be included in the Gui.
  *
  */
 public class BendingMenuInfo {
@@ -39,9 +39,9 @@ public class BendingMenuInfo {
 	 * @param key
 	 *            The key which must be held to use this radial menu
 	 * @param buttons
-	 *            An array of abilities which will be used as the buttons. Can't be more than 8. If
-	 *            it is less than 8, the unspecified elements are filled with
-	 *            {@link AvatarAbility#NONE}.
+	 *            An array of abilities which will be used as the buttons. Can't
+	 *            be more than 8. If it is less than 8, the unspecified elements
+	 *            are filled with {@link AvatarAbility#NONE}.
 	 */
 	public BendingMenuInfo(MenuTheme theme, AvatarControl key, BendingAbility... buttons) {
 		if (buttons.length > 8) throw new IllegalArgumentException(
@@ -63,8 +63,8 @@ public class BendingMenuInfo {
 	}
 	
 	/**
-	 * Get all the buttons. Size is guaranteed to be 8; if there is no button in that slot, it is
-	 * null.
+	 * Get all the buttons. Size is guaranteed to be 8; if there is no button in
+	 * that slot, it is null.
 	 */
 	public BendingAbility[] getButtons() {
 		return buttons;

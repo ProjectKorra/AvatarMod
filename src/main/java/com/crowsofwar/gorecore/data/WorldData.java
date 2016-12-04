@@ -39,8 +39,7 @@ public abstract class WorldData extends WorldSavedData implements DataSaver {
 	private World world;
 	
 	/**
-	 * Data stored via the {@link DataSaver} methods. FIXME never
-	 * saves...?
+	 * Data stored via the {@link DataSaver} methods. FIXME never saves...?
 	 */
 	private DataSaverNBT storedData;
 	
@@ -85,8 +84,8 @@ public abstract class WorldData extends WorldSavedData implements DataSaver {
 	 *            dimensions
 	 * @return World data, retrieved using the specified options
 	 */
-	protected static <T extends WorldData> T getDataForWorld(Class<T> worldDataClass, String key,
-			World world, boolean separatePerDimension) {
+	protected static <T extends WorldData> T getDataForWorld(Class<T> worldDataClass, String key, World world,
+			boolean separatePerDimension) {
 		try {
 			MapStorage ms = separatePerDimension ? world.getPerWorldStorage() : world.getMapStorage();
 			T data = worldDataClass.cast(ms.getOrLoadData(worldDataClass, key));

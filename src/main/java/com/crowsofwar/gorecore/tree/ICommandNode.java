@@ -24,8 +24,9 @@ import com.crowsofwar.gorecore.chat.ChatMessage;
 /**
  * A node in the Tree-Command model.
  * <p>
- * Each node is responsible for executing the function, and optionally passing along the chain of
- * tree nodes. It also has many other things such as argument lists and help suggestions.
+ * Each node is responsible for executing the function, and optionally passing
+ * along the chain of tree nodes. It also has many other things such as argument
+ * lists and help suggestions.
  * 
  * @author CrowsOfWar
  */

@@ -76,9 +76,9 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 	/**
 	 * Creates new GC player data.
 	 * <p>
-	 * Please note, the subclass must create a constructor identical to this one, passing the
-	 * arguments to <code>super</code>. This is because GoreCore player data is created with
-	 * reflection.
+	 * Please note, the subclass must create a constructor identical to this
+	 * one, passing the arguments to <code>super</code>. This is because
+	 * GoreCore player data is created with reflection.
 	 * 
 	 * @param dataSaver
 	 *            Where data is saved to
@@ -92,7 +92,8 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 	}
 	
 	/**
-	 * Called from constructor to initialize data. Override to change constructor.
+	 * Called from constructor to initialize data. Override to change
+	 * constructor.
 	 */
 	protected void construct(DataSaver dataSaver, UUID playerID, EntityPlayer playerEntity) {
 		if (dataSaver == null)
@@ -131,7 +132,8 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 	}
 	
 	/**
-	 * Returns whether this player data should be de-cached on a client-side Player Data Cache.
+	 * Returns whether this player data should be de-cached on a client-side
+	 * Player Data Cache.
 	 * <p>
 	 * This is only used by {@link PlayerDataFetcherClient}.
 	 * <p>

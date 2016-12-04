@@ -55,7 +55,8 @@ public final class GoreCoreMathHelper {
 	}
 	
 	/**
-	 * Round the given number to the nearest whole that is smaller than the number.
+	 * Round the given number to the nearest whole that is smaller than the
+	 * number.
 	 * 
 	 * @param n
 	 *            The number
@@ -66,7 +67,8 @@ public final class GoreCoreMathHelper {
 	}
 	
 	/**
-	 * Round the given number to the nearest whole that is greater than the number.
+	 * Round the given number to the nearest whole that is greater than the
+	 * number.
 	 * 
 	 * @param n
 	 *            The number

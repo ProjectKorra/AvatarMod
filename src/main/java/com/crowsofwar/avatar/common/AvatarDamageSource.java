@@ -22,7 +22,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 
 /**
- * Contains static methods used to acquire custom DamageSources for various uses.
+ * Contains static methods used to acquire custom DamageSources for various
+ * uses.
  * 
  * @author CrowsOfWar
  */

@@ -53,10 +53,12 @@ public class RenderFlames extends Render<EntityFlames> {
 		
 		particleSpawner.spawnParticles(entity.worldObj, ParticleType.FLAMES, 1, 1,
 				Vector.getEntityPos(entity), new Vector(0.02, 0.01, 0.02));
-		// entity.worldObj.spawnParticle(AvatarParticles.getParticleFlames(), entity.posX,
+		// entity.worldObj.spawnParticle(AvatarParticles.getParticleFlames(),
+		// entity.posX,
 		// entity.posY,
 		// entity.posZ,
-		// // entity.worldObj.spawnParticle(EnumParticleTypes.FLAME, entity.posX, entity.posY,
+		// // entity.worldObj.spawnParticle(EnumParticleTypes.FLAME,
+		// entity.posX, entity.posY,
 		// // entity.posZ,
 		// (random.nextGaussian() - 0.5) * 0.02, random.nextGaussian() * 0.01,
 		// (random.nextGaussian() - 0.5) * 0.02);

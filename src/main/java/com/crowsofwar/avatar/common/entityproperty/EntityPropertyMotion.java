@@ -22,8 +22,9 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 
 /**
- * An entity property which allows simple access to the entity's motion vector by manipulating the
- * motionX, motionY, and motionZ fields. All methods for velocity are in m/s.
+ * An entity property which allows simple access to the entity's motion vector
+ * by manipulating the motionX, motionY, and motionZ fields. All methods for
+ * velocity are in m/s.
  *
  */
 public class EntityPropertyMotion implements IEntityProperty<Vector> {

@@ -367,8 +367,8 @@ public final class PlayerUUIDs {
 	
 	/**
 	 * GetUUIDResult shows the result of getting UUIDs from player names through
-	 * {@link PlayerUUIDs#getUUID(String)}. It has a UUID for the result
-	 * and a {@link Outcome} that describes what happened.
+	 * {@link PlayerUUIDs#getUUID(String)}. It has a UUID for the result and a
+	 * {@link Outcome} that describes what happened.
 	 * 
 	 * @author CrowsOfWar
 	 */
