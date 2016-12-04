@@ -81,12 +81,13 @@ h1 {
 #navbar-logo {
   background-image: url("av2_water_fire-white.png");
   background-size: 64px;
-  background-position: 64px 5px;
+  background-position: 64px 12px;
   background-attachment: fixed;
   background-repeat: no-repeat;
   width: 2em;
   height: 1em;
   display: inline-block;
+  cursor: pointer;
 }
 @media (max-width: 800px) {
   #homepage span {
@@ -99,5 +100,15 @@ h1 {
   .button {
     font-size: 1.5em;
     margin-bottom: .5em;
+  }
+  #navbar {
+    font-size: 2em;
+    padding: 0.15em 2em;
+    height: 1em;
+  }
+  #navbar-logo {
+    background-size: 64px;
+    background-position: 64px 12px;
+    height: 1em;
   }
 }
