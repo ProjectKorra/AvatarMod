@@ -35,10 +35,10 @@ h1 {
   border-radius: 5px;
   box-shadow: 0px -2px 5px #b2b2b2 inset;
   cursor: pointer;
-  -webkit-transition-property: "color";
-  -moz-transition-property: "color";
-  -o-transition-property: "color";
-  transition-property: "color";
+  -webkit-transition-property: background-color;
+  -moz-transition-property: background-color;
+  -o-transition-property: background-color;
+  transition-property: background-color;
   -webkit-transition-duration: 0.5s;
   -moz-transition-duration: 0.5s;
   -o-transition-duration: 0.5s;
@@ -51,6 +51,7 @@ h1 {
   -moz-transition-delay: 0s;
   -o-transition-delay: 0s;
   transition-delay: 0s;
+  display: inline-block;
 }
 .button:hover {
   background-color: #d4d4d4;
@@ -62,4 +63,17 @@ h1 {
 }
 .button.highlight:hover {
   background-color: #a21e3f;
+}
+@media (max-width: 800px) {
+  #homepage span {
+    font-size: 1em;
+  }
+  #homepage h1 {
+    letter-spacing: 0px;
+    font-size: 2.5em;
+  }
+  .button {
+    font-size: 1.5em;
+    margin-bottom: .5em;
+  }
 }

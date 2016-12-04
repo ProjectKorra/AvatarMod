@@ -65,7 +65,9 @@ h1 {
     box-shadow: 0px -2px 5px (@button-color - #333) inset;
 
     cursor: pointer;
-    .Transition("color");
+    .Transition(background-color);
+
+    display: inline-block;
 
 }
 
@@ -81,5 +83,21 @@ h1 {
 
 .button.highlight:hover {
     background-color: @button-highlight-color - #222;
+}
+
+@media(max-width: 800px) {
+    #homepage span {
+        font-size: 1em;
+    }
+
+    #homepage h1 {
+        letter-spacing: 0px;
+        font-size: 2.5em;
+    }
+
+    .button {
+        font-size: 1.5em;
+        margin-bottom: .5em;
+    }
 }
 
