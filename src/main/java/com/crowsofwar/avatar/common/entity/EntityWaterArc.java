@@ -145,7 +145,7 @@ public class EntityWaterArc extends EntityArc {
 			}
 		}
 		
-		if (inWater) {
+		if (inWater && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
 			// try to go upwards
 			for (double i = 0.1; i <= 3; i += 0.05) {
 				BlockPos pos = new Vector(this).add(0, i, 0).toBlockPos();
