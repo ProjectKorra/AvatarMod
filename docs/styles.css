@@ -31,8 +31,20 @@ h1 {
   font-size: 2em;
   font-family: Source Sans Pro;
   margin: 0 0.5em;
-  text-shadow: 0px 1px 1px #777;
+  text-shadow: 0px 1px 1px 777;
+  border-radius: 5px;
+  box-shadow: 0px -2px 5px #b2b2b2 inset;
+  cursor: pointer;
+}
+.button:hover {
+  background-color: #d4d4d4;
 }
 .button.highlight {
-  background-color: #ff0000;
+  color: #e5e5e5;
+  background-color: #c44061;
+  box-shadow: 0px -2px 5px #b32f50 inset;
+  box-shadow: 3;
+}
+.button.highlight:hover {
+  background-color: #a21e3f;
 }
