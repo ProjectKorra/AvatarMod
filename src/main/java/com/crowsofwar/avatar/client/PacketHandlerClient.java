@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,20 +17,27 @@
 
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.data.AvatarPlayerData.*;
+
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.IBendingState;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
+import com.crowsofwar.avatar.common.network.Networker;
+import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
-import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
+import com.crowsofwar.gorecore.util.PlayerUUIDs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,16 +64,10 @@ public class PacketHandlerClient implements IPacketHandler {
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		
-		if (packet instanceof PacketCPlayerData)
-			return handlePacketPlayerData((PacketCPlayerData) packet, ctx);
-		
-		if (packet instanceof PacketCStatusControl)
-			return handlePacketStatusControl((PacketCStatusControl) packet, ctx);
-		
-		if (packet instanceof PacketCRemoveStatusControl)
-			return handlePacketStatusControl((PacketCRemoveStatusControl) packet, ctx);
-		
 		if (packet instanceof PacketCParticles) return handlePacketParticles((PacketCParticles) packet, ctx);
+		
+		if (packet instanceof PacketCPlayerData)
+			return handlePacketNewPlayerData((PacketCPlayerData) packet, ctx);
 		
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 		
@@ -76,43 +77,6 @@ public class PacketHandlerClient implements IPacketHandler {
 	@Override
 	public Side getSide() {
 		return Side.CLIENT;
-	}
-	
-	private IMessage handlePacketPlayerData(PacketCPlayerData packet, MessageContext ctx) {
-		EntityPlayer player = GoreCorePlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayer());
-		if (player == null) {
-			AvatarLog.warn(WarningType.WEIRD_PACKET,
-					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
-			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayer());
-			return null;
-		}
-		AvatarLog.debug("Client: Received data packet for " + player);
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing player data packet");
-		if (data != null) {
-			// Add bending controllers & bending states
-			data.takeBending();
-			for (int i = 0; i < packet.getAllControllersID().length; i++) {
-				data.addBending(packet.getAllControllersID()[i]);
-				data.getState().update(player, Raytrace.getTargetBlock(player, -1));
-			}
-			for (int i = 0; i < packet.getAllControllersID().length; i++) {
-				IBendingState state = data.getBendingState(packet.getBuf().readInt());
-				state.fromBytes(packet.getBuf());
-			}
-			
-		}
-		return null;
-	}
-	
-	private IMessage handlePacketStatusControl(PacketCStatusControl packet, MessageContext ctx) {
-		AvatarMod.proxy.addStatusControl(packet.getStatusControl());
-		return null;
-	}
-	
-	private IMessage handlePacketStatusControl(PacketCRemoveStatusControl packet, MessageContext ctx) {
-		AvatarMod.proxy.removeStatusControl(packet.getStatusControl());
-		return null;
 	}
 	
 	private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx) {
@@ -132,6 +96,60 @@ public class PacketHandlerClient implements IPacketHandler {
 					packet.getMaxVelocityX() * random.nextGaussian(),
 					packet.getMaxVelocityY() * random.nextGaussian(),
 					packet.getMaxVelocityZ() * random.nextGaussian());
+		}
+		
+		return null;
+	}
+	
+	/**
+	 */
+	private IMessage handlePacketNewPlayerData(PacketCPlayerData packet, MessageContext ctx) {
+		
+		EntityPlayer player = PlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayerId());
+		if (player == null) {
+			AvatarLog.warn(WarningType.WEIRD_PACKET,
+					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
+			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayerId());
+			return null;
+		}
+		AvatarLog.debug("Client: Received data packet for " + player);
+		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		if (data != null) {
+			
+			Map<Networker.Property, Object> readData = packet.interpretData(data.getNetworker(),
+					new PlayerDataContext(data));
+			if (readData.containsKey(KEY_CONTROLLERS)) {
+				data.takeBending();
+				List<BendingController> bending = (List<BendingController>) readData.get(KEY_CONTROLLERS);
+				for (BendingController controller : bending) {
+					data.addBending(controller);
+				}
+			}
+			
+			if (readData.containsKey(KEY_STATES)) {
+				data.clearBendingStates();
+				for (BendingState state : (List<BendingState>) readData.get(KEY_STATES))
+					data.addBendingState(state);
+			}
+			
+			if (readData.containsKey(KEY_ABILITY_DATA)) {
+				data.clearAbilityData();
+				Set<Map.Entry<BendingAbility, AbilityData>> entries = ((Map<BendingAbility, AbilityData>) readData
+						.get(KEY_ABILITY_DATA)).entrySet();
+				for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
+					data.getAbilityData(entry.getKey()).setXp(entry.getValue().getXp());
+				}
+			}
+			
+			if (readData.containsKey(KEY_STATUS_CONTROLS)) {
+				data.clearStatusControls();
+				Set<StatusControl> controls = (Set<StatusControl>) readData.get(KEY_STATUS_CONTROLS);
+				for (StatusControl control : controls) {
+					data.addStatusControl(control);
+				}
+			}
+			
 		}
 		
 		return null;

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,22 +18,21 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class FirebendingState implements IBendingState {
+public class FirebendingState extends BendingState {
 	
 	private EntityFireArc fireArc;
-	private AvatarPlayerData data;
 	private boolean isFlamethrowing;
 	
 	public FirebendingState(AvatarPlayerData data) {
+		super(data);
 		fireArc = null;
-		this.data = data;
 	}
 	
 	public int getFireArcId() {
@@ -50,6 +49,7 @@ public class FirebendingState implements IBendingState {
 	
 	public void setFireArc(EntityFireArc arc) {
 		fireArc = arc;
+		save();
 	}
 	
 	public void setNoFireArc() {
@@ -62,6 +62,7 @@ public class FirebendingState implements IBendingState {
 	
 	public void setFlamethrowing(boolean flamethrowing) {
 		this.isFlamethrowing = flamethrowing;
+		save();
 	}
 	
 	@Override
@@ -75,13 +76,13 @@ public class FirebendingState implements IBendingState {
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void writeBytes(ByteBuf buf) {
 		buf.writeInt(getFireArcId());
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
-		fireArc = EntityFireArc.findFromId(data.getState().getPlayerEntity().worldObj, buf.readInt());
+	public void readBytes(ByteBuf buf) {
+		fireArc = EntityFireArc.findFromId(data.getPlayerEntity().worldObj, buf.readInt());
 	}
 	
 	@Override

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -21,10 +21,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 import com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy;
 import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
 import com.crowsofwar.gorecore.tree.test.TreeTest;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
+import com.crowsofwar.gorecore.util.PlayerUUIDs;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.Mod;
@@ -37,9 +38,9 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 @Mod(modid = GoreCore.MOD_ID, name = GoreCore.MOD_NAME, version = GoreCore.MOD_VERSION)
 public class GoreCore {
 	
-	public static final String MOD_ID = "GoreCore";
+	public static final String MOD_ID = "gorecore";
 	public static final String MOD_NAME = "GoreCore";
-	public static final String MOD_VERSION = "1.10-0.10.0";
+	public static final String MOD_VERSION = "1.11-0.2.0";
 	
 	@SidedProxy(clientSide = "com.crowsofwar.gorecore.proxy.GoreCoreClientProxy", serverSide = "com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy")
 	public static GoreCoreCommonProxy proxy;
@@ -53,8 +54,9 @@ public class GoreCore {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		config = new GoreCoreModConfig(event);
+		ConverterRegistry.addDefaultConverters();
 		
-		GoreCorePlayerUUIDs.addUUIDsToCacheFromCacheFile();
+		PlayerUUIDs.addUUIDsToCacheFromCacheFile();
 		
 		proxy.sideSpecifics();
 		
@@ -71,7 +73,7 @@ public class GoreCore {
 	// Called both on the client and on the dedicated server
 	@EventHandler
 	public void onShutdown(FMLServerStoppingEvent event) {
-		GoreCorePlayerUUIDs.saveUUIDCache();
+		PlayerUUIDs.saveUUIDCache();
 	}
 	
 }

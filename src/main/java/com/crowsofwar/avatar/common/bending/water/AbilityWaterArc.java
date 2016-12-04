@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,13 +18,9 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
@@ -37,21 +33,19 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
-	
-	private final Raytrace.Info raytrace;
+public class AbilityWaterArc extends WaterAbility {
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityWaterArc(BendingController<WaterbendingState> controller) {
-		super(controller);
-		this.raytrace = new Raytrace.Info(-1, false);
+	public AbilityWaterArc() {
+		super("water_arc");
+		requireRaytrace(-1, false);
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		WaterbendingState bendingState = ctx.getData().getBendingState(controller);
+		WaterbendingState bendingState = (WaterbendingState) ctx.getData().getBendingState(controller());
 		World world = ctx.getWorld();
 		EntityPlayer player = ctx.getPlayerEntity();
 		
@@ -74,6 +68,7 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setGravityEnabled(false);
 				bendingState.setWaterArc(water);
+				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
 				
 				water.setBehavior(new WaterArcBehavior.PlayerControlled(water, player));
 				
@@ -81,7 +76,8 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 				
 				needsSync = true;
 				
-				ctx.addStatusControl(StatusControl.THROW_WATER);
+				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
+				ctx.getData().sync();
 				
 			}
 		}
@@ -92,11 +88,6 @@ public class AbilityWaterArc extends BendingAbility<WaterbendingState> {
 	@Override
 	public int getIconIndex() {
 		return 4;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

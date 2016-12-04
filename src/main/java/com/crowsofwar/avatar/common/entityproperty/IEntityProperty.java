@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,9 +18,9 @@
 package com.crowsofwar.avatar.common.entityproperty;
 
 /**
- * The basic interface for an entity property. A property is of a certain type, and can be retrieved
- * and set. Different implementations would have specific details about how the property should be
- * get and set.
+ * The basic interface for an entity property. A property is of a certain type,
+ * and can be retrieved and set. Different implementations would have specific
+ * details about how the property should be get and set.
  * 
  * @param <T>
  *            The type of object that the property stores.

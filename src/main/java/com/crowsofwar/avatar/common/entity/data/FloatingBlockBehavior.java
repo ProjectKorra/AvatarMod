@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,9 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
@@ -176,17 +180,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						double speed = entity.velocity().magnitude();
-						collided.attackEntityFrom(
-								AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-								(float) (speed * 0.25));
-						
-						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion.mul(1);
-						motion.setY(0.08);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
-						if (!world.isRemote) entity.setDead();
-						entity.onCollision();
+						collision((EntityLivingBase) collided);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
 						motion.mul(0.3);
@@ -199,6 +193,34 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			return this;
 			
+		}
+		
+		private void collision(EntityLivingBase collided) {
+			// Add damage
+			double speed = entity.velocity().magnitude();
+			collided.attackEntityFrom(
+					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
+					(float) (speed * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()));
+			
+			// Push entity
+			Vector motion = new Vector(collided).minus(new Vector(entity));
+			motion.mul(STATS_CONFIG.floatingBlockSettings.push);
+			motion.setY(0.08);
+			collided.addVelocity(motion.x(), motion.y(), motion.z());
+			
+			// Add XP
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
+			if (!collided.worldObj.isRemote && data != null) {
+				float xp = SKILLS_CONFIG.blockThrowHit;
+				if (collided.getHealth() <= 0) {
+					xp = SKILLS_CONFIG.blockKill;
+				}
+				data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK).addXp(xp);
+			}
+			
+			// Remove the floating block & spawn particles
+			if (!entity.worldObj.isRemote) entity.setDead();
+			entity.onCollision();
 		}
 		
 		@Override
@@ -268,17 +290,16 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate() {
-			EntityPlayer controller = getControllingPlayer();
+			EntityPlayer player = getControllingPlayer();
 			
-			if (controller == null) return this;
+			if (player == null) return this;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(controller,
-					"Could not get player data to update PlayerControlled entity Block");
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
-			double yaw = Math.toRadians(controller.rotationYaw);
-			double pitch = Math.toRadians(controller.rotationPitch);
+			double yaw = Math.toRadians(player.rotationYaw);
+			double pitch = Math.toRadians(player.rotationPitch);
 			Vector forward = Vector.fromYawPitch(yaw, pitch);
-			Vector eye = Vector.getEyePos(controller);
+			Vector eye = Vector.getEyePos(player);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);

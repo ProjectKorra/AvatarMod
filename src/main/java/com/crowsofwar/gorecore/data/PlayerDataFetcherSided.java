@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,16 +17,19 @@
 
 package com.crowsofwar.gorecore.data;
 
-import net.minecraft.entity.player.EntityPlayer;
+import java.util.UUID;
+
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Player data fetcher class which hands off the functionality to a delegate. (One for each side)
+ * Player data fetcher class which delegates to a sided player data fetcher.
+ * This is done by checking the current thread; works with integrated server.
  * 
  * @author CrowsOfWar
  */
-public class PlayerDataFetcherSided<T extends GoreCorePlayerData> implements PlayerDataFetcher<T> {
+public class PlayerDataFetcherSided<T extends PlayerData> implements PlayerDataFetcher<T> {
 	
 	private PlayerDataFetcher<T> clientDelegate, serverDelegate;
 	
@@ -35,28 +38,13 @@ public class PlayerDataFetcherSided<T extends GoreCorePlayerData> implements Pla
 		serverDelegate = server;
 	}
 	
-	private PlayerDataFetcher<T> getDelegate() {
-		return FMLCommonHandler.instance().getEffectiveSide().isClient() ? clientDelegate : serverDelegate;
-	}
-	
 	@Override
-	public T fetch(EntityPlayer player, String errorMessage) {
-		return getDelegate().fetch(player, errorMessage);
-	}
-	
-	@Override
-	public T fetch(World world, String playerName, String errorMessage) {
-		return getDelegate().fetch(world, playerName, errorMessage);
-	}
-	
-	@Override
-	public T fetchPerformance(EntityPlayer player) {
-		return getDelegate().fetchPerformance(player);
-	}
-	
-	@Override
-	public T fetchPerformance(World world, String playerName) {
-		return getDelegate().fetchPerformance(world, playerName);
+	public T fetch(World world, UUID accountId) {
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if (side == Side.CLIENT)
+			return clientDelegate.fetch(world, accountId);
+		else
+			return serverDelegate.fetch(world, accountId);
 	}
 	
 }

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -42,21 +42,21 @@ public class AvatarInfo {
 	/**
 	 * Incremented for every major update.
 	 */
-	public static final int VERSION_UPDATE = 1;
+	public static final int VERSION_UPDATE = 2;
 	/**
 	 * Incremented for minor bug fixes.
 	 */
-	public static final int VERSION_PATCH = 2;
+	public static final int VERSION_PATCH = 0;
 	/**
-	 * "A" for alpha.
+	 * "a" for alpha.
 	 * <p>
-	 * "B" for beta.
+	 * "b" for beta.
 	 * <p>
 	 * "" for full release.
 	 */
-	public static final String DEV_STAGE = "A";
-	public static final String MC_VERSION = "1.10.2";
-	public static final String VERSION = "AV_" + DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
+	public static final String DEV_STAGE = "a";
+	public static final String MC_VERSION = "1.11";
+	public static final String VERSION = DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
 			+ (IS_DEV_BUILD ? "_dev" : "");
 	
 }

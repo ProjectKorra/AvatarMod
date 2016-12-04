@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -49,8 +49,8 @@ public class GoreCoreCommonProxy {
 	}
 	
 	/**
-	 * Returns whether that person is currently walking. This only works for the person who is
-	 * playing Minecraft.
+	 * Returns whether that person is currently walking. This only works for the
+	 * person who is playing Minecraft.
 	 */
 	public boolean isPlayerWalking(EntityPlayer player) {
 		return false;

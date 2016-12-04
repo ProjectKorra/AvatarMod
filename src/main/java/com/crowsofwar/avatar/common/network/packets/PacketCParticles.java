@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,8 +17,8 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumParticleTypes;
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	
-	private EnumParticleTypes particle;
+	private ParticleType particle;
 	private int minimum, maximum;
 	private double x, y, z;
 	private double maxVelocityX, maxVelocityY, maxVelocityZ;
@@ -49,8 +49,8 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	 * @param maxVelocityY
 	 * @param maxVelocityZ
 	 */
-	public PacketCParticles(EnumParticleTypes particle, int minimum, int maximum, double x, double y,
-			double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
+	public PacketCParticles(ParticleType particle, int minimum, int maximum, double x, double y, double z,
+			double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
 		this.particle = particle;
 		this.minimum = minimum;
 		this.maximum = maximum;
@@ -64,7 +64,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		particle = AvatarParticles.lookup(buf.readInt());
+		particle = ParticleType.lookup(buf.readInt());
 		minimum = buf.readInt();
 		maximum = buf.readInt();
 		x = buf.readDouble();
@@ -77,7 +77,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(particle.getParticleID());
+		buf.writeInt(particle.id());
 		buf.writeInt(minimum);
 		buf.writeInt(maximum);
 		buf.writeDouble(x);
@@ -99,7 +99,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	}
 	
 	public EnumParticleTypes getParticle() {
-		return particle;
+		return particle.vanilla();
 	}
 	
 	public int getMinimum() {

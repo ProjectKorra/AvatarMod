@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -20,14 +20,17 @@ package com.crowsofwar.avatar.common.entity.data;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingState;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -84,7 +87,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			}
 			World world = player.worldObj;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(player);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
 			if (data != null) {
 				FirebendingState bendingState = (FirebendingState) data
@@ -100,7 +103,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 						Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
 						Vector motion = lookPos.minus(new Vector(fire));
 						motion.mul(.3);
-						fire.moveEntity(motion.x(), motion.y(), motion.z());
+						fire.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
 						
 					} else {
 						if (!world.isRemote) bendingState.setFireArc(null);
@@ -147,7 +150,16 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				if (collided != entity.getOwner()) return this;
 				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
-						6);
+						6 * entity.getDamageMult());
+				
+				if (!entity.worldObj.isRemote) {
+					AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
+					if (data != null) {
+						data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC)
+								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
+					}
+				}
+				
 			}
 			
 			return this;

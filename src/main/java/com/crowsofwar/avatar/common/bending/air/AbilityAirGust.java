@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,11 +18,7 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,16 +29,13 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirGust extends BendingAbility<AirbendingState> {
-	
-	private final Raytrace.Info raytrace;
+public class AbilityAirGust extends AirAbility {
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityAirGust(BendingController<AirbendingState> controller) {
-		super(controller);
-		this.raytrace = new Raytrace.Info();
+	public AbilityAirGust() {
+		super("air_gust");
 	}
 	
 	@Override
@@ -66,11 +59,6 @@ public class AbilityAirGust extends BendingAbility<AirbendingState> {
 	@Override
 	public int getIconIndex() {
 		return 7;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

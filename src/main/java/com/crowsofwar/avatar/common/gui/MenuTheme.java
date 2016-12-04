@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -22,11 +22,13 @@ import java.awt.Color;
 public class MenuTheme {
 	
 	private final ThemeColor background, edge, icon;
+	private final int text;
 	
-	public MenuTheme(ThemeColor background, ThemeColor edge, ThemeColor icon) {
+	public MenuTheme(ThemeColor background, ThemeColor edge, ThemeColor icon, int text) {
 		this.background = background;
 		this.edge = edge;
 		this.icon = icon;
+		this.text = text;
 	}
 	
 	public ThemeColor getBackground() {
@@ -41,11 +43,16 @@ public class MenuTheme {
 		return icon;
 	}
 	
+	public int getText() {
+		return text;
+	}
+	
 	public static class ThemeColor {
 		private final int r, g, b, hoverR, hoverG, hoverB;
 		
 		public ThemeColor(Color def, Color hover) {
-			this(def.getRed(), def.getGreen(), def.getBlue(), hover.getRed(), hover.getGreen(), hover.getBlue());
+			this(def.getRed(), def.getGreen(), def.getBlue(), hover.getRed(), hover.getGreen(),
+					hover.getBlue());
 		}
 		
 		public ThemeColor(int r, int g, int b, int hoverR, int hoverG, int hoverB) {

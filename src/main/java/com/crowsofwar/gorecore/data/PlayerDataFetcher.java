@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,17 +17,74 @@
 
 package com.crowsofwar.gorecore.data;
 
+import java.util.UUID;
+
+import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.util.PlayerUUIDs;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public interface PlayerDataFetcher<T extends GoreCorePlayerData> {
+/**
+ * Responsible for retrieving player data from an arbitrary storing mechanism.
+ * Implementations will generally return the player data upon success and null
+ * upon failure.
+ * 
+ * @param <T>
+ *            Type of player data
+ * 
+ * @author CrowsOfWar
+ */
+public interface PlayerDataFetcher<T extends PlayerData> {
 	
-	T fetch(EntityPlayer player, String errorMessage);
+	/**
+	 * Retrieves player data from that world and with the given Minecraft
+	 * Account UUID.
+	 * 
+	 * @param world
+	 *            World to fetch from
+	 * @param accountId
+	 *            UUID of the player
+	 * 
+	 * @see PlayerUUIDs
+	 */
+	T fetch(World world, UUID accountId);
 	
-	T fetch(World world, String playerName, String errorMessage);
+	/**
+	 * Retrieves player data from that world and with the given player name.
+	 * Internally looks up the account UUID of the player.
+	 * 
+	 * @param world
+	 *            World to fetch from
+	 * @param playerName
+	 *            UUID of the player
+	 */
+	default T fetch(World world, String playerName) {
+		if (world == null) throw new IllegalArgumentException("Cannot get player-data with null World");
+		if (playerName == null)
+			throw new IllegalArgumentException("Cannot get player-data with null player name");
+		PlayerUUIDs.Result result = PlayerUUIDs.getUUID(playerName);
+		if (result.isResultSuccessful()) {
+			return fetch(world, result.getUUID());
+		} else {
+			GoreCore.LOGGER.warn(
+					"Unable to find player " + playerName + "'s UUID for PD fetch: " + result.getOutcome());
+			return null;
+		}
+	}
 	
-	T fetchPerformance(EntityPlayer player);
-	
-	T fetchPerformance(World world, String playerName);
+	/**
+	 * Retrieves player data from that world and with the given player entity.
+	 * Internally looks up the account UUID of the player.
+	 * 
+	 * @param world
+	 *            World to fetch from
+	 * @param playerName
+	 *            UUID of the player
+	 */
+	default T fetch(EntityPlayer player) {
+		if (player == null) throw new IllegalArgumentException("Cannot get Player-Data for null player");
+		return fetch(player.worldObj, player.getName());
+	}
 	
 }

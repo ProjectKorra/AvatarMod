@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -22,6 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.crowsofwar.gorecore.chat.FormattingState.ChatFormatSet;
+import com.crowsofwar.gorecore.chat.FormattingState.Setting;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
@@ -40,7 +45,7 @@ public class ChatSender {
 	private static final ChatSender instance;
 	
 	private static final Map<String, ChatMessage> referenceToChatMessage;
-	private static final Map<String, ChatMessage> translateKeyToChatMessage;
+	static final Map<String, ChatMessage> translateKeyToChatMessage;
 	
 	/**
 	 * Cause static block to be called
@@ -55,17 +60,6 @@ public class ChatSender {
 	}
 	
 	private ChatSender() {}
-	
-	public static ChatMessage newChatMessage(String translateKey, String... translateArgs) {
-		return newChatMessage(MessageConfiguration.DEFAULT, translateKey, translateArgs);
-	}
-	
-	public static ChatMessage newChatMessage(MessageConfiguration config, String translateKey,
-			String... translateArgs) {
-		ChatMessage cm = new ChatMessage(config, translateKey, translateArgs);
-		translateKeyToChatMessage.put(translateKey, cm);
-		return cm;
-	}
 	
 	private Object[] getFormatArgs(TextComponentTranslation message) {
 		return ObfuscationReflectionHelper.getPrivateValue(TextComponentTranslation.class, message, 1);
@@ -112,7 +106,12 @@ public class ChatSender {
 			
 			if (cm != null) {
 				
-				result = processText(translate.getUnformattedText(), cm, translate.getFormatArgs());
+				try {
+					result = processText(translate.getUnformattedText(), cm, translate.getFormatArgs());
+				} catch (ProcessingException e) {
+					result = "Error processing text; see log for details";
+					e.printStackTrace();
+				}
 				
 			}
 			
@@ -124,6 +123,11 @@ public class ChatSender {
 	
 	private String processText(String text, ChatMessage cm, Object... formatArgs) {
 		MessageConfiguration cfg = cm.getConfig();
+		ChatFormatSet formatSet = new ChatFormatSet();
+		
+		for (Map.Entry<String, TextFormatting> color : cfg.allColors().entrySet()) {
+			formatSet.addFormat(color.getKey(), color.getValue(), Setting.UNKNOWN, Setting.UNKNOWN);
+		}
 		
 		String[] translateArgs = cm.getTranslationArgs();
 		for (int i = 0; i < translateArgs.length; i++) {
@@ -135,48 +139,62 @@ public class ChatSender {
 			text = text.replace("${" + entry.getKey() + "}", entry.getValue());
 		}
 		
-		ChatFormat format = new ChatFormat();
+		FormattingState format = new FormattingState();
 		
 		String newText = "";
-		String[] split = text.split("[\\[\\]]");
-		for (int i = 0; i < split.length; i++) {
+		
+		// Separate the text by square brackets
+		// for demo, see http://regexr.com/, regex is: \\?\[?\/?[^\]\[\\]+\]?
+		Matcher matcher = Pattern.compile("\\\\?\\[?\\/?[^\\]\\[\\\\]+\\]?").matcher(text);
+		
+		while (matcher.find()) {
+			
+			// Item may be a tag, may not be
+			String item = matcher.group();
+			
 			boolean recievedFormatInstruction = false;
-			String item = split[i];
+			
 			if (item.equals("")) continue;
-			if (item.equals("bold")) {
+			
+			if (item.startsWith("[") && item.endsWith("]")) {
 				
-				format.setBold(true);
+				// Is a tag
+				
+				String tag = item.substring(1, item.length() - 1);
 				recievedFormatInstruction = true;
 				
-			} else if (item.equals("/bold")) {
-				
-				format.setBold(false);
-				recievedFormatInstruction = true;
-				
-			} else if (item.equals("italic")) {
-				
-				format.setItalic(true);
-				recievedFormatInstruction = true;
-				
-			} else if (item.equals("/italic")) {
-				
-				format.setItalic(false);
-				recievedFormatInstruction = true;
-				
-			} else if (item.equals("/color")) {
-				
-				recievedFormatInstruction = format.setColor(item);
-				
-			} else if (item.startsWith("color=")) {
-				
-				recievedFormatInstruction = format.setColor(cfg, item.substring("color=".length()));
-				
-			} else if (item.startsWith("translate=")) {
-				
-				String key = item.substring("translate=".length());
-				item = processText(I18n.format(key), cm, formatArgs);
+				if (formatSet.isFormatFor(tag)) {
+					
+					format.pushFormat(formatSet.lookup(tag));
+					recievedFormatInstruction = true;
+					
+				} else if (tag.startsWith("/")) {
+					
+					if (tag.substring(1).equals(format.topFormat().getName())) {
+						
+						format.popFormat();
+						
+					} else {
+						throw new ProcessingException(
+								"Error processing message; closing tag does not match last opened tag: "
+										+ text);
+					}
+					
+				} else if (tag.startsWith("translate=")) {
+					
+					String key = tag.substring("translate=".length());
+					item = processText(I18n.format(key), cm, formatArgs);
+					recievedFormatInstruction = false;
+					
+				} else {
+					
+					throw new ProcessingException("String has invalid tag: [" + item + "]; text is " + text);
+					
+				}
 				
 			}
+			// remove backslash from escaped tags
+			if (item.startsWith("\\")) item = item.substring(1);
 			
 			// If any formats changed, must re add all chat formats
 			if (recievedFormatInstruction) {
@@ -190,6 +208,12 @@ public class ChatSender {
 			}
 			
 		}
+		
+		if (format.hasFormat()) {
+			throw new ProcessingException(
+					"Unclosed tag [" + format.topFormat().getName() + "] in text " + text);
+		}
+		
 		text = newText;
 		
 		return newText;
@@ -199,66 +223,10 @@ public class ChatSender {
 		sender.addChatMessage(message.getChatMessage(args));
 	}
 	
-	private class ChatFormat {
+	static class ProcessingException extends RuntimeException {
 		
-		private boolean isBold;
-		private boolean isItalic;
-		private TextFormatting color;
-		
-		public ChatFormat() {
-			isBold = false;
-			isItalic = false;
-			setColor("white");
-		}
-		
-		public boolean setColor(String colorStr) {
-			return setColor(MessageConfiguration.DEFAULT, colorStr);
-		}
-		
-		public boolean setColor(MessageConfiguration config, String colorStr) {
-			TextFormatting set = null;
-			if (colorStr.equals("/color")) {
-				set = TextFormatting.WHITE;
-			} else if (config.hasColor(colorStr)) {
-				set = config.getColor(colorStr);
-			} else {
-				TextFormatting[] allFormats = TextFormatting.values();
-				for (int i = 0; i < allFormats.length; i++) {
-					TextFormatting format = allFormats[i];
-					if (format.isColor() && format.name().toLowerCase().equals(colorStr.toLowerCase())) {
-						set = format;
-						break;
-					}
-				}
-			}
-			
-			if (set == null) {
-				return false;
-			} else {
-				this.color = set;
-				return true;
-			}
-			
-		}
-		
-		public void setBold(boolean bold) {
-			this.isBold = bold;
-		}
-		
-		public void setItalic(boolean italic) {
-			this.isItalic = italic;
-		}
-		
-		public boolean isBold() {
-			return isBold;
-		}
-		
-		public boolean isItalic() {
-			return isItalic;
-		}
-		
-		public TextFormatting getColor() {
-			return color;
+		public ProcessingException(String message) {
+			super(message);
 		}
 		
 	}

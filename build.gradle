@@ -16,7 +16,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "AV_A1.2"
+version = "a2.0"
 group= "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
 
@@ -24,7 +24,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-    version = "1.10.2-12.18.1.2011"
+    version = "1.11-13.19.0.2180"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -32,7 +32,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20160518"
+    mappings = "snapshot_20161111"
 }
 
 dependencies {

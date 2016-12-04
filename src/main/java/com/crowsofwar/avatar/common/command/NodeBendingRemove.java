@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -47,7 +47,8 @@ public class NodeBendingRemove extends NodeFunctional {
 		this.argBendingController = new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING,
 				"bending", BendingManager.allBending().toArray(new BendingController[0]));
 		
-		this.addArguments(argPlayerName, argBendingController);
+		this.addArgument(argPlayerName);
+		this.addArgument(argBendingController);
 		
 	}
 	
@@ -57,13 +58,12 @@ public class NodeBendingRemove extends NodeFunctional {
 		ICommandSender sender = call.getFrom();
 		World world = sender.getEntityWorld();
 		
-		ArgumentList args = call.popArguments(argPlayerName, argBendingController);
+		ArgumentList args = call.popArguments(this);
 		
 		String playerName = args.get(argPlayerName);
 		BendingController controller = args.get(argBendingController);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName,
-				"Error while getting player data for /avatar bending remove");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName);
 		if (data == null) {
 			
 			MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
@@ -73,6 +73,7 @@ public class NodeBendingRemove extends NodeFunctional {
 			if (data.hasBending(controller.getID())) {
 				
 				data.removeBending(controller);
+				data.sync();
 				MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getControllerName());
 				
 			} else {

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,20 +17,12 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.gorecore.data.GoreCorePlayerData;
-import com.crowsofwar.gorecore.data.GoreCoreWorldDataPlayers;
-import com.crowsofwar.gorecore.data.PlayerDataFetcherServer.WorldDataFetcher;
+import com.crowsofwar.gorecore.data.PlayerData;
+import com.crowsofwar.gorecore.data.WorldDataPlayers;
 
 import net.minecraft.world.World;
 
-public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> {
-	
-	public static final WorldDataFetcher<AvatarWorldData> FETCHER = new WorldDataFetcher<AvatarWorldData>() {
-		@Override
-		public AvatarWorldData fetch(World world) {
-			return getDataFromWorld(world);
-		}
-	};
+public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
 	public static final String WORLD_DATA_KEY = "Avatar";
 	
@@ -44,7 +36,7 @@ public class AvatarWorldData extends GoreCoreWorldDataPlayers<AvatarPlayerData> 
 	}
 	
 	@Override
-	public Class<? extends GoreCorePlayerData> playerDataClass() {
+	public Class<? extends PlayerData> playerDataClass() {
 		return AvatarPlayerData.class;
 	}
 	

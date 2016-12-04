@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,20 +17,18 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 /**
@@ -45,15 +43,16 @@ public class StatCtrlThrowBlock extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext context) {
+	public boolean execute(AbilityContext ctx) {
 		
-		BendingController<EarthbendingState> controller = (BendingController<EarthbendingState>) BendingManager
+		BendingController controller = (BendingController) BendingManager
 				.getBending(BendingType.EARTHBENDING);
 		
-		EarthbendingState ebs = (EarthbendingState) context.getData().getBendingState(controller);
-		EntityPlayer player = context.getPlayerEntity();
+		EarthbendingState ebs = (EarthbendingState) ctx.getData().getBendingState(controller);
+		EntityPlayer player = ctx.getPlayerEntity();
 		World world = player.worldObj;
 		EntityFloatingBlock floating = ebs.getPickupBlock();
+		AvatarPlayerData data = ctx.getData();
 		
 		if (floating != null) {
 			
@@ -65,11 +64,11 @@ public class StatCtrlThrowBlock extends StatusControl {
 			floating.velocity().add(lookDir.times(20));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown(floating));
 			ebs.setPickupBlock(null);
-			AvatarMod.network.sendTo(new PacketCPlayerData(context.getData()), (EntityPlayerMP) player);
 			
 			controller.post(new FloatingBlockEvent.BlockThrown(floating, player));
 			
-			context.removeStatusControl(PLACE_BLOCK);
+			data.removeStatusControl(PLACE_BLOCK);
+			data.sync();
 			
 		}
 		

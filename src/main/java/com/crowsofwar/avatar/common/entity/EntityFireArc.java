@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -19,15 +19,12 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -44,8 +41,11 @@ public class EntityFireArc extends EntityArc {
 	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
 	
+	private float damageMult;
+	
 	public EntityFireArc(World world) {
 		super(world);
+		this.damageMult = 1;
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class EntityFireArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (inWater) {
+		if (inWater || worldObj.isRainingAt(getPosition())) {
 			setDead();
 			Random random = new Random();
 			if (worldObj.isRemote) {
@@ -84,11 +84,12 @@ public class EntityFireArc extends EntityArc {
 	public void setDead() {
 		super.setDead();
 		if (getOwner() != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetchPerformance(getOwner());
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
 			data.removeStatusControl(StatusControl.THROW_FIRE);
-			if (!worldObj.isRemote)
-				AvatarMod.network.sendTo(new PacketCRemoveStatusControl(StatusControl.THROW_FIRE),
-						(EntityPlayerMP) getOwner());
+			if (!worldObj.isRemote) {
+				data.removeStatusControl(StatusControl.THROW_FIRE);
+				data.sync();
+			}
 		}
 	}
 	
@@ -118,6 +119,14 @@ public class EntityFireArc extends EntityArc {
 	
 	public void setBehavior(FireArcBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	public float getDamageMult() {
+		return damageMult;
+	}
+	
+	public void setDamageMult(float damageMult) {
+		this.damageMult = damageMult;
 	}
 	
 	public static class FireControlPoint extends ControlPoint {

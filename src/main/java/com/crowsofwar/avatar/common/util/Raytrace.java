@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,15 +37,16 @@ public class Raytrace {
 	private Raytrace() {}
 	
 	/**
-	 * Returns the position of the block the player is looking at. Null if the player is not
-	 * targeting anything in range. This does not raycast liquids.
+	 * Returns the position of the block the player is looking at. Null if the
+	 * player is not targeting anything in range. This does not raycast liquids.
 	 * 
 	 * @param player
 	 *            Player entity (works both client-side and server-side)
 	 * @param range
-	 *            How far to raytrace. If -1, then it is how far the player can reach.
-	 * @return The position of the block that the player is looking at. May differ between server
-	 *         and client.
+	 *            How far to raytrace. If -1, then it is how far the player can
+	 *            reach.
+	 * @return The position of the block that the player is looking at. May
+	 *         differ between server and client.
 	 */
 	public static Result getTargetBlock(EntityPlayer player, double range) {
 		
@@ -54,8 +56,8 @@ public class Raytrace {
 	
 	/**
 	 * Returns the position of the block the player is looking at.
-	 * {@link Raytrace.Result#hitSomething() No hit} if the player is not targeting anything in
-	 * range, or the information doesn't require raytrace.
+	 * {@link Raytrace.Result#hitSomething() No hit} if the player is not
+	 * targeting anything in range, or the information doesn't require raytrace.
 	 * 
 	 * @param info
 	 *            Information of this raytrace
@@ -74,11 +76,12 @@ public class Raytrace {
 	 * @param player
 	 *            Player entity (works both client-side and server-side)
 	 * @param range
-	 *            How far to raytrace. If -1, then it is how far the player can reach.
+	 *            How far to raytrace. If -1, then it is how far the player can
+	 *            reach.
 	 * @param raycastLiquids
 	 *            Whether liquids are detected in the raycast.
-	 * @return The position of the block that the player is looking at. May differ between server
-	 *         and client.
+	 * @return The position of the block that the player is looking at. May
+	 *         differ between server and client.
 	 */
 	public static Result getTargetBlock(EntityPlayer player, double range, boolean raycastLiquids) {
 		
@@ -91,7 +94,7 @@ public class Raytrace {
 				!raycastLiquids, raycastLiquids, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
-			return new Result(new VectorI(res.getBlockPos()), res.sideHit);
+			return new Result(new VectorI(res.getBlockPos()), res.sideHit, new Vector(res.hitVec));
 		} else {
 			return new Result();
 		}
@@ -133,16 +136,16 @@ public class Raytrace {
 				start.plus(direction.times(range)).toMinecraft(), !raycastLiquids, raycastLiquids, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
-			return new Result(new VectorI(res.getBlockPos()), res.sideHit);
+			return new Result(new VectorI(res.getBlockPos()), res.sideHit, new Vector(res.hitVec));
 		} else {
 			return new Result();
 		}
 	}
 	
 	/**
-	 * Custom raytrace which allows you to specify a (Bi)Predicate to determine if the block has
-	 * been hit. Unfortunately, this implementation does not correctly report the side hit (always
-	 * is {@link EnumFacing#DOWN}).
+	 * Custom raytrace which allows you to specify a (Bi)Predicate to determine
+	 * if the block has been hit. Unfortunately, this implementation does not
+	 * correctly report the side hit (always is {@link EnumFacing#DOWN}).
 	 * 
 	 * @param world
 	 *            The world
@@ -165,7 +168,7 @@ public class Raytrace {
 			BlockPos pos = currentPosition.toBlockPos();
 			IBlockState blockState = world.getBlockState(pos);
 			if (verify.test(pos, blockState)) {
-				return new Result(new VectorI(pos), EnumFacing.DOWN);
+				return new Result(new VectorI(pos), EnumFacing.DOWN, currentPosition);
 			}
 			
 			currentPosition.add(increment);
@@ -180,15 +183,17 @@ public class Raytrace {
 		private final boolean hit;
 		private final VectorI pos;
 		private final EnumFacing side;
+		private final Vector posPrecise;
 		
 		public Result() {
-			this(null, null);
+			this(null, null, null);
 		}
 		
-		public Result(VectorI pos, EnumFacing side) {
+		public Result(VectorI pos, EnumFacing side, Vector posPrecise) {
 			this.pos = pos;
 			this.side = side;
 			this.hit = pos != null;
+			this.posPrecise = posPrecise;
 		}
 		
 		/**
@@ -210,6 +215,32 @@ public class Raytrace {
 		 */
 		public boolean hitSomething() {
 			return hit;
+		}
+		
+		public Vector getPosPrecise() {
+			return posPrecise;
+		}
+		
+		public static Raytrace.Result fromBytes(ByteBuf buf) {
+			boolean hit = buf.readBoolean();
+			EnumFacing side = null;
+			VectorI pos = null;
+			Vector posPrecise = null;
+			if (hit) {
+				side = EnumFacing.values()[buf.readInt()];
+				pos = VectorI.fromBytes(buf);
+				posPrecise = Vector.fromBytes(buf);
+			}
+			return new Result(pos, side, posPrecise);
+		}
+		
+		public void toBytes(ByteBuf buf) {
+			buf.writeBoolean(hit);
+			if (hit) {
+				buf.writeInt(side.ordinal());
+				pos.toBytes(buf);
+				posPrecise.toBytes(buf);
+			}
 		}
 		
 	}
@@ -235,7 +266,8 @@ public class Raytrace {
 		}
 		
 		/**
-		 * Constructs a raytrace information requesting a raytrace with the designated parameters.
+		 * Constructs a raytrace information requesting a raytrace with the
+		 * designated parameters.
 		 * 
 		 * @param range
 		 *            Range of raytrace. If -1, how far player can reach.

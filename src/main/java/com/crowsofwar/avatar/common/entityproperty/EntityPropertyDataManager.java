@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -23,8 +23,8 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.EntityDataManager;
 
 /**
- * An IEntityProperty which uses the entity's DataManager to synchronize between server and client.
- * TODO add more docs
+ * An IEntityProperty which uses the entity's DataManager to synchronize between
+ * server and client. TODO add more docs
  *
  * @param <T>
  *            The type of object stored in the DataManager.
@@ -36,14 +36,16 @@ public final class EntityPropertyDataManager<T> implements IEntityProperty<T> {
 	private final DataParameter<T> parameter;
 	
 	/**
-	 * Creates a new EntityProperty using the EntityDataManager for a specific entity.
+	 * Creates a new EntityProperty using the EntityDataManager for a specific
+	 * entity.
 	 * 
 	 * @param entity
 	 *            The instance of the entity
 	 * @param clazz
 	 *            The class of the entity
 	 * @param serializer
-	 *            The DataSerializer which will be used to send the value over the network
+	 *            The DataSerializer which will be used to send the value over
+	 *            the network
 	 * @param startingValue
 	 *            The initial value of your property
 	 */
@@ -61,8 +63,8 @@ public final class EntityPropertyDataManager<T> implements IEntityProperty<T> {
 	 * @param entity
 	 *            The instance of the entity
 	 * @param parameter
-	 *            The DataParameter which is used to store the entity property. Note: Is also
-	 *            registered to the EntityDataManager.
+	 *            The DataParameter which is used to store the entity property.
+	 *            Note: Is also registered to the EntityDataManager.
 	 * @param startingValue
 	 *            The initial value of the property.
 	 */

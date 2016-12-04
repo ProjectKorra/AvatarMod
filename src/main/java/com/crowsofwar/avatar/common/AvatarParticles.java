@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -24,7 +24,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.common.util.EnumHelper;
 
 /**
- * 
+ * Manages registration of custom particles
  * 
  * @author CrowsOfWar
  */

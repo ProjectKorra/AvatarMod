@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,12 +17,17 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_RAVINE;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.earth.RavineEvent;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.gorecore.util.Vector;
@@ -37,6 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -51,6 +57,8 @@ public class EntityRavine extends AvatarEntity {
 	private Vector initialPosition;
 	private EntityPlayer owner;
 	
+	private float damageMult;
+	
 	/**
 	 * @param world
 	 */
@@ -60,6 +68,12 @@ public class EntityRavine extends AvatarEntity {
 		this.propVelocity = new EntityPropertyMotion(this);
 		setSize(1, 1);
 		
+		this.damageMult = 1;
+		
+	}
+	
+	public void setDamageMult(float mult) {
+		this.damageMult = mult;
 	}
 	
 	public void setOwner(EntityPlayer owner) {
@@ -105,6 +119,10 @@ public class EntityRavine extends AvatarEntity {
 		
 		BlockPos above = getPosition().offset(EnumFacing.UP);
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		
+		if (ticksExisted % 3 == 0) worldObj.playSound(posX, posY, posZ,
+				worldObj.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+				SoundCategory.PLAYERS, 1, 1, false);
 		
 		if (!worldObj.getBlockState(below).isNormalCube()) {
 			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
@@ -154,6 +172,9 @@ public class EntityRavine extends AvatarEntity {
 			
 		}
 		
+		// amount of entities which were successfully attacked
+		int attacked = 0;
+		
 		// Push collided entities back
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
@@ -164,11 +185,20 @@ public class EntityRavine extends AvatarEntity {
 						BendingManager.getBending(BendingType.EARTHBENDING)
 								.post(new RavineEvent.HitEntity(this, entity));
 						
-						Vector push = velocity.copy().setY(1).mul(0.25);
+						Vector push = velocity.copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
 						entity.addVelocity(push.x(), push.y(), push.z());
-						entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner), 7);
+						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
+								STATS_CONFIG.ravineSettings.damage * damageMult))
+							attacked++;
 					}
 				}
+			}
+		}
+		
+		if (!worldObj.isRemote && owner != null) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+			if (data != null) {
+				data.getAbilityData(ABILITY_RAVINE).addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}
 		}
 		

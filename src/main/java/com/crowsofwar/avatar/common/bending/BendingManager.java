@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -29,11 +29,12 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 
 /**
- * Manages instances of bending controllers. Bending controllers can be retrieved via
- * {@link #getBending(BendingType)}. Contains constants which specify the IDs of bending. <br />
+ * Manages instances of bending controllers. Bending controllers can be
+ * retrieved via {@link #getBending(BendingType)}. Contains constants which
+ * specify the IDs of bending. <br />
  * <br />
- * Third-party mods can use {@link #registerBending(BendingController)} to enable custom bending
- * controllers.
+ * Third-party mods can use {@link #registerBending(BendingController)} to
+ * enable custom bending controllers.
  *
  */
 public class BendingManager {
@@ -52,12 +53,19 @@ public class BendingManager {
 	private static Map<Integer, BendingAbility> abilities;
 	private static List<BendingAbility> allAbilities;
 	
-	public static void init() {
+	static {
 		bending = new HashMap<BendingType, BendingController>();
 		bendingByName = new HashMap<String, BendingController>();
 		allBending = new ArrayList<BendingController>();
 		abilities = new HashMap<>();
 		allAbilities = new ArrayList<>();
+	}
+	
+	/**
+	 * Register all bending controllers. Initialization of the BendingManager is
+	 * done in a static block. Requires BendingAbilities to be created.
+	 */
+	public static void init() {
 		registerBending(new Earthbending());
 		registerBending(new Firebending());
 		registerBending(new Waterbending());
@@ -66,6 +74,8 @@ public class BendingManager {
 	
 	/**
 	 * @deprecated Use {@link #getBending(BendingType)} instead.
+	 * @throws IllegalArgumentException
+	 *             if there is no bending with the ID
 	 */
 	@Deprecated
 	public static BendingController getBending(int id) {
@@ -73,17 +83,22 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController for that bending type. Returns null if invalid.
+	 * Get the BendingController for that bending type.
 	 * 
 	 * @param type
 	 *            Bending type to look for
+	 * @throws IllegalArgumentException
+	 *             If no bending controller for that type (shouldn't happen)
 	 */
-	public static BendingController<?> getBending(BendingType type) {
+	public static BendingController getBending(BendingType type) {
+		if (!bending.containsKey(type)) throw new IllegalArgumentException(
+				"No bending controller with type " + type + "... devs forgot to add a bending controller!");
 		return bending.get(type);
 	}
 	
 	/**
-	 * Get the BendingController with the given name. Returns null if the name is invalid.
+	 * Get the BendingController with the given name. Returns null if the name
+	 * is invalid.
 	 * 
 	 * @param name
 	 *            The name of the bending controller

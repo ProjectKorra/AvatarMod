@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,16 +17,17 @@
 
 package com.crowsofwar.gorecore.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
- * A very customizable implementation of {@link ICommandNode}. This is designed to simplify the
- * development of new command nodes by implementing many of ICommandNode's methods.
+ * A very customizable implementation of {@link ICommandNode}. This is designed
+ * to simplify the development of new command nodes by implementing many of
+ * ICommandNode's methods.
  * 
  * @author CrowsOfWar
  */
@@ -34,21 +35,22 @@ public abstract class NodeFunctional implements ICommandNode {
 	
 	private static final ChatMessage DEFAULT_INFO;
 	static {
-		DEFAULT_INFO = ChatSender.newChatMessage("gc.tree.node.defaultInfo");
+		DEFAULT_INFO = ChatMessage.newChatMessage("gc.tree.node.defaultInfo");
 	}
 	
 	private final String name;
 	private final boolean op;
-	private IArgument<?>[] args;
+	private List<IArgument> args;
 	
 	public NodeFunctional(String name, boolean op) {
 		this.name = name;
 		this.op = op;
-		addArguments();
+		this.args = new ArrayList<>();
 	}
 	
-	protected void addArguments(IArgument<?>... args) {
-		this.args = args;
+	protected <T extends IArgument<?>> T addArgument(T argument) {
+		this.args.add(argument);
+		return argument;
 	}
 	
 	@Override
@@ -63,7 +65,8 @@ public abstract class NodeFunctional implements ICommandNode {
 	
 	@Override
 	public final IArgument<?>[] getArgumentList() {
-		return args;
+		IArgument<?>[] arr = new IArgument[args.size()];
+		return args.toArray(arr);
 	}
 	
 	@Override

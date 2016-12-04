@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -36,7 +36,8 @@ public class TreeTest extends TreeCommand {
 		
 		ICommandNode videogamesPlay = new TestPlayVideogames();
 		ICommandNode videogamesBuy = new TestBuyVideogames();
-		ICommandNode branchVideogames = new NodeBranch(TestMessages.MSG_VIDEOGAME_BRANCH_HELP, "videogames", videogamesPlay, videogamesBuy);
+		ICommandNode branchVideogames = new NodeBranch(TestMessages.MSG_VIDEOGAME_BRANCH_HELP, "videogames",
+				videogamesPlay, videogamesBuy);
 		
 		return new ICommandNode[] { branchCake, branchVideogames, new TestUseChatSender(),
 				new TestSendMessage("const", TestMessages.MSG_CONST) };

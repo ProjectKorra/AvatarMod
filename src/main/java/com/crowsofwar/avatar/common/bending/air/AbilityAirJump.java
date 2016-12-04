@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,41 +18,33 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirJump extends BendingAbility<AirbendingState> {
+public class AbilityAirJump extends AirAbility {
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityAirJump(BendingController<AirbendingState> controller) {
-		super(controller);
+	public AbilityAirJump() {
+		super("air_jump");
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
-		ctx.addStatusControl(StatusControl.AIR_JUMP);
-		
+		AvatarPlayerData data = ctx.getData();
+		data.addStatusControl(StatusControl.AIR_JUMP);
+		data.sync();
 	}
 	
 	@Override
 	public int getIconIndex() {
 		return 10;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return new Raytrace.Info();
 	}
 	
 }

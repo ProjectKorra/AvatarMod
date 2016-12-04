@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,10 +17,9 @@
 
 package com.crowsofwar.gorecore.tree.test;
 
-import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
+import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
 import com.crowsofwar.gorecore.chat.MessageConfiguration;
 
 import net.minecraft.util.text.TextFormatting;
@@ -37,7 +36,7 @@ public class TestMessages {
 	public static final ChatMessage MSG_PLAYVIDEOGAMES_HELP = newChatMessage(CFG, "test.videogames.help");
 	public static final ChatMessage MSG_CHATSENDER_HELP = newChatMessage(CFG, "test.chatSender.help");
 	public static final ChatMessage MSG_VIDEOGAME_BRANCH_HELP = newChatMessage(CFG, "test.videogamesBranch.help");
-	public static final ChatMessage MSG_FRUIT = ChatSender.newChatMessage(CFG, "test.chatSender", "fruit");
-	public static final ChatMessage MSG_CONST = ChatSender.newChatMessage(CFG, "test.const");
+	public static final ChatMessage MSG_FRUIT = newChatMessage(CFG, "test.chatSender", "fruit");
+	public static final ChatMessage MSG_CONST = newChatMessage(CFG, "test.const");
 	
 }

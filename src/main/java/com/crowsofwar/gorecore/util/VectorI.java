@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -188,7 +188,8 @@ public class VectorI {
 	}
 	
 	/**
-	 * Creates a new vector from the sub of this vector and the vector defined by (x, y, z).
+	 * Creates a new vector from the sub of this vector and the vector defined
+	 * by (x, y, z).
 	 * 
 	 * @param x
 	 *            X-coordinate of other vector
@@ -238,7 +239,8 @@ public class VectorI {
 	}
 	
 	/**
-	 * Creates a new vector from this vector minus the vector defined by (x,y,z).
+	 * Creates a new vector from this vector minus the vector defined by
+	 * (x,y,z).
 	 * 
 	 * @param x
 	 *            X-coordinate to subtract
@@ -262,7 +264,8 @@ public class VectorI {
 	}
 	
 	/**
-	 * Move this Vector in the specified direction by the specified amount of meters.
+	 * Move this Vector in the specified direction by the specified amount of
+	 * meters.
 	 * 
 	 * @param direction
 	 *            The direction to offset this vector
@@ -392,7 +395,8 @@ public class VectorI {
 	}
 	
 	/**
-	 * Returns the cross product with the vector defined by (x, y, z). This creates a new vector.
+	 * Returns the cross product with the vector defined by (x, y, z). This
+	 * creates a new vector.
 	 * 
 	 * @param x
 	 *            X-coordinate of other vector
@@ -406,7 +410,8 @@ public class VectorI {
 	}
 	
 	/**
-	 * Returns the angle between the other vector, in radians. (result is ranged 0-PI).
+	 * Returns the angle between the other vector, in radians. (result is ranged
+	 * 0-PI).
 	 * 
 	 * @param vec
 	 *            Other vector

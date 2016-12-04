@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -55,7 +55,8 @@ public final class GoreCoreMathHelper {
 	}
 	
 	/**
-	 * Round the given number to the nearest whole that is smaller than the number.
+	 * Round the given number to the nearest whole that is smaller than the
+	 * number.
 	 * 
 	 * @param n
 	 *            The number
@@ -66,7 +67,8 @@ public final class GoreCoreMathHelper {
 	}
 	
 	/**
-	 * Round the given number to the nearest whole that is greater than the number.
+	 * Round the given number to the nearest whole that is greater than the
+	 * number.
 	 * 
 	 * @param n
 	 *            The number

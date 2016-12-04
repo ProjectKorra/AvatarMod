@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -24,8 +24,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.world.World;
 
 /**
- * An argument for a player's username. Supports tab completion if the player is currently in the
- * world. However, players not in the world can be specified.
+ * An argument for a player's username. Supports tab completion if the player is
+ * currently in the world. However, players not in the world can be specified.
  * 
  * @author CrowsOfWar
  */

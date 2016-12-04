@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -24,8 +24,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 /**
- * A particle spawner which operates on the server thread. It sends packets to clients about
- * particles.
+ * A particle spawner which operates on the server thread. It sends packets to
+ * clients about particles.
  * <p>
  * Avoid using spawnOneParticle as velocity might be unpredicted.
  * 
@@ -34,22 +34,23 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 public class NetworkParticleSpawner implements ParticleSpawner {
 	
 	@Override
-	public void spawnOneParticle(World world, AvatarParticleType particle, double x, double y, double z,
+	public void spawnOneParticle(World world, ParticleType particle, double x, double y, double z,
 			double velocityX, double velocityY, double velocityZ, int... parameters) {
 		
-		// Velocity -> max velocity... results in not expected velocity client side.
+		// Velocity -> max velocity... results in not expected velocity client
+		// side.
 		spawnParticles(world, particle, 1, 1, x, y, z, velocityX, velocityY, velocityZ, parameters);
 		
 	}
 	
 	@Override
-	public void spawnParticles(World world, AvatarParticleType particle, int minimum, int maximum, double x,
+	public void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x,
 			double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
 			int... parameters) {
 		
 		TargetPoint point = new TargetPoint(world.provider.getDimension(), x, y, z, 64);
 		
-		AvatarMod.network.sendToAllAround(new PacketCParticles(particle.vanilla(), minimum, maximum, x, y, z,
+		AvatarMod.network.sendToAllAround(new PacketCParticles(particle, minimum, maximum, x, y, z,
 				maxVelocityX / 20, maxVelocityY / 20, maxVelocityZ / 20), point);
 		
 	}

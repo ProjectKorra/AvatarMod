@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,20 +18,19 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class EarthbendingState implements IBendingState {
+public class EarthbendingState extends BendingState {
 	
-	private AvatarPlayerData data;
 	private EntityFloatingBlock pickupBlock;
 	
 	public EarthbendingState(AvatarPlayerData data) {
-		this.data = data;
+		super(data);
 	}
 	
 	@Override
@@ -51,12 +50,14 @@ public class EarthbendingState implements IBendingState {
 	public EntityFloatingBlock getPickupBlock() {
 		if (pickupBlock != null && pickupBlock.isDead) {
 			pickupBlock = null;
+			save();
 		}
 		return pickupBlock;
 	}
 	
 	public void setPickupBlock(EntityFloatingBlock pickupBlock) {
 		this.pickupBlock = pickupBlock;
+		save();
 	}
 	
 	public boolean isHoldingBlock() {
@@ -64,19 +65,18 @@ public class EarthbendingState implements IBendingState {
 	}
 	
 	public void dropBlock() {
-		pickupBlock = null;
+		setPickupBlock(null);
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void writeBytes(ByteBuf buf) {
 		buf.writeInt(pickupBlock == null ? -1 : pickupBlock.getID());
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void readBytes(ByteBuf buf) {
 		int id = buf.readInt();
-		pickupBlock = id == -1 ? null
-				: EntityFloatingBlock.getFromID(data.getState().getPlayerEntity().worldObj, id);
+		pickupBlock = id == -1 ? null : EntityFloatingBlock.getFromID(data.getPlayerEntity().worldObj, id);
 	}
 	
 	@Override

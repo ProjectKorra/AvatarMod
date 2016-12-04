@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -54,7 +54,8 @@ public class RenderFireArc extends RenderArc {
 		// TODO [1.10] Re-introduce flame particle
 		arc.worldObj.spawnParticle(EnumParticleTypes.FLAME, spawnAt.x(), spawnAt.y(), spawnAt.z(),
 				velocity.x() / 20, 0.05, velocity.z() / 20);
-		// AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord, spawnAt.yCoord,
+		// AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord,
+		// spawnAt.yCoord,
 		// spawnAt.zCoord,
 		// velocity.xCoord / 20, 0.05, velocity.zCoord / 20);
 		

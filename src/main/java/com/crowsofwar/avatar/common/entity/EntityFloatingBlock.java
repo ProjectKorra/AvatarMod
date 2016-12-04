@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -37,6 +37,7 @@ import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -91,23 +92,24 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 */
 	private AxisAlignedBB expandedHitbox;
 	
+	private float damageMult;
+	
 	private final OwnerAttribute ownerAttrib;
 	
 	public EntityFloatingBlock(World world) {
 		super(world);
-		// TODO Re-shrink floating block size to .95, to allow squeezing through
-		// small spaces
-		float size = 1;
+		float size = .9f;
 		setSize(size, size);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
 		this.enableItemDrops = true;
 		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, newOwner -> {
-			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher()
-					.fetchPerformance(newOwner).getBendingState(EARTHBENDING.id());
+			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetch(newOwner)
+					.getBendingState(EARTHBENDING);
 			if (state != null) state.setPickupBlock(this);
 		});
+		this.damageMult = 1;
 		
 	}
 	
@@ -155,6 +157,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
+		damageMult = nbt.getFloat("DamageMultiplier");
 		ownerAttrib.load(nbt);
 	}
 	
@@ -169,6 +172,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
 		getBehavior().save(getOrCreateNestedCompound(nbt, "BehaviorData"));
+		nbt.setFloat("DamageMultiplier", damageMult);
 		ownerAttrib.save(nbt);
 	}
 	
@@ -237,6 +241,14 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setItemDropsEnabled(false);
 	}
 	
+	public float getDamageMult() {
+		return damageMult;
+	}
+	
+	public void setDamageMult(float mult) {
+		this.damageMult = mult;
+	}
+	
 	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
 		worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
 				Block.getStateId(getBlockState()));
@@ -270,7 +282,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		motionY = velocity().y() / 20;
 		motionZ = velocity().z() / 20;
 		
-		moveEntity(velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
+		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		
 		getBehavior().setEntity(this);
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate();
@@ -279,7 +291,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	/**
-	 * Called when the block collides with the ground, but not other entities
+	 * Called when the block collides with the ground as well as other entities
 	 */
 	public void onCollision() {
 		// Spawn particles
@@ -342,6 +354,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double d) {
 		return true;
+	}
+	
+	@Override
+	public boolean canBeCollidedWith() {
+		return false;
 	}
 	
 }

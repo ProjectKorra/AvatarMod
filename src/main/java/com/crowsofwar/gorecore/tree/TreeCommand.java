@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,11 +17,12 @@
 
 package com.crowsofwar.gorecore.tree;
 
-import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
+import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.MessageConfiguration;
@@ -154,8 +155,14 @@ public abstract class TreeCommand implements ICommand {
 			} else {
 				IArgument<?>[] nodeArgs = node.getArgumentList();
 				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
-				return nodeArgs[sentArgs.length - 1 - nodeIndex].getCompletionSuggestions(sender,
-						sentArgs[sentArgs.length - 1]);
+				List<String> suggestions = nodeArgs[sentArgs.length - 1 - nodeIndex]
+						.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1]);
+				
+				String lastArg = sentArgs[sentArgs.length - 1];
+				List<String> ret = suggestions.stream().filter(suggestion -> suggestion.startsWith(lastArg))
+						.collect(Collectors.toList());
+				return ret;
+				
 			}
 			
 		}
@@ -229,8 +236,8 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	/**
-	 * Called to instantiate all subclass Command Nodes. Return the ones that should be added to the
-	 * root branch.
+	 * Called to instantiate all subclass Command Nodes. Return the ones that
+	 * should be added to the root branch.
 	 */
 	protected abstract ICommandNode[] addCommands();
 	

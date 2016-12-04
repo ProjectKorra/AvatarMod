@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -26,7 +26,8 @@ import java.util.Set;
 import org.apache.http.annotation.ThreadSafe;
 
 /**
- * An implementation of {@link Subject} which allows you to notify subjects of events.
+ * An implementation of {@link Subject} which allows you to notify subjects of
+ * events.
  * <p>
  * Designed to use with delegation.
  * <p>

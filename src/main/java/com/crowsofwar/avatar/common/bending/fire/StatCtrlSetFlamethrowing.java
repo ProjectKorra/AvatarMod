@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -54,7 +54,10 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 		if (data.hasBending(BendingType.FIREBENDING)) {
 			FirebendingState state = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
 			state.setFlamethrowing(setting);
-			if (setting) ctx.addStatusControl(STOP_FLAMETHROW);
+			if (setting) {
+				data.addStatusControl(STOP_FLAMETHROW);
+				data.sync();
+			}
 		}
 		
 		return true;

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -36,13 +36,14 @@ public class TestNode2 extends NodeFunctional {
 	public TestNode2() {
 		super("node2", false);
 		argTemp = new ArgumentDirect("temperature", ITypeConverter.CONVERTER_DOUBLE, 3);
-		addArguments(argTemp);
+		addArgument(argTemp);
 	}
 	
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		ArgumentList args = call.popArguments(argTemp);
-		call.getFrom().addChatMessage(new TextComponentTranslation("The temperature is " + args.get(argTemp)));
+		ArgumentList args = call.popArguments(this);
+		call.getFrom()
+				.addChatMessage(new TextComponentTranslation("The temperature is " + args.get(argTemp)));
 		return null;
 	}
 	

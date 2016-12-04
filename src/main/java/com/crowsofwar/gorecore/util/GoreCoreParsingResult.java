@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +18,8 @@
 package com.crowsofwar.gorecore.util;
 
 /**
- * A list of results for generic type parsing given using {@link GoreCoreParsingUtil}.
+ * A list of results for generic type parsing given using
+ * {@link GoreCoreParsingUtil}.
  * 
  * @author CrowsOfWar
  * @see GoreCoreParsingUtil
@@ -41,7 +42,8 @@ public final class GoreCoreParsingResult {
 		return new ResultLong(value, successful);
 	}
 	
-	public static GoreCoreParsingResult.ResultBoolean generateBooleanResult(boolean value, boolean successful) {
+	public static GoreCoreParsingResult.ResultBoolean generateBooleanResult(boolean value,
+			boolean successful) {
 		return new ResultBoolean(value, successful);
 	}
 	
@@ -55,16 +57,16 @@ public final class GoreCoreParsingResult {
 		}
 		
 		/**
-		 * Get the result of parsing the string. This will be the default value for the generic type
-		 * if {@link #wasSuccessful() an error occured}.
+		 * Get the result of parsing the string. This will be the default value
+		 * for the generic type if {@link #wasSuccessful() an error occured}.
 		 */
 		public T getResult() {
 			return value;
 		}
 		
 		/**
-		 * Returns whether parsing the string was successful - that is, if the string was correct
-		 * for this type.
+		 * Returns whether parsing the string was successful - that is, if the
+		 * string was correct for this type.
 		 */
 		public boolean wasSuccessful() {
 			return successful;

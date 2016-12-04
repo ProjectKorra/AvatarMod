@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -20,17 +20,15 @@ package com.crowsofwar.avatar.common.network;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
+import com.crowsofwar.gorecore.util.PlayerUUIDs;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -79,14 +77,12 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().playerEntity;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing UseAbility packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data != null) {
 			
+			BendingAbility ability = packet.getAbility();
 			// TODO Verify that the client can actually use that ability
-			data.getState().update(player, packet.getTargetPos(), packet.getSideHit());
-			packet.getAbility().execute(new AbilityContext(data,
-					new Raytrace.Result(packet.getTargetPos(), packet.getSideHit())));
+			ability.execute(new AbilityContext(data, packet.getRaytrace()));
 			
 		}
 		
@@ -96,7 +92,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 		
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = GoreCorePlayerUUIDs
+		EntityPlayer player = PlayerUUIDs
 				.findPlayerInWorldFromUUID(ctx.getServerHandler().playerEntity.worldObj, id);
 		
 		if (player == null) {
@@ -108,10 +104,10 @@ public class PacketHandlerServer implements IPacketHandler {
 			
 		}
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while" + " processing RequestData packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		
-		return data == null ? null : new PacketCPlayerData(data);
+		if (data != null) data.getNetworker().sendAll();
+		return null;
 		
 	}
 	
@@ -120,8 +116,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		World world = player.worldObj;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing" + " UseBendingController packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		
 		if (data != null) {
 			
@@ -144,16 +139,17 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player,
-				"Error while processing UseStatusControl packet");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		
 		if (data != null) {
-			if (packet.getStatusControl().execute(new AbilityContext(data,
-					new Raytrace.Result(packet.getLookPos(), packet.getLookSide())))) {
-				
-				data.removeStatusControl(packet.getStatusControl());
-				AvatarMod.network.sendTo(new PacketCRemoveStatusControl(packet.getStatusControl()), player);
-				
+			StatusControl sc = packet.getStatusControl();
+			if (data.hasStatusControl(sc)) {
+				if (sc.execute(new AbilityContext(data, packet.getRaytrace()))) {
+					
+					data.removeStatusControl(packet.getStatusControl());
+					data.sync();
+					
+				}
 			}
 			
 		}

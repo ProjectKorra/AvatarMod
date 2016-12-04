@@ -27,4 +27,5 @@ screenshots/
 crash-reports/
 resourcepacks/
 
-copyright.txt
+Client.launch
+Server.launch

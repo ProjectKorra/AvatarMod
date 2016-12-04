@@ -10,6 +10,7 @@ avatar.RadialMenu=Earthbending
 avatar.Firebend=Firebending
 avatar.Waterbend=Waterbending
 avatar.Airbend=Airbending
+avatar.Skills=Skills Menu
 
 avatar.earthbending=Earthbending
 avatar.earthbending.demonym=Earthbender
@@ -20,17 +21,52 @@ avatar.waterbending.demonym=Waterbender
 avatar.airbending=Airbending
 avatar.airbending.demonym=Airbender
 
+avatar.ui.openSkillsMenu=Click to open
+
 avatar.cmd.bending=Manage a player's bending controllers.
-avatar.cmd.bending.list.noData=[color=error_value]${player}[/color][color=error] is not a registered account.[/color]
-avatar.cmd.bending.list.nonbender=[italic][color=value]${player}[/color] is a non-bender.[/italic]
+avatar.cmd.bending.list.noData=[error][error_value]${player}[/error_value] is not a registered account.[/error]
+avatar.cmd.bending.list.nonbender=[italic][value]${player}[/value] is a non-bender.[/italic]
 avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
-avatar.cmd.bending.list.top=[bold]Listing [color=value]${amount}[/color] bending controllers for [color=value]${player}[/color]:
+avatar.cmd.bending.list.top=[bold]Listing [value]${amount}[/value] bending controllers for [value]${player}[/value][/bold]:
 
-avatar.cmd.bending.add.alreadyHas=[color=error_value]${player}[/color][color=error] is already a(n) [/color][color=error_value][translate=avatar.${bending}.demonym][/color].
-avatar.cmd.bending.add.success=[bold][color=value]${player}[/color] is now a(n) [color=value][translate=avatar.${bending}.demonym][/color]![/bold]
+avatar.cmd.bending.add.alreadyHas=[error][error_value]${player}[/error_value] is already a(n) [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.add.success=[bold][value]${player}[/value] is now a(n) [value][translate=avatar.${bending}.demonym][/value]![/bold]
 
-avatar.cmd.bending.remove.doesntHave=[color=error_value]${player}[/color][color=error] isn't a(n) [/color][color=error_value][translate=avatar.${bending}.demonym][/color].
-avatar.cmd.bending.remove.success=[bold]Took [color=value][translate=avatar.${bending}][/color] from [color=value]${player}[/color]![/bold]
+avatar.cmd.bending.remove.doesntHave=[error][error_value]${player}[/error_value] isn't a(n) [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.remove.success=[bold]Took [value][translate=avatar.${bending}][/value] from [value]${player}[/value]![/bold]
+
+avatar.cmd.ability.set.range=[error]Ability XP must be from [error_value]0[/error_value] to [error_value]100[/error_value].
+avatar.cmd.ability.set.success=[bold]Successfully set [value]${player}'s[/value] experience for [value]${ability}[/value] to [value]${amount}[/value][/bold]
+
+avatar.cmd.ability.get=[bold][value]${player}'s[/value] experience for [value]${ability}[/value] is [value]${amount}[/value][/bold]
+
+avatar.cmd.cfg.exception1=[error]An error occurred while trying to reload the configuration[/error]
+avatar.cmd.cfg.exception2=[error]Details: [error_value]${details}[/error_value] see log for more[/error]
+
+avatar.cmd.cfg.successful=[bold]Successfully reloaded configuration values[/bold]
+
+avatar.cmd.pp.add=Incremented [value]${player}'s[/value] [value][translate=avatar.${bending}][/value] progression points to [value]${pps}[/value].
+avatar.cmd.pp.get=[value]${player}[/value] currently has [value]${pps}[/value] [value][translate=avatar.${bending}][/value] progression points.
+avatar.cmd.pp.set=Set [value]${player}[/value]'s [value][translate=avatar.${bending}][/value] progression points to [value]${pps}[/value].
+avatar.cmd.pp.set.range=[error]Progression points must be more than 0.[/error]
+
+avatar.ability.pickup_block=Pick Up Block
+avatar.ability.ravine=Ravine
+
+avatar.ability.light_fire=Light Fire
+avatar.ability.fire_arc=Fire Arc
+avatar.ability.flamethrower=Flamethrower
+
+avatar.ability.water_arc=Water Arc
+avatar.ability.wave=Wave
+
+avatar.ability.air_gust=Air Gust
+avatar.ability.air_jump=Air Jump
+
+avatar.ability.undefined=???
+
+avatar.radial.xp=%1$f%%
+avatar.radial.undefined=Coming soon!
 
 death.attack.avatar_earthbendBlock=%2$s smashed %1$s with earthbending
 death.attack.avatar_waterArc=%2$s used waterbending to bring down %1$s

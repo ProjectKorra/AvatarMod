@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,13 +18,14 @@
 package com.crowsofwar.avatar.common.bending;
 
 /**
- * Defines different types of bending without actually describing their behavior. Useful for things
- * like Id and Id lookup.
+ * Defines different types of bending without actually describing their
+ * behavior. Useful for things like Id and Id lookup.
  * 
  * @author CrowsOfWar
  */
 public enum BendingType {
 	
+	ERROR,
 	EARTHBENDING,
 	FIREBENDING,
 	WATERBENDING,
@@ -34,7 +35,7 @@ public enum BendingType {
 	 * Get the Id of this BendingType.
 	 */
 	public int id() {
-		return ordinal() + 1;
+		return ordinal();
 	}
 	
 	/**
@@ -47,7 +48,6 @@ public enum BendingType {
 	 *             if the Id is invalid
 	 */
 	public static BendingType find(int id) {
-		id--;
 		if (id < 0 || id >= values().length)
 			throw new IllegalArgumentException("Cannot find BendingType with invalid id: " + id);
 		return values()[id];

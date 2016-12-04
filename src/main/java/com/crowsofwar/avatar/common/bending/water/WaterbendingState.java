@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -19,22 +19,20 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class WaterbendingState implements IBendingState {
-	
-	private final AvatarPlayerData data;
+public class WaterbendingState extends BendingState {
 	
 	private EntityWaterArc waterArc;
 	
 	public WaterbendingState(AvatarPlayerData data) {
-		this.data = data;
+		super(data);
 		this.waterArc = null;
 	}
 	
@@ -48,6 +46,7 @@ public class WaterbendingState implements IBendingState {
 	
 	public void setWaterArc(EntityWaterArc waterArc) {
 		this.waterArc = waterArc;
+		save();
 	}
 	
 	public boolean isBendingWater() {
@@ -55,7 +54,7 @@ public class WaterbendingState implements IBendingState {
 	}
 	
 	public void releaseWater() {
-		this.waterArc = null;
+		setWaterArc(null);
 	}
 	
 	@Override
@@ -69,13 +68,13 @@ public class WaterbendingState implements IBendingState {
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void writeBytes(ByteBuf buf) {
 		buf.writeInt(getWaterArcId());
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
-		World world = data.getState().getPlayerEntity().worldObj;
+	public void readBytes(ByteBuf buf) {
+		World world = data.getPlayerEntity().worldObj;
 		int id = buf.readInt();
 		EntityWaterArc waterArc = null;
 		if (id > -1) {

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -32,12 +32,15 @@ public class ArgumentList {
 		for (int i = 0; i < arguments.length; i++) {
 			IArgument<?> argument = arguments[i];
 			Object out = null;
-			if (i < userInput.length) { // If possible, prefer user input over default
+			if (i < userInput.length) { // If possible, prefer user input over
+										// default
 				out = argument.convert(userInput[i]);
 			} else { // Try to use the default value if the argument is optional
-				if (argument.isOptional()) { // Argument has a default value, which can be used
+				if (argument.isOptional()) { // Argument has a default value,
+												// which can be used
 					out = argument.getDefaultValue();
-				} else { // Argument isn't optional, but user input hasn't been specified. Throw an
+				} else { // Argument isn't optional, but user input hasn't been
+							// specified. Throw an
 							// error.
 					throw new TreeCommandException(Reason.ARGUMENT_MISSING, arguments[i].getArgumentName());
 				}

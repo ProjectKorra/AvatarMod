@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -30,7 +30,7 @@ public interface ParticleSpawner {
 	
 	/**
 	 * Spawn a particle in the world manually. It's generally recommended to
-	 * {@link #spawnParticles(World, AvatarParticleType, int, double, double, double, double, double, double, int...)
+	 * {@link #spawnParticles(World, ParticleType, int, double, double, double, double, double, double, int...)
 	 * spawn multiple particles}.
 	 * 
 	 * @param world
@@ -52,13 +52,13 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	void spawnOneParticle(World world, AvatarParticleType particle, double x, double y, double z,
-			double velocityX, double velocityY, double velocityZ, int... parameters);
+	void spawnOneParticle(World world, ParticleType particle, double x, double y, double z, double velocityX,
+			double velocityY, double velocityZ, int... parameters);
 	
 	/**
 	 * Spawn a particle in the world manually. It's generally recommended to
-	 * {@link #spawnParticles(World, AvatarParticleType, int, Vector, Vector, int...) spawn multiple
-	 * particles}.
+	 * {@link #spawnParticles(World, ParticleType, int, Vector, Vector, int...)
+	 * spawn multiple particles}.
 	 * 
 	 * @param world
 	 *            The world
@@ -71,15 +71,15 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	default void spawnOneParticle(World world, AvatarParticleType particle, Vector position, Vector velocity,
+	default void spawnOneParticle(World world, ParticleType particle, Vector position, Vector velocity,
 			int... parameters) {
 		spawnOneParticle(world, particle, position.x(), position.y(), position.z(), velocity.x(),
 				velocity.y(), velocity.z(), parameters);
 	}
 	
 	/**
-	 * Spawn multiple particles in the world. This is better than spawning particles manually since
-	 * it can be optimized for different settings.
+	 * Spawn multiple particles in the world. This is better than spawning
+	 * particles manually since it can be optimized for different settings.
 	 * 
 	 * @param world
 	 *            The world
@@ -104,13 +104,12 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	void spawnParticles(World world, AvatarParticleType particle, int minimum, int maximum, double x,
-			double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
-			int... parameters);
+	void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x, double y,
+			double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ, int... parameters);
 	
 	/**
-	 * Spawn multiple particles in the world. This is better than spawning particles manually since
-	 * it can be optimized for different settings.
+	 * Spawn multiple particles in the world. This is better than spawning
+	 * particles manually since it can be optimized for different settings.
 	 * 
 	 * @param world
 	 *            The world
@@ -127,8 +126,8 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	default void spawnParticles(World world, AvatarParticleType particle, int minimum, int maximum,
-			Vector position, Vector maxVelocity, int... parameters) {
+	default void spawnParticles(World world, ParticleType particle, int minimum, int maximum, Vector position,
+			Vector maxVelocity, int... parameters) {
 		spawnParticles(world, particle, minimum, maximum, position.x(), position.y(), position.z(),
 				maxVelocity.x(), maxVelocity.y(), maxVelocity.z(), parameters);
 	}

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common;
 
-import static com.crowsofwar.gorecore.chat.ChatSender.newChatMessage;
+import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.MessageConfiguration;
@@ -50,6 +50,20 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_EARTHBENDING = newChatMessage(CFG, "avatar.earthbending");
 	public static final ChatMessage MSG_FIREBENDING = newChatMessage(CFG, "avatar.firebending");
 	public static final ChatMessage MSG_WATERBENDING = newChatMessage(CFG, "avatar.waterbending");
+	
+	public static final ChatMessage MSG_CONFIG_EXCEPTION_1 = newChatMessage(CFG, "avatar.cmd.cfg.exception1");
+	public static final ChatMessage MSG_CONFIG_EXCEPTION_2 = newChatMessage(CFG, "avatar.cmd.cfg.exception2", "details");
+	public static final ChatMessage MSG_CONFIG_SUCCESS = newChatMessage(CFG, "avatar.cmd.cfg.successful");
+	
+	public static final ChatMessage MSG_ABILITY_SET_RANGE = newChatMessage(CFG, "avatar.cmd.ability.set.range");
+	public static final ChatMessage MSG_ABILITY_SET_SUCCESS = newChatMessage(CFG, "avatar.cmd.ability.set.success", "player", "ability", "amount");
+	
+	public static final ChatMessage MSG_ABILITY_GET = newChatMessage(CFG, "avatar.cmd.ability.get", "player", "ability", "amount");
+	
+	public static final ChatMessage MSG_PROGRESS_POINT_ADDED = newChatMessage(CFG, "avatar.cmd.pp.add", "player", "pps", "bending");
+	public static final ChatMessage MSG_PROGRESS_POINT_GET = newChatMessage(CFG, "avatar.cmd.pp.get", "player", "pps", "bending");
+	public static final ChatMessage MSG_PROGRESS_POINT_SET = newChatMessage(CFG, "avatar.cmd.pp.set", "player", "pps", "bending");
+	public static final ChatMessage MSG_PROGRESS_POINT_SET_RANGE = newChatMessage(CFG, "avatar.cmd.pp.set.range");
 	
 	/**
 	 * Call the static initializers

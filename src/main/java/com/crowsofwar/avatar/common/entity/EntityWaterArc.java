@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -28,11 +28,13 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityWaterArc extends EntityArc {
@@ -45,9 +47,21 @@ public class EntityWaterArc extends EntityArc {
 	 */
 	private int lastPlayedSplash;
 	
+	private float damageMult;
+	
 	public EntityWaterArc(World world) {
 		super(world);
+		setSize(.5f, .5f);
 		this.lastPlayedSplash = -1;
+		this.damageMult = 1;
+	}
+	
+	public float getDamageMult() {
+		return damageMult;
+	}
+	
+	public void setDamageMult(float mult) {
+		this.damageMult = mult;
 	}
 	
 	@Override
@@ -111,6 +125,7 @@ public class EntityWaterArc extends EntityArc {
 	
 	@Override
 	public void onUpdate() {
+		
 		super.onUpdate();
 		if (lastPlayedSplash > -1) {
 			lastPlayedSplash++;
@@ -118,7 +133,41 @@ public class EntityWaterArc extends EntityArc {
 		}
 		getBehavior().setEntity(this);
 		getBehavior().onUpdate();
+		
+		for (int x = 0; x <= 1; x++) {
+			for (int z = 0; z <= 1; z++) {
+				BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
+				if (worldObj.getBlockState(pos).getBlock() == Blocks.FIRE) {
+					worldObj.setBlockToAir(pos);
+					worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+							SoundCategory.PLAYERS, 1, 1, false);
+				}
+			}
+		}
+		
+		if (inWater && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
+			// try to go upwards
+			for (double i = 0.1; i <= 3; i += 0.05) {
+				BlockPos pos = new Vector(this).add(0, i, 0).toBlockPos();
+				if (worldObj.getBlockState(pos).getBlock() == Blocks.AIR) {
+					setPosition(posX, posY + i, posZ);
+					inWater = false;
+					break;
+				}
+			}
+		}
+		
+		// if (worldObj.getBlockState(getPosition()).getBlock() == Blocks.FIRE)
+		// {
+		// worldObj.setBlockToAir(getPosition());
+		// worldObj.playSound(posX, posY, posZ,
+		// SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 1,
+		// 1, false);
+		// }
 	}
+	
+	@Override
+	public void setFire(int seconds) {}
 	
 	public static EntityWaterArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
@@ -170,8 +219,8 @@ public class EntityWaterArc extends EntityArc {
 	@Override
 	protected Consumer<EntityPlayer> getNewOwnerCallback() {
 		return newOwner -> {
-			WaterbendingState state = (WaterbendingState) AvatarPlayerData.fetcher()
-					.fetchPerformance(newOwner).getBendingState(BendingType.WATERBENDING.id());
+			WaterbendingState state = (WaterbendingState) AvatarPlayerData.fetcher().fetch(newOwner)
+					.getBendingState(BendingType.WATERBENDING.id());
 			state.setWaterArc(this);
 		};
 	}

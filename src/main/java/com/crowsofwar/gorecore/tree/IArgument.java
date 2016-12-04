@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -34,7 +34,8 @@ import net.minecraft.command.ICommandSender;
 public interface IArgument<T> {
 	
 	/**
-	 * Returns whether this argument can be omitted for the command node to still work.
+	 * Returns whether this argument can be omitted for the command node to
+	 * still work.
 	 */
 	boolean isOptional();
 	
@@ -57,7 +58,8 @@ public interface IArgument<T> {
 	String getArgumentName();
 	
 	/**
-	 * Format the argument to show the accepted values of the argument. e.g. &lt;ON|OFF>
+	 * Format the argument to show the accepted values of the argument. e.g.
+	 * &lt;ON|OFF>
 	 */
 	String getHelpString();
 	
@@ -67,10 +69,12 @@ public interface IArgument<T> {
 	String getSpecificationString();
 	
 	/**
-	 * Gets a list of tab completion suggestions while the player is typing an argument. The first
-	 * item on the list is the item which will be auto-completed.
+	 * Gets a list of tab completion suggestions while the player is typing an
+	 * argument. The first item on the list is the item which will be
+	 * auto-completed.
 	 * <p>
-	 * If there are no suggestions, returns an empty list (doesn't returns null).
+	 * If there are no suggestions, returns an empty list (doesn't returns
+	 * null).
 	 * 
 	 * @param sender
 	 *            Player who is typing the message

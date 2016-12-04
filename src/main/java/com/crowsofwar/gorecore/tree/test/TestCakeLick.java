@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -36,12 +36,12 @@ public class TestCakeLick extends NodeFunctional {
 	public TestCakeLick() {
 		super("lick", false);
 		argGallons = new ArgumentDirect<Double>("gallons", ITypeConverter.CONVERTER_DOUBLE);
-		addArguments(argGallons);
+		addArgument(argGallons);
 	}
 	
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		double gallons = call.popArguments(argGallons).get(argGallons);
+		double gallons = call.popArguments(this).get(argGallons);
 		call.getFrom().addChatMessage(new TextComponentTranslation("test.lickCake", gallons));
 		return null;
 	}

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -21,20 +21,23 @@ import java.util.Set;
 
 import org.lwjgl.input.Mouse;
 
-import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.gui.RadialMenu;
+import com.crowsofwar.avatar.client.gui.RadialSegment;
+import com.crowsofwar.avatar.client.gui.SkillsGui;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,18 +50,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class AvatarUiRenderer extends Gui {
 	
-	private static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
-			"textures/gui/statusControl.png");
+	public static AvatarUiRenderer instance;
 	
 	private RadialMenu currentBendingMenu;
+	private RadialSegment fadingSegment;
+	private long timeFadeStart;
 	private final Minecraft mc;
 	
 	public AvatarUiRenderer() {
 		mc = Minecraft.getMinecraft();
+		instance = this;
 	}
 	
 	@SubscribeEvent
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
+		
+		if (e.getType() != ElementType.EXPERIENCE) return;
 		
 		ScaledResolution resolution = e.getResolution();
 		
@@ -69,15 +76,27 @@ public class AvatarUiRenderer extends Gui {
 		if (currentBendingMenu != null) {
 			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {
 				currentBendingMenu = null;
-				mc.setIngameFocus();
+				if (!(mc.currentScreen instanceof SkillsGui)) mc.setIngameFocus();
 			} else {
 				currentBendingMenu.drawScreen(mouseX, mouseY, resolution);
+				mc.setIngameNotInFocus();
+			}
+		}
+		if (fadingSegment != null) {
+			float timeToFade = 500;
+			long timeSinceStart = System.currentTimeMillis() - timeFadeStart;
+			if (timeSinceStart > timeToFade) {
+				fadingSegment = null;
+			} else {
+				float scale = (float) (1 + Math.sqrt(timeSinceStart / 10000f));
+				fadingSegment.draw(true, resolution, 1 - timeSinceStart / timeToFade, scale);
 			}
 		}
 		
-		Set<StatusControl> statusControls = AvatarMod.proxy.getAllStatusControls();
+		Set<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.thePlayer)
+				.getActiveStatusControls();
 		for (StatusControl statusControl : statusControls) {
-			mc.getTextureManager().bindTexture(STATUS_CONTROL_ICONS);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.STATUS_CONTROL_ICONS);
 			int centerX = resolution.getScaledWidth() / 2;
 			int centerY = resolution.getScaledHeight() / 2;
 			int xOffset = statusControl.getPosition().xOffset();
@@ -97,14 +116,20 @@ public class AvatarUiRenderer extends Gui {
 		
 	}
 	
-	public void openBendingGui(BendingType bending) {
+	public static void openBendingGui(BendingType bending) {
 		
 		BendingController controller = BendingManager.getBending(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
-		this.currentBendingMenu = new RadialMenu(menu.getTheme(), menu.getKey(), menu.getButtons());
-		mc.setIngameNotInFocus();
+		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getKey(),
+				menu.getButtons());
+		instance.mc.setIngameNotInFocus();
 		
+	}
+	
+	public static void fade(RadialSegment segment) {
+		instance.fadingSegment = segment;
+		instance.timeFadeStart = System.currentTimeMillis();
 	}
 	
 }

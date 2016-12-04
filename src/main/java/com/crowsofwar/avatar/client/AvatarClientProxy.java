@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -19,12 +19,8 @@ package com.crowsofwar.avatar.client;
 
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.controls.ClientInput;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
 import com.crowsofwar.avatar.client.render.RenderAirGust;
@@ -36,7 +32,6 @@ import com.crowsofwar.avatar.client.render.RenderWaterArc;
 import com.crowsofwar.avatar.client.render.RenderWave;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
@@ -69,26 +64,22 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
-	private AvatarUiRenderer menuHandler;
-	private Set<StatusControl> statusControls;
 	
 	@Override
 	public void preInit() {
 		mc = Minecraft.getMinecraft();
 		
 		packetHandler = new PacketHandlerClient();
-		menuHandler = new AvatarUiRenderer();
+		AvatarUiRenderer.instance = new AvatarUiRenderer();
 		
-		inputHandler = new ClientInput(menuHandler);
+		inputHandler = new ClientInput();
 		MinecraftForge.EVENT_BUS.register(inputHandler);
-		MinecraftForge.EVENT_BUS.register(menuHandler);
+		MinecraftForge.EVENT_BUS.register(AvatarUiRenderer.instance);
 		
 		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 			AvatarLog.debug("Client: Requesting data for " + data.getPlayerEntity() + "");
 		});
-		
-		statusControls = new HashSet<>();
 		
 		registerEntityRenderingHandler(EntityFloatingBlock.class, RenderFloatingBlock::new);
 		registerEntityRenderingHandler(EntityFireArc.class, RenderFireArc::new);
@@ -145,21 +136,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public int getParticleAmount() {
 		return mc.gameSettings.particleSetting;
-	}
-	
-	@Override
-	public void addStatusControl(StatusControl control) {
-		statusControls.add(control);
-	}
-	
-	@Override
-	public void removeStatusControl(StatusControl control) {
-		statusControls.remove(control);
-	}
-	
-	@Override
-	public Set<StatusControl> getAllStatusControls() {
-		return statusControls;
 	}
 	
 }

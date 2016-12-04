@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -34,11 +34,11 @@ public class GoreCoreNBTInterfaces {
 		 * @param nbt
 		 *            The NBTTagCompound to create it from
 		 * @param methodsExtraData
-		 *            Method-specific extra data provided by the method, the details should be
-		 *            provided in a javadoc
+		 *            Method-specific extra data provided by the method, the
+		 *            details should be provided in a javadoc
 		 * @param extraData
-		 *            Extra data provided by parameters in the method; specific per implementation
-		 *            of CreateFromNBT
+		 *            Extra data provided by parameters in the method; specific
+		 *            per implementation of CreateFromNBT
 		 * @return A new instance of <code>T</code>
 		 */
 		T create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData);
@@ -46,18 +46,19 @@ public class GoreCoreNBTInterfaces {
 	
 	public interface WriteToNBT<T> {
 		/**
-		 * Called to write the object of type <code>T</code> to the NBTTagCompound.
+		 * Called to write the object of type <code>T</code> to the
+		 * NBTTagCompound.
 		 * 
 		 * @param nbt
 		 *            The NBTTagCompound to write the data to
 		 * @param object
 		 *            The object to write to NBT
 		 * @param methodsExtraData
-		 *            Method-specific extra data provided by the method, the details should be
-		 *            provided in a javadoc
+		 *            Method-specific extra data provided by the method, the
+		 *            details should be provided in a javadoc
 		 * @param extraData
-		 *            Extra data provided by parameters in the method; specific per implementation
-		 *            of WriteToNBT
+		 *            Extra data provided by parameters in the method; specific
+		 *            per implementation of WriteToNBT
 		 */
 		void write(NBTTagCompound nbt, T object, Object[] methodsExtraData, Object[] extraData);
 	}
@@ -65,7 +66,8 @@ public class GoreCoreNBTInterfaces {
 	public interface MapUser<K, V> {
 		
 		/**
-		 * Create a new instance of the key object using the given constructor arguments.
+		 * Create a new instance of the key object using the given constructor
+		 * arguments.
 		 * 
 		 * @param nbt
 		 *            The NBTTagCompound which is used to store the key's data
@@ -77,7 +79,8 @@ public class GoreCoreNBTInterfaces {
 		K createK(NBTTagCompound nbt, Object[] constructArgsK);
 		
 		/**
-		 * Create a new instance of the value object using the given constructor arguments.
+		 * Create a new instance of the value object using the given constructor
+		 * arguments.
 		 * 
 		 * @param nbt
 		 *            The NBTTagCompound which is used to store the value's data

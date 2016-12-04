@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -23,6 +23,7 @@ import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.util.event.EventNotifier;
 import com.crowsofwar.avatar.common.util.event.Observer;
@@ -49,10 +50,10 @@ import net.minecraft.nbt.NBTTagCompound;
  * any code inside of it.
  *
  * @param <STATE>
- *            The IBendingState this controller is using
+ *            The BendingState this controller is using
  * 
  */
-public abstract class BendingController<STATE extends IBendingState> implements ReadableWritable, Subject {
+public abstract class BendingController implements ReadableWritable, Subject {
 	
 	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
 		@Override
@@ -83,7 +84,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 */
 	public static final Random random = new Random();
 	
-	private final List<BendingAbility<STATE>> abilities;
+	private final List<BendingAbility> abilities;
 	private final Subject eventNotifier;
 	
 	public BendingController() {
@@ -91,7 +92,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 		this.eventNotifier = new EventNotifier();
 	}
 	
-	protected void addAbility(BendingAbility<STATE> ability) {
+	protected void addAbility(BendingAbility ability) {
 		this.abilities.add(ability);
 	}
 	
@@ -109,7 +110,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	public abstract BendingType getType();
 	
 	/**
-	 * Called to create an IBendingState for the player. This allows the
+	 * Called to create an BendingState for the player. This allows the
 	 * BendingController to store specific metadata for each player, making
 	 * things much easier. <br />
 	 * <br />
@@ -119,7 +120,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 * 
 	 * @return
 	 */
-	public STATE createState(AvatarPlayerData data) {
+	public BendingState createState(AvatarPlayerData data) {
 		return null;
 	}
 	
@@ -133,7 +134,7 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	 */
 	public abstract String getControllerName();
 	
-	public List<BendingAbility<STATE>> getAllAbilities() {
+	public List<BendingAbility> getAllAbilities() {
 		return this.abilities;
 	}
 	
@@ -156,6 +157,20 @@ public abstract class BendingController<STATE extends IBendingState> implements 
 	@Override
 	public void post(Object e) {
 		eventNotifier.post(e);
+	}
+	
+	public static BendingController find(int id) {
+		
+		try {
+			BendingController bc = BendingManager.getBending(id);
+			return bc;
+		} catch (Exception e) {
+			AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,
+					"Could not find bending controller from ID '" + id + "' - please check NBT data");
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 	
 }

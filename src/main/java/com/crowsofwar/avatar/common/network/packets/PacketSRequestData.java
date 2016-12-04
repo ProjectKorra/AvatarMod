@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -21,8 +21,8 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs;
-import com.crowsofwar.gorecore.util.GoreCorePlayerUUIDs.GetUUIDResult;
+import com.crowsofwar.gorecore.util.PlayerUUIDs;
+import com.crowsofwar.gorecore.util.PlayerUUIDs.Result;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +43,7 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	}
 	
 	public PacketSRequestData(EntityPlayer player) {
-		GetUUIDResult result = GoreCorePlayerUUIDs.getUUID(player.getName());
+		Result result = PlayerUUIDs.getUUID(player.getName());
 		if (result.isResultSuccessful()) {
 			this.asking = result.getUUID();
 		} else {

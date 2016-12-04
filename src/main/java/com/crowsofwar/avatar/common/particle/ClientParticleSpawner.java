@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -24,7 +24,8 @@ import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.world.World;
 
 /**
- * An implementation of {@link ParticleSpawner} which spawns particles client-side.
+ * An implementation of {@link ParticleSpawner} which spawns particles
+ * client-side.
  * <p>
  * This can be used on either side
  * 
@@ -33,7 +34,7 @@ import net.minecraft.world.World;
 public class ClientParticleSpawner implements ParticleSpawner {
 	
 	@Override
-	public void spawnOneParticle(World world, AvatarParticleType particle, double x, double y, double z,
+	public void spawnOneParticle(World world, ParticleType particle, double x, double y, double z,
 			double velocityX, double velocityY, double velocityZ, int... parameters) {
 		
 		if (world.isRemote) {
@@ -46,7 +47,7 @@ public class ClientParticleSpawner implements ParticleSpawner {
 	}
 	
 	@Override
-	public void spawnParticles(World world, AvatarParticleType particle, int minimum, int maximum, double x,
+	public void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x,
 			double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
 			int... parameters) {
 		

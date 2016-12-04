@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -21,10 +21,13 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
@@ -40,8 +43,6 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
-import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
@@ -49,6 +50,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -64,7 +66,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:GoreCore", useMetadata = false)
+@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false)
 public class AvatarMod {
 	
 	@SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
@@ -82,8 +84,12 @@ public class AvatarMod {
 	public void preInit(FMLPreInitializationEvent e) {
 		
 		AvatarLog.log = e.getModLog();
+		ConfigStats.load();
+		ConfigSkills.load();
 		
+		BendingAbility.registerAbilities();
 		BendingManager.init();
+		
 		EarthSoundHandler.register();
 		
 		AvatarParticles.register();
@@ -94,12 +100,10 @@ public class AvatarMod {
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
 		registerPacket(PacketSUseAbility.class, Side.SERVER);
 		registerPacket(PacketSRequestData.class, Side.SERVER);
-		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		registerPacket(PacketSUseBendingController.class, Side.SERVER);
-		registerPacket(PacketCStatusControl.class, Side.CLIENT);
 		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
-		registerPacket(PacketCRemoveStatusControl.class, Side.CLIENT);
 		registerPacket(PacketCParticles.class, Side.CLIENT);
+		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
@@ -143,7 +147,8 @@ public class AvatarMod {
 	}
 	
 	private void registerEntity(Class<? extends Entity> entity, String name) {
-		EntityRegistry.registerModEntity(entity, name, nextEntityID++, this, 64, 20, true);
+		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name,
+				nextEntityID++, this, 64, 20, true);
 	}
 	
 }

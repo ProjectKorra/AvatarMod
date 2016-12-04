@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,14 +18,17 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleType;
+import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -33,16 +36,17 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityLightFire extends BendingAbility<FirebendingState> {
+public class AbilityLightFire extends FireAbility {
 	
-	private final Raytrace.Info raytrace;
+	private final ParticleSpawner particles;
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityLightFire(BendingController<FirebendingState> controller) {
-		super(controller);
-		this.raytrace = new Raytrace.Info(-1, false);
+	public AbilityLightFire() {
+		super("light_fire");
+		requireRaytrace(-1, false);
+		particles = new NetworkParticleSpawner();
 	}
 	
 	@Override
@@ -55,8 +59,23 @@ public class AbilityLightFire extends BendingAbility<FirebendingState> {
 		if (ctx.isLookingAtBlock(-1, 5)) {
 			VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
 			setAt.offset(side);
-			if (world.getBlockState(setAt.toBlockPos()).getBlock() == Blocks.AIR) {
-				world.setBlockState(setAt.toBlockPos(), Blocks.FIRE.getDefaultState());
+			BlockPos blockPos = setAt.toBlockPos();
+			
+			if (world.isRainingAt(blockPos)) {
+				
+				particles.spawnParticles(world, ParticleType.CLOUD, 3, 7, ctx.getLookPos(),
+						new Vector(0.5f, 0.75f, 0.5f));
+				
+				world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+						SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS,
+						0.4f + (float) Math.random() * 0.2f, 0.9f + (float) Math.random() * 0.2f);
+				
+			} else if (world.getBlockState(blockPos).getBlock() == Blocks.AIR
+					&& Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
+				world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
+				world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+						SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS,
+						0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
 			}
 		}
 	}
@@ -64,11 +83,6 @@ public class AbilityLightFire extends BendingAbility<FirebendingState> {
 	@Override
 	public int getIconIndex() {
 		return 2;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

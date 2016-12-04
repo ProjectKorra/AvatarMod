@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,6 +17,11 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -99,13 +104,23 @@ public class EntityAirGust extends EntityArc {
 		
 		@Override
 		protected void onCollision(Entity entity) {
-			if (entity != owner && entity != GoreCore.proxy.getClientSidePlayer()) {
+			if (!entity.worldObj.isRemote && entity != owner
+					&& entity != GoreCore.proxy.getClientSidePlayer()) {
 				
-				Vector velocity = velocity().times(0.3);
+				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+				float xp = 0;
+				if (data != null) {
+					AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_GUST);
+					xp = abilityData.getXp();
+					abilityData.addXp(SKILLS_CONFIG.airGustHit);
+				}
+				
+				Vector velocity = velocity().times(0.3).times(1 + xp / 200.0);
 				velocity.setY(1);
 				
 				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 				setDead();
+				
 			}
 		}
 		

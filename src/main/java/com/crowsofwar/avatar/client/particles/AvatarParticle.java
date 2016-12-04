@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -36,8 +36,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * A custom particle in the avatar mod.
  * <p>
- * Particles have multiple frames; they must instantiate an array of ParticleFrames. These contain
- * the information for the ResourceLocation, u, v, etc.
+ * Particles have multiple frames; they must instantiate an array of
+ * ParticleFrames. These contain the information for the ResourceLocation, u, v,
+ * etc.
  * 
  * @author CrowsOfWar
  */
@@ -100,12 +101,12 @@ public abstract class AvatarParticle extends Particle {
 				new Vec3d((double) (rotationX * f4 - rotationXY * f4), (double) (-rotationZ * f4),
 						(double) (rotationYZ * f4 - rotationXZ * f4)) };
 		
-		if (this.field_190014_F != 0.0F) {
-			float f8 = this.field_190014_F + (this.field_190014_F - this.field_190015_G) * partialTicks;
+		if (this.particleAngle != 0.0F) {
+			float f8 = this.particleAngle + (this.particleAngle - this.prevParticleAngle) * partialTicks;
 			float f9 = MathHelper.cos(f8 * 0.5F);
-			float f10 = MathHelper.sin(f8 * 0.5F) * (float) field_190016_K.xCoord;
-			float f11 = MathHelper.sin(f8 * 0.5F) * (float) field_190016_K.yCoord;
-			float f12 = MathHelper.sin(f8 * 0.5F) * (float) field_190016_K.zCoord;
+			float f10 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.xCoord;
+			float f11 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.yCoord;
+			float f12 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.zCoord;
 			Vec3d vec3d = new Vec3d((double) f10, (double) f11, (double) f12);
 			
 			for (int l = 0; l < 4; ++l) {
@@ -144,7 +145,8 @@ public abstract class AvatarParticle extends Particle {
 	}
 	
 	/**
-	 * Enable additive blending for a "glowing" effect when there are many particles.
+	 * Enable additive blending for a "glowing" effect when there are many
+	 * particles.
 	 */
 	protected void enableAdditiveBlending() {
 		additiveBlending = true;
@@ -169,8 +171,9 @@ public abstract class AvatarParticle extends Particle {
 		 * @param texture
 		 *            The texture location
 		 * @param textureSize
-		 *            Size of your spritesheet (width/height) in pixels. Spritesheet is assumed to
-		 *            be square, so 64 = 64x64 pixels, etc.
+		 *            Size of your spritesheet (width/height) in pixels.
+		 *            Spritesheet is assumed to be square, so 64 = 64x64 pixels,
+		 *            etc.
 		 * @param minU
 		 *            Minimum x-coordinate on texture
 		 * @param minV

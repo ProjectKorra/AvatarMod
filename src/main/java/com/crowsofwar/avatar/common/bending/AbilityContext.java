@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,16 +18,13 @@
 package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketCRemoveStatusControl;
-import com.crowsofwar.avatar.common.network.packets.PacketCStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
+import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -46,6 +43,7 @@ public class AbilityContext {
 	private final VectorI clientLookBlock;
 	private VectorI serverLookBlock;
 	private final EnumFacing lookSide;
+	private final Vector lookPos;
 	
 	/**
 	 * Create context for ability execution.
@@ -53,13 +51,14 @@ public class AbilityContext {
 	 * @param data
 	 *            Player data instance.
 	 * @param raytrace
-	 *            Result of the raytrace
+	 *            Result of the raytrace, from client
 	 */
 	public AbilityContext(AvatarPlayerData data, Raytrace.Result raytrace) {
 		this.data = data;
 		this.playerEntity = data.getPlayerEntity();
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
+		this.lookPos = raytrace.getPosPrecise();
 	}
 	
 	public AvatarPlayerData getData() {
@@ -88,16 +87,25 @@ public class AbilityContext {
 	}
 	
 	/**
-	 * Returns whether the player is looking at a block right now without verifying if the client is
-	 * correct.
+	 * Returns whether the player is looking at a block right now without
+	 * verifying if the client is correct.
 	 */
 	public boolean isLookingAtBlock() {
 		return lookSide != null && clientLookBlock != null;
 	}
 	
 	/**
-	 * Returns whether the player is looking at a block right now. Checks for hacking on the server.
-	 * If on client side, then no checks are made.
+	 * Get the lookPos, unverified
+	 * 
+	 * @return
+	 */
+	public Vector getLookPos() {
+		return lookPos;
+	}
+	
+	/**
+	 * Returns whether the player is looking at a block right now. Checks for
+	 * hacking on the server. If on client side, then no checks are made.
 	 * 
 	 * @see #verifyClientLookBlock(double, double)
 	 */
@@ -107,8 +115,9 @@ public class AbilityContext {
 	}
 	
 	/**
-	 * Ensure that the client's targeted block is within range of the server's targeted block. (To
-	 * avoid hacking) On client side, simply returns the client's targeted block.
+	 * Ensure that the client's targeted block is within range of the server's
+	 * targeted block. (To avoid hacking) On client side, simply returns the
+	 * client's targeted block.
 	 * 
 	 * @param raycastDist
 	 *            How far away can the block be?
@@ -132,16 +141,6 @@ public class AbilityContext {
 			Thread.dumpStack();
 			return serverLookBlock;
 		}
-	}
-	
-	public void addStatusControl(StatusControl control) {
-		AvatarMod.network.sendTo(new PacketCStatusControl(control), (EntityPlayerMP) playerEntity);
-		data.addStatusControl(control);
-	}
-	
-	public void removeStatusControl(StatusControl control) {
-		AvatarMod.network.sendTo(new PacketCRemoveStatusControl(control), (EntityPlayerMP) playerEntity);
-		data.removeStatusControl(control);
 	}
 	
 }

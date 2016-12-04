@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static com.crowsofwar.avatar.common.bending.BendingType.FIREBENDING;
 
 import java.awt.Color;
@@ -24,9 +25,9 @@ import java.awt.Color;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.IBendingState;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -36,15 +37,13 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Firebending extends BendingController {
 	
 	private final BendingMenuInfo menu;
-	private final BendingAbility<FirebendingState> abilityLightFire, abilityFireArc, abilityFireThrow,
-			abilityFlamethrower;
+	private final BendingAbility abilityLightFire, abilityFireArc, abilityFlamethrower;
 	
 	public Firebending() {
 		
-		addAbility(this.abilityLightFire = new AbilityLightFire(this));
-		addAbility(this.abilityFireArc = new AbilityFireArc(this));
-		addAbility(this.abilityFireThrow = new AbilityFireThrow(this));
-		addAbility(this.abilityFlamethrower = new AbilityFlamethrower(this));
+		addAbility(this.abilityLightFire = ABILITY_LIGHT_FIRE);
+		addAbility(this.abilityFireArc = ABILITY_FIRE_ARC);
+		addAbility(this.abilityFlamethrower = ABILITY_FLAMETHROWER);
 		
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
@@ -52,8 +51,8 @@ public class Firebending extends BendingController {
 		ThemeColor background = new ThemeColor(light, red);
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
-		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon), AvatarControl.KEY_FIREBENDING,
-				abilityLightFire, abilityFireArc, abilityFlamethrower);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A),
+				AvatarControl.KEY_FIREBENDING, abilityLightFire, abilityFireArc, abilityFlamethrower);
 		
 	}
 	
@@ -73,7 +72,7 @@ public class Firebending extends BendingController {
 	}
 	
 	@Override
-	public IBendingState createState(AvatarPlayerData data) {
+	public BendingState createState(AvatarPlayerData data) {
 		return new FirebendingState(data);
 	}
 	

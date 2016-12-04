@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,11 +17,12 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import java.util.List;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
+
 import java.util.UUID;
 
-import com.crowsofwar.avatar.common.bending.IBendingState;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.Networker;
+import com.crowsofwar.avatar.common.network.PacketModularData;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 
@@ -29,85 +30,45 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Sent from server to client to notify the client of a player's current bending
- * controller.
- *
+ * 
+ * 
  * @author CrowsOfWar
  */
-public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
+public class PacketCPlayerData extends PacketModularData<PacketCPlayerData> {
 	
-	private UUID player;
-	private int[] allControllers;
-	private List<IBendingState> states;
-	private ByteBuf buffer;
+	private UUID playerId;
 	
 	public PacketCPlayerData() {}
 	
-	public PacketCPlayerData(AvatarPlayerData data) {
-		player = data.getPlayerID();
-		allControllers = new int[data.getBendingControllers().size()];
-		for (int i = 0; i < allControllers.length; i++) {
-			allControllers[i] = data.getBendingControllers().get(i).getID();
-		}
-		states = data.getAllBendingStates();
-		
+	public PacketCPlayerData(Networker networker, UUID player) {
+		super(networker);
+		this.playerId = player;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		player = GoreCoreByteBufUtil.readUUID(buf);
-		// Read bending controllers
-		allControllers = new int[buf.readInt()];
-		for (int i = 0; i < allControllers.length; i++) {
-			allControllers[i] = buf.readInt();
-		}
-		
-		// Reading bending states is done elsewhere
-		buffer = buf;
+		playerId = readUUID(buf);
+		super.fromBytes(buf);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
-		GoreCoreByteBufUtil.writeUUID(buf, player);
-		// Write bending controllers
-		buf.writeInt(allControllers.length);
-		for (int i = 0; i < allControllers.length; i++) {
-			buf.writeInt(allControllers[i]);
-		}
-		// Write bending states
-		for (int i = 0; i < states.size(); i++) {
-			buf.writeInt(states.get(i).getId());
-			states.get(i).toBytes(buf);
-		}
+		GoreCoreByteBufUtil.writeUUID(buf, playerId);
+		super.toBytes(buf);
 	}
 	
 	@Override
-	public Side getRecievedSide() {
+	protected Side getRecievedSide() {
 		return Side.CLIENT;
 	}
 	
-	public UUID getPlayer() {
-		return player;
-	}
-	
-	/**
-	 * Get an array of the Ids of all the player's bending controllers.
-	 */
-	public int[] getAllControllersID() {
-		return allControllers;
-	}
-	
-	public ByteBuf getBuf() {
-		return buffer;
-	}
-	
-	public int getIndex() {
-		return buffer.readerIndex();
-	}
-	
 	@Override
-	protected AvatarPacket.Handler<PacketCPlayerData> getPacketHandler() {
+	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCPlayerData> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
+	}
+	
+	public UUID getPlayerId() {
+		return playerId;
 	}
 	
 }

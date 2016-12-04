@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -60,10 +60,14 @@ public class RenderFloatingBlock extends Render {
 		int j = MathHelper.floor_double(entity.posY);
 		int k = MathHelper.floor_double(entity.posZ);
 		
-		// x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * ((lerp -
-		// entity.lastTickPosX) / (entity.posX - entity.lastTickPosX)) - RenderManager.renderPosX;
-		// z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * ((lerp -
-		// entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) - RenderManager.renderPosZ;
+		// x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) *
+		// ((lerp -
+		// entity.lastTickPosX) / (entity.posX - entity.lastTickPosX)) -
+		// RenderManager.renderPosX;
+		// z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) *
+		// ((lerp -
+		// entity.lastTickPosZ) / (entity.posZ - entity.lastTickPosZ)) -
+		// RenderManager.renderPosZ;
 		
 		if (block != null) {
 			Tessellator tessellator = Tessellator.getInstance();
@@ -110,27 +114,28 @@ public class RenderFloatingBlock extends Render {
 	}
 	
 	/**
-	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call
-	 * Render.bindEntityTexture.
+	 * Returns the location of an entity's texture. Doesn't seem to be called
+	 * unless you call Render.bindEntityTexture.
 	 */
 	protected ResourceLocation getEntityTexture(EntityFloatingBlock p_110775_1_) {
 		return TextureMap.LOCATION_BLOCKS_TEXTURE;
 	}
 	
 	/**
-	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call
-	 * Render.bindEntityTexture.
+	 * Returns the location of an entity's texture. Doesn't seem to be called
+	 * unless you call Render.bindEntityTexture.
 	 */
 	protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
 		return this.getEntityTexture((EntityFloatingBlock) p_110775_1_);
 	}
 	
 	/**
-	 * Actually renders the given argument. This is a synthetic bridge method, always casting down
-	 * its argument and then handing it off to a worker function which does the actual work. In all
-	 * probabilty, the class Render is generic (Render<T extends Entity) and this method has
-	 * signature public void func_76986_a(T entity, double d, double d1, double d2, float f, float
-	 * f1). But JAD is pre 1.5 so doesn't do that.
+	 * Actually renders the given argument. This is a synthetic bridge method,
+	 * always casting down its argument and then handing it off to a worker
+	 * function which does the actual work. In all probabilty, the class Render
+	 * is generic (Render<T extends Entity) and this method has signature public
+	 * void func_76986_a(T entity, double d, double d1, double d2, float f,
+	 * float f1). But JAD is pre 1.5 so doesn't do that.
 	 */
 	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_,
 			float p_76986_8_, float p_76986_9_) {

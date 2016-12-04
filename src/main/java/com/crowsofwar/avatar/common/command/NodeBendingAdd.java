@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -43,11 +43,10 @@ public class NodeBendingAdd extends NodeFunctional {
 	public NodeBendingAdd() {
 		super("add", true);
 		
-		this.argPlayerName = new ArgumentPlayerName("player");
-		this.argBendingController = new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING,
-				"bending", BendingManager.allBending().toArray(new BendingController[0]));
-		
-		this.addArguments(argPlayerName, argBendingController);
+		this.argPlayerName = addArgument(new ArgumentPlayerName("player"));
+		this.argBendingController = addArgument(
+				new ArgumentOptions<BendingController>(AvatarCommand.CONVERTER_BENDING, "bending",
+						BendingManager.allBending().toArray(new BendingController[0])));
 		
 	}
 	
@@ -57,13 +56,12 @@ public class NodeBendingAdd extends NodeFunctional {
 		ICommandSender sender = call.getFrom();
 		World world = sender.getEntityWorld();
 		
-		ArgumentList args = call.popArguments(argPlayerName, argBendingController);
+		ArgumentList args = call.popArguments(this);
 		
 		String playerName = args.get(argPlayerName);
 		BendingController controller = args.get(argBendingController);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName,
-				"Error while getting player data for /avatar bending add");
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName);
 		
 		if (data == null) {
 			
@@ -78,6 +76,7 @@ public class NodeBendingAdd extends NodeFunctional {
 			} else {
 				
 				data.addBending(controller);
+				data.sync();
 				MSG_BENDING_ADD_SUCCESS.send(sender, playerName, controller.getControllerName());
 				
 			}

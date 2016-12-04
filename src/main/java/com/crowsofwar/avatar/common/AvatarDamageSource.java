@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -22,7 +22,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 
 /**
- * Contains static methods used to acquire custom DamageSources for various uses.
+ * Contains static methods used to acquire custom DamageSources for various
+ * uses.
  * 
  * @author CrowsOfWar
  */

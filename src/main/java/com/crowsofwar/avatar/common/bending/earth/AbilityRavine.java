@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,13 +18,10 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,23 +32,23 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityRavine extends BendingAbility<EarthbendingState> {
-	
-	private final Raytrace.Info raytrace;
+public class AbilityRavine extends EarthAbility {
 	
 	/**
 	 * @param controller
 	 */
-	public AbilityRavine(BendingController<EarthbendingState> controller) {
-		super(controller);
-		this.raytrace = new Raytrace.Info();
+	public AbilityRavine() {
+		super("ravine");
 	}
 	
 	@Override
-	public void execute(AbilityContext data) {
+	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = data.getPlayerEntity();
-		World world = data.getWorld();
+		AbilityData abilityData = ctx.getData().getAbilityData(this);
+		float xp = abilityData.getXp();
+		
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = ctx.getWorld();
 		
 		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw), 0);
 		
@@ -59,6 +56,7 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 		ravine.setOwner(player);
 		ravine.setPosition(player.posX, player.posY, player.posZ);
 		ravine.velocity().set(look.times(10));
+		ravine.setDamageMult(.75f + xp / 100);
 		world.spawnEntityInWorld(ravine);
 		
 		BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, player));
@@ -68,11 +66,6 @@ public class AbilityRavine extends BendingAbility<EarthbendingState> {
 	@Override
 	public int getIconIndex() {
 		return 8;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

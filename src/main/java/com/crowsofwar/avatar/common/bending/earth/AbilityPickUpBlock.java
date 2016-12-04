@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,28 +17,22 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import java.util.Random;
-import java.util.function.Predicate;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
+import java.util.Random;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
@@ -49,38 +43,38 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
+public class AbilityPickUpBlock extends EarthAbility {
 	
-	private final Predicate<IBlockState> bendableCallback;
 	private final Random random;
-	private final Raytrace.Info raytrace;
 	
-	public AbilityPickUpBlock(BendingController<EarthbendingState> controller,
-			Predicate<IBlockState> bendableCallback) {
-		super(controller);
-		this.bendableCallback = bendableCallback;
+	public AbilityPickUpBlock() {
+		super("pickup_block");
 		this.random = new Random();
-		this.raytrace = new Raytrace.Info(-1, true);
+		requireRaytrace(-1, true);
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
 		
 		AvatarPlayerData data = ctx.getData();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
+		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller());
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();
 		
 		if (ebs.getPickupBlock() != null) {
 			ebs.getPickupBlock().drop();
 			ebs.setPickupBlock(null);
-			AvatarMod.network.sendTo(new PacketCPlayerData(data), (EntityPlayerMP) player);
+			// AvatarMod.network.sendTo(new PacketCPlayerData(data),
+			// (EntityPlayerMP) player);
 		} else {
 			VectorI target = ctx.verifyClientLookBlock(-1, 5);
 			if (target != null) {
 				IBlockState ibs = world.getBlockState(target.toBlockPos());
 				Block block = ibs.getBlock();
-				if (bendableCallback.test(ibs)) {
+				if (STATS_CONFIG.bendableBlocks.contains(block)) {
+					
+					AbilityData abilityData = data.getAbilityData(this);
+					float xp = abilityData.getXp();
 					
 					EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 					floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);
@@ -91,6 +85,7 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					floating.velocity().add(force);
 					floating.setBehavior(new FloatingBlockBehavior.PickUp(floating));
 					floating.setOwner(player);
+					floating.setDamageMult(.75f + xp / 100);
 					
 					world.spawnEntityInWorld(floating);
 					
@@ -99,10 +94,11 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 					
 					world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 					
-					controller.post(new FloatingBlockEvent.BlockPickedUp(floating, player));
+					controller().post(new FloatingBlockEvent.BlockPickedUp(floating, player));
 					
-					ctx.addStatusControl(StatusControl.PLACE_BLOCK);
-					ctx.addStatusControl(StatusControl.THROW_BLOCK);
+					data.addStatusControl(StatusControl.PLACE_BLOCK);
+					data.addStatusControl(StatusControl.THROW_BLOCK);
+					data.sync();
 					
 				} else {
 					world.playSound(null, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
@@ -116,11 +112,6 @@ public class AbilityPickUpBlock extends BendingAbility<EarthbendingState> {
 	@Override
 	public int getIconIndex() {
 		return 0;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

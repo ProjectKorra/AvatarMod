@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -28,12 +28,12 @@ import net.minecraft.world.World;
 public class AvatarParticleAir extends AvatarParticle {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/particles/air2.png");
+			"textures/particles/cloud.png");
 	
 	private static final ParticleFrame[] FRAMES = new ParticleFrame[8];
 	static {
 		for (int i = 0; i < FRAMES.length; i++) {
-			FRAMES[i] = new ParticleFrame(TEXTURE, 256, i * 32, 0, 32, 32);
+			FRAMES[i] = new ParticleFrame(TEXTURE, 256, (i % 4) * 64, i / 64, 64, 64);
 		}
 	}
 	
@@ -50,8 +50,8 @@ public class AvatarParticleAir extends AvatarParticle {
 			double velY, double velZ, int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
 		
-		particleScale = 6f;
-		particleMaxAge *= 3;
+		particleScale = 4f;
+		particleMaxAge *= 1;
 		
 		motionX = velX;
 		motionY = velY;

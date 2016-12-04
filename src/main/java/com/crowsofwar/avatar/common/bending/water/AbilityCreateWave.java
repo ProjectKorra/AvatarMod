@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,11 +18,8 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Info;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
@@ -31,13 +28,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
-public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
+public class AbilityCreateWave extends WaterAbility {
 	
-	private final Raytrace.Info raytrace;
-	
-	public AbilityCreateWave(BendingController<WaterbendingState> controller) {
-		super(controller);
-		this.raytrace = new Raytrace.Info();
+	public AbilityCreateWave() {
+		super("wave");
 	}
 	
 	@Override
@@ -51,17 +45,25 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
 			
-			VectorI hitPos = result.getPos();
-			IBlockState hitBlockState = world.getBlockState(hitPos.toBlockPos());
+			VectorI pos = result.getPos();
+			IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
+			IBlockState up = world.getBlockState(pos.toBlockPos().up());
 			
-			EntityWave wave = new EntityWave(world);
-			wave.setOwner(player);
-			wave.velocity().set(look.times(10));
-			wave.setPosition(hitPos.x() + 0.5, hitPos.y(), hitPos.z() + 0.5);
-			
-			wave.rotationYaw = (float) look.toSpherical().toDegrees().y();
-			
-			world.spawnEntityInWorld(wave);
+			for (int i = 0; i < 3; i++) {
+				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
+					EntityWave wave = new EntityWave(world);
+					wave.setOwner(player);
+					wave.velocity().set(look.times(10));
+					wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
+					wave.setDamageMultiplier(1 + data.getData().getAbilityData(this).getXp() / 100f);
+					
+					wave.rotationYaw = (float) look.toSpherical().toDegrees().y();
+					
+					world.spawnEntityInWorld(wave);
+					break;
+				}
+				pos.add(0, 1, 0);
+			}
 			
 		}
 		
@@ -70,11 +72,6 @@ public class AbilityCreateWave extends BendingAbility<WaterbendingState> {
 	@Override
 	public int getIconIndex() {
 		return 11;
-	}
-	
-	@Override
-	public Info getRaytrace() {
-		return raytrace;
 	}
 	
 }

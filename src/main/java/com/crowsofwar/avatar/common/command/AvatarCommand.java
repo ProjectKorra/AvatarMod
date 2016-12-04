@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -64,7 +64,13 @@ public class AvatarCommand extends TreeCommand {
 		NodeBranch branchBending = new NodeBranch(AvatarChatMessages.MSG_BENDING_BRANCH_INFO, "bending",
 				bendingList, bendingAdd, bendingRemove);
 		
-		return new ICommandNode[] { branchBending };
+		NodeBranch branchAbility = new NodeBranch(branchHelpDefault, "ability", new NodeAbilityGet(),
+				new NodeAbilitySet());
+		
+		NodeBranch branchPps = new NodeBranch(branchHelpDefault, "pps", new NodeProgressPoints.Get(),
+				new NodeProgressPoints.Set(), new NodeProgressPoints.Add());
+		
+		return new ICommandNode[] { branchBending, new NodeConfig(), branchAbility, branchPps };
 		
 	}
 	

@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -86,7 +86,11 @@ public class AvatarLog {
 		/**
 		 * Server sent abnormal input which is not 'correct' on client
 		 */
-		WEIRD_PACKET;
+		WEIRD_PACKET,
+		/**
+		 * Miswritten configuration files
+		 */
+		CONFIGURATION;
 	}
 	
 }

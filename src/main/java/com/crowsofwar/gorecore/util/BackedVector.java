@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -21,11 +21,12 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * A vector which is adds Consumers in a way that allows clients to create a view of another vector.
+ * A vector which is adds Consumers in a way that allows clients to create a
+ * view of another vector.
  * <p>
- * In a backed vector, the vector's fields x, y, and z have become obsolete. Instead, functions
- * provide the x, y, and z when they are retrieved, and enact necessary behavior when the components
- * are set.
+ * In a backed vector, the vector's fields x, y, and z have become obsolete.
+ * Instead, functions provide the x, y, and z when they are retrieved, and enact
+ * necessary behavior when the components are set.
  * 
  * @author CrowsOfWar
  */
@@ -38,11 +39,14 @@ public class BackedVector extends Vector {
 	 * Create a backed vector.
 	 * 
 	 * @param setX
-	 *            Called when X was set. Use this to modify the underlying vector.
+	 *            Called when X was set. Use this to modify the underlying
+	 *            vector.
 	 * @param setY
-	 *            Called when Y was set. Use this to modify the underlying vector.
+	 *            Called when Y was set. Use this to modify the underlying
+	 *            vector.
 	 * @param setZ
-	 *            Called when Z was set. Use this to modify the underlying vector.
+	 *            Called when Z was set. Use this to modify the underlying
+	 *            vector.
 	 * @param getX
 	 *            Called to retrieve the x-value of the vector
 	 * @param getY

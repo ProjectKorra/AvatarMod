@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -29,6 +29,7 @@ public enum AvatarControl {
 	KEY_FIREBENDING("Firebend"),
 	KEY_WATERBENDING("Waterbend"),
 	KEY_AIRBENDING("Airbend"),
+	KEY_SKILLS("Skills"),
 	/** Left mouse button is held down */
 	CONTROL_LEFT_CLICK("LeftClick"),
 	/** Right mouse button is held down */

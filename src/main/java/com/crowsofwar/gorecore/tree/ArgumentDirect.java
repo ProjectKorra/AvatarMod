@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -23,8 +23,8 @@ import java.util.List;
 import net.minecraft.command.ICommandSender;
 
 /**
- * An argument that takes direct user input and converts it into a value. This allows all possible
- * values. Does not support tab completion.
+ * An argument that takes direct user input and converts it into a value. This
+ * allows all possible values. Does not support tab completion.
  * 
  * @param <T>
  *            The type of value
@@ -69,14 +69,14 @@ public class ArgumentDirect<T> implements IArgument<T> {
 	
 	@Override
 	public String getHelpString() {
-		String before = isOptional() ? "[" : "<";
+		String before = isOptional() ? "\\[" : "<";
 		String after = isOptional() ? "]" : ">";
 		return before + "any " + converter.getTypeName() + after;
 	}
 	
 	@Override
 	public String getSpecificationString() {
-		String before = isOptional() ? "[" : "<";
+		String before = isOptional() ? "\\[" : "<";
 		String after = isOptional() ? "]" : ">";
 		return before + getArgumentName() + after;
 	}
