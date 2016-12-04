@@ -17,14 +17,12 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WATER_ARC;
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WAVE;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_WATERBENDING;
 
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -38,11 +36,11 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Waterbending extends BendingController {
 	
 	private BendingMenuInfo menu;
-	private final BendingAbility abilityWaterArc, abilityWave;
 	
 	public Waterbending() {
-		addAbility(this.abilityWaterArc = ABILITY_WATER_ARC);
-		addAbility(this.abilityWave = ABILITY_WAVE);
+		addAbility(ABILITY_WATER_ARC);
+		addAbility(ABILITY_WAVE);
+		addAbility(ABILITY_WATER_BUBBLE);
 		
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);
@@ -51,7 +49,7 @@ public class Waterbending extends BendingController {
 		menu = new BendingMenuInfo(
 				new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
 						new ThemeColor(icon, base), 0x57E8F2),
-				KEY_WATERBENDING, abilityWaterArc, abilityWave);
+				KEY_WATERBENDING, ABILITY_WATER_ARC, ABILITY_WAVE, ABILITY_WATER_BUBBLE);
 	}
 	
 	@Override

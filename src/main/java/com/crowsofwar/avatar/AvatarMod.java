@@ -35,10 +35,12 @@ import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
@@ -113,6 +115,7 @@ public class AvatarMod {
 		FloatingBlockBehavior.register();
 		WaterArcBehavior.register();
 		FireArcBehavior.register();
+		WaterBubbleBehavior.register();
 		
 		AvatarChatMessages.loadAll();
 		
@@ -129,6 +132,7 @@ public class AvatarMod {
 		registerEntity(EntityRavine.class, "Ravine");
 		registerEntity(EntityFlames.class, "Flames");
 		registerEntity(EntityWave.class, "Wave");
+		registerEntity(EntityWaterBubble.class, "WaterBubble");
 		proxy.init();
 	}
 	
