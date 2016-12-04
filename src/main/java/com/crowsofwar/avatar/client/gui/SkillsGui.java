@@ -105,7 +105,6 @@ public class SkillsGui extends GuiScreen {
 //			scale(2, 2, 1);
 			
 			float imgWidth = scale * 1600f * zoom, imgHeight = scale * 900f * zoom;
-//			System.out.println(imgWidth + ", " + width);
 			translate((width - imgWidth) / 2, (height - imgHeight) / 2, 0);
 			scale(zoom, zoom, 1);
 			scale(scale, scale, 1);

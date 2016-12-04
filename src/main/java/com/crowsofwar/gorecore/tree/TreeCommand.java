@@ -154,9 +154,6 @@ public abstract class TreeCommand implements ICommand {
 				nodeIndex++;
 			} else {
 				IArgument<?>[] nodeArgs = node.getArgumentList();
-				System.out.println("Node args: " + Arrays.asList(node.getArgumentList()));
-				System.out.println("All sent:  " + Arrays.asList(sentArgs));
-				System.out.println("Node index:" + nodeIndex);
 				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
 				List<String> suggestions = nodeArgs[sentArgs.length - 1 - nodeIndex]
 						.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1]);

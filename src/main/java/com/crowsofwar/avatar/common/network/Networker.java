@@ -50,7 +50,6 @@ public class Networker {
 		this.server = server;
 		this.packet = dataPacket;
 		this.packetCreator = packetCreator;
-		System.out.println("New networker, server? " + server);
 	}
 	
 	/**
@@ -75,7 +74,6 @@ public class Networker {
 		if (!allKeys.contains(key))
 			throw new IllegalArgumentException("Invalid key- no data was registered with Key " + key);
 		if (server) {
-			System.out.println("marked " + key + " changed to " + data);
 			changed.add(key);
 			currentData.put(key, data);
 		}

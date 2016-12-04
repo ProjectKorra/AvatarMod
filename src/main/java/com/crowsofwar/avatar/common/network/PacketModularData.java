@@ -75,20 +75,13 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 		Map<Networker.Property, Object> out = new HashMap<>();
 		Map<Networker.Property, DataTransmitter> transmitters = networker.transmitters;
 		
-		System.out.println("======== INTERPRETING");
-		System.out.println("Transmitters: " + transmitters);
-		System.out.println();
-		
 		int size = buf.readInt();
 		for (int i = 0; i < size; i++) {
 			int keyId = buf.readInt();
-			System.out.println("keyID " + keyId);
 			Networker.Property key = networker.allKeys.stream().filter(candidate -> candidate.id() == keyId)
 					.collect(Collectors.toList()).get(0); // Find Key with the
 															// id of keyId
-			System.out.println("key " + key);
 			Object read = transmitters.get(key).read(buf, context);
-			System.out.println("got " + read);
 			out.put(key, read);
 		}
 		return out;

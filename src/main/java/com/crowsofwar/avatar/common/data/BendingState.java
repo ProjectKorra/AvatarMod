@@ -111,7 +111,6 @@ public abstract class BendingState {
 	 * Write to the NBT. Should be parent of StateData compound
 	 */
 	public final void write(NBTTagCompound nbt) {
-		System.out.println("Saving: " + nbt);
 		
 		nbt.setInteger("ControllerID", getId());
 		NBTTagCompound stateData = getOrCreateNestedCompound(nbt, "StateData");
@@ -124,7 +123,6 @@ public abstract class BendingState {
 	 * Read the NBT. Should be parent of StateData compound
 	 */
 	public final void read(NBTTagCompound nbt) {
-		System.out.println("Read: " + nbt);
 		
 		NBTTagCompound stateData = getOrCreateNestedCompound(nbt, "StateData");
 		progressionPoints = stateData.getInteger("ProgressPoints");
@@ -148,7 +146,6 @@ public abstract class BendingState {
 	 */
 	public static BendingState find(AvatarPlayerData data, NBTTagCompound nbt) {
 		int id = nbt.getInteger("ControllerID");
-		System.out.println("----- ID IS: " + id);
 		BendingController controller = BendingManager.getBending(id);
 		if (controller != null) {
 			BendingState state = controller.createState(data);

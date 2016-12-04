@@ -51,7 +51,6 @@ public class AvatarUtils {
 		list.clear();
 		
 		NBTTagList listTag = nbt.getTagList(listName, 10);
-		System.out.println("list tag: " + listTag.toString());
 		for (int i = 0; i < listTag.tagCount(); i++) {
 			NBTTagCompound item = listTag.getCompoundTagAt(i);
 			T read = itemProvider.apply(item);

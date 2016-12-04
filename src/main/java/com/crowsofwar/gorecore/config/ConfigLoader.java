@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.logging.log4j.Level;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
@@ -38,6 +39,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
+import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 
 /**
@@ -134,15 +136,14 @@ public class ConfigLoader {
 				
 				if (Modifier.isStatic(field.getModifiers())) {
 					
-					System.out.println(
+					GoreCore.LOGGER.log(Level.WARN,
 							"[ConfigLoader] Warning: Not recommended to mark static fields with @Load, may work out weirdly.");
-					System.out.println(
+					GoreCore.LOGGER.log(Level.WARN,
 							"This field is " + field.getDeclaringClass().getName() + "#" + field.getName());
-					System.out.println("Use a singleton instead!");
+					GoreCore.LOGGER.log(Level.WARN, "Use a singleton instead!");
 					
 				}
 				
-				System.out.println("Should load " + field.getName());
 				// Should load this field
 				
 				HasCustomLoader loaderAnnot = fieldType.getAnnotation(HasCustomLoader.class);
@@ -155,13 +156,10 @@ public class ConfigLoader {
 				if (fromData == null) {
 					
 					// Nothing present- try to load default value
-					System.out.println(" -> Nothing present; trying default value");
 					
 					if (field.get(obj) != null) {
 						
 						setTo = field.get(obj);
-						
-						System.out.println(" -> Found default " + setTo);
 						
 					} else {
 						throw new ConfigurationException.UserMistake(
@@ -175,9 +173,6 @@ public class ConfigLoader {
 					
 					Class<Object> from = (Class<Object>) fromData.getClass();
 					Class<?> to = fieldType;
-					
-					System.out.println(" -> Using from cfg.");
-					System.out.println(" -> Convert " + from + "-> " + to);
 					
 					setTo = convert(fromData, to, field.getName());
 					
@@ -277,22 +272,17 @@ public class ConfigLoader {
 		
 		if (from == to) {
 			
-			System.out.println(" -> Is already in the type we want.");
 			return (T) object;
 			
 		} else if (from.isAssignableFrom(to) || to.isAssignableFrom(from)) {
 			
-			System.out.println(" -> Is a form of the type we want.");
 			return (T) object;
 			
 		} else if (ConverterRegistry.isConverter(from, to)) {
 			
-			System.out.println(" -> Used a converter.");
 			return ConverterRegistry.getConverter(from, to).convert(object);
 			
 		} else if (object instanceof Map<?, ?> && !to.isAssignableFrom(Map.class)) {
-			
-			System.out.println(" -> Populating fields with reflection");
 			
 			T loadedObject;
 			

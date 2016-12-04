@@ -121,11 +121,9 @@ public class PacketHandlerClient implements IPacketHandler {
 					new PlayerDataContext(data));
 			if (readData.containsKey(KEY_CONTROLLERS)) {
 				data.takeBending();
-				System.out.println("Currently all are " + data.getBendingControllers());
 				List<BendingController> bending = (List<BendingController>) readData.get(KEY_CONTROLLERS);
 				for (BendingController controller : bending) {
 					data.addBending(controller);
-					System.out.println("Add " + controller);
 				}
 			}
 			
