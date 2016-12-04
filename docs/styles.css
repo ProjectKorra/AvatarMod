@@ -5,12 +5,17 @@ body {
   margin: 0;
   padding: 0;
   border: none;
+  height: 100%;
 }
 h1 {
   font-weight: 100;
 }
 #homepage {
+  position: absolute;
   text-align: center;
+  background-image: url("bg.png");
+  height: 100%;
+  width: 100%;
 }
 #homepage h1 {
   font-family: Oswald;
