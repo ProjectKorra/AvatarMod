@@ -56,7 +56,7 @@ public class AvatarInfo {
 	 */
 	public static final String DEV_STAGE = "a";
 	public static final String MC_VERSION = "1.11";
-	public static final String VERSION = "AV_" + DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
+	public static final String VERSION = DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
 			+ (IS_DEV_BUILD ? "_dev" : "");
 	
 }
