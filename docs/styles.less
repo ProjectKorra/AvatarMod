@@ -137,13 +137,18 @@ h1 {
 }
 
 #navbar-download {
-    background-color: #c44061;
+    background-color: @button-highlight-color;
     float: right;
     margin-right: 0;
     height: 100%;
     padding: 0px 20px;
     box-shadow: 0px -2px 5px (@button-highlight-color - #111) inset;
     right: 0;
+    .Transition(background-color);
+}
+
+#navbar-download:hover {
+    background-color: @button-highlight-color - #111;
 }
 
 #navbar-download span {
