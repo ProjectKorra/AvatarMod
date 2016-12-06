@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 
@@ -47,11 +48,15 @@ public class EntityWaterBubble extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound) {
 		ownerAttrib.load(compound);
+		setBehavior((WaterBubbleBehavior) Behavior.lookup(compound.getInteger("Behavior"), this));
+		getBehavior().load(compound);
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound) {
 		ownerAttrib.save(compound);
+		compound.setInteger("Behavior", getBehavior().getId());
+		getBehavior().save(compound);
 	}
 	
 	public WaterBubbleBehavior getBehavior() {

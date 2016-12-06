@@ -1,8 +1,11 @@
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
+import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -14,7 +17,7 @@ import net.minecraft.network.datasync.DataSerializers;
  * 
  * @author CrowsOfWar
  */
-public abstract class WaterBubbleBehavior extends Behavior {
+public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 	
 	public static final DataSerializer<WaterBubbleBehavior> DATA_SERIALIZER = new BehaviorSerializer<>();
 	
@@ -57,7 +60,21 @@ public abstract class WaterBubbleBehavior extends Behavior {
 		
 		@Override
 		public Behavior onUpdate() {
-			System.out.println("Player controlled");
+			EntityPlayer player = entity.getOwner();
+			
+			if (player == null) return this;
+			
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			
+			double yaw = Math.toRadians(player.rotationYaw);
+			double pitch = Math.toRadians(player.rotationPitch);
+			Vector forward = Vector.fromYawPitch(yaw, pitch);
+			Vector eye = Vector.getEyePos(player);
+			Vector target = forward.times(2).plus(eye);
+			Vector motion = target.minus(new Vector(entity));
+			motion.mul(5);
+			entity.velocity().set(motion);
+			
 			return this;
 		}
 		
@@ -79,7 +96,7 @@ public abstract class WaterBubbleBehavior extends Behavior {
 		
 		@Override
 		public Behavior onUpdate() {
-			((AvatarEntity) entity).velocity().add(0, -9.81, 0);
+			entity.velocity().add(0, -9.81, 0);
 			if (entity.onGround) {
 				entity.worldObj.setBlockState(entity.getPosition(), Blocks.WATER.getDefaultState());
 			}
