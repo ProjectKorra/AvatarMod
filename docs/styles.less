@@ -98,42 +98,39 @@ h1 {
 #navbar {
     background-color: black;
     color: white;
-    font-size: 3em;
     font-family: Source Sans Pro;
     padding: 0 0 0 2em;
-    height: 1.5em;
     position: fixed;
     z-index: 2;
     width: 100%;
+    font-size: 2em;
+    top: 0;
+}
+
+nav {
+    background-color: black;
+    color: white;
 }
 
 #navbar-logo {
     background-image: url("av2_water_fire-white.png");
     background-size: 96px;
-    background-position: 96px 20px;
-    background-attachment: fixed;
     background-repeat: no-repeat;
-    width: 2em;
-    height: 1em;
-    display: inline-block;
+    /*display: inline-block;*/
+    background-position: center center;
     cursor: pointer;
     margin: 0.15em 0;
+    width: 2em;
+
 }
+
+#navbar-logo:hover { text-decoration: none; }
 
 .navbar-link {
     color: #f0f0f0;
     text-decoration: none;
     margin: 0 1em;
     height: 100%;
-    position: absolute;
-}
-
-.navbar-link[href~='#dev'] {
-    left: 25%;
-}
-
-.navbar-link[href~='#contact'] {
-    left: 50%;
 }
 
 #navbar-download {
