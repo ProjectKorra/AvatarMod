@@ -1,25 +1,26 @@
 @import url('https://fonts.googleapis.com/css?family=Lato|Source+Sans+Pro|Oswald');
 
-@button-color: #e5e5e5;
-@button-highlight-color: #c44061;
+$button-color: #e5e5e5;
+$button-highlight-color: #c44061;
 
-.Transition(@property; @duration: .5s; @timing-function: ease; @delay: 0s) {
-    -webkit-transition-property: @property;
-       -moz-transition-property: @property;
-         -o-transition-property: @property;
-            transition-property: @property;
-    -webkit-transition-duration: @duration;
-       -moz-transition-duration: @duration;
-         -o-transition-duration: @duration;
-            transition-duration: @duration;
-    -webkit-transition-timing-function: @timing-function;
-       -moz-transition-timing-function: @timing-function;
-         -o-transition-timing-function: @timing-function;
-            transition-timing-function: @timing-function;
-    -webkit-transition-delay: @delay;
-       -moz-transition-delay: @delay;
-         -o-transition-delay: @delay;
-            transition-delay: @delay;
+
+@mixin transition($property, $duration: .5s, $timing-function: ease, $delay: 0s) {
+    -webkit-transition-property: $property;
+       -moz-transition-property: $property;
+         -o-transition-property: $property;
+            transition-property: $property;
+    -webkit-transition-duration: $duration;
+       -moz-transition-duration: $duration;
+         -o-transition-duration: $duration;
+            transition-duration: $duration;
+    -webkit-transition-timing-function: $timing-function;
+       -moz-transition-timing-function: $timing-function;
+         -o-transition-timing-function: $timing-function;
+            transition-timing-function: $timing-function;
+    -webkit-transition-delay: $delay;
+       -moz-transition-delay: $delay;
+         -o-transition-delay: $delay;
+            transition-delay: $delay;
 
 }
 
@@ -64,7 +65,7 @@ h1 {
 }
 
 .button {
-    background-color: @button-color;
+    background-color: $button-color;
     padding: 0.4em 0.6em;
     font-size: 2em;
     font-family: Source Sans Pro;
@@ -72,27 +73,27 @@ h1 {
 
     text-shadow: 0px 1px 1px 777;
     border-radius: 5px;
-    box-shadow: 0px -2px 5px (@button-color - #333) inset;
+    box-shadow: 0px -2px 5px ($button-color - #333) inset;
 
     cursor: pointer;
-    .Transition(background-color);
+    @include transition(background-color);
 
     display: inline-block;
 
 }
 
 .button:hover {
-    background-color: @button-color - #111;
+    background-color: $button-color - #111;
 }
 
 .button.highlight {
     color: #e5e5e5;
-    background-color: @button-highlight-color;
-    box-shadow: 0px -2px 5px (@button-highlight-color - #111) inset;
+    background-color: $button-highlight-color;
+    box-shadow: 0px -2px 5px ($button-highlight-color - #111) inset;
 }
 
 .button.highlight:hover {
-    background-color: @button-highlight-color - #222;
+    background-color: $button-highlight-color - #222;
 }
 
 #navbar {
@@ -110,6 +111,7 @@ h1 {
 nav {
     background-color: black;
     color: white;
+    border-radius: 0px;
 }
 
 #navbar-logo {
@@ -120,7 +122,7 @@ nav {
     background-position: center center;
     cursor: pointer;
     margin: 0.15em 0;
-    width: 2em;
+    width: 96px;
 
 }
 
@@ -134,18 +136,18 @@ nav {
 }
 
 #navbar-download {
-    background-color: @button-highlight-color;
+    background-color: $button-highlight-color;
     float: right;
     margin-right: 0;
     height: 100%;
     padding: 0px 20px;
-    box-shadow: 0px -2px 5px (@button-highlight-color - #111) inset;
+    box-shadow: 0px -2px 5px ($button-highlight-color - #111) inset;
     right: 0;
-    .Transition(background-color);
+    @include transition(background-color);
 }
 
 #navbar-download:hover {
-    background-color: @button-highlight-color - #111;
+    background-color: $button-highlight-color - #111;
 }
 
 #navbar-download span {

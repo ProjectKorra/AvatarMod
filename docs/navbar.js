@@ -6,6 +6,8 @@ $(document).ready(function () {
         url: "navbar.html",
         isLocal: true
     }).done(function (data) {
-        document.getElementsByTagName("nav")[0].innerHTML = data;
+        $("nav").load("navbar.html");
+        $("nav").addClass("navbar");
+        $("nav").css("border-radius", "0px");
     });
 });
