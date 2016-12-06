@@ -19,8 +19,6 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.AvatarLog;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,8 +26,8 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.world.World;
 
 /**
- * An object which is designed to be used with an entity. Manages a synced owner
- * (player entity), storing it, and retrieving it.
+ * Designed to use with an entity. Manages a synchronized owner property,
+ * allowing retrieval and "storage" of a player entity.
  * 
  * @author CrowsOfWar
  */

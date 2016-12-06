@@ -39,7 +39,7 @@ public class AbilityWaterBubble extends BendingAbility {
 				EntityWaterBubble bubble = new EntityWaterBubble(world);
 				bubble.setPosition(pos.x(), pos.y(), pos.z());
 				bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
-				// set owner or something?
+				bubble.setOwner(player);
 				world.spawnEntityInWorld(bubble);
 			}
 		}
