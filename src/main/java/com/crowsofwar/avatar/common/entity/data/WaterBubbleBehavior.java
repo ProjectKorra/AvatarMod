@@ -36,6 +36,12 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 	
 	public static class Drop extends WaterBubbleBehavior {
 		
+		public Drop() {}
+		
+		public Drop(EntityWaterBubble bubble) {
+			super(bubble);
+		}
+		
 		@Override
 		public Behavior onUpdate() {
 			((AvatarEntity) entity).velocity().add(0, -9.81, 0);
@@ -58,6 +64,12 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 	
 	public static class PlayerControlled extends WaterBubbleBehavior {
 		
+		public PlayerControlled() {}
+		
+		public PlayerControlled(EntityWaterBubble bubble) {
+			super(bubble);
+		}
+		
 		@Override
 		public Behavior onUpdate() {
 			EntityPlayer player = entity.getOwner();
@@ -74,7 +86,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);
 			entity.velocity().set(motion);
-			
+			// System.out.println(motion);
 			return this;
 		}
 		
@@ -93,6 +105,12 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 	}
 	
 	public static class Place extends WaterBubbleBehavior {
+		
+		public Place() {}
+		
+		public Place(EntityWaterBubble bubble) {
+			super(bubble);
+		}
 		
 		@Override
 		public Behavior onUpdate() {

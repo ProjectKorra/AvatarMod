@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -40,6 +41,8 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	@Override
 	public void onUpdate() {
+		super.onUpdate();
+		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		WaterBubbleBehavior currentBehavior = getBehavior();
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate();
 		if (currentBehavior != nextBehavior) setBehavior(nextBehavior);
