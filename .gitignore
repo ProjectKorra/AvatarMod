@@ -28,3 +28,6 @@ crash-reports/
 resourcepacks/
 
 copyright.txt
+
+docs/.sass-cache
+_sass.bat
