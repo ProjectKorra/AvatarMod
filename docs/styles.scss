@@ -35,6 +35,10 @@ h1 {
     font-weight: 100;
 }
 
+#content {
+    height: 100%;
+}
+
 #homepage {
     text-align: center;
     background-image: url("bg.png");
@@ -112,6 +116,11 @@ nav {
     background-color: black;
     color: white;
     border-radius: 0px;
+    width: 100%;
+}
+
+.nav {
+    width: 100%;
 }
 
 #navbar-logo {
@@ -120,10 +129,12 @@ nav {
     background-repeat: no-repeat;
     /*display: inline-block;*/
     background-position: center center;
-    cursor: pointer;
-    margin: 0.15em 0;
     width: 96px;
+}
 
+.nav-link {
+    color: #eee;
+    font-family: Oswald;
 }
 
 #navbar-logo:hover { text-decoration: none; }
@@ -135,24 +146,24 @@ nav {
     height: 100%;
 }
 
-#navbar-download {
+#nav-download {
     background-color: $button-highlight-color;
     float: right;
     margin-right: 0;
     height: 100%;
-    padding: 0px 20px;
     box-shadow: 0px -2px 5px ($button-highlight-color - #111) inset;
     right: 0;
+    float: right;
     @include transition(background-color);
 }
 
-#navbar-download:hover {
+#nav-download:hover, #nav-download:active {
     background-color: $button-highlight-color - #111;
 }
 
-#navbar-download span {
-    position: relative;
-    top: 10px;
+#nav-download-link:hover, #nav-download-link:active {
+    background-color: inherit;
+    color: inherit;
 }
 
 @media(max-width: 800px) {

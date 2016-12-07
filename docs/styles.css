@@ -8,6 +8,9 @@ html, body {
 h1 {
   font-weight: 100; }
 
+#content {
+  height: 100%; }
+
 #homepage {
   text-align: center;
   background-image: url("bg.png");
@@ -86,7 +89,11 @@ h1 {
 nav {
   background-color: black;
   color: white;
-  border-radius: 0px; }
+  border-radius: 0px;
+  width: 100%; }
+
+.nav {
+  width: 100%; }
 
 #navbar-logo {
   background-image: url("av2_water_fire-white.png");
@@ -94,9 +101,11 @@ nav {
   background-repeat: no-repeat;
   /*display: inline-block;*/
   background-position: center center;
-  cursor: pointer;
-  margin: 0.15em 0;
   width: 96px; }
+
+.nav-link {
+  color: #eee;
+  font-family: Oswald; }
 
 #navbar-logo:hover {
   text-decoration: none; }
@@ -107,14 +116,14 @@ nav {
   margin: 0 1em;
   height: 100%; }
 
-#navbar-download {
+#nav-download {
   background-color: #c44061;
   float: right;
   margin-right: 0;
   height: 100%;
-  padding: 0px 20px;
   box-shadow: 0px -2px 5px #b32f50 inset;
   right: 0;
+  float: right;
   -webkit-transition-property: background-color;
   -moz-transition-property: background-color;
   -o-transition-property: background-color;
@@ -132,12 +141,12 @@ nav {
   -o-transition-delay: 0s;
   transition-delay: 0s; }
 
-#navbar-download:hover {
+#nav-download:hover, #nav-download:active {
   background-color: #b32f50; }
 
-#navbar-download span {
-  position: relative;
-  top: 10px; }
+#nav-download-link:hover, #nav-download-link:active {
+  background-color: inherit;
+  color: inherit; }
 
 @media (max-width: 800px) {
   #homepage span {
