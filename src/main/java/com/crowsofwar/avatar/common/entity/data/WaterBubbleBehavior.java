@@ -86,6 +86,9 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);
 			entity.velocity().set(motion);
+			// System.out.println("" +
+			// System.identityHashCode(entity.velocity()));
+			// System.out.println("" + System.identityHashCode(entity));
 			// System.out.println(motion);
 			return this;
 		}
