@@ -42,6 +42,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		velocity().set(0, 1, 0);
 		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		WaterBubbleBehavior currentBehavior = getBehavior();
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate();
