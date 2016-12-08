@@ -99,7 +99,7 @@ nav {
   width: 100%; }
 
 #navbar-logo {
-  background-image: url("av2_water_fire-white.png");
+  background-image: url("logo_96px_white.png");
   background-size: 96px;
   background-repeat: no-repeat;
   /*display: inline-block;*/
@@ -108,10 +108,14 @@ nav {
   @media (max-width: 768px) {
     #navbar-logo {
       width: 64px;
-      background-size: 64px; } }
+      background-size: 64px;
+      background-image: url("logo_64px_white.png"); } }
 
 #navbar-logo:hover {
-  background-image: url("av2_water_fire-focused.png"); }
+  background-image: url("logo_96px_black.png"); }
+  @media (max-width: 768px) {
+    #navbar-logo:hover {
+      background-image: url("logo_64px_black.png"); } }
 
 .nav-link {
   color: #eee;
