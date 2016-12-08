@@ -10,5 +10,6 @@ $(document).ready(function () {
         $("nav").addClass("navbar");
         $("nav").css("border-radius", "0px");
         $("nav").css("margin-bottom", "0px");
+        $("nav").css("position", "fixed");
     });
 });
