@@ -25,7 +25,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Drop.class);
 		registerBehavior(PlayerControlled.class);
-		registerBehavior(Place.class);
+		registerBehavior(Thrown.class);
 	}
 	
 	protected WaterBubbleBehavior() {}
@@ -107,11 +107,11 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		
 	}
 	
-	public static class Place extends WaterBubbleBehavior {
+	public static class Thrown extends WaterBubbleBehavior {
 		
-		public Place() {}
+		public Thrown() {}
 		
-		public Place(EntityWaterBubble bubble) {
+		public Thrown(EntityWaterBubble bubble) {
 			super(bubble);
 		}
 		

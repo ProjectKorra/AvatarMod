@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,10 +31,12 @@ import net.minecraft.world.World;
 public class WaterbendingState extends BendingState {
 	
 	private EntityWaterArc waterArc;
+	private EntityWaterBubble waterBubble;
 	
 	public WaterbendingState(AvatarPlayerData data) {
 		super(data);
 		this.waterArc = null;
+		this.waterBubble = null;
 	}
 	
 	public EntityWaterArc getWaterArc() {
@@ -55,6 +58,14 @@ public class WaterbendingState extends BendingState {
 	
 	public void releaseWater() {
 		setWaterArc(null);
+	}
+	
+	public EntityWaterBubble getBubble() {
+		return waterBubble;
+	}
+	
+	public void setBubble(EntityWaterBubble bubble) {
+		this.waterBubble = bubble;
 	}
 	
 	@Override

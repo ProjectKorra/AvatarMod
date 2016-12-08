@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
@@ -34,7 +37,11 @@ public class EntityWaterBubble extends AvatarEntity {
 	 */
 	public EntityWaterBubble(World world) {
 		super(world);
-		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
+		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER, newOwner -> {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(newOwner);
+			if (data != null)
+				((WaterbendingState) data.getBendingState(BendingType.WATERBENDING)).setBubble(this);
+		});
 		setSize(1, 1);
 	}
 	

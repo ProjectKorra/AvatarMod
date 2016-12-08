@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
@@ -41,6 +42,8 @@ public class AbilityWaterBubble extends BendingAbility {
 				bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled(bubble));
 				bubble.setOwner(player);
 				world.spawnEntityInWorld(bubble);
+				data.addStatusControl(StatusControl.THROW_BUBBLE);
+				data.sync();
 			}
 		}
 	}
