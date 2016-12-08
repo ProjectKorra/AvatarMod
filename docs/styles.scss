@@ -72,6 +72,19 @@ h1 {
     padding: 0.2em 0.5em;
 }
 
+.homepage-flyer {
+}
+
+.homepage-flyer p {
+    font-size: 2em;
+    font-family: Source Sans Pro;
+    font-weight: 100;
+}
+
+.homepage-flyer .row {
+    margin-top: 50px;
+}
+
 .button {
     background-color: $button-color;
     padding: 0.4em 0.6em;
