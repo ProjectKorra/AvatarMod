@@ -4,12 +4,15 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -52,6 +55,13 @@ public class EntityWaterBubble extends AvatarEntity {
 											// entity
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate();
 		if (currentBehavior != nextBehavior) setBehavior(nextBehavior);
+		
+		BlockPos down = getPosition().down();
+		IBlockState downState = worldObj.getBlockState(down);
+		if (downState.getBlock() == Blocks.FARMLAND && downState == Blocks.FARMLAND.getDefaultState()) {
+			worldObj.setBlockState(down, Blocks.FARMLAND.getStateById(7));
+		}
+		
 	}
 	
 	@Override
