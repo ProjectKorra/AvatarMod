@@ -2,7 +2,7 @@
 
 $button-color: #e5e5e5;
 $button-highlight-color: #c44061;
-
+$collapse: 768px;
 
 @mixin transition($property, $duration: .5s, $timing-function: ease, $delay: 0s) {
     -webkit-transition-property: $property;
@@ -133,7 +133,7 @@ nav {
     /*display: inline-block;*/
     background-position: center center;
     width: 96px;
-    @media(max-width: 800px) {
+    @media(max-width: $collapse) {
         width: 64px;
         background-size: 64px;
     }

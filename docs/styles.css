@@ -105,7 +105,7 @@ nav {
   /*display: inline-block;*/
   background-position: center center;
   width: 96px; }
-  @media (max-width: 800px) {
+  @media (max-width: 768px) {
     #navbar-logo {
       width: 64px;
       background-size: 64px; } }
