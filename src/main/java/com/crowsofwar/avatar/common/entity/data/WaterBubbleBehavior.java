@@ -120,6 +120,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			entity.velocity().add(0, -9.81, 0);
 			if (entity.onGround) {
 				entity.worldObj.setBlockState(entity.getPosition(), Blocks.WATER.getDefaultState());
+				entity.setDead();
 			}
 			return this;
 		}
