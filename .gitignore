@@ -29,5 +29,6 @@ resourcepacks/
 
 copyright.txt
 
-docs/.sass-cache
+**/.sass-cache
+**/.sass-cache/*
 _sass.bat

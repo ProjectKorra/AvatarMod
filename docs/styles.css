@@ -110,6 +110,9 @@ nav {
       width: 64px;
       background-size: 64px; } }
 
+#navbar-logo:hover {
+  background-image: url("av2_water_fire-focused.png"); }
+
 .nav-link {
   color: #eee;
   font-family: Oswald; }
