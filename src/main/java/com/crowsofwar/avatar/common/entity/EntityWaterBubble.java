@@ -32,6 +32,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	public EntityWaterBubble(World world) {
 		super(world);
 		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
+		setSize(1, 1);
 	}
 	
 	@Override
@@ -42,11 +43,13 @@ public class EntityWaterBubble extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		// velocity().set(0, 1, 0);
 		
 		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
+		
 		WaterBubbleBehavior currentBehavior = getBehavior();
-		currentBehavior.setEntity(this);
+		currentBehavior.setEntity(this); // CRITICAL: Otherwise the behavior
+											// does not use correct instance of
+											// entity
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate();
 		if (currentBehavior != nextBehavior) setBehavior(nextBehavior);
 	}
