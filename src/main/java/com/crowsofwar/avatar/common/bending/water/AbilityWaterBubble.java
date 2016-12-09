@@ -50,7 +50,7 @@ public class AbilityWaterBubble extends BendingAbility {
 	
 	@Override
 	public int getIconIndex() {
-		return 0;
+		return 12;
 	}
 	
 }

@@ -22,7 +22,7 @@ public class StatCtrlThrowBubble extends StatusControl {
 	/**
 	 */
 	public StatCtrlThrowBubble() {
-		super(0, CONTROL_RIGHT_CLICK_DOWN, RIGHT_OF_CROSSHAIR);
+		super(7, CONTROL_RIGHT_CLICK_DOWN, RIGHT_OF_CROSSHAIR);
 	}
 	
 	@Override
