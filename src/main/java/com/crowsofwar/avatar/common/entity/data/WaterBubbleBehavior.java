@@ -118,7 +118,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		@Override
 		public Behavior onUpdate() {
 			entity.velocity().add(0, -9.81 / 10, 0);
-			if (entity.onGround) {
+			if (entity.isCollided) {
 				entity.worldObj.setBlockState(entity.getPosition(), Blocks.FLOWING_WATER.getDefaultState(),
 						3);
 				entity.setDead();
