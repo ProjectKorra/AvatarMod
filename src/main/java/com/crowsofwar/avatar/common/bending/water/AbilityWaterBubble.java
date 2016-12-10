@@ -29,6 +29,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -50,7 +51,8 @@ public class AbilityWaterBubble extends BendingAbility {
 		World world = ctx.getWorld();
 		
 		if (ctx.isLookingAtBlock()) {
-			IBlockState lookingAtBlock = world.getBlockState(ctx.getClientLookBlock().toBlockPos());
+			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
+			IBlockState lookingAtBlock = world.getBlockState(lookPos);
 			if (lookingAtBlock.getBlock() == Blocks.WATER) {
 				System.out.println("Water bubble");
 				Vector pos = ctx.getLookPos();
@@ -61,6 +63,7 @@ public class AbilityWaterBubble extends BendingAbility {
 				world.spawnEntityInWorld(bubble);
 				data.addStatusControl(StatusControl.THROW_BUBBLE);
 				data.sync();
+				world.setBlockToAir(lookPos);
 			}
 		}
 	}

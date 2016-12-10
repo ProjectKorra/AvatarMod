@@ -58,7 +58,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.renderEngine.bindTexture(water);
 		GlStateManager.enableBlend();
-		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.7f);
+		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.6f);
 		
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x - 0.5f, (float) y, (float) z - 0.5f);
@@ -98,12 +98,12 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		int anim = (int) ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 		
-		drawQuad(1, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
-		drawQuad(0, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
-		drawQuad(1, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
-		drawQuad(0, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
-		drawQuad(0, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
-		drawQuad(1, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
+		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
+		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
+		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
+		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
+		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
+		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 		
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableBlend();
