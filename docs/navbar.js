@@ -1,15 +1,21 @@
 var $;
 
+addListeners = function() {
+  $('a').click(function() {
+      var href = this.href.substring(this.href.indexOf("#"));
+      console.log(href);
+      $('html, body').animate({
+          scrollTop: $(href).offset().top
+      }, 1000);
+      return false;
+  })
+};
+
 $(document).ready(function () {
-    "use strict";
-    $.ajax({
-        url: "navbar.html",
-        isLocal: true
-    }).done(function (data) {
-        $("nav").load("navbar.html");
-        $("nav").addClass("navbar");
-        $("nav").css("border-radius", "0px");
-        $("nav").css("margin-bottom", "0px");
-        $("nav").css("position", "fixed");
-    });
+    $("nav").load("navbar.html", addListeners);
+    $("nav").addClass("navbar");
+    $("nav").css("border-radius", "0px");
+    $("nav").css("margin-bottom", "0px");
+    $("nav").css("position", "fixed");
 });
+

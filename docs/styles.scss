@@ -210,7 +210,7 @@ nav {
 
 #navbar-logo:hover { text-decoration: none; }
 
-#homepage-fullscreen-promo {
+#download {
     font-size: 2em;
     background-image: url("promo.png");
     background-size: cover !important;
@@ -220,7 +220,7 @@ nav {
     border-top: 20px solid #222;
 }
 
-#homepage-fullscreen-promo .text {
+.fg-text {
     margin: 0 auto;
     width: 50%;
     background-color: rgba(0, 0, 0, .5);
@@ -231,7 +231,7 @@ nav {
     padding-bottom: 1em;
 }
 
-#homepage-fullscreen-promo h1 {
+#download h1 {
     text-align: center;
     font-size: 1.25em;
     padding-top: .5em;
