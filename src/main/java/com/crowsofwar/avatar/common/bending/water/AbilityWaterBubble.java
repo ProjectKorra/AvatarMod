@@ -54,7 +54,6 @@ public class AbilityWaterBubble extends BendingAbility {
 			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
 			IBlockState lookingAtBlock = world.getBlockState(lookPos);
 			if (lookingAtBlock.getBlock() == Blocks.WATER) {
-				System.out.println("Water bubble");
 				Vector pos = ctx.getLookPos();
 				EntityWaterBubble bubble = new EntityWaterBubble(world);
 				bubble.setPosition(pos.x(), pos.y(), pos.z());
