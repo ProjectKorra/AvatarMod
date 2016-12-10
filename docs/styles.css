@@ -12,7 +12,6 @@ h1 {
   height: 100%;
   width: 100%;
   padding: 0;
-  position: relative;
   z-index: -1; }
 
 #homepage {
@@ -252,5 +251,31 @@ dfn {
   cursor: help;
   border-bottom: 1px dotted #222;
   font-style: normal; }
+
+.avbtn {
+  color: #333;
+  background-color: #eee;
+  font-size: 2em;
+  text-shadow: 0px 1px 2px #aaa;
+  padding: .3em .5em;
+  margin: 0 .2em;
+  border-radius: 5px;
+  border: 2px solid #ddd;
+  box-shadow: 0px 0px 2px #ddd inset;
+  cursor: pointer; }
+  .avbtn:hover {
+    text-decoration: none;
+    color: #222;
+    box-shadow: 0px 0px 4px #ccc inset; }
+
+.avbtn-bold {
+  background-color: #c44061;
+  border-color: #b32f50;
+  box-shadow: 0px 0px 2px #b32f50 inset;
+  color: #eee;
+  text-shadow: 0px 1px 1px #ccc; }
+  .avbtn-bold:hover {
+    color: #ccc;
+    box-shadow: 0px 0px 4px #aa2647 inset; }
 
 /*# sourceMappingURL=styles.css.map */
