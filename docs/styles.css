@@ -11,7 +11,9 @@ h1 {
 #content {
   height: 100%;
   width: 100%;
-  padding: 0; }
+  padding: 0;
+  position: relative;
+  z-index: -1; }
 
 #homepage {
   text-align: center;
