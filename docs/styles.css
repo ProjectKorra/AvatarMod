@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Lato|Source+Sans+Pro|Oswald");
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro|Oswald|Source+Sans+Pro:200");
 html, body {
   margin: 0;
   padding: 0;
@@ -40,12 +40,13 @@ h1 {
 
 #homepage-desc span {
   font-size: 2vw;
-  padding: 0.2em 0.5em; }
+  padding: 0.2em 0.5em;
+  font-weight: normal; }
 
 .homepage-flyer p {
   font-size: 2em;
   font-family: Source Sans Pro;
-  font-weight: 100; }
+  font-weight: normal; }
 
 .homepage-flyer .row {
   margin-top: 50px; }
@@ -64,7 +65,8 @@ h1 {
   padding: 20px 20px 30px 20px;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 30px;
-  border-top: 25px solid #111; }
+  border-top: 25px solid #111;
+  text-shadow: 0px 1px 2px #222; }
 
 .homepage-text p {
   margin: 1.5em 0; }
@@ -163,7 +165,10 @@ nav {
       width: 100%; } }
 
 .nav-link {
-  color: #eee; }
+  color: #eee;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 2em;
+  font-weight: 200; }
 
 #navbar-logo:hover {
   text-decoration: none; }

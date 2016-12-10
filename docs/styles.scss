@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Lato|Source+Sans+Pro|Oswald');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro|Oswald|Source+Sans+Pro:200');
 
 $button-color: #e5e5e5;
 $button-highlight-color: #c44061;
@@ -72,6 +72,7 @@ h1 {
 #homepage-desc span {
     font-size: 2vw;
     padding: 0.2em 0.5em;
+    font-weight: normal;
 }
 
 .homepage-flyer {
@@ -80,7 +81,7 @@ h1 {
 .homepage-flyer p {
     font-size: 2em;
     font-family: Source Sans Pro;
-    font-weight: 100;
+    font-weight: normal;
 }
 
 .homepage-flyer .row {
@@ -104,6 +105,7 @@ h1 {
     font-family: "Source Sans Pro", sans-serif;
     font-size: 30px;
     border-top: 25px solid #111;
+    text-shadow: 0px 1px 2px #222;
 }
 
 .homepage-text p {
@@ -205,6 +207,9 @@ nav {
 
 .nav-link {
     color: #eee;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 2em;
+    font-weight: 200;
 }
 
 #navbar-logo:hover { text-decoration: none; }
