@@ -86,6 +86,16 @@ h1 {
     margin-top: 50px;
 }
 
+.homepage-flyer img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.homepage-flyer h1 {
+    font-family: Oswald, sans-serif;
+}
+
 .homepage-text {
     background-color: #222;
     color: #eee;
@@ -100,7 +110,7 @@ h1 {
 }
 
 .homepage-text h1 {
-    font-family: "Oswald", sans-serif;
+    font-family: Oswald, sans-serif;
 }
 
 .button {
