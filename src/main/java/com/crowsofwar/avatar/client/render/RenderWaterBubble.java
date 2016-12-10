@@ -22,8 +22,8 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderWaterBubble extends Render<EntityWaterBubble> {
 	
-	private static final ResourceLocation water = new ResourceLocation("avatarmod",
-			"textures/entity/water-ribbon.png");
+	private static final ResourceLocation water = new ResourceLocation("minecraft",
+			"textures/blocks/water_still.png");
 	
 	public RenderWaterBubble(RenderManager renderManager) {
 		super(renderManager);
@@ -54,12 +54,16 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		rtb = new Vector4f(1, 1, 1, 1).mul(mat);
 		// @formatter:on
 		
-		drawQuad(1, ltb, lbb, lbf, ltf, 0, 0, 1, 1); // -x
-		drawQuad(0, rtb, rbb, rbf, rtf, 0, 0, 1, 1); // +x
-		drawQuad(1, rbb, rbf, lbf, lbb, 0, 0, 1, 1); // -y
-		drawQuad(0, rtb, rtf, ltf, ltb, 0, 0, 1, 1); // +y
-		drawQuad(0, rtf, rbf, lbf, ltf, 0, 0, 1, 1); // -z
-		drawQuad(1, rtb, rbb, lbb, ltb, 0, 0, 1, 1); // +z
+		float existed = bubble.ticksExisted / 4f;
+		int anim = (int) ((int) existed % 16);
+		float v1 = anim / 16f, v2 = v1 + 1f / 16;
+		
+		drawQuad(1, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
+		drawQuad(0, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
+		drawQuad(1, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
+		drawQuad(0, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
+		drawQuad(0, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
+		drawQuad(1, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 		
 		GlStateManager.disableBlend();
 		
