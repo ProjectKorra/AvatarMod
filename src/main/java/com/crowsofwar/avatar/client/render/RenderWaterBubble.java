@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -34,6 +35,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.renderEngine.bindTexture(water);
+		GlStateManager.enableBlend();
 		
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x - 0.5f, (float) y, (float) z - 0.5f);
@@ -52,12 +54,14 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		rtb = new Vector4f(1, 1, 1, 1).mul(mat);
 		// @formatter:on
 		
-		drawQuad(2, ltb, lbb, lbf, ltf, 0, 0, 1, 1); // -x
-		drawQuad(2, rtb, rbb, rbf, rtf, 0, 0, 1, 1); // +x
-		drawQuad(2, rbb, rbf, lbf, lbb, 0, 0, 1, 1); // -y
-		drawQuad(2, rtb, rtf, ltf, ltb, 0, 0, 1, 1); // +y
-		drawQuad(2, rtf, rbf, lbf, ltf, 0, 0, 1, 1); // -z
-		drawQuad(2, rtb, rbb, lbb, ltb, 0, 0, 1, 1); // +z
+		drawQuad(1, ltb, lbb, lbf, ltf, 0, 0, 1, 1); // -x
+		drawQuad(0, rtb, rbb, rbf, rtf, 0, 0, 1, 1); // +x
+		drawQuad(1, rbb, rbf, lbf, lbb, 0, 0, 1, 1); // -y
+		drawQuad(0, rtb, rtf, ltf, ltb, 0, 0, 1, 1); // +y
+		drawQuad(0, rtf, rbf, lbf, ltf, 0, 0, 1, 1); // -z
+		drawQuad(1, rtb, rbb, lbb, ltb, 0, 0, 1, 1); // +z
+		
+		GlStateManager.disableBlend();
 		
 	}
 	
