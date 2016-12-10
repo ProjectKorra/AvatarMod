@@ -17,6 +17,9 @@
 
 package com.crowsofwar.avatar.client.render;
 
+import static net.minecraft.util.math.MathHelper.cos;
+import static net.minecraft.util.math.MathHelper.sin;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -62,6 +65,8 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		
 		// (0 Left)/(1 Right), (0 Bottom)/(1 Top), (0 Front)/(1 Back)
 		
+		Vector4f mid = new Vector4f((float) x, (float) y + .5f, (float) z, 1);
+		
 		// @formatter:off
 		Vector4f
 		lbf = new Vector4f(0, 0, 0, 1).mul(mat),
@@ -72,6 +77,21 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		rbb = new Vector4f(1, 0, 1, 1).mul(mat),
 		ltb = new Vector4f(0, 1, 1, 1).mul(mat),
 		rtb = new Vector4f(1, 1, 1, 1).mul(mat);
+		
+		float t1 = bubble.ticksExisted * (float) Math.PI / 10f;
+		float t2 = t1 + (float) Math.PI / 2f;
+		float amt = .05f;
+		
+		lbf.add(cos(t1)*amt, sin(t2)*amt, cos(t2)*amt, 0);
+		rbf.add(sin(t1)*amt, cos(t2)*amt, sin(t2)*amt, 0);
+		lbb.add(sin(t2)*amt, cos(t2)*amt, cos(t2)*amt, 0);
+		rbb.add(cos(t2)*amt, cos(t1)*amt, cos(t1)*amt, 0);
+		
+		ltf.add(cos(t2)*amt, cos(t1)*amt, sin(t1)*amt, 0);
+		rtf.add(sin(t2)*amt, sin(t1)*amt, cos(t1)*amt, 0);
+		ltb.add(sin(t1)*amt, sin(t2)*amt, cos(t1)*amt, 0);
+		rtb.add(cos(t1)*amt, cos(t2)*amt, sin(t1)*amt, 0);
+		
 		// @formatter:on
 		
 		float existed = bubble.ticksExisted / 4f;
