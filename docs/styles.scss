@@ -206,10 +206,49 @@ nav {
 
 .nav-link {
     color: #eee;
-    font-family: Oswald;
 }
 
 #navbar-logo:hover { text-decoration: none; }
+
+#homepage-fullscreen-promo {
+    font-size: 2em;
+    background-image: url("promo.png");
+    background-size: cover !important;
+    background-repeat: no-repeat;
+    padding-top: 1.5em;
+    margin-top: 2em;
+    border-top: 20px solid #222;
+}
+
+#homepage-fullscreen-promo .text {
+    margin: 0 auto;
+    width: 50%;
+    background-color: rgba(0, 0, 0, .5);
+    padding: 0 4%;
+    color: #eee;
+    box-shadow: 0px 0px 2px black;
+    text-shadow: 0px 1px 1px #333;
+    padding-bottom: 1em;
+}
+
+#homepage-fullscreen-promo h1 {
+    text-align: center;
+    font-size: 1.25em;
+    padding-top: .5em;
+}
+
+#content h1 {
+    font-family: Oswald, sans-serif;
+}
+
+#content p {
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+.note {
+    font-size: .75em;
+    margin-top: 1em;
+}
 
 .navbar-link {
     color: #f0f0f0;
