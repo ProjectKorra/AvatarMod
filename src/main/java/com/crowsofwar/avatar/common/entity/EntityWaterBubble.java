@@ -102,4 +102,9 @@ public class EntityWaterBubble extends AvatarEntity {
 		ownerAttrib.setOwner(player);
 	}
 	
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+	
 }

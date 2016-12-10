@@ -33,9 +33,12 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 	public void doRender(EntityWaterBubble bubble, double x, double y, double z, float entityYaw,
 			float partialTicks) {
 		
+		float colorEnhancement = 1.2f;
+		
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.renderEngine.bindTexture(water);
 		GlStateManager.enableBlend();
+		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.7f);
 		
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x - 0.5f, (float) y, (float) z - 0.5f);
@@ -65,6 +68,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		drawQuad(0, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
 		drawQuad(1, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 		
+		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableBlend();
 		
 	}
