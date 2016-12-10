@@ -49,6 +49,20 @@ h1 {
 .homepage-flyer .row {
   margin-top: 50px; }
 
+.homepage-text {
+  background-color: #222;
+  color: #eee;
+  padding: 20px 20px 30px 20px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 30px;
+  border-top: 25px solid #111; }
+
+.homepage-text p {
+  margin: 1.5em 0; }
+
+.homepage-text h1 {
+  font-family: "Oswald", sans-serif; }
+
 .button {
   background-color: #e5e5e5;
   padding: 0.4em 0.6em;
