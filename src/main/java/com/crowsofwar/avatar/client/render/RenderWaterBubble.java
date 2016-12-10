@@ -52,7 +52,12 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		rtb = new Vector4f(1, 1, 1, 1).mul(mat);
 		// @formatter:on
 		
-		drawQuad(2, rtf, rbf, lbf, ltf, 0, 0, 1, 1);
+		drawQuad(2, ltb, lbb, lbf, ltf, 0, 0, 1, 1); // -x
+		drawQuad(2, rtb, rbb, rbf, rtf, 0, 0, 1, 1); // +x
+		drawQuad(2, rbb, rbf, lbf, lbb, 0, 0, 1, 1); // -y
+		drawQuad(2, rtb, rtf, ltf, ltb, 0, 0, 1, 1); // +y
+		drawQuad(2, rtf, rbf, lbf, ltf, 0, 0, 1, 1); // -z
+		drawQuad(2, rtb, rbb, lbb, ltb, 0, 0, 1, 1); // +z
 		
 	}
 	
