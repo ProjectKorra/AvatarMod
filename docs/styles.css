@@ -127,6 +127,12 @@ nav {
     #navbar-logo:hover {
       background-image: url("logo_64px_black.png"); } }
 
+#navbar-logo-parent {
+  height: 50px; }
+  @media (max-width: 768px) {
+    #navbar-logo-parent {
+      height: 40px; } }
+
 .nav-link {
   color: #eee;
   font-family: Oswald; }

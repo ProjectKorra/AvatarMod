@@ -162,6 +162,13 @@ nav {
     }
 }
 
+#navbar-logo-parent {
+    height: 50px;
+    @media(max-width: $collapse) {
+        height: 40px;
+    }
+}
+
 .nav-link {
     color: #eee;
     font-family: Oswald;
