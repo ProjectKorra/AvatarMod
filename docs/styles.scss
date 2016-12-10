@@ -164,6 +164,9 @@ nav {
     color: white;
     border-radius: 0px;
     width: 100%;
+    @media(max-width: $collapse) {
+        padding-left: 20px;
+    }
 }
 
 .nav {
@@ -181,6 +184,8 @@ nav {
         width: 64px;
         background-size: 64px;
         background-image: url("logo_64px_white.png");
+        width: 100%;
+        background-position: 10px center;
     }
 }
 
@@ -195,6 +200,7 @@ nav {
     height: 50px;
     @media(max-width: $collapse) {
         height: 40px;
+        width: 100%;
     }
 }
 
