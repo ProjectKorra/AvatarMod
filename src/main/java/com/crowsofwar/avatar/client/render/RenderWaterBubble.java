@@ -32,9 +32,11 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 	public void doRender(EntityWaterBubble bubble, double x, double y, double z, float entityYaw,
 			float partialTicks) {
 		
-		Minecraft.getMinecraft().renderEngine.bindTexture(water);
+		Minecraft mc = Minecraft.getMinecraft();
+		mc.renderEngine.bindTexture(water);
 		
 		Matrix4f mat = new Matrix4f();
+		mat.translate((float) x - 0.5f, (float) y, (float) z - 0.5f);
 		
 		// (0 Left)/(1 Right), (0 Bottom)/(1 Top), (0 Front)/(1 Back)
 		
