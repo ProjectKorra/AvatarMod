@@ -118,7 +118,6 @@ h1 {
   font-family: Source Sans Pro;
   padding: 0 0 0 2em;
   position: fixed;
-  z-index: 2;
   width: 100%;
   font-size: 2em;
   top: 0; }
@@ -127,7 +126,8 @@ nav {
   background-color: black;
   color: white;
   border-radius: 0px;
-  width: 100%; }
+  width: 100%;
+  z-index: 2; }
   @media (max-width: 768px) {
     nav {
       padding-left: 20px; } }
