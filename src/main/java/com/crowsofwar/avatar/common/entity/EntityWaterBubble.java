@@ -85,6 +85,9 @@ public class EntityWaterBubble extends AvatarEntity {
 						Blocks.FARMLAND.getDefaultState().withProperty(BlockFarmland.MOISTURE, moisture + 1));
 			}
 		}
+		if (inWater) {
+			setDead();
+		}
 		
 	}
 	
