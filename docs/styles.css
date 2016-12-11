@@ -57,7 +57,34 @@ h1 {
       font-size: 6vw; } }
 
 #features .row {
-  margin-top: 50px; }
+  margin-top: 50px;
+  opacity: 0;
+  position: relative;
+  /* #${} removes quotation marks */
+  -webkit-transition-property: opacity, left;
+  -moz-transition-property: opacity, left;
+  -o-transition-property: opacity, left;
+  transition-property: opacity, left;
+  -webkit-transition-duration: 1s;
+  -moz-transition-duration: 1s;
+  -o-transition-duration: 1s;
+  transition-duration: 1s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-transition-delay: 0s;
+  -moz-transition-delay: 0s;
+  -o-transition-delay: 0s;
+  transition-delay: 0s; }
+  #features .row:nth-child(even) {
+    left: -100px; }
+  #features .row:nth-child(odd) {
+    left: 100px; }
+
+#features .row.in-view {
+  opacity: 1;
+  left: 0px; }
 
 #features img {
   max-width: 100%;
@@ -88,6 +115,7 @@ h1 {
   border-radius: 5px;
   box-shadow: 0px -2px 5px #b2b2b2 inset;
   cursor: pointer;
+  /* #${} removes quotation marks */
   -webkit-transition-property: background-color;
   -moz-transition-property: background-color;
   -o-transition-property: background-color;
@@ -140,6 +168,7 @@ nav {
   border-radius: 0px;
   width: 100%;
   z-index: 2;
+  /* #${} removes quotation marks */
   -webkit-transition-property: background-color;
   -moz-transition-property: background-color;
   -o-transition-property: background-color;
@@ -268,6 +297,7 @@ ________________________________________
   box-shadow: 0px -2px 5px #b32f50 inset;
   right: 0;
   float: right;
+  /* #${} removes quotation marks */
   -webkit-transition-property: background-color;
   -moz-transition-property: background-color;
   -o-transition-property: background-color;

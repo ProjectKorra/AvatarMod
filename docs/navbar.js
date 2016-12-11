@@ -1,4 +1,4 @@
-var $;
+var $, $scrollTransition;
 
 addListeners = function() {
   $('a').click(function() {
@@ -12,6 +12,10 @@ addListeners = function() {
       $(this).blur();
   });
 };
+setClassPresent = function($el, cls, present) {
+    if (present && !$el.hasClass(cls)) $el.addClass(cls);
+    if (!present && $el.hasClass(cls)) $el.removeClass(cls);
+}
 checkNav = function() {
     $nav = $("nav");
     if ($(window).scrollTop() < $("#vision").offset().top - 100) {
@@ -19,6 +23,12 @@ checkNav = function() {
     } else {
         if (!$nav.hasClass("not-top")) $nav.addClass("not-top");
     }
+    $scrollTransition.each(function(index, el) {
+        var scrollBottom = $(window).scrollTop() + $(window).height();
+        var elPos = $(el).offset().top + parseInt($(el).attr("data-scroll-transition"));
+        setClassPresent($(el), "in-view", scrollBottom > elPos);
+        console.log(scrollBottom > elPos);
+    });
 }
 
 $(document).ready(function () {
@@ -27,6 +37,7 @@ $(document).ready(function () {
     $("nav").css("border-radius", "0px");
     $("nav").css("margin-bottom", "0px");
     $("nav").css("position", "fixed");
+    $scrollTransition = $("[data-scroll-transition]");
     checkNav();
 });
 
