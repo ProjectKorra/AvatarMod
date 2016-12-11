@@ -315,8 +315,9 @@ ________________________________________
   -o-transition-delay: 0s;
   transition-delay: 0s; }
 
-#nav-download:hover, #nav-download:active {
-  background-color: #b32f50; }
+#nav-download:hover, #nav-download:active, #nav-download.active a {
+  background-color: #b32f50;
+  color: inherit; }
 
 #nav-download-link:hover, #nav-download-link:active {
   background-color: inherit;

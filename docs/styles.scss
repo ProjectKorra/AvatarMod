@@ -324,11 +324,11 @@ ________________________________________
     right: 0;
     float: right;
     @include transition(background-color);
-    
 }
 
-#nav-download:hover, #nav-download:active {
+#nav-download:hover, #nav-download:active, #nav-download.active a {
     background-color: $button-highlight-color - #111;
+    color: inherit;
 }
 
 #nav-download-link:hover, #nav-download-link:active {
