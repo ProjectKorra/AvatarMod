@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
@@ -87,6 +89,10 @@ public class EntityWaterBubble extends AvatarEntity {
 		}
 		if (inWater) {
 			setDead();
+			if (getOwner() != null) {
+				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+				if (data != null) data.removeStatusControl(StatusControl.THROW_BUBBLE);
+			}
 		}
 		
 	}
