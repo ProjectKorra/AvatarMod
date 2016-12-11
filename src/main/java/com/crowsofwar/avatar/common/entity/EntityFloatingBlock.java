@@ -140,6 +140,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		
+		super.entityInit();
 		dataManager.register(SYNC_ENTITY_ID, 0);
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
@@ -150,6 +151,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
 		setBlockState(
 				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
@@ -163,6 +165,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
 		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
 		nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
 		nbt.setDouble("VelocityX", velocity().x());

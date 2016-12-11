@@ -88,6 +88,7 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	protected void entityInit() {
+		super.entityInit();
 		dataManager.register(SYNC_ID, 0);
 		dataManager.register(SYNC_GRAVITY, false);
 	}
@@ -164,11 +165,14 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
 		setDead();
 	}
 	
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {}
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+	}
 	
 	@Override
 	public void setPosition(double x, double y, double z) {
@@ -202,14 +206,25 @@ public abstract class EntityArc extends AvatarEntity {
 		return points[index == 0 ? index : index - 1];
 	}
 	
+	/**
+	 * Get the id of this arc<br />
+	 * NOT TO BE CONFUSED WITH {@link #getAvId()}
+	 */
 	public int getId() {
 		return dataManager.get(SYNC_ID);
 	}
 	
+	/**
+	 * Set the id of this arc<br />
+	 * NOT TO BE CONFUSED WITH {@link #setAvId()}
+	 */
 	public void setId(int id) {
 		dataManager.set(SYNC_ID, id);
 	}
 	
+	/**
+	 * Uses id from {@link #getId()} not {@link #getAvId()}
+	 */
 	public static EntityArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
 			if (obj instanceof EntityArc && ((EntityArc) obj).getId() == id) return (EntityArc) obj;

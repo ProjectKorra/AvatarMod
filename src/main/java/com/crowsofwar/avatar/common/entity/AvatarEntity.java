@@ -17,10 +17,15 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 /**
@@ -32,6 +37,8 @@ public abstract class AvatarEntity extends Entity {
 	
 	private final Vector internalVelocity;
 	private final Vector internalPosition;
+	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityWaterBubble.class,
+			DataSerializers.VARINT);
 	
 	/**
 	 * @param world
@@ -41,6 +48,12 @@ public abstract class AvatarEntity extends Entity {
 		this.internalVelocity = createInternalVelocity();
 		this.internalPosition = new BackedVector(x -> this.posX = x, y -> this.posY = y, z -> this.posZ = z,
 				() -> posX, () -> posY, () -> posZ);
+	}
+	
+	@Override
+	protected void entityInit() {
+		dataManager.register(SYNC_ID,
+				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
 	}
 	
 	/**
@@ -59,6 +72,24 @@ public abstract class AvatarEntity extends Entity {
 		return internalPosition;
 	}
 	
+	public int getAvId() {
+		return dataManager.get(SYNC_ID);
+	}
+	
+	private void setAvId(int id) {
+		dataManager.set(SYNC_ID, id);
+	}
+	
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		setAvId(nbt.getInteger("AvId"));
+	}
+	
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		nbt.setInteger("AvId", getAvId());
+	}
+	
 	//@formatter:off
 	protected Vector createInternalVelocity() {
 		return new BackedVector(
@@ -69,5 +100,5 @@ public abstract class AvatarEntity extends Entity {
 				() -> this.motionY * 20,
 				() -> this.motionZ * 20);
 	}
-		
+	
 }

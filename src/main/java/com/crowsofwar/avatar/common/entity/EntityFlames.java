@@ -72,18 +72,15 @@ public class EntityFlames extends AvatarEntity {
 	}
 	
 	@Override
-	protected void entityInit() {
-		
-	}
-	
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound) {
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		// TODO Support saving/loading of EntityFlames
+		super.readEntityFromNBT(nbt);
 		setDead();
 	}
 	
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound) {
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
 		setDead();
 	}
 	

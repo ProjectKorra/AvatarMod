@@ -20,19 +20,21 @@ package com.crowsofwar.avatar.common.data;
 import com.crowsofwar.gorecore.data.PlayerData;
 import com.crowsofwar.gorecore.data.WorldDataPlayers;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
 	public static final String WORLD_DATA_KEY = "Avatar";
+	private int nextEntityId;
 	
 	public AvatarWorldData() {
 		super(WORLD_DATA_KEY);
-		// TODO Auto-generated constructor stub
+		nextEntityId = 0;
 	}
 	
 	public AvatarWorldData(String key) {
-		super(WORLD_DATA_KEY);
+		this();
 	}
 	
 	@Override
@@ -42,6 +44,23 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
 	public static AvatarWorldData getDataFromWorld(World world) {
 		return getDataForWorld(AvatarWorldData.class, WORLD_DATA_KEY, world, false);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		nextEntityId = nbt.getInteger("NextEntityId");
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("NextEntityId", nextEntityId);
+		return nbt;
+	}
+	
+	public int nextEntityId() {
+		return ++nextEntityId;
 	}
 	
 }

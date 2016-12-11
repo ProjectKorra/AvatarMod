@@ -17,9 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
@@ -55,16 +52,13 @@ public class EntityWaterBubble extends AvatarEntity {
 	 */
 	public EntityWaterBubble(World world) {
 		super(world);
-		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER, newOwner -> {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(newOwner);
-			if (data != null)
-				((WaterbendingState) data.getBendingState(BendingType.WATERBENDING)).setBubble(this);
-		});
+		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
 		setSize(1, 1);
 	}
 	
 	@Override
 	protected void entityInit() {
+		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new WaterBubbleBehavior.Drop());
 	}
 	
@@ -96,6 +90,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(nbt);
 		ownerAttrib.load(compound);
 		setBehavior((WaterBubbleBehavior) Behavior.lookup(compound.getInteger("Behavior"), this));
 		getBehavior().load(compound);
@@ -103,6 +98,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound) {
+		super.writeEntityToNBT(nbt);
 		ownerAttrib.save(compound);
 		compound.setInteger("Behavior", getBehavior().getId());
 		getBehavior().save(compound);

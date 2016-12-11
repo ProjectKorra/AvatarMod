@@ -26,7 +26,6 @@ import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityArc {
@@ -47,21 +46,6 @@ public class EntityAirGust extends EntityArc {
 				|| ticksExisted > 80) {
 			setDead();
 		}
-	}
-	
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-	}
-	
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		setDead();
-	}
-	
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		
 	}
 	
 	@Override
