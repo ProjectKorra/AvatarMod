@@ -162,14 +162,19 @@ h1 {
 }
 
 nav {
-    background-color: black;
+    background: none;
     color: white;
     border-radius: 0px;
     width: 100%;
     z-index: 2;
+    @include transition(background-color, .5s, linear);
     @media(max-width: $collapse) {
         padding-left: 20px;
     }
+}
+
+nav.not-top {
+    background-color: black;
 }
 
 .nav {

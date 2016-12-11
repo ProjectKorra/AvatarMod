@@ -128,14 +128,33 @@ h1 {
   top: 0; }
 
 nav {
-  background-color: black;
+  background: none;
   color: white;
   border-radius: 0px;
   width: 100%;
-  z-index: 2; }
+  z-index: 2;
+  -webkit-transition-property: background-color;
+  -moz-transition-property: background-color;
+  -o-transition-property: background-color;
+  transition-property: background-color;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: linear;
+  -moz-transition-timing-function: linear;
+  -o-transition-timing-function: linear;
+  transition-timing-function: linear;
+  -webkit-transition-delay: 0s;
+  -moz-transition-delay: 0s;
+  -o-transition-delay: 0s;
+  transition-delay: 0s; }
   @media (max-width: 768px) {
     nav {
       padding-left: 20px; } }
+
+nav.not-top {
+  background-color: black; }
 
 .nav {
   width: 100%; }
