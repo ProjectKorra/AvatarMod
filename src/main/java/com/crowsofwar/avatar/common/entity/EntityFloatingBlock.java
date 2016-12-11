@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.getOrCreateNestedCompound;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 import java.util.List;
@@ -174,7 +174,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
-		getBehavior().save(getOrCreateNestedCompound(nbt, "BehaviorData"));
+		getBehavior().save(findNestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
 		ownerAttrib.save(nbt);
 	}

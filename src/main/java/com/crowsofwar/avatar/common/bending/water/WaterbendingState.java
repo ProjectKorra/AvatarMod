@@ -17,10 +17,13 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
+import com.crowsofwar.avatar.common.data.CachedEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 
@@ -31,12 +34,12 @@ import net.minecraft.world.World;
 public class WaterbendingState extends BendingState {
 	
 	private EntityWaterArc waterArc;
-	private EntityWaterBubble waterBubble;
+	private CachedEntity<EntityWaterBubble> waterBubble;
 	
 	public WaterbendingState(AvatarPlayerData data) {
 		super(data);
 		this.waterArc = null;
-		this.waterBubble = null;
+		this.waterBubble = new CachedEntity<>(-1);
 	}
 	
 	public EntityWaterArc getWaterArc() {
@@ -60,22 +63,22 @@ public class WaterbendingState extends BendingState {
 		setWaterArc(null);
 	}
 	
-	public EntityWaterBubble getBubble() {
-		return waterBubble;
+	public EntityWaterBubble getBubble(World world) {
+		return waterBubble.getEntity(world);
 	}
 	
 	public void setBubble(EntityWaterBubble bubble) {
-		this.waterBubble = bubble;
+		this.waterBubble.setEntity(bubble);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		
+		waterBubble.readFromNBT(findNestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		
+		waterBubble.writeToNBT(findNestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override

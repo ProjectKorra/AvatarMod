@@ -48,7 +48,7 @@ public class StatCtrlThrowBubble extends StatusControl {
 		WaterbendingState state = (WaterbendingState) data
 				.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
 		
-		EntityWaterBubble bubble = state.getBubble();
+		EntityWaterBubble bubble = state.getBubble(ctx.getWorld());
 		if (bubble != null) {
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown(bubble));
 			bubble.velocity().set(Vector.fromEntityLook(ctx.getPlayerEntity()).mul(10));
