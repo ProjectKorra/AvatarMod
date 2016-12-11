@@ -42,6 +42,9 @@ h1 {
   padding: 0.2em 0.5em;
   font-weight: normal; }
 
+#features {
+  overflow-x: hidden; }
+
 #features p, #vision p, #download p {
   font-size: 2em;
   font-family: Source Sans Pro;

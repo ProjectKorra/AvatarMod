@@ -76,6 +76,10 @@ h1 {
     font-weight: normal;
 }
 
+#features {
+    overflow-x: hidden;
+}
+
 #features p, #vision p, #download p {
     font-size: 2em;
     font-family: Source Sans Pro;
