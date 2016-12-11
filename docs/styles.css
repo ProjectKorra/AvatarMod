@@ -16,7 +16,7 @@ h1 {
 
 #homepage {
   text-align: center;
-  background-image: url("bg.png");
+  background-image: url("imgs/bg.png");
   background-attachment: fixed;
   width: 100%;
   height: 100%;
@@ -136,7 +136,7 @@ nav {
   width: 100%; }
 
 #navbar-logo {
-  background-image: url("logo_96px_white.png");
+  background-image: url("imgs/logo_96px_white.png");
   background-size: 96px;
   background-repeat: no-repeat;
   /*display: inline-block;*/
@@ -146,15 +146,15 @@ nav {
     #navbar-logo {
       width: 64px;
       background-size: 64px;
-      background-image: url("logo_64px_white.png");
+      background-image: url("imgs/logo_64px_white.png");
       width: 100%;
       background-position: 10px center; } }
 
 #navbar-logo:hover {
-  background-image: url("logo_96px_black.png"); }
+  background-image: url("imgs/logo_96px_black.png"); }
   @media (max-width: 768px) {
     #navbar-logo:hover {
-      background-image: url("logo_64px_black.png"); } }
+      background-image: url("imgs/logo_64px_black.png"); } }
 
 #navbar-logo-parent {
   height: 50px; }
@@ -174,7 +174,7 @@ nav {
 
 #download {
   font-size: 2em;
-  background-image: url("promo.png");
+  background-image: url("imgs/promo.png");
   background-size: cover !important;
   background-repeat: no-repeat;
   padding-top: 1.5em;
