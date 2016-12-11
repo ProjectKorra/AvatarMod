@@ -34,6 +34,7 @@ checkNav = function() {
 $(document).ready(function () {
     $("nav").load("navbar.html", addListeners);
     $("nav").addClass("navbar");
+    $("nav").addClass("navbar-default");
     $("nav").css("border-radius", "0px");
     $("nav").css("margin-bottom", "0px");
     $("nav").css("position", "fixed");
