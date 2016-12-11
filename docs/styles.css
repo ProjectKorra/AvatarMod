@@ -184,12 +184,14 @@ note: "nav"  selector refers to the outer <nav>
   font-size: 2em;
   top: 0; }
 
-nav {
+/* .navbar class for priority over bs styles */
+nav.navbar {
   background: none;
   color: white;
   border-radius: 0px;
   width: 100%;
   z-index: 2;
+  border: none;
   /* #${} removes quotation marks */
   -webkit-transition-property: background-color;
   -moz-transition-property: background-color;
@@ -208,8 +210,17 @@ nav {
   -o-transition-delay: 0s;
   transition-delay: 0s; }
   @media (max-width: 768px) {
-    nav {
+    nav.navbar {
       padding-left: 20px; } }
+
+nav.navbar .navbar-default {
+  background-color: transparent;
+  color: white; }
+
+.navbar-default .navbar-nav > li > a {
+  color: #fff; }
+  .navbar-default .navbar-nav > li > a:hover {
+    color: #ddd; }
 
 nav.not-top {
   background-color: black; }
