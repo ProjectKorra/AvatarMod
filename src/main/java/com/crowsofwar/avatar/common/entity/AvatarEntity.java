@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
@@ -99,6 +101,14 @@ public abstract class AvatarEntity extends Entity {
 				() -> this.motionX * 20,
 				() -> this.motionY * 20,
 				() -> this.motionZ * 20);
+	}
+	
+	/**
+	 * Looks up an entity from the world, given its {@link #getAvId() synced id}. Returns null if not found.
+	 */
+	public static <T extends AvatarEntity> T lookupEntity(World world, int id) {
+		List<AvatarEntity> entities = world.getEntities(AvatarEntity.class, ent -> ent.getAvId() == id);
+		return entities.isEmpty() ? null : (T) entities.get(0);
 	}
 	
 }

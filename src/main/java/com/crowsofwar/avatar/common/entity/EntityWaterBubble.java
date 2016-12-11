@@ -90,7 +90,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound) {
-		super.readEntityFromNBT(nbt);
+		super.readEntityFromNBT(compound);
 		ownerAttrib.load(compound);
 		setBehavior((WaterBubbleBehavior) Behavior.lookup(compound.getInteger("Behavior"), this));
 		getBehavior().load(compound);
@@ -98,7 +98,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound) {
-		super.writeEntityToNBT(nbt);
+		super.writeEntityToNBT(compound);
 		ownerAttrib.save(compound);
 		compound.setInteger("Behavior", getBehavior().getId());
 		getBehavior().save(compound);
