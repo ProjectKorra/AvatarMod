@@ -26,6 +26,21 @@ $col-collapse: 991px;
 
 }
 
+@mixin box($box-orient: vertical) {
+    display: -webkit-box;
+       display: -moz-box;
+            display: box;
+    -webkit-box-orient: $box-orient;
+       -moz-box-orient: $box-orient;
+            box-orient: $box-orient;
+}
+
+@mixin box-ordinal-group($group) {
+    -webkit-box-ordinal-group: $group;
+       -moz-box-ordinal-group: $group;
+            box-ordinal-group: $group;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -107,6 +122,9 @@ h1 {
         left: 100px;
     }
     @include transition("opacity, left", 1s);
+    @media(max-width: $col-collapse) {
+        @include box;
+    }
 }
 
 #features .row.in-view {
@@ -119,6 +137,13 @@ h1 {
     min-width: 50%;
     display: block;
     margin: 0 auto;
+}
+
+#features .col-md-4 {
+    @include box-ordinal-group(2);
+}
+#features .col-md-8 {
+    @include box-ordinal-group(1);
 }
 
 .homepage-text {

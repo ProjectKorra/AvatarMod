@@ -84,6 +84,14 @@ h1 {
     left: -100px; }
   #features .row:nth-child(odd) {
     left: 100px; }
+  @media (max-width: 991px) {
+    #features .row {
+      display: -webkit-box;
+      display: -moz-box;
+      display: box;
+      -webkit-box-orient: vertical;
+      -moz-box-orient: vertical;
+      box-orient: vertical; } }
 
 #features .row.in-view {
   opacity: 1;
@@ -94,6 +102,16 @@ h1 {
   min-width: 50%;
   display: block;
   margin: 0 auto; }
+
+#features .col-md-4 {
+  -webkit-box-ordinal-group: 2;
+  -moz-box-ordinal-group: 2;
+  box-ordinal-group: 2; }
+
+#features .col-md-8 {
+  -webkit-box-ordinal-group: 1;
+  -moz-box-ordinal-group: 1;
+  box-ordinal-group: 1; }
 
 .homepage-text {
   background-color: #222;
