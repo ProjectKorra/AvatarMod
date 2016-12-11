@@ -144,9 +144,9 @@ nav {
   width: 96px; }
   @media (max-width: 768px) {
     #navbar-logo {
+      background-image: url("imgs/logo_64px_white.png");
       width: 64px;
       background-size: 64px;
-      background-image: url("imgs/logo_64px_white.png");
       width: 100%;
       background-position: 10px center; } }
 
@@ -156,6 +156,14 @@ nav {
     #navbar-logo:hover {
       background-image: url("imgs/logo_64px_black.png"); } }
 
+.active #navbar-logo {
+  background-color: #000; }
+  .active #navbar-logo:hover {
+    background-color: #eee; }
+
+.nav-item:focus {
+  background-color: yellow !important; }
+
 #navbar-logo-parent {
   height: 50px; }
   @media (max-width: 768px) {
@@ -164,16 +172,20 @@ nav {
       width: 100%; } }
 
 .nav-link {
-  color: #eee;
+  color: #ccc;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 2em;
   font-weight: 200; }
+
+.nav-item.active .nav-link {
+  background-color: #eee;
+  color: #222; }
 
 #navbar-logo:hover {
   text-decoration: none; }
 
 #download {
-  font-size: 2em;
+  font-size: 2vw;
   background-image: url("imgs/promo.png");
   background-size: cover !important;
   background-repeat: no-repeat;
@@ -283,8 +295,7 @@ footer {
   background-color: #000;
   color: #eee;
   padding: 3em 4em;
-  font-family: "Source Sans Pro", sans-serif;
-  font-size: 1.4em; }
+  font-family: "Source Sans Pro", sans-serif; }
 
 footer .link {
   margin-top: 5px; }
