@@ -150,6 +150,14 @@ h1 {
     background-color: $button-highlight-color - #222;
 }
 
+/*
+NAVBAR
+________________________________________
+
+note: "nav"  selector refers to the outer <nav>
+      ".nav" selector refers to inner <ul class="nav">
+*/
+
 #navbar {
     background-color: black;
     color: white;
@@ -181,7 +189,10 @@ nav.not-top {
     width: 100%;
 }
 
-
+/*
+NAVBAR LOGO
+________________________________________
+*/
 
 #navbar-logo {
     background-image: url("imgs/logo_96px_white.png");
@@ -201,6 +212,7 @@ nav.not-top {
 
 #navbar-logo:hover {
     background-image: url("imgs/logo_96px_black.png");
+    text-decoration: none;
     @media(max-width: $collapse) {
         background-image: url("imgs/logo_64px_black.png");
     }
@@ -213,16 +225,21 @@ nav.not-top {
     }
 }
 
-.nav-item:focus {
-    background-color: yellow !important;
-}
-
 #navbar-logo-parent {
     height: 50px;
     @media(max-width: $collapse) {
         height: 40px;
         width: 100%;
     }
+}
+
+/*
+NAV LINKS
+________________________________________
+*/
+
+.nav-item:focus {
+    background-color: yellow !important;
 }
 
 .nav-link {
@@ -236,8 +253,6 @@ nav.not-top {
     background-color: #eee;
     color: #222;
 }
-
-#navbar-logo:hover { text-decoration: none; }
 
 #download {
     background-image: url("imgs/promo.png");
