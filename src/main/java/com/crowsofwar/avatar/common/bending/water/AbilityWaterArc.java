@@ -51,10 +51,10 @@ public class AbilityWaterArc extends WaterAbility {
 		
 		boolean needsSync = false;
 		
-		if (bendingState.isBendingWater()) {
-			EntityWaterArc water = bendingState.getWaterArc();
+		if (bendingState.getWaterArc(world) != null) {
+			EntityWaterArc water = bendingState.getWaterArc(world);
 			water.setGravityEnabled(true);
-			bendingState.releaseWater();
+			bendingState.setWaterArc(null);
 			needsSync = true;
 		}
 		

@@ -21,7 +21,6 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 
 import javax.annotation.Nullable;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
@@ -35,34 +34,22 @@ import net.minecraft.world.World;
 
 public class WaterbendingState extends BendingState {
 	
-	private EntityWaterArc waterArc;
+	private CachedEntity<EntityWaterArc> waterArc;
 	private CachedEntity<EntityWaterBubble> waterBubble;
 	
 	public WaterbendingState(AvatarPlayerData data) {
 		super(data);
-		this.waterArc = null;
+		this.waterArc = new CachedEntity<>(-1);
 		this.waterBubble = new CachedEntity<>(-1);
 	}
 	
-	public EntityWaterArc getWaterArc() {
-		return waterArc;
+	public EntityWaterArc getWaterArc(World world) {
+		return waterArc.getEntity(world);
 	}
 	
-	public int getWaterArcId() {
-		return waterArc == null ? -1 : waterArc.getId();
-	}
-	
-	public void setWaterArc(EntityWaterArc waterArc) {
-		this.waterArc = waterArc;
+	public void setWaterArc(EntityWaterArc arc) {
+		waterArc.setEntity(arc);
 		save();
-	}
-	
-	public boolean isBendingWater() {
-		return waterArc != null;
-	}
-	
-	public void releaseWater() {
-		setWaterArc(null);
 	}
 	
 	/**
@@ -78,34 +65,30 @@ public class WaterbendingState extends BendingState {
 	 */
 	public void setBubble(@Nullable EntityWaterBubble bubble) {
 		this.waterBubble.setEntity(bubble);
+		save();
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
+		waterArc.readFromNBT(findNestedCompound(nbt, "WaterArc"));
 		waterBubble.readFromNBT(findNestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
+		waterArc.readFromNBT(findNestedCompound(nbt, "WaterArc"));
 		waterBubble.writeToNBT(findNestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
 	public void writeBytes(ByteBuf buf) {
-		buf.writeInt(getWaterArcId());
+		waterArc.toBytes(buf);
 		waterBubble.toBytes(buf);
 	}
 	
 	@Override
 	public void readBytes(ByteBuf buf) {
-		World world = data.getPlayerEntity().worldObj;
-		int id = buf.readInt();
-		EntityWaterArc waterArc = null;
-		if (id > -1) {
-			waterArc = EntityWaterArc.findFromId(world, id);
-			if (waterArc == null) AvatarLog.warn("WaterbendingState- Couldn't find water arc with ID " + id);
-		}
-		setWaterArc(waterArc);
+		waterArc.fromBytes(buf);
 		waterBubble.fromBytes(buf);
 	}
 	

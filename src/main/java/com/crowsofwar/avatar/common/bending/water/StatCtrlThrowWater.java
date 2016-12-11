@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -41,17 +42,18 @@ public class StatCtrlThrowWater extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext context) {
+	public boolean execute(AbilityContext ctx) {
 		
-		EntityPlayer player = context.getPlayerEntity();
-		AvatarPlayerData data = context.getData();
+		EntityPlayer player = ctx.getPlayerEntity();
+		AvatarPlayerData data = ctx.getData();
+		World world = ctx.getWorld();
 		
 		WaterbendingState bendingState = (WaterbendingState) data
 				.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
 		
-		if (bendingState.isBendingWater()) {
+		if (bendingState.getWaterArc(world) != null) {
 			
-			EntityWaterArc water = bendingState.getWaterArc();
+			EntityWaterArc water = bendingState.getWaterArc(world);
 			
 			Vector force = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
@@ -59,7 +61,7 @@ public class StatCtrlThrowWater extends StatusControl {
 			water.velocity().add(force);
 			water.setBehavior(new WaterArcBehavior.Thrown(water));
 			
-			bendingState.releaseWater();
+			bendingState.setWaterArc(null);
 			data.sendBendingState(bendingState);
 			
 			return true;

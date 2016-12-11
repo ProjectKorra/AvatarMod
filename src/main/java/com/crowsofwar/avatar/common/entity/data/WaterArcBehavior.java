@@ -94,9 +94,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				WaterbendingState bendingState = (WaterbendingState) data
 						.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
 				
-				if (bendingState != null && bendingState.isBendingWater()) {
+				if (bendingState != null) {
 					
-					EntityWaterArc water = bendingState.getWaterArc();
+					EntityWaterArc water = bendingState.getWaterArc(world);
 					if (water != null) {
 						
 						Raytrace.Result res = Raytrace.getTargetBlock(player, 3, false);
