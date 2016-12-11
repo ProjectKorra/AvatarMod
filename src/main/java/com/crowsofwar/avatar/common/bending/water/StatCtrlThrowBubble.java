@@ -52,6 +52,7 @@ public class StatCtrlThrowBubble extends StatusControl {
 		if (bubble != null) {
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown(bubble));
 			bubble.velocity().set(Vector.fromEntityLook(ctx.getPlayerEntity()).mul(10));
+			state.setBubble(null);
 		}
 		
 		return true;

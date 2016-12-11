@@ -1,7 +1,10 @@
 package com.crowsofwar.avatar.common.data;
 
+import javax.annotation.Nullable;
+
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -35,6 +38,14 @@ public class CachedEntity<T extends AvatarEntity> {
 		nbt.setInteger("EntityId", entityId);
 	}
 	
+	public void fromBytes(ByteBuf buf) {
+		entityId = buf.readInt();
+	}
+	
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(entityId);
+	}
+	
 	public int getEntityId() {
 		return entityId;
 	}
@@ -48,16 +59,16 @@ public class CachedEntity<T extends AvatarEntity> {
 	 * <p>
 	 * Null if entity cannot be found.
 	 */
-	public T getEntity(World world) {
+	public @Nullable T getEntity(World world) {
 		if (checkCacheValidity() && entityId > -1) {
 			cachedEntity = AvatarEntity.lookupEntity(world, entityId);
 		}
 		return cachedEntity;
 	}
 	
-	public void setEntity(T entity) {
+	public void setEntity(@Nullable T entity) {
 		cachedEntity = entity;
-		entityId = entity.getAvId();
+		entityId = entity == null ? -1 : entity.getAvId();
 	}
 	
 	/**

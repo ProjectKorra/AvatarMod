@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -49,6 +51,7 @@ public class AbilityWaterBubble extends BendingAbility {
 		EntityPlayer player = ctx.getPlayerEntity();
 		AvatarPlayerData data = ctx.getData();
 		World world = ctx.getWorld();
+		WaterbendingState bendingState = (WaterbendingState) data.getBendingState(WATERBENDING);
 		
 		if (ctx.isLookingAtBlock()) {
 			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
@@ -63,6 +66,7 @@ public class AbilityWaterBubble extends BendingAbility {
 				data.addStatusControl(StatusControl.THROW_BUBBLE);
 				data.sync();
 				world.setBlockToAir(lookPos);
+				bendingState.setBubble(bubble);
 			}
 		}
 	}

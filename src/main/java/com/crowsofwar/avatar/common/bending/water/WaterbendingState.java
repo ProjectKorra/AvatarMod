@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 
+import javax.annotation.Nullable;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -63,11 +65,18 @@ public class WaterbendingState extends BendingState {
 		setWaterArc(null);
 	}
 	
-	public EntityWaterBubble getBubble(World world) {
+	/**
+	 * Gets the instance of EntityWaterBubble which the player is currently
+	 * controlling, which is synced across client and server.
+	 */
+	public @Nullable EntityWaterBubble getBubble(World world) {
 		return waterBubble.getEntity(world);
 	}
 	
-	public void setBubble(EntityWaterBubble bubble) {
+	/**
+	 * Sets a synced instance of EntityWaterBubble
+	 */
+	public void setBubble(@Nullable EntityWaterBubble bubble) {
 		this.waterBubble.setEntity(bubble);
 	}
 	
@@ -84,6 +93,7 @@ public class WaterbendingState extends BendingState {
 	@Override
 	public void writeBytes(ByteBuf buf) {
 		buf.writeInt(getWaterArcId());
+		waterBubble.toBytes(buf);
 	}
 	
 	@Override
@@ -96,6 +106,7 @@ public class WaterbendingState extends BendingState {
 			if (waterArc == null) AvatarLog.warn("WaterbendingState- Couldn't find water arc with ID " + id);
 		}
 		setWaterArc(waterArc);
+		waterBubble.fromBytes(buf);
 	}
 	
 	@Override
