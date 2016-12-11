@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro|Oswald|Source+Sans+Pro:200');
 
 $button-color: #e5e5e5;
-$button-highlight-color: #c44061;
+$btn-hi-clr: #c44061;
 $collapse: 768px;
 $col-collapse: 991px;
 
@@ -187,12 +187,12 @@ h1 {
 
 .button.highlight {
     color: #e5e5e5;
-    background-color: $button-highlight-color;
-    box-shadow: 0px -2px 5px ($button-highlight-color - #111) inset;
+    background-color: $btn-hi-clr;
+    box-shadow: 0px -2px 5px ($btn-hi-clr - #111) inset;
 }
 
 .button.highlight:hover {
-    background-color: $button-highlight-color - #222;
+    background-color: $btn-hi-clr - #222;
 }
 
 /*
@@ -346,18 +346,18 @@ ________________________________________
 }
 
 #nav-download {
-    background-color: $button-highlight-color;
+    background-color: $btn-hi-clr;
     float: right;
     margin-right: 0;
     height: 100%;
-    box-shadow: 0px -2px 5px ($button-highlight-color - #111) inset;
+    box-shadow: 0px -2px 5px ($btn-hi-clr - #111) inset;
     right: 0;
     float: right;
     @include transition(background-color);
 }
 
 #nav-download:hover, #nav-download:active, #nav-download.active a {
-    background-color: $button-highlight-color - #111;
+    background-color: $btn-hi-clr - #111;
     color: inherit;
 }
 
@@ -374,33 +374,49 @@ dfn {
 
 .avbtn {
     color: #333;
-    background-color: #eee;
     font-size: 2em;
     text-shadow: 0px 1px 2px #aaa;
     padding: .3em .5em;
     margin: 0 .2em;
-    border-radius: 5px;
+    border-radius: 10px;
+    font-family: "Source Sans Pro", sans-serif;
     border: 2px solid #ddd;
     box-shadow: 0px 0px 2px #ddd inset;
     cursor: pointer;
+    background: linear-gradient(#f2f2f2, #eee);
     
     &:hover {
         text-decoration: none;
         color: #222;
         box-shadow: 0px 0px 4px #ccc inset;
+        background: linear-gradient(#eee, #ddd);
+    }
+    &:focus {
+        color: #222;
+        text-decoration: none;
+    }
+    &:active {
+        background: linear-gradient(#ddd, #eee);
     }
 }
 
 .avbtn-bold {
-    background-color: $button-highlight-color;
-    border-color: $button-highlight-color - #111;
-    box-shadow: 0px 0px 2px ($button-highlight-color - #111) inset;
+    background: linear-gradient($btn-hi-clr + #111, $btn-hi-clr);
+    border-color: $btn-hi-clr + #050505;
+    box-shadow: 0px 0px 2px ($btn-hi-clr - #111) inset;
     color: #eee;
-    text-shadow: 0px 1px 1px #ccc;
+    text-shadow: 0px 1px 2px ($btn-hi-clr - #555);
     
     &:hover {
-        color: #ccc;
-        box-shadow: 0px 0px 4px ($button-highlight-color - #1a1a1a) inset;
+        color: #fff;
+        box-shadow: 0px 0px 4px ($btn-hi-clr - #1a1a1a) inset;
+        background: linear-gradient($btn-hi-clr + #050505, $btn-hi-clr - #050505);
+    }
+    &:focus {
+        color: #fff;
+    }
+    &:active {
+        background: linear-gradient($btn-hi-clr - #050505, $btn-hi-clr + #050505);
     }
 }
 

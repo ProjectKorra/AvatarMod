@@ -352,29 +352,41 @@ dfn {
 
 .avbtn {
   color: #333;
-  background-color: #eee;
   font-size: 2em;
   text-shadow: 0px 1px 2px #aaa;
   padding: .3em .5em;
   margin: 0 .2em;
-  border-radius: 5px;
+  border-radius: 10px;
+  font-family: "Source Sans Pro", sans-serif;
   border: 2px solid #ddd;
   box-shadow: 0px 0px 2px #ddd inset;
-  cursor: pointer; }
+  cursor: pointer;
+  background: linear-gradient(#f2f2f2, #eee); }
   .avbtn:hover {
     text-decoration: none;
     color: #222;
-    box-shadow: 0px 0px 4px #ccc inset; }
+    box-shadow: 0px 0px 4px #ccc inset;
+    background: linear-gradient(#eee, #ddd); }
+  .avbtn:focus {
+    color: #222;
+    text-decoration: none; }
+  .avbtn:active {
+    background: linear-gradient(#ddd, #eee); }
 
 .avbtn-bold {
-  background-color: #c44061;
-  border-color: #b32f50;
+  background: linear-gradient(#d55172, #c44061);
+  border-color: #c94566;
   box-shadow: 0px 0px 2px #b32f50 inset;
   color: #eee;
-  text-shadow: 0px 1px 1px #ccc; }
+  text-shadow: 0px 1px 2px #6f000c; }
   .avbtn-bold:hover {
-    color: #ccc;
-    box-shadow: 0px 0px 4px #aa2647 inset; }
+    color: #fff;
+    box-shadow: 0px 0px 4px #aa2647 inset;
+    background: linear-gradient(#c94566, #bf3b5c); }
+  .avbtn-bold:focus {
+    color: #fff; }
+  .avbtn-bold:active {
+    background: linear-gradient(#bf3b5c, #c94566); }
 
 footer {
   background-color: #000;
