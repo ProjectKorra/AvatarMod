@@ -117,6 +117,13 @@ h1 {
 .button.highlight:hover {
   background-color: #a21e3f; }
 
+/*
+NAVBAR
+________________________________________
+
+note: "nav"  selector refers to the outer <nav>
+      ".nav" selector refers to the inner <ul class="nav">
+*/
 #navbar {
   background-color: black;
   color: white;
@@ -159,6 +166,10 @@ nav.not-top {
 .nav {
   width: 100%; }
 
+/*
+NAVBAR LOGO
+________________________________________
+*/
 #navbar-logo {
   background-image: url("imgs/logo_96px_white.png");
   background-size: 96px;
@@ -173,20 +184,17 @@ nav.not-top {
       background-size: 64px;
       width: 100%;
       background-position: 10px center; } }
+  #navbar-logo:hover {
+    text-decoration: none;
+    background-image: url("imgs/logo_96px_black.png"); }
+    @media (max-width: 768px) {
+      #navbar-logo:hover {
+        background-image: url("imgs/logo_64px_black.png"); } }
 
-#navbar-logo:hover {
-  background-image: url("imgs/logo_96px_black.png"); }
-  @media (max-width: 768px) {
-    #navbar-logo:hover {
-      background-image: url("imgs/logo_64px_black.png"); } }
-
-.active #navbar-logo {
+nav.not-top .active #navbar-logo {
   background-color: #000; }
-  .active #navbar-logo:hover {
+  nav.not-top .active #navbar-logo:hover {
     background-color: #eee; }
-
-.nav-item:focus {
-  background-color: yellow !important; }
 
 #navbar-logo-parent {
   height: 50px; }
@@ -194,6 +202,16 @@ nav.not-top {
     #navbar-logo-parent {
       height: 40px;
       width: 100%; } }
+
+#navbar-logo-parent.active #navbar-logo {
+  background-color: transparent; }
+
+/*
+NAV LINKS
+________________________________________
+*/
+.nav-item:focus {
+  background-color: yellow !important; }
 
 .nav-link {
   color: #ccc;
@@ -204,9 +222,6 @@ nav.not-top {
 .nav-item.active .nav-link {
   background-color: #eee;
   color: #222; }
-
-#navbar-logo:hover {
-  text-decoration: none; }
 
 #download {
   background-image: url("imgs/promo.png");

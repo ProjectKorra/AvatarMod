@@ -155,7 +155,7 @@ NAVBAR
 ________________________________________
 
 note: "nav"  selector refers to the outer <nav>
-      ".nav" selector refers to inner <ul class="nav">
+      ".nav" selector refers to the inner <ul class="nav">
 */
 
 #navbar {
@@ -208,17 +208,16 @@ ________________________________________
         width: 100%;
         background-position: 10px center;
     }
-}
-
-#navbar-logo:hover {
-    background-image: url("imgs/logo_96px_black.png");
-    text-decoration: none;
-    @media(max-width: $collapse) {
-        background-image: url("imgs/logo_64px_black.png");
+    &:hover {
+        text-decoration: none;
+        background-image: url("imgs/logo_96px_black.png");
+        @media(max-width: $collapse) {
+            background-image: url("imgs/logo_64px_black.png");
+        }
     }
 }
 
-.active #navbar-logo {
+nav.not-top .active #navbar-logo {
     background-color: #000;
     &:hover {
         background-color: #eee;
@@ -231,6 +230,10 @@ ________________________________________
         height: 40px;
         width: 100%;
     }
+}
+
+#navbar-logo-parent.active #navbar-logo {
+    background-color: transparent;
 }
 
 /*
