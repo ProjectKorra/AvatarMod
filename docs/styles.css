@@ -381,6 +381,7 @@ dfn {
   font-style: normal; }
 
 .avbtn {
+  display: inline-block;
   color: #333;
   font-size: 2em;
   text-shadow: 0px 1px 2px #aaa;
