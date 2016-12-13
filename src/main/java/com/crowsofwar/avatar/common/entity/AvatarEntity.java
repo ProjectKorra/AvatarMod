@@ -39,7 +39,7 @@ public abstract class AvatarEntity extends Entity {
 	
 	private final Vector internalVelocity;
 	private final Vector internalPosition;
-	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityWaterBubble.class,
+	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
 			DataSerializers.VARINT);
 	
 	/**
