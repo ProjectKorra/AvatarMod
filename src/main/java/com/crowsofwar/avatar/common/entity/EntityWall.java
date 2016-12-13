@@ -19,6 +19,13 @@ public class EntityWall extends AvatarEntity {
 	
 	private static final DataParameter<Integer> SYNC_DIRECTION = EntityDataManager.createKey(EntityWall.class,
 			DataSerializers.VARINT);
+	private static final DataParameter<Integer>[] SYNC_SEGMENTS;
+	static {
+		SYNC_SEGMENTS = new DataParameter[5];
+		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
+			SYNC_SEGMENTS[i] = EntityDataManager.createKey(EntityWall.class, DataSerializers.VARINT);
+		}
+	}
 	
 	/**
 	 * All the segments in this wall. MUST be fixed-length, as the data
@@ -33,11 +40,10 @@ public class EntityWall extends AvatarEntity {
 	 */
 	public EntityWall(World world) {
 		super(world);
-		this.segments = new SyncableEntityReference[] { new SyncableEntityReference<>(this, EntityWall.class),
-				new SyncableEntityReference<>(this, EntityWall.class),
-				new SyncableEntityReference<>(this, EntityWall.class),
-				new SyncableEntityReference<>(this, EntityWall.class),
-				new SyncableEntityReference<>(this, EntityWall.class) };
+		this.segments = new SyncableEntityReference[5];
+		for (int i = 0; i < segments.length; i++) {
+			segments[i] = new SyncableEntityReference(this, SYNC_SEGMENTS[i]);
+		}
 	}
 	
 	@Override

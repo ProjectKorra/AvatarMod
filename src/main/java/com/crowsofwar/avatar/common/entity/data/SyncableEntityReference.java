@@ -4,8 +4,6 @@ import com.crowsofwar.avatar.common.data.CachedEntity;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 
 /**
  * Like {@link CachedEntity}, but allows access to the server/client
@@ -28,15 +26,14 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	 * @param entity
 	 *            The entity that is USING the reference, usually
 	 *            <code>this</code>. Not the entity being referenced
-	 * @param cls
-	 *            Class of who instantiates this. May not necessarily be
-	 *            <code>entity.getClass()</code> in the case of subclasses
+	 * @param sync
+	 *            DataParameter used to sync. Should NOT be created specifically
+	 *            for this SyncableEntityReference - use a constant
 	 */
-	public <E extends AvatarEntity> SyncableEntityReference(E entity, Class<E> cls) {
+	public <E extends AvatarEntity> SyncableEntityReference(E entity, DataParameter<Integer> sync) {
 		this.using = entity;
-		this.sync = EntityDataManager.createKey(cls, DataSerializers.VARINT);
+		this.sync = sync;
 		this.cache = new CachedEntity<T>(-1);
-		entity.getDataManager().register(sync, -1);
 	}
 	
 	public T getEntity() {
