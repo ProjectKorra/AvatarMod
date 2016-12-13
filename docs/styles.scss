@@ -250,6 +250,10 @@ nav.not-top {
     z-index: 1031;
 }
 
+.navbar-collapse {
+    padding-right: 0;
+}
+
 .navbar-collapse.in, .navbar-collapse.collapsing {
     background-color: black !important;
 }
@@ -318,6 +322,40 @@ ________________________________________
     color: #222;
 }
 
+#nav-download {
+    background-color: $btn-hi-clr;
+    float: right;
+    margin-right: 0;
+    height: 100%;
+    box-shadow: 0px -2px 5px ($btn-hi-clr - #111) inset;
+    right: 0;
+    float: right;
+    @include transition(background-color);
+}
+
+#nav-download:hover, #nav-download:active, #nav-download.active a {
+    background-color: $btn-hi-clr - #111;
+    color: inherit;
+}
+
+#nav-download-link:hover, #nav-download-link:active {
+    background-color: inherit;
+    color: inherit;
+}
+
+.navbar-collapse.in #nav-download, .navbar-collapse.collapsing #nav-download {
+    width: 100%;
+}
+
+.navbar-default .navbar-toggle:focus {
+    background-color: transparent;
+}
+
+/*
+moar stuffs
+________________________________________
+*/
+
 #download {
     background-image: url("imgs/promo.png");
     background-size: cover !important;
@@ -363,27 +401,6 @@ ________________________________________
     text-decoration: none;
     margin: 0 1em;
     height: 100%;
-}
-
-#nav-download {
-    background-color: $btn-hi-clr;
-    float: right;
-    margin-right: 0;
-    height: 100%;
-    box-shadow: 0px -2px 5px ($btn-hi-clr - #111) inset;
-    right: 0;
-    float: right;
-    @include transition(background-color);
-}
-
-#nav-download:hover, #nav-download:active, #nav-download.active a {
-    background-color: $btn-hi-clr - #111;
-    color: inherit;
-}
-
-#nav-download-link:hover, #nav-download-link:active {
-    background-color: inherit;
-    color: inherit;
 }
 
 dfn {
