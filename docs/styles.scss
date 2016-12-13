@@ -363,6 +363,7 @@ ________________________________________
     padding-top: 1.5em;
     margin-top: 2em;
     border-top: 20px solid #222;
+    overflow: none; /* prevent .fg-text causing scrollbar */
 }
 
 .fg-text {
@@ -374,10 +375,21 @@ ________________________________________
     box-shadow: 0px 0px 2px black;
     text-shadow: 0px 1px 1px #333;
     padding-bottom: 1em;
+    min-width: 500px;
+    max-width: 730px;
 }
 
 .fg-text.lg {
     width: 65%;
+}
+
+#homepage {
+    overflow: none;
+}
+#homepage .fg-text {
+    width: 65%;
+    min-width: 600px;
+    max-width: 850px;
 }
 
 #download h1 {
