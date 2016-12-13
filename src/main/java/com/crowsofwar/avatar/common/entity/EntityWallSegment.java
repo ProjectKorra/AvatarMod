@@ -22,8 +22,13 @@ public class EntityWallSegment extends AvatarEntity {
 		return wallReference.getEntity();
 	}
 	
-	public void setWall(EntityWall wall) {
+	/**
+	 * Allows this segment to reference the wall, and allows the wall to
+	 * reference this segment.
+	 */
+	public void attachToWall(EntityWall wall) {
 		wallReference.setEntity(wall);
+		wall.addSegment(this);
 	}
 	
 }

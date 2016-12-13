@@ -46,7 +46,10 @@ public class EntityWall extends AvatarEntity {
 		dataManager.register(SYNC_DIRECTION, NORTH.ordinal());
 	}
 	
-	public void addSegment(EntityWallSegment segment) {
+	/**
+	 * To be used ONLY by {@link EntityWallSegment}
+	 */
+	void addSegment(EntityWallSegment segment) {
 		segments[nextSegment].setEntity(segment);
 		nextSegment++;
 	}

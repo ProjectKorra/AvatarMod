@@ -5,6 +5,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.entity.EntityWall;
+import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +27,13 @@ public class AbilityWall extends BendingAbility {
 		BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
 		if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(lookPos).getBlock())) {
 			System.out.println("BEND A WALL");
-			
+			EntityWall wall = new EntityWall(world);
+			for (int i = 0; i < 5; i++) {
+				EntityWallSegment seg = new EntityWallSegment(world);
+				seg.attachToWall(wall);
+				world.spawnEntityInWorld(seg);
+			}
+			world.spawnEntityInWorld(wall);
 		}
 		
 	}
