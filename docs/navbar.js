@@ -27,7 +27,6 @@ checkNav = function() {
         var scrollBottom = $(window).scrollTop() + $(window).height();
         var elPos = $(el).offset().top + parseInt($(el).attr("data-scroll-transition"));
         setClassPresent($(el), "in-view", scrollBottom > elPos);
-        console.log(scrollBottom > elPos);
     });
 }
 
