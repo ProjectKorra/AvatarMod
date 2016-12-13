@@ -26,6 +26,7 @@ public class EntityWallSegment extends AvatarEntity {
 	
 	@Override
 	public void entityInit() {
+		super.entityInit();
 		dataManager.register(SYNC_WALL, -1);
 	}
 	
