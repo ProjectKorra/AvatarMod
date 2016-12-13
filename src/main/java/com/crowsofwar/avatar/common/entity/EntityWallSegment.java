@@ -24,6 +24,11 @@ public class EntityWallSegment extends AvatarEntity {
 		this.wallReference = new SyncableEntityReference<>(this, SYNC_WALL);
 	}
 	
+	@Override
+	public void entityInit() {
+		dataManager.register(SYNC_WALL, -1);
+	}
+	
 	public EntityWall getWall() {
 		return wallReference.getEntity();
 	}

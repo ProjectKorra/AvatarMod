@@ -50,6 +50,9 @@ public class EntityWall extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DIRECTION, NORTH.ordinal());
+		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
+			dataManager.register(SYNC_SEGMENTS[i], -1);
+		}
 	}
 	
 	/**
