@@ -67,7 +67,7 @@ public class CachedEntity<T extends AvatarEntity> {
 	}
 	
 	/**
-	 * Sets the cached entity. Can be set to null.
+	 * Sets the entity Id and cache. Can be set to null.
 	 */
 	public void setEntity(@Nullable T entity) {
 		cachedEntity = entity;
