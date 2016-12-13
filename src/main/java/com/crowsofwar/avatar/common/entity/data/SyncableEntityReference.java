@@ -27,7 +27,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	 * 
 	 * @param entity
 	 *            The entity that is USING the reference, usually
-	 *            <code>this</code>
+	 *            <code>this</code>. Not the entity being referenced
 	 * @param cls
 	 *            Class of who instantiates this. May not necessarily be
 	 *            <code>entity.getClass()</code> in the case of subclasses

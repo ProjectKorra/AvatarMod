@@ -1,10 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.CachedEntity;
+import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 /**
@@ -14,27 +11,19 @@ import net.minecraft.world.World;
  */
 public class EntityWallSegment extends AvatarEntity {
 	
-	private static final DataParameter<Integer> SYNC_WALL_ID = EntityDataManager
-			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
-	
-	private CachedEntity<EntityWall> wall;
+	private final SyncableEntityReference<EntityWall> wallReference;
 	
 	public EntityWallSegment(World world) {
 		super(world);
-	}
-	
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		dataManager.register(SYNC_WALL_ID, -1);
+		this.wallReference = new SyncableEntityReference<>(this, EntityWallSegment.class);
 	}
 	
 	public EntityWall getWall() {
-		return wall.getEntity(worldObj);
+		return wallReference.getEntity();
 	}
 	
 	public void setWall(EntityWall wall) {
-		this.wall.setEntity(wall);
+		wallReference.setEntity(wall);
 	}
 	
 }
