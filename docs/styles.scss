@@ -250,6 +250,10 @@ nav.not-top {
     z-index: 1031;
 }
 
+.navbar-collapse.in, .navbar-collapse.collapsing {
+    background-color: black !important;
+}
+
 /*
 NAVBAR LOGO
 ________________________________________
