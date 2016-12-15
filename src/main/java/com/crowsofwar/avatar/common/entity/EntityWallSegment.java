@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
-import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -93,18 +92,24 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void applyEntityCollision(Entity entity) {
 		
-		double amt = .3;
+		double amt = 0.4;
 		
-		Vector midPos = new Vector(this);
-		Vector theirPos = new Vector(entity);
-		if (midPos.z() > theirPos.z()) {
-			entity.motionZ = -amt;
-		} else {
+		// entity.motionZ = velocity;
+		if (entity.posZ > this.posZ) {
+			entity.posZ = this.posZ + 1.1;
 			entity.motionZ = amt;
+		} else {
+			entity.posZ = this.posZ - 1.1;
+			entity.motionZ = -amt;
 		}
+		entity.motionY = .25;
+		
 		entity.isAirBorne = true;
 		if (entity instanceof EntityPlayerMP) {
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+		}
+		if (entity instanceof AvatarEntity) {
+			// ((AvatarEntity) entity).velocity().setZ(velocity);
 		}
 	}
 	
