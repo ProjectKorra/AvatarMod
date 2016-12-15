@@ -1,9 +1,11 @@
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 import static net.minecraft.util.EnumFacing.NORTH;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -85,6 +87,20 @@ public class EntityWall extends AvatarEntity {
 			if (ref.getEntity() != null) ref.getEntity().isDead = true;
 		}
 		super.setDead();
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		for (int i = 0; i < segments.length; i++)
+			segments[i].readFromNBT(findNestedCompound(nbt, "Wall" + i));
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		for (int i = 0; i < segments.length; i++)
+			segments[i].writeToNBT(findNestedCompound(nbt, "Wall" + i));
 	}
 	
 }

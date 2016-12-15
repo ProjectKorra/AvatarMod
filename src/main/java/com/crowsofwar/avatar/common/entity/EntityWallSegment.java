@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -97,6 +98,18 @@ public class EntityWallSegment extends AvatarEntity {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).velocity().setZ(amt);
 		}
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		wallReference.readFromNBT(nbt);
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		wallReference.writeToNBT(nbt);
 	}
 	
 }

@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity.data;
 import com.crowsofwar.avatar.common.data.CachedEntity;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 
 /**
@@ -46,6 +47,22 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	public void setEntity(T entity) {
 		cache.setEntity(entity);
 		using.getDataManager().set(sync, cache.getEntityId());
+	}
+	
+	/**
+	 * Reads this reference from NBT. Please note, reads values directly from
+	 * this compound (no sub-compound).
+	 */
+	public void readFromNBT(NBTTagCompound nbt) {
+		cache.readFromNBT(nbt);
+	}
+	
+	/**
+	 * Writes this reference from NBT. Please note, writes values directly from
+	 * this compound (no sub-compound).
+	 */
+	public void writeToNBT(NBTTagCompound nbt) {
+		cache.writeToNBT(nbt);
 	}
 	
 }

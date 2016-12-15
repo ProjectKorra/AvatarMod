@@ -81,7 +81,8 @@ public class CachedEntity<T extends AvatarEntity> {
 	 * @return whether cache is invalid; if true the cached entity is null
 	 */
 	private boolean checkCacheValidity() {
-		if (entityId < 0 || cachedEntity == null || cachedEntity.isDead) {
+		if (entityId < 0 || cachedEntity == null || cachedEntity.isDead
+				|| cachedEntity.getAvId() != entityId) {
 			cachedEntity = null;
 			return true;
 		}
