@@ -44,4 +44,10 @@ public class EntityWallSegment extends AvatarEntity {
 		wall.addSegment(this);
 	}
 	
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (getWall() != null) getWall().setDead();
+	}
+	
 }

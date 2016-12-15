@@ -78,4 +78,12 @@ public class EntityWall extends AvatarEntity {
 		this.dataManager.set(SYNC_DIRECTION, direction.ordinal());
 	}
 	
+	@Override
+	public void setDead() {
+		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+			// don't use setDead() as that will trigger this being called again
+			if (ref.getEntity() != null) ref.getEntity().isDead = true;
+		}
+	}
+	
 }
