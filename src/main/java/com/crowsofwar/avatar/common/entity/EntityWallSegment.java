@@ -1,12 +1,17 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
+import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
@@ -55,6 +60,7 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		this.noClip = false;
 		// System.out.println(this.getWall());
 	}
 	
@@ -72,6 +78,34 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public boolean canBeCollidedWith() {
 		return true;
+	}
+	
+	@Override
+	public AxisAlignedBB getCollisionBox(Entity entityIn) {
+		return getEntityBoundingBox();
+	}
+	
+	@Override
+	public boolean canBePushed() {
+		return true;
+	}
+	
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		
+		double amt = .3;
+		
+		Vector midPos = new Vector(this);
+		Vector theirPos = new Vector(entity);
+		if (midPos.z() > theirPos.z()) {
+			entity.motionZ = -amt;
+		} else {
+			entity.motionZ = amt;
+		}
+		entity.isAirBorne = true;
+		if (entity instanceof EntityPlayerMP) {
+			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+		}
 	}
 	
 }
