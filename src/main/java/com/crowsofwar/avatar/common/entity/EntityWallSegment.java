@@ -22,6 +22,7 @@ public class EntityWallSegment extends AvatarEntity {
 	public EntityWallSegment(World world) {
 		super(world);
 		this.wallReference = new SyncableEntityReference<>(this, SYNC_WALL);
+		this.setSize(1, 5);
 	}
 	
 	@Override

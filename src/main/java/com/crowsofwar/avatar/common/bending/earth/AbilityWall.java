@@ -28,9 +28,11 @@ public class AbilityWall extends BendingAbility {
 		if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(lookPos).getBlock())) {
 			System.out.println("BEND A WALL");
 			EntityWall wall = new EntityWall(world);
+			wall.setPosition(lookPos.getX(), lookPos.getY(), lookPos.getZ());
 			for (int i = 0; i < 5; i++) {
 				EntityWallSegment seg = new EntityWallSegment(world);
 				seg.attachToWall(wall);
+				seg.setPosition(lookPos.getX() - 2 + i, lookPos.getY(), lookPos.getZ());
 				world.spawnEntityInWorld(seg);
 			}
 			world.spawnEntityInWorld(wall);
