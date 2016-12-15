@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -48,6 +49,16 @@ public class EntityWallSegment extends AvatarEntity {
 	public void setDead() {
 		super.setDead();
 		if (getWall() != null) getWall().setDead();
+	}
+	
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if (!this.isDead && !worldObj.isRemote) {
+			setDead();
+			setBeenAttacked();
+			return true;
+		}
+		return false;
 	}
 	
 }
