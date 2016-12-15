@@ -260,6 +260,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		
+		super.onUpdate();
+		
 		extinguish();
 		
 		if (ticksExisted == 1) {
@@ -361,7 +363,13 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	public boolean canBeCollidedWith() {
-		return false;
+		return true;
+	}
+	
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		System.out.println("BlockHit " + entity);// EntityPlayer
+		super.applyEntityCollision(entity);
 	}
 	
 }

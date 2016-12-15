@@ -28,6 +28,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
@@ -102,13 +105,65 @@ public abstract class AvatarEntity extends Entity {
 				() -> this.motionY * 20,
 				() -> this.motionZ * 20);
 	}
+	//@formatter:on
 	
 	/**
-	 * Looks up an entity from the world, given its {@link #getAvId() synced id}. Returns null if not found.
+	 * Looks up an entity from the world, given its {@link #getAvId() synced id}
+	 * . Returns null if not found.
 	 */
 	public static <T extends AvatarEntity> T lookupEntity(World world, int id) {
 		List<AvatarEntity> entities = world.getEntities(AvatarEntity.class, ent -> ent.getAvId() == id);
 		return entities.isEmpty() ? null : (T) entities.get(0);
+	}
+	
+	@Override
+	public boolean canBeCollidedWith() {
+		return true;
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		collideWithNearbyEntities();
+	}
+	
+	// copied from EntityLivingBase
+	protected void collideWithNearbyEntities() {
+		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
+				EntitySelectors.<Entity> getTeamCollisionPredicate(this));
+		
+		if (!list.isEmpty()) {
+			int i = this.worldObj.getGameRules().getInt("maxEntityCramming");
+			
+			if (i > 0 && list.size() > i - 1 && this.rand.nextInt(4) == 0) {
+				int j = 0;
+				
+				for (int k = 0; k < list.size(); ++k) {
+					if (!((Entity) list.get(k)).isRiding()) {
+						++j;
+					}
+				}
+				
+				if (j > i - 1) {
+					this.attackEntityFrom(DamageSource.field_191291_g, 6.0F);
+				}
+			}
+			
+			for (int l = 0; l < list.size(); ++l) {
+				Entity entity = (Entity) list.get(l);
+				entity.applyEntityCollision(this);
+			}
+		}
+	}
+	
+	@Override
+	public AxisAlignedBB getCollisionBox(Entity entityIn) {
+		return getEntityBoundingBox();
+	}
+	
+	@Override
+	public boolean canBePushed() {
+		return true;
 	}
 	
 }

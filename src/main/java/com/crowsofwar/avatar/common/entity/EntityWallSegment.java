@@ -10,7 +10,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
@@ -75,22 +74,9 @@ public class EntityWallSegment extends AvatarEntity {
 	}
 	
 	@Override
-	public boolean canBeCollidedWith() {
-		return true;
-	}
-	
-	@Override
-	public AxisAlignedBB getCollisionBox(Entity entityIn) {
-		return getEntityBoundingBox();
-	}
-	
-	@Override
-	public boolean canBePushed() {
-		return true;
-	}
-	
-	@Override
 	public void applyEntityCollision(Entity entity) {
+		
+		System.out.println("Hit " + entity);
 		
 		double amt = 0.4;
 		
