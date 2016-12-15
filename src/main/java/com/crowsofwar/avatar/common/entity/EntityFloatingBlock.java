@@ -368,8 +368,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	public void applyEntityCollision(Entity entity) {
-		System.out.println("BlockHit " + entity);// EntityPlayer
-		super.applyEntityCollision(entity);
+		// super.applyEntityCollision(entity);
+		// entity.applyEntityCollision(entity);
 	}
 	
 }

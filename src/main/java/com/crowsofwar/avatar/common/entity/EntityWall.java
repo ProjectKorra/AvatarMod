@@ -84,6 +84,7 @@ public class EntityWall extends AvatarEntity {
 			// don't use setDead() as that will trigger this being called again
 			if (ref.getEntity() != null) ref.getEntity().isDead = true;
 		}
+		super.setDead();
 	}
 	
 }

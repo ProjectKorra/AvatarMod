@@ -83,11 +83,11 @@ public class EntityWallSegment extends AvatarEntity {
 		// entity.motionZ = velocity;
 		if (entity.posZ > this.posZ) {
 			entity.posZ = this.posZ + 1.1;
-			entity.motionZ = amt;
 		} else {
+			amt = -amt;
 			entity.posZ = this.posZ - 1.1;
-			entity.motionZ = -amt;
 		}
+		entity.motionZ = amt;
 		entity.motionY = .25;
 		
 		entity.isAirBorne = true;
@@ -95,7 +95,7 @@ public class EntityWallSegment extends AvatarEntity {
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 		}
 		if (entity instanceof AvatarEntity) {
-			// ((AvatarEntity) entity).velocity().setZ(velocity);
+			((AvatarEntity) entity).velocity().setZ(amt);
 		}
 	}
 	
