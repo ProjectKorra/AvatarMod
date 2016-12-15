@@ -3,10 +3,13 @@ package com.crowsofwar.avatar.common.entity;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
+import com.google.common.base.Optional;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -22,8 +25,19 @@ import net.minecraft.world.World;
  */
 public class EntityWallSegment extends AvatarEntity {
 	
+	public static final int SEGMENT_HEIGHT = 5;
+	
 	private static final DataParameter<Integer> SYNC_WALL = EntityDataManager
 			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
+	
+	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
+	static {
+		SYNC_BLOCKS_DATA = new DataParameter[SEGMENT_HEIGHT];
+		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
+			SYNC_BLOCKS_DATA[i] = EntityDataManager.createKey(EntityWallSegment.class,
+					DataSerializers.OPTIONAL_BLOCK_STATE);
+		}
+	}
 	
 	private final SyncableEntityReference<EntityWall> wallReference;
 	
@@ -37,6 +51,9 @@ public class EntityWallSegment extends AvatarEntity {
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_WALL, -1);
+		for (DataParameter<Optional<IBlockState>> sync : SYNC_BLOCKS_DATA)
+			dataManager.register(sync, Optional.of(Blocks.STONE.getDefaultState()));
+		
 	}
 	
 	public EntityWall getWall() {
@@ -50,6 +67,14 @@ public class EntityWallSegment extends AvatarEntity {
 	public void attachToWall(EntityWall wall) {
 		wallReference.setEntity(wall);
 		wall.addSegment(this);
+	}
+	
+	public IBlockState getBlock(int i) {
+		return dataManager.get(SYNC_BLOCKS_DATA[i]).orNull();
+	}
+	
+	public void setBlock(int i, IBlockState block) {
+		dataManager.set(SYNC_BLOCKS_DATA[i], block == null ? Optional.absent() : Optional.of(block));
 	}
 	
 	@Override
@@ -71,6 +96,11 @@ public class EntityWallSegment extends AvatarEntity {
 		if (!this.isDead && !worldObj.isRemote) {
 			setDead();
 			setBeenAttacked();
+			
+			for (int i = 0; i < SEGMENT_HEIGHT; i++) {
+				System.out.println("Dropping " + getBlock(i));
+			}
+			
 			return true;
 		}
 		return false;
