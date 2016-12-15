@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 
 import net.minecraft.entity.Entity;
@@ -77,7 +79,8 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void applyEntityCollision(Entity entity) {
 		
-		System.out.println("Hit " + entity);
+		// System.out.println("Hit " + entity);
+		System.out.println(wallReference.getEntity());
 		
 		double amt = 0.4;
 		
@@ -103,13 +106,15 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		wallReference.readFromNBT(nbt);
+		wallReference.readFromNBT(findNestedCompound(nbt, "Parent"));
+		System.out.println("Reading... " + findNestedCompound(nbt, "Parent"));
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		wallReference.writeToNBT(nbt);
+		wallReference.writeToNBT(findNestedCompound(nbt, "Parent"));
+		System.out.println("Writing... " + findNestedCompound(nbt, "Parent"));
 	}
 	
 }

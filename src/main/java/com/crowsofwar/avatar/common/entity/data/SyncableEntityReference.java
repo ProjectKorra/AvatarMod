@@ -55,6 +55,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	 */
 	public void readFromNBT(NBTTagCompound nbt) {
 		cache.readFromNBT(nbt);
+		using.getDataManager().set(sync, cache.getEntityId());
 	}
 	
 	/**
