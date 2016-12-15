@@ -2,10 +2,11 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 /**
@@ -52,13 +53,25 @@ public class EntityWallSegment extends AvatarEntity {
 	}
 	
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount) {
+	public void onUpdate() {
+		super.onUpdate();
+		// System.out.println(this.getWall());
+	}
+	
+	@Override
+	public boolean processInitialInteract(EntityPlayer player, EnumHand stack) {
+		System.out.println("Attacked");// EntityItemFrame Minecraft
 		if (!this.isDead && !worldObj.isRemote) {
 			setDead();
 			setBeenAttacked();
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean canBeCollidedWith() {
+		return true;
 	}
 	
 }
