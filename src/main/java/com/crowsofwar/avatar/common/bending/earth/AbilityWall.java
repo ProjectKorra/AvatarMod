@@ -33,7 +33,7 @@ public class AbilityWall extends BendingAbility {
 			for (int i = 0; i < 5; i++) {
 				
 				int x = lookPos.getX() - 2 + i;
-				int y = lookPos.getY(), z = lookPos.getZ();
+				int y = lookPos.getY() + 1, z = lookPos.getZ();
 				
 				EntityWallSegment seg = new EntityWallSegment(world);
 				seg.attachToWall(wall);
