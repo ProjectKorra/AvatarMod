@@ -5,6 +5,7 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.google.common.base.Optional;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -94,7 +95,9 @@ public class EntityWallSegment extends AvatarEntity {
 		if (!worldObj.isRemote) {
 			for (int i = 0; i < SEGMENT_HEIGHT; i++) {
 				System.out.println("Dropping " + getBlock(i));
-				entityDropItem(new ItemStack(getBlock(i).getBlock()), i);
+				IBlockState state = getBlock(i);
+				Block block = state.getBlock();
+				entityDropItem(new ItemStack(state.getBlock(), 1, block.getMetaFromState(state)), i);
 			}
 		}
 	}
