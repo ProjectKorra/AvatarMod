@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -35,6 +36,10 @@ public class AbilityWall extends BendingAbility {
 				EntityWallSegment seg = new EntityWallSegment(world);
 				seg.attachToWall(wall);
 				seg.setPosition(x - 2 + i, y, z);
+				for (int j = 0; j < EntityWallSegment.SEGMENT_HEIGHT - 1; j++) {
+					seg.setBlock(j, Blocks.DIRT.getDefaultState());
+				}
+				seg.setBlock(4, Blocks.GRASS.getDefaultState());
 				world.spawnEntityInWorld(seg);
 			}
 			world.spawnEntityInWorld(wall);

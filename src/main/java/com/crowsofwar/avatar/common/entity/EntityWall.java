@@ -84,7 +84,11 @@ public class EntityWall extends AvatarEntity {
 	public void setDead() {
 		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
 			// don't use setDead() as that will trigger this being called again
-			if (ref.getEntity() != null) ref.getEntity().isDead = true;
+			EntityWallSegment entity = ref.getEntity();
+			if (entity != null) {
+				entity.isDead = true;
+				entity.dropBlocks();
+			}
 		}
 		super.setDead();
 	}

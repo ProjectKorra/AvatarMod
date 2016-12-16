@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -80,14 +81,28 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void setDead() {
 		super.setDead();
-		if (getWall() != null) getWall().setDead();
+		if (getWall() != null)
+			getWall().setDead();
+		else
+			dropBlocks();
+	}
+	
+	/**
+	 * Drops any blocks contained by this segment
+	 */
+	public void dropBlocks() {
+		if (!worldObj.isRemote) {
+			for (int i = 0; i < SEGMENT_HEIGHT; i++) {
+				System.out.println("Dropping " + getBlock(i));
+				entityDropItem(new ItemStack(getBlock(i).getBlock()), i);
+			}
+		}
 	}
 	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		this.noClip = false;
-		// System.out.println(this.getWall());
 	}
 	
 	@Override
@@ -96,11 +111,6 @@ public class EntityWallSegment extends AvatarEntity {
 		if (!this.isDead && !worldObj.isRemote) {
 			setDead();
 			setBeenAttacked();
-			
-			for (int i = 0; i < SEGMENT_HEIGHT; i++) {
-				System.out.println("Dropping " + getBlock(i));
-			}
-			
 			return true;
 		}
 		return false;
