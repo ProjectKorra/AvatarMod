@@ -57,7 +57,7 @@ public class StatCtrlThrowFire extends StatusControl {
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
 			fire.velocity().add(force);
-			fire.setBehavior(new FireArcBehavior.Thrown(fire));
+			fire.setBehavior(new FireArcBehavior.Thrown());
 			
 			bendingState.setNoFireArc();
 			data.sendBendingState(bendingState);

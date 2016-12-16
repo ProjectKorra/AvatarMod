@@ -70,7 +70,7 @@ public class AbilityWaterArc extends WaterAbility {
 				bendingState.setWaterArc(water);
 				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
 				
-				water.setBehavior(new WaterArcBehavior.PlayerControlled(water, player));
+				water.setBehavior(new WaterArcBehavior.PlayerControlled());
 				
 				world.spawnEntityInWorld(water);
 				

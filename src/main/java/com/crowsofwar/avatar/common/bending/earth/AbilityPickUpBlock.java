@@ -83,7 +83,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 					double dist = 2.5;
 					Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
 					floating.velocity().add(force);
-					floating.setBehavior(new FloatingBlockBehavior.PickUp(floating));
+					floating.setBehavior(new FloatingBlockBehavior.PickUp());
 					floating.setOwner(player);
 					floating.setDamageMult(.75f + xp / 100);
 					

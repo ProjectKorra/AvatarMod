@@ -59,7 +59,7 @@ public class StatCtrlThrowWater extends StatusControl {
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
 			water.velocity().add(force);
-			water.setBehavior(new WaterArcBehavior.Thrown(water));
+			water.setBehavior(new WaterArcBehavior.Thrown());
 			
 			bendingState.setWaterArc(null);
 			data.sendBendingState(bendingState);
