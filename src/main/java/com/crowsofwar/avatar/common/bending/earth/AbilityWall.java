@@ -40,7 +40,9 @@ public class AbilityWall extends BendingAbility {
 				seg.setPosition(x + .5, y, z + .5);
 				
 				for (int j = 0; j < EntityWallSegment.SEGMENT_HEIGHT; j++) {
-					seg.setBlock(j, world.getBlockState(new BlockPos(x, y + j - 5, z)));
+					BlockPos pos = new BlockPos(x, y + j - 5, z);
+					seg.setBlock(j, world.getBlockState(pos));
+					world.setBlockToAir(pos);
 				}
 				
 				world.spawnEntityInWorld(seg);
