@@ -11,13 +11,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -97,7 +97,12 @@ public class EntityWallSegment extends AvatarEntity {
 				System.out.println("Dropping " + getBlock(i));
 				IBlockState state = getBlock(i);
 				Block block = state.getBlock();
-				entityDropItem(new ItemStack(state.getBlock(), 1, block.getMetaFromState(state)), i);
+				// entityDropItem(new ItemStack(state.getBlock(), 1,
+				// block.getMetaFromState(state)), i);
+				
+				// put back
+				worldObj.setBlockState(new BlockPos(this).down(5 - i), state);
+				
 			}
 		}
 	}
