@@ -62,20 +62,10 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		ID_THROWN = registerBehavior(Thrown.class);
 	}
 	
-	public FloatingBlockBehavior() {}
-	
-	public FloatingBlockBehavior(EntityFloatingBlock entity) {
-		super(entity);
-	}
-	
-	protected void applyGravity() {
-		entity.velocity().add(0, -9.81 / 20, 0);
-	}
-	
 	public static class DoNothing extends FloatingBlockBehavior {
 		
 		@Override
-		public FloatingBlockBehavior onUpdate() {
+		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			return this;
 		}
 		
@@ -104,7 +94,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		}
 		
 		@Override
-		public FloatingBlockBehavior onUpdate() {
+		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY() + 0.25, placeAt.getZ() + 0.5);
 			Vector thisPos = new Vector(entity);
 			Vector force = placeAtVec.minus(thisPos);
@@ -151,17 +141,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 	
 	public static class Thrown extends FloatingBlockBehavior {
 		
-		public Thrown() {}
-		
-		/**
-		 * @param entity
-		 */
-		public Thrown(EntityFloatingBlock entity) {
-			super(entity);
-		}
-		
 		@Override
-		public FloatingBlockBehavior onUpdate() {
+		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			
 			if (entity.isCollided) {
 				if (!entity.worldObj.isRemote) entity.setDead();
@@ -171,7 +152,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				
 			}
 			
-			applyGravity();
+			entity.velocity().add(0, -9.81 / 20, 0);
 			
 			World world = entity.worldObj;
 			if (!entity.isDead) {
@@ -180,7 +161,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						collision((EntityLivingBase) collided);
+						collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
 						motion.mul(0.3);
@@ -195,7 +176,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 		}
 		
-		private void collision(EntityLivingBase collided) {
+		private void collision(EntityLivingBase collided, EntityFloatingBlock entity) {
 			// Add damage
 			double speed = entity.velocity().magnitude();
 			collided.attackEntityFrom(
@@ -239,18 +220,9 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 	
 	public static class PickUp extends FloatingBlockBehavior {
 		
-		public PickUp() {}
-		
-		/**
-		 * @param entity
-		 */
-		public PickUp(EntityFloatingBlock entity) {
-			super(entity);
-		}
-		
 		@Override
-		public FloatingBlockBehavior onUpdate() {
-			applyGravity();
+		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
+			entity.velocity().add(0, -9.81 / 20, 0);
 			
 			Vector velocity = entity.velocity();
 			if (velocity.y() <= 0) {
@@ -280,17 +252,11 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		public PlayerControlled() {}
 		
-		public PlayerControlled(EntityFloatingBlock entity, EntityPlayer player) {
-			super(entity);
-		}
-		
-		private EntityPlayer getControllingPlayer() {
-			return entity.getOwner();
-		}
+		public PlayerControlled(EntityFloatingBlock entity, EntityPlayer player) {}
 		
 		@Override
-		public FloatingBlockBehavior onUpdate() {
-			EntityPlayer player = getControllingPlayer();
+		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
+			EntityPlayer player = entity.getOwner();
 			
 			if (player == null) return this;
 			
@@ -325,8 +291,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 	public static class Fall extends FloatingBlockBehavior {
 		
 		@Override
-		public FloatingBlockBehavior onUpdate() {
-			applyGravity();
+		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
+			entity.velocity().add(0, -9.81 / 20, 0);
 			return this;
 		}
 		

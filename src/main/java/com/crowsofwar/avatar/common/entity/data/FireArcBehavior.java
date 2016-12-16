@@ -56,32 +56,16 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 		
 	}
 	
-	public FireArcBehavior() {}
-	
-	public FireArcBehavior(EntityFireArc water) {
-		super(water);
-	}
-	
-	protected void applyGravity() {
-		entity.velocity().add(0, -9.81 / 60, 0);
-	}
-	
 	public static class PlayerControlled extends FireArcBehavior {
 		
 		public PlayerControlled() {}
 		
-		public PlayerControlled(EntityFireArc arc, EntityPlayer player) {
-			super(arc);
-		}
-		
-		private EntityPlayer getPlayer() {
-			return entity.getOwner();
-		}
+		public PlayerControlled(EntityFireArc arc, EntityPlayer player) {}
 		
 		@Override
-		public FireArcBehavior onUpdate() {
+		public FireArcBehavior onUpdate(EntityFireArc entity) {
 			
-			EntityPlayer player = getPlayer();
+			EntityPlayer player = entity.getOwner();
 			if (player == null) {
 				return this;
 			}
@@ -132,15 +116,9 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 	
 	public static class Thrown extends FireArcBehavior {
 		
-		public Thrown() {}
-		
-		public Thrown(EntityFireArc arc) {
-			super(arc);
-		}
-		
 		@Override
-		public FireArcBehavior onUpdate() {
-			applyGravity();
+		public FireArcBehavior onUpdate(EntityFireArc entity) {
+			entity.velocity().add(0, -9.81 / 60, 0);
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().expandXyz(0.9),
@@ -181,14 +159,8 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 	
 	public static class Idle extends FireArcBehavior {
 		
-		public Idle() {}
-		
-		public Idle(EntityFireArc arc) {
-			super(arc);
-		}
-		
 		@Override
-		public FireArcBehavior onUpdate() {
+		public FireArcBehavior onUpdate(EntityFireArc entity) {
 			return this;
 		}
 		

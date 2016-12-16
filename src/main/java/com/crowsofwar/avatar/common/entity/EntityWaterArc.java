@@ -131,8 +131,7 @@ public class EntityWaterArc extends EntityArc {
 			lastPlayedSplash++;
 			if (lastPlayedSplash > 20) lastPlayedSplash = -1;
 		}
-		getBehavior().setEntity(this);
-		getBehavior().onUpdate();
+		getBehavior().onUpdate(this);
 		
 		for (int x = 0; x <= 1; x++) {
 			for (int z = 0; z <= 1; z++) {

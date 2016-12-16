@@ -59,30 +59,12 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	
 	public WaterArcBehavior() {}
 	
-	public WaterArcBehavior(EntityWaterArc water) {
-		super(water);
-	}
-	
-	protected void applyGravity() {
-		entity.velocity().add(0, -9.81 / 50, 0);
-	}
-	
 	public static class PlayerControlled extends WaterArcBehavior {
 		
-		public PlayerControlled() {}
-		
-		public PlayerControlled(EntityWaterArc arc, EntityPlayer player) {
-			super(arc);
-		}
-		
-		private EntityPlayer getPlayer() {
-			return entity.getOwner();
-		}
-		
 		@Override
-		public WaterArcBehavior onUpdate() {
+		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			
-			EntityPlayer player = getPlayer();
+			EntityPlayer player = entity.getOwner();
 			if (player == null) {
 				return this;
 			}
@@ -144,15 +126,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	
 	public static class Thrown extends WaterArcBehavior {
 		
-		public Thrown() {}
-		
-		public Thrown(EntityWaterArc arc) {
-			super(arc);
-		}
-		
 		@Override
-		public WaterArcBehavior onUpdate() {
-			applyGravity();
+		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
+			entity.velocity().add(0, -9.81 / 60, 0);
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().expandXyz(0.9),
@@ -193,14 +169,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	
 	public static class Idle extends WaterArcBehavior {
 		
-		public Idle() {}
-		
-		public Idle(EntityWaterArc arc) {
-			super(arc);
-		}
-		
 		@Override
-		public WaterArcBehavior onUpdate() {
+		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			return this;
 		}
 		

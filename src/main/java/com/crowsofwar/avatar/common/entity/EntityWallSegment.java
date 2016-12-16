@@ -122,7 +122,7 @@ public class EntityWallSegment extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		this.noClip = false;
-		WallBehavior next = (WallBehavior) getBehavior().onUpdate();
+		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
 	}
 	

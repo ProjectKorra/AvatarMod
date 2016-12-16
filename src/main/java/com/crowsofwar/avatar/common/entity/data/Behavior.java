@@ -36,10 +36,15 @@ import net.minecraft.network.datasync.DataSerializers;
  * update tick. Typically, behaviors are static inner classes, where the outer
  * class extends Behavior and is the superclass of the inner classes.
  * <p>
- * The custom behaviors must be registered via {@link #registerBehavior(Class)}.
- * There also is probably a {@link BehaviorSerializer data serializer} to
- * synchronize server and client, so the data serializer should be registed with
+ * All custom behaviors must be registered via {@link #registerBehavior(Class)}.
+ * As Behaviors are most commonly synced with DataManager, a
+ * {@link BehaviorSerializer data serializer} is needed to synchronize server
+ * and client. It should be registered with
  * {@link DataSerializers#registerSerializer(DataSerializer)}.
+ * <p>
+ * Make sure that subclasses receive the instance of entity. For server-side
+ * changing of behavior, call {@link #Behavior(Entity) the constructor with
+ * Entity argument}. Client-side
  * 
  * @param E
  *            Type of entity this behavior is for
@@ -72,7 +77,6 @@ public abstract class Behavior<E extends Entity> {
 		try {
 			
 			Behavior behavior = behaviorIdToClass.get(id).newInstance();
-			behavior.entity = entity;
 			return behavior;
 			
 		} catch (Exception e) {
@@ -84,22 +88,7 @@ public abstract class Behavior<E extends Entity> {
 		}
 	}
 	
-	/**
-	 * The entity that this Behavior is attached to.
-	 * <p>
-	 * NOTE: Is null during client-side construction from packet buffer.
-	 */
-	protected E entity;
-	
 	public Behavior() {}
-	
-	public Behavior(E entity) {
-		setEntity(entity);
-	}
-	
-	public void setEntity(E entity) {
-		this.entity = entity;
-	}
 	
 	public int getId() {
 		return classToBehaviorId.get(getClass());
@@ -111,7 +100,7 @@ public abstract class Behavior<E extends Entity> {
 	 * @return Next Behavior. Return <code>this</code> to continue the Behavior.
 	 *         Never return null.
 	 */
-	public abstract Behavior onUpdate();
+	public abstract Behavior onUpdate(E entity);
 	
 	public abstract void fromBytes(PacketBuffer buf);
 	

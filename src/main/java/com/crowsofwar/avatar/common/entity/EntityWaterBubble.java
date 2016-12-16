@@ -72,10 +72,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		velocity().mul(0.9);
 		
 		WaterBubbleBehavior currentBehavior = getBehavior();
-		currentBehavior.setEntity(this); // CRITICAL: Otherwise the behavior
-											// does not use correct instance of
-											// entity
-		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate();
+		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate(this);
 		if (currentBehavior != nextBehavior) setBehavior(nextBehavior);
 		
 		if (ticksExisted % 5 == 0) {
