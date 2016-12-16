@@ -41,6 +41,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -118,6 +119,7 @@ public class AvatarMod {
 		WaterArcBehavior.register();
 		FireArcBehavior.register();
 		WaterBubbleBehavior.register();
+		WallBehavior.register();
 		
 		AvatarChatMessages.loadAll();
 		
