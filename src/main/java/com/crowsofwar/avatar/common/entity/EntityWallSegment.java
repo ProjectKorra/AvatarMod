@@ -105,7 +105,6 @@ public class EntityWallSegment extends AvatarEntity {
 	public void dropBlocks() {
 		if (!worldObj.isRemote) {
 			for (int i = 0; i < SEGMENT_HEIGHT; i++) {
-				System.out.println("Dropping " + getBlock(i));
 				IBlockState state = getBlock(i);
 				Block block = state.getBlock();
 				// entityDropItem(new ItemStack(state.getBlock(), 1,
@@ -121,7 +120,10 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		this.noClip = false;
+		velocity().setX(0);
+		velocity().setZ(0);
+		position().add(velocity().dividedBy(20));
+		setPosition(position().x(), position().y(), position().z());
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
 	}

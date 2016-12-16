@@ -27,7 +27,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			entity.velocity().add(0, -4 / 20, 0);
+			entity.velocity().add(0, -7.0 / 20, 0);
 			if (entity.isCollided) {
 				// also drops blocks
 				entity.setDead();
@@ -55,12 +55,17 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			if (ticks == 0)
+			// not 0 since client missed 0th tick
+			if (ticks == 1)
 				entity.velocity().set(0, 5, 0);
 			else
 				entity.velocity().setY(entity.velocity().y() * 0.9);
-			ticks++;
-			return entity.velocity().y() <= 0.2 ? new Waiting() : this;
+			
+			// For some reason, the same entity instance is on server/client,
+			// but has different world reference when this is called...?
+			if (!entity.worldObj.isRemote) ticks++;
+			
+			return ticks > 5 && entity.velocity().y() <= 0.2 ? new Waiting() : this;
 		}
 		
 		@Override
