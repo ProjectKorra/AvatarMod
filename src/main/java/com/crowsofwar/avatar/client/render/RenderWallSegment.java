@@ -33,38 +33,34 @@ public class RenderWallSegment extends Render<EntityWallSegment> {
 		
 		for (int i = 0; i < EntityWallSegment.SEGMENT_HEIGHT; i++) {
 			IBlockState block = entity.getBlock(i);
-			if (block != null) renderBlock(block, entity, x, y + i, z);
+			if (block != null) renderBlock(block, entity, x, y + i, z, new BlockPos(entity).up(i));
 		}
 		
 	}
 	
-	private void renderBlock(IBlockState iblockstate, EntityWallSegment entity, double x, double y,
-			double z) {
+	private void renderBlock(IBlockState blockState, EntityWallSegment entity, double x, double y, double z,
+			BlockPos pos) {
 		Tessellator tessellator = Tessellator.getInstance();
 		
-		if (iblockstate.getRenderType() == EnumBlockRenderType.MODEL) {
+		if (blockState.getRenderType() == EnumBlockRenderType.MODEL) {
 			
-			if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
+			if (blockState.getRenderType() != EnumBlockRenderType.INVISIBLE) {
 				this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 				GlStateManager.pushMatrix();
 				GlStateManager.disableLighting();
-				VertexBuffer vertexbuffer = tessellator.getBuffer();
+				VertexBuffer vb = tessellator.getBuffer();
 				
 				if (this.renderOutlines) {
 					GlStateManager.enableColorMaterial();
 					GlStateManager.enableOutlineMode(this.getTeamColor(entity));
 				}
 				
-				vertexbuffer.begin(7, DefaultVertexFormats.BLOCK);
-				BlockPos blockpos = new BlockPos(entity.posX, entity.getEntityBoundingBox().maxY,
-						entity.posZ);
-				GlStateManager.translate(x - blockpos.getX() - 0.5, y - blockpos.getY(),
-						z - blockpos.getZ() - 0.5);
-				BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft()
-						.getBlockRendererDispatcher();
-				blockrendererdispatcher.getBlockModelRenderer().renderModel(entity.worldObj,
-						blockrendererdispatcher.getModelForState(iblockstate), iblockstate, blockpos,
-						vertexbuffer, false, 0);
+				vb.begin(7, DefaultVertexFormats.BLOCK);
+				GlStateManager.translate(x - pos.getX() - 0.5, y - pos.getY(), z - pos.getZ() - 0.5);
+				BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
+				
+				brd.getBlockModelRenderer().renderModel(entity.worldObj, brd.getModelForState(blockState),
+						blockState, pos, vb, true, 0);
 				tessellator.draw();
 				
 				if (this.renderOutlines) {
