@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
+import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.google.common.base.Optional;
 
 import net.minecraft.block.Block;
@@ -31,6 +32,8 @@ public class EntityWallSegment extends AvatarEntity {
 	
 	private static final DataParameter<Integer> SYNC_WALL = EntityDataManager
 			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
+	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
 	
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
 	static {
@@ -55,7 +58,7 @@ public class EntityWallSegment extends AvatarEntity {
 		dataManager.register(SYNC_WALL, -1);
 		for (DataParameter<Optional<IBlockState>> sync : SYNC_BLOCKS_DATA)
 			dataManager.register(sync, Optional.of(Blocks.STONE.getDefaultState()));
-		
+		dataManager.register(SYNC_BEHAVIOR, new WallBehavior.Rising());
 	}
 	
 	public EntityWall getWall() {
@@ -77,6 +80,14 @@ public class EntityWallSegment extends AvatarEntity {
 	
 	public void setBlock(int i, IBlockState block) {
 		dataManager.set(SYNC_BLOCKS_DATA[i], block == null ? Optional.absent() : Optional.of(block));
+	}
+	
+	public WallBehavior getBehavior() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+	
+	public void setBehavior(WallBehavior behavior) {
+		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
 	@Override
@@ -111,6 +122,8 @@ public class EntityWallSegment extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		this.noClip = false;
+		WallBehavior next = (WallBehavior) getBehavior().onUpdate();
+		if (getBehavior() != next) setBehavior(next);
 	}
 	
 	@Override
