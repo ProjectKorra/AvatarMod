@@ -4,11 +4,13 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
+import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -111,7 +113,7 @@ public class EntityWallSegment extends AvatarEntity {
 				// block.getMetaFromState(state)), i);
 				
 				// put back
-				worldObj.setBlockState(new BlockPos(this).down(5 - i), state);
+				worldObj.setBlockState(new BlockPos(this).up(i), state);
 				
 			}
 		}
@@ -122,8 +124,8 @@ public class EntityWallSegment extends AvatarEntity {
 		super.onUpdate();
 		velocity().setX(0);
 		velocity().setZ(0);
-		position().add(velocity().dividedBy(20));
-		setPosition(position().x(), position().y(), position().z());
+		Vector vec = velocity().dividedBy(20);
+		moveEntity(MoverType.SELF, vec.x(), vec.y(), vec.z());
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
 	}
