@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -25,6 +26,12 @@ public class RenderWallSegment extends Render<EntityWallSegment> {
 	
 	public RenderWallSegment(RenderManager renderManager) {
 		super(renderManager);
+	}
+	
+	@Override
+	public boolean shouldRender(EntityWallSegment livingEntity, ICamera camera, double camX, double camY,
+			double camZ) {
+		return true;
 	}
 	
 	@Override
