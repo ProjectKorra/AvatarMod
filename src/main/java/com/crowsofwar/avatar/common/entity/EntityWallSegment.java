@@ -132,8 +132,7 @@ public class EntityWallSegment extends AvatarEntity {
 	
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand stack) {
-		System.out.println("Attacked");// EntityItemFrame Minecraft
-		if (!this.isDead && !worldObj.isRemote) {
+		if (!this.isDead && !worldObj.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
 			setDead();
 			setBeenAttacked();
 			return true;
