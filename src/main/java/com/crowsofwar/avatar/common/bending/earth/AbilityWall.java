@@ -33,14 +33,14 @@ public class AbilityWall extends BendingAbility {
 			for (int i = 0; i < 5; i++) {
 				
 				int x = lookPos.getX() - 2 + i;
-				int y = lookPos.getY() + 1, z = lookPos.getZ();
+				int y = lookPos.getY() - 4, z = lookPos.getZ();
 				
 				EntityWallSegment seg = new EntityWallSegment(world);
 				seg.attachToWall(wall);
 				seg.setPosition(x + .5, y, z + .5);
 				
 				for (int j = 0; j < EntityWallSegment.SEGMENT_HEIGHT; j++) {
-					BlockPos pos = new BlockPos(x, y + j - 5, z);
+					BlockPos pos = new BlockPos(x, y + j, z);
 					seg.setBlock(j, world.getBlockState(pos));
 					world.setBlockToAir(pos);
 				}
