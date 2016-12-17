@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -86,5 +87,9 @@ public class RenderWallSegment extends Render<EntityWallSegment> {
 	protected ResourceLocation getEntityTexture(EntityWallSegment entity) {
 		return null;
 	}
+	
+	@Override
+	public void doRenderShadowAndFire(Entity entityIn, double x, double y, double z, float yaw,
+			float partialTicks) {}
 	
 }
