@@ -57,7 +57,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		public Behavior onUpdate(EntityWallSegment entity) {
 			// not 0 since client missed 0th tick
 			if (ticks == 1)
-				entity.velocity().set(0, 5, 0);
+				entity.velocity().set(0, 10, 0);
 			else
 				entity.velocity().setY(entity.velocity().y() * 0.9);
 			
