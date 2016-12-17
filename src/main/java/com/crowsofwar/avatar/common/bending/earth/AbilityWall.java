@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -23,17 +24,22 @@ public class AbilityWall extends BendingAbility {
 	public void execute(AbilityContext ctx) {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
+		EnumFacing cardinal = player.getHorizontalFacing();
 		
 		BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
 		if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(lookPos).getBlock())) {
 			System.out.println("BEND A WALL");
 			EntityWall wall = new EntityWall(world);
-			
+			// Minecraft
 			wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
 			for (int i = 0; i < 5; i++) {
 				
-				int x = lookPos.getX() - 2 + i;
-				int y = lookPos.getY() - 4, z = lookPos.getZ();
+				int horizMod = -2 + i;
+				int x = lookPos.getX()
+						+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
+				int y = lookPos.getY() - 4;
+				int z = lookPos.getZ()
+						+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
 				
 				EntityWallSegment seg = new EntityWallSegment(world);
 				seg.attachToWall(wall);
