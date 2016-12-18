@@ -7,7 +7,6 @@ import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -52,6 +51,7 @@ public class EntityWallSegment extends AvatarEntity {
 	 * direction that all wall-segments are facing towards. Only set on server.
 	 */
 	private EnumFacing direction;
+	private int blocksOffset = 0;
 	
 	public EntityWallSegment(World world) {
 		super(world);
@@ -82,11 +82,13 @@ public class EntityWallSegment extends AvatarEntity {
 	}
 	
 	public IBlockState getBlock(int i) {
-		return dataManager.get(SYNC_BLOCKS_DATA[i]).orNull();
+		IBlockState state = dataManager.get(SYNC_BLOCKS_DATA[i]).orNull();
+		return state == null ? Blocks.AIR.getDefaultState() : state;
 	}
 	
 	public void setBlock(int i, IBlockState block) {
-		dataManager.set(SYNC_BLOCKS_DATA[i], block == null ? Optional.absent() : Optional.of(block));
+		dataManager.set(SYNC_BLOCKS_DATA[i],
+				block == null ? Optional.of(Blocks.AIR.getDefaultState()) : Optional.of(block));
 	}
 	
 	public WallBehavior getBehavior() {
@@ -99,6 +101,10 @@ public class EntityWallSegment extends AvatarEntity {
 	
 	public void setDirection(EnumFacing dir) {
 		this.direction = dir;
+	}
+	
+	public int getBlocksOffset() {
+		return blocksOffset;
 	}
 	
 	@Override
@@ -116,12 +122,9 @@ public class EntityWallSegment extends AvatarEntity {
 	public void dropBlocks() {
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
 			IBlockState state = getBlock(i);
-			Block block = state.getBlock();
-			// entityDropItem(new ItemStack(state.getBlock(), 1,
-			// block.getMetaFromState(state)), i);
 			
-			// put back
-			worldObj.setBlockState(new BlockPos(this).up(i), state);
+			if (state.getBlock() != Blocks.AIR)
+				worldObj.setBlockState(new BlockPos(this).up(i + blocksOffset), state);
 			
 		}
 	}
@@ -135,6 +138,21 @@ public class EntityWallSegment extends AvatarEntity {
 		moveEntity(MoverType.SELF, vec.x(), vec.y(), vec.z());
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
+		if (height == 5) {
+			for (int i = SEGMENT_HEIGHT - 1; i >= 0; i--) {
+				if (getBlock(i).getBlock() == Blocks.AIR) {
+					// System.out.println("Air@" + i);
+					// 0->-1, 1->0, 2->1, 3->2,
+					setSize(.9f, 5 - i - 1);
+					int f = 1;
+					position().add(0, f, 0);
+					blocksOffset = 1000;
+					System.out.println("Air at " + i);
+					System.out.println("h=" + height);
+					System.out.println("f=" + f);
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -151,7 +169,7 @@ public class EntityWallSegment extends AvatarEntity {
 	public void applyEntityCollision(Entity entity) {
 		
 		// Note... only called server-side
-		
+		if (2 % 2 == 0) return;
 		double amt = 0.4;
 		
 		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;

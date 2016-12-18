@@ -90,7 +90,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		public Behavior onUpdate(EntityWallSegment entity) {
 			entity.velocity().set(0, 0, 0);
 			ticks++;
-			return ticks < 200 ? this : new Drop();
+			return ticks < 40 ? this : new Drop();
 		}
 		
 		@Override

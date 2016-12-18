@@ -41,7 +41,9 @@ public class RenderWallSegment extends Render<EntityWallSegment> {
 		
 		for (int i = 0; i < EntityWallSegment.SEGMENT_HEIGHT; i++) {
 			IBlockState block = entity.getBlock(i);
+			GlStateManager.translate(0, entity.getBlocksOffset(), 0);
 			if (block != null) renderBlock(block, entity, x, y + i, z, new BlockPos(entity).up(i));
+			GlStateManager.translate(0, -entity.getBlocksOffset(), 0);
 		}
 		
 	}
