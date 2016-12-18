@@ -8,7 +8,9 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -46,10 +48,13 @@ public class AbilityWall extends BendingAbility {
 				seg.setPosition(x + .5, y, z + .5);
 				seg.setDirection(cardinal);
 				
-				for (int j = 0; j < EntityWallSegment.SEGMENT_HEIGHT; j++) {
+				boolean air = false;
+				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
 					BlockPos pos = new BlockPos(x, y + j, z);
-					seg.setBlock(j, world.getBlockState(pos));
-					world.setBlockToAir(pos);
+					IBlockState state = world.getBlockState(pos);
+					if (!STATS_CONFIG.bendableBlocks.contains(state.getBlock())) air = true;
+					seg.setBlock(j, air ? Blocks.AIR.getDefaultState() : state);
+					if (!air) world.setBlockToAir(pos);
 				}
 				
 				world.spawnEntityInWorld(seg);
