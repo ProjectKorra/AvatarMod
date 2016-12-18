@@ -67,8 +67,9 @@ public class RenderWallSegment extends Render<EntityWallSegment> {
 				GlStateManager.translate(x - pos.getX() - 0.5, y - pos.getY(), z - pos.getZ() - 0.5);
 				BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
 				
+				GlStateManager.translate(0, -1, 0);
 				brd.getBlockModelRenderer().renderModel(entity.worldObj, brd.getModelForState(blockState),
-						blockState, pos, vb, false, 0);
+						blockState, pos.up(), vb, false, 0);
 				tessellator.draw();
 				
 				if (this.renderOutlines) {
