@@ -105,17 +105,15 @@ public class EntityWallSegment extends AvatarEntity {
 	 * Drops any blocks contained by this segment
 	 */
 	public void dropBlocks() {
-		if (!worldObj.isRemote) {
-			for (int i = 0; i < SEGMENT_HEIGHT; i++) {
-				IBlockState state = getBlock(i);
-				Block block = state.getBlock();
-				// entityDropItem(new ItemStack(state.getBlock(), 1,
-				// block.getMetaFromState(state)), i);
-				
-				// put back
-				worldObj.setBlockState(new BlockPos(this).up(i), state);
-				
-			}
+		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
+			IBlockState state = getBlock(i);
+			Block block = state.getBlock();
+			// entityDropItem(new ItemStack(state.getBlock(), 1,
+			// block.getMetaFromState(state)), i);
+			
+			// put back
+			worldObj.setBlockState(new BlockPos(this).up(i), state);
+			
 		}
 	}
 	
