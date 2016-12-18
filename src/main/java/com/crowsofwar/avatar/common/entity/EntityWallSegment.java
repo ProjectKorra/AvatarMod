@@ -19,6 +19,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -47,6 +48,10 @@ public class EntityWallSegment extends AvatarEntity {
 	}
 	
 	private final SyncableEntityReference<EntityWall> wallReference;
+	/**
+	 * direction that all wall-segments are facing towards. Only set on server.
+	 */
+	private EnumFacing direction;
 	
 	public EntityWallSegment(World world) {
 		super(world);
@@ -90,6 +95,10 @@ public class EntityWallSegment extends AvatarEntity {
 	
 	public void setBehavior(WallBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	public void setDirection(EnumFacing dir) {
+		this.direction = dir;
 	}
 	
 	@Override
@@ -141,16 +150,33 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void applyEntityCollision(Entity entity) {
 		
+		// Note... only called server-side
+		
 		double amt = 0.4;
 		
-		// entity.motionZ = velocity;
-		if (entity.posZ > this.posZ) {
-			entity.posZ = this.posZ + 1.1;
+		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
+		if (ns) {
+			if (entity.posZ > this.posZ) {
+				entity.posZ = this.posZ + 1.1;
+			} else {
+				amt = -amt;
+				entity.posZ = this.posZ - 1.1;
+			}
 		} else {
-			amt = -amt;
-			entity.posZ = this.posZ - 1.1;
+			if (entity.posX > this.posX) {
+				entity.posX = this.posX + 1.1;
+			} else {
+				amt = -amt;
+				entity.posX = this.posX - 1.1;
+			}
 		}
-		entity.motionZ = amt;
+		
+		if (ns) {
+			entity.motionZ = amt;
+		} else {
+			entity.motionX = amt;
+		}
+		
 		entity.motionY = .25;
 		
 		entity.isAirBorne = true;
@@ -158,7 +184,11 @@ public class EntityWallSegment extends AvatarEntity {
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 		}
 		if (entity instanceof AvatarEntity) {
-			((AvatarEntity) entity).velocity().setZ(amt);
+			Vector velocity = ((AvatarEntity) entity).velocity();
+			if (ns)
+				velocity.setZ(amt);
+			else
+				velocity.setX(amt);
 		}
 	}
 	

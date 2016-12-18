@@ -44,6 +44,7 @@ public class AbilityWall extends BendingAbility {
 				EntityWallSegment seg = new EntityWallSegment(world);
 				seg.attachToWall(wall);
 				seg.setPosition(x + .5, y, z + .5);
+				seg.setDirection(cardinal);
 				
 				for (int j = 0; j < EntityWallSegment.SEGMENT_HEIGHT; j++) {
 					BlockPos pos = new BlockPos(x, y + j, z);
