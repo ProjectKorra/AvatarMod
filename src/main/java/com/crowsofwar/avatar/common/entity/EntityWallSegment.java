@@ -144,12 +144,13 @@ public class EntityWallSegment extends AvatarEntity {
 					// System.out.println("Air@" + i);
 					// 0->-1, 1->0, 2->1, 3->2,
 					setSize(.9f, 5 - i - 1);
-					int f = 1;
+					int f = -i - 1;
 					position().add(0, f, 0);
-					blocksOffset = 1000;
+					blocksOffset = f;
 					System.out.println("Air at " + i);
 					System.out.println("h=" + height);
 					System.out.println("f=" + f);
+					break;
 				}
 			}
 		}
