@@ -57,7 +57,10 @@ public abstract class AvatarEntity extends Entity {
 	public AvatarEntity(World world) {
 		super(world);
 		this.internalVelocity = createInternalVelocity();
-		this.internalPosition = new BackedVector(x -> this.posX = x, y -> this.posY = y, z -> this.posZ = z,
+		this.internalPosition = new BackedVector(//
+				x -> setPosition(x, posY, posZ), //
+				y -> setPosition(posX, y, posZ), //
+				z -> setPosition(posX, posY, z), //
 				() -> posX, () -> posY, () -> posZ);
 		this.putsOutFires = false;
 	}

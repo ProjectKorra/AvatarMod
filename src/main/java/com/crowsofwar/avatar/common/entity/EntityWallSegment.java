@@ -32,6 +32,10 @@ public class EntityWallSegment extends AvatarEntity {
 	
 	public static final int SEGMENT_HEIGHT = 5;
 	
+	private static final DataParameter<Integer> SYNC_HEIGHT = EntityDataManager
+			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> SYNC_OFFSET = EntityDataManager
+			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
 	private static final DataParameter<Integer> SYNC_WALL = EntityDataManager
 			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
 	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
@@ -51,7 +55,6 @@ public class EntityWallSegment extends AvatarEntity {
 	 * direction that all wall-segments are facing towards. Only set on server.
 	 */
 	private EnumFacing direction;
-	private int blocksOffset = 0;
 	
 	public EntityWallSegment(World world) {
 		super(world);
@@ -62,6 +65,8 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void entityInit() {
 		super.entityInit();
+		dataManager.register(SYNC_HEIGHT, SEGMENT_HEIGHT);
+		dataManager.register(SYNC_OFFSET, 0);
 		dataManager.register(SYNC_WALL, -1);
 		for (DataParameter<Optional<IBlockState>> sync : SYNC_BLOCKS_DATA)
 			dataManager.register(sync, Optional.of(Blocks.STONE.getDefaultState()));
@@ -103,8 +108,20 @@ public class EntityWallSegment extends AvatarEntity {
 		this.direction = dir;
 	}
 	
+	public int getSyncedHeight() {
+		return dataManager.get(SYNC_HEIGHT);
+	}
+	
+	public void setSyncedHeight(int height) {
+		dataManager.set(SYNC_HEIGHT, height);
+	}
+	
 	public int getBlocksOffset() {
-		return blocksOffset;
+		return dataManager.get(SYNC_OFFSET);
+	}
+	
+	public void setBlocksOffset(int offset) {
+		dataManager.set(SYNC_OFFSET, offset);
 	}
 	
 	@Override
@@ -124,7 +141,7 @@ public class EntityWallSegment extends AvatarEntity {
 			IBlockState state = getBlock(i);
 			
 			if (state.getBlock() != Blocks.AIR)
-				worldObj.setBlockState(new BlockPos(this).up(i + blocksOffset), state);
+				worldObj.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
 			
 		}
 	}
@@ -138,7 +155,9 @@ public class EntityWallSegment extends AvatarEntity {
 		moveEntity(MoverType.SELF, vec.x(), vec.y(), vec.z());
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
-		if (height == 5) {
+		System.out.println("Height: " + getSyncedHeight());
+		if (height != getSyncedHeight()) setSize(.9f, getSyncedHeight());
+		if (!worldObj.isRemote && height == 5) {
 			for (int i = SEGMENT_HEIGHT - 1; i >= 0; i--) {
 				if (getBlock(i).getBlock() == Blocks.AIR) {
 					// System.out.println("Air@" + i);
@@ -146,10 +165,11 @@ public class EntityWallSegment extends AvatarEntity {
 					setSize(.9f, 5 - i - 1);
 					int f = -i - 1;
 					position().add(0, f, 0);
-					blocksOffset = f;
+					setBlocksOffset(f);
 					System.out.println("Air at " + i);
 					System.out.println("h=" + height);
 					System.out.println("f=" + f);
+					setSyncedHeight(5 - i - 1);
 					break;
 				}
 			}
