@@ -140,8 +140,7 @@ public class EntityWallSegment extends AvatarEntity {
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
 			IBlockState state = getBlock(i);
 			
-			if (state.getBlock() != Blocks.AIR)
-				worldObj.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
+			if (state.getBlock() != Blocks.AIR) worldObj.setBlockState(new BlockPos(this).up(i), state);
 			
 		}
 	}
@@ -155,21 +154,18 @@ public class EntityWallSegment extends AvatarEntity {
 		moveEntity(MoverType.SELF, vec.x(), vec.y(), vec.z());
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
-		System.out.println("Height: " + getSyncedHeight());
 		if (height != getSyncedHeight()) setSize(.9f, getSyncedHeight());
 		if (!worldObj.isRemote && height == 5) {
 			for (int i = SEGMENT_HEIGHT - 1; i >= 0; i--) {
 				if (getBlock(i).getBlock() == Blocks.AIR) {
-					// System.out.println("Air@" + i);
-					// 0->-1, 1->0, 2->1, 3->2,
 					setSize(.9f, 5 - i - 1);
-					int f = -i - 1;
-					position().add(0, f, 0);
-					setBlocksOffset(f);
+					// int f = -1;
+					// position().add(0, 40, 0);
+					setBlocksOffset(0);
+					setSyncedHeight(5 - i - 1);
 					System.out.println("Air at " + i);
 					System.out.println("h=" + height);
-					System.out.println("f=" + f);
-					setSyncedHeight(5 - i - 1);
+					// System.out.println("f=" + f);
 					break;
 				}
 			}
