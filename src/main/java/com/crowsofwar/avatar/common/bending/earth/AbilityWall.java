@@ -32,7 +32,7 @@ public class AbilityWall extends BendingAbility {
 		if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(lookPos).getBlock())) {
 			System.out.println("BEND A WALL");
 			EntityWall wall = new EntityWall(world);
-			// Minecraft
+			
 			wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
 			for (int i = 0; i < 5; i++) {
 				

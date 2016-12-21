@@ -1,10 +1,12 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+import static java.lang.Math.abs;
 import static net.minecraft.util.EnumFacing.NORTH;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 
+import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -56,6 +58,28 @@ public class EntityWall extends AvatarEntity {
 		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
 			dataManager.register(SYNC_SEGMENTS[i], -1);
 		}
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		
+		// Sync y-velocity with slowest moving wall segment
+		double slowest = Integer.MAX_VALUE;
+		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+			EntityWallSegment seg = ref.getEntity();
+			if (abs(seg.velocity().y()) < abs(slowest)) {
+				slowest = seg.velocity().y();
+			}
+		}
+		
+		// Now sync all wall segment speeds
+		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+			ref.getEntity().velocity().setY(slowest);
+		}
+		
+		this.noClip = true;
+		moveEntity(MoverType.SELF, 0, slowest / 20, 0);
 	}
 	
 	/**
