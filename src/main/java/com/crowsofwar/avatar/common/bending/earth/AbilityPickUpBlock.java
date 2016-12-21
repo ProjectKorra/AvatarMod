@@ -64,8 +64,9 @@ public class AbilityPickUpBlock extends EarthAbility {
 		if (ebs.getPickupBlock() != null) {
 			ebs.getPickupBlock().drop();
 			ebs.setPickupBlock(null);
-			// AvatarMod.network.sendTo(new PacketCPlayerData(data),
-			// (EntityPlayerMP) player);
+			data.removeStatusControl(StatusControl.THROW_BLOCK);
+			data.removeStatusControl(StatusControl.PLACE_BLOCK);
+			data.sync();
 		} else {
 			VectorI target = ctx.verifyClientLookBlock(-1, 5);
 			if (target != null) {

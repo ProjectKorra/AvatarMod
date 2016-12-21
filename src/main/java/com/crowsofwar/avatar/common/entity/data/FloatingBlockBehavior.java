@@ -293,6 +293,10 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			entity.velocity().add(0, -9.81 / 20, 0);
+			if (entity.isCollided) {
+				if (!entity.worldObj.isRemote) entity.setDead();
+				entity.onCollision();
+			}
 			return this;
 		}
 		
