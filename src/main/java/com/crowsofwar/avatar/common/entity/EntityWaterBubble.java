@@ -56,6 +56,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		super(world);
 		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
 		setSize(1, 1);
+		this.putsOutFires = true;
 	}
 	
 	@Override

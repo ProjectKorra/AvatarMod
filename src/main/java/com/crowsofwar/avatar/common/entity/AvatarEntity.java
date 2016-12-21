@@ -24,13 +24,17 @@ import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -45,6 +49,8 @@ public abstract class AvatarEntity extends Entity {
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
 			DataSerializers.VARINT);
 	
+	protected boolean putsOutFires;
+	
 	/**
 	 * @param world
 	 */
@@ -53,6 +59,7 @@ public abstract class AvatarEntity extends Entity {
 		this.internalVelocity = createInternalVelocity();
 		this.internalPosition = new BackedVector(x -> this.posX = x, y -> this.posY = y, z -> this.posZ = z,
 				() -> posX, () -> posY, () -> posZ);
+		this.putsOutFires = false;
 	}
 	
 	@Override
@@ -125,6 +132,19 @@ public abstract class AvatarEntity extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 		collideWithNearbyEntities();
+		if (putsOutFires && ticksExisted % 2 == 0) {
+			setFire(0);
+			for (int x = 0; x <= 1; x++) {
+				for (int z = 0; z <= 1; z++) {
+					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
+					if (worldObj.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						worldObj.setBlockToAir(pos);
+						worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+				}
+			}
+		}
 	}
 	
 	// copied from EntityLivingBase
@@ -164,6 +184,16 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	public boolean canBePushed() {
 		return true;
+	}
+	
+	@Override
+	public boolean canRenderOnFire() {
+		return !putsOutFires;
+	}
+	
+	@Override
+	public void setFire(int seconds) {
+		if (!putsOutFires) super.setFire(seconds);
 	}
 	
 }

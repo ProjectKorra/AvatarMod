@@ -54,6 +54,7 @@ public class EntityWaterArc extends EntityArc {
 		setSize(.5f, .5f);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
+		this.putsOutFires = true;
 	}
 	
 	public float getDamageMult() {
@@ -133,17 +134,6 @@ public class EntityWaterArc extends EntityArc {
 		}
 		getBehavior().onUpdate(this);
 		
-		for (int x = 0; x <= 1; x++) {
-			for (int z = 0; z <= 1; z++) {
-				BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-				if (worldObj.getBlockState(pos).getBlock() == Blocks.FIRE) {
-					worldObj.setBlockToAir(pos);
-					worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-							SoundCategory.PLAYERS, 1, 1, false);
-				}
-			}
-		}
-		
 		if (inWater && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
 			// try to go upwards
 			for (double i = 0.1; i <= 3; i += 0.05) {
@@ -164,9 +154,6 @@ public class EntityWaterArc extends EntityArc {
 		// 1, false);
 		// }
 	}
-	
-	@Override
-	public void setFire(int seconds) {}
 	
 	public static EntityWaterArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {

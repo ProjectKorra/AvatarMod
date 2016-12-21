@@ -170,7 +170,6 @@ public class EntityWallSegment extends AvatarEntity {
 	public void applyEntityCollision(Entity entity) {
 		
 		// Note... only called server-side
-		if (2 % 2 == 0) return;
 		double amt = 0.4;
 		
 		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;

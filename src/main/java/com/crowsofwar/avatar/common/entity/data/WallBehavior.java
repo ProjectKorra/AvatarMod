@@ -28,7 +28,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 			entity.velocity().add(0, -7.0 / 20, 0);
-			if (entity.isCollided) {
+			if (entity.onGround) {
 				// also drops blocks
 				entity.setDead();
 			}
@@ -90,7 +90,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		public Behavior onUpdate(EntityWallSegment entity) {
 			entity.velocity().set(0, 0, 0);
 			ticks++;
-			return ticks < 40 ? this : new Drop();
+			return ticks < 200 ? this : new Drop();
 		}
 		
 		@Override
