@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -22,20 +23,17 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class EntityWallSegment extends AvatarEntity {
+public class EntityWallSegment extends AvatarEntity implements IEntityAdditionalSpawnData {
 	
 	public static final int SEGMENT_HEIGHT = 5;
 	
-	private static final DataParameter<Integer> SYNC_HEIGHT = EntityDataManager
-			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
-	private static final DataParameter<Integer> SYNC_OFFSET = EntityDataManager
-			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
 	private static final DataParameter<Integer> SYNC_WALL = EntityDataManager
 			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
 	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
@@ -55,6 +53,7 @@ public class EntityWallSegment extends AvatarEntity {
 	 * direction that all wall-segments are facing towards. Only set on server.
 	 */
 	private EnumFacing direction;
+	private int offset;
 	
 	public EntityWallSegment(World world) {
 		super(world);
@@ -65,8 +64,6 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_HEIGHT, SEGMENT_HEIGHT);
-		dataManager.register(SYNC_OFFSET, 0);
 		dataManager.register(SYNC_WALL, -1);
 		for (DataParameter<Optional<IBlockState>> sync : SYNC_BLOCKS_DATA)
 			dataManager.register(sync, Optional.of(Blocks.STONE.getDefaultState()));
@@ -108,20 +105,18 @@ public class EntityWallSegment extends AvatarEntity {
 		this.direction = dir;
 	}
 	
-	public int getSyncedHeight() {
-		return dataManager.get(SYNC_HEIGHT);
-	}
-	
-	public void setSyncedHeight(int height) {
-		dataManager.set(SYNC_HEIGHT, height);
-	}
-	
 	public int getBlocksOffset() {
-		return dataManager.get(SYNC_OFFSET);
+		return offset;
 	}
 	
 	public void setBlocksOffset(int offset) {
-		dataManager.set(SYNC_OFFSET, offset);
+		this.offset = offset;
+	}
+	
+	// Expose setSize method so AbilityWall can call it
+	@Override
+	public void setSize(float width, float height) {
+		super.setSize(width, height);
 	}
 	
 	@Override
@@ -139,9 +134,8 @@ public class EntityWallSegment extends AvatarEntity {
 	public void dropBlocks() {
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
 			IBlockState state = getBlock(i);
-			
-			if (state.getBlock() != Blocks.AIR) worldObj.setBlockState(new BlockPos(this).up(i), state);
-			
+			if (state.getBlock() != Blocks.AIR)
+				worldObj.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
 		}
 	}
 	
@@ -154,22 +148,6 @@ public class EntityWallSegment extends AvatarEntity {
 		moveEntity(MoverType.SELF, vec.x(), vec.y(), vec.z());
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
-		if (height != getSyncedHeight()) setSize(.9f, getSyncedHeight());
-		if (!worldObj.isRemote && height == 5) {
-			for (int i = SEGMENT_HEIGHT - 1; i >= 0; i--) {
-				if (getBlock(i).getBlock() == Blocks.AIR) {
-					setSize(.9f, 5 - i - 1);
-					// int f = -1;
-					// position().add(0, 40, 0);
-					setBlocksOffset(0);
-					setSyncedHeight(5 - i - 1);
-					System.out.println("Air at " + i);
-					System.out.println("h=" + height);
-					// System.out.println("f=" + f);
-					break;
-				}
-			}
-		}
 	}
 	
 	@Override
@@ -241,6 +219,19 @@ public class EntityWallSegment extends AvatarEntity {
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
 		return true;
+	}
+	
+	@Override
+	public void writeSpawnData(ByteBuf buf) {
+		buf.writeFloat(height);
+		buf.writeInt(offset);
+	}
+	
+	@Override
+	public void readSpawnData(ByteBuf buf) {
+		setSize(.9f, buf.readFloat());
+		offset = buf.readInt();
+		System.out.println("Read data; height: " + height + ", offset: " + offset);
 	}
 	
 }
