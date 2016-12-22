@@ -75,7 +75,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public EntityWallSegment(World world) {
 		super(world);
 		this.wallReference = new SyncableEntityReference<>(this, SYNC_WALL);
-		this.setSize(0.9f, 5);
+		this.setSize(.9f, 5);
 	}
 	
 	@Override
@@ -156,6 +156,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		ignoreFrustumCheck = true;
 		velocity().setX(0);
 		velocity().setZ(0);
 		Vector vec = velocity().dividedBy(20);
@@ -244,7 +245,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	
 	@Override
 	public void readSpawnData(ByteBuf buf) {
-		setSize(.9f, buf.readFloat());
+		setSize(width, buf.readFloat());
 		offset = buf.readInt();
 		System.out.println("Read data; height: " + height + ", offset: " + offset);
 	}
