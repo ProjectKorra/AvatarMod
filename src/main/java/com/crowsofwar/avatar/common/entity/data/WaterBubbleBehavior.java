@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -51,7 +50,10 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
-			((AvatarEntity) entity).velocity().add(0, -9.81, 0);
+			entity.velocity().add(0, -9.81, 0);
+			if (entity.isCollided) {
+				entity.setDead();
+			}
 			return this;
 		}
 		
