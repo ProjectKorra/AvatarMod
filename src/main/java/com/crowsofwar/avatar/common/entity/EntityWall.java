@@ -127,7 +127,7 @@ public class EntityWall extends AvatarEntity {
 			// don't use setDead() as that will trigger this being called again
 			EntityWallSegment entity = ref.getEntity();
 			if (entity != null) {
-				entity.isDead = true;
+				entity.setDead();
 				entity.dropBlocks();
 			}
 		}

@@ -46,7 +46,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		public Behavior onUpdate(EntityWallSegment entity) {
 			entity.velocity().add(0, -7.0 / 20, 0);
 			if (entity.onGround) {
-				// also drops blocks
+				entity.dropBlocks();
 				entity.setDead();
 			}
 			return this;

@@ -29,6 +29,10 @@ import net.minecraft.network.datasync.DataParameter;
  * <p>
  * Designed for use to have 2 entities having synced references to each other.
  * Uses DataManager to sync the entities' IDs and then performs lookup/caching.
+ * <p>
+ * NOTE: By default, if the entity is being loaded and the reference is null,
+ * the SyncableEntityReference will setDead() the entity to prevent a NPE crash.
+ * This can be disabled by calling {@link #allowNullSaving()}.
  * 
  * @author CrowsOfWar
  */
@@ -37,6 +41,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	private final AvatarEntity using;
 	private final DataParameter<Integer> sync;
 	private final CachedEntity<T> cache;
+	private boolean allowNullSaving;
 	
 	/**
 	 * Create an entity reference.
@@ -52,6 +57,16 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 		this.using = entity;
 		this.sync = sync;
 		this.cache = new CachedEntity<T>(-1);
+		this.allowNullSaving = false;
+	}
+	
+	/**
+	 * Enable saving a null reference. Normally, if the reference is null while
+	 * being loaded, the entity is setDead() to try to prevent erroring entities
+	 * from causing crashes.
+	 */
+	public void allowNullSaving() {
+		allowNullSaving = true;
 	}
 	
 	public T getEntity() {
@@ -73,6 +88,9 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	public void readFromNBT(NBTTagCompound nbt) {
 		cache.readFromNBT(nbt);
 		using.getDataManager().set(sync, cache.getEntityId());
+		if (!allowNullSaving && getEntity() == null) {
+			using.setDead();
+		}
 	}
 	
 	/**

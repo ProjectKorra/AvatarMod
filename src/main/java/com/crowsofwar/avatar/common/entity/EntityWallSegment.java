@@ -139,10 +139,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void setDead() {
 		super.setDead();
-		if (getWall() != null)
-			getWall().setDead();
-		else
-			dropBlocks();
+		if (getWall() != null) getWall().setDead();
 	}
 	
 	/**
@@ -171,6 +168,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public boolean processInitialInteract(EntityPlayer player, EnumHand stack) {
 		if (!this.isDead && !worldObj.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
 			setDead();
+			dropBlocks();
 			setBeenAttacked();
 			return true;
 		}
