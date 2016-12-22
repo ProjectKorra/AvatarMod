@@ -101,7 +101,7 @@ public class OwnerAttribute {
 	 */
 	public EntityPlayer getOwner() {
 		
-		if ((ownerCached == null || ownerCached.isDead) && getOwnerName() != null) {
+		if (isCacheInvalid()) {
 			// Slightly cosmetic, but only call setOwner(...) if the player was
 			// found
 			EntityPlayer player = world.getPlayerEntityByName(getOwnerName());
@@ -127,6 +127,26 @@ public class OwnerAttribute {
 			setOwnerCallback.accept(owner);
 		}
 		
+	}
+	
+	/**
+	 * Checks the cache's validity. If it is invalid, resets the cache and
+	 * returns true.
+	 * <p>
+	 * Invalid conditions:
+	 * <ul>
+	 * <li>Cached owner is null
+	 * <li>Cached owner is dead
+	 * <li>Cached owner is not the correct owner
+	 * <li>There is not supposed to be an owner
+	 */
+	private boolean isCacheInvalid() {
+		if (ownerCached == null || ownerCached.isDead || !ownerCached.getName().equals(getOwnerName())
+				|| getOwnerName() == null) {
+			ownerCached = null;
+			return true;
+		}
+		return false;
 	}
 	
 }

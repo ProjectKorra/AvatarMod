@@ -8,7 +8,7 @@ import net.minecraft.network.datasync.DataParameter;
 
 /**
  * Like {@link CachedEntity}, but allows access to the server/client
- * counterparts of an entity, on both sides.
+ * counterparts of an AvatarEntity, on both sides.
  * <p>
  * Designed for use to have 2 entities having synced references to each other.
  * Uses DataManager to sync the entities' IDs and then performs lookup/caching.
@@ -31,7 +31,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	 *            DataParameter used to sync. Should NOT be created specifically
 	 *            for this SyncableEntityReference - use a constant
 	 */
-	public <E extends AvatarEntity> SyncableEntityReference(E entity, DataParameter<Integer> sync) {
+	public SyncableEntityReference(AvatarEntity entity, DataParameter<Integer> sync) {
 		this.using = entity;
 		this.sync = sync;
 		this.cache = new CachedEntity<T>(-1);

@@ -9,7 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
- * Represents an entity which is stored by ID but also cached for performance.
+ * Represents an AvatarEntity which is stored by ID but also cached for
+ * performance.
  * <p>
  * Note: is not synced; designed to be manipulated by someone with a
  * synchronized ID.
