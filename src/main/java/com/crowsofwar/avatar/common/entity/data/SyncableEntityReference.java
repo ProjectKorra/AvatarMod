@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.CachedEntity;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 
@@ -90,6 +92,8 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 		using.getDataManager().set(sync, cache.getEntityId());
 		if (!allowNullSaving && getEntity() == null) {
 			using.setDead();
+			AvatarLog.warn(WarningType.INVALID_SAVE,
+					"Entity reference was null on load and removed entity for safety: " + using);
 		}
 	}
 	
