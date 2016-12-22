@@ -181,7 +181,7 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	protected boolean canCollideWith(Entity entity) {
-		return entity instanceof AvatarEntity;
+		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
 	}
 	
 	@Override

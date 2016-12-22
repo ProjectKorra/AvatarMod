@@ -74,6 +74,9 @@ public class AbilityWall extends BendingAbility {
 						seg.setSize(.9f, 5 - j - 1);
 						seg.setBlocksOffset(-(j + 1));
 						seg.position().add(0, j + 1, 0);
+						System.out.println("Now pos: " + seg.position().y());
+						System.out.println("Wouldbe: " + (y + j + 1));
+						seg.setPosition(x, y + j + 1, z);
 						System.out.println("Air at " + j);
 						foundAir = true;
 					}
