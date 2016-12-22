@@ -50,7 +50,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
-			entity.velocity().add(0, -9.81, 0);
+			entity.velocity().add(0, -9.81 / 20, 0);
 			if (entity.isCollided) {
 				entity.setDead();
 			}

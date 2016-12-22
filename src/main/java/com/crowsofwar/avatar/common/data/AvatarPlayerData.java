@@ -148,6 +148,10 @@ public class AvatarPlayerData extends PlayerData {
 		
 	}
 	
+	/**
+	 * Saves changes to disk. Does <b>not</b> sync changes; use {@link #sync()}
+	 * for that.
+	 */
 	@Override
 	protected void saveChanges() {
 		super.saveChanges();

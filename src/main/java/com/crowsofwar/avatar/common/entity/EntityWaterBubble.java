@@ -85,11 +85,14 @@ public class EntityWaterBubble extends AvatarEntity {
 						Blocks.FARMLAND.getDefaultState().withProperty(BlockFarmland.MOISTURE, moisture + 1));
 			}
 		}
-		if (inWater) {
+		if (inWater && !worldObj.isRemote) {
 			setDead();
 			if (getOwner() != null) {
 				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
-				if (data != null) data.removeStatusControl(StatusControl.THROW_BUBBLE);
+				if (data != null) {
+					data.removeStatusControl(StatusControl.THROW_BUBBLE);
+					data.sync();
+				}
 			}
 		}
 		
