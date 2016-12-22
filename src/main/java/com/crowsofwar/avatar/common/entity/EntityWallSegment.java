@@ -140,6 +140,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public void setDead() {
 		super.setDead();
 		if (getWall() != null) getWall().setDead();
+		System.out.println("DIED");
 	}
 	
 	/**
