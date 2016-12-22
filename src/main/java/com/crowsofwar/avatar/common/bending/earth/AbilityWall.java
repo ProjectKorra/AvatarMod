@@ -73,7 +73,7 @@ public class AbilityWall extends BendingAbility {
 					if (!foundAir && state.getBlock() == Blocks.AIR) {
 						seg.setSize(.9f, 5 - j - 1);
 						seg.setBlocksOffset(-(j + 1));
-						seg.position().set(0, y + j + 1, 0);
+						seg.position().add(0, j + 1, 0);
 						System.out.println("Air at " + j);
 						foundAir = true;
 					}
