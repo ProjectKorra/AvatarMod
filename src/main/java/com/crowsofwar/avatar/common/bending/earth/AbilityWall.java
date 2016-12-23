@@ -101,7 +101,7 @@ public class AbilityWall extends BendingAbility {
 	
 	@Override
 	public int getIconIndex() {
-		return 14;
+		return 13;
 	}
 	
 }
