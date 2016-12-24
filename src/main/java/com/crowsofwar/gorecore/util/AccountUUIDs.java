@@ -351,7 +351,7 @@ public final class AccountUUIDs {
 		
 		@Override
 		public String toString() {
-			return "PlayerID[uuid=" + uuid + ",temporary=" + temporary + "]";
+			return "AccountId[uuid=" + uuid + ",temporary=" + temporary + "]";
 		}
 		
 	}
