@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.util.AccountUUIDs.Outcome;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -352,36 +353,6 @@ public final class AccountUUIDs {
 			return "PlayerID[uuid=" + uuid + ",temporary=" + temporary + "]";
 		}
 		
-	}
-	
-	/**
-	 * ResultOutcome enumerates different possibilities for results of getting
-	 * UUIDs from usernames. Using this enum will allow for handling on
-	 * errors/success based on what specific things happened.
-	 * 
-	 * @author CrowsOfWar
-	 */
-	public static enum Outcome {
-		/**
-		 * No errors were encountered while getting the UUID.
-		 */
-		SUCCESS,
-		
-		/**
-		 * The player is not registered in minecraft.net, so the username has no
-		 * UUID.
-		 */
-		USERNAME_DOES_NOT_EXIST,
-		
-		/**
-		 * The HTTP code has no handling for it (handled ones are 200s and 204s)
-		 */
-		BAD_HTTP_CODE,
-		
-		/**
-		 * An exception occured while trying to get the result
-		 */
-		EXCEPTION_OCCURED;
 	}
 	
 }
