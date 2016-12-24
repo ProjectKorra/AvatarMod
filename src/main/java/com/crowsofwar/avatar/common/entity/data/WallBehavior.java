@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -74,7 +76,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		public Behavior onUpdate(EntityWallSegment entity) {
 			// not 0 since client missed 0th tick
 			if (ticks == 1)
-				entity.velocity().set(0, 10, 0);
+				entity.velocity().set(0, STATS_CONFIG.wallMomentum, 0);
 			else
 				entity.velocity().setY(entity.velocity().y() * 0.9);
 			
@@ -107,7 +109,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		public Behavior onUpdate(EntityWallSegment entity) {
 			entity.velocity().set(0, 0, 0);
 			ticks++;
-			return ticks < 200 ? this : new Drop();
+			return ticks < (STATS_CONFIG.wallWaitTime * 20) ? this : new Drop();
 		}
 		
 		@Override
