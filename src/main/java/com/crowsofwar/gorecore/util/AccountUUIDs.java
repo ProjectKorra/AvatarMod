@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.util.AccountUUIDs.Outcome;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -185,7 +184,7 @@ public final class AccountUUIDs {
 	 */
 	public static EntityPlayer findEntityFromUUID(World world, UUID playerID) {
 		for (int i = 0; i < world.playerEntities.size(); i++) {
-			UUID accountId = getUUID(world.playerEntities.get(i).getName()).getUUID();
+			UUID accountId = getID(world.playerEntities.get(i).getName()).getUUID();
 			if (accountId.equals(playerID)) {
 				return world.playerEntities.get(i);
 			}
@@ -210,7 +209,7 @@ public final class AccountUUIDs {
 	 *            The username to get the UUID for
 	 * @return The UUID result of the getting
 	 */
-	public static AccountUUIDs.AccountID getUUID(String username) {
+	public static AccountUUIDs.AccountID getID(String username) {
 		if (playerNameToUUID.containsKey(username)) {
 			// TODO how to save as temporary?
 			return new AccountID(playerNameToUUID.get(username), false);
@@ -293,7 +292,7 @@ public final class AccountUUIDs {
 	
 	/**
 	 * GetUUIDResult shows the result of getting UUIDs from player names through
-	 * {@link AccountUUIDs#getUUID(String)}. It has a UUID for the result and a
+	 * {@link AccountUUIDs#getID(String)}. It has a UUID for the result and a
 	 * {@link Outcome} that describes what happened.
 	 * 
 	 * @author CrowsOfWar

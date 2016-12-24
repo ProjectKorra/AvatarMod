@@ -43,7 +43,7 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	}
 	
 	public PacketSRequestData(EntityPlayer player) {
-		AccountID result = AccountUUIDs.getUUID(player.getName());
+		AccountID result = AccountUUIDs.getID(player.getName());
 		this.asking = result.getUUID();
 	}
 	
