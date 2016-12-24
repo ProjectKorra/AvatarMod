@@ -162,7 +162,7 @@ public final class AccountUUIDs {
 				next = entries.hasNext();
 				String username = current.getKey();
 				AccountId account = current.getValue();
-				bw.write((account.temporary ? "%" : "") + username + account.uuid + ln);
+				bw.write((account.temporary ? "%" : "") + username + "=" + account.uuid + ln);
 			}
 			
 			bw.close();
