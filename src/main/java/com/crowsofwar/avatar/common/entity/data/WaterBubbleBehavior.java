@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -81,11 +82,18 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
-			double yaw = Math.toRadians(player.rotationYaw);
-			double pitch = Math.toRadians(player.rotationPitch);
-			Vector forward = Vector.fromYawPitch(yaw, pitch);
-			Vector eye = Vector.getEyePos(player);
-			Vector target = forward.times(2).plus(eye);
+			Vector target;
+			Raytrace.Result raytrace = Raytrace.getTargetBlock(player, -1, false);
+			if (raytrace.hitSomething()) {
+				target = raytrace.getPosPrecise().plus(0, .2, 0);
+			} else {
+				double yaw = Math.toRadians(player.rotationYaw);
+				double pitch = Math.toRadians(player.rotationPitch);
+				Vector forward = Vector.fromYawPitch(yaw, pitch);
+				Vector eye = Vector.getEyePos(player);
+				target = forward.times(2).plus(eye);
+			}
+			
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);
 			
