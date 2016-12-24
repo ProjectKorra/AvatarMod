@@ -70,13 +70,13 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 		if (players.containsKey(player)) {
 			T data = getPlayerDataWithoutCreate(player);
 			if (getWorld() != null)
-				data.setPlayerEntity(AccountUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
+				data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 			return data;
 		} else {
 			T data = createNewPlayerData(player);
 			players.put(player, data);
 			if (getWorld() != null)
-				data.setPlayerEntity(AccountUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
+				data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 			saveChanges();
 			return data;
 		}
@@ -93,7 +93,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	public T getPlayerDataWithoutCreate(UUID player) {
 		T data = (T) players.get(player);
 		if (data != null && data.getPlayerEntity() == null) {
-			data.setPlayerEntity(AccountUUIDs.findPlayerInWorldFromUUID(getWorld(), player));
+			data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 		}
 		return data;
 	}
@@ -103,7 +103,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	private T createNewPlayerData(UUID player) {
 		try {
 			
-			EntityPlayer playerEntity = AccountUUIDs.findPlayerInWorldFromUUID(getWorld(), player);
+			EntityPlayer playerEntity = AccountUUIDs.findEntityFromUUID(getWorld(), player);
 			if (playerEntity == null)
 				GoreCore.LOGGER.warn("WARNING: playerEntity was null while creating new player data");
 			PlayerData data = playerDataClass()

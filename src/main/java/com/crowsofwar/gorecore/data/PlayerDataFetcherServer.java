@@ -50,7 +50,7 @@ public class PlayerDataFetcherServer<T extends PlayerData> implements PlayerData
 			throw new IllegalArgumentException("Cannot get client player data for null player ID");
 		
 		T data = worldDataFetcher.apply(world).getPlayerData(accountId);
-		data.setPlayerEntity(AccountUUIDs.findPlayerInWorldFromUUID(world, accountId));
+		data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(world, accountId));
 		return data;
 	}
 	

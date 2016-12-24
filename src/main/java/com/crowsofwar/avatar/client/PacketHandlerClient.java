@@ -105,7 +105,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	 */
 	private IMessage handlePacketNewPlayerData(PacketCPlayerData packet, MessageContext ctx) {
 		
-		EntityPlayer player = AccountUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayerId());
+		EntityPlayer player = AccountUUIDs.findEntityFromUUID(mc.theWorld, packet.getPlayerId());
 		if (player == null) {
 			AvatarLog.warn(WarningType.WEIRD_PACKET,
 					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");

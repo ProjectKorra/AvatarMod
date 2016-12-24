@@ -56,7 +56,7 @@ public class GoreCore {
 		config = new GoreCoreModConfig(event);
 		ConverterRegistry.addDefaultConverters();
 		
-		AccountUUIDs.addUUIDsToCacheFromCacheFile();
+		AccountUUIDs.readCache();
 		
 		proxy.sideSpecifics();
 		
@@ -73,7 +73,7 @@ public class GoreCore {
 	// Called both on the client and on the dedicated server
 	@EventHandler
 	public void onShutdown(FMLServerStoppingEvent event) {
-		AccountUUIDs.saveUUIDCache();
+		AccountUUIDs.saveCache();
 	}
 	
 }

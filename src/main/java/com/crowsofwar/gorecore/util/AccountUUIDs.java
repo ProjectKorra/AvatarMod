@@ -68,9 +68,9 @@ public final class AccountUUIDs {
 	 * located in different places for client/server. This is so that the big
 	 * cache list does not have to be re-created every time Minecraft restarts.
 	 * 
-	 * @see #saveUUIDCache()
+	 * @see #saveCache()
 	 */
-	public static void addUUIDsToCacheFromCacheFile() {
+	public static void readCache() {
 		BufferedReader br = null;
 		try {
 			
@@ -124,9 +124,9 @@ public final class AccountUUIDs {
 	 * Saves the cache of UUIDs to a text file for reading later so that the
 	 * UUID cache does not have to be re-built every time Minecraft restarts.
 	 * 
-	 * @see #addUUIDsToCacheFromCacheFile()
+	 * @see #readCache()
 	 */
-	public static void saveUUIDCache() {
+	public static void saveCache() {
 		try {
 			
 			long start = System.currentTimeMillis();
@@ -180,7 +180,7 @@ public final class AccountUUIDs {
 	 *            The world to look for the player in
 	 * @return
 	 */
-	public static EntityPlayer findPlayerInWorldFromUUID(World world, UUID playerID) {
+	public static EntityPlayer findEntityFromUUID(World world, UUID playerID) {
 		for (int i = 0; i < world.playerEntities.size(); i++) {
 			UUID accountId = getUUID(world.playerEntities.get(i).getName()).getUUID();
 			if (accountId.equals(playerID)) {
@@ -267,84 +267,6 @@ public final class AccountUUIDs {
 				FMLLog.severe("GoreCore> Error getting player UUID for username " + username);
 				e.printStackTrace();
 				return new Result(null, Outcome.EXCEPTION_OCCURED);
-			}
-		}
-	}
-	
-	/**
-	 * <p>
-	 * Gets the account UUID of the player with the given username. If it exists
-	 * in the cache, the UUID will be obtained via the cache; otherwise, a HTTP
-	 * request will be made to obtain the UUID.
-	 * </p>
-	 * 
-	 * <p>
-	 * The UUID found will be returned. If an error occurs, this will return
-	 * null. A minimal amount of objects will be created.
-	 * </p>
-	 * 
-	 * @param username
-	 *            The username to get the UUID for
-	 * @return The account UUID for the username, or null if an error occurred
-	 */
-	public static UUID getUUIDPerformance(String username) {
-		if (playerNameToUUID.containsKey(username)) {
-			return playerNameToUUID.get(username);
-		} else {
-			try {
-				String url = "https://api.mojang.com/users/profiles/minecraft/" + username;
-				
-				URL obj = new URL(url);
-				HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-				
-				connection.setRequestMethod("GET");
-				connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-				
-				int responseCode = connection.getResponseCode();
-				BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				
-				String line;
-				StringBuffer response = new StringBuffer();
-				while ((line = br.readLine()) != null)
-					response.append(line);
-				br.close();
-				
-				// For normal webpages, it would be like
-				// "<html><head>...</head><body><p>HAI</p></body></html>" or
-				// something like that
-				// for this it's a JSON
-				String result = response.toString();
-				
-				if (responseCode == 204) return null;
-				
-				if (responseCode != 200) {
-					FMLLog.warning("GoreCore> Attempted to get a UUID for player " + username
-							+ ", but the response code was unexpected (" + responseCode + ")");
-					return null;
-				}
-				
-				String resultOfExtraction = result.replace("{", "");
-				resultOfExtraction = resultOfExtraction.replace("}", "");
-				resultOfExtraction = resultOfExtraction.substring(0, resultOfExtraction.indexOf(','));
-				resultOfExtraction = resultOfExtraction.substring(resultOfExtraction.indexOf(':'),
-						resultOfExtraction.length());
-				resultOfExtraction = resultOfExtraction.replace("\"", "");
-				resultOfExtraction = resultOfExtraction.replace(":", "");
-				
-				String uuidCleaned = resultOfExtraction.replaceAll("[^a-zA-Z0-9]", "");
-				uuidCleaned = (uuidCleaned.substring(0, 8) + "-" + uuidCleaned.substring(8, 12) + "-"
-						+ uuidCleaned.substring(12, 16) + "-" + uuidCleaned.substring(16, 20) + "-"
-						+ uuidCleaned.substring(20, 32));
-				
-				UUID uuidResult = UUID.fromString(uuidCleaned);
-				
-				cacheResults(username, uuidResult);
-				return uuidResult;
-				
-			} catch (Exception e) {
-				FMLLog.severe("GoreCore> Error getting player UUID for username " + username);
-				e.printStackTrace();
-				return null;
 			}
 		}
 	}

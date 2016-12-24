@@ -93,7 +93,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		UUID id = packet.getAskedPlayer();
 		EntityPlayer player = AccountUUIDs
-				.findPlayerInWorldFromUUID(ctx.getServerHandler().playerEntity.worldObj, id);
+				.findEntityFromUUID(ctx.getServerHandler().playerEntity.worldObj, id);
 		
 		if (player == null) {
 			
