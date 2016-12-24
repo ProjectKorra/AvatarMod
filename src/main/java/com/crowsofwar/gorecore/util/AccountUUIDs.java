@@ -221,8 +221,7 @@ public final class AccountUUIDs {
 	 */
 	public static AccountUUIDs.AccountId getID(String username) {
 		if (idCache.containsKey(username)) {
-			// TODO how to save as temporary?
-			return new AccountId(idCache.get(username).uuid, false);
+			return idCache.get(username);
 		} else {
 			try {
 				String url = "https://api.mojang.com/users/profiles/minecraft/" + username;
@@ -249,13 +248,13 @@ public final class AccountUUIDs {
 				String result = response.toString();
 				
 				if (responseCode == 204) {
-					return new AccountId();
+					return cacheResults(username, new AccountId());
 				}
 				
 				if (responseCode != 200) {
 					GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
 							+ ", but the response code was unexpected (" + responseCode + ")");
-					return new AccountId();
+					return cacheResults(username, new AccountId());
 				}
 				
 				String resultOfExtraction = result.replace("{", "");
@@ -272,14 +271,11 @@ public final class AccountUUIDs {
 						+ uuidCleaned.substring(20, 32));
 				
 				UUID uuidResult = UUID.fromString(uuidCleaned);
-				AccountId accountId = new AccountId(uuidResult);
-				cacheResults(username, accountId);
-				return accountId;
+				return cacheResults(username, new AccountId(uuidResult));
 				
 			} catch (Exception e) {
-				FMLLog.severe("GoreCore> Error getting player UUID for username " + username);
-				e.printStackTrace();
-				return new AccountId();
+				GoreCore.LOGGER.error("Unexpected error getting UUID for " + username, e);
+				return cacheResults(username, new AccountId());
 			}
 		}
 	}
@@ -293,11 +289,13 @@ public final class AccountUUIDs {
 	 *            The username to store in the cache (key)
 	 * @param id
 	 *            The account ID to store in the cache (value)
+	 * @return id parameter
 	 */
-	private static void cacheResults(String username, AccountId id) {
+	private static AccountId cacheResults(String username, AccountId id) {
 		if (idCache.size() < GoreCore.config.MAX_UUID_CACHE_SIZE) {
 			idCache.put(username, id);
 		}
+		return id;
 	}
 	
 	/**
