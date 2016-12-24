@@ -25,7 +25,7 @@ import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 import com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy;
 import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
 import com.crowsofwar.gorecore.tree.test.TreeTest;
-import com.crowsofwar.gorecore.util.PlayerUUIDs;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.Mod;
@@ -56,7 +56,7 @@ public class GoreCore {
 		config = new GoreCoreModConfig(event);
 		ConverterRegistry.addDefaultConverters();
 		
-		PlayerUUIDs.addUUIDsToCacheFromCacheFile();
+		AccountUUIDs.addUUIDsToCacheFromCacheFile();
 		
 		proxy.sideSpecifics();
 		
@@ -73,7 +73,7 @@ public class GoreCore {
 	// Called both on the client and on the dedicated server
 	@EventHandler
 	public void onShutdown(FMLServerStoppingEvent event) {
-		PlayerUUIDs.saveUUIDCache();
+		AccountUUIDs.saveUUIDCache();
 	}
 	
 }

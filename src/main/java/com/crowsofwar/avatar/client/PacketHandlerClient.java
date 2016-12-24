@@ -37,7 +37,7 @@ import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.gorecore.util.PlayerUUIDs;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -105,7 +105,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	 */
 	private IMessage handlePacketNewPlayerData(PacketCPlayerData packet, MessageContext ctx) {
 		
-		EntityPlayer player = PlayerUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayerId());
+		EntityPlayer player = AccountUUIDs.findPlayerInWorldFromUUID(mc.theWorld, packet.getPlayerId());
 		if (player == null) {
 			AvatarLog.warn(WarningType.WEIRD_PACKET,
 					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");

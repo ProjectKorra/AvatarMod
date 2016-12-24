@@ -20,7 +20,7 @@ package com.crowsofwar.gorecore.data;
 import java.util.UUID;
 import java.util.function.Function;
 
-import com.crowsofwar.gorecore.util.PlayerUUIDs;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.world.World;
 
@@ -50,7 +50,7 @@ public class PlayerDataFetcherServer<T extends PlayerData> implements PlayerData
 			throw new IllegalArgumentException("Cannot get client player data for null player ID");
 		
 		T data = worldDataFetcher.apply(world).getPlayerData(accountId);
-		data.setPlayerEntity(PlayerUUIDs.findPlayerInWorldFromUUID(world, accountId));
+		data.setPlayerEntity(AccountUUIDs.findPlayerInWorldFromUUID(world, accountId));
 		return data;
 	}
 	

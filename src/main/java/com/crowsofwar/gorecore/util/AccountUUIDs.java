@@ -51,7 +51,7 @@ import net.minecraftforge.fml.common.FMLLog;
  * 
  * @author CrowsOfWar
  */
-public final class PlayerUUIDs {
+public final class AccountUUIDs {
 	
 	/**
 	 * A cache of UUIDs for quick use. It is saved via a UUID cache file. The
@@ -207,7 +207,7 @@ public final class PlayerUUIDs {
 	 *            The username to get the UUID for
 	 * @return The UUID result of the getting
 	 */
-	public static PlayerUUIDs.Result getUUID(String username) {
+	public static AccountUUIDs.Result getUUID(String username) {
 		if (playerNameToUUID.containsKey(username)) {
 			return new Result(playerNameToUUID.get(username), Outcome.SUCCESS);
 		} else {
@@ -367,7 +367,7 @@ public final class PlayerUUIDs {
 	
 	/**
 	 * GetUUIDResult shows the result of getting UUIDs from player names through
-	 * {@link PlayerUUIDs#getUUID(String)}. It has a UUID for the result and a
+	 * {@link AccountUUIDs#getUUID(String)}. It has a UUID for the result and a
 	 * {@link Outcome} that describes what happened.
 	 * 
 	 * @author CrowsOfWar

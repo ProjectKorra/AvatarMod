@@ -28,7 +28,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
-import com.crowsofwar.gorecore.util.PlayerUUIDs;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -92,7 +92,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 		
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = PlayerUUIDs
+		EntityPlayer player = AccountUUIDs
 				.findPlayerInWorldFromUUID(ctx.getServerHandler().playerEntity.worldObj, id);
 		
 		if (player == null) {
