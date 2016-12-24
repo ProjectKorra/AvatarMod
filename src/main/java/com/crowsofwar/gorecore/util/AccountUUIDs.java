@@ -17,6 +17,8 @@
 
 package com.crowsofwar.gorecore.util;
 
+import static java.util.UUID.randomUUID;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -200,16 +202,17 @@ public final class AccountUUIDs {
 	 * 
 	 * <p>
 	 * The UUID found can be extracted from the UUID-result via
-	 * {@link Result#getUUID()} as long as an error has not occurred.
+	 * {@link AccountID#getUUID()} as long as an error has not occurred.
 	 * </p>
 	 * 
 	 * @param username
 	 *            The username to get the UUID for
 	 * @return The UUID result of the getting
 	 */
-	public static AccountUUIDs.Result getUUID(String username) {
+	public static AccountUUIDs.AccountID getUUID(String username) {
 		if (playerNameToUUID.containsKey(username)) {
-			return new Result(playerNameToUUID.get(username), Outcome.SUCCESS);
+			// TODO how to save as temporary?
+			return new AccountID(playerNameToUUID.get(username), false);
 		} else {
 			try {
 				String url = "https://api.mojang.com/users/profiles/minecraft/" + username;
@@ -236,13 +239,13 @@ public final class AccountUUIDs {
 				String result = response.toString();
 				
 				if (responseCode == 204) {
-					return new Result(null, Outcome.USERNAME_DOES_NOT_EXIST);
+					return new AccountID();
 				}
 				
 				if (responseCode != 200) {
-					FMLLog.warning("GoreCore> Attempted to get a UUID for player " + username
+					GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
 							+ ", but the response code was unexpected (" + responseCode + ")");
-					return new Result(null, Outcome.BAD_HTTP_CODE);
+					return new AccountID();
 				}
 				
 				String resultOfExtraction = result.replace("{", "");
@@ -261,12 +264,12 @@ public final class AccountUUIDs {
 				UUID uuidResult = UUID.fromString(uuidCleaned);
 				
 				cacheResults(username, uuidResult);
-				return new Result(uuidResult, Outcome.SUCCESS);
+				return new AccountID(uuidResult);
 				
 			} catch (Exception e) {
 				FMLLog.severe("GoreCore> Error getting player UUID for username " + username);
 				e.printStackTrace();
-				return new Result(null, Outcome.EXCEPTION_OCCURED);
+				return new AccountID();
 			}
 		}
 	}
@@ -294,13 +297,35 @@ public final class AccountUUIDs {
 	 * 
 	 * @author CrowsOfWar
 	 */
-	public static class Result {
+	public static class AccountID {
 		private final UUID uuid;
-		private final Outcome outcome;
+		private final boolean temporary;
 		
-		public Result(UUID uuid, Outcome outcome) {
+		/**
+		 * Creates a temporary ID using a randomly generated UUID
+		 */
+		public AccountID() {
+			this.uuid = randomUUID();
+			this.temporary = true;
+		}
+		
+		/**
+		 * Creates an account ID from a successful result
+		 * 
+		 * @param uuid
+		 *            UUID obtained from Mojang API
+		 */
+		public AccountID(UUID uuid) {
 			this.uuid = uuid;
-			this.outcome = outcome;
+			this.temporary = false;
+		}
+		
+		/**
+		 * Creates an account ID which might be temporary
+		 */
+		public AccountID(UUID uuid, boolean temporary) {
+			this.uuid = uuid;
+			this.temporary = temporary;
 		}
 		
 		/**
@@ -312,39 +337,19 @@ public final class AccountUUIDs {
 		}
 		
 		/**
-		 * Gets the outcome of the result.
+		 * Returns whether this ID is temporary. If an error occurred when
+		 * accessing Mojang's API, a random UUID is generated and this will
+		 * return true.
+		 * 
+		 * @return
 		 */
-		public Outcome getOutcome() {
-			return outcome;
-		}
-		
-		/**
-		 * Returns whether the result of fetching the UUID is successful or not;
-		 * that is, whether the UUID could be found correctly and did not have
-		 * any errors.
-		 */
-		public boolean isResultSuccessful() {
-			return outcome == Outcome.SUCCESS && uuid != null;
-		}
-		
-		/**
-		 * Logs an error to the console if the UUID-get was unsuccessful.
-		 */
-		public void logError() {
-			if (!isResultSuccessful()) {
-				String text = "There's a bug with the error warning code! o_o";
-				if (outcome == Outcome.USERNAME_DOES_NOT_EXIST)
-					text = "The player was not registered on Minecraft.net - are you using a cracked launcher?";
-				if (outcome == Outcome.EXCEPTION_OCCURED)
-					text = "An unexpected error (specifically, an exception) occured while getting the player's UUID";
-				if (outcome == Outcome.BAD_HTTP_CODE) text = "Got an unexpected HTTP code";
-				FMLLog.warning("GoreCore> Attempted to get a player's UUID but failed: " + text);
-			}
+		public boolean isTemporary() {
+			return temporary;
 		}
 		
 		@Override
 		public String toString() {
-			return "GetUUIDResult[uuid=" + uuid + ", outcome=" + outcome + "]";
+			return "PlayerID[uuid=" + uuid + ",temporary=" + temporary + "]";
 		}
 		
 	}
