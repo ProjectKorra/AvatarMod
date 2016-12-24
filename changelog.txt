@@ -5,3 +5,4 @@ AV2 a3.0
 * Changed water skills menu background
 * Removed some unused assets
 * GoreCore's UUID cache uses CRLF line endings on windows
+* Offline/hacked support for account UUID fetching; generates random UUID
