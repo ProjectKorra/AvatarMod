@@ -94,21 +94,28 @@ public final class AccountUUIDs {
 			while ((line = br.readLine()) != null) {
 				if (line.startsWith("#")) continue;
 				if (!line.contains("=")) continue;
+				
 				String[] split = line.split("=");
 				if (split.length != 2) continue;
 				
-				// An IllegalArgumentException is thrown if split[1] is not a
-				// valid UUID string. It
-				// self-validates!
+				boolean temp = false;
+				if (line.startsWith("%")) {
+					temp = true;
+					line = line.substring(1);
+					GoreCore.LOGGER.warn("UUID cache for player " + split[0]
+							+ " is temporary, connect to online to fix this");
+				}
+				
 				try {
-					idCache.put(split[0], new AccountId(UUID.fromString(split[1])));
+					idCache.put(split[0], new AccountId(UUID.fromString(split[1]), temp));
 				} catch (IllegalArgumentException e) {
-					continue;
+					GoreCore.LOGGER.warn("UUID cache contains invalidly formatted UUID for player " + split[0]
+							+ ", skipping");
 				}
 				
 			}
 			
-			GoreCore.LOGGER.info("Finished reading %1$d player UUID(s)", idCache.entrySet().size());
+			GoreCore.LOGGER.info("Finished reading " + idCache.entrySet().size() + " player UUID(s)");
 			
 		} catch (Exception e) {
 			FMLLog.severe("Error reading GoreCore player UUID cache from text file:");
@@ -153,7 +160,9 @@ public final class AccountUUIDs {
 			while (next) {
 				Map.Entry<String, AccountId> current = entries.next();
 				next = entries.hasNext();
-				bw.write(current.getKey() + "=" + current.getValue().uuid + ln);
+				String username = current.getKey();
+				AccountId account = current.getValue();
+				bw.write((account.temporary ? "%" : "") + username + account.uuid + ln);
 			}
 			
 			bw.close();
