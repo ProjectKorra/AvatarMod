@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -56,13 +57,14 @@ import net.minecraftforge.fml.common.FMLLog;
 public final class AccountUUIDs {
 	
 	/**
-	 * A cache of UUIDs for quick use. It is saved via a UUID cache file. The
-	 * UUID cache map size will never exceed the maximum UUID cache size.
+	 * The cache of usernames -> account IDs, which is also saved to a cache
+	 * file. Never exceeds {@link GoreCoreModConfig#MAX_UUID_CACHE_SIZE maximum
+	 * cache size}.
 	 */
-	private static final Map<String, UUID> playerNameToUUID;
+	private static final Map<String, AccountId> idCache;
 	
 	static {
-		playerNameToUUID = new HashMap<String, UUID>();
+		idCache = new HashMap<String, AccountId>();
 	}
 	
 	/**
@@ -79,7 +81,7 @@ public final class AccountUUIDs {
 			long start = System.currentTimeMillis();
 			FMLLog.info("GoreCore> Reading UUIDs from cache file");
 			
-			playerNameToUUID.clear();
+			idCache.clear();
 			
 			File file = GoreCore.proxy.getUUIDCacheFile();
 			if (!file.exists()) {
@@ -99,7 +101,7 @@ public final class AccountUUIDs {
 				// valid UUID string. It
 				// self-validates!
 				try {
-					playerNameToUUID.put(split[0], UUID.fromString(split[1]));
+					idCache.put(split[0], new AccountId(UUID.fromString(split[1])));
 				} catch (IllegalArgumentException e) {
 					continue;
 				}
@@ -107,7 +109,7 @@ public final class AccountUUIDs {
 			}
 			
 			FMLLog.info("GoreCore> Success! Read %1$d player UUID(s). Time taken in seconds: %2$f.",
-					playerNameToUUID.entrySet().size(), (System.currentTimeMillis() - start) / 1000.0);
+					idCache.entrySet().size(), (System.currentTimeMillis() - start) / 1000.0);
 			
 		} catch (Exception e) {
 			FMLLog.severe("Error reading GoreCore player UUID cache from text file:");
@@ -139,7 +141,7 @@ public final class AccountUUIDs {
 			
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			
-			Iterator<Map.Entry<String, UUID>> entries = playerNameToUUID.entrySet().iterator();
+			Iterator<Map.Entry<String, AccountId>> entries = idCache.entrySet().iterator();
 			boolean next = entries.hasNext();
 			
 			bw.write("# This holds a cache of all the players' UUIDs determined by GoreCore\n");
@@ -148,10 +150,10 @@ public final class AccountUUIDs {
 					+ (next ? "\n\n" : ""));
 			
 			while (next) {
-				Map.Entry<String, UUID> current = entries.next();
+				Map.Entry<String, AccountId> current = entries.next();
 				next = entries.hasNext();
 				
-				bw.write(current.getKey() + "=" + current.getValue() + (next ? "\n" : ""));
+				bw.write(current.getKey() + "=" + current.getValue().uuid + (next ? "\n" : ""));
 			}
 			
 			bw.close();
@@ -202,17 +204,17 @@ public final class AccountUUIDs {
 	 * 
 	 * <p>
 	 * The UUID found can be extracted from the UUID-result via
-	 * {@link AccountID#getUUID()} as long as an error has not occurred.
+	 * {@link AccountId#getUUID()} as long as an error has not occurred.
 	 * </p>
 	 * 
 	 * @param username
 	 *            The username to get the UUID for
 	 * @return The UUID result of the getting
 	 */
-	public static AccountUUIDs.AccountID getID(String username) {
-		if (playerNameToUUID.containsKey(username)) {
+	public static AccountUUIDs.AccountId getID(String username) {
+		if (idCache.containsKey(username)) {
 			// TODO how to save as temporary?
-			return new AccountID(playerNameToUUID.get(username), false);
+			return new AccountId(idCache.get(username).uuid, false);
 		} else {
 			try {
 				String url = "https://api.mojang.com/users/profiles/minecraft/" + username;
@@ -239,13 +241,13 @@ public final class AccountUUIDs {
 				String result = response.toString();
 				
 				if (responseCode == 204) {
-					return new AccountID();
+					return new AccountId();
 				}
 				
 				if (responseCode != 200) {
 					GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
 							+ ", but the response code was unexpected (" + responseCode + ")");
-					return new AccountID();
+					return new AccountId();
 				}
 				
 				String resultOfExtraction = result.replace("{", "");
@@ -262,14 +264,14 @@ public final class AccountUUIDs {
 						+ uuidCleaned.substring(20, 32));
 				
 				UUID uuidResult = UUID.fromString(uuidCleaned);
-				
-				cacheResults(username, uuidResult);
-				return new AccountID(uuidResult);
+				AccountId accountId = new AccountId(uuidResult);
+				cacheResults(username, accountId);
+				return accountId;
 				
 			} catch (Exception e) {
 				FMLLog.severe("GoreCore> Error getting player UUID for username " + username);
 				e.printStackTrace();
-				return new AccountID();
+				return new AccountId();
 			}
 		}
 	}
@@ -281,12 +283,12 @@ public final class AccountUUIDs {
 	 * 
 	 * @param username
 	 *            The username to store in the cache (key)
-	 * @param uuid
-	 *            The UUID to store in the cache (value)
+	 * @param id
+	 *            The account ID to store in the cache (value)
 	 */
-	private static void cacheResults(String username, UUID uuid) {
-		if (playerNameToUUID.size() < GoreCore.config.MAX_UUID_CACHE_SIZE) {
-			playerNameToUUID.put(username, uuid);
+	private static void cacheResults(String username, AccountId id) {
+		if (idCache.size() < GoreCore.config.MAX_UUID_CACHE_SIZE) {
+			idCache.put(username, id);
 		}
 	}
 	
@@ -297,14 +299,14 @@ public final class AccountUUIDs {
 	 * 
 	 * @author CrowsOfWar
 	 */
-	public static class AccountID {
+	public static class AccountId {
 		private final UUID uuid;
 		private final boolean temporary;
 		
 		/**
 		 * Creates a temporary ID using a randomly generated UUID
 		 */
-		public AccountID() {
+		public AccountId() {
 			this.uuid = randomUUID();
 			this.temporary = true;
 		}
@@ -315,7 +317,7 @@ public final class AccountUUIDs {
 		 * @param uuid
 		 *            UUID obtained from Mojang API
 		 */
-		public AccountID(UUID uuid) {
+		public AccountId(UUID uuid) {
 			this.uuid = uuid;
 			this.temporary = false;
 		}
@@ -323,7 +325,7 @@ public final class AccountUUIDs {
 		/**
 		 * Creates an account ID which might be temporary
 		 */
-		public AccountID(UUID uuid, boolean temporary) {
+		public AccountId(UUID uuid, boolean temporary) {
 			this.uuid = uuid;
 			this.temporary = temporary;
 		}
