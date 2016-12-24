@@ -79,7 +79,7 @@ public final class AccountUUIDs {
 		try {
 			
 			long start = System.currentTimeMillis();
-			FMLLog.info("GoreCore> Reading UUIDs from cache file");
+			GoreCore.LOGGER.info("Reading UUIDs from cache file");
 			
 			idCache.clear();
 			
@@ -108,8 +108,7 @@ public final class AccountUUIDs {
 				
 			}
 			
-			FMLLog.info("GoreCore> Success! Read %1$d player UUID(s). Time taken in seconds: %2$f.",
-					idCache.entrySet().size(), (System.currentTimeMillis() - start) / 1000.0);
+			GoreCore.LOGGER.info("Finished reading %1$d player UUID(s)", idCache.entrySet().size());
 			
 		} catch (Exception e) {
 			FMLLog.severe("Error reading GoreCore player UUID cache from text file:");

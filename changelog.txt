@@ -4,3 +4,4 @@ AV2 a3.0
 + Added earth wall ability
 * Changed water skills menu background
 * Removed some unused assets
+* GoreCore's UUID cache uses CRLF line endings on windows
