@@ -62,7 +62,7 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 		if (world == null) throw new IllegalArgumentException("Cannot get player-data with null World");
 		if (playerName == null)
 			throw new IllegalArgumentException("Cannot get player-data with null player name");
-		return fetch(world, AccountUUIDs.getID(playerName).getUUID());
+		return fetch(world, AccountUUIDs.getId(playerName).getUUID());
 	}
 	
 	/**
