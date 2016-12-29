@@ -2,6 +2,7 @@ AV2 a3.0
 
 + Added water bubble ability
 + Added earth wall ability
++ Added /gorecore fixid, which allows you to sync UUID to online
 * Changed water skills menu background
 * Removed some unused assets
 * GoreCore's UUID cache uses CRLF line endings on windows
