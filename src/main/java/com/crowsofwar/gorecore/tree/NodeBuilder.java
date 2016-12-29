@@ -16,7 +16,9 @@
 */
 package com.crowsofwar.gorecore.tree;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Allows quick creation of a NodeFunctional at runtime via the builder pattern
@@ -28,21 +30,78 @@ public class NodeBuilder {
 	
 	private final String name;
 	private boolean op;
+	private final List<IArgument> args;
 	
 	public NodeBuilder(String name) {
 		this.name = name;
+		this.args = new ArrayList<>();
 	}
 	
-	public NodeFunctional build() {
+	public NodeBuilder addArgument(IArgument argument) {
+		this.args.add(argument);
+		return this;
+	}
+	
+	public NodeBuilder addArgumentDirect(String argumentName, ITypeConverter<?> converter) {
+		return addArgument(new ArgumentDirect<>(argumentName, converter));
+	}
+	
+	public NodeBuilder addArgumentPlayer(String argumentName) {
+		return addArgument(new ArgumentPlayerName(argumentName));
+	}
+	
+	public NodeFunctional build(Consumer<ArgumentList> action) {
 		NodeFunctional node = new NodeFunctional(name, op) {
 			@Override
 			protected ICommandNode doFunction(CommandCall call, List<String> options) {
-				// TODO Auto-generated method stub
+				ArgumentList argList = call.popArguments(this);
+				action.accept(argList);
 				return null;
 			}
 		};
+		for (IArgument arg : args)
+			node.addArgument(arg);
 		
 		return node;
+	}
+	
+	public static class ArgPopper {
+		
+		private ArgumentList values;
+		private List<IArgument> args;
+		private int nextArg;
+		
+		public ArgPopper(ArgumentList values, List<IArgument> args) {
+			this.values = values;
+			this.args = args;
+			this.nextArg = 0;
+		}
+		
+		//@formatter:off
+		/**
+		 * Get the next argument from this popper. Arguments must be popped in
+		 * the same order they were declared.
+		 * <p>
+		 * Example:
+		 * 
+		 * <pre>
+		 * new NodeBuilder("sendMsg")
+		 * 		.addArgumentPlayer("player")
+		 * 		.addArgumentDirect("msg", ITypeConverter.CONVERTER_STRING)
+		 * 		.build(popper -> {
+		 * 			// Must use exact same order as used in addArgument methods
+		 * 			String playerName = popper.get();
+		 * 			String message = popper.get();
+		 * 		});
+		 * </pre>
+		 */
+		//@formatter:on
+		public <T> T get() {
+			if (nextArg >= args.size()) throw new IndexOutOfBoundsException("Ran out of arguments to pop");
+			IArgument<T> key = args.get(nextArg++);
+			return values.get(key);
+		}
+		
 	}
 	
 }

@@ -16,11 +16,33 @@
 */
 package com.crowsofwar.gorecore.tree.test;
 
+import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
+import com.crowsofwar.gorecore.tree.ICommandNode;
+import com.crowsofwar.gorecore.tree.NodeBuilder;
+import com.crowsofwar.gorecore.tree.NodeFunctional;
+import com.crowsofwar.gorecore.tree.TreeCommand;
+
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class GoreCoreCommand {
+public class GoreCoreCommand extends TreeCommand {
+	
+	@Override
+	public String getCommandName() {
+		return "gorecore";
+	}
+	
+	@Override
+	protected ICommandNode[] addCommands() {
+		
+		NodeFunctional reloadId = new NodeBuilder("relids").addArgument(new ArgumentPlayerName("player"))
+				.build(argList -> {
+					
+				});
+		
+		return null;
+	}
 	
 }
