@@ -16,6 +16,9 @@
 */
 package com.crowsofwar.gorecore.tree.test;
 
+import static com.crowsofwar.gorecore.tree.test.GoreCoreChatMessages.*;
+
+import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.NodeBuilder;
@@ -38,11 +41,17 @@ public class GoreCoreCommand extends TreeCommand {
 	@Override
 	protected ICommandNode[] addCommands() {
 		
-		NodeFunctional reloadId = new NodeBuilder("relids").addArgument(new ArgumentPlayerName("player"))
+		NodeFunctional reloadId = new NodeBuilder("fixid").addArgument(new ArgumentPlayerName("player"))
 				.build(popper -> {
 					String username = popper.get();
 					System.out.println("Reload " + username);
-					boolean success = AccountUUIDs.tryFixId(username);
+					ChatMessage msg;
+					if (AccountUUIDs.getId(username).isTemporary()) {
+						msg = AccountUUIDs.tryFixId(username) ? MSG_FIXID_SUCCESS : MSG_FIXID_FAILURE;
+					} else {
+						msg = MSG_FIXID_ONLINE;
+					}
+					msg.send(popper.from(), username);
 					
 				});
 		

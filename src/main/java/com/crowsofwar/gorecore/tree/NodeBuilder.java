@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.minecraft.command.ICommandSender;
+
 /**
  * Allows quick creation of a NodeFunctional at runtime via the builder pattern
  * and lambdas.
@@ -55,7 +57,7 @@ public class NodeBuilder {
 			@Override
 			protected ICommandNode doFunction(CommandCall call, List<String> options) {
 				ArgumentList argList = call.popArguments(this);
-				action.accept(new ArgPopper(argList, args));
+				action.accept(new ArgPopper(argList, args, call));
 				return null;
 			}
 		};
@@ -70,11 +72,13 @@ public class NodeBuilder {
 		private ArgumentList values;
 		private List<IArgument> args;
 		private int nextArg;
+		private final CommandCall call;
 		
-		public ArgPopper(ArgumentList values, List<IArgument> args) {
+		public ArgPopper(ArgumentList values, List<IArgument> args, CommandCall call) {
 			this.values = values;
 			this.args = args;
 			this.nextArg = 0;
+			this.call = call;
 		}
 		
 		//@formatter:off
@@ -100,6 +104,10 @@ public class NodeBuilder {
 			if (nextArg >= args.size()) throw new IndexOutOfBoundsException("Ran out of arguments to pop");
 			IArgument<T> key = args.get(nextArg++);
 			return values.get(key);
+		}
+		
+		public ICommandSender from() {
+			return call.getFrom();
 		}
 		
 	}
