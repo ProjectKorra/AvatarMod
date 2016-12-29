@@ -44,7 +44,6 @@ public class GoreCoreCommand extends TreeCommand {
 		NodeFunctional reloadId = new NodeBuilder("fixid").addArgument(new ArgumentPlayerName("player"))
 				.build(popper -> {
 					String username = popper.get();
-					System.out.println("Reload " + username);
 					ChatMessage msg;
 					if (AccountUUIDs.getId(username).isTemporary()) {
 						msg = AccountUUIDs.tryFixId(username) ? MSG_FIXID_SUCCESS : MSG_FIXID_FAILURE;

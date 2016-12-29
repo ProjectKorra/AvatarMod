@@ -300,6 +300,8 @@ public final class AccountUUIDs {
 			String result = response.toString();
 			
 			if (responseCode == 204) {
+				GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
+						+ ", but that account is not registered");
 				return null;
 			}
 			
