@@ -45,6 +45,7 @@ public class AbilityWall extends BendingAbility {
 		World world = ctx.getWorld();
 		EnumFacing cardinal = player.getHorizontalFacing();
 		
+		if (!ctx.isLookingAtBlock()) return;
 		BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
 		if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(lookPos).getBlock())) {
 			System.out.println("BEND A WALL");
