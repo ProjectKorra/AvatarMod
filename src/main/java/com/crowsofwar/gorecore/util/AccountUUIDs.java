@@ -228,17 +228,34 @@ public final class AccountUUIDs {
 		}
 	}
 	
-	public static void tryFixId(String playerName) {
-		AccountId id = getId(playerName);
+	/**
+	 * Gets the AccountId of that player. If it is temporary, tries to send a
+	 * request to Mojang's API and fix the UUID.
+	 * 
+	 * @param username
+	 *            the name of that player
+	 * @return true if the id was temporary AND it was successfully changed
+	 */
+	public static boolean tryFixId(String username) {
+		AccountId id = getId(username);
 		if (id.isTemporary()) {
-			
+			UUID found = requestId(username);
+			if (found == null) {
+				return false;
+			} else {
+				// TODO Fix clients' saved UUIDs
+				cacheResults(username, new AccountId(found));
+				return true;
+			}
+		} else {
+			return false;
 		}
 	}
 	
 	/**
-	 * Caches the results for the given username. However, the cache will not be
-	 * added on to if the cache is too large (if the size of the cache exceeds
-	 * the maximum UUID cache size).
+	 * Caches the results for the given username, replacing any current data.
+	 * However, the cache will not be added on to if the cache is too large (if
+	 * the size of the cache exceeds the maximum UUID cache size).
 	 * 
 	 * @param username
 	 *            The username to store in the cache (key)

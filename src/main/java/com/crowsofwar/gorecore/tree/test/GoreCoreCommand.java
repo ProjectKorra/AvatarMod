@@ -21,6 +21,7 @@ import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.NodeBuilder;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
 import com.crowsofwar.gorecore.tree.TreeCommand;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 /**
  * 
@@ -39,8 +40,10 @@ public class GoreCoreCommand extends TreeCommand {
 		
 		NodeFunctional reloadId = new NodeBuilder("relids").addArgument(new ArgumentPlayerName("player"))
 				.build(popper -> {
-					String playerName = popper.get();
-					System.out.println("Reload " + playerName);
+					String username = popper.get();
+					System.out.println("Reload " + username);
+					boolean success = AccountUUIDs.tryFixId(username);
+					
 				});
 		
 		return new ICommandNode[] { reloadId };
