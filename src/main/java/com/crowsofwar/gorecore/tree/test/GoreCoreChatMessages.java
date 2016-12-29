@@ -19,6 +19,9 @@ package com.crowsofwar.gorecore.tree.test;
 import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.chat.MessageConfiguration;
+
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * 
@@ -29,8 +32,10 @@ public class GoreCoreChatMessages {
 	
 	public static void register() {}
 	
-	public static final ChatMessage MSG_FIXID_SUCCESS = newChatMessage("gc.cmd.fixid.success", "player");
-	public static final ChatMessage MSG_FIXID_FAILURE = newChatMessage("gc.cmd.fixid.failure", "player");
-	public static final ChatMessage MSG_FIXID_ONLINE = newChatMessage("gc.cmd.fixid.online", "player");
+	public static final MessageConfiguration CFG = new MessageConfiguration().addColor("value",
+			TextFormatting.GOLD);
+	public static final ChatMessage MSG_FIXID_SUCCESS = newChatMessage(CFG, "gc.cmd.fixid.success", "player");
+	public static final ChatMessage MSG_FIXID_FAILURE = newChatMessage(CFG, "gc.cmd.fixid.failure", "player");
+	public static final ChatMessage MSG_FIXID_ONLINE = newChatMessage(CFG, "gc.cmd.fixid.online", "player");
 	
 }

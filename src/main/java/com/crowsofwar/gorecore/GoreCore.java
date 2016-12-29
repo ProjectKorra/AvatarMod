@@ -24,6 +24,7 @@ import com.crowsofwar.gorecore.chat.ChatSender;
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 import com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy;
 import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
+import com.crowsofwar.gorecore.tree.test.GoreCoreChatMessages;
 import com.crowsofwar.gorecore.tree.test.GoreCoreCommand;
 import com.crowsofwar.gorecore.tree.test.TreeTest;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
@@ -58,6 +59,7 @@ public class GoreCore {
 		ConverterRegistry.addDefaultConverters();
 		
 		AccountUUIDs.readCache();
+		GoreCoreChatMessages.register();
 		
 		proxy.sideSpecifics();
 		
