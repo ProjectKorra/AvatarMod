@@ -24,6 +24,7 @@ import com.crowsofwar.gorecore.chat.ChatSender;
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 import com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy;
 import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
+import com.crowsofwar.gorecore.tree.test.GoreCoreCommand;
 import com.crowsofwar.gorecore.tree.test.TreeTest;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 
@@ -68,6 +69,7 @@ public class GoreCore {
 	public void onServerLoad(FMLServerStartingEvent event) {
 		event.registerServerCommand(new TreeTest()); // TODO remove when testing
 														// is over
+		event.registerServerCommand(new GoreCoreCommand());
 	}
 	
 	// Called both on the client and on the dedicated server

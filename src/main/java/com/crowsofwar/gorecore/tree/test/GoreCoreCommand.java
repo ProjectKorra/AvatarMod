@@ -38,11 +38,12 @@ public class GoreCoreCommand extends TreeCommand {
 	protected ICommandNode[] addCommands() {
 		
 		NodeFunctional reloadId = new NodeBuilder("relids").addArgument(new ArgumentPlayerName("player"))
-				.build(argList -> {
-					
+				.build(popper -> {
+					String playerName = popper.get();
+					System.out.println("Reload " + playerName);
 				});
 		
-		return null;
+		return new ICommandNode[] { reloadId };
 	}
 	
 }

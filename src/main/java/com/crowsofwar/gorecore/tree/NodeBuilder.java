@@ -50,12 +50,12 @@ public class NodeBuilder {
 		return addArgument(new ArgumentPlayerName(argumentName));
 	}
 	
-	public NodeFunctional build(Consumer<ArgumentList> action) {
+	public NodeFunctional build(Consumer<ArgPopper> action) {
 		NodeFunctional node = new NodeFunctional(name, op) {
 			@Override
 			protected ICommandNode doFunction(CommandCall call, List<String> options) {
 				ArgumentList argList = call.popArguments(this);
-				action.accept(argList);
+				action.accept(new ArgPopper(argList, args));
 				return null;
 			}
 		};
