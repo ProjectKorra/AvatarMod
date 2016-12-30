@@ -22,16 +22,19 @@ import java.util.UUID;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -66,6 +69,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSUseStatusControl)
 			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
 		
+		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
+		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
 	}
@@ -92,8 +97,8 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 		
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = AccountUUIDs
-				.findEntityFromUUID(ctx.getServerHandler().playerEntity.worldObj, id);
+		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().playerEntity.worldObj,
+				id);
 		
 		if (player == null) {
 			
@@ -152,6 +157,21 @@ public class PacketHandlerServer implements IPacketHandler {
 				}
 			}
 			
+		}
+		
+		return null;
+	}
+	
+	private IMessage handleWallJump(PacketSWallJump packet, MessageContext ctx) {
+		
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		World world = player.worldObj;
+		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		if (data.hasBending(BendingType.AIRBENDING)) {
+			System.out.println("jumpitty jump");
+			player.addVelocity(0, 10, 0); // lol
+			player.connection.sendPacket(new SPacketEntityVelocity(player));
 		}
 		
 		return null;

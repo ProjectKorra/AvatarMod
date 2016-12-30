@@ -53,6 +53,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
@@ -111,6 +112,7 @@ public class AvatarMod {
 		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
 		registerPacket(PacketCParticles.class, Side.CLIENT);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
+		registerPacket(PacketSWallJump.class, Side.SERVER);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		

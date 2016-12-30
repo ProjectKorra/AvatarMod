@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,6 +44,7 @@ public class AirTick {
 				&& !player.isCollidedVertically) {
 			if (AvatarMod.proxy.getKeyHandler().isControlPressed(CONTROL_SPACE)) {
 				System.out.println("JUMP!");
+				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
 		}
 	}
