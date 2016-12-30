@@ -66,7 +66,6 @@ public class AirJumpParticleSpawner {
 		}
 	}
 	
-	// Note: not fired on survival mode
 	@SubscribeEvent
 	public void onFall(LivingFallEvent e) {
 		if (e.getEntity() == target && !e.getEntity().worldObj.isRemote) {
