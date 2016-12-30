@@ -173,7 +173,6 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data.hasBending(BendingType.AIRBENDING) && !data.isWallJumping()) {
 			
 			data.setWallJumping(true);
-			System.out.println("jumpitty jump");
 			
 			// Detect direction to jump
 			Vector normal = Vector.UP;
@@ -202,13 +201,14 @@ public class PacketHandlerServer implements IPacketHandler {
 				}
 			}
 			
-			System.out.println("reflected across " + normal);
-			
-			Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
-			Vector n = velocity.reflect(normal).mul(2).add(normal);
-			
-			player.setVelocity(n.x(), n.y(), n.z());
-			player.connection.sendPacket(new SPacketEntityVelocity(player));
+			if (normal != Vector.UP) {
+				
+				Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
+				Vector n = velocity.reflect(normal).mul(4).subtract(normal.times(0.5)).setY(0.5);
+				
+				player.setVelocity(n.x(), n.y(), n.z());
+				player.connection.sendPacket(new SPacketEntityVelocity(player));
+			}
 			
 		}
 		

@@ -43,7 +43,6 @@ public class AirTick {
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
 				&& !player.isCollidedVertically) {
 			if (AvatarMod.proxy.getKeyHandler().isControlPressed(CONTROL_SPACE_DOWN)) {
-				System.out.println("JUMP!");
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
 		}
