@@ -75,6 +75,10 @@ public class AvatarPlayerData extends PlayerData {
 	private final boolean isClient;
 	
 	private boolean wallJumping;
+	/**
+	 * Amount to reduce fall distance by the next time the player lands
+	 */
+	private float fallAbsorption;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
@@ -130,6 +134,7 @@ public class AvatarPlayerData extends PlayerData {
 		}, readFrom, "AbilityData");
 		
 		wallJumping = readFrom.getBoolean("WallJumping");
+		fallAbsorption = readFrom.getFloat("FallAbsorption");
 		
 	}
 	
@@ -151,6 +156,7 @@ public class AvatarPlayerData extends PlayerData {
 				}, writeTo, "AbilityData");
 		
 		writeTo.setBoolean("WallJumping", wallJumping);
+		writeTo.setFloat("FallAbsorption", fallAbsorption);
 		
 	}
 	
@@ -450,6 +456,14 @@ public class AvatarPlayerData extends PlayerData {
 	
 	public void setWallJumping(boolean wallJumping) {
 		this.wallJumping = wallJumping;
+	}
+	
+	public float getFallAbsorption() {
+		return fallAbsorption;
+	}
+	
+	public void setFallAbsorption(float amount) {
+		this.fallAbsorption = amount;
 	}
 	
 	public Networker getNetworker() {
