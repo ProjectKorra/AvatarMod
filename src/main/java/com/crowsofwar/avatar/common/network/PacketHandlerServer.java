@@ -214,6 +214,7 @@ public class PacketHandlerServer implements IPacketHandler {
 				
 				Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
 				Vector n = velocity.reflect(normal).mul(4).subtract(normal.times(0.5)).setY(0.5);
+				n.add(Vector.fromEntityLook(player).mul(.3));
 				
 				player.setVelocity(n.x(), n.y(), n.z());
 				player.connection.sendPacket(new SPacketEntityVelocity(player));
