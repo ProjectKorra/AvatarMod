@@ -31,10 +31,12 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -169,9 +171,44 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data.hasBending(BendingType.AIRBENDING)) {
+			
 			System.out.println("jumpitty jump");
-			player.addVelocity(0, 10, 0); // lol
+			
+			// Detect direction to jump
+			Vector normal = Vector.UP;
+			{
+				BlockPos pos = new BlockPos(player).north();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.NORTH;
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(player).south();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.SOUTH;
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(player).east();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.EAST;
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(player).west();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.WEST;
+				}
+			}
+			
+			System.out.println("reflected across " + normal);
+			
+			Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
+			Vector n = velocity.reflect(normal).mul(2).add(normal);
+			
+			player.setVelocity(n.x(), n.y(), n.z());
 			player.connection.sendPacket(new SPacketEntityVelocity(player));
+			
 		}
 		
 		return null;
