@@ -8,3 +8,4 @@ AV2 a3.0
 * GoreCore's UUID cache uses CRLF line endings on windows
 * Offline/hacked support for account UUID fetching; generates random UUID
 * Air gust puts out fires
+* New texture for air particles, provided by EduMC
