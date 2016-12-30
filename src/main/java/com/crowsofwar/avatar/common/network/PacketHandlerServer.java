@@ -30,12 +30,16 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -176,28 +180,33 @@ public class PacketHandlerServer implements IPacketHandler {
 			
 			// Detect direction to jump
 			Vector normal = Vector.UP;
+			Block block = null;
 			{
 				BlockPos pos = new BlockPos(player).north();
 				if (!world.isAirBlock(pos)) {
 					normal = Vector.NORTH;
+					block = world.getBlockState(pos).getBlock();
 				}
 			}
 			{
 				BlockPos pos = new BlockPos(player).south();
 				if (!world.isAirBlock(pos)) {
 					normal = Vector.SOUTH;
+					block = world.getBlockState(pos).getBlock();
 				}
 			}
 			{
 				BlockPos pos = new BlockPos(player).east();
 				if (!world.isAirBlock(pos)) {
 					normal = Vector.EAST;
+					block = world.getBlockState(pos).getBlock();
 				}
 			}
 			{
 				BlockPos pos = new BlockPos(player).west();
 				if (!world.isAirBlock(pos)) {
 					normal = Vector.WEST;
+					block = world.getBlockState(pos).getBlock();
 				}
 			}
 			
@@ -208,6 +217,12 @@ public class PacketHandlerServer implements IPacketHandler {
 				
 				player.setVelocity(n.x(), n.y(), n.z());
 				player.connection.sendPacket(new SPacketEntityVelocity(player));
+				
+				new NetworkParticleSpawner().spawnParticles(world, ParticleType.AIR, 4, 10,
+						new Vector(player).plus(n), n.times(3));
+				world.playSound(null, new BlockPos(player), block.getSoundType().getBreakSound(),
+						SoundCategory.PLAYERS, 1, 0.6f);
+				
 			}
 			
 		}
