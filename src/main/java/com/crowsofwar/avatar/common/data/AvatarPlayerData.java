@@ -462,8 +462,11 @@ public class AvatarPlayerData extends PlayerData {
 		return fallAbsorption;
 	}
 	
+	/**
+	 * Set the amount to reduce fall distance by. Cannot lower existing amount.
+	 */
 	public void setFallAbsorption(float amount) {
-		this.fallAbsorption = amount;
+		if (amount > this.fallAbsorption) this.fallAbsorption = amount;
 	}
 	
 	public Networker getNetworker() {

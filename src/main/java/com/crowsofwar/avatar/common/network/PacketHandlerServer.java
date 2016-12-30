@@ -224,6 +224,8 @@ public class PacketHandlerServer implements IPacketHandler {
 				world.playSound(null, new BlockPos(player), block.getSoundType().getBreakSound(),
 						SoundCategory.PLAYERS, 1, 0.6f);
 				
+				data.setFallAbsorption(3);
+				
 			}
 			
 		}
