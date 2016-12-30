@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.air.AirTick;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
@@ -98,6 +99,7 @@ public class AvatarMod {
 		EarthSoundHandler.register();
 		
 		AvatarParticles.register();
+		AirTick.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
