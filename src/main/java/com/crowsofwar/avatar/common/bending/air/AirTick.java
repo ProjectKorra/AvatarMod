@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE_DOWN;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -42,10 +42,13 @@ public class AirTick {
 	private void tick(EntityPlayer player, World world, AvatarPlayerData data) {
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
 				&& !player.isCollidedVertically) {
-			if (AvatarMod.proxy.getKeyHandler().isControlPressed(CONTROL_SPACE)) {
+			if (AvatarMod.proxy.getKeyHandler().isControlPressed(CONTROL_SPACE_DOWN)) {
 				System.out.println("JUMP!");
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
+		}
+		if (player.onGround) {
+			data.setWallJumping(false);
 		}
 	}
 	

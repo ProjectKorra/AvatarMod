@@ -74,6 +74,8 @@ public class AvatarPlayerData extends PlayerData {
 	private final Networker networker;
 	private final boolean isClient;
 	
+	private boolean wallJumping;
+	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
 		isClient = dataSaver instanceof DataSaverDontSave;
@@ -127,6 +129,8 @@ public class AvatarPlayerData extends PlayerData {
 			return data;
 		}, readFrom, "AbilityData");
 		
+		wallJumping = readFrom.getBoolean("WallJumping");
+		
 	}
 	
 	@Override
@@ -145,6 +149,8 @@ public class AvatarPlayerData extends PlayerData {
 					nbt.setInteger("AbilityId", data.getAbility().getId());
 					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");
+		
+		writeTo.setBoolean("WallJumping", wallJumping);
 		
 	}
 	
@@ -436,6 +442,14 @@ public class AvatarPlayerData extends PlayerData {
 	 */
 	public void sendBendingState(BendingState state) {
 		networker.changeAndSync(KEY_STATES, bendingStateList);
+	}
+	
+	public boolean isWallJumping() {
+		return wallJumping;
+	}
+	
+	public void setWallJumping(boolean wallJumping) {
+		this.wallJumping = wallJumping;
 	}
 	
 	public Networker getNetworker() {

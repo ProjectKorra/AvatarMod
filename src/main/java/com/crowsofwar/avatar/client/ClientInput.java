@@ -64,7 +64,7 @@ public class ClientInput implements IControlsHandler {
 	private GameSettings gameSettings;
 	private Map<String, KeyBinding> keybindings;
 	private boolean mouseLeft, mouseRight, mouseMiddle, space;
-	private boolean wasLeft, wasRight, wasMiddle;
+	private boolean wasLeft, wasRight, wasMiddle, wasSpace;
 	
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
@@ -120,6 +120,7 @@ public class ClientInput implements IControlsHandler {
 			if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
 			if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
 			if (control == CONTROL_SPACE) return space;
+			if (control == CONTROL_SPACE_DOWN) return space && !wasSpace;
 			if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
 			if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
 			if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
@@ -161,6 +162,7 @@ public class ClientInput implements IControlsHandler {
 		wasLeft = mouseLeft;
 		wasRight = mouseRight;
 		wasMiddle = mouseMiddle;
+		wasSpace = space;
 		
 		if (mc.inGameHasFocus) {
 			mouseLeft = Mouse.isButtonDown(0);

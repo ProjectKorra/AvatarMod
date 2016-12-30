@@ -170,8 +170,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		World world = player.worldObj;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(BendingType.AIRBENDING)) {
+		if (data.hasBending(BendingType.AIRBENDING) && !data.isWallJumping()) {
 			
+			data.setWallJumping(true);
 			System.out.println("jumpitty jump");
 			
 			// Detect direction to jump
