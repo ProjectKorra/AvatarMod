@@ -7,3 +7,4 @@ AV2 a3.0
 * Removed some unused assets
 * GoreCore's UUID cache uses CRLF line endings on windows
 * Offline/hacked support for account UUID fetching; generates random UUID
+* Air gust puts out fires

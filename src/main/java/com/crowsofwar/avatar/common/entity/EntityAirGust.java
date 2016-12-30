@@ -35,6 +35,7 @@ public class EntityAirGust extends EntityArc {
 	public EntityAirGust(World world) {
 		super(world);
 		setSize(0.5f, 0.5f);
+		putsOutFires = true;
 	}
 	
 	@Override
