@@ -662,6 +662,24 @@ public class Vector {
 	}
 	
 	/**
+	 * Get velocity of the entity in m/s.
+	 * 
+	 * @see #getVelocityTpS(Entity)
+	 */
+	public static Vector getVelocityMpS(Entity entity) {
+		return new Vector(entity.motionX / 20, entity.motionY / 20, entity.motionZ / 20);
+	}
+	
+	/**
+	 * Get velocity of the entity in ticks/s.
+	 * 
+	 * @see #getVelocityMpS(Entity)
+	 */
+	public static Vector getVelocityTpS(Entity entity) {
+		return new Vector(entity.motionX, entity.motionY, entity.motionZ);
+	}
+	
+	/**
 	 * Get the pitch to lob a projectile in radians. Example: pitch to target
 	 * can be used in {@link #toRectangular(double, double)}
 	 * 
