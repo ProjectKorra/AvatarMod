@@ -49,7 +49,7 @@ public class FirebendingUpdate {
 				FirebendingState fs = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
 				if (fs.isFlamethrowing() && player.ticksExisted % 3 < 2) {
 					
-					Vector look = Vector.fromEntityLook(player);
+					Vector look = Vector.getLookRectangular(player);
 					Vector eye = Vector.getEyePos(player);
 					
 					World world = data.getWorld();

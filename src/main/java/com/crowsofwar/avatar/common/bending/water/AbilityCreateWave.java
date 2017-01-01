@@ -39,7 +39,7 @@ public class AbilityCreateWave extends WaterAbility {
 		EntityPlayer player = data.getPlayerEntity();
 		World world = data.getWorld();
 		
-		Vector look = Vector.fromEntityLook(player);
+		Vector look = Vector.getLookRectangular(player);
 		look.setY(0);
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(player).add(0, -1, 0),
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
@@ -57,7 +57,7 @@ public class AbilityCreateWave extends WaterAbility {
 					wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
 					wave.setDamageMultiplier(1 + data.getData().getAbilityData(this).getXp() / 100f);
 					
-					wave.rotationYaw = (float) look.toSpherical().toDegrees().y();
+					wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 					
 					world.spawnEntityInWorld(wave);
 					break;

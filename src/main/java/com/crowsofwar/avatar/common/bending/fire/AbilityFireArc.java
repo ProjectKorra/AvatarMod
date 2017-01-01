@@ -53,7 +53,7 @@ public class AbilityFireArc extends FireAbility {
 		if (ctx.isLookingAtBlock()) {
 			lookPos = ctx.getLookPos();
 		} else {
-			Vector look = Vector.fromEntityLook(player);
+			Vector look = Vector.getLookRectangular(player);
 			lookPos = Vector.getEyePos(player).plus(look.times(3));
 		}
 		
