@@ -333,7 +333,7 @@ public class ConfigLoader {
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config/" + path)));
 			
-			writer.write(dump());
+			writer.write(dump().replace("\n", System.getProperty("line.separator")));
 			writer.close();
 			
 		} catch (IOException e) {

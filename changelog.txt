@@ -6,7 +6,10 @@ AV2 a3.0
 + Added wall-jumping for airbenders
 * Changed water skills menu background
 * Removed some unused assets
-* GoreCore's UUID cache uses CRLF line endings on windows
 * Offline/hacked support for account UUID fetching; generates random UUID
 * Flamethrower flames inherit the firebender's velocity
+* Adjusted default values for configuration files
 > Fixed air gust not working on other players in LAN
+> Fixed crashing for hacked players... don't expect it to work on servers though
+> Fixed UUID cache using LF line endings on windows
+> Fixed config files using LF line endings on windows
