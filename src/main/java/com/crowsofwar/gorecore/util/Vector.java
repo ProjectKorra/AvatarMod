@@ -663,7 +663,7 @@ public class Vector {
 	
 	/**
 	 * Get the pitch to lob a projectile in radians. Example: pitch to target
-	 * can be used in {@link #fromYawPitch(double, double)}
+	 * can be used in {@link #toRectangular(double, double)}
 	 * 
 	 * @param v
 	 *            Force of the projectile, going FORWARDS
@@ -679,27 +679,21 @@ public class Vector {
 	}
 	
 	/**
-	 * Create a unit vector from yaw and pitch. Parameters should be in radians.
-	 */
-	public static Vector fromYawPitch(double yaw, double pitch) {
-		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
-	}
-	
-	/**
-	 * Create a unit vector based from the direction of the entity's head.
-	 * <p>
-	 * This equivalent to calling {@link #fromYawPitch(double, double)} using
-	 * entity's rotations as inputs.
+	 * Create a rectangular vector from the entity's rotations. This can be used
+	 * to determine the coordinates the entity is looking at (without raytrace).
 	 * 
 	 * @param entity
 	 *            The entity to use
 	 */
 	public static Vector getLookRectangular(Entity entity) {
-		return fromYawPitch(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
+		return toRectangular(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
 	}
 	
 	/**
-	 * Gets the look euler of the entity, in radians.
+	 * Create a rotation vector from the entity's rotations. This is a euler and
+	 * is in radians.
+	 * 
+	 * @see #getEuler(double, double)
 	 */
 	public static Vector getLookRotations(Entity entity) {
 		return getEuler(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
@@ -717,7 +711,7 @@ public class Vector {
 	 * Converts a rotation vector into a rectangular (Cartesian) vector. Euler
 	 * must be in radians.
 	 * 
-	 * @see #fromYawPitch(double, double)
+	 * @see #toRectangular(double, double)
 	 * @see #getEuler(double, double)
 	 */
 	public static Vector toRectangular(Vector euler) {
@@ -725,10 +719,24 @@ public class Vector {
 	}
 	
 	/**
+	 * Converts the given rotations into a rectangular (Cartesian) vector.
+	 * Parameters must be in radians.
+	 * 
+	 * @see #toRectangular(Vector)
+	 */
+	public static Vector toRectangular(double yaw, double pitch) {
+		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
+	}
+	
+	/**
 	 * Creates a new vector from the packet information in the byte buffer.
+	 * Vectors should be encoded using the non-static {@link #toBytes(ByteBuf)
+	 * toBytes}.
 	 * 
 	 * @param buf
 	 *            Buffer to read from
+	 * 
+	 * @see #toBytes(ByteBuf)
 	 */
 	public static Vector fromBytes(ByteBuf buf) {
 		return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());

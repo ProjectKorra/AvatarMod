@@ -87,7 +87,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						if (res.hitSomething()) {
 							lookPos = res.getPosPrecise();
 						} else {
-							Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+							Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 									Math.toRadians(player.rotationPitch));
 							lookPos = Vector.getEyePos(player).plus(look.times(3));
 						}

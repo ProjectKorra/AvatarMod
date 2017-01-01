@@ -82,7 +82,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					EntityFireArc fire = bendingState.getFireArc();
 					if (fire != null) {
 						
-						Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+						Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 								Math.toRadians(player.rotationPitch));
 						Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
 						Vector motion = lookPos.minus(new Vector(fire));

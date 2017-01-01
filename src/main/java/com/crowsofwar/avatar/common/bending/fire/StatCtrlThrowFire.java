@@ -53,7 +53,7 @@ public class StatCtrlThrowFire extends StatusControl {
 			
 			EntityFireArc fire = bendingState.getFireArc();
 			
-			Vector force = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+			Vector force = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
 			fire.velocity().add(force);

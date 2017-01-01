@@ -55,7 +55,7 @@ public class StatCtrlThrowWater extends StatusControl {
 			
 			EntityWaterArc water = bendingState.getWaterArc(world);
 			
-			Vector force = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+			Vector force = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
 			water.velocity().add(force);

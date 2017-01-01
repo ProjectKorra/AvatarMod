@@ -89,7 +89,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			} else {
 				double yaw = Math.toRadians(player.rotationYaw);
 				double pitch = Math.toRadians(player.rotationPitch);
-				Vector forward = Vector.fromYawPitch(yaw, pitch);
+				Vector forward = Vector.toRectangular(yaw, pitch);
 				Vector eye = Vector.getEyePos(player);
 				target = forward.times(2).plus(eye);
 			}

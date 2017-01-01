@@ -264,7 +264,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			double yaw = Math.toRadians(player.rotationYaw);
 			double pitch = Math.toRadians(player.rotationPitch);
-			Vector forward = Vector.fromYawPitch(yaw, pitch);
+			Vector forward = Vector.toRectangular(yaw, pitch);
 			Vector eye = Vector.getEyePos(player);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(entity));
