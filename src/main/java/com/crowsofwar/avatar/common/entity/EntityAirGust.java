@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -103,6 +104,8 @@ public class EntityAirGust extends EntityArc {
 				velocity.setY(1);
 				
 				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+				afterVelocityAdded(entity);
+				
 				setDead();
 				
 			}
