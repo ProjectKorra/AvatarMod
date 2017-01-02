@@ -4,6 +4,7 @@ AV2 Changelog :: version a3.0
 + Added earth wall ability
 + Added /gorecore fixid, which allows you to sync UUID to online
 + Added wall-jumping for airbenders
++ Added version checker
 * Changed water skills menu background
 * Removed some unused assets
 * Offline/hacked support for account UUID fetching; generates random UUID
