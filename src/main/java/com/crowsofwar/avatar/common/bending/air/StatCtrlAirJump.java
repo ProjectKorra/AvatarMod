@@ -30,9 +30,12 @@ import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * 
@@ -86,6 +89,11 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 			fallAbsorption -= 2; // compensate that it may be a bit extra
 			data.setFallAbsorption(fallAbsorption);
+			
+			BlockPos under = player.getPosition().down();
+			Block underBlock = player.worldObj.getBlockState(under).getBlock();
+			player.worldObj.playSound(null, new BlockPos(player), underBlock.getSoundType().getBreakSound(),
+					SoundCategory.PLAYERS, 1, 0.6f);
 			
 		}
 		
