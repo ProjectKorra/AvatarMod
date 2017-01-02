@@ -9,3 +9,4 @@ AV2 a3.0
 * Offline/hacked support for account UUID fetching; generates random UUID
 * Air gust puts out fires
 * New texture for air particles, provided by EduMC
+> Fix weird Block{Minecraft.stone} entry in stats.yml

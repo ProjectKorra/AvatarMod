@@ -28,7 +28,6 @@ import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -58,7 +57,6 @@ public class ConfigStats {
 	
 	private ConfigStats() {
 		bendableBlocksNames = new ArrayList<String>();
-		bendableBlocksNames.add(Blocks.STONE.toString());
 		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
 				STONEBRICK, CLAY, HARDENED_CLAY, STAINED_HARDENED_CLAY, COAL_ORE, IRON_ORE, EMERALD_ORE,
 				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE, GRASS);
