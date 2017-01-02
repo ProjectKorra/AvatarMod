@@ -347,7 +347,7 @@ public class ConfigLoader {
 			String write = "";
 			if (ignoreConfigFile) {
 				write += "# WARNING : Any changes to this config file will not take effect!!\n";
-				write += "# To fix this, set 'IGNORE_CONFIG_FILE: false' --> 'IGNORE_CONFIG_FILE: true'\n";
+				write += "# To fix this, set 'IGNORE_CONFIG_FILE: true' --> 'IGNORE_CONFIG_FILE: false'\n";
 				write += "# This was done to prevent default values in new versions from being overriden\n";
 				write += "# by outdated config files. By doing this, you will no longer recieve any new\n";
 				write += "# config defaults...\n\n";
@@ -395,7 +395,7 @@ public class ConfigLoader {
 			Yaml yaml = new Yaml();
 			Map<String, Object> map = (Map) yaml.load(contents);
 			
-			return map;
+			return map == null ? new HashMap<>() : map;
 			
 		} catch (IOException e) {
 			throw new ConfigurationException.LoadingException(
