@@ -79,6 +79,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * Amount to reduce fall distance by the next time the player lands
 	 */
 	private float fallAbsorption;
+	private int timeInAir;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
@@ -135,6 +136,7 @@ public class AvatarPlayerData extends PlayerData {
 		
 		wallJumping = readFrom.getBoolean("WallJumping");
 		fallAbsorption = readFrom.getFloat("FallAbsorption");
+		timeInAir = readFrom.getInteger("TimeInAir");
 		
 	}
 	
@@ -157,6 +159,7 @@ public class AvatarPlayerData extends PlayerData {
 		
 		writeTo.setBoolean("WallJumping", wallJumping);
 		writeTo.setFloat("FallAbsorption", fallAbsorption);
+		writeTo.setInteger("TimeInAir", timeInAir);
 		
 	}
 	
@@ -467,6 +470,14 @@ public class AvatarPlayerData extends PlayerData {
 	 */
 	public void setFallAbsorption(float amount) {
 		if (amount > this.fallAbsorption) this.fallAbsorption = amount;
+	}
+	
+	public int getTimeInAir() {
+		return timeInAir;
+	}
+	
+	public void setTimeInAir(int time) {
+		this.timeInAir = time;
 	}
 	
 	public Networker getNetworker() {

@@ -41,13 +41,16 @@ public class AirTick {
 	
 	private void tick(EntityPlayer player, World world, AvatarPlayerData data) {
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
-				&& !player.isCollidedVertically) {
+				&& !player.isCollidedVertically && data.getTimeInAir() > 10) {
 			if (AvatarMod.proxy.getKeyHandler().isControlPressed(CONTROL_SPACE_DOWN)) {
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
 		}
 		if (player.onGround) {
 			data.setWallJumping(false);
+			data.setTimeInAir(0);
+		} else {
+			data.setTimeInAir(data.getTimeInAir() + 1);
 		}
 	}
 	
