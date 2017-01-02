@@ -1,4 +1,4 @@
-AV2 a3.0
+AV2 Changelog :: version a3.0
 
 + Added water bubble ability
 + Added earth wall ability
@@ -9,7 +9,9 @@ AV2 a3.0
 * Offline/hacked support for account UUID fetching; generates random UUID
 * Flamethrower flames inherit the firebender's velocity
 * Adjusted default values for configuration files
+* By default, config files ignore anything on them and favor the latest default values
 > Fixed air gust not working on other players in LAN
 > Fixed crashing for hacked players... don't expect it to work on servers though
 > Fixed UUID cache using LF line endings on windows
 > Fixed config files using LF line endings on windows
+> Fixed '/avatar config' not refreshing config values for skills.yml
