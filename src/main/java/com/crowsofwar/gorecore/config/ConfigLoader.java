@@ -83,6 +83,11 @@ public class ConfigLoader {
 	 */
 	private final List<Class<?>> classTags;
 	
+	/**
+	 * Config files typically have a key called IGNORE_CONFIG_FILE. This is used
+	 * so defaults changed between updates will not get overriden by any old
+	 * config files.
+	 */
 	private final boolean ignoreConfigFile;
 	
 	private ConfigLoader(String path, Object obj, Map<String, ?> data, boolean ignoreConfigFile) {
@@ -110,8 +115,7 @@ public class ConfigLoader {
 		for (Field field : fields) {
 			
 			field.setAccessible(true);
-			loadField(field,
-					data.containsKey("IGNORE_CONFIG_FILE") ? (Boolean) data.get("IGNORE_CONFIG_FILE") : true);
+			loadField(field);
 			
 		}
 		
@@ -127,12 +131,8 @@ public class ConfigLoader {
 	 * 
 	 * @param field
 	 *            The field to load
-	 * @param ignoreConfigFile
-	 *            Config files typically have a key called IGNORE_CONFIG_FILE.
-	 *            This is used so defaults changed between updates will not get
-	 *            overriden by any old config files.
 	 */
-	private <T> void loadField(Field field, boolean ignoreConfigFile) {
+	private <T> void loadField(Field field) {
 		
 		Class<?> cls = field.getDeclaringClass();
 		Class<?> fieldType = field.getType();
@@ -161,7 +161,6 @@ public class ConfigLoader {
 				Object fromData = data.get(field.getName());
 				Object setTo;
 				
-				usedValues.put("IGNORE_CONFIG_FILE", ignoreConfigFile);
 				boolean tryDefaultValue = fromData == null || ignoreConfigFile;
 				
 				if (tryDefaultValue) {
@@ -345,7 +344,19 @@ public class ConfigLoader {
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config/" + path)));
 			
-			writer.write(dump().replace("\n", System.getProperty("line.separator")));
+			String write = "";
+			if (ignoreConfigFile) {
+				write += "# WARNING : Any changes to this config file will not take effect!!\n";
+				write += "# To fix this, set 'IGNORE_CONFIG_FILE: false' --> 'IGNORE_CONFIG_FILE: true'\n";
+				write += "# This was done to prevent default values in new versions from being overriden\n";
+				write += "# by outdated config files. By doing this, you will no longer recieve any new\n";
+				write += "# config defaults...\n\n";
+			}
+			write += "IGNORE_CONFIG_FILE: " + ignoreConfigFile;
+			write += dump();
+			write = write.replace("\n", System.getProperty("line.separator"));
+			
+			writer.write(write);
 			writer.close();
 			
 		} catch (IOException e) {
@@ -443,6 +454,8 @@ public class ConfigLoader {
 		} else {
 			ignoreSetting = (boolean) ignoreObject;
 		}
+		// TODO This is debug remove vvv
+		GoreCore.LOGGER.info("Ignore setting: " + ignoreSetting + "; obj " + ignoreObject);//
 		
 		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting);
 		loader.load();
