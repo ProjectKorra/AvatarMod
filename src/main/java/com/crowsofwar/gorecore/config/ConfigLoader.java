@@ -352,7 +352,7 @@ public class ConfigLoader {
 				write += "# by outdated config files. By doing this, you will no longer recieve any new\n";
 				write += "# config defaults...\n\n";
 			}
-			write += "IGNORE_CONFIG_FILE: " + ignoreConfigFile;
+			write += "IGNORE_CONFIG_FILE: " + ignoreConfigFile + "\n\n";
 			write += dump();
 			write = write.replace("\n", System.getProperty("line.separator"));
 			
