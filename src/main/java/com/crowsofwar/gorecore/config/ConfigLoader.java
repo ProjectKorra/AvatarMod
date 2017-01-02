@@ -83,13 +83,16 @@ public class ConfigLoader {
 	 */
 	private final List<Class<?>> classTags;
 	
-	private ConfigLoader(String path, Object obj, Map<String, ?> data) {
+	private final boolean ignoreConfigFile;
+	
+	private ConfigLoader(String path, Object obj, Map<String, ?> data, boolean ignoreConfigFile) {
 		this.path = path;
 		this.obj = obj;
 		this.data = data == null ? new HashMap<>() : data;
 		this.usedValues = new HashMap<>();
 		this.representer = new Representer();
 		this.classTags = new ArrayList<>();
+		this.ignoreConfigFile = ignoreConfigFile;
 	}
 	
 	/**
@@ -107,7 +110,8 @@ public class ConfigLoader {
 		for (Field field : fields) {
 			
 			field.setAccessible(true);
-			loadField(field);
+			loadField(field,
+					data.containsKey("IGNORE_CONFIG_FILE") ? (Boolean) data.get("IGNORE_CONFIG_FILE") : true);
 			
 		}
 		
@@ -123,8 +127,12 @@ public class ConfigLoader {
 	 * 
 	 * @param field
 	 *            The field to load
+	 * @param ignoreConfigFile
+	 *            Config files typically have a key called IGNORE_CONFIG_FILE.
+	 *            This is used so defaults changed between updates will not get
+	 *            overriden by any old config files.
 	 */
-	private <T> void loadField(Field field) {
+	private <T> void loadField(Field field, boolean ignoreConfigFile) {
 		
 		Class<?> cls = field.getDeclaringClass();
 		Class<?> fieldType = field.getType();
@@ -153,7 +161,10 @@ public class ConfigLoader {
 				Object fromData = data.get(field.getName());
 				Object setTo;
 				
-				if (fromData == null) {
+				usedValues.put("IGNORE_CONFIG_FILE", ignoreConfigFile);
+				boolean tryDefaultValue = fromData == null || ignoreConfigFile;
+				
+				if (tryDefaultValue) {
 					
 					// Nothing present- try to load default value
 					
@@ -289,7 +300,8 @@ public class ConfigLoader {
 			try {
 				loadedObject = to.newInstance();
 				
-				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name));
+				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name),
+						this.ignoreConfigFile);
 				loader.load();
 				usedValues.put(name, loader.dump());
 				
@@ -421,7 +433,18 @@ public class ConfigLoader {
 	 *            Path to the configuration file, from ".minecraft/config/"
 	 */
 	public static void load(Object obj, String path) {
-		ConfigLoader loader = new ConfigLoader(path, obj, loadMap(path));
+		Map<String, Object> map = loadMap(path);
+		
+		// Determine whether IGNORE_CONFIG_FILE is true or false
+		Object ignoreObject = map.get("IGNORE_CONFIG_FILE");
+		boolean ignoreSetting;
+		if (ignoreObject == null || !(ignoreObject instanceof Boolean)) {
+			ignoreSetting = true;
+		} else {
+			ignoreSetting = (boolean) ignoreObject;
+		}
+		
+		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting);
 		loader.load();
 		loader.save();
 	}
