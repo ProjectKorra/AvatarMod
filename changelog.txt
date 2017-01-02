@@ -15,3 +15,4 @@ AV2 Changelog :: version a3.0
 > Fixed UUID cache using LF line endings on windows
 > Fixed config files using LF line endings on windows
 > Fixed '/avatar config' not refreshing config values for skills.yml
+> Fixed water arc not damaging enemies

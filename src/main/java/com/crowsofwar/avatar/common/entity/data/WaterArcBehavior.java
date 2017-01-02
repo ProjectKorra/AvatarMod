@@ -99,6 +99,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						if (water.worldObj.isRemote && water.canPlaySplash()) {
 							if (motion.sqrMagnitude() >= 0.004) water.playSplash();
 						}
+						
 					} else {
 						if (!world.isRemote) bendingState.setWaterArc(null);
 					}
@@ -135,7 +136,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {
-				if (collided != entity.getOwner()) return this;
+				if (collided == entity.getOwner()) return this;
 				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
 						6 * entity.getDamageMult());
