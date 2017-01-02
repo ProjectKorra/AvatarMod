@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.network;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
@@ -174,7 +176,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		World world = player.worldObj;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(BendingType.AIRBENDING) && !data.isWallJumping() && data.getTimeInAir() > 10) {
+		if (data.hasBending(BendingType.AIRBENDING) && !data.isWallJumping()
+				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			
 			data.setWallJumping(true);
 			

@@ -51,6 +51,9 @@ public class ConfigStats {
 	@Load
 	public double wallWaitTime = 10, wallMomentum = 10;
 	
+	@Load
+	public int wallJumpDelay = 10;
+	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {
