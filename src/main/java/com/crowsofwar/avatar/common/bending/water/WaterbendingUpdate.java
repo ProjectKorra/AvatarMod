@@ -19,19 +19,18 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -68,6 +67,7 @@ public class WaterbendingUpdate {
 			if (player.isInWater()) {
 				data.setSkateTime(0);
 				data.setSkating(true);
+				data.addStatusControl(StatusControl.SKATING_JUMP);
 			}
 		}
 	}
@@ -99,10 +99,11 @@ public class WaterbendingUpdate {
 							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
 				}
 				
-				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(player));
-				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
+				AvatarUtils.afterVelocityAdded(player);
 			}
 			
+		} else if (data.hasStatusControl(StatusControl.SKATING_JUMP)) {
+			data.removeStatusControl(StatusControl.SKATING_JUMP);
 		}
 	}
 	

@@ -31,16 +31,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 
 public class AvatarUtils {
 	
 	/**
 	 * Solves the issue where players on singleplayer/LAN will sometimes not
-	 * have velocity changed.
+	 * have velocity or position changed.
 	 */
 	public static void afterVelocityAdded(Entity entity) {
 		if (entity instanceof EntityPlayerMP) {
+			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(entity));
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 		}
 	}
