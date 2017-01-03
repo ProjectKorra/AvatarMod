@@ -27,10 +27,23 @@ import java.util.function.Function;
 
 import com.crowsofwar.avatar.AvatarLog;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 
 public class AvatarUtils {
+	
+	/**
+	 * Solves the issue where players on singleplayer/LAN will sometimes not
+	 * have velocity changed.
+	 */
+	public static void afterVelocityAdded(Entity entity) {
+		if (entity instanceof EntityPlayerMP) {
+			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+		}
+	}
 	
 	/**
 	 * Clears the list(or collection), and adds items from the NBT list. Does

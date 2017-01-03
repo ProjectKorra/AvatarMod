@@ -83,15 +83,15 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
 			Vector target;
-			Raytrace.Result raytrace = Raytrace.getTargetBlock(player, -1, false);
+			Raytrace.Result raytrace = Raytrace.getTargetBlock(player, 3, false);
 			if (raytrace.hitSomething()) {
 				target = raytrace.getPosPrecise().plus(0, .2, 0);
 			} else {
 				double yaw = Math.toRadians(player.rotationYaw);
 				double pitch = Math.toRadians(player.rotationPitch);
-				Vector forward = Vector.fromYawPitch(yaw, pitch);
+				Vector forward = Vector.toRectangular(yaw, pitch);
 				Vector eye = Vector.getEyePos(player);
-				target = forward.times(2).plus(eye);
+				target = forward.times(3).plus(eye);
 			}
 			
 			Vector motion = target.minus(new Vector(entity));

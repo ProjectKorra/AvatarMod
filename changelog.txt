@@ -1,13 +1,23 @@
-AV2 a3.0
+AV2 Changelog :: version a3.0
 
 + Added water bubble ability
 + Added earth wall ability
 + Added /gorecore fixid, which allows you to sync UUID to online
++ Added wall-jumping for airbenders
++ Added version checker
 * Changed water skills menu background
 * Removed some unused assets
-* GoreCore's UUID cache uses CRLF line endings on windows
 * Offline/hacked support for account UUID fetching; generates random UUID
 * Air gust puts out fires
 * New texture for air particles, provided by EduMC
 * Air jump makes sound
+* Flamethrower flames inherit the firebender's velocity
+* Adjusted default values for configuration files
+* By default, config files ignore anything on them and favor the latest default values
+> Fixed air gust not working on other players in LAN
+> Fixed crashing for hacked players... don't expect it to work on servers though
+> Fixed UUID cache using LF line endings on windows
+> Fixed config files using LF line endings on windows
+> Fixed '/avatar config' not refreshing config values for skills.yml
+> Fixed water arc not damaging enemies
 > Fix weird Block{Minecraft.stone} entry in stats.yml

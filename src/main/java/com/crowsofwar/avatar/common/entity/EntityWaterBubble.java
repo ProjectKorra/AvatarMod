@@ -87,7 +87,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		}
 		
 		boolean inWaterSource = false;
-		if (!worldObj.isRemote && ticksExisted % 2 == 1) {
+		if (!worldObj.isRemote && ticksExisted % 2 == 1 && ticksExisted > 10) {
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);

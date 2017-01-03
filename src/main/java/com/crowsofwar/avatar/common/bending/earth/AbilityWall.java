@@ -47,56 +47,53 @@ public class AbilityWall extends BendingAbility {
 		
 		if (!ctx.isLookingAtBlock()) return;
 		BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
-		if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(lookPos).getBlock())) {
-			System.out.println("BEND A WALL");
-			EntityWall wall = new EntityWall(world);
+		EntityWall wall = new EntityWall(world);
+		
+		wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
+		for (int i = 0; i < 5; i++) {
 			
-			wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
-			for (int i = 0; i < 5; i++) {
-				
-				int horizMod = -2 + i;
-				int x = lookPos.getX()
-						+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
-				int y = lookPos.getY() - 4;
-				int z = lookPos.getZ()
-						+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
-				
-				EntityWallSegment seg = new EntityWallSegment(world);
-				seg.attachToWall(wall);
-				seg.setPosition(x + .5, y, z + .5);
-				seg.setDirection(cardinal);
-				
-				boolean foundAir = false, dontBreakMore = false;
-				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
-					BlockPos pos = new BlockPos(x, y + j, z);
-					IBlockState state = world.getBlockState(pos);
-					boolean bendable = STATS_CONFIG.bendableBlocks.contains(state.getBlock());
-					if (!bendable || dontBreakMore) {
-						state = Blocks.AIR.getDefaultState();
-						dontBreakMore = true;
-					}
-					
-					if (!foundAir && state.getBlock() == Blocks.AIR) {
-						seg.setSize(seg.width, 5 - j - 1);
-						seg.setBlocksOffset(-(j + 1));
-						seg.position().setY(y + j + 1);
-						foundAir = true;
-					}
-					if (foundAir && state.getBlock() != Blocks.AIR) {
-						// Extend bounding box
-						seg.setSize(seg.width, 5 - j);
-						seg.setBlocksOffset(-j);
-						seg.position().setY(y + j);
-					}
-					
-					seg.setBlock(j, state);
-					if (bendable && !dontBreakMore) world.setBlockToAir(pos);
+			int horizMod = -2 + i;
+			int x = lookPos.getX()
+					+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
+			int y = lookPos.getY() - 4;
+			int z = lookPos.getZ()
+					+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
+			
+			EntityWallSegment seg = new EntityWallSegment(world);
+			seg.attachToWall(wall);
+			seg.setPosition(x + .5, y, z + .5);
+			seg.setDirection(cardinal);
+			
+			boolean foundAir = false, dontBreakMore = false;
+			for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
+				BlockPos pos = new BlockPos(x, y + j, z);
+				IBlockState state = world.getBlockState(pos);
+				boolean bendable = STATS_CONFIG.bendableBlocks.contains(state.getBlock());
+				if (!bendable || dontBreakMore) {
+					state = Blocks.AIR.getDefaultState();
+					dontBreakMore = true;
 				}
 				
-				world.spawnEntityInWorld(seg);
+				if (!foundAir && state.getBlock() == Blocks.AIR) {
+					seg.setSize(seg.width, 5 - j - 1);
+					seg.setBlocksOffset(-(j + 1));
+					seg.position().setY(y + j + 1);
+					foundAir = true;
+				}
+				if (foundAir && state.getBlock() != Blocks.AIR) {
+					// Extend bounding box
+					seg.setSize(seg.width, 5 - j);
+					seg.setBlocksOffset(-j);
+					seg.position().setY(y + j);
+				}
+				
+				seg.setBlock(j, state);
+				if (bendable && !dontBreakMore) world.setBlockToAir(pos);
 			}
-			world.spawnEntityInWorld(wall);
+			
+			world.spawnEntityInWorld(seg);
 		}
+		world.spawnEntityInWorld(wall);
 		
 	}
 	

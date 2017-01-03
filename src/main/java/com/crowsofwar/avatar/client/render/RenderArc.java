@@ -118,7 +118,7 @@ public abstract class RenderArc extends Render {
 		sizeLeader *= sizeMultiplier;
 		sizePoint *= sizeMultiplier;
 		
-		Vector lookingEuler = Vector.getRotations(from, to);
+		Vector lookingEuler = Vector.getRotationTo(from, to);
 		
 		double u1 = ((arc.ticksExisted / 20.0) % 1);
 		double u2 = (u1 + 0.5);

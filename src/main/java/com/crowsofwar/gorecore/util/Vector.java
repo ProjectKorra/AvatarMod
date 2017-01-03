@@ -17,8 +17,7 @@
 
 package com.crowsofwar.gorecore.util;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -532,9 +531,11 @@ public class Vector {
 	 * rotations of this vector.
 	 * <p>
 	 * Does not modify this vector.
+	 * 
+	 * @see #toRectangular(Vector)
 	 */
 	public Vector toRectangular() {
-		return Vector.fromDirection(this);
+		return Vector.toRectangular(this);
 	}
 	
 	/**
@@ -544,23 +545,7 @@ public class Vector {
 	 * Does not modify this vector.
 	 */
 	public Vector toSpherical() {
-		return Vector.getRotations(Vector.ZERO, this);
-	}
-	
-	/**
-	 * <strong>Assuming</strong> this vector represents spherical coordinates in
-	 * degrees, returns a new spherical coordinate vector which is in radians.
-	 */
-	public Vector toRadians() {
-		return new Vector(Math.toRadians(x()), Math.toRadians(y()), Math.toRadians(z()));
-	}
-	
-	/**
-	 * <strong>Assuming</strong> this vector represents spherical coordinates in
-	 * radians, returns a new spherical coordinate vector which is in degrees.
-	 */
-	public Vector toDegrees() {
-		return new Vector(Math.toDegrees(x()), Math.toDegrees(y()), Math.toDegrees(z()));
+		return Vector.getRotationTo(Vector.ZERO, this);
 	}
 	
 	/**
@@ -624,6 +609,11 @@ public class Vector {
 		}
 	}
 	
+	/**
+	 * Reflects the vector across the given normal. Returns a new vector.
+	 * 
+	 * @see #reflect(Vector)
+	 */
 	public static Vector reflect(Vector vec, Vector normal) {
 		return vec.reflect(normal);
 	}
@@ -639,7 +629,7 @@ public class Vector {
 	 * @param pos2
 	 *            Where to look at
 	 */
-	public static Vector getRotations(Vector pos1, Vector pos2) {
+	public static Vector getRotationTo(Vector pos1, Vector pos2) {
 		Vector diff = pos2.minus(pos1);
 		diff.normalize();
 		double x = diff.x();
@@ -655,10 +645,16 @@ public class Vector {
 		return new Vector(rotX, rotY, rotZ);
 	}
 	
+	/**
+	 * Gets the position of the entity
+	 */
 	public static Vector getEntityPos(Entity entity) {
 		return new Vector(entity);
 	}
 	
+	/**
+	 * Gets the position of the entity, but adjusted so ypos is the eyepos
+	 */
 	public static Vector getEyePos(Entity entity) {
 		Vector pos = getEntityPos(entity);
 		pos.setY(pos.y() + entity.getEyeHeight());
@@ -666,8 +662,26 @@ public class Vector {
 	}
 	
 	/**
+	 * Get velocity of the entity in m/s.
+	 * 
+	 * @see #getVelocityTpS(Entity)
+	 */
+	public static Vector getVelocityMpS(Entity entity) {
+		return new Vector(entity.motionX / 20, entity.motionY / 20, entity.motionZ / 20);
+	}
+	
+	/**
+	 * Get velocity of the entity in ticks/s.
+	 * 
+	 * @see #getVelocityMpS(Entity)
+	 */
+	public static Vector getVelocityTpS(Entity entity) {
+		return new Vector(entity.motionX, entity.motionY, entity.motionZ);
+	}
+	
+	/**
 	 * Get the pitch to lob a projectile in radians. Example: pitch to target
-	 * can be used in {@link #fromYawPitch(double, double)}
+	 * can be used in {@link #toRectangular(double, double)}
 	 * 
 	 * @param v
 	 *            Force of the projectile, going FORWARDS
@@ -683,38 +697,64 @@ public class Vector {
 	}
 	
 	/**
-	 * Create a unit vector from yaw and pitch. Parameters should be in radians.
-	 */
-	public static Vector fromYawPitch(double yaw, double pitch) {
-		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
-	}
-	
-	/**
-	 * Create a unit vector based from the direction of the entity's head.
-	 * <p>
-	 * This equivalent to calling {@link #fromYawPitch(double, double)} using
-	 * entity's rotations as inputs.
+	 * Create a rectangular vector from the entity's rotations. This can be used
+	 * to determine the coordinates the entity is looking at (without raytrace).
 	 * 
 	 * @param entity
 	 *            The entity to use
 	 */
-	public static Vector fromEntityLook(Entity entity) {
-		return fromYawPitch(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
+	public static Vector getLookRectangular(Entity entity) {
+		return toRectangular(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
 	}
 	
 	/**
-	 * Create a unit vector from the given euler angles. Measurements should be
-	 * in radians.
+	 * Create a rotation vector from the entity's rotations. This is a euler and
+	 * is in radians.
+	 * 
+	 * @see #getEuler(double, double)
 	 */
-	public static Vector fromDirection(Vector euler) {
-		return fromYawPitch(euler.y(), euler.x());
+	public static Vector getLookRotations(Entity entity) {
+		return getEuler(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
+	}
+	
+	/**
+	 * Gets a vector representing rotations for the given yaw/pitch. Parameters
+	 * should be in radians.
+	 */
+	public static Vector getEuler(double yaw, double pitch) {
+		return new Vector(pitch, yaw, 0);
+	}
+	
+	/**
+	 * Converts a rotation vector into a rectangular (Cartesian) vector. Euler
+	 * must be in radians.
+	 * 
+	 * @see #toRectangular(double, double)
+	 * @see #getEuler(double, double)
+	 */
+	public static Vector toRectangular(Vector euler) {
+		return new Vector(-sin(euler.y()) * cos(euler.x()), -sin(euler.x()), cos(euler.y()) * cos(euler.x()));
+	}
+	
+	/**
+	 * Converts the given rotations into a rectangular (Cartesian) vector.
+	 * Parameters must be in radians.
+	 * 
+	 * @see #toRectangular(Vector)
+	 */
+	public static Vector toRectangular(double yaw, double pitch) {
+		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
 	}
 	
 	/**
 	 * Creates a new vector from the packet information in the byte buffer.
+	 * Vectors should be encoded using the non-static {@link #toBytes(ByteBuf)
+	 * toBytes}.
 	 * 
 	 * @param buf
 	 *            Buffer to read from
+	 * 
+	 * @see #toBytes(ByteBuf)
 	 */
 	public static Vector fromBytes(ByteBuf buf) {
 		return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());

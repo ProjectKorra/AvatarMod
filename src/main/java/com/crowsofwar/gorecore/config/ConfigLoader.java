@@ -83,13 +83,21 @@ public class ConfigLoader {
 	 */
 	private final List<Class<?>> classTags;
 	
-	private ConfigLoader(String path, Object obj, Map<String, ?> data) {
+	/**
+	 * Config files typically have a key called IGNORE_CONFIG_FILE. This is used
+	 * so defaults changed between updates will not get overriden by any old
+	 * config files.
+	 */
+	private final boolean ignoreConfigFile;
+	
+	private ConfigLoader(String path, Object obj, Map<String, ?> data, boolean ignoreConfigFile) {
 		this.path = path;
 		this.obj = obj;
 		this.data = data == null ? new HashMap<>() : data;
 		this.usedValues = new HashMap<>();
 		this.representer = new Representer();
 		this.classTags = new ArrayList<>();
+		this.ignoreConfigFile = ignoreConfigFile;
 	}
 	
 	/**
@@ -153,7 +161,9 @@ public class ConfigLoader {
 				Object fromData = data.get(field.getName());
 				Object setTo;
 				
-				if (fromData == null) {
+				boolean tryDefaultValue = fromData == null || ignoreConfigFile;
+				
+				if (tryDefaultValue) {
 					
 					// Nothing present- try to load default value
 					
@@ -289,7 +299,8 @@ public class ConfigLoader {
 			try {
 				loadedObject = to.newInstance();
 				
-				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name));
+				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name),
+						this.ignoreConfigFile);
 				loader.load();
 				usedValues.put(name, loader.dump());
 				
@@ -333,7 +344,19 @@ public class ConfigLoader {
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config/" + path)));
 			
-			writer.write(dump());
+			String write = "";
+			if (ignoreConfigFile) {
+				write += "# WARNING : Any changes to this config file will not take effect!!\n";
+				write += "# To fix this, set 'IGNORE_CONFIG_FILE: true' --> 'IGNORE_CONFIG_FILE: false'\n";
+				write += "# This was done to prevent default values in new versions from being overriden\n";
+				write += "# by outdated config files. By doing this, you will no longer recieve any new\n";
+				write += "# config defaults...\n\n";
+			}
+			write += "IGNORE_CONFIG_FILE: " + ignoreConfigFile + "\n\n";
+			write += dump();
+			write = write.replace("\n", System.getProperty("line.separator"));
+			
+			writer.write(write);
 			writer.close();
 			
 		} catch (IOException e) {
@@ -372,7 +395,7 @@ public class ConfigLoader {
 			Yaml yaml = new Yaml();
 			Map<String, Object> map = (Map) yaml.load(contents);
 			
-			return map;
+			return map == null ? new HashMap<>() : map;
 			
 		} catch (IOException e) {
 			throw new ConfigurationException.LoadingException(
@@ -421,7 +444,20 @@ public class ConfigLoader {
 	 *            Path to the configuration file, from ".minecraft/config/"
 	 */
 	public static void load(Object obj, String path) {
-		ConfigLoader loader = new ConfigLoader(path, obj, loadMap(path));
+		Map<String, Object> map = loadMap(path);
+		
+		// Determine whether IGNORE_CONFIG_FILE is true or false
+		Object ignoreObject = map.get("IGNORE_CONFIG_FILE");
+		boolean ignoreSetting;
+		if (ignoreObject == null || !(ignoreObject instanceof Boolean)) {
+			ignoreSetting = true;
+		} else {
+			ignoreSetting = (boolean) ignoreObject;
+		}
+		// TODO This is debug remove vvv
+		GoreCore.LOGGER.info("Ignore setting: " + ignoreSetting + "; obj " + ignoreObject);//
+		
+		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting);
 		loader.load();
 		loader.save();
 	}

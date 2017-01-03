@@ -44,7 +44,7 @@ public class AbilityAirGust extends AirAbility {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		
-		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 				Math.toRadians(player.rotationPitch));
 		Vector pos = Vector.getEyePos(player);
 		

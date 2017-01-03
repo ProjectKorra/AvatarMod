@@ -50,7 +50,7 @@ public class AbilityRavine extends EarthAbility {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		
-		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw), 0);
+		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), 0);
 		
 		EntityRavine ravine = new EntityRavine(world);
 		ravine.setOwner(player);

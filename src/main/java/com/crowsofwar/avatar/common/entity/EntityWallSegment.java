@@ -247,7 +247,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public void readSpawnData(ByteBuf buf) {
 		setSize(width, buf.readFloat());
 		offset = buf.readInt();
-		System.out.println("Read data; height: " + height + ", offset: " + offset);
 	}
 	
 }

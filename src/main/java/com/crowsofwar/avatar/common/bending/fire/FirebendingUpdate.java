@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.gorecore.util.Vector.*;
+
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
@@ -49,13 +51,13 @@ public class FirebendingUpdate {
 				FirebendingState fs = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
 				if (fs.isFlamethrowing() && player.ticksExisted % 3 < 2) {
 					
-					Vector look = Vector.fromEntityLook(player);
-					Vector eye = Vector.getEyePos(player);
+					Vector look = getLookRectangular(player);
+					Vector eye = getEyePos(player);
 					
 					World world = data.getWorld();
 					
 					EntityFlames flames = new EntityFlames(world, player);
-					flames.velocity().set(look.times(10));
+					flames.velocity().set(look.times(10).plus(getVelocityMpS(player)));
 					flames.setPosition(eye.x(), eye.y(), eye.z());
 					world.spawnEntityInWorld(flames);
 					
