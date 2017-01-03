@@ -19,7 +19,10 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.network.play.server.SPacketEntityTeleport;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -51,16 +54,34 @@ public class WaterbendingUpdate {
 			if (player.isInWater()) {
 				data.setSkateTime(0);
 				data.setSkating(true);
+				System.out.println("Start skating");
 			}
 		}
 	}
 	
 	private void skate(AvatarPlayerData data, EntityPlayer player) {
 		if (data.isSkating()) {
-			if (player.isInWater()) {
-				BlockPos pos = player.getPosition().up();
-				player.setPosition(player.posX, pos.getY(), player.posZ);
+			
+			System.out.println(" ===== skate start ===== ");
+			
+			int yPos = player.getPosition().getY();
+			
+			if (player.isInWater()
+					|| player.worldObj.getBlockState(player.getPosition()).getBlock() == Blocks.WATER) {
+				System.out.println("Inwater, increment to " + (yPos + 1));
+				yPos++;
 			}
+			
+			if (!player.onGround) {
+				player.setPosition(player.posX, yPos, player.posZ);
+				System.out.println("Skate " + yPos);
+				player.motionY = 0;
+				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(player));
+				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
+			} else {
+				data.setSkating(false);
+			}
+			
 		}
 	}
 	
