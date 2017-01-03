@@ -20,14 +20,19 @@ import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
 
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,7 +45,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
  */
 public class WaterbendingUpdate {
 	
-	private WaterbendingUpdate() {}
+	private final ParticleSpawner particles;
+	
+	private WaterbendingUpdate() {
+		particles = new NetworkParticleSpawner();
+	}
 	
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
@@ -59,7 +68,6 @@ public class WaterbendingUpdate {
 			if (player.isInWater()) {
 				data.setSkateTime(0);
 				data.setSkating(true);
-				System.out.println("Start skating");
 			}
 		}
 	}
@@ -78,6 +86,13 @@ public class WaterbendingUpdate {
 				player.motionX = velocity.x();
 				player.motionY = 0;
 				player.motionZ = velocity.z();
+				
+				if (player.ticksExisted % 3 == 0) {
+					player.worldObj.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
+							SoundCategory.PLAYERS, 1, 1);
+					particles.spawnParticles(player.worldObj, ParticleType.SPLASH, 2, 4,
+							Vector.getEntityPos(player), new Vector(.2, .2, .2));
+				}
 				
 				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(player));
 				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
