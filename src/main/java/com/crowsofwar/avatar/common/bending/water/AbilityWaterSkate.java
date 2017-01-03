@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -38,7 +39,8 @@ public class AbilityWaterSkate extends BendingAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityPlayer player = ctx.getPlayerEntity();
-		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		data.setSkateTime(60);
 	}
 	
 	@Override

@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -36,8 +37,8 @@ public class WaterbendingTick {
 		World world = player.worldObj;
 		if (!world.isRemote) {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-			
 			tryStartSkating(data, player);
+			skate(data, player);
 		}
 	}
 	
@@ -47,6 +48,15 @@ public class WaterbendingTick {
 			if (player.isInWater()) {
 				data.setSkateTime(0);
 				data.setSkating(true);
+			}
+		}
+	}
+	
+	private void skate(AvatarPlayerData data, EntityPlayer player) {
+		if (data.isSkating()) {
+			if (player.isInWater()) {
+				BlockPos pos = player.getPosition().up();
+				player.setPosition(player.posX, pos.getY(), player.posZ);
 			}
 		}
 	}
