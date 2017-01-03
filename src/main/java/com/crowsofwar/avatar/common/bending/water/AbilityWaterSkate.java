@@ -20,7 +20,6 @@ import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +31,7 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class AbilityWaterSkate extends BendingAbility {
 	
-	public AbilityWaterSkate(BendingType bendingType, String name) {
+	public AbilityWaterSkate() {
 		super(WATERBENDING, "water_skate");
 	}
 	

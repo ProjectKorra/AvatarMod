@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
 import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
 import com.crowsofwar.avatar.common.gui.AbilityIcon;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
@@ -44,7 +45,7 @@ public abstract class BendingAbility {
 	
 	public static BendingAbility ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE,
 			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER, ABILITY_WATER_ARC, ABILITY_WAVE,
-			ABILITY_WATER_BUBBLE, ABILITY_WALL;
+			ABILITY_WATER_BUBBLE, ABILITY_WALL, ABILITY_WATER_SKATE;
 	
 	/**
 	 * Creates all abilities. Done before bending controllers are created.
@@ -61,6 +62,7 @@ public abstract class BendingAbility {
 		ABILITY_WAVE = new AbilityCreateWave();
 		ABILITY_WATER_BUBBLE = new AbilityWaterBubble();
 		ABILITY_WALL = new AbilityWall();
+		ABILITY_WATER_SKATE = new AbilityWaterSkate();
 	}
 	
 	private static int nextId = 1;

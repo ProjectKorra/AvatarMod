@@ -41,6 +41,7 @@ public class Waterbending extends BendingController {
 		addAbility(ABILITY_WATER_ARC);
 		addAbility(ABILITY_WAVE);
 		addAbility(ABILITY_WATER_BUBBLE);
+		addAbility(ABILITY_WATER_SKATE);
 		
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);
@@ -49,7 +50,7 @@ public class Waterbending extends BendingController {
 		menu = new BendingMenuInfo(
 				new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
 						new ThemeColor(icon, base), 0x57E8F2),
-				KEY_WATERBENDING, ABILITY_WATER_ARC, ABILITY_WAVE, ABILITY_WATER_BUBBLE);
+				KEY_WATERBENDING, ABILITY_WATER_ARC, ABILITY_WAVE, ABILITY_WATER_BUBBLE, ABILITY_WATER_SKATE);
 	}
 	
 	@Override

@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -29,7 +30,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
  * 
  * @author CrowsOfWar
  */
-public class WaterbendingTick {
+public class WaterbendingUpdate {
+	
+	private WaterbendingUpdate() {}
 	
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
@@ -59,6 +62,10 @@ public class WaterbendingTick {
 				player.setPosition(player.posX, pos.getY(), player.posZ);
 			}
 		}
+	}
+	
+	public static void register() {
+		MinecraftForge.EVENT_BUS.register(new WaterbendingUpdate());
 	}
 	
 }
