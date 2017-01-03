@@ -75,8 +75,13 @@ public class WaterbendingUpdate {
 	private void skate(AvatarPlayerData data, EntityPlayer player) {
 		if (data.isSkating()) {
 			
+			World world = player.worldObj;
+			
 			int yPos = player.getPosition().getY();
-			IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
+			IBlockState below = world.getBlockState(player.getPosition().down());
+			IBlockState in = world.getBlockState(player.getPosition());
+			
+			if (in.getBlock() == Blocks.WATER) yPos++;
 			
 			if (player.isSneaking() || player.onGround || below.getBlock() != Blocks.WATER) {
 				data.setSkating(false);
@@ -88,10 +93,10 @@ public class WaterbendingUpdate {
 				player.motionZ = velocity.z();
 				
 				if (player.ticksExisted % 3 == 0) {
-					player.worldObj.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
+					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 1, 1);
-					particles.spawnParticles(player.worldObj, ParticleType.SPLASH, 2, 4,
-							Vector.getEntityPos(player), new Vector(.2, .2, .2));
+					particles.spawnParticles(world, ParticleType.SPLASH, 2, 4,
+							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
 				}
 				
 				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(player));
