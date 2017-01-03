@@ -68,6 +68,7 @@ public class WaterbendingUpdate {
 				data.setSkateTime(0);
 				data.setSkating(true);
 				data.addStatusControl(StatusControl.SKATING_JUMP);
+				data.sync();
 			}
 		}
 	}
@@ -104,6 +105,7 @@ public class WaterbendingUpdate {
 			
 		} else if (data.hasStatusControl(StatusControl.SKATING_JUMP)) {
 			data.removeStatusControl(StatusControl.SKATING_JUMP);
+			data.sync();
 		}
 	}
 	

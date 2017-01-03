@@ -45,11 +45,13 @@ public class StatCtrlSkateJump extends StatusControl {
 		if (data.isSkating()) {
 			data.setSkating(false);
 			
-			Vector velocity = Vector.toRectangular(Math.toRadians(player.rotationYaw), Math.toRadians(30));
-			velocity.mul(.5);
+			Vector velocity = Vector.getLookRectangular(player);
+			velocity.mul(2);
 			player.motionX = velocity.x();
 			player.motionY = velocity.y();
 			player.motionZ = velocity.z();
+			
+			data.setFallAbsorption(6);
 			
 			AvatarUtils.afterVelocityAdded(player);
 			
