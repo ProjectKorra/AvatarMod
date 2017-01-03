@@ -478,7 +478,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * Set the amount to reduce fall distance by. Cannot lower existing amount.
 	 */
 	public void setFallAbsorption(float amount) {
-		if (amount > this.fallAbsorption) this.fallAbsorption = amount;
+		if (amount == 0 || amount > this.fallAbsorption) this.fallAbsorption = amount;
 	}
 	
 	public int getTimeInAir() {
