@@ -217,7 +217,7 @@ public class PacketHandlerServer implements IPacketHandler {
 				
 				Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
 				Vector n = velocity.reflect(normal).mul(4).subtract(normal.times(0.5)).setY(0.5);
-				n.add(Vector.fromEntityLook(player).mul(.8));
+				n.add(Vector.getLookRectangular(player).mul(.8));
 				
 				if (n.sqrMagnitude() > 1) {
 					n.normalize().mul(1);
