@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -62,24 +63,16 @@ public class WaterbendingUpdate {
 	private void skate(AvatarPlayerData data, EntityPlayer player) {
 		if (data.isSkating()) {
 			
-			System.out.println(" ===== skate start ===== ");
-			
 			int yPos = player.getPosition().getY();
+			IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
 			
-			if (player.isInWater()
-					|| player.worldObj.getBlockState(player.getPosition()).getBlock() == Blocks.WATER) {
-				System.out.println("Inwater, increment to " + (yPos + 1));
-				yPos++;
-			}
-			
-			if (!player.onGround) {
+			if (player.isSneaking() || player.onGround || below.getBlock() != Blocks.WATER) {
+				data.setSkating(false);
+			} else {
 				player.setPosition(player.posX, yPos, player.posZ);
-				System.out.println("Skate " + yPos);
 				player.motionY = 0;
 				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(player));
 				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
-			} else {
-				data.setSkating(false);
 			}
 			
 		}
