@@ -16,7 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.gorecore.util.Vector.toRectangular;
+import static java.lang.Math.toRadians;
+
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,8 +73,12 @@ public class WaterbendingUpdate {
 			if (player.isSneaking() || player.onGround || below.getBlock() != Blocks.WATER) {
 				data.setSkating(false);
 			} else {
-				player.setPosition(player.posX, yPos, player.posZ);
+				player.setPosition(player.posX, yPos + .2, player.posZ);
+				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).dividedBy(2);
+				player.motionX = velocity.x();
 				player.motionY = 0;
+				player.motionZ = velocity.z();
+				
 				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(player));
 				((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 			}
