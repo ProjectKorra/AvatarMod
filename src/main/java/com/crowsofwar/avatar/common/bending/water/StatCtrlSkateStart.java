@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 public class StatCtrlSkateStart extends StatusControl {
 	
 	public StatCtrlSkateStart() {
-		super(0, AvatarControl.NONE, BELOW_CROSSHAIR);
+		super(8, AvatarControl.NONE, BELOW_CROSSHAIR);
 	}
 	
 	@Override

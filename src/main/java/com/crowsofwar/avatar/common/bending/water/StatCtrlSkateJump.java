@@ -35,7 +35,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class StatCtrlSkateJump extends StatusControl {
 	
 	public StatCtrlSkateJump() {
-		super(0, CONTROL_SPACE_DOWN, BELOW_CROSSHAIR);
+		super(9, CONTROL_SPACE_DOWN, BELOW_CROSSHAIR);
 	}
 	
 	@Override
