@@ -127,6 +127,10 @@ public class AvatarUiRenderer extends Gui {
 		
 	}
 	
+	public static boolean hasBendingGui() {
+		return instance.currentBendingMenu != null;
+	}
+	
 	public static void fade(RadialSegment segment) {
 		instance.fadingSegment = segment;
 		instance.timeFadeStart = System.currentTimeMillis();

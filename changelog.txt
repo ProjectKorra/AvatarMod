@@ -22,3 +22,4 @@ AV2 Changelog :: version a3.0
 > Fixed '/avatar config' not refreshing config values for skills.yml
 > Fixed water arc not damaging enemies
 > Fix weird Block{Minecraft.stone} entry in stats.yml
+> (hopefully) Fixed bug where radial menu keeps reopening
