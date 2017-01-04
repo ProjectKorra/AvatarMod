@@ -26,7 +26,6 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
@@ -56,11 +55,9 @@ public class WaterbendingUpdate {
 	public void onPlayerTick(PlayerTickEvent e) {
 		EntityPlayer player = e.player;
 		World world = player.worldObj;
-		if (!world.isRemote) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-			tryStartSkating(data, player);
-			skate(data, player);
-		}
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		if (!world.isRemote) tryStartSkating(data, player);
+		skate(data, player);
 	}
 	
 	private void tryStartSkating(AvatarPlayerData data, EntityPlayer player) {
@@ -87,6 +84,7 @@ public class WaterbendingUpdate {
 			
 			if (player.isSneaking() || player.onGround || below.getBlock() != Blocks.WATER) {
 				data.setSkating(false);
+				data.sync();
 			} else {
 				player.setPosition(player.posX, yPos + .2, player.posZ);
 				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).dividedBy(2);
@@ -101,7 +99,7 @@ public class WaterbendingUpdate {
 							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
 				}
 				
-				AvatarUtils.afterVelocityAdded(player);
+				// AvatarUtils.afterVelocityAdded(player);
 			}
 			
 		} else if (data.hasStatusControl(StatusControl.SKATING_JUMP)) {

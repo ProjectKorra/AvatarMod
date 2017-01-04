@@ -156,4 +156,18 @@ public class Transmitters {
 			return out;
 		}
 	};
+	
+	public static final DataTransmitter<Boolean, PlayerDataContext> BOOLEAN = new DataTransmitter<Boolean, PlayerDataContext>() {
+		
+		@Override
+		public void write(ByteBuf buf, Boolean t) {
+			buf.writeBoolean(t);
+		}
+		
+		@Override
+		public Boolean read(ByteBuf buf, PlayerDataContext ctx) {
+			return buf.readBoolean();
+		}
+	};
+	
 }

@@ -150,6 +150,10 @@ public class PacketHandlerClient implements IPacketHandler {
 				}
 			}
 			
+			if (readData.containsKey(KEY_SKATING)) {
+				data.setSkating((Boolean) readData.get(KEY_SKATING));
+			}
+			
 		}
 		
 		return null;

@@ -58,6 +58,7 @@ public class AvatarPlayerData extends PlayerData {
 	public static final Networker.Property<Map<BendingAbility, AbilityData>> KEY_ABILITY_DATA = new Property<>(
 			3);
 	public static final Networker.Property<Set<StatusControl>> KEY_STATUS_CONTROLS = new Property<>(4);
+	public static final Networker.Property<Boolean> KEY_SKATING = new Property<>(5);
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
@@ -98,6 +99,7 @@ public class AvatarPlayerData extends PlayerData {
 		networker.register(bendingStateList, Transmitters.STATE_LIST, KEY_STATES);
 		networker.register(abilityData, Transmitters.ABILITY_DATA_MAP, KEY_ABILITY_DATA);
 		networker.register(statusControls, Transmitters.STATUS_CONTROLS, KEY_STATUS_CONTROLS);
+		networker.register(skating, Transmitters.BOOLEAN, KEY_SKATING);
 		
 	}
 	
@@ -489,6 +491,7 @@ public class AvatarPlayerData extends PlayerData {
 	
 	public void setSkating(boolean skating) {
 		this.skating = skating;
+		networker.markChanged(KEY_SKATING, skating);
 	}
 	
 	public Networker getNetworker() {
