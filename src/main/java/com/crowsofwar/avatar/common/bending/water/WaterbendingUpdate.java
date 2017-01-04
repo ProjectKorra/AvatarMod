@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
+import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
 
@@ -62,15 +64,14 @@ public class WaterbendingUpdate {
 	}
 	
 	private void tryStartSkating(AvatarPlayerData data, EntityPlayer player) {
-		// if (data.getSkateTime() > 0) {
-		// data.setSkateTime(data.getSkateTime() - 1);
-		// if (player.isInWater()) {
-		// data.setSkateTime(0);
-		// data.setSkating(true);
-		// data.addStatusControl(StatusControl.SKATING_JUMP);
-		// data.sync();
-		// }
-		// }
+		if (data.hasStatusControl(SKATING_START)) {
+			if (player.isInWater()) {
+				data.removeStatusControl(SKATING_START);
+				data.setSkating(true);
+				data.addStatusControl(SKATING_JUMP);
+				data.sync();
+			}
+		}
 	}
 	
 	private void skate(AvatarPlayerData data, EntityPlayer player) {

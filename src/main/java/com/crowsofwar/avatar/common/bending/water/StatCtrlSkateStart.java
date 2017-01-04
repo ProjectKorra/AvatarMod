@@ -16,34 +16,26 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
+import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterSkate extends BendingAbility {
+public class StatCtrlSkateStart extends StatusControl {
 	
-	public AbilityWaterSkate() {
-		super(WATERBENDING, "water_skate");
+	public StatCtrlSkateStart() {
+		super(0, AvatarControl.NONE, BELOW_CROSSHAIR);
 	}
 	
 	@Override
-	public void execute(AbilityContext ctx) {
-		AvatarPlayerData data = ctx.getData();
-		data.addStatusControl(StatusControl.SKATING_START);
-		data.sync();
-	}
-	
-	@Override
-	public int getIconIndex() {
-		return 0;
+	public boolean execute(AbilityContext ctx) {
+		return false;
 	}
 	
 }
