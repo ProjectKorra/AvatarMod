@@ -60,7 +60,9 @@ public class AbilityWaterSkate extends BendingAbility {
 			for (int i = 0; i < 3; i++) {
 				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
 					player.setPosition(pos.x() + .5, pos.y() + 1.2, pos.z() + .5);
-					data.setSkateTime(20);
+					// data.setSkateTime(20);
+					data.setSkating(true);
+					player.onGround = false;
 					
 					afterVelocityAdded(player);
 					

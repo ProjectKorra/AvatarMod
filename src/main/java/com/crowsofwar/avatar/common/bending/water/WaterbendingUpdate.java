@@ -62,15 +62,15 @@ public class WaterbendingUpdate {
 	}
 	
 	private void tryStartSkating(AvatarPlayerData data, EntityPlayer player) {
-		if (data.getSkateTime() > 0) {
-			data.setSkateTime(data.getSkateTime() - 1);
-			if (player.isInWater()) {
-				data.setSkateTime(0);
-				data.setSkating(true);
-				data.addStatusControl(StatusControl.SKATING_JUMP);
-				data.sync();
-			}
-		}
+		// if (data.getSkateTime() > 0) {
+		// data.setSkateTime(data.getSkateTime() - 1);
+		// if (player.isInWater()) {
+		// data.setSkateTime(0);
+		// data.setSkating(true);
+		// data.addStatusControl(StatusControl.SKATING_JUMP);
+		// data.sync();
+		// }
+		// }
 	}
 	
 	private void skate(AvatarPlayerData data, EntityPlayer player) {

@@ -80,10 +80,6 @@ public class AvatarPlayerData extends PlayerData {
 	 */
 	private float fallAbsorption;
 	private int timeInAir;
-	/**
-	 * Time left to activate water skating, in ticks
-	 */
-	private int skateTime;
 	private boolean skating;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
@@ -142,7 +138,6 @@ public class AvatarPlayerData extends PlayerData {
 		wallJumping = readFrom.getBoolean("WallJumping");
 		fallAbsorption = readFrom.getFloat("FallAbsorption");
 		timeInAir = readFrom.getInteger("TimeInAir");
-		skateTime = readFrom.getInteger("SkateTime");
 		skating = readFrom.getBoolean("WaterSkating");
 		
 	}
@@ -167,7 +162,6 @@ public class AvatarPlayerData extends PlayerData {
 		writeTo.setBoolean("WallJumping", wallJumping);
 		writeTo.setFloat("FallAbsorption", fallAbsorption);
 		writeTo.setInteger("TimeInAir", timeInAir);
-		writeTo.setInteger("SkateTime", skateTime);
 		writeTo.setBoolean("WaterSkating", skating);
 		
 	}
@@ -487,14 +481,6 @@ public class AvatarPlayerData extends PlayerData {
 	
 	public void setTimeInAir(int time) {
 		this.timeInAir = time;
-	}
-	
-	public int getSkateTime() {
-		return skateTime;
-	}
-	
-	public void setSkateTime(int skateTime) {
-		this.skateTime = skateTime;
 	}
 	
 	public boolean isSkating() {
