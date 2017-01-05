@@ -16,17 +16,20 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
+import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
+
+import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -34,36 +37,32 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityFireball extends FireAbility {
+public class StatCtrlThrowFireball extends StatusControl {
 	
-	public AbilityFireball() {
-		super("fireball");
+	public StatCtrlThrowFireball() {
+		super(0, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
 	}
 	
 	@Override
-	public void execute(AbilityContext ctx) {
-		
+	public boolean execute(AbilityContext ctx) {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
-		AvatarPlayerData data = ctx.getData();
 		
-		Vector playerPos = getEntityPos(player);
-		Vector target = playerPos.plus(getLookRectangular(player).times(2.5));
+		double size = 6;
+		Vec3d playerPos = player.getPositionVector();
+		AxisAlignedBB boundingBox = new AxisAlignedBB(playerPos.subtract(size, size, size),
+				playerPos.addVector(size, size, size));
 		
-		EntityFireball fireball = new EntityFireball(world);
-		fireball.position().set(target);
-		fireball.setOwner(player);
-		fireball.setBehavior(new FireballBehavior.PlayerControlled());
-		world.spawnEntityInWorld(fireball);
+		List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class, //
+				boundingBox, //
+				fireball -> fireball.getOwner() == player);
 		
-		data.addStatusControl(StatusControl.THROW_FIREBALL);
-		data.sync();
+		for (EntityFireball fireball : fireballs) {
+			fireball.velocity().add(Vector.getLookRectangular(player).mul(15));
+			fireball.setBehavior(new FireballBehavior.Thrown());
+		}
 		
-	}
-	
-	@Override
-	public int getIconIndex() {
-		return 0;
+		return true;
 	}
 	
 }
