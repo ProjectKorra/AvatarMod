@@ -22,6 +22,7 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,6 +51,8 @@ public class AbilityFireball extends FireAbility {
 		
 		EntityFireball fireball = new EntityFireball(world);
 		fireball.position().set(target);
+		fireball.setOwner(player);
+		fireball.setBehavior(new FireballBehavior.PlayerControlled());
 		world.spawnEntityInWorld(fireball);
 		
 	}

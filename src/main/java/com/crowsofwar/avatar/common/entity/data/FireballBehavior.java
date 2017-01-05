@@ -17,14 +17,11 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior.Place;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
@@ -45,19 +42,16 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 	
 	public static final DataSerializer<FireballBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 	
-	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLACE, ID_PLAYER_CONTROL, ID_THROWN;
+	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
 	
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		ID_NOTHING = registerBehavior(DoNothing.class);
-		ID_FALL = registerBehavior(Fall.class);
-		ID_PICKUP = registerBehavior(PickUp.class);
-		ID_PLACE = registerBehavior(Place.class);
+		ID_NOTHING = registerBehavior(Idle.class);
 		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
 		ID_THROWN = registerBehavior(Thrown.class);
 	}
 	
-	public static class DoNothing extends FireballBehavior {
+	public static class Idle extends FireballBehavior {
 		
 		@Override
 		public FireballBehavior onUpdate(EntityFireball entity) {
@@ -120,10 +114,12 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			collided.setFire(6);
 			
 			// TODO Push entity
-			Vector /*motion = new Vector(collided).minus(new Vector(entity));
-			motion.mul(STATS_CONFIG.floatingBlockSettings.push);
-			motion.setY(0.08);
-			collide*/d.addVelocity(motion.x(), motion.y(), motion.z());
+			/*
+			 * Vector motion = new Vector(collided).minus(new Vector(entity));
+			 * motion.mul(STATS_CONFIG.floatingBlockSettings.push);
+			 * motion.setY(0.08); collided.addVelocity(motion.x(), motion.y(),
+			 * motion.z());
+			 */
 			
 			// TODO Add XP
 			/*
@@ -154,41 +150,9 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 		
 	}
 	
-	public static class PickUp extends FireballBehavior {
-		
-		@Override
-		public FireballBehavior onUpdate(EntityFireball entity) {
-			entity.velocity().add(0, -9.81 / 20, 0);
-			
-			Vector velocity = entity.velocity();
-			if (velocity.y() <= 0) {
-				velocity.setY(0);
-				entity.velocity().set(velocity);
-				return new PlayerControlled(entity, entity.getOwner());
-			}
-			
-			return this;
-		}
-		
-		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
-		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
-		@Override
-		public void load(NBTTagCompound nbt) {}
-		
-		@Override
-		public void save(NBTTagCompound nbt) {}
-		
-	}
-	
 	public static class PlayerControlled extends FireballBehavior {
 		
 		public PlayerControlled() {}
-		
-		public PlayerControlled(EntityFireball entity, EntityPlayer player) {}
 		
 		@Override
 		public FireballBehavior onUpdate(EntityFireball entity) {
@@ -207,32 +171,6 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			motion.mul(5);
 			entity.velocity().set(motion);
 			
-			return this;
-		}
-		
-		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
-		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
-		@Override
-		public void load(NBTTagCompound nbt) {}
-		
-		@Override
-		public void save(NBTTagCompound nbt) {}
-		
-	}
-	
-	public static class Fall extends FireballBehavior {
-		
-		@Override
-		public FireballBehavior onUpdate(EntityFireball entity) {
-			entity.velocity().add(0, -9.81 / 20, 0);
-			if (entity.isCollided) {
-				if (!entity.worldObj.isRemote) entity.setDead();
-				entity.onCollision();
-			}
 			return this;
 		}
 		

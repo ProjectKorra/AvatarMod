@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +36,8 @@ public class EntityFireball extends AvatarEntity {
 	
 	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityFireball.class,
 			DataSerializers.STRING);
+	public static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
 	
 	private final OwnerAttribute ownerAttr;
 	private AxisAlignedBB expandedHitbox;
@@ -48,12 +51,32 @@ public class EntityFireball extends AvatarEntity {
 		setSize(.8f, .8f);
 	}
 	
+	@Override
+	public void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
+	}
+	
 	public EntityPlayer getOwner() {
 		return ownerAttr.getOwner();
 	}
 	
 	public void setOwner(EntityPlayer owner) {
 		ownerAttr.setOwner(owner);
+	}
+	
+	public FireballBehavior getBehavior() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+	
+	public void setBehavior(FireballBehavior behavior) {
+		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
 	public void onCollision() {
