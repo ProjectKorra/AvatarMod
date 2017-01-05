@@ -22,7 +22,6 @@ import static com.crowsofwar.avatar.common.bending.BendingType.FIREBENDING;
 
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -37,13 +36,13 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Firebending extends BendingController {
 	
 	private final BendingMenuInfo menu;
-	private final BendingAbility abilityLightFire, abilityFireArc, abilityFlamethrower;
 	
 	public Firebending() {
 		
-		addAbility(this.abilityLightFire = ABILITY_LIGHT_FIRE);
-		addAbility(this.abilityFireArc = ABILITY_FIRE_ARC);
-		addAbility(this.abilityFlamethrower = ABILITY_FLAMETHROWER);
+		addAbility(ABILITY_LIGHT_FIRE);
+		addAbility(ABILITY_FIRE_ARC);
+		addAbility(ABILITY_FLAMETHROWER);
+		addAbility(ABILITY_FIREBALL);
 		
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
@@ -52,7 +51,8 @@ public class Firebending extends BendingController {
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A),
-				AvatarControl.KEY_FIREBENDING, abilityLightFire, abilityFireArc, abilityFlamethrower);
+				AvatarControl.KEY_FIREBENDING, ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER,
+				ABILITY_FIREBALL);
 		
 	}
 	
