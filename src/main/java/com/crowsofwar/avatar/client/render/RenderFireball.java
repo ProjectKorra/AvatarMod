@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -49,6 +50,17 @@ public class RenderFireball extends Render<EntityFireball> {
 			float partialTicks) {
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		
+		// RenderSlime
+		
+		GlStateManager.enableBlend();
+		
+		GlStateManager.color(1, 1, 1, .5f);
+		renderCube((float) x, (float) y, (float) z, //
+				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
+				1f);
+		GlStateManager.color(1, 1, 1, 1);
+		
 		renderCube((float) x, (float) y, (float) z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				.6f);
