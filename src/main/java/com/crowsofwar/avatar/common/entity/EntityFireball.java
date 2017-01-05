@@ -18,7 +18,9 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -61,6 +63,10 @@ public class EntityFireball extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
+		
+		Vector v = velocity().dividedBy(20);
+		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
+		
 	}
 	
 	public EntityPlayer getOwner() {
