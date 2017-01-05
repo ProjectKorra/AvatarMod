@@ -67,7 +67,6 @@ public class WaterbendingUpdate {
 			IBlockState in = player.worldObj.getBlockState(player.getPosition());
 			IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
 			if (player.isInWater() || below.getBlock() == Blocks.WATER) {
-				System.out.println("Start skating");
 				data.removeStatusControl(SKATING_START);
 				data.setSkating(true);
 				data.addStatusControl(SKATING_JUMP);
@@ -85,15 +84,27 @@ public class WaterbendingUpdate {
 			Block below = world.getBlockState(player.getPosition().down()).getBlock();
 			Block in = world.getBlockState(player.getPosition()).getBlock();
 			
-			if (in == WATER) yPos++;
+			int increased = 0;
+			while (in == WATER && increased < 3) {
+				increased++;
+				in = world.getBlockState(player.getPosition().up(increased - 1)).getBlock();
+				in = world.getBlockState(player.getPosition().up(increased)).getBlock();
+			}
+			
+			if (world.getBlockState(player.getPosition().up(increased)).getBlock() == Blocks.AIR) {
+				yPos += increased;
+			} else {
+				data.setSkating(false);
+				data.sync();
+				return;
+			}
 			
 			if (!player.worldObj.isRemote && (player.isSneaking() || (below != WATER && in != WATER))) {
-				System.out.println("End skating");
 				data.setSkating(false);
 				data.sync();
 			} else {
 				player.setPosition(player.posX, yPos + .2, player.posZ);
-				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).dividedBy(2);
+				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(.667);
 				player.motionX = velocity.x();
 				player.motionY = 0;
 				player.motionZ = velocity.z();

@@ -17,6 +17,10 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -31,6 +35,10 @@ public class AbilityFireball extends FireAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
+		
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = ctx.getWorld();
+		AvatarPlayerData data = ctx.getData();
 		
 	}
 	
