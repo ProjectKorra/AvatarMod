@@ -51,7 +51,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		renderCube((float) x, (float) y, (float) z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
-				.5f);
+				.6f);
 		
 	}
 	
@@ -61,16 +61,17 @@ public class RenderFireball extends Render<EntityFireball> {
 		mat.translate(x - 0.5f, y, z - 0.5f);
 		
 		// @formatter:off
+		float add = (1 - size) / 2f;
 		// Can't use .mul(size) here because it would mul the w component
 		Vector4f
-		lbf = new Vector4f(0000, 0000, 0000, 1).mul(mat),
-		rbf = new Vector4f(size, 0000, 0000, 1).mul(mat),
-		ltf = new Vector4f(0000, size, 0000, 1).mul(mat),
-		rtf = new Vector4f(size, size, 0000, 1).mul(mat),
-		lbb = new Vector4f(0000, 0000, size, 1).mul(mat),
-		rbb = new Vector4f(size, 0000, size, 1).mul(mat),
-		ltb = new Vector4f(0000, size, size, 1).mul(mat),
-		rtb = new Vector4f(size, size, size, 1).mul(mat);
+		lbf = new Vector4f(0000, 0000, 0000, 1).add(add, add / 2, add, 0).mul(mat),
+		rbf = new Vector4f(size, 0000, 0000, 1).add(add, add / 2, add, 0).mul(mat),
+		ltf = new Vector4f(0000, size, 0000, 1).add(add, add / 2, add, 0).mul(mat),
+		rtf = new Vector4f(size, size, 0000, 1).add(add, add / 2, add, 0).mul(mat),
+		lbb = new Vector4f(0000, 0000, size, 1).add(add, add / 2, add, 0).mul(mat),
+		rbb = new Vector4f(size, 0000, size, 1).add(add, add / 2, add, 0).mul(mat),
+		ltb = new Vector4f(0000, size, size, 1).add(add, add / 2, add, 0).mul(mat),
+		rtb = new Vector4f(size, size, size, 1).add(add, add / 2, add, 0).mul(mat);
 		
 		// @formatter:on
 		
