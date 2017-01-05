@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
+import static net.minecraft.init.Blocks.WATER;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -28,6 +29,7 @@ import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -62,7 +64,10 @@ public class WaterbendingUpdate {
 	
 	private void tryStartSkating(AvatarPlayerData data, EntityPlayer player) {
 		if (data.hasStatusControl(SKATING_START)) {
-			if (player.isInWater()) {
+			IBlockState in = player.worldObj.getBlockState(player.getPosition());
+			IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
+			if (player.isInWater() || below.getBlock() == Blocks.WATER) {
+				System.out.println("Start skating");
 				data.removeStatusControl(SKATING_START);
 				data.setSkating(true);
 				data.addStatusControl(SKATING_JUMP);
@@ -77,12 +82,13 @@ public class WaterbendingUpdate {
 			World world = player.worldObj;
 			
 			int yPos = player.getPosition().getY();
-			IBlockState below = world.getBlockState(player.getPosition().down());
-			IBlockState in = world.getBlockState(player.getPosition());
+			Block below = world.getBlockState(player.getPosition().down()).getBlock();
+			Block in = world.getBlockState(player.getPosition()).getBlock();
 			
-			if (in.getBlock() == Blocks.WATER) yPos++;
+			if (in == WATER) yPos++;
 			
-			if (player.isSneaking() || player.onGround || below.getBlock() != Blocks.WATER) {
+			if (!player.worldObj.isRemote && (player.isSneaking() || (below != WATER && in != WATER))) {
+				System.out.println("End skating");
 				data.setSkating(false);
 				data.sync();
 			} else {
