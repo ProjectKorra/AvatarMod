@@ -16,6 +16,14 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
@@ -25,11 +33,53 @@ import net.minecraft.world.World;
  */
 public class EntityFireball extends AvatarEntity {
 	
+	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityFireball.class,
+			DataSerializers.STRING);
+	
+	private final OwnerAttribute ownerAttr;
+	private AxisAlignedBB expandedHitbox;
+	
 	/**
 	 * @param world
 	 */
 	public EntityFireball(World world) {
 		super(world);
+		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		setSize(.8f, .8f);
+	}
+	
+	public EntityPlayer getOwner() {
+		return ownerAttr.getOwner();
+	}
+	
+	public void setOwner(EntityPlayer owner) {
+		ownerAttr.setOwner(owner);
+	}
+	
+	public void onCollision() {
+		
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		ownerAttr.load(nbt);
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		ownerAttr.save(nbt);
+	}
+	
+	public AxisAlignedBB getExpandedHitbox() {
+		return this.expandedHitbox;
+	}
+	
+	@Override
+	public void setEntityBoundingBox(AxisAlignedBB bb) {
+		super.setEntityBoundingBox(bb);
+		expandedHitbox = bb.expand(0.35, 0.35, 0.35);
 	}
 	
 }
