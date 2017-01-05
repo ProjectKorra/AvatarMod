@@ -49,26 +49,27 @@ public class RenderFireball extends Render<EntityFireball> {
 			float partialTicks) {
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		renderCube((float) x, (float) y, (float) z, 0, 0, 8, 8, .5f);
+		renderCube((float) x, (float) y, (float) z, //
+				0, 8 / 256.0, 0, 8 / 256.0, //
+				2);
 		
 	}
 	
-	private void renderCube(float x, float y, float z, int u1, int u2, int v1, int v2, float size) {
+	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2,
+			float size) {
 		Matrix4f mat = new Matrix4f();
 		mat.translate(x - 0.5f, y, z - 0.5f);
 		
-		Vector4f mid = new Vector4f(x, y + .5f, z, 1);
-		
 		// @formatter:off
 		Vector4f
-		lbf = new Vector4f(0, 0, 0, 1).mul(size).mul(mat),
-		rbf = new Vector4f(1, 0, 0, 1).mul(size).mul(mat),
-		ltf = new Vector4f(0, 1, 0, 1).mul(size).mul(mat),
-		rtf = new Vector4f(1, 1, 0, 1).mul(size).mul(mat),
-		lbb = new Vector4f(0, 0, 1, 1).mul(size).mul(mat),
-		rbb = new Vector4f(1, 0, 1, 1).mul(size).mul(mat),
-		ltb = new Vector4f(0, 1, 1, 1).mul(size).mul(mat),
-		rtb = new Vector4f(1, 1, 1, 1).mul(size).mul(mat);
+		lbf = new Vector4f(-.5f, -.5f, -.5f, 0.5f).mul(size).mul(mat),
+		rbf = new Vector4f(0.5f, -.5f, -.5f, 0.5f).mul(size).mul(mat),
+		ltf = new Vector4f(-.5f, 0.5f, -.5f, 0.5f).mul(size).mul(mat),
+		rtf = new Vector4f(0.5f, 0.5f, -.5f, 0.5f).mul(size).mul(mat),
+		lbb = new Vector4f(-.5f, -.5f, 0.5f, 0.5f).mul(size).mul(mat),
+		rbb = new Vector4f(0.5f, -.5f, 0.5f, 0.5f).mul(size).mul(mat),
+		ltb = new Vector4f(-.5f, 0.5f, 0.5f, 0.5f).mul(size).mul(mat),
+		rtb = new Vector4f(0.5f, 0.5f, 0.5f, 0.5f).mul(size).mul(mat);
 		// @formatter:on
 		
 		drawQuad(2, ltb, lbb, lbf, ltf, u1, v1, u2, v2); // -x
