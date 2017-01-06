@@ -58,7 +58,7 @@ public class StatCtrlThrowFireball extends StatusControl {
 				fireball -> fireball.getOwner() == player);
 		
 		for (EntityFireball fireball : fireballs) {
-			fireball.velocity().add(Vector.getLookRectangular(player).mul(15));
+			fireball.velocity().add(Vector.getLookRectangular(player).mul(25));
 			fireball.setBehavior(new FireballBehavior.Thrown());
 		}
 		
