@@ -46,7 +46,7 @@ public class NodeAbilityGet extends NodeFunctional {
 		public BendingAbility convert(String str) {
 			List<BendingAbility> allAbilities = BendingManager.allAbilities();
 			for (BendingAbility ability : allAbilities) {
-				if (ability.getClass().getSimpleName().equals(str)) return ability;
+				if (ability.getName().equals(str)) return ability;
 			}
 			
 			throw new TreeCommandException(Reason.NOT_OPTION);
@@ -54,7 +54,7 @@ public class NodeAbilityGet extends NodeFunctional {
 		
 		@Override
 		public String toString(BendingAbility obj) {
-			return obj.getClass().getSimpleName();
+			return obj.getName();
 		}
 		
 		@Override
