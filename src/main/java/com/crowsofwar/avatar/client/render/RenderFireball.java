@@ -53,14 +53,15 @@ public class RenderFireball extends Render<EntityFireball> {
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		
-		float rotation = entity.ticksExisted / 20f;
+		float rotation = entity.ticksExisted / 5f;
 		
 		GlStateManager.enableBlend();
 		
 		pushMatrix();
 		renderCube((float) x, (float) y, (float) z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
-				.5f, 0);
+				.5f, //
+				0, entity.ticksExisted / 25f, 0);
 		popMatrix();
 		
 		disableLighting();
@@ -68,7 +69,8 @@ public class RenderFireball extends Render<EntityFireball> {
 		color(1, 1, 1, .5f);
 		renderCube((float) x, (float) y, (float) z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
-				.8f, rotation);
+				.8f, //
+				rotation * .2f, rotation, rotation * -.4f);
 		color(1, 1, 1, 1);
 		
 		enableLighting();
@@ -76,11 +78,13 @@ public class RenderFireball extends Render<EntityFireball> {
 	}
 	
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
-			float rotation) {
+			float rotateX, float rotateY, float rotateZ) {
 		Matrix4f mat = new Matrix4f();
 		mat.translate(x, y + .4f, z);
 		
-		mat.rotate(rotation, .2f, 1, -.4f);
+		mat.rotate(rotateX, 1, 0, 0);
+		mat.rotate(rotateY, 0, 1, 0);
+		mat.rotate(rotateZ, 0, 0, 1);
 		
 		// @formatter:off
 		// Can't use .mul(size) here because it would mul the w component
