@@ -20,8 +20,6 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
@@ -39,10 +37,10 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterBubble extends BendingAbility {
+public class AbilityWaterBubble extends WaterAbility {
 	
 	public AbilityWaterBubble() {
-		super(BendingType.WATERBENDING, "water_bubble");
+		super("water_bubble");
 		requireRaytrace(-1, false);
 	}
 	

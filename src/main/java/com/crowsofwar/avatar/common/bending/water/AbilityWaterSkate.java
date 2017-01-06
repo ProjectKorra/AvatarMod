@@ -16,10 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
-
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
@@ -28,10 +25,10 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterSkate extends BendingAbility {
+public class AbilityWaterSkate extends WaterAbility {
 	
 	public AbilityWaterSkate() {
-		super(WATERBENDING, "water_skate");
+		super("water_skate");
 	}
 	
 	@Override
