@@ -89,7 +89,8 @@ public class EntityFireball extends AvatarEntity {
 	
 	public void onCollision() {
 		// Explosion -- last parameter is whether to damage blocks
-		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 1.5f, true, false);
+		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 1.5f, !worldObj.isRemote,
+				false);
 		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
