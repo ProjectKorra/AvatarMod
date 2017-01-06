@@ -78,7 +78,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 		public FireballBehavior onUpdate(EntityFireball entity) {
 			
 			if (entity.isCollided) {
-				if (!entity.worldObj.isRemote) entity.setDead();
+				entity.setDead();
 				entity.onCollision();
 			}
 			

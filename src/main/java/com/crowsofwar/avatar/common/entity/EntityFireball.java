@@ -27,7 +27,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 
 /**
  * 
@@ -86,6 +88,12 @@ public class EntityFireball extends AvatarEntity {
 	}
 	
 	public void onCollision() {
+		// Explosion -- last parameter is whether to damage blocks
+		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 1.5f, true, false);
+		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+			explosion.doExplosionA();
+			explosion.doExplosionB(true);
+		}
 		
 	}
 	
