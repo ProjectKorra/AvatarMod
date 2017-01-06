@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
+import static net.minecraft.util.math.MathHelper.cos;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -25,7 +26,7 @@ import org.lwjgl.opengl.GL11;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -47,35 +48,41 @@ public class RenderFireball extends Render<EntityFireball> {
 		super(renderManager);
 	}
 	
+	// @formatter:off
 	@Override
-	public void doRender(EntityFireball entity, double x, double y, double z, float entityYaw,
+	public void doRender(EntityFireball entity, double xx, double yy, double zz, float entityYaw,
 			float partialTicks) {
+		
+		float x = (float) xx, y = (float) yy, z = (float) zz;
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		
 		float rotation = entity.ticksExisted / 5f;
+		float size = .8f + cos(entity.ticksExisted / 5f) * .05f;
 		
-		GlStateManager.enableBlend();
+		enableBlend();
 		
-		pushMatrix();
-		renderCube((float) x, (float) y, (float) z, //
+		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f, //
 				0, entity.ticksExisted / 25f, 0);
-		popMatrix();
+		
+		int i = 15728880;
+        int j = i % 65536;
+        int k = i / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
 		
 		disableLighting();
-		
-		color(1, 1, 1, .5f);
-		renderCube((float) x, (float) y, (float) z, //
-				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
-				.8f, //
-				rotation * .2f, rotation, rotation * -.4f);
-		color(1, 1, 1, 1);
-		
+			pushMatrix();
+				renderCube(x, y, z, //
+						8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
+						size, //
+						rotation * .2f, rotation, rotation * -.4f);
+			popMatrix();
 		enableLighting();
 		
 	}
+	// @formatter:on
 	
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
 			float rotateX, float rotateY, float rotateZ) {
