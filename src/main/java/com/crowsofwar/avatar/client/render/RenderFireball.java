@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import static net.minecraft.client.renderer.GlStateManager.*;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -51,39 +53,46 @@ public class RenderFireball extends Render<EntityFireball> {
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		
-		// RenderSlime
+		float rotation = entity.ticksExisted / 20f;
 		
 		GlStateManager.enableBlend();
 		
-		GlStateManager.color(1, 1, 1, .5f);
-		renderCube((float) x, (float) y, (float) z, //
-				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
-				1f);
-		GlStateManager.color(1, 1, 1, 1);
-		
+		pushMatrix();
 		renderCube((float) x, (float) y, (float) z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
-				.6f);
+				.5f, 0);
+		popMatrix();
+		
+		disableLighting();
+		
+		color(1, 1, 1, .5f);
+		renderCube((float) x, (float) y, (float) z, //
+				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
+				.8f, rotation);
+		color(1, 1, 1, 1);
+		
+		enableLighting();
 		
 	}
 	
-	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2,
-			float size) {
+	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
+			float rotation) {
 		Matrix4f mat = new Matrix4f();
-		mat.translate(x - 0.5f, y, z - 0.5f);
+		mat.translate(x, y + .4f, z);
+		
+		mat.rotate(rotation, .2f, 1, -.4f);
 		
 		// @formatter:off
-		float add = (1 - size) / 2f;
 		// Can't use .mul(size) here because it would mul the w component
 		Vector4f
-		lbf = new Vector4f(0000, 0000, 0000, 1).add(add, add / 2, add, 0).mul(mat),
-		rbf = new Vector4f(size, 0000, 0000, 1).add(add, add / 2, add, 0).mul(mat),
-		ltf = new Vector4f(0000, size, 0000, 1).add(add, add / 2, add, 0).mul(mat),
-		rtf = new Vector4f(size, size, 0000, 1).add(add, add / 2, add, 0).mul(mat),
-		lbb = new Vector4f(0000, 0000, size, 1).add(add, add / 2, add, 0).mul(mat),
-		rbb = new Vector4f(size, 0000, size, 1).add(add, add / 2, add, 0).mul(mat),
-		ltb = new Vector4f(0000, size, size, 1).add(add, add / 2, add, 0).mul(mat),
-		rtb = new Vector4f(size, size, size, 1).add(add, add / 2, add, 0).mul(mat);
+		lbf = new Vector4f(-.5f*size, -.5f*size, -.5f*size, 1).mul(mat),
+		rbf = new Vector4f(0.5f*size, -.5f*size, -.5f*size, 1).mul(mat),
+		ltf = new Vector4f(-.5f*size, 0.5f*size, -.5f*size, 1).mul(mat),
+		rtf = new Vector4f(0.5f*size, 0.5f*size, -.5f*size, 1).mul(mat),
+		lbb = new Vector4f(-.5f*size, -.5f*size, 0.5f*size, 1).mul(mat),
+		rbb = new Vector4f(0.5f*size, -.5f*size, 0.5f*size, 1).mul(mat),
+		ltb = new Vector4f(-.5f*size, 0.5f*size, 0.5f*size, 1).mul(mat),
+		rtb = new Vector4f(0.5f*size, 0.5f*size, 0.5f*size, 1).mul(mat);
 		
 		// @formatter:on
 		
