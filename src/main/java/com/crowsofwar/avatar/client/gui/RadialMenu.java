@@ -193,7 +193,8 @@ public class RadialMenu extends Gui {
 		if (Mouse.isButtonDown(0)) {
 			int centeredX = mouseX - resolution.getScaledWidth() / 2;
 			int centeredY = mouseY - resolution.getScaledHeight() / 2;
-			if (Math.sqrt(centeredX * centeredX + centeredY * centeredY) / menuScale < 100) {
+			if (currentMouseover == null
+					&& Math.sqrt(centeredX * centeredX + centeredY * centeredY) / menuScale < 100) {
 				mc.displayGuiScreen(new SkillsGui(controller));
 				return true;
 			}
