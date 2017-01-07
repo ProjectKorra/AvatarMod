@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
@@ -47,7 +47,7 @@ public class AbilityFireball extends FireAbility {
 		World world = ctx.getWorld();
 		AvatarPlayerData data = ctx.getData();
 		
-		Vector playerPos = getEntityPos(player);
+		Vector playerPos = getEyePos(player);
 		Vector target = playerPos.plus(getLookRectangular(player).times(2.5));
 		
 		EntityFireball fireball = new EntityFireball(world);

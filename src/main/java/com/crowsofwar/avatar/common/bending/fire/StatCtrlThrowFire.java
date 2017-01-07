@@ -37,7 +37,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class StatCtrlThrowFire extends StatusControl {
 	
 	public StatCtrlThrowFire() {
-		super(6, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
+		super(6, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 	
 	@Override
