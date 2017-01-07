@@ -40,7 +40,7 @@ import net.minecraft.world.World;
 public class StatCtrlThrowFireball extends StatusControl {
 	
 	public StatCtrlThrowFireball() {
-		super(0, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
+		super(10, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
 	}
 	
 	@Override
