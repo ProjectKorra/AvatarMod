@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 
 import net.minecraft.block.BlockFarmland;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -91,7 +92,8 @@ public class EntityWaterBubble extends AvatarEntity {
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-					if (worldObj.getBlockState(pos).getBlock() == Blocks.WATER) {
+					IBlockState state = worldObj.getBlockState(pos);
+					if (state.getBlock() == Blocks.WATER && state.getValue(BlockLiquid.LEVEL) == 0) {
 						inWaterSource = true;
 						break;
 					}
