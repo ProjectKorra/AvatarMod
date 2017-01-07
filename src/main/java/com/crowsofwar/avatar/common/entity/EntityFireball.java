@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.gorecore.util.Vector;
@@ -26,6 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -68,6 +71,16 @@ public class EntityFireball extends AvatarEntity {
 		
 		Vector v = velocity().dividedBy(20);
 		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
+		
+		if (inWater) {
+			removeStatCtrl();
+			int particles = rand.nextInt(4) + 5;
+			for (int i = 0; i < particles; i++) {
+				worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
+						rand.nextDouble() * .2, rand.nextGaussian() * .05);
+			}
+			setDead();
+		}
 		
 	}
 	
@@ -118,6 +131,14 @@ public class EntityFireball extends AvatarEntity {
 	public void setEntityBoundingBox(AxisAlignedBB bb) {
 		super.setEntityBoundingBox(bb);
 		expandedHitbox = bb.expand(0.35, 0.35, 0.35);
+	}
+	
+	private void removeStatCtrl() {
+		if (getOwner() != null) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			data.removeStatusControl(StatusControl.THROW_FIREBALL);
+			if (!worldObj.isRemote) data.sync();
+		}
 	}
 	
 }
