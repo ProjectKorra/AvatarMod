@@ -24,11 +24,13 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -79,6 +81,8 @@ public class EntityFireball extends AvatarEntity {
 				worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
 						rand.nextDouble() * .2, rand.nextGaussian() * .05);
 			}
+			worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+					SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f, false);
 			setDead();
 		}
 		
