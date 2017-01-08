@@ -35,7 +35,6 @@ public class RenderWaterArc extends RenderArc {
 	 */
 	public RenderWaterArc(RenderManager renderManager) {
 		super(renderManager);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override

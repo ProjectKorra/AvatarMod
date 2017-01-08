@@ -458,8 +458,6 @@ public class ConfigLoader {
 		} else {
 			ignoreSetting = (boolean) ignoreObject;
 		}
-		// TODO This is debug remove vvv
-		GoreCore.LOGGER.info("Ignore setting: " + ignoreSetting + "; obj " + ignoreObject);//
 		
 		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting);
 		loader.load();
