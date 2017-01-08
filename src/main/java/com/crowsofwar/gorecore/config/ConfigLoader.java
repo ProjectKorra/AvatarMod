@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.Level;
@@ -328,7 +329,10 @@ public class ConfigLoader {
 		Yaml yaml = new Yaml(representer, options);
 		
 		try {
-			return yaml.dump(usedValues);
+			
+			Map<String, Object> sorted = new TreeMap<String, Object>(usedValues);
+			return yaml.dump(sorted);
+			
 		} catch (YAMLException e) {
 			throw new ConfigurationException.Unexpected(
 					"Unexpected error while trying to convert values to YAML: classTags " + classTags
