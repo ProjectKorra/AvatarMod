@@ -121,6 +121,9 @@ public class ConfigStats {
 		@Load
 		public boolean damageBlocks = false;
 		
+		@Load
+		public double push = .75;
+		
 	}
 	
 }

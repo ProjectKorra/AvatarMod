@@ -116,13 +116,10 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 					entity.getDamage());
 			collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 			
-			// TODO Push entity
-			/*
-			 * Vector motion = new Vector(collided).minus(new Vector(entity));
-			 * motion.mul(STATS_CONFIG.floatingBlockSettings.push);
-			 * motion.setY(0.08); collided.addVelocity(motion.x(), motion.y(),
-			 * motion.z());
-			 */
+			Vector motion = entity.velocity().dividedBy(20);
+			motion.mul(STATS_CONFIG.fireballSettings.push);
+			motion.setY(0.08);
+			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
 			if (!collided.worldObj.isRemote && data != null) {
