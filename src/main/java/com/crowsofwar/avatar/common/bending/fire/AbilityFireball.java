@@ -38,17 +38,24 @@ public class AbilityFireball extends FireAbility {
 	
 	public AbilityFireball() {
 		super("fireball");
+		requireRaytrace(2.5, false);
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
 		
+		requireRaytrace(2.5, false);
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		AvatarPlayerData data = ctx.getData();
 		
-		Vector playerPos = getEyePos(player);
-		Vector target = playerPos.plus(getLookRectangular(player).times(2.5));
+		Vector target;
+		if (ctx.isLookingAtBlock()) {
+			target = ctx.getLookPos();
+		} else {
+			Vector playerPos = getEyePos(player);
+			target = playerPos.plus(getLookRectangular(player).times(2.5));
+		}
 		
 		EntityFireball fireball = new EntityFireball(world);
 		fireball.position().set(target);
