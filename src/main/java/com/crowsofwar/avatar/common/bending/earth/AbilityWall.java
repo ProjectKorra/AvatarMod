@@ -20,8 +20,6 @@ package com.crowsofwar.avatar.common.bending.earth;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
@@ -32,10 +30,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class AbilityWall extends BendingAbility {
+public class AbilityWall extends EarthAbility {
 	
 	public AbilityWall() {
-		super(BendingType.EARTHBENDING, "earth_wall");
+		super("earth_wall");
 		requireRaytrace(6, false);
 	}
 	

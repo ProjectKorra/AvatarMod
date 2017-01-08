@@ -16,6 +16,7 @@ AV2 Changelog :: version a3.0
 * By default, config files ignore anything on them and favor the latest default values
 * Earthbenders can bend grass blocks
 * Sort all keys in config file by alphabetical order
+* Using simpler ability names in '/avatar ability...', e.g. AbilityFireArc -> fire_arc
 > Fixed air gust not working on other players in LAN
 > Fixed crashing for hacked players... don't expect it to work on servers though
 > Fixed UUID cache using LF line endings on windows
