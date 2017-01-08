@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
@@ -56,10 +57,15 @@ public class AbilityFireball extends FireAbility {
 			target = playerPos.plus(getLookRectangular(player).times(2.5));
 		}
 		
+		float xp = data.getAbilityData(this).getXp();
+		float damage = STATS_CONFIG.fireballSettings.damage;
+		damage *= .75 + xp * .0075f; // 0=.75, 100=1.5
+		
 		EntityFireball fireball = new EntityFireball(world);
 		fireball.position().set(target);
 		fireball.setOwner(player);
 		fireball.setBehavior(new FireballBehavior.PlayerControlled());
+		fireball.setDamage(damage);
 		world.spawnEntityInWorld(fireball);
 		
 		data.addStatusControl(StatusControl.THROW_FIREBALL);

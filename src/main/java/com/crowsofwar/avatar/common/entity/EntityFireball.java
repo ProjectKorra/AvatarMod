@@ -53,6 +53,8 @@ public class EntityFireball extends AvatarEntity {
 	private final OwnerAttribute ownerAttr;
 	private AxisAlignedBB expandedHitbox;
 	
+	private float damage;
+	
 	/**
 	 * @param world
 	 */
@@ -106,6 +108,14 @@ public class EntityFireball extends AvatarEntity {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
+	public float getDamage() {
+		return damage;
+	}
+	
+	public void setDamage(float damage) {
+		this.damage = damage;
+	}
+	
 	public void onCollision() {
 		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ,
 				STATS_CONFIG.fireballSettings.explosionSize, !worldObj.isRemote,
@@ -121,12 +131,14 @@ public class EntityFireball extends AvatarEntity {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
+		setDamage(nbt.getFloat("Damage"));
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
+		nbt.setFloat("Damage", getDamage());
 	}
 	
 	public AxisAlignedBB getExpandedHitbox() {

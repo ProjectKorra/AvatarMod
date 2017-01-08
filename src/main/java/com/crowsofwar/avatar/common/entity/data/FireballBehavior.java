@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_FIREBALL;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.List;
@@ -111,7 +113,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 		private void collision(EntityLivingBase collided, EntityFireball entity) {
 			double speed = entity.velocity().magnitude();
 			collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-					STATS_CONFIG.fireballSettings.damage);
+					entity.getDamage());
 			collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 			
 			// TODO Push entity
@@ -122,17 +124,13 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			 * motion.z());
 			 */
 			
-			// TODO Add XP
-			/*
-			 * AvatarPlayerData data =
-			 * AvatarPlayerData.fetcher().fetch(entity.getOwner()); if
-			 * (!collided.worldObj.isRemote && data != null) { float xp =
-			 * SKILLS_CONFIG.blockThrowHit; if (collided.getHealth() <= 0) { xp
-			 * = SKILLS_CONFIG.blockKill; }
-			 * data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK).addXp(
-			 * xp); }
-			 */
-			// Remove the floating block & spawn particles
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
+			if (!collided.worldObj.isRemote && data != null) {
+				float xp = SKILLS_CONFIG.fireballHit;
+				data.getAbilityData(ABILITY_FIREBALL).addXp(xp);
+			}
+			
+			// Remove the fireball & spawn particles
 			if (!entity.worldObj.isRemote) entity.setDead();
 			entity.onCollision();
 		}
