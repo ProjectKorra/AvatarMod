@@ -53,6 +53,9 @@ public class ConfigStats {
 	@Load
 	public int wallJumpDelay = 10;
 	
+	@Load
+	public FireballSettings fireballSettings = new FireballSettings();
+	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {
@@ -101,6 +104,22 @@ public class ConfigStats {
 			this.damage = damage;
 			this.push = push;
 		}
+		
+	}
+	
+	public static class FireballSettings {
+		
+		@Load
+		public float damage = 6;
+		
+		@Load
+		public int fireTime = 6;
+		
+		@Load
+		public float explosionSize = 1.5f;
+		
+		@Load
+		public boolean damageBlocks = false;
 		
 	}
 	

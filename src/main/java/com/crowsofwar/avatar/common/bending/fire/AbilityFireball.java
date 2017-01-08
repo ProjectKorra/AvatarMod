@@ -44,7 +44,6 @@ public class AbilityFireball extends FireAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		requireRaytrace(2.5, false);
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		AvatarPlayerData data = ctx.getData();

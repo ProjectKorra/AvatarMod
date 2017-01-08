@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
@@ -107,11 +109,10 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 		}
 		
 		private void collision(EntityLivingBase collided, EntityFireball entity) {
-			// Add damage TODO use different config value
 			double speed = entity.velocity().magnitude();
-			collided.attackEntityFrom(
-					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()), 6);
-			collided.setFire(6);
+			collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+					STATS_CONFIG.fireballSettings.damage);
+			collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 			
 			// TODO Push entity
 			/*

@@ -74,3 +74,4 @@ death.attack.avatar_earthbendBlock=%2$s smashed %1$s with earthbending
 death.attack.avatar_waterArc=%2$s used waterbending to bring down %1$s
 death.attack.avatar_ravine=%2$s crushed %1$s in a ravine
 death.attack.avatar_wave=%1$s can't surf
+death.attack.avatar_fireball=%2$s blasted %1$s with a fireball

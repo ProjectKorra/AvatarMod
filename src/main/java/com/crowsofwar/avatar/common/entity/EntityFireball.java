@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
@@ -105,9 +107,9 @@ public class EntityFireball extends AvatarEntity {
 	}
 	
 	public void onCollision() {
-		// Explosion -- last parameter is whether to damage blocks
-		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 1.5f, !worldObj.isRemote,
-				false);
+		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ,
+				STATS_CONFIG.fireballSettings.explosionSize, !worldObj.isRemote,
+				STATS_CONFIG.fireballSettings.damageBlocks);
 		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
