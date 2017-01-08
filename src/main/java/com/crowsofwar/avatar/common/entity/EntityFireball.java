@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.gorecore.util.Vector;
@@ -132,6 +133,7 @@ public class EntityFireball extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
 		setDamage(nbt.getFloat("Damage"));
+		setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
 	
 	@Override
@@ -139,6 +141,7 @@ public class EntityFireball extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
 		nbt.setFloat("Damage", getDamage());
+		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 	
 	public AxisAlignedBB getExpandedHitbox() {
