@@ -16,13 +16,20 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import java.util.List;
 
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.gorecore.util.Vector;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -46,8 +53,32 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		position().add(velocity().dividedBy(20));
-		if (!worldObj.isRemote && ticksExisted > 100) setDead();
+		Vector v = velocity().dividedBy(20);
+		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
+		if (!worldObj.isRemote && ticksExisted > 60) setDead();
+		
+		if (!isDead) {
+			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
+					getEntityBoundingBox());
+			
+			if (!collidedList.isEmpty()) {
+				
+				Entity collided = collidedList.get(0);
+				if (collided instanceof EntityLivingBase) {
+					
+					EntityLivingBase lb = (EntityLivingBase) collided;
+					lb.attackEntityFrom(DamageSource.cactus, 6);
+					
+				}
+				
+				Vector motion = velocity();
+				motion.mul(0.3);
+				motion.setY(0.08);
+				collided.addVelocity(motion.x(), motion.y(), motion.z());
+				
+			}
+		}
+		
 	}
 	
 	public EntityPlayer getOwner() {
