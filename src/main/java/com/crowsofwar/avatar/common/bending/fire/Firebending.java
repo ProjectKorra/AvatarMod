@@ -51,8 +51,7 @@ public class Firebending extends BendingController {
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A),
-				AvatarControl.KEY_FIREBENDING, ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER,
-				ABILITY_FIREBALL);
+				AvatarControl.KEY_FIREBENDING, this);
 		
 	}
 	

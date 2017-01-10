@@ -49,7 +49,7 @@ public class Earthbending extends BendingController {
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F),
-				AvatarControl.KEY_EARTHBENDING, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE, ABILITY_WALL);
+				AvatarControl.KEY_EARTHBENDING, this);
 		
 	}
 	

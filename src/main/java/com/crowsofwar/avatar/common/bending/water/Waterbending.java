@@ -47,10 +47,8 @@ public class Waterbending extends BendingController {
 		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
-		menu = new BendingMenuInfo(
-				new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
-						new ThemeColor(icon, base), 0x57E8F2),
-				KEY_WATERBENDING, ABILITY_WATER_ARC, ABILITY_WAVE, ABILITY_WATER_BUBBLE, ABILITY_WATER_SKATE);
+		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
+				new ThemeColor(icon, base), 0x57E8F2), KEY_WATERBENDING, this);
 	}
 	
 	@Override

@@ -49,8 +49,7 @@ public class Airbending extends BendingController {
 		ThemeColor edge = new ThemeColor(dark, dark);
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
 		MenuTheme theme = new MenuTheme(background, edge, icon, 0xE8E5DF);
-		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, ABILITY_AIR_GUST,
-				ABILITY_AIR_JUMP, ABILITY_AIRBLADE);
+		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, this);
 	}
 	
 	@Override
