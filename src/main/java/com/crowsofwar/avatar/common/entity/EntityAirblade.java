@@ -43,6 +43,13 @@ public class EntityAirblade extends AvatarEntity {
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 	}
 	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		position().add(velocity().dividedBy(20));
+		if (!worldObj.isRemote && ticksExisted > 100) setDead();
+	}
+	
 	public EntityPlayer getOwner() {
 		return ownerAttr.getOwner();
 	}

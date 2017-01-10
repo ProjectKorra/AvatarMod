@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
+import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
@@ -153,6 +154,7 @@ public class AvatarMod {
 		registerEntity(EntityWall.class, "Wall");
 		registerEntity(EntityWallSegment.class, "WallSegment");
 		registerEntity(EntityFireball.class, "Fireball");
+		registerEntity(EntityAirblade.class, "Airblade");
 		proxy.init();
 	}
 	

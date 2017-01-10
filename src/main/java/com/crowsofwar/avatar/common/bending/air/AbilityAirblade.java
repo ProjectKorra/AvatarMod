@@ -17,6 +17,11 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityAirblade;
+import com.crowsofwar.gorecore.util.Vector;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -31,6 +36,17 @@ public class AbilityAirblade extends AirAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
+		
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = ctx.getWorld();
+		
+		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), 0);
+		Vector spawnAt = Vector.getEyePos(player).add(look);
+		
+		EntityAirblade airblade = new EntityAirblade(world);
+		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
+		airblade.velocity().set(look.times(5));
+		world.spawnEntityInWorld(airblade);
 		
 	}
 	
