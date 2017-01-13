@@ -96,18 +96,6 @@ public class RadialSegment extends Gui {
 	 *            Whether mouse is over it
 	 * @param resolution
 	 *            Resolution MC is at
-	 */
-	public void draw(boolean hover, ScaledResolution resolution) {
-		draw(hover, resolution, 1, 1);
-	}
-	
-	/**
-	 * Draw this radial segment.
-	 * 
-	 * @param hover
-	 *            Whether mouse is over it
-	 * @param resolution
-	 *            Resolution MC is at
 	 * @param alpha
 	 *            Alpha of the image; 0 for completely transparent and 1 for
 	 *            completely opaque
