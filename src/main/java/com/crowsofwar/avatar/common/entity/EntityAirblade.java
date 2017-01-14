@@ -59,9 +59,9 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		Vector v = velocity().dividedBy(20);
+		Vector v = velocity().mul(.96).dividedBy(20);
 		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
-		if (!worldObj.isRemote && ticksExisted > 60) setDead();
+		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .1) setDead();
 		
 		if (!isDead && !worldObj.isRemote) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
