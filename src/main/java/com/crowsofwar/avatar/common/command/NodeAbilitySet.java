@@ -66,8 +66,8 @@ public class NodeAbilitySet extends NodeFunctional {
 				
 				data.getAbilityData(ability).setXp(setXp);
 				data.sync();
-				AvatarChatMessages.MSG_ABILITY_SET_SUCCESS.send(call.getFrom(), player,
-						ability.getClass().getSimpleName(), setXp);
+				AvatarChatMessages.MSG_ABILITY_SET_SUCCESS.send(call.getFrom(), player, ability.getName(),
+						setXp);
 			}
 		} else {
 			AvatarChatMessages.MSG_ABILITY_SET_RANGE.send(call.getFrom());

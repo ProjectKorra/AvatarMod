@@ -95,8 +95,7 @@ public class NodeAbilityGet extends NodeFunctional {
 		if (data != null) {
 			
 			float xp = data.getAbilityData(ability).getXp();
-			AvatarChatMessages.MSG_ABILITY_GET.send(call.getFrom(), player,
-					ability.getClass().getSimpleName(), xp);
+			AvatarChatMessages.MSG_ABILITY_GET.send(call.getFrom(), player, ability.getName(), xp);
 			
 		}
 		
