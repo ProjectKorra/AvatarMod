@@ -16,11 +16,13 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -43,10 +45,15 @@ public class RenderAirblade extends Render<EntityAirblade> {
 	public void doRender(EntityAirblade entity, double x, double y, double z, float entityYaw,
 			float partialTicks) {
 		
-		Vector4f nw = new Vector4f(0, 0, 0, 1);
-		Vector4f ne = new Vector4f(1, 0, 0, 1);
-		Vector4f sw = new Vector4f(0, 0, 1, 1);
-		Vector4f se = new Vector4f(1, 0, 1, 1);
+		Matrix4f mat = new Matrix4f();
+		mat.translate((float) x, (float) y, (float) z);
+		
+		Vector4f nw = new Vector4f(0, 0, 0, 1).mul(mat);
+		Vector4f ne = new Vector4f(1, 0, 0, 1).mul(mat);
+		Vector4f sw = new Vector4f(0, 0, 1, 1).mul(mat);
+		Vector4f se = new Vector4f(1, 0, 1, 1).mul(mat);
+		
+		Minecraft.getMinecraft().renderEngine.bindTexture(RenderAirGust.TEXTURE);
 		
 		drawQuad(2, nw, ne, se, sw, 0, 0, 1, 1);
 		

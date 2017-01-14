@@ -41,11 +41,12 @@ public class AbilityAirblade extends AirAbility {
 		World world = ctx.getWorld();
 		
 		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), 0);
-		Vector spawnAt = Vector.getEyePos(player).add(look);
+		Vector spawnAt = Vector.getEntityPos(player).add(look).add(0, 1, 0);
+		spawnAt.add(look);
 		
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-		airblade.velocity().set(look.times(35));
+		airblade.velocity().set(look.times(2));
 		world.spawnEntityInWorld(airblade);
 		
 	}
