@@ -40,7 +40,17 @@ public class AbilityAirblade extends AirAbility {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		
-		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), 0);
+		double x = player.rotationPitch;
+		boolean flip = false;
+		if (x < 0) {
+			x = -x;
+			flip = true;
+		}
+		double pitch = -1.0 / ((.015 * x + .1825) * (.015 * x + .1825)) + 30;
+		if (flip) pitch = -pitch;
+		pitch = Math.toRadians(pitch);
+		
+		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), pitch);
 		Vector spawnAt = Vector.getEntityPos(player).add(look).add(0, 1, 0);
 		spawnAt.add(look);
 		
