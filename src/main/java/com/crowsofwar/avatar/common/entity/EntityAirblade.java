@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -31,7 +32,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -69,7 +69,8 @@ public class EntityAirblade extends AvatarEntity {
 				if (collided instanceof EntityLivingBase) {
 					
 					EntityLivingBase lb = (EntityLivingBase) collided;
-					lb.attackEntityFrom(DamageSource.cactus, STATS_CONFIG.airbladeSettings.damage);
+					lb.attackEntityFrom(AvatarDamageSource.causeAirbladeDamage(collided, getOwner()),
+							STATS_CONFIG.airbladeSettings.damage);
 					
 				}
 				
