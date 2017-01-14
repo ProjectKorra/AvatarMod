@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
@@ -54,9 +56,12 @@ public class AbilityAirblade extends AirAbility {
 		Vector spawnAt = Vector.getEntityPos(player).add(look).add(0, 1, 0);
 		spawnAt.add(look);
 		
+		float xp = ctx.getData().getAbilityData(this).getXp();
+		
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 		airblade.velocity().set(look.times(25));
+		airblade.setDamage(STATS_CONFIG.airbladeSettings.damage * (1 + xp * .015f));
 		world.spawnEntityInWorld(airblade);
 		
 	}

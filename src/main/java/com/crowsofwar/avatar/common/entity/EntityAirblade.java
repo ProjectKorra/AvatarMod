@@ -16,11 +16,14 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -45,6 +48,7 @@ public class EntityAirblade extends AvatarEntity {
 			DataSerializers.STRING);
 	
 	private final OwnerAttribute ownerAttr;
+	private float damage;
 	
 	public EntityAirblade(World world) {
 		super(world);
@@ -59,7 +63,7 @@ public class EntityAirblade extends AvatarEntity {
 		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
 		if (!worldObj.isRemote && ticksExisted > 60) setDead();
 		
-		if (!isDead) {
+		if (!isDead && !worldObj.isRemote) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
 					getEntityBoundingBox());
 			
@@ -69,15 +73,17 @@ public class EntityAirblade extends AvatarEntity {
 				if (collided instanceof EntityLivingBase) {
 					
 					EntityLivingBase lb = (EntityLivingBase) collided;
-					lb.attackEntityFrom(AvatarDamageSource.causeAirbladeDamage(collided, getOwner()),
-							STATS_CONFIG.airbladeSettings.damage);
+					lb.attackEntityFrom(AvatarDamageSource.causeAirbladeDamage(collided, getOwner()), damage);
 					
 				}
 				
-				Vector motion = velocity();
+				Vector motion = velocity().copy();
 				motion.mul(STATS_CONFIG.airbladeSettings.push);
 				motion.setY(0.08);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
+				
+				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+				data.getAbilityData(BendingAbility.ABILITY_AIRBLADE).addXp(SKILLS_CONFIG.airbladeHit);
 				
 			}
 		}
@@ -92,16 +98,22 @@ public class EntityAirblade extends AvatarEntity {
 		ownerAttr.setOwner(owner);
 	}
 	
+	public void setDamage(float damage) {
+		this.damage = damage;
+	}
+	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
+		damage = nbt.getFloat("Damage");
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
+		nbt.setFloat("Damage", damage);
 	}
 	
 }
