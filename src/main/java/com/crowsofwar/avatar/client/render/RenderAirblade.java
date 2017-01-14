@@ -57,7 +57,7 @@ public class RenderAirblade extends Render<EntityAirblade> {
 		
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x, (float) y + .1f, (float) z);
-		mat.rotate(entity.ticksExisted / 10f, 0, 1, 0);
+		mat.rotate(entity.ticksExisted / 3f, 0, 1, 0);
 		
 		//@formatter:off
 		float n = -.75f, p = .75f;
@@ -70,7 +70,9 @@ public class RenderAirblade extends Render<EntityAirblade> {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		
 		GlStateManager.enableBlend();
+		GlStateManager.disableLighting();
 		drawQuad(2, nw, ne, se, sw, 0, 0, 1, 1);
+		GlStateManager.enableLighting();
 		
 		if (entity.ticksExisted % 3 == 0) {
 			World world = entity.worldObj;

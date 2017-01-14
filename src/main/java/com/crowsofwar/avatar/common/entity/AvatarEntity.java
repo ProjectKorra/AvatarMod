@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -153,7 +154,7 @@ public abstract class AvatarEntity extends Entity {
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				ent -> EntitySelectors.<Entity> getTeamCollisionPredicate(this).apply(ent)
+				ent -> EntitySelectors.<Entity>getTeamCollisionPredicate(this).apply(ent)
 						&& canCollideWith(ent));
 		
 		if (!list.isEmpty()) {
@@ -203,5 +204,9 @@ public abstract class AvatarEntity extends Entity {
 	public void setFire(int seconds) {
 		if (!putsOutFires) super.setFire(seconds);
 	}
+	
+	// disable stepping sounds
+	@Override
+	protected void playStepSound(BlockPos pos, Block blockIn) {}
 	
 }
