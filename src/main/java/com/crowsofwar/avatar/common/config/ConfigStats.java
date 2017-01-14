@@ -43,7 +43,7 @@ public class ConfigStats {
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(6, 6), //
-			airbladeSettings = new AttackSettings(6, .1);
+			airbladeSettings = new AttackSettings(4, .1);
 	
 	@Load
 	public List<String> bendableBlocksNames;
