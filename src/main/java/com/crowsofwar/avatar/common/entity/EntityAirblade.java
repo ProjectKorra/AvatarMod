@@ -82,8 +82,10 @@ public class EntityAirblade extends AvatarEntity {
 				motion.setY(0.08);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 				
-				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
-				data.getAbilityData(BendingAbility.ABILITY_AIRBLADE).addXp(SKILLS_CONFIG.airbladeHit);
+				if (getOwner() != null) {
+					AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+					data.getAbilityData(BendingAbility.ABILITY_AIRBLADE).addXp(SKILLS_CONFIG.airbladeHit);
+				}
 				
 			}
 		}
