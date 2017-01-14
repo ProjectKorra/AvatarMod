@@ -78,12 +78,16 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 	
 	public static class Thrown extends FireballBehavior {
 		
+		int time = 0;
+		
 		@Override
 		public FireballBehavior onUpdate(EntityFireball entity) {
 			
-			if (entity.isCollided) {
+			time++;
+			
+			if (entity.isCollided || (!entity.worldObj.isRemote && time > 100)) {
 				entity.setDead();
-				entity.onCollision();
+				entity.explode();
 			}
 			
 			entity.velocity().add(0, -9.81 / 40, 0);
@@ -129,7 +133,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			
 			// Remove the fireball & spawn particles
 			if (!entity.worldObj.isRemote) entity.setDead();
-			entity.onCollision();
+			entity.explode();
 		}
 		
 		@Override
