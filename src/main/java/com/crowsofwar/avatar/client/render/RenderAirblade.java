@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -46,15 +47,18 @@ public class RenderAirblade extends Render<EntityAirblade> {
 			float partialTicks) {
 		
 		Matrix4f mat = new Matrix4f();
-		mat.translate((float) x, (float) y, (float) z);
+		mat.translate((float) x - .75f, (float) y, (float) z - .75f);
 		
-		Vector4f nw = new Vector4f(0, 0, 0, 1).mul(mat);
-		Vector4f ne = new Vector4f(1, 0, 0, 1).mul(mat);
-		Vector4f sw = new Vector4f(0, 0, 1, 1).mul(mat);
-		Vector4f se = new Vector4f(1, 0, 1, 1).mul(mat);
+		//@formatter:off
+		Vector4f nw = new Vector4f(0   , 0, 0   , 1).mul(mat);
+		Vector4f ne = new Vector4f(1.5f, 0, 0   , 1).mul(mat);
+		Vector4f sw = new Vector4f(0   , 0, 1.5f, 1).mul(mat);
+		Vector4f se = new Vector4f(1.5f, 0, 1.5f, 1).mul(mat);
+		//@formatter:on
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(RenderAirGust.TEXTURE);
 		
+		GlStateManager.enableBlend();
 		drawQuad(2, nw, ne, se, sw, 0, 0, 1, 1);
 		
 	}
