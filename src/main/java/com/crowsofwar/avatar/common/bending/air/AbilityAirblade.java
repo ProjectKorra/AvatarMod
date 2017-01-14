@@ -46,7 +46,7 @@ public class AbilityAirblade extends AirAbility {
 		
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-		airblade.velocity().set(look.times(2));
+		airblade.velocity().set(look.times(25));
 		world.spawnEntityInWorld(airblade);
 		
 	}

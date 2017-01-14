@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import java.util.Random;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -29,7 +31,10 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -40,6 +45,7 @@ public class RenderAirblade extends Render<EntityAirblade> {
 	
 	public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/airblade.png");
+	private static final Random random = new Random();
 	
 	public RenderAirblade(RenderManager renderManager) {
 		super(renderManager);
@@ -51,6 +57,7 @@ public class RenderAirblade extends Render<EntityAirblade> {
 		
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x - .75f, (float) y, (float) z - .75f);
+		mat.rotate(entity.ticksExisted / 10f, 0, 1, 0);
 		
 		//@formatter:off
 		Vector4f nw = new Vector4f(0   , 0, 0   , 1).mul(mat);
@@ -63,6 +70,15 @@ public class RenderAirblade extends Render<EntityAirblade> {
 		
 		GlStateManager.enableBlend();
 		drawQuad(2, nw, ne, se, sw, 0, 0, 1, 1);
+		
+		if (entity.ticksExisted % 3 == 0) {
+			World world = entity.worldObj;
+			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+			double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+			world.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
+		}
 		
 	}
 	
