@@ -38,6 +38,9 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderAirblade extends Render<EntityAirblade> {
 	
+	public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
+			"textures/entity/airblade.png");
+	
 	public RenderAirblade(RenderManager renderManager) {
 		super(renderManager);
 	}
@@ -56,7 +59,7 @@ public class RenderAirblade extends Render<EntityAirblade> {
 		Vector4f se = new Vector4f(1.5f, 0, 1.5f, 1).mul(mat);
 		//@formatter:on
 		
-		Minecraft.getMinecraft().renderEngine.bindTexture(RenderAirGust.TEXTURE);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		
 		GlStateManager.enableBlend();
 		drawQuad(2, nw, ne, se, sw, 0, 0, 1, 1);
