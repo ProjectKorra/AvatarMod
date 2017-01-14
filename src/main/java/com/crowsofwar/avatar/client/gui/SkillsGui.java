@@ -178,6 +178,16 @@ public class SkillsGui extends GuiScreen {
 		recentVelocity.add(Mouse.getDWheel() / 1);
 	}
 	
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		
+		if (keyCode == mc.gameSettings.keyBindInventory.getKeyCode()) {
+			keyCode = 1;
+		}
+		super.keyTyped(typedChar, keyCode);
+		
+	}
+	
 	private int getMouseX() {
 		return Mouse.getX();
 	}

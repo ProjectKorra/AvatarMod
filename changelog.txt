@@ -26,3 +26,4 @@ AV2 Changelog :: version a3.0
 > Fixed water arc not damaging enemies
 > Fix weird Block{Minecraft.stone} entry in stats.yml
 > (hopefully) Fixed bug where radial menu keeps reopening
+> Fixed pressing 'e' doesn't close skills menu
