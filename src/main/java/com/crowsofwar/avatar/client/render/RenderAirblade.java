@@ -56,14 +56,15 @@ public class RenderAirblade extends Render<EntityAirblade> {
 			float partialTicks) {
 		
 		Matrix4f mat = new Matrix4f();
-		mat.translate((float) x - .75f, (float) y, (float) z - .75f);
+		mat.translate((float) x, (float) y + .1f, (float) z);
 		mat.rotate(entity.ticksExisted / 10f, 0, 1, 0);
 		
 		//@formatter:off
-		Vector4f nw = new Vector4f(0   , 0, 0   , 1).mul(mat);
-		Vector4f ne = new Vector4f(1.5f, 0, 0   , 1).mul(mat);
-		Vector4f sw = new Vector4f(0   , 0, 1.5f, 1).mul(mat);
-		Vector4f se = new Vector4f(1.5f, 0, 1.5f, 1).mul(mat);
+		float n = -.75f, p = .75f;
+		Vector4f nw = new Vector4f(n, 0, n, 1).mul(mat);
+		Vector4f ne = new Vector4f(p, 0, n, 1).mul(mat);
+		Vector4f sw = new Vector4f(n, 0, p, 1).mul(mat);
+		Vector4f se = new Vector4f(p, 0, p, 1).mul(mat);
 		//@formatter:on
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
