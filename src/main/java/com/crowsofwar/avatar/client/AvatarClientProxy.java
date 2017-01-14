@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
 import com.crowsofwar.avatar.client.render.RenderAirGust;
+import com.crowsofwar.avatar.client.render.RenderAirblade;
 import com.crowsofwar.avatar.client.render.RenderFireArc;
 import com.crowsofwar.avatar.client.render.RenderFireball;
 import com.crowsofwar.avatar.client.render.RenderFlames;
@@ -38,6 +39,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
+import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
@@ -98,6 +100,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityWaterBubble.class, RenderWaterBubble::new);
 		registerEntityRenderingHandler(EntityWallSegment.class, RenderWallSegment::new);
 		registerEntityRenderingHandler(EntityFireball.class, RenderFireball::new);
+		registerEntityRenderingHandler(EntityAirblade.class, RenderAirblade::new);
 		
 	}
 	
