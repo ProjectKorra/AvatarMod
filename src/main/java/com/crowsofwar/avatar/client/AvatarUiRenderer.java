@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+
 import java.util.Set;
 
 import org.lwjgl.input.Mouse;
@@ -89,7 +91,8 @@ public class AvatarUiRenderer extends Gui {
 				fadingSegment = null;
 			} else {
 				float scale = (float) (1 + Math.sqrt(timeSinceStart / 10000f));
-				fadingSegment.draw(true, resolution, 1 - timeSinceStart / timeToFade, scale);
+				fadingSegment.draw(true, resolution,
+						(1 - timeSinceStart / timeToFade) * CLIENT_CONFIG.radialMenuAlpha, scale);
 			}
 		}
 		

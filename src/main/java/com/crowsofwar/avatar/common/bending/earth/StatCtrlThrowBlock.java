@@ -61,7 +61,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 			
 			// Calculate force and everything
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
-			floating.velocity().add(lookDir.times(20));
+			floating.velocity().add(lookDir.times(35));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
 			ebs.setPickupBlock(null);
 			

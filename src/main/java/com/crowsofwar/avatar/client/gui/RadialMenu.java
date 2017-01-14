@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.AvatarMod.proxy;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -115,7 +116,7 @@ public class RadialMenu extends Gui {
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
-			segments[i].draw(hover, resolution, scale, scale);
+			segments[i].draw(hover, resolution, scale * CLIENT_CONFIG.radialMenuAlpha, scale);
 			
 			if (hover) {
 				displaySegmentDetails(controls[i], resolution);
