@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
@@ -67,12 +69,12 @@ public class EntityAirblade extends AvatarEntity {
 				if (collided instanceof EntityLivingBase) {
 					
 					EntityLivingBase lb = (EntityLivingBase) collided;
-					lb.attackEntityFrom(DamageSource.cactus, 6);
+					lb.attackEntityFrom(DamageSource.cactus, STATS_CONFIG.airbladeSettings.damage);
 					
 				}
 				
 				Vector motion = velocity();
-				motion.mul(0.3);
+				motion.mul(STATS_CONFIG.airbladeSettings.push);
 				motion.setY(0.08);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 				
