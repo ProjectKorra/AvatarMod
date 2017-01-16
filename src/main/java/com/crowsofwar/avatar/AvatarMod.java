@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.air.AirTick;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
+import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
@@ -140,6 +141,7 @@ public class AvatarMod {
 		
 		MinecraftForge.EVENT_BUS.register(new FirebendingUpdate());
 		WaterbendingUpdate.register();
+		EarthbendingEvents.register();
 		
 	}
 	
