@@ -40,6 +40,7 @@ public class Earthbending extends BendingController {
 		addAbility(ABILITY_PICK_UP_BLOCK);
 		addAbility(ABILITY_RAVINE);
 		addAbility(ABILITY_WALL);
+		addAbility(ABILITY_MINING);
 		
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
