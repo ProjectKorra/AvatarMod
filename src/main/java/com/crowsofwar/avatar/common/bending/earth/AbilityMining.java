@@ -55,7 +55,8 @@ public class AbilityMining extends EarthAbility {
 				boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
 				if (bendable) {
 					AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-					wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3));
+					wd.getScheduledDestroyBlocks().add(
+							wd.new ScheduledDestroyBlock(pos, i * 3, !player.capabilities.isCreativeMode));
 				} else if (block != Blocks.AIR) {
 					break;
 				}

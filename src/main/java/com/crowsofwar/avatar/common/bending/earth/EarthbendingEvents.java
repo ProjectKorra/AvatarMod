@@ -63,9 +63,8 @@ public class EarthbendingEvents {
 				ScheduledDestroyBlock sdb = iterator.next();
 				sdb.decrementTicks();
 				if (sdb.getTicks() <= 0) {
-					world.destroyBlock(sdb.getPos(), true);
+					world.destroyBlock(sdb.getPos(), sdb.isDrop());
 					iterator.remove();
-					System.out.println("Destroyed at " + sdb.getPos());
 				}
 			}
 		}
