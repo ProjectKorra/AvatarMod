@@ -41,17 +41,7 @@ public class EarthbendingEvents {
 		
 		IBlockState state = e.getState();
 		if (STATS_CONFIG.bendableBlocks.contains(state.getBlock())) {
-			e.setNewSpeed(e.getOriginalSpeed() * 3.5f);
-		}
-		
-	}
-	
-	@SubscribeEvent
-	public void canBreak(PlayerEvent.HarvestCheck e) {
-		
-		IBlockState state = e.getTargetBlock();
-		if (STATS_CONFIG.bendableBlocks.contains(state.getBlock())) {
-			e.setCanHarvest(true);
+			e.setNewSpeed(e.getOriginalSpeed() * 2);
 		}
 		
 	}
