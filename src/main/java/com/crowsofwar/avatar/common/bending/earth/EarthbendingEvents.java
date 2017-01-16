@@ -18,12 +18,19 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.Iterator;
+
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.AvatarWorldData.ScheduledDestroyBlock;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 /**
  * 
@@ -44,6 +51,24 @@ public class EarthbendingEvents {
 			e.setNewSpeed(e.getOriginalSpeed() * 2);
 		}
 		
+	}
+	
+	@SubscribeEvent
+	public void worldUpdate(WorldTickEvent e) {
+		World world = e.world;
+		if (!world.isRemote && e.phase == TickEvent.Phase.START && world.provider.getDimension() == 0) {
+			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+			Iterator<ScheduledDestroyBlock> iterator = wd.getScheduledDestroyBlocks().iterator();
+			while (iterator.hasNext()) {
+				ScheduledDestroyBlock sdb = iterator.next();
+				sdb.decrementTicks();
+				if (sdb.getTicks() <= 0) {
+					world.destroyBlock(sdb.getPos(), true);
+					iterator.remove();
+					System.out.println("Destroyed at " + sdb.getPos());
+				}
+			}
+		}
 	}
 	
 	public static void register() {

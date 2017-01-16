@@ -16,9 +16,14 @@
 */
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
+
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,11 +47,19 @@ public class AbilityMining extends EarthAbility {
 		
 		EnumFacing facing = player.getHorizontalFacing();
 		
-		for (int i = 1; i <= 5; i++) {
-			BlockPos pos = player.getPosition().offset(facing, i);
-			world.destroyBlock(pos, true);
-			pos = pos.up();
-			world.destroyBlock(pos, true);
+		for (int y = 0; y <= 1; y++) {
+			for (int i = 1; i <= 5; i++) {
+				BlockPos pos = player.getPosition().offset(facing, i).up(y);
+				Block block = world.getBlockState(pos).getBlock();
+				
+				boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+				if (bendable) {
+					AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+					wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3));
+				} else if (block != Blocks.AIR) {
+					break;
+				}
+			}
 		}
 		
 		BlockPos pos = player.getPosition().offset(facing);
