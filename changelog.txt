@@ -22,6 +22,7 @@ AV2 Changelog :: version a3.0
 * Using simpler ability names in '/avatar ability...', e.g. AbilityFireArc -> fire_arc
 * Radial menu is semi-transparent and added option for semi transparency in cosmetic.yml
 * Earthbenders receive a 2x bonus to mining speed for bendable blocks (still need pickaxes though)
+* New logo in Mods menu
 > Fixed air gust not working on other players in LAN
 > Fixed crashing for hacked players... don't expect it to work on servers though
 > Fixed UUID cache using LF line endings on windows
