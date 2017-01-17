@@ -61,7 +61,7 @@ public class EntityAirblade extends AvatarEntity {
 		super.onUpdate();
 		Vector v = velocity().mul(.96).dividedBy(20);
 		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
-		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .1) setDead();
+		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) setDead();
 		
 		if (!isDead && !worldObj.isRemote) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
@@ -86,6 +86,8 @@ public class EntityAirblade extends AvatarEntity {
 					AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
 					data.getAbilityData(BendingAbility.ABILITY_AIRBLADE).addXp(SKILLS_CONFIG.airbladeHit);
 				}
+				
+				setDead();
 				
 			}
 		}
