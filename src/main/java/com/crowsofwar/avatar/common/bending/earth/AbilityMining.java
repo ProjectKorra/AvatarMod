@@ -50,7 +50,25 @@ public class AbilityMining extends EarthAbility {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		
-		// EnumFacing facing = player.getHorizontalFacing();
+		int chanceMin, chanceMax;
+		float xp = ctx.getData().getAbilityData(this).getXp();
+		if (xp == 100) {
+			chanceMin = 5;
+			chanceMax = 6;
+		} else if (xp >= 75) {
+			chanceMin = 4;
+			chanceMax = 6;
+		} else if (xp >= 50) {
+			chanceMin = 3;
+			chanceMax = 5;
+		} else if (xp >= 25) {
+			chanceMin = 2;
+			chanceMax = 4;
+		} else {
+			chanceMin = 2;
+			chanceMax = 3;
+		}
+		int dist = chanceMin + (int) Math.round(Math.random() * (chanceMax - chanceMin));
 		
 		//@formatter:off
 		// 0 = S 0x +z    1 = SW -x +z
@@ -97,7 +115,7 @@ public class AbilityMining extends EarthAbility {
 		}
 		
 		for (VectorI ray : rays) {
-			for (int i = 1; i <= 5; i++) {
+			for (int i = 1; i <= dist; i++) {
 				BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
 				Block block = world.getBlockState(pos).getBlock();
 				
