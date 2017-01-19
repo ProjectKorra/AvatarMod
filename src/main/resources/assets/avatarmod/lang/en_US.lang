@@ -52,6 +52,7 @@ avatar.cmd.pp.set.range=[error]Progression points must be more than 0.[/error]
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.ravine=Ravine
+avatar.ability.mine_blocks=Mine Blocks
 
 avatar.ability.light_fire=Light Fire
 avatar.ability.fire_arc=Fire Arc

@@ -116,7 +116,7 @@ public class AbilityMining extends EarthAbility {
 	
 	@Override
 	public int getIconIndex() {
-		return 0;
+		return 17;
 	}
 	
 }
