@@ -50,7 +50,8 @@ public enum AvatarControl {
 	/** Right mouse button was just released */
 	CONTROL_RIGHT_CLICK_UP("RightClickUp"),
 	/** Middle mouse button was just released */
-	CONTROL_MIDDLE_CLICK_UP("MiddleClickUp");
+	CONTROL_MIDDLE_CLICK_UP("MiddleClickUp"),
+	CONTROL_SHIFT("Shift");
 	
 	private String name;
 	private boolean isKey;

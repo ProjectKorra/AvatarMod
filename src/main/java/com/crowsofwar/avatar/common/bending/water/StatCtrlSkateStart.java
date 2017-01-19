@@ -30,12 +30,12 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 public class StatCtrlSkateStart extends StatusControl {
 	
 	public StatCtrlSkateStart() {
-		super(8, AvatarControl.NONE, BELOW_CROSSHAIR);
+		super(8, AvatarControl.CONTROL_SHIFT, BELOW_CROSSHAIR);
 	}
 	
 	@Override
 	public boolean execute(AbilityContext ctx) {
-		return false;
+		return true;
 	}
 	
 }

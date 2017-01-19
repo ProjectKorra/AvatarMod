@@ -124,6 +124,7 @@ public class ClientInput implements IControlsHandler {
 			if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
 			if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
 			if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
+			if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 			AvatarLog.warn("ClientInput- Unknown control: " + control);
 			return false;
 		}
