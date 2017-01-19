@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.earth;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.abs;
 import static java.lang.Math.floor;
@@ -69,6 +70,7 @@ public class AbilityMining extends EarthAbility {
 			chanceMax = 3;
 		}
 		int dist = chanceMin + (int) Math.round(Math.random() * (chanceMax - chanceMin));
+		ctx.getData().getAbilityData(this).addXp(SKILLS_CONFIG.miningUse);
 		
 		//@formatter:off
 		// 0 = S 0x +z    1 = SW -x +z
