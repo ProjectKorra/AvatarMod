@@ -254,6 +254,28 @@ public class VectorI {
 	}
 	
 	/**
+	 * Multiply this vector by the given scalar, and returns the result.
+	 * Modifies the original vector.
+	 * 
+	 * @param scalar
+	 *            The scalar to multiply this vector by
+	 * @return this
+	 */
+	public VectorI mul(int scalar) {
+		return set(x() * scalar, y() * scalar, z() * scalar);
+	}
+	
+	/**
+	 * Creates a new vector from this vector times the scalar.
+	 * 
+	 * @param scalar
+	 *            The scalar to multiply the new vector by
+	 */
+	public VectorI times(int scalar) {
+		return new VectorI(this).mul(scalar);
+	}
+	
+	/**
 	 * Move this Vector in the specified direction by 1 meter.
 	 * 
 	 * @param direction

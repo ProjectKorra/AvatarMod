@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.common.bending.earth;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.floor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -61,21 +64,31 @@ public class AbilityMining extends EarthAbility {
 		if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
 		if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
 		
-		VectorI diff = new VectorI(x, 0, z);
-		System.out.println("Look is " + diff);
+		// Each starting position of the ray to mine out
+		List<VectorI> rays = new ArrayList<>();
+		rays.add(new VectorI(player.getPosition()));
 		
-		for (int y = 0; y <= 1; y++) {
-			for (int i = 1; i <= 5; i++) {
-				BlockPos pos = player.getPosition().add(diff.x() * i, diff.y() * i, diff.z() * i).up(y);
-				Block block = world.getBlockState(pos).getBlock();
-				
-				boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
-				if (bendable) {
-					AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-					wd.getScheduledDestroyBlocks().add(
-							wd.new ScheduledDestroyBlock(pos, i * 3, !player.capabilities.isCreativeMode));
-				} else if (block != Blocks.AIR) {
-					break;
+		// If yaw is diagonal; SW, NW, NE, SE
+		if (yaw % 2 == 1) {
+			rays.add(new VectorI(player.getPosition().east()));
+		}
+		
+		VectorI dir = new VectorI(x, 0, z);
+		
+		for (VectorI ray : rays) {
+			for (int y = 0; y <= 1; y++) {
+				for (int i = 1; i <= 5; i++) {
+					BlockPos pos = ray.plus(dir.times(i)).plus(0, y, 0).toBlockPos();
+					Block block = world.getBlockState(pos).getBlock();
+					
+					boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+					if (bendable) {
+						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+						wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3,
+								!player.capabilities.isCreativeMode));
+					} else if (block != Blocks.AIR) {
+						break;
+					}
 				}
 			}
 		}
