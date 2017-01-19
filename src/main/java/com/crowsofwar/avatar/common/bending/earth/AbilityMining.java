@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.abs;
 import static java.lang.Math.floor;
 
 import java.util.ArrayList;
@@ -64,31 +65,46 @@ public class AbilityMining extends EarthAbility {
 		if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
 		if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
 		
+		// Pitch: 0 = forward, 1 = 45 deg up, 2 = 90 deg up
+		// -1 = 45 deg down, -2 = 90 deg down
+		// Use abs and post-mul to fix weirdness with negatives... not totally
+		// investigated
+		int pitch = (int) floor((abs(player.rotationPitch) * 8 / 360) + 0.5) & 7;
+		pitch *= -abs(player.rotationPitch) / player.rotationPitch;
+		
 		// Each starting position of the ray to mine out
 		List<VectorI> rays = new ArrayList<>();
 		rays.add(new VectorI(player.getPosition()));
+		rays.add(new VectorI(player.getPosition().up()));
 		
 		// If yaw is diagonal; SW, NW, NE, SE
 		if (yaw % 2 == 1) {
 			rays.add(new VectorI(player.getPosition().east()));
+			rays.add(new VectorI(player.getPosition().east().up()));
+		}
+		// Add height to excavating a stairway so you don't bump your head
+		if (pitch != 0) {
+			rays.add(new VectorI(player.getPosition().up(2)));
 		}
 		
-		VectorI dir = new VectorI(x, 0, z);
+		VectorI dir = new VectorI(x, pitch, z);
+		if (abs(pitch) == 2) {
+			dir.setX(0);
+			dir.setZ(0);
+		}
 		
 		for (VectorI ray : rays) {
-			for (int y = 0; y <= 1; y++) {
-				for (int i = 1; i <= 5; i++) {
-					BlockPos pos = ray.plus(dir.times(i)).plus(0, y, 0).toBlockPos();
-					Block block = world.getBlockState(pos).getBlock();
-					
-					boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
-					if (bendable) {
-						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-						wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3,
-								!player.capabilities.isCreativeMode));
-					} else if (block != Blocks.AIR) {
-						break;
-					}
+			for (int i = 1; i <= 5; i++) {
+				BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
+				Block block = world.getBlockState(pos).getBlock();
+				
+				boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+				if (bendable) {
+					AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+					wd.getScheduledDestroyBlocks().add(
+							wd.new ScheduledDestroyBlock(pos, i * 3, !player.capabilities.isCreativeMode));
+				} else if (block != Blocks.AIR) {
+					break;
 				}
 			}
 		}
