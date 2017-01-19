@@ -91,9 +91,9 @@ public class AbilityMining extends EarthAbility {
 		if (abs(pitch) == 2) {
 			dir.setX(0);
 			dir.setZ(0);
-			dir.setY(-1);
+			dir.setY(abs(pitch) / pitch);
 			rays.clear();
-			rays.add(new VectorI(player.getPosition()));
+			rays.add(new VectorI(player.getPosition().up(pitch < 0 ? 0 : 1)));
 		}
 		
 		for (VectorI ray : rays) {
