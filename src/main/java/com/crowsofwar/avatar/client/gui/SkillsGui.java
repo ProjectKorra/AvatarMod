@@ -186,6 +186,7 @@ public class SkillsGui extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		
 		if (keyCode == 1 && editing != null) {
+			System.out.println("Remove keybinding");
 			CLIENT_CONFIG.keymappings.remove(editing.getAbility());
 			updateConflicts(editing);
 			stopEditing();
@@ -196,8 +197,10 @@ public class SkillsGui extends GuiScreen {
 			keyCode = 1;
 		}
 		if (editing != null) {
-			System.out.println("Set " + editing.getAbility().getName() + " -> " + typedChar);
+			System.out.println(
+					"Set " + editing.getAbility().getName() + " -> " + typedChar + " (" + keyCode + ")");
 			CLIENT_CONFIG.keymappings.put(editing.getAbility(), keyCode);
+			System.out.println("New code: " + CLIENT_CONFIG.keymappings.get(editing.getAbility()));
 			updateConflicts(editing);
 			stopEditing();
 		}
