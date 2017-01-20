@@ -249,4 +249,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		offset = buf.readInt();
 	}
 	
+	@Override
+	public void addVelocity(double x, double y, double z) {}
+	
 }
