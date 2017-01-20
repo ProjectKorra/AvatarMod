@@ -151,8 +151,8 @@ public class AbilityCard extends Gui {
 					key = "none";
 				}
 				
-				String boundTo = CLIENT_CONFIG.keymappings.get(ability) != null ? Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(ability)) : "-none-";
-				String conflictStr = conflict == null ? "no conflict" : conflict.getDisplayName();
+				String boundTo = CLIENT_CONFIG.keymappings.get(ability) != null ? Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(ability)) : "no key";
+				String conflictStr = conflict == null ? "no conflict" : I18n.format(conflict.getKeyDescription());
 				String firstMsg = I18n.format("avatar.key." + key + "1", boundTo);
 				String secondMsg = I18n.format("avatar.key." + key + "2", conflictStr);
 				
