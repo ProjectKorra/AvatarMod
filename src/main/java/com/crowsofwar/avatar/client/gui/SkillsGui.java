@@ -261,7 +261,8 @@ public class SkillsGui extends GuiScreen {
 	private void updateConflicts(AbilityCard card) {
 		card.setConflict(null);
 		for (KeyBinding kb : mc.gameSettings.keyBindings) {
-			if (CLIENT_CONFIG.keymappings.get(card.getAbility()) == kb.getKeyCode()) {
+			if (CLIENT_CONFIG.keymappings.get(card.getAbility()) != null
+					&& (CLIENT_CONFIG.keymappings.get(card.getAbility()) == kb.getKeyCode())) {
 				card.setConflict(kb);
 				break;
 			}
