@@ -58,7 +58,6 @@ import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
@@ -121,7 +120,6 @@ public class AvatarMod {
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
 		registerPacket(PacketSUseAbility.class, Side.SERVER);
 		registerPacket(PacketSRequestData.class, Side.SERVER);
-		registerPacket(PacketSUseBendingController.class, Side.SERVER);
 		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
 		registerPacket(PacketCParticles.class, Side.CLIENT);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);

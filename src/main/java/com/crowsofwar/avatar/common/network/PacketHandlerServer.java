@@ -29,7 +29,6 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
@@ -70,9 +69,6 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSUseAbility) return handleKeypress((PacketSUseAbility) packet, ctx);
 		
 		if (packet instanceof PacketSRequestData) return handleRequestData((PacketSRequestData) packet, ctx);
-		
-		if (packet instanceof PacketSUseBendingController)
-			return handleUseBendingController((PacketSUseBendingController) packet, ctx);
 		
 		if (packet instanceof PacketSUseStatusControl)
 			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
@@ -122,26 +118,6 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) data.getNetworker().sendAll();
 		return null;
 		
-	}
-	
-	// TODO remove packet s usebendingcontroller
-	private IMessage handleUseBendingController(PacketSUseBendingController packet, MessageContext ctx) {
-		
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-		World world = player.worldObj;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		
-		if (data != null) {
-			
-			if (data.hasBending(packet.getBendingControllerId())) {
-			} else {
-				AvatarLog.warn("Player '" + player.getName() + "' attempted to activate a BendingController "
-						+ "they don't have; hacking?");
-			}
-			
-		}
-		
-		return null;
 	}
 	
 	/**
