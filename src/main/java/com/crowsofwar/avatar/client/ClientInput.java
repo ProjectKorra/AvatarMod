@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.client;
 
 import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 import java.util.ArrayList;
@@ -32,12 +33,15 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
@@ -148,6 +152,15 @@ public class ClientInput implements IControlsHandler {
 		
 	}
 	
+	private boolean isAbilityPressed(BendingAbility ability) {
+		if (CLIENT_CONFIG.keymappings.containsKey(ability)) {
+			if (Keyboard.isKeyDown(CLIENT_CONFIG.keymappings.get(ability))) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
@@ -201,6 +214,14 @@ public class ClientInput implements IControlsHandler {
 				}
 				
 			}
+			
+			for (BendingAbility ability : BendingManager.allAbilities()) {
+				if (isAbilityPressed(ability)) {
+					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer, ability.getRaytrace());
+					AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+				}
+			}
+			
 		}
 		
 	}

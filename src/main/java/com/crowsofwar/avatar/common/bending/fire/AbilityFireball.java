@@ -49,6 +49,8 @@ public class AbilityFireball extends FireAbility {
 		World world = ctx.getWorld();
 		AvatarPlayerData data = ctx.getData();
 		
+		if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
+		
 		Vector target;
 		if (ctx.isLookingAtBlock()) {
 			target = ctx.getLookPos();

@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.lwjgl.input.Keyboard;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.gorecore.config.ConfigLoader;
@@ -45,9 +43,6 @@ public class ConfigClient {
 	public Map<BendingAbility, Integer> keymappings = new HashMap<>();
 	
 	public static void load() {
-		if (CLIENT_CONFIG.nameKeymappings.isEmpty()) {
-			CLIENT_CONFIG.nameKeymappings.put("air_jump", Keyboard.KEY_J);
-		}
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 		
 		CLIENT_CONFIG.keymappings.clear();
