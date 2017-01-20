@@ -35,6 +35,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -46,6 +47,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -70,6 +74,19 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	public static void register() {
 		MinecraftForge.EVENT_BUS.register(instance);
+	}
+	
+	@SubscribeEvent
+	public void tick(WorldTickEvent e) {
+		World world = e.world;
+		if (e.phase == TickEvent.Phase.START) {
+			for (ProcessAbilityRequest par : unprocessedAbilityRequests) {
+				par.ticks--;
+				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0) {
+					par.ability.execute(new AbilityContext(par.data, par.raytrace));
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -105,8 +122,8 @@ public class PacketHandlerServer implements IPacketHandler {
 					ability.execute(new AbilityContext(data, packet.getRaytrace()));
 					data.setAbilityCooldown(15);
 				} else {
-					unprocessedAbilityRequests
-							.add(new ProcessAbilityRequest(data.getAbilityCooldown(), player, data, ability));
+					unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
+							player, data, ability, packet.getRaytrace()));
 				}
 			}
 			
@@ -235,17 +252,19 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private static class ProcessAbilityRequest {
 		
-		private final int ticks;
+		private int ticks;
 		private final EntityPlayer player;
 		private final AvatarPlayerData data;
 		private final BendingAbility ability;
+		private final Raytrace.Result raytrace;
 		
 		public ProcessAbilityRequest(int ticks, EntityPlayer player, AvatarPlayerData data,
-				BendingAbility ability) {
+				BendingAbility ability, Raytrace.Result raytrace) {
 			this.ticks = ticks;
 			this.player = player;
 			this.data = data;
 			this.ability = ability;
+			this.raytrace = raytrace;
 		}
 		
 	}
