@@ -255,6 +255,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		// Will only setDead avatar entities
+		if (entity instanceof AvatarEntity) ((AvatarEntity) entity).onCollideWithSolid();
 		entity.setDead();
 	}
 	

@@ -297,7 +297,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	/**
 	 * Called when the block collides with the ground as well as other entities
 	 */
-	public void onCollision() {
+	@Override
+	public void onCollideWithSolid() {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {

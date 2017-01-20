@@ -146,7 +146,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			if (entity.isCollided) {
 				if (!entity.worldObj.isRemote) entity.setDead();
-				entity.onCollision();
+				entity.onCollideWithSolid();
 				BendingManager.getBending(BendingType.EARTHBENDING)
 						.post(new FloatingBlockEvent.BlockThrownReached(entity));
 				
@@ -201,7 +201,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			// Remove the floating block & spawn particles
 			if (!entity.worldObj.isRemote) entity.setDead();
-			entity.onCollision();
+			entity.onCollideWithSolid();
 		}
 		
 		@Override
@@ -295,7 +295,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			entity.velocity().add(0, -9.81 / 20, 0);
 			if (entity.isCollided) {
 				if (!entity.worldObj.isRemote) entity.setDead();
-				entity.onCollision();
+				entity.onCollideWithSolid();
 			}
 			return this;
 		}

@@ -188,6 +188,11 @@ public abstract class AvatarEntity extends Entity {
 	
 	protected void onCollideWithEntity(Entity entity) {}
 	
+	/**
+	 * Called when the entity collides with blocks or a wall
+	 */
+	public void onCollideWithSolid() {}
+	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {
 		return getEntityBoundingBox();

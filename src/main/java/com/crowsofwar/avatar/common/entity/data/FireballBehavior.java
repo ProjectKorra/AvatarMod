@@ -87,7 +87,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			
 			if (entity.isCollided || (!entity.worldObj.isRemote && time > 100)) {
 				entity.setDead();
-				entity.explode();
+				entity.onCollideWithSolid();
 			}
 			
 			entity.velocity().add(0, -9.81 / 40, 0);
@@ -133,7 +133,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			
 			// Remove the fireball & spawn particles
 			if (!entity.worldObj.isRemote) entity.setDead();
-			entity.explode();
+			entity.onCollideWithSolid();
 		}
 		
 		@Override

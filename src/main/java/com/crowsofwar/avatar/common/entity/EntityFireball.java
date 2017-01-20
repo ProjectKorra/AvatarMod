@@ -117,7 +117,8 @@ public class EntityFireball extends AvatarEntity {
 		this.damage = damage;
 	}
 	
-	public void explode() {
+	@Override
+	public void onCollideWithSolid() {
 		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ,
 				STATS_CONFIG.fireballSettings.explosionSize, !worldObj.isRemote,
 				STATS_CONFIG.fireballSettings.damageBlocks);
