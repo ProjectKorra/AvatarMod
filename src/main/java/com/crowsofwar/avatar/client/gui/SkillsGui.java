@@ -188,6 +188,34 @@ public class SkillsGui extends GuiScreen {
 		
 	}
 	
+	@Override
+	protected void mouseClicked(int x, int y, int button) throws IOException {
+		super.mouseClicked(x, y, button);
+		System.out.println("Click at " + x + "," + y);
+		for (int i = 0; i < cards.size(); i++) {
+			AbilityCard card = cards.get(i);
+			float _actualWidth = res.getScaledWidth() / 7f;
+			float _spacing = res.getScaledWidth() / 8.5f;
+			float minX = (int) (i * (_actualWidth + _spacing)) + (float) scroll / res.getScaleFactor();
+			float maxX = minX + _actualWidth;
+			
+			if (x >= minX && x <= maxX) {
+				
+				float _scaledWidth = 100;
+				float _scale = _actualWidth / _scaledWidth;
+				float _minY = (res.getScaledHeight() - height) / 2 + 50;
+				float minY = _minY + 180 * _scale;
+				float maxY = minY + 30 * _scale;
+				
+				if (y >= minY && y <= maxY) {
+					System.out.println("CHANGE");
+				}
+				
+			}
+			
+		}
+	}
+	
 	private int getMouseX() {
 		return Mouse.getX();
 	}

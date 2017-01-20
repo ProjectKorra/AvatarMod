@@ -17,7 +17,10 @@
 
 package com.crowsofwar.avatar.client.gui;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
+
+import org.lwjgl.input.Keyboard;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -98,6 +101,8 @@ public class AbilityCard extends Gui {
 		float textY = 123;
 		
 		float progressY = 120;
+		float keybindingY = 180;
+		float keybindingEditY = 200;
 		
 		// Draw card background
 		pushMatrix();
@@ -124,6 +129,15 @@ public class AbilityCard extends Gui {
 				scale(iconWidth / 40, iconWidth / 40, 1);
 				renderImage(AvatarUiTextures.skillsGui, 0, 1, 40, 13);
 				renderImage(AvatarUiTextures.skillsGui, 0, 14, (int) (data.getAbilityData(ability).getXp() / scaledWidth * 40), 13);
+			popMatrix();
+			
+			// draw keybinding
+			pushMatrix();
+				String keyMsg = "No key", secondMsg = "Click to edit";
+				if (CLIENT_CONFIG.keymappings.containsKey(ability))
+					keyMsg = Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(ability));
+				renderCenteredString(keyMsg, keybindingY, 1.5f);
+				renderCenteredString(secondMsg, keybindingEditY, 1.25f);
 			popMatrix();
 			
 		popMatrix();
