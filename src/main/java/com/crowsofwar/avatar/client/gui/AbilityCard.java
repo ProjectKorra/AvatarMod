@@ -137,13 +137,21 @@ public class AbilityCard extends Gui {
 			// draw keybinding
 			pushMatrix();
 				int color = editing ? 0xFF5962 : 0xffffff;
-				String keyMsg = "No key", secondMsg = "Click to edit";
-				if (CLIENT_CONFIG.keymappings.containsKey(ability))
-					keyMsg = Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(ability));
-				if (editing)
-					secondMsg = "Press a key/ESC";
 				
-				renderCenteredString(keyMsg, keybindingY, 1.5f, color);
+				String key;
+				if (editing) {
+					key = "editing";
+				} else if (CLIENT_CONFIG.keymappings.containsKey(ability)) {
+					key = "set";
+				} else {
+					key = "none";
+				}
+				
+				String boundTo = CLIENT_CONFIG.keymappings.containsKey(ability) ? Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(key)) : "-none-";
+				String firstMsg = I18n.format("avatar.key." + key + "1", boundTo);
+				String secondMsg = I18n.format("avatar.key." + key + "2");
+				
+				renderCenteredString(firstMsg, keybindingY, 1.5f, color);
 				renderCenteredString(secondMsg, keybindingEditY, 1.25f, color);
 			popMatrix();
 			

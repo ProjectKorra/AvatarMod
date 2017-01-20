@@ -74,6 +74,13 @@ avatar.ability.undefined=???
 avatar.radial.xp=%1$f%%
 avatar.radial.undefined=Coming soon!
 
+avatar.key.none1=No key
+avatar.key.none2=Click to edit
+avatar.key.set1=Key: %1$s
+avatar.key.set2=Click to edit
+avatar.key.editing1=Press a key
+avatar.key.editing2=ESC to unbind
+
 death.attack.avatar_earthbendBlock=%2$s smashed %1$s with earthbending
 death.attack.avatar_waterArc=%2$s used waterbending to bring down %1$s
 death.attack.avatar_ravine=%2$s crushed %1$s in a ravine
