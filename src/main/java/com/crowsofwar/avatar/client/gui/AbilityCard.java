@@ -152,12 +152,9 @@ public class AbilityCard extends Gui {
 			translate(minX, minY, 0);
 			scale(scale, scale, 1);
 			
-			if (editing) color(.9f, .7f, .7f);
-			
-			renderCenteredString(draw, textY, 2.5f);
+			int color = editing ? 0xFF5962 : 0xffffff;
+			renderCenteredString(draw, textY, 2.5f, color);
 			renderCenteredString(I18n.format("avatar.ability." + ability.getName()), 10, 1.5f);
-			
-			if (editing) color(1, 1, 1);
 			
 		popMatrix();
 		
@@ -205,14 +202,20 @@ public class AbilityCard extends Gui {
 	 *            Y position to draw at
 	 * @param scale
 	 *            Scale of text
+	 * @param color
+	 *            Color of the text
 	 */
-	private void renderCenteredString(String str, float y, float scale) {
+	private void renderCenteredString(String str, float y, float scale, int color) {
 		pushMatrix();
 		// assume padding is 10, innerWidth is 80
 		translate(10 + (80 - mc.fontRendererObj.getStringWidth(str) * scale) / 2, y, 0);
 		scale(scale, scale, 1);
-		drawString(mc.fontRendererObj, str, 0, 0, 0xffffff);
+		drawString(mc.fontRendererObj, str, 0, 0, color);
 		popMatrix();
+	}
+	
+	private void renderCenteredString(String str, float y, float scale) {
+		renderCenteredString(str, y, scale, 0xffffff);
 	}
 	
 }
