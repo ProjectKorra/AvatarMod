@@ -37,6 +37,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
@@ -186,6 +187,7 @@ public class SkillsGui extends GuiScreen {
 		
 		if (keyCode == 1 && editing != null) {
 			CLIENT_CONFIG.keymappings.remove(editing.getAbility());
+			updateConflicts(editing);
 			stopEditing();
 			return;
 		}
@@ -196,6 +198,7 @@ public class SkillsGui extends GuiScreen {
 		if (editing != null) {
 			System.out.println("Set " + editing.getAbility().getName() + " -> " + typedChar);
 			CLIENT_CONFIG.keymappings.put(editing.getAbility(), keyCode);
+			updateConflicts(editing);
 			stopEditing();
 		}
 		
@@ -248,6 +251,20 @@ public class SkillsGui extends GuiScreen {
 		if (editing != null) {
 			editing.setEditing(false);
 			editing = null;
+		}
+	}
+	
+	/**
+	 * Ensures that the card's conflict field is correctly set to the
+	 * conflicting keybinding; null if none
+	 */
+	private void updateConflicts(AbilityCard card) {
+		card.setConflict(null);
+		for (KeyBinding kb : mc.gameSettings.keyBindings) {
+			if (CLIENT_CONFIG.keymappings.get(card.getAbility()) == kb.getKeyCode()) {
+				card.setConflict(kb);
+				break;
+			}
 		}
 	}
 	

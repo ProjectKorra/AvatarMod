@@ -31,6 +31,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -45,6 +46,7 @@ public class AbilityCard extends Gui {
 	private final Minecraft mc;
 	
 	private boolean editing;
+	private KeyBinding conflict;
 	
 	public AbilityCard(BendingAbility ability) {
 		this.mc = Minecraft.getMinecraft();
@@ -141,6 +143,8 @@ public class AbilityCard extends Gui {
 				String key;
 				if (editing) {
 					key = "editing";
+				} else if (conflict != null) {
+					key = "conflict";
 				} else if (CLIENT_CONFIG.keymappings.containsKey(ability)) {
 					key = "set";
 				} else {
@@ -148,8 +152,9 @@ public class AbilityCard extends Gui {
 				}
 				
 				String boundTo = CLIENT_CONFIG.keymappings.containsKey(ability) ? Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(key)) : "-none-";
+				String conflictStr = conflict == null ? "no conflict" : conflict.getDisplayName();
 				String firstMsg = I18n.format("avatar.key." + key + "1", boundTo);
-				String secondMsg = I18n.format("avatar.key." + key + "2");
+				String secondMsg = I18n.format("avatar.key." + key + "2", conflictStr);
 				
 				renderCenteredString(firstMsg, keybindingY, 1.5f, color);
 				renderCenteredString(secondMsg, keybindingEditY, 1.25f, color);
@@ -180,6 +185,10 @@ public class AbilityCard extends Gui {
 	
 	public void setEditing(boolean editing) {
 		this.editing = editing;
+	}
+	
+	public void setConflict(KeyBinding conflict) {
+		this.conflict = conflict;
 	}
 	
 	/**
