@@ -23,6 +23,7 @@ import static net.minecraft.util.EnumFacing.NORTH;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -147,6 +148,11 @@ public class EntityWall extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
 			segments[i].writeToNBT(findNestedCompound(nbt, "Wall" + i));
+	}
+	
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) && !(entity instanceof EntityWallSegment);
 	}
 	
 }

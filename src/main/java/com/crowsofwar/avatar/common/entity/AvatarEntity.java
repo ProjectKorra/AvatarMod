@@ -177,6 +177,7 @@ public abstract class AvatarEntity extends Entity {
 			for (int l = 0; l < list.size(); ++l) {
 				Entity entity = (Entity) list.get(l);
 				entity.applyEntityCollision(this);
+				onCollideWithEntity(entity);
 			}
 		}
 	}
@@ -184,6 +185,8 @@ public abstract class AvatarEntity extends Entity {
 	protected boolean canCollideWith(Entity entity) {
 		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
 	}
+	
+	protected void onCollideWithEntity(Entity entity) {}
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {

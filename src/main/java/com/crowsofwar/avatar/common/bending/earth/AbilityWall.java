@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -46,6 +47,13 @@ public class AbilityWall extends EarthAbility {
 		if (!ctx.isLookingAtBlock()) return;
 		BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
 		EntityWall wall = new EntityWall(world);
+		
+		Block lookBlock = world.getBlockState(lookPos).getBlock();
+		if (lookBlock == Blocks.TALLGRASS) {
+			lookPos = lookPos.down();
+		} else if (lookBlock == Blocks.DOUBLE_PLANT) {
+			lookPos = lookPos.down(2);
+		}
 		
 		wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
 		for (int i = 0; i < 5; i++) {

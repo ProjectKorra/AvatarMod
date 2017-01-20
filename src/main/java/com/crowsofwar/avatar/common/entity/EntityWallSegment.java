@@ -252,4 +252,15 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void addVelocity(double x, double y, double z) {}
 	
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		// Will only setDead avatar entities
+		entity.setDead();
+	}
+	
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) && !(entity instanceof EntityWall);
+	}
+	
 }
