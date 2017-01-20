@@ -82,6 +82,7 @@ public class AvatarPlayerData extends PlayerData {
 	private float fallAbsorption;
 	private int timeInAir;
 	private boolean skating;
+	private int abilityCooldown;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
@@ -141,6 +142,7 @@ public class AvatarPlayerData extends PlayerData {
 		fallAbsorption = readFrom.getFloat("FallAbsorption");
 		timeInAir = readFrom.getInteger("TimeInAir");
 		skating = readFrom.getBoolean("WaterSkating");
+		abilityCooldown = readFrom.getInteger("AbilityCooldown");
 		
 	}
 	
@@ -165,6 +167,7 @@ public class AvatarPlayerData extends PlayerData {
 		writeTo.setFloat("FallAbsorption", fallAbsorption);
 		writeTo.setInteger("TimeInAir", timeInAir);
 		writeTo.setBoolean("WaterSkating", skating);
+		writeTo.setInteger("AbilityCooldown", abilityCooldown);
 		
 	}
 	
@@ -492,6 +495,23 @@ public class AvatarPlayerData extends PlayerData {
 	public void setSkating(boolean skating) {
 		this.skating = skating;
 		networker.markChanged(KEY_SKATING, skating);
+	}
+	
+	public int getAbilityCooldown() {
+		return abilityCooldown;
+	}
+	
+	public void setAbilityCooldown(int cooldown) {
+		if (cooldown < 0) cooldown = 0;
+		this.abilityCooldown = cooldown;
+		saveChanges();
+	}
+	
+	public void decrementCooldown() {
+		if (abilityCooldown > 0) {
+			abilityCooldown--;
+			saveChanges();
+		}
 	}
 	
 	public Networker getNetworker() {

@@ -91,6 +91,13 @@ public abstract class BendingAbility {
 	}
 	
 	/**
+	 * Get the bending type that this ability belongs to
+	 */
+	public final BendingType getBendingType() {
+		return type;
+	}
+	
+	/**
 	 * Execute this ability. Only called on server.
 	 * 
 	 * @param ctx

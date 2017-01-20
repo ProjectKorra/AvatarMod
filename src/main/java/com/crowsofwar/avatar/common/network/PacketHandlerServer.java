@@ -90,8 +90,10 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			
 			BendingAbility ability = packet.getAbility();
-			// TODO Verify that the client can actually use that ability
-			ability.execute(new AbilityContext(data, packet.getRaytrace()));
+			if (data.hasBending(ability.getBendingType()) && data.getAbilityCooldown() == 0) {
+				ability.execute(new AbilityContext(data, packet.getRaytrace()));
+				data.setAbilityCooldown(10);
+			}
 			
 		}
 		

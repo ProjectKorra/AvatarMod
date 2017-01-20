@@ -21,13 +21,17 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class AvatarPlayerTick {
 	
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
-		if (e.side == Side.CLIENT) AvatarPlayerData.fetcher().fetch(e.player);
+		// Also forces loading of data on client
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(e.player);
+		if (data != null) {
+			data.decrementCooldown();
+		}
+		
 	}
 	
 }
