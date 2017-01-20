@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.network;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
@@ -43,6 +45,7 @@ import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -55,12 +58,19 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PacketHandlerServer implements IPacketHandler {
 	
 	public static final IPacketHandler instance;
+	private List<ProcessAbilityRequest> unprocessedAbilityRequests;
 	
 	static {
 		instance = new PacketHandlerServer();
 	}
 	
-	private PacketHandlerServer() {}
+	private PacketHandlerServer() {
+		unprocessedAbilityRequests = new ArrayList<>();
+	}
+	
+	public static void register() {
+		MinecraftForge.EVENT_BUS.register(instance);
+	}
 	
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
@@ -90,9 +100,14 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			
 			BendingAbility ability = packet.getAbility();
-			if (data.hasBending(ability.getBendingType()) && data.getAbilityCooldown() == 0) {
-				ability.execute(new AbilityContext(data, packet.getRaytrace()));
-				data.setAbilityCooldown(10);
+			if (data.hasBending(ability.getBendingType())) {
+				if (data.getAbilityCooldown() == 0) {
+					ability.execute(new AbilityContext(data, packet.getRaytrace()));
+					data.setAbilityCooldown(15);
+				} else {
+					unprocessedAbilityRequests
+							.add(new ProcessAbilityRequest(data.getAbilityCooldown(), player, data, ability));
+				}
 			}
 			
 		}
@@ -216,6 +231,23 @@ public class PacketHandlerServer implements IPacketHandler {
 		}
 		
 		return null;
+	}
+	
+	private static class ProcessAbilityRequest {
+		
+		private final int ticks;
+		private final EntityPlayer player;
+		private final AvatarPlayerData data;
+		private final BendingAbility ability;
+		
+		public ProcessAbilityRequest(int ticks, EntityPlayer player, AvatarPlayerData data,
+				BendingAbility ability) {
+			this.ticks = ticks;
+			this.player = player;
+			this.data = data;
+			this.ability = ability;
+		}
+		
 	}
 	
 }

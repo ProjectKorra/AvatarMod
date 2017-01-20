@@ -53,6 +53,7 @@ import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -142,6 +143,8 @@ public class AvatarMod {
 		MinecraftForge.EVENT_BUS.register(new FirebendingUpdate());
 		WaterbendingUpdate.register();
 		EarthbendingEvents.register();
+		
+		PacketHandlerServer.register();
 		
 	}
 	
