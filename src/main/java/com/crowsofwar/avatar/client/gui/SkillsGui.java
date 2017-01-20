@@ -185,6 +185,7 @@ public class SkillsGui extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		
 		if (keyCode == 1 && editing != null) {
+			CLIENT_CONFIG.keymappings.remove(editing.getAbility());
 			editing.setEditing(false);
 			editing = null;
 			return;

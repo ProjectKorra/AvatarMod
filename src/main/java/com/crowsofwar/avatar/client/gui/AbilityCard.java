@@ -136,11 +136,15 @@ public class AbilityCard extends Gui {
 			
 			// draw keybinding
 			pushMatrix();
+				int color = editing ? 0xFF5962 : 0xffffff;
 				String keyMsg = "No key", secondMsg = "Click to edit";
 				if (CLIENT_CONFIG.keymappings.containsKey(ability))
 					keyMsg = Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(ability));
-				renderCenteredString(keyMsg, keybindingY, 1.5f);
-				renderCenteredString(secondMsg, keybindingEditY, 1.25f);
+				if (editing)
+					secondMsg = "Press a key/ESC";
+				
+				renderCenteredString(keyMsg, keybindingY, 1.5f, color);
+				renderCenteredString(secondMsg, keybindingEditY, 1.25f, color);
 			popMatrix();
 			
 		popMatrix();
@@ -152,8 +156,7 @@ public class AbilityCard extends Gui {
 			translate(minX, minY, 0);
 			scale(scale, scale, 1);
 			
-			int color = editing ? 0xFF5962 : 0xffffff;
-			renderCenteredString(draw, textY, 2.5f, color);
+			renderCenteredString(draw, textY, 2.5f);
 			renderCenteredString(I18n.format("avatar.ability." + ability.getName()), 10, 1.5f);
 			
 		popMatrix();
