@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.client.gui;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 import java.io.IOException;
@@ -58,6 +59,7 @@ public class SkillsGui extends GuiScreen {
 	private boolean wasMouseDown;
 	
 	private final BendingController controller;
+	private AbilityCard editing;
 	
 	public SkillsGui(BendingController controller) {
 		this.controller = controller;
@@ -66,6 +68,7 @@ public class SkillsGui extends GuiScreen {
 			cards.add(new AbilityCard(ability));
 		}
 		lastX = Mouse.getX();
+		this.editing = null;
 	}
 	
 	@Override
@@ -181,9 +184,22 @@ public class SkillsGui extends GuiScreen {
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		
+		if (keyCode == 1 && editing != null) {
+			editing.setEditing(false);
+			editing = null;
+			return;
+		}
+		
 		if (keyCode == mc.gameSettings.keyBindInventory.getKeyCode()) {
 			keyCode = 1;
 		}
+		if (editing != null) {
+			System.out.println("Set " + editing.getAbility().getName() + " -> " + typedChar);
+			CLIENT_CONFIG.keymappings.put(editing.getAbility(), keyCode);
+			editing.setEditing(false);
+			editing = null;
+		}
+		
 		super.keyTyped(typedChar, keyCode);
 		
 	}
@@ -191,7 +207,6 @@ public class SkillsGui extends GuiScreen {
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button);
-		System.out.println("Click at " + x + "," + y);
 		for (int i = 0; i < cards.size(); i++) {
 			AbilityCard card = cards.get(i);
 			float _actualWidth = res.getScaledWidth() / 7f;
@@ -208,7 +223,8 @@ public class SkillsGui extends GuiScreen {
 				float maxY = minY + 30 * _scale;
 				
 				if (y >= minY && y <= maxY) {
-					System.out.println("CHANGE");
+					card.setEditing(true);
+					editing = card;
 				}
 				
 			}

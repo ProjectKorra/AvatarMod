@@ -44,10 +44,13 @@ public class AbilityCard extends Gui {
 	private final AvatarPlayerData data;
 	private final Minecraft mc;
 	
+	private boolean editing;
+	
 	public AbilityCard(BendingAbility ability) {
 		this.mc = Minecraft.getMinecraft();
 		this.ability = ability;
 		this.data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		this.editing = false;
 	}
 	
 	public BendingAbility getAbility() {
@@ -149,8 +152,12 @@ public class AbilityCard extends Gui {
 			translate(minX, minY, 0);
 			scale(scale, scale, 1);
 			
+			if (editing) color(.9f, .7f, .7f);
+			
 			renderCenteredString(draw, textY, 2.5f);
 			renderCenteredString(I18n.format("avatar.ability." + ability.getName()), 10, 1.5f);
+			
+			if (editing) color(1, 1, 1);
 			
 		popMatrix();
 		
@@ -158,6 +165,14 @@ public class AbilityCard extends Gui {
 		
 	}
 	// @formatter:on
+	
+	public boolean isEditing() {
+		return editing;
+	}
+	
+	public void setEditing(boolean editing) {
+		this.editing = editing;
+	}
 	
 	/**
 	 * Draws the image. Any transformations (e.g. transformation) should be
