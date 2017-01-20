@@ -233,7 +233,7 @@ public class SkillsGui extends GuiScreen {
 		
 		if (button == 1) {
 			stopEditing();
-		} else if (editing != null) {
+		} else if (button != 0 && editing != null) {
 			CLIENT_CONFIG.keymappings.put(editing.getAbility(), button - 100);
 			updateConflicts(editing);
 			stopEditing();

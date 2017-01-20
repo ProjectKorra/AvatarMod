@@ -20,8 +20,6 @@ package com.crowsofwar.avatar.client.gui;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
-import org.lwjgl.input.Keyboard;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AbilityIcon;
@@ -31,6 +29,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 
@@ -151,7 +150,7 @@ public class AbilityCard extends Gui {
 					key = "none";
 				}
 				
-				String boundTo = CLIENT_CONFIG.keymappings.get(ability) != null ? Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(ability)) : "no key";
+				String boundTo = CLIENT_CONFIG.keymappings.get(ability) != null ? GameSettings.getKeyDisplayString(CLIENT_CONFIG.keymappings.get(ability)) : "no key";
 				String conflictStr = conflict == null ? "no conflict" : I18n.format(conflict.getKeyDescription());
 				String firstMsg = I18n.format("avatar.key." + key + "1", boundTo);
 				String secondMsg = I18n.format("avatar.key." + key + "2", conflictStr);

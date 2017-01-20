@@ -155,7 +155,7 @@ public class ClientInput implements IControlsHandler {
 	private boolean isAbilityPressed(BendingAbility ability) {
 		if (CLIENT_CONFIG.keymappings.containsKey(ability)) {
 			int key = CLIENT_CONFIG.keymappings.get(ability);
-			if (key < 0 && Mouse.isButtonDown(key)) return true;
+			if (key < 0 && Mouse.isButtonDown(key + 100)) return true;
 			if (key >= 0 && Keyboard.isKeyDown(key)) return true;
 		}
 		return false;
