@@ -186,8 +186,7 @@ public class SkillsGui extends GuiScreen {
 		
 		if (keyCode == 1 && editing != null) {
 			CLIENT_CONFIG.keymappings.remove(editing.getAbility());
-			editing.setEditing(false);
-			editing = null;
+			stopEditing();
 			return;
 		}
 		
@@ -197,8 +196,7 @@ public class SkillsGui extends GuiScreen {
 		if (editing != null) {
 			System.out.println("Set " + editing.getAbility().getName() + " -> " + typedChar);
 			CLIENT_CONFIG.keymappings.put(editing.getAbility(), keyCode);
-			editing.setEditing(false);
-			editing = null;
+			stopEditing();
 		}
 		
 		super.keyTyped(typedChar, keyCode);
@@ -224,8 +222,7 @@ public class SkillsGui extends GuiScreen {
 				float maxY = minY + 30 * _scale;
 				
 				if (y >= minY && y <= maxY) {
-					card.setEditing(true);
-					editing = card;
+					startEditing(card);
 				}
 				
 			}
@@ -239,6 +236,19 @@ public class SkillsGui extends GuiScreen {
 	
 	public int getMouseScroll() {
 		return scroll + getMouseX();
+	}
+	
+	private void startEditing(AbilityCard card) {
+		if (editing != null) stopEditing();
+		card.setEditing(true);
+		this.editing = card;
+	}
+	
+	private void stopEditing() {
+		if (editing != null) {
+			editing.setEditing(false);
+			editing = null;
+		}
 	}
 	
 }
