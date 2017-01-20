@@ -145,13 +145,13 @@ public class AbilityCard extends Gui {
 					key = "editing";
 				} else if (conflict != null) {
 					key = "conflict";
-				} else if (CLIENT_CONFIG.keymappings.containsKey(ability)) {
+				} else if (CLIENT_CONFIG.keymappings.get(ability) != null) { // for some reason, containsKey isn't exactly working
 					key = "set";
 				} else {
 					key = "none";
 				}
 				
-				String boundTo = CLIENT_CONFIG.keymappings.containsKey(ability) ? Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(key)) : "-none-";
+				String boundTo = CLIENT_CONFIG.keymappings.get(key) != null ? Keyboard.getKeyName(CLIENT_CONFIG.keymappings.get(key)) : "-none-";
 				String conflictStr = conflict == null ? "no conflict" : conflict.getDisplayName();
 				String firstMsg = I18n.format("avatar.key." + key + "1", boundTo);
 				String secondMsg = I18n.format("avatar.key." + key + "2", conflictStr);
