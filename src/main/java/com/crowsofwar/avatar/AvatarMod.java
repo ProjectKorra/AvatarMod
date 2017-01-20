@@ -100,11 +100,13 @@ public class AvatarMod {
 	public void preInit(FMLPreInitializationEvent e) {
 		
 		AvatarLog.log = e.getModLog();
+		
+		BendingAbility.registerAbilities();
+		
 		ConfigStats.load();
 		ConfigSkills.load();
 		ConfigClient.load();
 		
-		BendingAbility.registerAbilities();
 		BendingManager.init();
 		
 		EarthSoundHandler.register();

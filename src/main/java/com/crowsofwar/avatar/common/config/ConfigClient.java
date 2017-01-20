@@ -16,6 +16,14 @@
 */
 package com.crowsofwar.avatar.common.config;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.lwjgl.input.Keyboard;
+
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 
@@ -31,8 +39,32 @@ public class ConfigClient {
 	@Load
 	public float radialMenuAlpha = .75f;
 	
+	@Load
+	private Map<String, Integer> nameKeymappings = new HashMap<>();
+	
+	public Map<BendingAbility, Integer> keymappings = new HashMap<>();
+	
 	public static void load() {
+		if (CLIENT_CONFIG.nameKeymappings.isEmpty()) {
+			CLIENT_CONFIG.nameKeymappings.put("air_jump", Keyboard.KEY_J);
+		}
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
+		
+		CLIENT_CONFIG.keymappings.clear();
+		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
+		for (Map.Entry<String, Integer> entry : entries) {
+			BendingAbility ability = null;
+			for (BendingAbility a : BendingManager.allAbilities()) {
+				if (a.getName().equals(entry.getKey())) {
+					ability = a;
+					break;
+				}
+			}
+			if (ability != null) {
+				CLIENT_CONFIG.keymappings.put(ability, entry.getValue());
+			}
+		}
+		
 	}
 	
 }

@@ -39,9 +39,6 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  * Encapsulates all logic required for a bending ability. There is 1 instance of
  * a bending ability for each ability present - similar to BendingController.
  * 
- * @param <STATE>
- *            The BendingState this ability uses
- * 
  * @author CrowsOfWar
  */
 public abstract class BendingAbility {
