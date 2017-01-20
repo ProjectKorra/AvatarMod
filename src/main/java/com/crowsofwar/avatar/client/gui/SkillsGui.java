@@ -230,6 +230,11 @@ public class SkillsGui extends GuiScreen {
 			}
 			
 		}
+		
+		if (button == 1) {
+			stopEditing();
+		}
+		
 	}
 	
 	private int getMouseX() {

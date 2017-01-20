@@ -76,7 +76,7 @@ avatar.radial.undefined=Coming soon!
 
 avatar.key.none1=No key
 avatar.key.none2=Click to edit
-avatar.key.set1=Key: %1$s
+avatar.key.set1=%1$s
 avatar.key.set2=Click to edit
 avatar.key.editing1=> %1$s <
 avatar.key.editing2=ESC to unbind
