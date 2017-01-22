@@ -63,6 +63,13 @@ public class ConfigClient {
 	}
 	
 	public static void save() {
+		
+		CLIENT_CONFIG.nameKeymappings.clear();
+		Set<Map.Entry<BendingAbility, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
+		for (Map.Entry<BendingAbility, Integer> entry : entries) {
+			CLIENT_CONFIG.nameKeymappings.put(entry.getKey().getName(), entry.getValue());
+		}
+		
 		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
 	}
 	
