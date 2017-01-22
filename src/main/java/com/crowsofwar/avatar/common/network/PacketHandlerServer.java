@@ -79,7 +79,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	@SubscribeEvent
 	public void tick(WorldTickEvent e) {
 		World world = e.world;
-		if (e.phase == TickEvent.Phase.START) {
+		if (e.phase == TickEvent.Phase.START && !world.isRemote) {
 			for (ProcessAbilityRequest par : unprocessedAbilityRequests) {
 				par.ticks--;
 				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0) {
