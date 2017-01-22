@@ -31,6 +31,7 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.config.ConfigClient;
 import com.google.common.collect.EvictingQueue;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -189,6 +190,7 @@ public class SkillsGui extends GuiScreen {
 			CLIENT_CONFIG.keymappings.remove(editing.getAbility());
 			updateConflicts(editing);
 			stopEditing();
+			ConfigClient.save();
 			return;
 		}
 		
@@ -199,6 +201,7 @@ public class SkillsGui extends GuiScreen {
 			CLIENT_CONFIG.keymappings.put(editing.getAbility(), keyCode);
 			updateConflicts(editing);
 			stopEditing();
+			ConfigClient.save();
 		}
 		
 		super.keyTyped(typedChar, keyCode);

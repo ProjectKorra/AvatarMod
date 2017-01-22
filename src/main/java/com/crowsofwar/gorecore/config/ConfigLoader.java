@@ -464,6 +464,24 @@ public class ConfigLoader {
 		loader.save();
 	}
 	
+	public static void save(Object obj, String path) {
+		try {
+			
+			Map<String, Object> map = new HashMap<>();
+			Field[] fields = obj.getClass().getDeclaredFields();
+			for (Field field : fields) {
+				field.setAccessible(true);
+				map.put(field.getName(), field.get(obj));
+			}
+			
+			ConfigLoader loader = new ConfigLoader(path, obj, map, false);
+			loader.save();
+			
+		} catch (Exception e) {
+			GoreCore.LOGGER.error("Error saving config @ " + path, e);
+		}
+	}
+	
 	/**
 	 * Keeps track of a custom loader
 	 * 

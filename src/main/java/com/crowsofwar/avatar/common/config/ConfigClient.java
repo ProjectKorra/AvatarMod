@@ -62,4 +62,8 @@ public class ConfigClient {
 		
 	}
 	
+	public static void save() {
+		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
+	}
+	
 }
