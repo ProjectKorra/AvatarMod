@@ -75,6 +75,8 @@ public class ClientInput implements IControlsHandler {
 	 */
 	private final List<BendingController> keyboardBending;
 	
+	private final boolean[] wasAbilityDown;
+	
 	private boolean press;
 	
 	public ClientInput() {
@@ -90,6 +92,8 @@ public class ClientInput implements IControlsHandler {
 		addBendingButton(BendingType.WATERBENDING, Keyboard.KEY_C);
 		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_G);
 		addKeybinding(AvatarControl.KEY_SKILLS, Keyboard.KEY_K, "main");
+		
+		this.wasAbilityDown = new boolean[BendingManager.allAbilities().size()];
 		
 	}
 	
@@ -215,11 +219,15 @@ public class ClientInput implements IControlsHandler {
 				
 			}
 			
-			for (BendingAbility ability : BendingManager.allAbilities()) {
-				if (isAbilityPressed(ability)) {
+			List<BendingAbility> allAbilities = BendingManager.allAbilities();
+			for (int i = 0; i < allAbilities.size(); i++) {
+				BendingAbility ability = allAbilities.get(i);
+				boolean down = isAbilityPressed(ability);
+				if (down && !wasAbilityDown[i]) {
 					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer, ability.getRaytrace());
 					AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
 				}
+				wasAbilityDown[i] = down;
 			}
 			
 		}
