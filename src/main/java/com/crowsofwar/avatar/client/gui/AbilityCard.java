@@ -137,7 +137,7 @@ public class AbilityCard extends Gui {
 			
 			// draw keybinding
 			pushMatrix();
-				int color = editing ? 0xFF5962 : 0xffffff;
+				int color = conflict != null ? 0xff0000 : (editing ? 0xFF5962 : 0xffffff);
 				
 				String key;
 				if (editing) {

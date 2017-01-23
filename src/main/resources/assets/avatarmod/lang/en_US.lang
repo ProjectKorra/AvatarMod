@@ -80,7 +80,7 @@ avatar.key.set1=%1$s
 avatar.key.set2=Click to edit
 avatar.key.editing1=> %1$s <
 avatar.key.editing2=ESC to unbind
-avatar.key.conflict1=Key: %1$s
+avatar.key.conflict1=%1$s
 avatar.key.conflict2=Conflict w/ %1$s
 
 death.attack.avatar_earthbendBlock=%2$s smashed %1$s with earthbending
