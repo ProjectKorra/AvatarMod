@@ -34,6 +34,7 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.config.ConfigClient;
 import com.google.common.collect.EvictingQueue;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -64,6 +65,7 @@ public class SkillsGui extends GuiScreen {
 	private AbilityCard editing;
 	
 	public SkillsGui(BendingController controller) {
+		mc = Minecraft.getMinecraft();
 		this.controller = controller;
 		this.cards = new ArrayList<>();
 		for (BendingAbility ability : controller.getAllAbilities()) {
