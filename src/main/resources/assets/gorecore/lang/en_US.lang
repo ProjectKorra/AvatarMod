@@ -40,6 +40,8 @@ gc.tree.branchHelp.root=The root branch for ${command}.
 gc.cmd.fixid.success=Successfully synced the UUID of [value]${player}[/value] to online!
 gc.cmd.fixid.failure=Unable to sync UUID of [value]${player}[/value] with online; see log for details
 gc.cmd.fixid.online=[value]${player}[/value]'s UUID is already using the online version.
+gc.cmd.fixid.confirm=WARNING: This operation will delete player data for [value]${player}[/value]!
+gc.cmd.fixid.confirm2=If you want to continue, type in: [value]/gorecore fixid ${player} destroy-data[/value]
 
 test.frostCake=You frost the cake.
 test.frostCake.fancy=You frost the cake with small swirls.

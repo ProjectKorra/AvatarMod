@@ -37,5 +37,8 @@ public class GoreCoreChatMessages {
 	public static final ChatMessage MSG_FIXID_SUCCESS = newChatMessage(CFG, "gc.cmd.fixid.success", "player");
 	public static final ChatMessage MSG_FIXID_FAILURE = newChatMessage(CFG, "gc.cmd.fixid.failure", "player");
 	public static final ChatMessage MSG_FIXID_ONLINE = newChatMessage(CFG, "gc.cmd.fixid.online", "player");
+	public static final ChatMessage MSG_FIXID_CONFIRM = newChatMessage(CFG, "gc.cmd.fixid.confirm", "player");
+	public static final ChatMessage MSG_FIXID_CONFIRM2 = newChatMessage(CFG, "gc.cmd.fixid.confirm2",
+			"player");
 	
 }

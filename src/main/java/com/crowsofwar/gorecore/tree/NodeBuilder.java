@@ -48,6 +48,11 @@ public class NodeBuilder {
 		return addArgument(new ArgumentDirect<>(argumentName, converter));
 	}
 	
+	public <T> NodeBuilder addArgumentDirect(String argumentName, ITypeConverter<T> converter,
+			T defaultValue) {
+		return addArgument(new ArgumentDirect<>(argumentName, converter, defaultValue));
+	}
+	
 	public NodeBuilder addArgumentPlayer(String argumentName) {
 		return addArgument(new ArgumentPlayerName(argumentName));
 	}
