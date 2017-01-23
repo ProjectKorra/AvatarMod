@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.network;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,10 +81,13 @@ public class PacketHandlerServer implements IPacketHandler {
 	public void tick(WorldTickEvent e) {
 		World world = e.world;
 		if (e.phase == TickEvent.Phase.START && !world.isRemote) {
-			for (ProcessAbilityRequest par : unprocessedAbilityRequests) {
+			Iterator<ProcessAbilityRequest> iterator = unprocessedAbilityRequests.iterator();
+			while (iterator.hasNext()) {
+				ProcessAbilityRequest par = iterator.next();
 				par.ticks--;
 				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0) {
 					par.ability.execute(new AbilityContext(par.data, par.raytrace));
+					iterator.remove();
 				}
 			}
 		}
