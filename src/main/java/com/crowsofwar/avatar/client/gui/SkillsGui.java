@@ -67,7 +67,9 @@ public class SkillsGui extends GuiScreen {
 		this.controller = controller;
 		this.cards = new ArrayList<>();
 		for (BendingAbility ability : controller.getAllAbilities()) {
-			cards.add(new AbilityCard(ability));
+			AbilityCard card = new AbilityCard(ability);
+			cards.add(card);
+			updateConflicts(card);
 		}
 		lastX = Mouse.getX();
 		this.editing = null;
