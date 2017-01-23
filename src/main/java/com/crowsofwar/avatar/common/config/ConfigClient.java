@@ -39,8 +39,11 @@ public class ConfigClient {
 	
 	@Load
 	private Map<String, Integer> nameKeymappings = new HashMap<>();
-	
 	public Map<BendingAbility, Integer> keymappings = new HashMap<>();
+	
+	@Load
+	private Map<String, Boolean> nameConflicts = new HashMap<>();
+	public Map<BendingAbility, Boolean> conflicts = new HashMap<>();
 	
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
@@ -59,6 +62,20 @@ public class ConfigClient {
 				CLIENT_CONFIG.keymappings.put(ability, entry.getValue());
 			}
 		}
+		CLIENT_CONFIG.conflicts.clear();
+		Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
+		for (Map.Entry<String, Boolean> entry : entries2) {
+			BendingAbility ability = null;
+			for (BendingAbility a : BendingManager.allAbilities()) {
+				if (a.getName().equals(entry.getKey())) {
+					ability = a;
+					break;
+				}
+			}
+			if (ability != null) {
+				CLIENT_CONFIG.conflicts.put(ability, entry.getValue());
+			}
+		}
 		
 	}
 	
@@ -68,6 +85,11 @@ public class ConfigClient {
 		Set<Map.Entry<BendingAbility, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
 		for (Map.Entry<BendingAbility, Integer> entry : entries) {
 			CLIENT_CONFIG.nameKeymappings.put(entry.getKey().getName(), entry.getValue());
+		}
+		CLIENT_CONFIG.nameConflicts.clear();
+		Set<Map.Entry<BendingAbility, Boolean>> entries2 = CLIENT_CONFIG.conflicts.entrySet();
+		for (Map.Entry<BendingAbility, Boolean> entry : entries2) {
+			CLIENT_CONFIG.nameConflicts.put(entry.getKey().getName(), entry.getValue());
 		}
 		
 		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");

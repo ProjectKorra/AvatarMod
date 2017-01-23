@@ -224,7 +224,8 @@ public class ClientInput implements IControlsHandler {
 				BendingAbility ability = allAbilities.get(i);
 				boolean down = isAbilityPressed(ability);
 				
-				if (mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
+				if (!CLIENT_CONFIG.conflicts.get(ability) && mc.inGameHasFocus && mc.currentScreen == null
+						&& down && !wasAbilityDown[i]) {
 					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer, ability.getRaytrace());
 					AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
 				}
