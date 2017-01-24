@@ -18,11 +18,14 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
 import static net.minecraft.init.Blocks.WATER;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -77,6 +80,8 @@ public class WaterbendingUpdate {
 	private void skate(AvatarPlayerData data, EntityPlayer player) {
 		if (data.isSkating()) {
 			
+			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
+			
 			World world = player.worldObj;
 			int yPos = getSurfacePos(player);
 			
@@ -84,8 +89,11 @@ public class WaterbendingUpdate {
 				data.setSkating(false);
 				data.sync();
 			} else {
+				
+				double speed = .4 + abilityData.getXp() * (.3 / 100);
+				
 				player.setPosition(player.posX, yPos + .2, player.posZ);
-				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(.667);
+				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(speed);
 				player.motionX = velocity.x();
 				player.motionY = 0;
 				player.motionZ = velocity.z();
@@ -97,7 +105,10 @@ public class WaterbendingUpdate {
 							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
 				}
 				
-				// AvatarUtils.afterVelocityAdded(player);
+				if (player.ticksExisted % 10 == 0) {
+					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
+				}
+				
 			}
 			
 		} else if (data.hasStatusControl(StatusControl.SKATING_JUMP)) {
