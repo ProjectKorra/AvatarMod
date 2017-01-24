@@ -65,6 +65,7 @@ public class WaterbendingUpdate {
 	private void tryStartSkating(AvatarPlayerData data, EntityPlayer player) {
 		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
 			if (shouldSkate(player)) {
+				System.out.println("Start skating");
 				data.removeStatusControl(SKATING_START);
 				data.setSkating(true);
 				data.addStatusControl(SKATING_JUMP);
@@ -76,21 +77,14 @@ public class WaterbendingUpdate {
 	private void skate(AvatarPlayerData data, EntityPlayer player) {
 		if (data.isSkating()) {
 			
-			boolean stopSkating = !shouldSkate(player);
-			
 			World world = player.worldObj;
-			
-			int yPos = player.getPosition().getY();
-			Block below = world.getBlockState(player.getPosition().down()).getBlock();
-			Block in = world.getBlockState(player.getPosition()).getBlock();
-			
-			int surfacePos = getSurfacePos(player);
-			yPos = surfacePos;
-			if (surfacePos == -1) {
-				stopSkating = true;
+			int yPos = getSurfacePos(player);
+			if (yPos != (int) player.posY) {
+				System.out.println("New posy: " + yPos);
 			}
 			
-			if (!player.worldObj.isRemote && stopSkating) {
+			if (!player.worldObj.isRemote && !shouldSkate(player)) {
+				System.out.println("Stop skating");
 				data.setSkating(false);
 				data.sync();
 			} else {
@@ -122,7 +116,26 @@ public class WaterbendingUpdate {
 	private boolean shouldSkate(EntityPlayer player) {
 		IBlockState in = player.worldObj.getBlockState(player.getPosition());
 		IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
-		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER);
+		
+		if (player.isSneaking()) {
+			System.out.println("No; sneaking");
+			return false;
+		}
+		if (!(player.isInWater() || below.getBlock() == Blocks.WATER)) {
+			System.out.println(" not in/on water");
+			System.out.println("  on " + below.getBlock());
+			System.out.println("  pos" + player.getPosition().down());
+			return false;
+		} else {
+			System.out.println(" is in/on water");
+			System.out.println("  on " + below.getBlock());
+			System.out.println("  pos" + player.getPosition().down());
+			
+		}
+		
+		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER)
+				&& getSurfacePos(player) != -1;
+		
 	}
 	
 	/**
@@ -142,7 +155,8 @@ public class WaterbendingUpdate {
 			increased++;
 			in = world.getBlockState(player.getPosition().up(increased)).getBlock();
 		}
-		return increased;
+		
+		return (int) player.posY + increased;
 		
 	}
 	
