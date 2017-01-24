@@ -96,6 +96,17 @@ public class EntityWall extends AvatarEntity {
 			ref.getEntity().velocity().setY(slowest);
 		}
 		
+		double lowest = Integer.MAX_VALUE;
+		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+			EntityWallSegment seg = ref.getEntity();
+			if (abs(seg.position().y()) < abs(lowest)) {
+				lowest = seg.position().y();
+			}
+		}
+		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+			ref.getEntity().position().setY(lowest);
+		}
+		
 		this.noClip = true;
 		moveEntity(MoverType.SELF, 0, slowest / 20, 0);
 	}
