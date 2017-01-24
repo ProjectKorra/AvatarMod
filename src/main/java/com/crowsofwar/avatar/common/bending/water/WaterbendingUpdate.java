@@ -58,15 +58,13 @@ public class WaterbendingUpdate {
 		EntityPlayer player = e.player;
 		World world = player.worldObj;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (!world.isRemote) tryStartSkating(data, player);
+		tryStartSkating(data, player);
 		skate(data, player);
 	}
 	
 	private void tryStartSkating(AvatarPlayerData data, EntityPlayer player) {
-		if (data.hasStatusControl(SKATING_START)) {
-			IBlockState in = player.worldObj.getBlockState(player.getPosition());
-			IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
-			if (player.isInWater() || below.getBlock() == Blocks.WATER) {
+		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
+			if (shouldSkate(player)) {
 				data.removeStatusControl(SKATING_START);
 				data.setSkating(true);
 				data.addStatusControl(SKATING_JUMP);
@@ -78,23 +76,21 @@ public class WaterbendingUpdate {
 	private void skate(AvatarPlayerData data, EntityPlayer player) {
 		if (data.isSkating()) {
 			
+			boolean stopSkating = !shouldSkate(player);
+			
 			World world = player.worldObj;
 			
 			int yPos = player.getPosition().getY();
 			Block below = world.getBlockState(player.getPosition().down()).getBlock();
 			Block in = world.getBlockState(player.getPosition()).getBlock();
 			
-			int increased = checkDistToSurface(player);
-			
-			if (world.getBlockState(player.getPosition().up(increased)).getBlock() == Blocks.AIR) {
-				yPos += increased;
-			} else {
-				data.setSkating(false);
-				data.sync();
-				return;
+			int surfacePos = getSurfacePos(player);
+			yPos = surfacePos;
+			if (surfacePos == -1) {
+				stopSkating = true;
 			}
 			
-			if (!player.worldObj.isRemote && (player.isSneaking() || (below != WATER && in != WATER))) {
+			if (!player.worldObj.isRemote && stopSkating) {
 				data.setSkating(false);
 				data.sync();
 			} else {
@@ -126,25 +122,24 @@ public class WaterbendingUpdate {
 	private boolean shouldSkate(EntityPlayer player) {
 		IBlockState in = player.worldObj.getBlockState(player.getPosition());
 		IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
-		return player.isInWater() || below.getBlock() == Blocks.WATER;
+		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER);
 	}
 	
 	/**
 	 * Checks that the player is within 3 blocks of the surface. Returns the y
-	 * position above the surface. If the player is out of the water, returns
-	 * the player's ypos. If the player is too deep, returns -1.
+	 * position at the surface. If the player is out of the water, returns the
+	 * player's ypos. If the player is too deep, returns -1.
 	 */
-	private int checkDistToSurface(EntityPlayer player) {
+	private int getSurfacePos(EntityPlayer player) {
 		
 		World world = player.worldObj;
 		if (!player.isInWater()) return (int) player.posY;
 		
 		Block in = world.getBlockState(player.getPosition()).getBlock();
 		
-		int increased = 0;
-		while (in == WATER && increased < 3) {
+		int increased = 1;
+		while (in == WATER && increased <= 3) {
 			increased++;
-			in = world.getBlockState(player.getPosition().up(increased - 1)).getBlock();
 			in = world.getBlockState(player.getPosition().up(increased)).getBlock();
 		}
 		return increased;
