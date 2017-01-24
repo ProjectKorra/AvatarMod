@@ -84,12 +84,7 @@ public class WaterbendingUpdate {
 			Block below = world.getBlockState(player.getPosition().down()).getBlock();
 			Block in = world.getBlockState(player.getPosition()).getBlock();
 			
-			int increased = 0;
-			while (in == WATER && increased < 3) {
-				increased++;
-				in = world.getBlockState(player.getPosition().up(increased - 1)).getBlock();
-				in = world.getBlockState(player.getPosition().up(increased)).getBlock();
-			}
+			int increased = checkDistToSurface(player);
 			
 			if (world.getBlockState(player.getPosition().up(increased)).getBlock() == Blocks.AIR) {
 				yPos += increased;
@@ -123,6 +118,37 @@ public class WaterbendingUpdate {
 			data.removeStatusControl(StatusControl.SKATING_JUMP);
 			data.sync();
 		}
+	}
+	
+	/**
+	 * Determine if the player is in the ideal conditions to water-skate.
+	 */
+	private boolean shouldSkate(EntityPlayer player) {
+		IBlockState in = player.worldObj.getBlockState(player.getPosition());
+		IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
+		return player.isInWater() || below.getBlock() == Blocks.WATER;
+	}
+	
+	/**
+	 * Checks that the player is within 3 blocks of the surface. Returns the y
+	 * position above the surface. If the player is out of the water, returns
+	 * the player's ypos. If the player is too deep, returns -1.
+	 */
+	private int checkDistToSurface(EntityPlayer player) {
+		
+		World world = player.worldObj;
+		if (!player.isInWater()) return (int) player.posY;
+		
+		Block in = world.getBlockState(player.getPosition()).getBlock();
+		
+		int increased = 0;
+		while (in == WATER && increased < 3) {
+			increased++;
+			in = world.getBlockState(player.getPosition().up(increased - 1)).getBlock();
+			in = world.getBlockState(player.getPosition().up(increased)).getBlock();
+		}
+		return increased;
+		
 	}
 	
 	public static void register() {
