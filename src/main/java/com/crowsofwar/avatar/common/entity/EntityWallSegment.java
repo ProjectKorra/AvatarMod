@@ -218,6 +218,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			else
 				velocity.setX(amt);
 		}
+		
 	}
 	
 	@Override

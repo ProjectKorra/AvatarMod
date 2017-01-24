@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.Random;
@@ -68,6 +69,7 @@ public class AbilityWall extends EarthAbility {
 		}
 		
 		int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
+		data.getAbilityData(this).addXp(SKILLS_CONFIG.wallRaised);
 		
 		if (!ctx.isLookingAtBlock()) return;
 		BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
