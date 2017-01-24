@@ -188,6 +188,11 @@ public abstract class AvatarEntity extends Entity {
 		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
 	}
 	
+	/**
+	 * Called when this AvatarEntity collides with another entity. Not to be
+	 * confused with the vanilla {@link #applyEntityCollision(Entity)}, which is
+	 * where another entity is pushing this one.
+	 */
 	protected void onCollideWithEntity(Entity entity) {}
 	
 	/**
