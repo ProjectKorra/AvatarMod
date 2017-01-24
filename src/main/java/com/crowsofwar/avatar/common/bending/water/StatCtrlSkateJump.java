@@ -47,10 +47,10 @@ public class StatCtrlSkateJump extends StatusControl {
 			data.sync();
 			
 			Vector velocity = Vector.getLookRectangular(player);
-			velocity.mul(2);
-			player.motionX = velocity.x();
+			velocity.mul(1.5);
+			player.motionX = velocity.x() * 2;
 			player.motionY = velocity.y();
-			player.motionZ = velocity.z();
+			player.motionZ = velocity.z() * 2;
 			
 			data.setFallAbsorption(6);
 			
