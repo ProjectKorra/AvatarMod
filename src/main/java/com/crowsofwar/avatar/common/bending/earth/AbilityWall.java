@@ -19,7 +19,10 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.Random;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
@@ -43,6 +46,28 @@ public class AbilityWall extends EarthAbility {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		EnumFacing cardinal = player.getHorizontalFacing();
+		AvatarPlayerData data = ctx.getData();
+		
+		float xp = data.getAbilityData(this).getXp();
+		int whMin, whMax;
+		Random random = new Random();
+		if (xp == 100) {
+			whMin = whMax = 5;
+		} else if (xp >= 75) {
+			whMin = 4;
+			whMax = 5;
+		} else if (xp >= 50) {
+			whMin = 3;
+			whMax = 4;
+		} else if (xp >= 25) {
+			whMin = 2;
+			whMax = 4;
+		} else {
+			whMin = 1;
+			whMax = 3;
+		}
+		
+		int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
 		
 		if (!ctx.isLookingAtBlock()) return;
 		BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
@@ -95,6 +120,11 @@ public class AbilityWall extends EarthAbility {
 				
 				seg.setBlock(j, state);
 				if (bendable && !dontBreakMore) world.setBlockToAir(pos);
+				
+				if (j == 5 - wallHeight) {
+					dontBreakMore = true;
+				}
+				
 			}
 			
 			world.spawnEntityInWorld(seg);
