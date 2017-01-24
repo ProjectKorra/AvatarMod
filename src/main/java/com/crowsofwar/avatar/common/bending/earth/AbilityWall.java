@@ -96,6 +96,7 @@ public class AbilityWall extends EarthAbility {
 			seg.attachToWall(wall);
 			seg.setPosition(x + .5, y, z + .5);
 			seg.setDirection(cardinal);
+			seg.setOwner(player);
 			
 			boolean foundAir = false, dontBreakMore = false;
 			for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {

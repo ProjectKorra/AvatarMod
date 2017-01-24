@@ -17,8 +17,12 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -55,6 +59,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
 	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
+	private static final DataParameter<String> SYNC_OWNER = EntityDataManager
+			.createKey(EntityWallSegment.class, DataSerializers.STRING);
 	
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
 	static {
@@ -72,10 +78,13 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	private EnumFacing direction;
 	private int offset;
 	
+	private final OwnerAttribute ownerAttribute;
+	
 	public EntityWallSegment(World world) {
 		super(world);
 		this.wallReference = new SyncableEntityReference<>(this, SYNC_WALL);
 		this.setSize(.9f, 5);
+		this.ownerAttribute = new OwnerAttribute(this, SYNC_OWNER);
 	}
 	
 	@Override
@@ -98,6 +107,14 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public void attachToWall(EntityWall wall) {
 		wallReference.setEntity(wall);
 		wall.addSegment(this);
+	}
+	
+	public EntityPlayer getOwner() {
+		return ownerAttribute.getOwner();
+	}
+	
+	public void setOwner(EntityPlayer owner) {
+		ownerAttribute.setOwner(owner);
 	}
 	
 	public IBlockState getBlock(int i) {
@@ -225,12 +242,14 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		wallReference.readFromNBT(findNestedCompound(nbt, "Parent"));
+		ownerAttribute.load(nbt);
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		wallReference.writeToNBT(findNestedCompound(nbt, "Parent"));
+		ownerAttribute.save(nbt);
 	}
 	
 	@Override
@@ -255,9 +274,13 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		// Will only setDead avatar entities
-		if (entity instanceof AvatarEntity) ((AvatarEntity) entity).onCollideWithSolid();
+		// Only called for avatar entities due to canCollideWith
+		((AvatarEntity) entity).onCollideWithSolid();
 		entity.setDead();
+		if (getOwner() != null) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			data.getAbilityData(BendingAbility.ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
+		}
 	}
 	
 	@Override
