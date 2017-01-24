@@ -51,6 +51,7 @@ public abstract class AvatarEntity extends Entity {
 			DataSerializers.VARINT);
 	
 	protected boolean putsOutFires;
+	protected boolean flammable;
 	
 	/**
 	 * @param world
@@ -64,6 +65,7 @@ public abstract class AvatarEntity extends Entity {
 				z -> setPosition(posX, posY, z), //
 				() -> posX, () -> posY, () -> posZ);
 		this.putsOutFires = false;
+		this.flammable = false;
 	}
 	
 	@Override
@@ -205,12 +207,12 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public boolean canRenderOnFire() {
-		return !putsOutFires && super.canRenderOnFire();
+		return !putsOutFires && !flammable && super.canRenderOnFire();
 	}
 	
 	@Override
 	public void setFire(int seconds) {
-		if (!putsOutFires) super.setFire(seconds);
+		if (!putsOutFires && !flammable) super.setFire(seconds);
 	}
 	
 	// disable stepping sounds
