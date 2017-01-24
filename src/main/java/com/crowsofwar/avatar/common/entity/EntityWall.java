@@ -96,15 +96,18 @@ public class EntityWall extends AvatarEntity {
 			ref.getEntity().velocity().setY(slowest);
 		}
 		
+		// Lowest top pos of all the segments
 		double lowest = Integer.MAX_VALUE;
 		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
-			if (abs(seg.position().y()) < abs(lowest)) {
-				lowest = seg.position().y();
+			double topPos = seg.position().y() + seg.height;
+			if (topPos < lowest) {
+				lowest = topPos;
 			}
 		}
 		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
-			ref.getEntity().position().setY(lowest);
+			EntityWallSegment seg = ref.getEntity();
+			seg.position().setY(lowest - seg.height);
 		}
 		
 		this.noClip = true;

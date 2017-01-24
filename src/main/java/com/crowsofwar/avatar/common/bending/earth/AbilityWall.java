@@ -64,11 +64,10 @@ public class AbilityWall extends EarthAbility {
 			whMin = 2;
 			whMax = 4;
 		} else {
-			whMin = 1;
+			whMin = 2;
 			whMax = 3;
 		}
 		
-		int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
 		data.getAbilityData(this).addXp(SKILLS_CONFIG.wallRaised);
 		
 		if (!ctx.isLookingAtBlock()) return;
@@ -84,6 +83,8 @@ public class AbilityWall extends EarthAbility {
 		
 		wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
 		for (int i = 0; i < 5; i++) {
+			
+			int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
 			
 			int horizMod = -2 + i;
 			int x = lookPos.getX()
