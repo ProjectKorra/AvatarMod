@@ -95,12 +95,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			}
 			
 			Vector motion = target.minus(new Vector(entity));
-			motion.mul(5);
-			
-			double maxSpeed = 6;
-			if (motion.sqrMagnitude() > maxSpeed * maxSpeed) {
-				motion.normalize().mul(maxSpeed);
-			}
+			motion.mul(3);
 			
 			entity.velocity().set(motion);
 			// System.out.println("" +
