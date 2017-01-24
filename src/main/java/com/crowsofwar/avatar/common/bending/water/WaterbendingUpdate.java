@@ -35,6 +35,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -65,7 +66,6 @@ public class WaterbendingUpdate {
 	private void tryStartSkating(AvatarPlayerData data, EntityPlayer player) {
 		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
 			if (shouldSkate(player)) {
-				System.out.println("Start skating");
 				data.removeStatusControl(SKATING_START);
 				data.setSkating(true);
 				data.addStatusControl(SKATING_JUMP);
@@ -79,12 +79,8 @@ public class WaterbendingUpdate {
 			
 			World world = player.worldObj;
 			int yPos = getSurfacePos(player);
-			if (yPos != (int) player.posY) {
-				System.out.println("New posy: " + yPos);
-			}
 			
 			if (!player.worldObj.isRemote && !shouldSkate(player)) {
-				System.out.println("Stop skating");
 				data.setSkating(false);
 				data.sync();
 			} else {
@@ -114,24 +110,7 @@ public class WaterbendingUpdate {
 	 * Determine if the player is in the ideal conditions to water-skate.
 	 */
 	private boolean shouldSkate(EntityPlayer player) {
-		IBlockState in = player.worldObj.getBlockState(player.getPosition());
-		IBlockState below = player.worldObj.getBlockState(player.getPosition().down());
-		
-		if (player.isSneaking()) {
-			System.out.println("No; sneaking");
-			return false;
-		}
-		if (!(player.isInWater() || below.getBlock() == Blocks.WATER)) {
-			System.out.println(" not in/on water");
-			System.out.println("  on " + below.getBlock());
-			System.out.println("  pos" + player.getPosition().down());
-			return false;
-		} else {
-			System.out.println(" is in/on water");
-			System.out.println("  on " + below.getBlock());
-			System.out.println("  pos" + player.getPosition().down());
-			
-		}
+		IBlockState below = player.worldObj.getBlockState(new BlockPos(player.getPosition()).down());
 		
 		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER)
 				&& getSurfacePos(player) != -1;
