@@ -115,12 +115,7 @@ public class RadialSegment extends Gui {
 					theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f, alpha);
 			mc.getTextureManager().bindTexture(AvatarUiTextures.radialMenu);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-			// Draw edge
-			GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
-					theme.getEdge().getBlue(hover) / 255f, alpha);
-			mc.getTextureManager().bindTexture(AvatarUiTextures.edge);
-//			GlStateManager.translate(0, 0, 1);
-			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			
 		GlStateManager.popMatrix();
 		
 		// Draw icon

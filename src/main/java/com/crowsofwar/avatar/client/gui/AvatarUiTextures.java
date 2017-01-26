@@ -34,8 +34,6 @@ public class AvatarUiTextures {
 	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
 			"textures/radial/circle_segment.png");
 	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
-	static final ResourceLocation edge = new ResourceLocation("avatarmod",
-			"textures/gui/radial_segment_edge_thicker.png");
 	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
 			"textures/gui/blurred_icons.png");
 	static final ResourceLocation skillsGui = new ResourceLocation("avatarmod", "textures/gui/skillmenu.png");
