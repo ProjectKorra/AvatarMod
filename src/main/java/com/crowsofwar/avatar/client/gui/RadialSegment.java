@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.client.gui.RadialMenu.*;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 
 import net.minecraft.client.Minecraft;
@@ -38,14 +39,13 @@ public class RadialSegment extends Gui {
 	private final Minecraft mc;
 	private final float angle;
 	private final int index;
-	private final int icon;
+	private final BendingAbility ability;
 	
-	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, int icon) {
+	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, BendingAbility ability) {
 		this.gui = gui;
 		this.angle = 22.5f + index * 45;
 		this.index = index;
-		if (icon == -1) icon = 255;
-		this.icon = icon;
+		this.ability = ability;
 		this.theme = theme;
 		this.mc = Minecraft.getMinecraft();
 	}
@@ -79,14 +79,6 @@ public class RadialSegment extends Gui {
 	
 	public float getAngle() {
 		return angle;
-	}
-	
-	public int getTextureU() {
-		return (icon * 32) % 256;
-	}
-	
-	public int getTextureV() {
-		return (icon / 8) * 32;
 	}
 	
 	/**
@@ -153,8 +145,14 @@ public class RadialSegment extends Gui {
 			GlStateManager.scale(iconScale, iconScale, iconScale);  // Scale the icon's recentering
 																	// and actual image
 			GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
-			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
-			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
+			
+//			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
+//			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
+			
+			if (ability != null) {
+				mc.getTextureManager().bindTexture(AvatarUiTextures.getAbilityTexture(ability));
+				drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			}
 			
 			float darkenBy = 0.05f;
 			float r = theme.getIcon().getRed(hover) / 255f - darkenBy;
@@ -163,8 +161,10 @@ public class RadialSegment extends Gui {
 			float avg = (r + g + b) / 3;
 			GlStateManager.color(avg, avg,
 					avg, alpha);
-			mc.getTextureManager().bindTexture(AvatarUiTextures.blurredIcons);
-			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
+			
+			// TODO Blurred versions
+//			mc.getTextureManager().bindTexture(AvatarUiTextures.blurredIcons);
+//			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
 			
 		GlStateManager.popMatrix();
 		

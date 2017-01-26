@@ -103,8 +103,7 @@ public class RadialMenu extends Gui {
 		this.controls = ctrl;
 		
 		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new RadialSegment(this, theme, i,
-					controls[i] == null ? -1 : controls[i].getIconIndex());
+			segments[i] = new RadialSegment(this, theme, i, controls[i]);
 		}
 		
 	}
