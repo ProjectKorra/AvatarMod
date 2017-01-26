@@ -46,11 +46,11 @@ public class RadialMenu extends Gui {
 	/**
 	 * Center of rotation X position for radial_segment.png
 	 */
-	public static final int segmentX = 141;
+	public static final int segmentX = 207;
 	/**
 	 * Center of rotation Y position for radial_segment.png
 	 */
-	public static final int segmentY = 200;
+	public static final int segmentY = 296;
 	/**
 	 * Scaling factor for the radial menu
 	 */
