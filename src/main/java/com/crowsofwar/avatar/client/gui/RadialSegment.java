@@ -18,8 +18,7 @@
 package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.client.gui.RadialMenu.*;
-import static net.minecraft.client.renderer.GlStateManager.rotate;
-import static net.minecraft.client.renderer.GlStateManager.translate;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -128,28 +127,23 @@ public class RadialSegment extends Gui {
 			
 			// Recenter over origin
 			translate((width - 256 * iconScale) / 2f, (height - 256 * iconScale) / 2f, 0);
+			// Translate to the correct position
 			rotate(angle, 0, 0, 1);
-			translate(0, -80, 0);
+			translate(0, -80 * scale, 0);
 			rotate(-angle, 0, 0, 1);
-			
-//			if (ability != null) System.out.println(ability.getName() + " -> " + angle);
-			
-//			GlStateManager.translate(-200, -50, 0); // Translate into correct position
-			
-//			GlStateManager.rotate(-angle, 0, 0, 1); // Icon is now at desired position, rotate the
-													// image back
-			// to regular
+			// Last transform before draw
+			scale(iconScale, iconScale, 1);
 			
 			// Color to icon RGB
 			GlStateManager.color(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
 					theme.getIcon().getBlue(hover) / 255f, alpha);
 			
-			GlStateManager.translate(0, 0, 2); // Ensure icon is not overlapped
+			// Ensure icon is not overlapped
+			GlStateManager.translate(0, 0, 2);
 			
 			if (ability != null) {
 				mc.getTextureManager().bindTexture(AvatarUiTextures.getAbilityTexture(ability));
 				if (ability != BendingAbility.ABILITY_AIRBLADE && ability != BendingAbility.ABILITY_WATER_SKATE) {
-					GlStateManager.scale(iconScale, iconScale, 1);
 					drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 				}
 			}
