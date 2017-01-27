@@ -124,11 +124,15 @@ public class RadialSegment extends Gui {
 			float angle = this.getAngle() + 45f;
 			angle %= 360;
 			
-			GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
-			GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
-			GlStateManager.scale(scale, scale, scale);
-			if (ability != null) System.out.println(ability.getName() + " -> " + angle);
-			GlStateManager.translate(-200, -50, 0); // Translate into correct position
+			// Recenter over origin
+			GlStateManager.translate((width - 256) / 2f, (height - 256) / 2f, 0);
+//			GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
+//			translate(-100, -100, 0);
+			
+//			if (ability != null) System.out.println(ability.getName() + " -> " + angle);
+			
+//			GlStateManager.translate(-200, -50, 0); // Translate into correct position
+			
 //			GlStateManager.rotate(-angle, 0, 0, 1); // Icon is now at desired position, rotate the
 													// image back
 			// to regular
@@ -141,8 +145,9 @@ public class RadialSegment extends Gui {
 			
 			if (ability != null) {
 				mc.getTextureManager().bindTexture(AvatarUiTextures.getAbilityTexture(ability));
-				if (ability != BendingAbility.ABILITY_AIRBLADE && ability != BendingAbility.ABILITY_WATER_SKATE)
-				drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+				if (ability != BendingAbility.ABILITY_AIRBLADE && ability != BendingAbility.ABILITY_WATER_SKATE) {
+					drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+				}
 			}
 			
 			float darkenBy = 0.05f;
