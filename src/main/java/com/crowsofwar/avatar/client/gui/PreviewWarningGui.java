@@ -29,23 +29,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class PreviewWarningGui extends GuiScreen {
 	
-	/**
-	 * Adds the buttons (and other controls) to the screen in question. Called
-	 * when the GUI is displayed and when the window resizes, the buttonList is
-	 * cleared beforehand.
-	 */
+	@Override
 	public void initGui() {
 		this.buttonList.clear();
+		
 		this.buttonList.add(new GuiOptionButton(0, this.width / 2 - 155, this.height / 4 + 120 + 12,
 				I18n.format("gui.toTitle", new Object[0])));
+		
 		this.buttonList.add(new GuiOptionButton(1, this.width / 2 - 155 + 160, this.height / 4 + 120 + 12,
 				I18n.format("menu.quit", new Object[0])));
 	}
 	
-	/**
-	 * Called by the controls from the buttonList when activated. (Mouse pressed
-	 * for buttons)
-	 */
+	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
 			this.mc.displayGuiScreen(new GuiMainMenu());
@@ -54,37 +49,33 @@ public class PreviewWarningGui extends GuiScreen {
 		}
 	}
 	
-	/**
-	 * Fired when a key is typed (except F11 which toggles full screen). This is
-	 * the equivalent of KeyListener.keyTyped(KeyEvent e). Args : character
-	 * (character on the key), keyCode (lwjgl Keyboard key code)
-	 */
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {}
-	
-	/**
-	 * Draws the screen and all the components in it.
-	 */
+	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRendererObj, "Out of memory!", this.width / 2,
-				this.height / 4 - 60 + 20, 16777215);
-		this.drawString(this.fontRendererObj, "Minecraft has run out of memory.", this.width / 2 - 140,
-				this.height / 4 - 60 + 60 + 0, 10526880);
-		this.drawString(this.fontRendererObj, "This could be caused by a bug in the game or by the",
-				this.width / 2 - 140, this.height / 4 - 60 + 60 + 18, 10526880);
-		this.drawString(this.fontRendererObj, "Java Virtual Machine not being allocated enough",
-				this.width / 2 - 140, this.height / 4 - 60 + 60 + 27, 10526880);
-		this.drawString(this.fontRendererObj, "memory.", this.width / 2 - 140, this.height / 4 - 60 + 60 + 36,
-				10526880);
-		this.drawString(this.fontRendererObj, "To prevent level corruption, the current game has quit.",
-				this.width / 2 - 140, this.height / 4 - 60 + 60 + 54, 10526880);
-		this.drawString(this.fontRendererObj, "We\'ve tried to free up enough memory to let you go back to",
-				this.width / 2 - 140, this.height / 4 - 60 + 60 + 63, 10526880);
-		this.drawString(this.fontRendererObj,
-				"the main menu and back to playing, but this may not have worked.", this.width / 2 - 140,
-				this.height / 4 - 60 + 60 + 72, 10526880);
-		this.drawString(this.fontRendererObj, "Please restart the game if you see this message again.",
-				this.width / 2 - 140, this.height / 4 - 60 + 60 + 81, 10526880);
+		
+		// @formatter:off
+		String[] lines = {
+			"Warning: Avatar Mod Preview Version",
+			"",
+			"You are running a preview version of the Avatar Mod.",
+			"This is made so fans can get a glimpse of upcoming releases,",
+			"and so people can critique/suggest tweaks to the mod.",
+			"",
+			"While you are not required to, I would really appreciate it",
+			"if you gave some feedback on the new changes in the form of",
+			"an e-mail or a forum post. I'll use these suggestions in the",
+			"OFFICIAL release to make the mod more fun.",
+			"",
+			"Thanks!!"
+		};
+		// @formatter:on
+		
+		int y = height / 4;
+		for (String ln : lines) {
+			drawString(fontRendererObj, ln, (width - fontRendererObj.getStringWidth(ln)) / 2, y, 0xffffff);
+			y += fontRendererObj.FONT_HEIGHT;
+		}
+		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

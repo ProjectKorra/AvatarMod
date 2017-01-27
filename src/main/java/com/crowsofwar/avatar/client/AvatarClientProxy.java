@@ -163,7 +163,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	public void onMainMenu(GuiOpenEvent e) {
 		if (e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
 			GuiScreen screen = new PreviewWarningGui();
-			
 			mc.displayGuiScreen(screen);
 			e.setGui(screen);
 			displayedMainMenu = true;
