@@ -57,11 +57,14 @@ import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -72,10 +75,13 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
+	private boolean displayedMainMenu;
 	
 	@Override
 	public void preInit() {
 		mc = Minecraft.getMinecraft();
+		
+		displayedMainMenu = false;
 		
 		packetHandler = new PacketHandlerClient();
 		AvatarUiRenderer.instance = new AvatarUiRenderer();
@@ -83,6 +89,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		inputHandler = new ClientInput();
 		MinecraftForge.EVENT_BUS.register(inputHandler);
 		MinecraftForge.EVENT_BUS.register(AvatarUiRenderer.instance);
+		MinecraftForge.EVENT_BUS.register(this);
 		
 		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
@@ -148,6 +155,14 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public int getParticleAmount() {
 		return mc.gameSettings.particleSetting;
+	}
+	
+	@SubscribeEvent
+	public void onMainMenu(GuiOpenEvent e) {
+		if (e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
+			System.out.println("main menu for first time");
+			displayedMainMenu = true;
+		}
 	}
 	
 }
