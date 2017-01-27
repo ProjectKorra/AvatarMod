@@ -24,7 +24,7 @@ public class AvatarLog {
 	static Logger log;
 	
 	public static void debug(String s) {
-		if (AvatarInfo.IS_DEV_BUILD) log.debug("[Debug] " + s);
+		if (AvatarInfo.IS_DEVELOPMENT) log.debug("[Debug] " + s);
 	}
 	
 	public static void info(String s) {

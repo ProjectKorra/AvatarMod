@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client;
 
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
@@ -161,7 +162,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@SubscribeEvent
 	public void onMainMenu(GuiOpenEvent e) {
-		if (e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
+		if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
 			GuiScreen screen = new PreviewWarningGui();
 			mc.displayGuiScreen(screen);
 			e.setGui(screen);
