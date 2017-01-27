@@ -20,9 +20,7 @@ import java.io.IOException;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,11 +31,9 @@ public class PreviewWarningGui extends GuiScreen {
 	public void initGui() {
 		this.buttonList.clear();
 		
-		this.buttonList.add(new GuiOptionButton(0, this.width / 2 - 155, this.height / 4 + 120 + 12,
-				I18n.format("gui.toTitle", new Object[0])));
+		this.buttonList
+				.add(new GuiButton(0, (width - 200) / 2, height - height / 5, 200, 20, "To Main Menu"));
 		
-		this.buttonList.add(new GuiOptionButton(1, this.width / 2 - 155 + 160, this.height / 4 + 120 + 12,
-				I18n.format("menu.quit", new Object[0])));
 	}
 	
 	@Override
@@ -63,17 +59,18 @@ public class PreviewWarningGui extends GuiScreen {
 			"",
 			"While you are not required to, I would really appreciate it",
 			"if you gave some feedback on the new changes in the form of",
-			"an e-mail or a forum post. I'll use these suggestions in the",
+			"an e-mail or a forum post. I'll use your suggestions in the",
 			"OFFICIAL release to make the mod more fun.",
 			"",
-			"Thanks!!"
+			"Thanks, CrowsOfWar",
+			"ofwarcrows@gmail.com"
 		};
 		// @formatter:on
 		
-		int y = height / 4;
+		int y = height / 6;
 		for (String ln : lines) {
 			drawString(fontRendererObj, ln, (width - fontRendererObj.getStringWidth(ln)) / 2, y, 0xffffff);
-			y += fontRendererObj.FONT_HEIGHT;
+			y += fontRendererObj.FONT_HEIGHT + 2;
 		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
