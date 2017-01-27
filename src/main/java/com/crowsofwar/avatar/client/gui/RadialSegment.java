@@ -18,6 +18,8 @@
 package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.client.gui.RadialMenu.*;
+import static net.minecraft.client.renderer.GlStateManager.rotate;
+import static net.minecraft.client.renderer.GlStateManager.translate;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -121,13 +123,14 @@ public class RadialSegment extends Gui {
 		// Draw icon
 		GlStateManager.pushMatrix();
 			float iconScale = .6f;
-			float angle = this.getAngle() + 45f;
+			float angle = this.getAngle() - 20f;
 			angle %= 360;
 			
 			// Recenter over origin
-			GlStateManager.translate((width - 256) / 2f, (height - 256) / 2f, 0);
-//			GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
-//			translate(-100, -100, 0);
+			translate((width - 256 * iconScale) / 2f, (height - 256 * iconScale) / 2f, 0);
+			rotate(angle, 0, 0, 1);
+			translate(0, -80, 0);
+			rotate(-angle, 0, 0, 1);
 			
 //			if (ability != null) System.out.println(ability.getName() + " -> " + angle);
 			
@@ -146,6 +149,7 @@ public class RadialSegment extends Gui {
 			if (ability != null) {
 				mc.getTextureManager().bindTexture(AvatarUiTextures.getAbilityTexture(ability));
 				if (ability != BendingAbility.ABILITY_AIRBLADE && ability != BendingAbility.ABILITY_WATER_SKATE) {
+					GlStateManager.scale(iconScale, iconScale, 1);
 					drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 				}
 			}
