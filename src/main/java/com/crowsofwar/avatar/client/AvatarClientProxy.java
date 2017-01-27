@@ -21,6 +21,7 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
 import com.crowsofwar.avatar.client.render.RenderAirGust;
@@ -58,6 +59,7 @@ import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
@@ -160,7 +162,10 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@SubscribeEvent
 	public void onMainMenu(GuiOpenEvent e) {
 		if (e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
-			System.out.println("main menu for first time");
+			GuiScreen screen = new PreviewWarningGui();
+			
+			mc.displayGuiScreen(screen);
+			e.setGui(screen);
 			displayedMainMenu = true;
 		}
 	}
