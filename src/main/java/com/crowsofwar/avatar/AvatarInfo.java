@@ -58,7 +58,7 @@ public class AvatarInfo {
 	 * Accessed via {@link #IS_PRODUCTION}, {@link #IS_PREVIEW},
 	 * {@link #IS_DEVELOPMENT}
 	 */
-	private static final int VERSION_TYPE = 0;
+	private static final int VERSION_TYPE = 1;
 	
 	// Not adjustable / automatically calculated
 	
