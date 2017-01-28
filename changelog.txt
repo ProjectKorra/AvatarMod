@@ -10,6 +10,8 @@ AV2 Changelog :: version a3.0
 + Added version checker
 + Can bind keys to abilities through skills menu
 
+* New textures for radial menu!!
+* New icons for abilities!!
 * Changed water skills menu background
 * Removed some unused assets
 * Offline/hacked support for account UUID fetching; generates random UUID

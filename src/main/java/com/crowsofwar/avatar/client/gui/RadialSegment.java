@@ -122,7 +122,7 @@ public class RadialSegment extends Gui {
 		
 		// Draw icon
 		GlStateManager.pushMatrix();
-			float iconScale = .5f;
+			float iconScale = .4f;
 			float angle = this.getAngle() - 20f;
 			angle %= 360;
 			
@@ -130,7 +130,7 @@ public class RadialSegment extends Gui {
 			translate((width - 256 * iconScale) / 2f, (height - 256 * iconScale) / 2f, 0);
 			// Translate to the correct position
 			rotate(angle, 0, 0, 1);
-			translate(0, -200 * menuScale * scale, 0);
+			translate(0, -200 * .9f * menuScale * scale, 0);
 			rotate(-angle, 0, 0, 1);
 			// Last transform before draw
 			scale(iconScale, iconScale, 1);
