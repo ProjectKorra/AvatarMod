@@ -38,7 +38,7 @@ public class AvatarInfo {
 	/**
 	 * Incremented for every major update.
 	 */
-	public static final int VERSION_UPDATE = 2;
+	public static final int VERSION_UPDATE = 3;
 	/**
 	 * Incremented for minor bug fixes.
 	 */
@@ -58,7 +58,7 @@ public class AvatarInfo {
 	 * Accessed via {@link #IS_PRODUCTION}, {@link #IS_PREVIEW},
 	 * {@link #IS_DEVELOPMENT}
 	 */
-	private static final int VERSION_TYPE = 1;
+	private static final int VERSION_TYPE = 2;
 	
 	// Not adjustable / automatically calculated
 	
