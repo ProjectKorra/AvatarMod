@@ -64,7 +64,6 @@ public class Configuration {
 	
 	private void construct(Map<String, Object> map) {
 		this.map = map;
-		System.out.println("Set map to " + map);
 		this.defaults = new ArrayList<>();
 	}
 	
