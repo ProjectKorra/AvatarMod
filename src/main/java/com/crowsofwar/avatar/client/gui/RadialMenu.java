@@ -54,7 +54,7 @@ public class RadialMenu extends Gui {
 	/**
 	 * Scaling factor for the radial menu
 	 */
-	public static final float menuScale = 0.4f;
+	public static final float menuScale = 0.36f;
 	
 	private RadialSegment[] segments;
 	private AvatarControl pressing;
