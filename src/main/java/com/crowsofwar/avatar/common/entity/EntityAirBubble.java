@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
@@ -126,6 +127,7 @@ public class EntityAirBubble extends AvatarEntity {
 			avent.velocity().set(velX, velY, velZ);
 		}
 		entity.isAirBorne = true;
+		AvatarUtils.afterVelocityAdded(entity);
 	}
 	
 	@Override
