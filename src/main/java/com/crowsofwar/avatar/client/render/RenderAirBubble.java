@@ -65,8 +65,14 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		enableBlend();
 		GlStateManager.disableLighting();
 		
-		float sizeMult = entity.isDissipating() ? 1 + entity.getDissipateTime() / 10f : 1;
-		float alpha = entity.isDissipating() ? 1 - entity.getDissipateTime() / 10f : 1;
+		float sizeMult = 1, alpha = 1;
+		if (entity.isDissipating()) {
+			sizeMult = 1 + entity.getDissipateTime() / 10f;
+			alpha = 1 - entity.getDissipateTime() / 10f;
+		} else if (entity.ticksExisted < 10) {
+			sizeMult = .75f + entity.ticksExisted / 40f;
+			alpha = entity.ticksExisted / 10f;
+		}
 		
 		GlStateManager.color(1, 1, 1, .5f * alpha);
 		{

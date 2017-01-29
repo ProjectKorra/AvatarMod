@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.bending.earth.RavineEvent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
@@ -186,6 +187,7 @@ public class EntityRavine extends AvatarEntity {
 						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
 								STATS_CONFIG.ravineSettings.damage * damageMult))
 							attacked++;
+						AvatarUtils.afterVelocityAdded(entity);
 					}
 				}
 			}
