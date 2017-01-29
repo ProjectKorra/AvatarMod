@@ -73,8 +73,8 @@ public class EntityAirBubble extends AvatarEntity {
 		if (owner != null) {
 			setPosition(owner.posX, owner.posY, owner.posZ);
 			if (owner.isSneaking() || owner.isDead) {
-				// dissipateLarge();
-				dissipateSmall();
+				dissipateLarge();
+				// dissipateSmall();
 			}
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) == null) {

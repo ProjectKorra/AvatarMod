@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
+import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleContract;
+import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleExpand;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlSetFlamethrowing;
@@ -49,17 +51,22 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  */
 public abstract class StatusControl {
 	
-	public static final StatusControl AIR_JUMP = new StatCtrlAirJump();
-	public static final StatusControl PLACE_BLOCK = new StatCtrlPlaceBlock();
-	public static final StatusControl THROW_BLOCK = new StatCtrlThrowBlock();
-	public static final StatusControl THROW_WATER = new StatCtrlThrowWater();
-	public static final StatusControl START_FLAMETHROW = new StatCtrlSetFlamethrowing(true);
-	public static final StatusControl STOP_FLAMETHROW = new StatCtrlSetFlamethrowing(false);
-	public static final StatusControl THROW_FIRE = new StatCtrlThrowFire();
-	public static final StatusControl THROW_BUBBLE = new StatCtrlThrowBubble();
-	public static final StatusControl SKATING_JUMP = new StatCtrlSkateJump();
-	public static final StatusControl SKATING_START = new StatCtrlSkateStart();
-	public static final StatusControl THROW_FIREBALL = new StatCtrlThrowFireball();
+	// @formatter:off
+	public static final StatusControl
+			AIR_JUMP = new StatCtrlAirJump(),
+			PLACE_BLOCK = new StatCtrlPlaceBlock(),
+			THROW_BLOCK = new StatCtrlThrowBlock(),
+			THROW_WATER = new StatCtrlThrowWater(),
+			START_FLAMETHROW = new StatCtrlSetFlamethrowing(true),
+			STOP_FLAMETHROW = new StatCtrlSetFlamethrowing(false),
+			THROW_FIRE = new StatCtrlThrowFire(),
+			THROW_BUBBLE = new StatCtrlThrowBubble(),
+			SKATING_JUMP = new StatCtrlSkateJump(),
+			SKATING_START = new StatCtrlSkateStart(),
+			THROW_FIREBALL = new StatCtrlThrowFireball(),
+			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
+			BUBBLE_CONTRACT = new StatCtrlBubbleContract();
+	// @formatter:on
 	
 	private static int nextId = 0;
 	private static List<StatusControl> allControls;
