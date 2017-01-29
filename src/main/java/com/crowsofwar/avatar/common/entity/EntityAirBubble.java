@@ -52,6 +52,16 @@ public class EntityAirBubble extends AvatarEntity {
 	}
 	
 	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		
+		EntityPlayer owner = getOwner();
+		if (owner != null) {
+			setPosition(owner.posX, owner.posY, owner.posZ);
+		}
+	}
+	
+	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
