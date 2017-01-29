@@ -64,7 +64,7 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	@Override
 	public void applyEntityCollision(Entity entity) {
-		double mult = 20;
+		double mult = -3;
 		double velX = (this.posX - entity.posX) * mult;
 		double velY = (this.posY - entity.posY) * mult;
 		double velZ = (this.posZ - entity.posZ) * mult;
