@@ -22,7 +22,6 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.AbilityIcon;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -75,8 +74,6 @@ public class AbilityCard extends Gui {
 		
 		GlStateManager.enableBlend();
 		
-		AbilityIcon icon = ability.getIcon();
-		
 		float spacing = res.getScaledWidth() / 8.5f; // Spacing between each card
 		float actualWidth = res.getScaledWidth() / 7f;  // Width of each card;  1/10 of total width
 		float height = res.getScaledHeight() * 0.6f; // Height of each card; about 1/2 of total height
@@ -97,8 +94,7 @@ public class AbilityCard extends Gui {
 		float innerWidth = scaledWidth - 2 * padding;
 		
 		float iconY = 25;
-		float iconWidth = 80;
-		float iconHeight = 80;
+		float iconSize = 180;
 		
 		float textMinX = 5;
 		float textMaxX = 95;
@@ -122,15 +118,16 @@ public class AbilityCard extends Gui {
 			
 			// draw icon
 			pushMatrix();
-				translate(padding, iconY, 0);
-				scale(iconWidth / 32, iconHeight / 32, 1);
-				renderImage(AvatarUiTextures.icons, icon.getMinU(), icon.getMinV(), 32, 32);
+//				translate(padding, iconY, 0);
+				translate((scaledWidth - iconSize) / 2 , -20, 0);
+				scale(iconSize / 256, iconSize / 256, 1);
+				renderImage(AvatarUiTextures.getAbilityTexture(ability), 0, 0, 256, 256);
 			popMatrix();
 			
 			// draw progress bar
 			pushMatrix();
 				translate(10, progressY, 0);
-				scale(iconWidth / 40, iconWidth / 40, 1);
+				scale(2, 2, 1);
 				renderImage(AvatarUiTextures.skillsGui, 0, 1, 40, 13);
 				renderImage(AvatarUiTextures.skillsGui, 0, 14, (int) (data.getAbilityData(ability).getXp() / scaledWidth * 40), 13);
 			popMatrix();
