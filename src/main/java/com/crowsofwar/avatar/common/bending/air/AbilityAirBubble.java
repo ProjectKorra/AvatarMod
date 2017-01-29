@@ -17,6 +17,8 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,11 +39,15 @@ public class AbilityAirBubble extends AirAbility {
 	public void execute(AbilityContext ctx) {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
+		AvatarPlayerData data = ctx.getData();
 		
 		EntityAirBubble bubble = new EntityAirBubble(world);
 		bubble.setOwner(player);
 		bubble.setPosition(player.posX, player.posY, player.posZ);
 		world.spawnEntityInWorld(bubble);
+		
+		data.addStatusControl(StatusControl.BUBBLE_EXPAND);
+		data.addStatusControl(StatusControl.BUBBLE_CONTRACT);
 		
 	}
 	

@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.UUID;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -72,9 +74,8 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityPlayer owner = getOwner();
 		if (owner != null) {
 			setPosition(owner.posX, owner.posY, owner.posZ);
-			if (owner.isSneaking() || owner.isDead) {
-				dissipateLarge();
-				// dissipateSmall();
+			if (owner.isDead) {
+				dissipateSmall();
 			}
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
@@ -108,6 +109,11 @@ public class EntityAirBubble extends AvatarEntity {
 			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
 				attribute.removeModifier(SLOW_ATTR);
 			}
+			
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+			
 		}
 	}
 	
