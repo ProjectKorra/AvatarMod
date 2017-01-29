@@ -16,10 +16,15 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -36,6 +41,10 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.STRING);
+	
+	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
+	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
+			"airbubble_slowness", -.3, 2);
 	
 	private final OwnerAttribute ownerAttr;
 	
@@ -62,6 +71,22 @@ public class EntityAirBubble extends AvatarEntity {
 			setPosition(owner.posX, owner.posY, owner.posZ);
 			if (owner.isSneaking() || owner.isDead) {
 				setDead();
+			}
+			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
+				attribute.applyModifier(SLOW_ATTR);
+			}
+		}
+	}
+	
+	@Override
+	public void setDead() {
+		super.setDead();
+		EntityPlayer owner = getOwner();
+		if (owner != null) {
+			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
+				attribute.removeModifier(SLOW_ATTR);
 			}
 		}
 	}
