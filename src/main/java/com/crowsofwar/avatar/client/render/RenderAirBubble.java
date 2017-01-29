@@ -66,14 +66,15 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		GlStateManager.disableLighting();
 		
 		float sizeMult = entity.isDissipating() ? 1 + entity.getDissipateTime() / 10f : 1;
+		float alpha = entity.isDissipating() ? 1 - entity.getDissipateTime() / 10f : 1;
 		
-		GlStateManager.color(1, 1, 1, .5f);
+		GlStateManager.color(1, 1, 1, .5f * alpha);
 		{
 			float rotY = entity.ticksExisted / 7f;
 			float rotX = MathHelper.cos(entity.ticksExisted / 4f) * .3f;
 			renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
 		}
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.color(1, 1, 1, 1 * alpha);
 		{
 			float rotY = entity.ticksExisted / 25f;
 			float rotZ = MathHelper.cos(entity.ticksExisted / 10f + 1.3f) * .3f;

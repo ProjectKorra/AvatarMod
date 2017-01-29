@@ -84,7 +84,7 @@ public class EntityAirBubble extends AvatarEntity {
 			dissipateTime++;
 			float mult = 1 + getDissipateTime() / 10f;
 			setSize(2.5f * mult, 2.5f * mult);
-			if (dissipateTime >= 5) {
+			if (dissipateTime >= 10) {
 				setDead();
 			}
 		}
