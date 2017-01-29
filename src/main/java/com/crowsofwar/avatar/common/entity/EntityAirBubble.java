@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -57,8 +58,27 @@ public class EntityAirBubble extends AvatarEntity {
 		
 		EntityPlayer owner = getOwner();
 		if (owner != null) {
-			setPosition(owner.posX, owner.posY, owner.posZ);
+			// setPosition(owner.posX, owner.posY, owner.posZ);
 		}
+	}
+	
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		double mult = 20;
+		double velX = (this.posX - entity.posX) * mult;
+		double velY = (this.posY - entity.posY) * mult;
+		double velZ = (this.posZ - entity.posZ) * mult;
+		// Need to use addVelocity() so avatar entities can detect it
+		entity.motionX = entity.motionY = entity.motionZ = 0;
+		// entity.addVelocity(velX, velY, velZ);
+		entity.motionY = velY;
+		entity.motionX = velX;
+		entity.motionZ = velZ;
+		if (entity instanceof AvatarEntity) {
+			AvatarEntity avent = (AvatarEntity) entity;
+			avent.velocity().set(velX, velY, velZ);
+		}
+		entity.isAirBorne = true;
 	}
 	
 	@Override
