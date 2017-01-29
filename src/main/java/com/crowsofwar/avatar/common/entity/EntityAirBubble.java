@@ -72,7 +72,8 @@ public class EntityAirBubble extends AvatarEntity {
 		if (owner != null) {
 			setPosition(owner.posX, owner.posY, owner.posZ);
 			if (owner.isSneaking() || owner.isDead) {
-				setDead();
+				// setDead();
+				dissipate();
 			}
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
@@ -81,7 +82,7 @@ public class EntityAirBubble extends AvatarEntity {
 		}
 		if (isDissipating()) {
 			dissipateTime++;
-			if (dissipateTime >= 20) {
+			if (dissipateTime >= 5) {
 				setDead();
 			}
 		}
@@ -144,7 +145,7 @@ public class EntityAirBubble extends AvatarEntity {
 	}
 	
 	public void dissipate() {
-		dissipateTime = 0;
+		if (!isDissipating()) dissipateTime = 0;
 	}
 	
 	public boolean isDissipating() {
