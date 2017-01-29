@@ -82,6 +82,8 @@ public class EntityAirBubble extends AvatarEntity {
 		}
 		if (isDissipating()) {
 			dissipateTime++;
+			float mult = 1 + getDissipateTime() / 10f;
+			setSize(2.5f * mult, 2.5f * mult);
 			if (dissipateTime >= 5) {
 				setDead();
 			}
@@ -105,6 +107,7 @@ public class EntityAirBubble extends AvatarEntity {
 		if (entity == getOwner()) return;
 		
 		double mult = -2;
+		if (isDissipating()) mult = -4;
 		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
 		vel.normalize();
 		vel.mul(mult);
