@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * 
@@ -58,8 +59,11 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		float y = (float) yy + .8f;
 		float z = (float) zz;
 		
+		float rotY = entity.ticksExisted / 7f;
+		float rotX = MathHelper.cos(entity.ticksExisted / 4f) * .3f;
+		
 		GlStateManager.enableBlend();
-		renderCube(x, y, z, 0, 1, 0, 1, entity.width, 0, 0, 0);
+		renderCube(x, y, z, 0, 1, 0, 1, entity.width, rotX, rotY, 0);
 		GlStateManager.disableBlend();
 		
 	}

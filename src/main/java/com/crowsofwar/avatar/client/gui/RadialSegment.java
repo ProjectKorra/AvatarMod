@@ -135,10 +135,6 @@ public class RadialSegment extends Gui {
 			// Last transform before draw
 			scale(iconScale, iconScale, 1);
 			
-			// Color to icon RGB
-			GlStateManager.color(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
-					theme.getIcon().getBlue(hover) / 255f, alpha);
-			
 			// Ensure icon is not overlapped
 			GlStateManager.translate(0, 0, 2);
 			
