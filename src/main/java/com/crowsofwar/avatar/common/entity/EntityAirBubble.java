@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,10 +70,14 @@ public class EntityAirBubble extends AvatarEntity {
 	public void applyEntityCollision(Entity entity) {
 		if (entity == getOwner()) return;
 		
-		double mult = -3;
-		double velX = (this.posX - entity.posX) * mult;
-		double velY = (this.posY - entity.posY) * mult;
-		double velZ = (this.posZ - entity.posZ) * mult;
+		double mult = -2;
+		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
+		vel.normalize();
+		vel.mul(mult);
+		vel.add(0, .3f, 0);
+		
+		double velX = vel.x(), velY = vel.y(), velZ = vel.z();
+		
 		// Need to use addVelocity() so avatar entities can detect it
 		entity.motionX = entity.motionY = entity.motionZ = 0;
 		// entity.addVelocity(velX, velY, velZ);
