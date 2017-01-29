@@ -59,6 +59,9 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityPlayer owner = getOwner();
 		if (owner != null) {
 			setPosition(owner.posX, owner.posY, owner.posZ);
+			if (owner.isSneaking()) {
+				setDead();
+			}
 		}
 	}
 	
