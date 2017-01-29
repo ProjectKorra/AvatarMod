@@ -41,6 +41,7 @@ public class Airbending extends BendingController {
 		addAbility(ABILITY_AIR_GUST);
 		addAbility(ABILITY_AIR_JUMP);
 		addAbility(ABILITY_AIRBLADE);
+		addAbility(ABILITY_AIR_BUBBLE);
 		
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);
