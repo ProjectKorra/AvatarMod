@@ -44,19 +44,25 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.STRING);
+	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
+			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
 			"airbubble_slowness", -.3, 2);
 	
 	private final OwnerAttribute ownerAttr;
-	private int dissipateTime;
 	
 	public EntityAirBubble(World world) {
 		super(world);
 		setSize(2.5f, 2.5f);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		this.dissipateTime = 0;
+	}
+	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_DISSIPATE, 0);
 	}
 	
 	public EntityPlayer getOwner() {
@@ -83,18 +89,18 @@ public class EntityAirBubble extends AvatarEntity {
 			}
 		}
 		if (isDissipatingLarge()) {
-			dissipateTime++;
+			setDissipateTime(getDissipateTime() + 1);
 			float mult = 1 + getDissipateTime() / 10f;
 			setSize(2.5f * mult, 2.5f * mult);
-			if (dissipateTime >= 10) {
+			if (getDissipateTime() >= 10) {
 				setDead();
 			}
 		}
 		if (isDissipatingSmall()) {
-			dissipateTime--;
+			setDissipateTime(getDissipateTime() - 1);
 			float mult = 1 + getDissipateTime() / 40f;
 			setSize(2.5f * mult, 2.5f * mult);
-			if (dissipateTime <= -10) {
+			if (getDissipateTime() <= -10) {
 				setDead();
 			}
 		}
@@ -109,11 +115,6 @@ public class EntityAirBubble extends AvatarEntity {
 			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
 				attribute.removeModifier(SLOW_ATTR);
 			}
-			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
-			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
-			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-			
 		}
 	}
 	
@@ -148,14 +149,14 @@ public class EntityAirBubble extends AvatarEntity {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
-		dissipateTime = nbt.getInteger("Dissipate");
+		setDissipateTime(nbt.getInteger("Dissipate"));
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
-		nbt.setInteger("Dissipate", dissipateTime);
+		nbt.setInteger("Dissipate", getDissipateTime());
 	}
 	
 	@Override
@@ -163,28 +164,43 @@ public class EntityAirBubble extends AvatarEntity {
 		return pass == 1;
 	}
 	
+	public int getDissipateTime() {
+		return dataManager.get(SYNC_DISSIPATE);
+	}
+	
+	public void setDissipateTime(int dissipate) {
+		dataManager.set(SYNC_DISSIPATE, dissipate);
+	}
+	
 	public void dissipateLarge() {
-		if (!isDissipating()) dissipateTime = 1;
+		if (!isDissipating()) setDissipateTime(1);
+		removeStatCtrl();
 	}
 	
 	public void dissipateSmall() {
-		if (!isDissipating()) dissipateTime = -1;
+		if (!isDissipating()) setDissipateTime(-1);
+		removeStatCtrl();
 	}
 	
 	public boolean isDissipating() {
-		return dissipateTime != 0;
+		return getDissipateTime() != 0;
 	}
 	
 	public boolean isDissipatingLarge() {
-		return dissipateTime > 0;
+		return getDissipateTime() > 0;
 	}
 	
 	public boolean isDissipatingSmall() {
-		return dissipateTime < 0;
+		return getDissipateTime() < 0;
 	}
 	
-	public int getDissipateTime() {
-		return dissipateTime;
+	private void removeStatCtrl() {
+		if (getOwner() != null) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+			data.sync();
+		}
 	}
 	
 }
