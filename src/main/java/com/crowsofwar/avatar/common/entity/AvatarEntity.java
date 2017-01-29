@@ -25,6 +25,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -72,6 +73,10 @@ public abstract class AvatarEntity extends Entity {
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
 				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+	}
+	
+	public EntityPlayer getOwner() {
+		return null;
 	}
 	
 	/**
