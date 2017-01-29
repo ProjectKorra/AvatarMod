@@ -68,9 +68,13 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		float ticks = entity.ticksExisted + partialTicks;
 		
 		float sizeMult = 1, alpha = 1;
-		if (entity.isDissipating()) {
+		if (entity.isDissipatingLarge()) {
 			sizeMult = 1 + entity.getDissipateTime() / 10f;
 			alpha = 1 - entity.getDissipateTime() / 10f;
+		} else if (entity.isDissipatingSmall()) {
+			// plus is technically minus since dissipateTime is negative
+			sizeMult = 1 + entity.getDissipateTime() / 40f;
+			alpha = 1 + entity.getDissipateTime() / 10f;
 		} else if (ticks < 10) {
 			sizeMult = .75f + ticks / 40f;
 			alpha = ticks / 10f;

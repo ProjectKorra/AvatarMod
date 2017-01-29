@@ -54,7 +54,7 @@ public class EntityAirBubble extends AvatarEntity {
 		super(world);
 		setSize(2.5f, 2.5f);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		this.dissipateTime = -1;
+		this.dissipateTime = 0;
 	}
 	
 	public EntityPlayer getOwner() {
@@ -73,8 +73,7 @@ public class EntityAirBubble extends AvatarEntity {
 		if (owner != null) {
 			setPosition(owner.posX, owner.posY, owner.posZ);
 			if (owner.isSneaking() || owner.isDead) {
-				// setDead();
-				dissipate();
+				dissipateLarge();
 			}
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
@@ -83,9 +82,9 @@ public class EntityAirBubble extends AvatarEntity {
 		}
 		if (isDissipating()) {
 			dissipateTime++;
-			float mult = 1 + getDissipateTime() / 10f;
+			float mult = isDissipatingLarge() ? 1 + getDissipateTime() / 10f : 1 + getDissipateTime() / 40f;
 			setSize(2.5f * mult, 2.5f * mult);
-			if (dissipateTime >= 10) {
+			if (Math.abs(dissipateTime) >= 10) {
 				setDead();
 			}
 		}
@@ -108,7 +107,7 @@ public class EntityAirBubble extends AvatarEntity {
 		if (entity == getOwner()) return;
 		
 		double mult = -2;
-		if (isDissipating()) mult = -4;
+		if (isDissipatingLarge()) mult = -4;
 		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
 		vel.normalize();
 		vel.mul(mult);
@@ -149,12 +148,24 @@ public class EntityAirBubble extends AvatarEntity {
 		return pass == 1;
 	}
 	
-	public void dissipate() {
-		if (!isDissipating()) dissipateTime = 0;
+	public void dissipateLarge() {
+		if (!isDissipating()) dissipateTime = 1;
+	}
+	
+	public void dissipateSmall() {
+		if (!isDissipating()) dissipateTime = -1;
 	}
 	
 	public boolean isDissipating() {
-		return dissipateTime > -1;
+		return dissipateTime != 0;
+	}
+	
+	public boolean isDissipatingLarge() {
+		return dissipateTime > 0;
+	}
+	
+	public boolean isDissipatingSmall() {
+		return dissipateTime < 0;
 	}
 	
 	public int getDissipateTime() {
