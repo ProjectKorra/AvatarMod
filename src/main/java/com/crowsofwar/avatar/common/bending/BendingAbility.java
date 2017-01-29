@@ -33,7 +33,6 @@ import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
-import com.crowsofwar.avatar.common.gui.AbilityIcon;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
@@ -76,7 +75,6 @@ public abstract class BendingAbility {
 	private final BendingType type;
 	protected final int id;
 	private final String name;
-	private final AbilityIcon icon;
 	private Raytrace.Info raytrace;
 	
 	public BendingAbility(BendingType bendingType, String name) {
@@ -84,7 +82,6 @@ public abstract class BendingAbility {
 		this.id = nextId++;
 		this.name = name;
 		BendingManager.registerAbility(this);
-		this.icon = new AbilityIcon(getIconIndex() == -1 ? 255 : getIconIndex());
 		this.raytrace = new Raytrace.Info();
 	}
 	
@@ -112,25 +109,6 @@ public abstract class BendingAbility {
 	 */
 	public final int getId() {
 		return id;
-	}
-	
-	/**
-	 * Get the texture index of this bending ability. -1 for no texture.
-	 */
-	public abstract int getIconIndex();
-	
-	/**
-	 * Get the icon for this ability; null for no icon
-	 */
-	public AbilityIcon getIcon() {
-		return icon;
-	}
-	
-	/**
-	 * Returns whether this bending ability has an icon.
-	 */
-	public boolean hasTexture() {
-		return getIconIndex() > -1;
 	}
 	
 	/**
