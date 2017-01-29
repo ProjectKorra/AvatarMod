@@ -42,9 +42,4 @@ public class AbilityAirJump extends AirAbility {
 		data.sync();
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 10;
-	}
-	
 }

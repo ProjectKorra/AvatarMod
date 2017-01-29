@@ -35,10 +35,4 @@ public class AbilityAirBubble extends AirAbility {
 		
 	}
 	
-	@Override
-	public int getIconIndex() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
 }

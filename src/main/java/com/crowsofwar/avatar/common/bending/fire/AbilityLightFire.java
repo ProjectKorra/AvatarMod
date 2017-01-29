@@ -80,9 +80,4 @@ public class AbilityLightFire extends FireAbility {
 		}
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 2;
-	}
-	
 }

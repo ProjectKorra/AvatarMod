@@ -110,9 +110,4 @@ public class AbilityPickUpBlock extends EarthAbility {
 		}
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 0;
-	}
-	
 }

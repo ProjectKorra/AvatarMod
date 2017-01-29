@@ -85,9 +85,4 @@ public class AbilityWaterArc extends WaterAbility {
 		if (needsSync) ctx.getData().sendBendingState(bendingState);
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 4;
-	}
-	
 }

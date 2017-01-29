@@ -77,9 +77,4 @@ public class AbilityWaterBubble extends WaterAbility {
 		}
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 12;
-	}
-	
 }

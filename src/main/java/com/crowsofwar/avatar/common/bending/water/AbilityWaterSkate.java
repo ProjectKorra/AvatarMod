@@ -38,9 +38,4 @@ public class AbilityWaterSkate extends WaterAbility {
 		data.sync();
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 14;
-	}
-	
 }

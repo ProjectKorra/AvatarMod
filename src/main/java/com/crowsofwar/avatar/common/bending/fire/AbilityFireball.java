@@ -75,9 +75,4 @@ public class AbilityFireball extends FireAbility {
 		
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 15;
-	}
-	
 }

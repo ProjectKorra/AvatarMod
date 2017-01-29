@@ -137,9 +137,4 @@ public class AbilityWall extends EarthAbility {
 		
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 13;
-	}
-	
 }

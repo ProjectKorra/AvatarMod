@@ -56,9 +56,4 @@ public class AbilityAirGust extends AirAbility {
 		world.spawnEntityInWorld(gust);
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 7;
-	}
-	
 }

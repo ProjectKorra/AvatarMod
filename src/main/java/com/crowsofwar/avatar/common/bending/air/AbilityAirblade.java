@@ -67,9 +67,4 @@ public class AbilityAirblade extends AirAbility {
 		
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 16;
-	}
-	
 }

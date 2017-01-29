@@ -73,9 +73,4 @@ public class AbilityFireArc extends FireAbility {
 		
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 3;
-	}
-	
 }

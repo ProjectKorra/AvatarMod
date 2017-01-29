@@ -42,9 +42,4 @@ public class AbilityFlamethrower extends FireAbility {
 		data.sync();
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 9;
-	}
-	
 }

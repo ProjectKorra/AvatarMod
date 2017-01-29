@@ -63,9 +63,4 @@ public class AbilityRavine extends EarthAbility {
 		
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 8;
-	}
-	
 }

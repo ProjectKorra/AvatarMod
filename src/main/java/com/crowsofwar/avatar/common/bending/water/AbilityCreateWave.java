@@ -69,9 +69,4 @@ public class AbilityCreateWave extends WaterAbility {
 		
 	}
 	
-	@Override
-	public int getIconIndex() {
-		return 11;
-	}
-	
 }
