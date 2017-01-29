@@ -16,6 +16,9 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import static net.minecraft.client.renderer.GlStateManager.disableBlend;
+import static net.minecraft.client.renderer.GlStateManager.enableBlend;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -23,7 +26,6 @@ import org.lwjgl.opengl.GL11;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -59,12 +61,20 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		float y = (float) yy + .8f;
 		float z = (float) zz;
 		
-		float rotY = entity.ticksExisted / 7f;
-		float rotX = MathHelper.cos(entity.ticksExisted / 4f) * .3f;
+		enableBlend();
 		
-		GlStateManager.enableBlend();
-		renderCube(x, y, z, 0, 1, 0, 1, entity.width, rotX, rotY, 0);
-		GlStateManager.disableBlend();
+		{
+			float rotY = entity.ticksExisted / 7f;
+			float rotX = MathHelper.cos(entity.ticksExisted / 4f) * .3f;
+			renderCube(x, y, z, 0, 1, 0, 1, 2.5f, rotX, rotY, 0);
+		}
+		{
+			float rotY = entity.ticksExisted / 15f;
+			float rotX = MathHelper.cos(entity.ticksExisted / 7f + 1.3f) * .3f;
+			renderCube(x, y, z, 0, 1, 0, 1, 4f, rotX, rotY, 0);
+		}
+		
+		disableBlend();
 		
 	}
 	
