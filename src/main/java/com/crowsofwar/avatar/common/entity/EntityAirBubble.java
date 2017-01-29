@@ -47,11 +47,13 @@ public class EntityAirBubble extends AvatarEntity {
 			"airbubble_slowness", -.3, 2);
 	
 	private final OwnerAttribute ownerAttr;
+	private int dissipateTime;
 	
 	public EntityAirBubble(World world) {
 		super(world);
 		setSize(2.5f, 2.5f);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		this.dissipateTime = -1;
 	}
 	
 	public EntityPlayer getOwner() {
@@ -75,6 +77,12 @@ public class EntityAirBubble extends AvatarEntity {
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 				attribute.applyModifier(SLOW_ATTR);
+			}
+		}
+		if (isDissipating()) {
+			dissipateTime++;
+			if (dissipateTime >= 20) {
+				setDead();
 			}
 		}
 	}
@@ -120,17 +128,31 @@ public class EntityAirBubble extends AvatarEntity {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
+		dissipateTime = nbt.getInteger("Dissipate");
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
+		nbt.setInteger("Dissipate", dissipateTime);
 	}
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
+	}
+	
+	public void dissipate() {
+		dissipateTime = 0;
+	}
+	
+	public boolean isDissipating() {
+		return dissipateTime > -1;
+	}
+	
+	public int getDissipateTime() {
+		return dissipateTime;
 	}
 	
 }
