@@ -96,4 +96,9 @@ public class EntityAirBubble extends AvatarEntity {
 		ownerAttr.save(nbt);
 	}
 	
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+	
 }
