@@ -30,14 +30,14 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class EntityAirShield extends AvatarEntity {
+public class EntityAirBubble extends AvatarEntity {
 	
-	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityAirShield.class,
+	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.STRING);
 	
 	private final OwnerAttribute ownerAttr;
 	
-	public EntityAirShield(World world) {
+	public EntityAirBubble(World world) {
 		super(world);
 		setSize(2.5f, 2.5f);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
