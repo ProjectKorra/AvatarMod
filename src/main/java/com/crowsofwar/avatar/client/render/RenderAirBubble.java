@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -54,10 +55,12 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		
 		float x = (float) xx;
-		float y = (float) yy;
+		float y = (float) yy + .8f;
 		float z = (float) zz;
 		
-		renderCube(x, y, z, 0, 0, 1, 1, entity.width, 0, 0, 0);
+		GlStateManager.enableBlend();
+		renderCube(x, y, z, 0, 1, 0, 1, entity.width, 0, 0, 0);
+		GlStateManager.disableBlend();
 		
 	}
 	
