@@ -21,7 +21,6 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -61,7 +60,7 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityPlayer owner = getOwner();
 		if (owner != null) {
 			setPosition(owner.posX, owner.posY, owner.posZ);
-			if (owner.isSneaking()) {
+			if (owner.isSneaking() || owner.isDead) {
 				setDead();
 			}
 		}
@@ -70,8 +69,6 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	public void applyEntityCollision(Entity entity) {
 		if (entity == getOwner()) return;
-		if (entity instanceof EntityArrow && ((EntityArrow) entity).shootingEntity == getOwner()) return;
-		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == this.getOwner()) return;
 		
 		double mult = -2;
 		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
