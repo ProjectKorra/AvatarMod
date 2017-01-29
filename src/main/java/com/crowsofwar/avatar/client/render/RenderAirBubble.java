@@ -26,6 +26,7 @@ import org.lwjgl.opengl.GL11;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -62,6 +63,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		float z = (float) zz;
 		
 		enableBlend();
+		GlStateManager.disableLighting();
 		
 		{
 			float rotY = entity.ticksExisted / 7f;
@@ -69,12 +71,13 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 			renderCube(x, y, z, 0, 1, 0, 1, 2.5f, rotX, rotY, 0);
 		}
 		{
-			float rotY = entity.ticksExisted / 15f;
-			float rotX = MathHelper.cos(entity.ticksExisted / 7f + 1.3f) * .3f;
-			renderCube(x, y, z, 0, 1, 0, 1, 4f, rotX, rotY, 0);
+			float rotY = entity.ticksExisted / 25f;
+			float rotZ = MathHelper.cos(entity.ticksExisted / 10f + 1.3f) * .3f;
+			renderCube(x, y, z, 0, 1, 0, 1, 2.75f, 0, rotY, rotZ);
 		}
 		
 		disableBlend();
+		GlStateManager.enableLighting();
 		
 	}
 	
