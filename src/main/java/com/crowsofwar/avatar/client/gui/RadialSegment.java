@@ -143,13 +143,12 @@ public class RadialSegment extends Gui {
 				drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			}
 			
-			float darkenBy = 0.05f;
-			float r = theme.getIcon().getRed(hover) / 255f - darkenBy;
-			float g = theme.getIcon().getGreen(hover) / 255f - darkenBy;
-			float b = theme.getIcon().getBlue(hover) / 255f - darkenBy;
-			float avg = (r + g + b) / 3;
-			GlStateManager.color(avg, avg,
-					avg, alpha);
+//			float darkenBy = 0.05f;
+//			float r = theme.getIcon().getRed(hover) / 255f - darkenBy;
+//			float g = theme.getIcon().getGreen(hover) / 255f - darkenBy;
+//			float b = theme.getIcon().getBlue(hover) / 255f - darkenBy;
+//			float avg = (r + g + b) / 3;
+//			GlStateManager.color(avg, avg, avg, alpha);
 			
 			// TODO Blurred versions
 //			mc.getTextureManager().bindTexture(AvatarUiTextures.blurredIcons);

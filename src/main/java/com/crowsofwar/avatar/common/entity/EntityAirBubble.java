@@ -112,7 +112,7 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityPlayer owner = getOwner();
 		if (owner != null) {
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			while (attribute.getModifier(SLOW_ATTR_ID) != null) {
+			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
 				attribute.removeModifier(SLOW_ATTR);
 			}
 		}
