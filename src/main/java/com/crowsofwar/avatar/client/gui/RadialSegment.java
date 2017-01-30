@@ -140,9 +140,7 @@ public class RadialSegment extends Gui {
 			
 			if (ability != null) {
 				mc.getTextureManager().bindTexture(AvatarUiTextures.getAbilityTexture(ability));
-				if (ability != BendingAbility.ABILITY_AIRBLADE && ability != BendingAbility.ABILITY_WATER_SKATE) {
-					drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-				}
+				drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			}
 			
 			float darkenBy = 0.05f;
