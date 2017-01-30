@@ -18,7 +18,10 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.UUID;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
@@ -41,6 +44,8 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.STRING);
+	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
+			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
@@ -52,6 +57,12 @@ public class EntityAirBubble extends AvatarEntity {
 		super(world);
 		setSize(2.5f, 2.5f);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+	}
+	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_DISSIPATE, 0);
 	}
 	
 	public EntityPlayer getOwner() {
@@ -69,12 +80,28 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityPlayer owner = getOwner();
 		if (owner != null) {
 			setPosition(owner.posX, owner.posY, owner.posZ);
-			if (owner.isSneaking() || owner.isDead) {
-				setDead();
+			if (owner.isDead) {
+				dissipateSmall();
 			}
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 				attribute.applyModifier(SLOW_ATTR);
+			}
+		}
+		if (isDissipatingLarge()) {
+			setDissipateTime(getDissipateTime() + 1);
+			float mult = 1 + getDissipateTime() / 10f;
+			setSize(2.5f * mult, 2.5f * mult);
+			if (getDissipateTime() >= 10) {
+				setDead();
+			}
+		}
+		if (isDissipatingSmall()) {
+			setDissipateTime(getDissipateTime() - 1);
+			float mult = 1 + getDissipateTime() / 40f;
+			setSize(2.5f * mult, 2.5f * mult);
+			if (getDissipateTime() <= -10) {
+				setDead();
 			}
 		}
 	}
@@ -96,6 +123,7 @@ public class EntityAirBubble extends AvatarEntity {
 		if (entity == getOwner()) return;
 		
 		double mult = -2;
+		if (isDissipatingLarge()) mult = -4;
 		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
 		vel.normalize();
 		vel.mul(mult);
@@ -114,23 +142,69 @@ public class EntityAirBubble extends AvatarEntity {
 			avent.velocity().set(velX, velY, velZ);
 		}
 		entity.isAirBorne = true;
+		AvatarUtils.afterVelocityAdded(entity);
 	}
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
+		setDissipateTime(nbt.getInteger("Dissipate"));
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
+		nbt.setInteger("Dissipate", getDissipateTime());
 	}
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
+	}
+	
+	public int getDissipateTime() {
+		return dataManager.get(SYNC_DISSIPATE);
+	}
+	
+	public void setDissipateTime(int dissipate) {
+		dataManager.set(SYNC_DISSIPATE, dissipate);
+	}
+	
+	public void dissipateLarge() {
+		if (!isDissipating()) setDissipateTime(1);
+		removeStatCtrl();
+	}
+	
+	public void dissipateSmall() {
+		if (!isDissipating()) setDissipateTime(-1);
+		removeStatCtrl();
+	}
+	
+	public boolean isDissipating() {
+		return getDissipateTime() != 0;
+	}
+	
+	public boolean isDissipatingLarge() {
+		return getDissipateTime() > 0;
+	}
+	
+	public boolean isDissipatingSmall() {
+		return getDissipateTime() < 0;
+	}
+	
+	private void removeStatCtrl() {
+		if (getOwner() != null) {
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+			data.sync();
+		}
+		IAttributeInstance attribute = getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+		if (attribute.getModifier(SLOW_ATTR_ID) != null) {
+			attribute.removeModifier(SLOW_ATTR);
+		}
 	}
 	
 }
