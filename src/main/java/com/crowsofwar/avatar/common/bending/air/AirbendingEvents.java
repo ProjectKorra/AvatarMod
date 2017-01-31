@@ -25,12 +25,14 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -89,7 +91,7 @@ public class AirbendingEvents {
 					
 					DamageSource source = e.getSource();
 					Entity entity = source.getEntity();
-					if (entity != null && !(entity instanceof EntityPlayer)) {
+					if (entity != null && (entity instanceof AvatarEntity || entity instanceof EntityArrow)) {
 						entity.setDead();
 					}
 					
