@@ -125,7 +125,7 @@ public class WaterbendingUpdate {
 		int surface = getSurfacePos(player);
 		
 		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER)
-				&& surface != -1 && surface <= 3;
+				&& surface != -1 && surface - player.posY <= 3;
 		
 	}
 	
