@@ -17,6 +17,9 @@
 
 package com.crowsofwar.avatar.common.command;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -27,16 +30,17 @@ import com.crowsofwar.gorecore.tree.TreeCommand;
 
 public class AvatarCommand extends TreeCommand {
 	
-	public static final ITypeConverter<BendingController> CONVERTER_BENDING = new ITypeConverter<BendingController>() {
+	public static final ITypeConverter<List<BendingController>> CONVERTER_BENDING = new ITypeConverter<List<BendingController>>() {
 		
 		@Override
-		public BendingController convert(String str) {
-			return BendingManager.getBending(str);
+		public List<BendingController> convert(String str) {
+			return str.equals("all") ? BendingManager.allBending()
+					: Arrays.asList(BendingManager.getBending(str));
 		}
 		
 		@Override
-		public String toString(BendingController obj) {
-			return obj.getControllerName();
+		public String toString(List<BendingController> obj) {
+			return obj == BendingManager.allBending() ? "all" : obj.get(0).getControllerName();
 		}
 		
 		@Override
