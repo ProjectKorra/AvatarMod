@@ -35,7 +35,7 @@ public class AvatarCommand extends TreeCommand {
 		CONTROLLER_BENDING_OPTIONS = new List[BendingManager.allBending().size() + 1];
 		CONTROLLER_BENDING_OPTIONS[0] = BendingManager.allBending();
 		for (int i = 1; i < CONTROLLER_BENDING_OPTIONS.length; i++) {
-			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingManager.allBending().get(i));
+			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingManager.allBending().get(i - 1));
 		}
 	}
 	
