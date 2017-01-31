@@ -30,6 +30,15 @@ import com.crowsofwar.gorecore.tree.TreeCommand;
 
 public class AvatarCommand extends TreeCommand {
 	
+	public static final List<BendingController>[] CONTROLLER_BENDING_OPTIONS;
+	static {
+		CONTROLLER_BENDING_OPTIONS = new List[BendingManager.allBending().size() + 1];
+		CONTROLLER_BENDING_OPTIONS[0] = BendingManager.allBending();
+		for (int i = 1; i < CONTROLLER_BENDING_OPTIONS.length; i++) {
+			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingManager.allBending().get(i));
+		}
+	}
+	
 	public static final ITypeConverter<List<BendingController>> CONVERTER_BENDING = new ITypeConverter<List<BendingController>>() {
 		
 		@Override
@@ -40,7 +49,7 @@ public class AvatarCommand extends TreeCommand {
 		
 		@Override
 		public String toString(List<BendingController> obj) {
-			return obj == BendingManager.allBending() ? "all" : obj.get(0).getControllerName();
+			return obj.equals(BendingManager.allBending()) ? "all" : obj.get(0).getControllerName();
 		}
 		
 		@Override
