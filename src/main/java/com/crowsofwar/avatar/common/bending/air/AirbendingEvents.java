@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE_DOWN;
 
@@ -87,12 +89,12 @@ public class AirbendingEvents {
 				for (EntityAirBubble bubble : entities) {
 					bubble.setHealth(bubble.getHealth() - e.getAmount());
 					e.setCanceled(true);
-					System.out.println("Health now " + bubble.getHealth());
 					
 					DamageSource source = e.getSource();
 					Entity entity = source.getEntity();
 					if (entity != null && (entity instanceof AvatarEntity || entity instanceof EntityArrow)) {
 						entity.setDead();
+						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
 					}
 					
 				}

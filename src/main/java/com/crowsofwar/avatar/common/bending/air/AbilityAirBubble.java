@@ -42,9 +42,12 @@ public class AbilityAirBubble extends AirAbility {
 		AvatarPlayerData data = ctx.getData();
 		
 		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
+			float xp = data.getAbilityData(this).getXp();
+			
 			EntityAirBubble bubble = new EntityAirBubble(world);
 			bubble.setOwner(player);
 			bubble.setPosition(player.posX, player.posY, player.posZ);
+			bubble.setHealth(15 + xp / 10f);
 			world.spawnEntityInWorld(bubble);
 			
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);
