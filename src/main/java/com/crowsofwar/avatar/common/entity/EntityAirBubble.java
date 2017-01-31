@@ -21,12 +21,15 @@ import java.util.UUID;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -122,30 +125,30 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	@Override
 	public void applyEntityCollision(Entity entity) {
-		// if (entity == getOwner()) return;
-		//
-		// double mult = -2;
-		// if (isDissipatingLarge()) mult = -4;
-		// Vector vel = new Vector(this.posX - entity.posX, this.posY -
-		// entity.posY, this.posZ - entity.posZ);
-		// vel.normalize();
-		// vel.mul(mult);
-		// vel.add(0, .3f, 0);
-		//
-		// double velX = vel.x(), velY = vel.y(), velZ = vel.z();
-		//
-		// // Need to use addVelocity() so avatar entities can detect it
-		// entity.motionX = entity.motionY = entity.motionZ = 0;
-		// // entity.addVelocity(velX, velY, velZ);
-		// entity.motionY = velY;
-		// entity.motionX = velX;
-		// entity.motionZ = velZ;
-		// if (entity instanceof AvatarEntity) {
-		// AvatarEntity avent = (AvatarEntity) entity;
-		// avent.velocity().set(velX, velY, velZ);
-		// }
-		// entity.isAirBorne = true;
-		// AvatarUtils.afterVelocityAdded(entity);
+		if (entity == getOwner()) return;
+		if (entity instanceof AvatarEntity || entity instanceof EntityArrow) return;
+		
+		double mult = -2;
+		if (isDissipatingLarge()) mult = -4;
+		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
+		vel.normalize();
+		vel.mul(mult);
+		vel.add(0, .3f, 0);
+		
+		double velX = vel.x(), velY = vel.y(), velZ = vel.z();
+		
+		// Need to use addVelocity() so avatar entities can detect it
+		entity.motionX = entity.motionY = entity.motionZ = 0;
+		// entity.addVelocity(velX, velY, velZ);
+		entity.motionY = velY;
+		entity.motionX = velX;
+		entity.motionZ = velZ;
+		if (entity instanceof AvatarEntity) {
+			AvatarEntity avent = (AvatarEntity) entity;
+			avent.velocity().set(velX, velY, velZ);
+		}
+		entity.isAirBorne = true;
+		AvatarUtils.afterVelocityAdded(entity);
 	}
 	
 	@Override

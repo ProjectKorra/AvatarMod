@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -87,8 +88,9 @@ public class AirbendingEvents {
 					System.out.println("Health now " + bubble.getHealth());
 					
 					DamageSource source = e.getSource();
-					if (source.getEntity() != null) {
-						source.getEntity().setDead();
+					Entity entity = source.getEntity();
+					if (entity != null && !(entity instanceof EntityPlayer)) {
+						entity.setDead();
 					}
 					
 				}
