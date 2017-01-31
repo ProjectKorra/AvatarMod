@@ -122,9 +122,10 @@ public class WaterbendingUpdate {
 	 */
 	private boolean shouldSkate(EntityPlayer player) {
 		IBlockState below = player.worldObj.getBlockState(new BlockPos(player.getPosition()).down());
+		int surface = getSurfacePos(player);
 		
 		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER)
-				&& getSurfacePos(player) != -1;
+				&& surface != -1 && surface <= 3;
 		
 	}
 	
