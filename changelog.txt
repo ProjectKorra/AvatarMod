@@ -7,6 +7,7 @@ AV2 Changelog :: version a3.0
 + Added fireball ability
 + Added water skating ability
 + Added airblade ability
++ Added air bubble ability
 + Added version checker
 + Can bind keys to abilities through skills menu
 
