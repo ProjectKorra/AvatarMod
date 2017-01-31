@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -73,7 +74,7 @@ public class AirbendingEvents {
 	@SubscribeEvent
 	public void airBubbleShield(LivingAttackEvent e) {
 		World world = e.getEntity().worldObj;
-		if (e.getEntity() instanceof EntityPlayer) {
+		if (!world.isRemote && e.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntity();
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
@@ -83,6 +84,13 @@ public class AirbendingEvents {
 				for (EntityAirBubble bubble : entities) {
 					bubble.setHealth(bubble.getHealth() - e.getAmount());
 					e.setCanceled(true);
+					System.out.println("Health now " + bubble.getHealth());
+					
+					DamageSource source = e.getSource();
+					if (source.getEntity() != null) {
+						source.getEntity().setDead();
+					}
+					
 				}
 				
 			}

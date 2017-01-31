@@ -224,10 +224,12 @@ public class EntityAirBubble extends AvatarEntity {
 			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
 			data.sync();
-		}
-		IAttributeInstance attribute = getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-		if (attribute.getModifier(SLOW_ATTR_ID) != null) {
-			attribute.removeModifier(SLOW_ATTR);
+			
+			IAttributeInstance attribute = getOwner()
+					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
+				attribute.removeModifier(SLOW_ATTR);
+			}
 		}
 	}
 	
