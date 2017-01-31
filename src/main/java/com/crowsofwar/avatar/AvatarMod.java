@@ -24,7 +24,7 @@ import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.FallAbsorptionHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.air.AirTick;
+import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
@@ -113,7 +113,7 @@ public class AvatarMod {
 		EarthSoundHandler.register();
 		
 		AvatarParticles.register();
-		AirTick.register();
+		AirbendingEvents.register();
 		FallAbsorptionHandler.register();
 		
 		proxy.preInit();

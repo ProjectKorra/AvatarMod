@@ -19,15 +19,20 @@ package com.crowsofwar.avatar.common.bending.air;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE_DOWN;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -36,9 +41,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
  * 
  * @author CrowsOfWar
  */
-public class AirTick {
+public class AirbendingEvents {
 	
-	private AirTick() {}
+	private AirbendingEvents() {}
 	
 	private void tick(EntityPlayer player, World world, AvatarPlayerData data) {
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
@@ -65,8 +70,27 @@ public class AirTick {
 		}
 	}
 	
+	@SubscribeEvent
+	public void airBubbleShield(LivingAttackEvent e) {
+		World world = e.getEntity().worldObj;
+		if (e.getEntity() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) e.getEntity();
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
+				
+				List<EntityAirBubble> entities = player.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
+						player.getEntityBoundingBox(), bubble -> bubble.getOwner() == player);
+				for (EntityAirBubble bubble : entities) {
+					bubble.setHealth(bubble.getHealth() - e.getAmount());
+					e.setCanceled(true);
+				}
+				
+			}
+		}
+	}
+	
 	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new AirTick());
+		MinecraftForge.EVENT_BUS.register(new AirbendingEvents());
 	}
 	
 }
