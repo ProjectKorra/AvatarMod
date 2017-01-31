@@ -33,6 +33,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -46,6 +47,8 @@ public class EntityAirBubble extends AvatarEntity {
 			DataSerializers.STRING);
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
+	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityAirBubble.class,
+			DataSerializers.FLOAT);
 	
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
@@ -63,6 +66,7 @@ public class EntityAirBubble extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DISSIPATE, 0);
+		dataManager.register(SYNC_HEALTH, 20f);
 	}
 	
 	public EntityPlayer getOwner() {
@@ -150,6 +154,7 @@ public class EntityAirBubble extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
 		setDissipateTime(nbt.getInteger("Dissipate"));
+		setHealth(nbt.getFloat("Health"));
 	}
 	
 	@Override
@@ -157,11 +162,22 @@ public class EntityAirBubble extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
 		nbt.setInteger("Dissipate", getDissipateTime());
+		nbt.setFloat("Health", getHealth());
 	}
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
+	}
+	
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if (!isEntityInvulnerable(source)) {
+			setHealth(getHealth() - (float) amount);
+			setBeenAttacked();
+			return true;
+		}
+		return false;
 	}
 	
 	public int getDissipateTime() {
@@ -170,6 +186,15 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	public void setDissipateTime(int dissipate) {
 		dataManager.set(SYNC_DISSIPATE, dissipate);
+	}
+	
+	public float getHealth() {
+		return dataManager.get(SYNC_HEALTH);
+	}
+	
+	public void setHealth(float health) {
+		dataManager.set(SYNC_HEALTH, health);
+		if (health <= 0) dissipateSmall();
 	}
 	
 	public void dissipateLarge() {
