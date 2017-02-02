@@ -66,6 +66,9 @@ public class Raytrace {
 		
 		if (!info.needsRaytrace()) return new Raytrace.Result();
 		
+		if (info.predicateRaytrace()) return predicateRaytrace(player.worldObj, Vector.getEyePos(player),
+				Vector.getLookRectangular(player), info.range, info.predicate);
+		
 		return getTargetBlock(player, info.getRange(), info.raycastLiquids());
 		
 	}
@@ -161,6 +164,8 @@ public class Raytrace {
 	public static Result predicateRaytrace(World world, Vector start, Vector direction, double range,
 			BiPredicate<BlockPos, IBlockState> verify) {
 		
+		if (range == -1) range = 3;
+		
 		Vector currentPosition = start.copy();
 		Vector increment = direction.times(0.2);
 		while (currentPosition.sqrDist(start) <= range * range) {
@@ -185,6 +190,9 @@ public class Raytrace {
 		private final EnumFacing side;
 		private final Vector posPrecise;
 		
+		/**
+		 * Creates a raytrace result with no block hit
+		 */
 		public Result() {
 			this(null, null, null);
 		}
@@ -255,6 +263,7 @@ public class Raytrace {
 		private final double range;
 		private final boolean needsRaytrace;
 		private final boolean raycastLiquids;
+		private BiPredicate<BlockPos, IBlockState> predicate;
 		
 		/**
 		 * Constructs a raytrace information requesting a no raytrace.
@@ -263,6 +272,7 @@ public class Raytrace {
 			this.range = -1;
 			this.needsRaytrace = false;
 			this.raycastLiquids = false;
+			this.predicate = null;
 		}
 		
 		/**
@@ -279,6 +289,7 @@ public class Raytrace {
 			this.range = range;
 			this.needsRaytrace = true;
 			this.raycastLiquids = raycastLiquids;
+			this.predicate = null;
 		}
 		
 		public double getRange() {
@@ -291,6 +302,18 @@ public class Raytrace {
 		
 		public boolean raycastLiquids() {
 			return raycastLiquids;
+		}
+		
+		public boolean predicateRaytrace() {
+			return predicate != null;
+		}
+		
+		public BiPredicate<BlockPos, IBlockState> getPredicate() {
+			return predicate;
+		}
+		
+		public void setPredicate(BiPredicate<BlockPos, IBlockState> predicate) {
+			this.predicate = predicate;
 		}
 		
 	}

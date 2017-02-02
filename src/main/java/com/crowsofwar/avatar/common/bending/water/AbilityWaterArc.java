@@ -41,6 +41,8 @@ public class AbilityWaterArc extends WaterAbility {
 	public AbilityWaterArc() {
 		super("water_arc");
 		requireRaytrace(-1, false);
+		getRaytrace().setPredicate(
+				(pos, state) -> state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER);
 	}
 	
 	@Override
@@ -59,8 +61,10 @@ public class AbilityWaterArc extends WaterAbility {
 		}
 		
 		VectorI targetPos = ctx.getClientLookBlock();
+		System.out.println(targetPos);
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+			System.out.println(lookAt);
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
 				
 				EntityWaterArc water = new EntityWaterArc(world);

@@ -74,11 +74,21 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
+			
 			// not 0 since client missed 0th tick
-			if (ticks == 1)
-				entity.velocity().set(0, STATS_CONFIG.wallMomentum, 0);
-			else
+			if (ticks == 1) {
+				
+				int maxHeight = 0;
+				for (int i = 0; i < 5; i++) {
+					EntityWallSegment seg = entity.getWall().getSegment(i);
+					if (seg.height > maxHeight) maxHeight = (int) seg.height;
+				}
+				
+				entity.velocity().set(0, STATS_CONFIG.wallMomentum / 5 * maxHeight, 0);
+				
+			} else {
 				entity.velocity().setY(entity.velocity().y() * 0.9);
+			}
 			
 			// For some reason, the same entity instance is on server/client,
 			// but has different world reference when this is called...?
