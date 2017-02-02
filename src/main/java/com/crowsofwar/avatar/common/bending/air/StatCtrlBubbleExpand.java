@@ -33,7 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class StatCtrlBubbleExpand extends StatusControl {
 	
 	public StatCtrlBubbleExpand() {
-		super(0, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
+		super(11, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 	
 	@Override

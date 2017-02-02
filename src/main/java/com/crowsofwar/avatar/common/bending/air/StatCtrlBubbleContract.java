@@ -33,7 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class StatCtrlBubbleContract extends StatusControl {
 	
 	public StatCtrlBubbleContract() {
-		super(0, AvatarControl.CONTROL_RIGHT_CLICK, CrosshairPosition.RIGHT_OF_CROSSHAIR);
+		super(12, AvatarControl.CONTROL_RIGHT_CLICK, CrosshairPosition.RIGHT_OF_CROSSHAIR);
 	}
 	
 	@Override
