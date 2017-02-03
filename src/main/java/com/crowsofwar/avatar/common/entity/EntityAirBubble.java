@@ -92,7 +92,7 @@ public class EntityAirBubble extends AvatarEntity {
 			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 				attribute.applyModifier(SLOW_ATTR);
 			}
-			if (!owner.onGround && !owner.isInWater()) owner.motionY += .03;
+			if (!owner.onGround && !owner.isInWater() && !owner.capabilities.isFlying) owner.motionY += .03;
 		}
 		if (isDissipatingLarge()) {
 			setDissipateTime(getDissipateTime() + 1);

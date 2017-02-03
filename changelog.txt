@@ -42,3 +42,4 @@ AV2 Changelog :: version a3.0
 > Fixed pressing 'e' doesn't close skills menu
 > Fixed UUID cache saving issues when joining MP server
 > Fixed water arc not working on flowing water
+> Fixed airjump not working when start flying
