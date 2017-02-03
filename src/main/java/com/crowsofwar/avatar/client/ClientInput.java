@@ -33,6 +33,7 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -170,9 +171,16 @@ public class ClientInput implements IControlsHandler {
 	 */
 	private void openBendingMenu(BendingController controller) {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
-		if (isControlPressed(controller.getRadialMenu().getKey()) && data.hasBending(controller.getType())
-				&& !AvatarUiRenderer.hasBendingGui())
-			AvatarUiRenderer.openBendingGui(controller.getType());
+		if (isControlPressed(controller.getRadialMenu().getKey()) && !AvatarUiRenderer.hasBendingGui()) {
+			
+			if (data.hasBending(controller.getType())) {
+				AvatarUiRenderer.openBendingGui(controller.getType());
+			} else {
+				AvatarChatMessages.MSG_DONT_HAVE_BENDING.send(mc.thePlayer, controller.getControllerName(),
+						mc.thePlayer.getName());
+			}
+			
+		}
 		
 	}
 	

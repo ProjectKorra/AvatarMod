@@ -30,6 +30,7 @@ AV2 Changelog :: version a3.0
 * New logo in Mods menu
 * Greatly reduced XP gain when using abilities
 * Allow /avatar bending add ALL
+* Message displayed if can't bend
 
 > Fixed air gust not working on other players in LAN
 > Fixed crashing for hacked players... don't expect it to work on servers though
