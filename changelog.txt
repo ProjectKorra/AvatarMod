@@ -29,6 +29,7 @@ AV2 Changelog :: version a3.0
 * Earthbenders receive a 2x bonus to mining speed for bendable blocks (still need pickaxes though)
 * New logo in Mods menu
 * Greatly reduced XP gain when using abilities
+* Allow /avatar bending add ALL
 
 > Fixed air gust not working on other players in LAN
 > Fixed crashing for hacked players... don't expect it to work on servers though
@@ -39,3 +40,5 @@ AV2 Changelog :: version a3.0
 > Fix weird Block{Minecraft.stone} entry in stats.yml
 > (hopefully) Fixed bug where radial menu keeps reopening
 > Fixed pressing 'e' doesn't close skills menu
+> Fixed UUID cache saving issues when joining MP server
+> Fixed water arc not working on flowing water
