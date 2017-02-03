@@ -55,9 +55,11 @@ public class RenderAirblade extends Render<EntityAirblade> {
 	public void doRender(EntityAirblade entity, double x, double y, double z, float entityYaw,
 			float partialTicks) {
 		
+		float ticks = (entity.ticksExisted + partialTicks) / 3;
+		
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x, (float) y + .1f, (float) z);
-		mat.rotate(entity.ticksExisted / 3f, 0, 1, 0);
+		mat.rotate(ticks, 0, 1, 0);
 		
 		//@formatter:off
 		float n = -.75f, p = .75f;
