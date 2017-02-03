@@ -31,6 +31,7 @@ AV2 Changelog :: version a3.0
 * Greatly reduced XP gain when using abilities
 * Allow /avatar bending add ALL
 * Message displayed if can't bend
+* Fire arc looks 'smoother' -- texture animation was previously only 20fps
 
 > Fixed air gust not working on other players in LAN
 > Fixed crashing for hacked players... don't expect it to work on servers though

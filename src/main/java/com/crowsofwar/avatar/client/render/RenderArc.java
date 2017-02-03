@@ -120,7 +120,7 @@ public abstract class RenderArc extends Render {
 		
 		Vector lookingEuler = Vector.getRotationTo(from, to);
 		
-		double u1 = ((arc.ticksExisted / 20.0) % 1);
+		double u1 = (((arc.ticksExisted + partialTicks) / 20.0) % 1);
 		double u2 = (u1 + 0.5);
 		
 		GlStateManager.color(1, 1, 1);

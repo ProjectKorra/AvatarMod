@@ -57,15 +57,17 @@ public class RenderFireball extends Render<EntityFireball> {
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		
-		float rotation = entity.ticksExisted / 5f;
-		float size = .8f + cos(entity.ticksExisted / 5f) * .05f;
+		float ticks = entity.ticksExisted + partialTicks;
+		
+		float rotation = ticks / 5f;
+		float size = .8f + cos(ticks / 5f) * .05f;
 		
 		enableBlend();
 		
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f, //
-				0, entity.ticksExisted / 25f, 0);
+				0, ticks / 25f, 0);
 		
 		int i = 15728880;
         int j = i % 65536;

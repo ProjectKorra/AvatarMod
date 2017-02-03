@@ -53,6 +53,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 	public void doRender(EntityWaterBubble bubble, double x, double y, double z, float entityYaw,
 			float partialTicks) {
 		
+		float ticks = bubble.ticksExisted + partialTicks;
 		float colorEnhancement = 1.2f;
 		
 		Minecraft mc = Minecraft.getMinecraft();
@@ -78,7 +79,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		ltb = new Vector4f(0, 1, 1, 1).mul(mat),
 		rtb = new Vector4f(1, 1, 1, 1).mul(mat);
 		
-		float t1 = bubble.ticksExisted * (float) Math.PI / 10f;
+		float t1 = ticks * (float) Math.PI / 10f;
 		float t2 = t1 + (float) Math.PI / 2f;
 		float amt = .05f;
 		
@@ -94,7 +95,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		
 		// @formatter:on
 		
-		float existed = bubble.ticksExisted / 4f;
+		float existed = ticks / 4f;
 		int anim = (int) ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 		
