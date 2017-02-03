@@ -31,6 +31,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -62,6 +63,8 @@ public class EntityAirblade extends AvatarEntity {
 		Vector v = velocity().mul(.96).dividedBy(20);
 		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
 		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) setDead();
+		
+		if (worldObj.getBlockState(getPosition()).getBlock() == Blocks.WATER) setDead();
 		
 		if (!isDead && !worldObj.isRemote) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
