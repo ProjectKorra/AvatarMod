@@ -88,11 +88,17 @@ public class EntityAirBubble extends AvatarEntity {
 			if (owner.isDead) {
 				dissipateSmall();
 			}
-			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
-				attribute.applyModifier(SLOW_ATTR);
+			
+			if (!isDissipating()) {
+				IAttributeInstance attribute = owner
+						.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
+					attribute.applyModifier(SLOW_ATTR);
+				}
+				if (!owner.onGround && !owner.isInWater() && !owner.capabilities.isFlying)
+					owner.motionY += .03;
 			}
-			if (!owner.onGround && !owner.isInWater() && !owner.capabilities.isFlying) owner.motionY += .03;
+			
 		}
 		if (isDissipatingLarge()) {
 			setDissipateTime(getDissipateTime() + 1);
