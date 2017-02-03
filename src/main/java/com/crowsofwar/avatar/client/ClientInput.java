@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
 import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
@@ -33,7 +34,6 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -45,11 +45,14 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -176,8 +179,12 @@ public class ClientInput implements IControlsHandler {
 			if (data.hasBending(controller.getType())) {
 				AvatarUiRenderer.openBendingGui(controller.getType());
 			} else {
-				AvatarChatMessages.MSG_DONT_HAVE_BENDING.send(mc.thePlayer, controller.getControllerName(),
-						mc.thePlayer.getName());
+				
+				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
+				message = ChatSender.instance.processText(message, MSG_DONT_HAVE_BENDING,
+						controller.getControllerName(), mc.thePlayer.getName());
+				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
+				
 			}
 			
 		}
