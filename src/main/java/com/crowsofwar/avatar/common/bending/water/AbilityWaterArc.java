@@ -72,14 +72,11 @@ public class AbilityWaterArc extends WaterAbility {
 				EntityWaterArc water = new EntityWaterArc(world);
 				water.setOwner(player);
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
-				water.setGravityEnabled(false);
 				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
 				
 				water.setBehavior(new WaterArcBehavior.PlayerControlled());
 				
 				world.spawnEntityInWorld(water);
-				
-				needsSync = true;
 				
 				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
 				ctx.getData().sync();
