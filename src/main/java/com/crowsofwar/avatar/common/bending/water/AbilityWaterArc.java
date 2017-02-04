@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -26,6 +28,7 @@ import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
@@ -51,27 +54,25 @@ public class AbilityWaterArc extends WaterAbility {
 		World world = ctx.getWorld();
 		EntityPlayer player = ctx.getPlayerEntity();
 		
-		boolean needsSync = false;
+		AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5, player.posZ - 5,
+				player.posX + 5, player.posY + 5, player.posZ + 5);
+		List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
+				arc -> arc.getOwner() == player
+						&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
 		
-		if (bendingState.getWaterArc(world) != null) {
-			EntityWaterArc water = bendingState.getWaterArc(world);
-			water.setGravityEnabled(true);
-			bendingState.setWaterArc(null);
-			needsSync = true;
+		for (EntityWaterArc arc : existing) {
+			arc.setBehavior(new WaterArcBehavior.Thrown());
 		}
 		
 		VectorI targetPos = ctx.getClientLookBlock();
-		System.out.println(targetPos);
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
-			System.out.println(lookAt);
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
 				
 				EntityWaterArc water = new EntityWaterArc(world);
 				water.setOwner(player);
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setGravityEnabled(false);
-				bendingState.setWaterArc(water);
 				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
 				
 				water.setBehavior(new WaterArcBehavior.PlayerControlled());
@@ -86,7 +87,6 @@ public class AbilityWaterArc extends WaterAbility {
 			}
 		}
 		
-		if (needsSync) ctx.getData().sendBendingState(bendingState);
 	}
 	
 }

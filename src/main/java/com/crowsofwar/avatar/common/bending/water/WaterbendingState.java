@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.data.CachedEntity;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 
 import io.netty.buffer.ByteBuf;
@@ -34,22 +33,11 @@ import net.minecraft.world.World;
 
 public class WaterbendingState extends BendingState {
 	
-	private CachedEntity<EntityWaterArc> waterArc;
 	private CachedEntity<EntityWaterBubble> waterBubble;
 	
 	public WaterbendingState(AvatarPlayerData data) {
 		super(data);
-		this.waterArc = new CachedEntity<>(-1);
 		this.waterBubble = new CachedEntity<>(-1);
-	}
-	
-	public EntityWaterArc getWaterArc(World world) {
-		return waterArc.getEntity(world);
-	}
-	
-	public void setWaterArc(EntityWaterArc arc) {
-		waterArc.setEntity(arc);
-		save();
 	}
 	
 	/**
@@ -70,25 +58,21 @@ public class WaterbendingState extends BendingState {
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		waterArc.readFromNBT(findNestedCompound(nbt, "WaterArc"));
 		waterBubble.readFromNBT(findNestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		waterArc.readFromNBT(findNestedCompound(nbt, "WaterArc"));
 		waterBubble.writeToNBT(findNestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
 	public void writeBytes(ByteBuf buf) {
-		waterArc.toBytes(buf);
 		waterBubble.toBytes(buf);
 	}
 	
 	@Override
 	public void readBytes(ByteBuf buf) {
-		waterArc.fromBytes(buf);
 		waterBubble.fromBytes(buf);
 	}
 	

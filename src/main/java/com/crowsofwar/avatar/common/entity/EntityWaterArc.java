@@ -18,16 +18,11 @@
 package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
-import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -200,15 +195,6 @@ public class EntityWaterArc extends EntityArc {
 		@Override
 		protected void onCollision(Entity entity) {}
 		
-	}
-	
-	@Override
-	protected Consumer<EntityPlayer> getNewOwnerCallback() {
-		return newOwner -> {
-			WaterbendingState state = (WaterbendingState) AvatarPlayerData.fetcher().fetch(newOwner)
-					.getBendingState(BendingType.WATERBENDING.id());
-			state.setWaterArc(this);
-		};
 	}
 	
 }
