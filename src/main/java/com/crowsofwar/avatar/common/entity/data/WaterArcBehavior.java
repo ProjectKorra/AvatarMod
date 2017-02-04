@@ -21,9 +21,6 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -62,49 +59,28 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	public static class PlayerControlled extends WaterArcBehavior {
 		
 		@Override
-		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
+		public WaterArcBehavior onUpdate(EntityWaterArc water) {
 			
-			EntityPlayer player = entity.getOwner();
-			if (player == null) {
-				return this;
-			}
+			EntityPlayer player = water.getOwner();
 			World world = player.worldObj;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			Raytrace.Result res = Raytrace.getTargetBlock(player, 3, false);
 			
-			if (data != null) {
-				WaterbendingState bendingState = (WaterbendingState) data
-						.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
-				
-				if (bendingState != null) {
-					
-					EntityWaterArc water = bendingState.getWaterArc(world);
-					if (water != null) {
-						
-						Raytrace.Result res = Raytrace.getTargetBlock(player, 3, false);
-						
-						Vector lookPos;
-						if (res.hitSomething()) {
-							lookPos = res.getPosPrecise();
-						} else {
-							Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
-									Math.toRadians(player.rotationPitch));
-							lookPos = Vector.getEyePos(player).plus(look.times(3));
-						}
-						
-						Vector motion = lookPos.minus(new Vector(water));
-						motion.mul(.3);
-						water.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
-						
-						if (water.worldObj.isRemote && water.canPlaySplash()) {
-							if (motion.sqrMagnitude() >= 0.004) water.playSplash();
-						}
-						
-					} else {
-						if (!world.isRemote) bendingState.setWaterArc(null);
-					}
-					
-				}
+			Vector lookPos;
+			if (res.hitSomething()) {
+				lookPos = res.getPosPrecise();
+			} else {
+				Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
+						Math.toRadians(player.rotationPitch));
+				lookPos = Vector.getEyePos(player).plus(look.times(3));
+			}
+			
+			Vector motion = lookPos.minus(new Vector(water));
+			motion.mul(.3);
+			water.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
+			
+			if (water.worldObj.isRemote && water.canPlaySplash()) {
+				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
 			}
 			
 			return this;

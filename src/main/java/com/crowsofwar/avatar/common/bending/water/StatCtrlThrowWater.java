@@ -17,9 +17,9 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
@@ -48,27 +49,25 @@ public class StatCtrlThrowWater extends StatusControl {
 		AvatarPlayerData data = ctx.getData();
 		World world = ctx.getWorld();
 		
-		WaterbendingState bendingState = (WaterbendingState) data
-				.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
+		AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5, player.posZ - 5,
+				player.posX + 5, player.posY + 5, player.posZ + 5);
+		List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
+				arc -> arc.getOwner() == player
+						&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
 		
-		if (bendingState.getWaterArc(world) != null) {
-			
-			EntityWaterArc water = bendingState.getWaterArc(world);
+		for (EntityWaterArc arc : existing) {
+			arc.setBehavior(new WaterArcBehavior.Thrown());
 			
 			Vector force = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
-			water.velocity().add(force);
-			water.setBehavior(new WaterArcBehavior.Thrown());
-			
-			bendingState.setWaterArc(null);
-			data.sendBendingState(bendingState);
-			
-			return true;
+			arc.velocity().add(force);
+			arc.setBehavior(new WaterArcBehavior.Thrown());
 			
 		}
 		
-		return false;
+		return true;
+		
 	}
 	
 }
