@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -66,18 +65,18 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			
 			Raytrace.Result res = Raytrace.getTargetBlock(player, 3, false);
 			
-			Vector lookPos;
+			Vector target;
 			if (res.hitSomething()) {
-				lookPos = res.getPosPrecise();
+				target = res.getPosPrecise();
 			} else {
 				Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 						Math.toRadians(player.rotationPitch));
-				lookPos = Vector.getEyePos(player).plus(look.times(3));
+				target = Vector.getEyePos(player).plus(look.times(3));
 			}
 			
-			Vector motion = lookPos.minus(new Vector(water));
-			motion.mul(.3);
-			water.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
+			Vector motion = target.minus(water.position());
+			motion.mul(.3 * 20);
+			water.velocity().set(motion);
 			
 			if (water.worldObj.isRemote && water.canPlaySplash()) {
 				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
