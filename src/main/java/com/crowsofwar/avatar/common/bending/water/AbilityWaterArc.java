@@ -54,20 +54,20 @@ public class AbilityWaterArc extends WaterAbility {
 		World world = ctx.getWorld();
 		EntityPlayer player = ctx.getPlayerEntity();
 		
-		AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5, player.posZ - 5,
-				player.posX + 5, player.posY + 5, player.posZ + 5);
-		List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
-				arc -> arc.getOwner() == player
-						&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
-		
-		for (EntityWaterArc arc : existing) {
-			arc.setBehavior(new WaterArcBehavior.Thrown());
-		}
-		
 		VectorI targetPos = ctx.getClientLookBlock();
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
+				
+				AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5,
+						player.posZ - 5, player.posX + 5, player.posY + 5, player.posZ + 5);
+				List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
+						arc -> arc.getOwner() == player
+								&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
+				
+				for (EntityWaterArc arc : existing) {
+					arc.setBehavior(new WaterArcBehavior.Thrown());
+				}
 				
 				EntityWaterArc water = new EntityWaterArc(world);
 				water.setOwner(player);
