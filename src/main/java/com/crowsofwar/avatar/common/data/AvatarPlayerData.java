@@ -49,7 +49,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class AvatarPlayerData extends PlayerData {
+public class AvatarPlayerData extends PlayerData implements BendingData {
 	
 	// TODO change player data lists into sets, when applicable
 	
@@ -204,6 +204,7 @@ public class AvatarPlayerData extends PlayerData {
 	/**
 	 * Check if the player has that type of bending
 	 */
+	@Override
 	public boolean hasBending(BendingType type) {
 		return bendingControllers.containsKey(type);
 	}
@@ -214,6 +215,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * <p>
 	 * Also adds the state if it isn't present.
 	 */
+	@Override
 	public void addBending(BendingController bending) {
 		if (!hasBending(bending.getType())) {
 			bendingControllers.put(bending.getType(), bending);
@@ -235,6 +237,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
 	 */
+	@Override
 	public void addBending(BendingType type) {
 		addBending(BendingManager.getBending(type));
 	}
@@ -255,6 +258,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * note, this will be saved, so is permanent (unless another bending
 	 * controller is added).
 	 */
+	@Override
 	public void removeBending(BendingController bending) {
 		if (hasBending(bending.getType())) {
 			// remove state before controller- getBendingState only works with
@@ -276,6 +280,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * 
 	 * @see #removeBending(BendingController)
 	 */
+	@Override
 	public void removeBending(BendingType type) {
 		removeBending(getBendingController(type));
 	}
@@ -294,6 +299,7 @@ public class AvatarPlayerData extends PlayerData {
 		
 	}
 	
+	@Override
 	public List<BendingController> getBendingControllers() {
 		return bendingControllerList;
 	}
@@ -316,6 +322,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * Get the BendingController with that type. Returns null if there is no
 	 * bending controller for that type.
 	 */
+	@Override
 	public BendingController getBendingController(BendingType type) {
 		return bendingControllers.get(type);
 	}
@@ -327,6 +334,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * Will automatically create a state and sync changes if the controller is
 	 * present.
 	 */
+	@Override
 	public BendingState getBendingState(BendingType type) {
 		if (!hasBending(type)) {
 			AvatarLog.warn(WarningType.INVALID_CODE, "Tried to access BendingState with Type " + type
@@ -357,6 +365,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * 
 	 * @see #getBendingState(BendingType)
 	 */
+	@Override
 	public BendingState getBendingState(BendingController controller) {
 		return getBendingState(controller.getType());
 	}
@@ -365,14 +374,17 @@ public class AvatarPlayerData extends PlayerData {
 	 * Returns whether a bending state for the bending controller is present.
 	 * Does not add one if necessary.
 	 */
+	@Override
 	public boolean hasBendingState(BendingController controller) {
 		return bendingStates.containsKey(controller.getType());
 	}
 	
+	@Override
 	public List<BendingState> getAllBendingStates() {
 		return bendingStateList;
 	}
 	
+	@Override
 	public void clearBendingStates() {
 		bendingStateList.clear();
 		bendingStates.clear();
@@ -382,6 +394,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * Adds the bending state to this player data, replacing the existing one of
 	 * that type if necessary.
 	 */
+	@Override
 	public void addBendingState(BendingState state) {
 		bendingStates.put(state.getType(), state);
 		bendingStateList.add(state);
@@ -392,32 +405,38 @@ public class AvatarPlayerData extends PlayerData {
 	 * Removes that bending state from this player data. Note: Must be the exact
 	 * instance already present to successfully occur.
 	 */
+	@Override
 	public void removeBendingState(BendingState state) {
 		bendingStates.remove(state.getType());
 		bendingStateList.remove(state);
 		networker.markChanged(KEY_STATES, bendingStateList);
 	}
 	
+	@Override
 	public Set<StatusControl> getActiveStatusControls() {
 		return Collections.unmodifiableSet(statusControls);
 	}
 	
+	@Override
 	public boolean hasStatusControl(StatusControl status) {
 		return statusControls.contains(status);
 	}
 	
+	@Override
 	public void addStatusControl(StatusControl control) {
 		statusControls.add(control);
 		networker.markChanged(KEY_STATUS_CONTROLS, statusControls);
 		saveChanges();
 	}
 	
+	@Override
 	public void removeStatusControl(StatusControl control) {
 		statusControls.remove(control);
 		networker.markChanged(KEY_STATUS_CONTROLS, statusControls);
 		saveChanges();
 	}
 	
+	@Override
 	public void clearStatusControls() {
 		statusControls.clear();
 		networker.markChanged(KEY_STATUS_CONTROLS, statusControls);
@@ -427,6 +446,7 @@ public class AvatarPlayerData extends PlayerData {
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
+	@Override
 	public AbilityData getAbilityData(BendingAbility ability) {
 		if (!abilityData.containsKey(ability)) {
 			abilityData.put(ability, new AbilityData(this, ability));
@@ -438,6 +458,7 @@ public class AvatarPlayerData extends PlayerData {
 	 * Gets a list of all ability data contained in this player data. The list
 	 * is immutable.
 	 */
+	@Override
 	public List<AbilityData> getAllAbilityData() {
 		return ImmutableList.copyOf(abilityData.values());
 	}
@@ -450,6 +471,7 @@ public class AvatarPlayerData extends PlayerData {
 		return abilityData;
 	}
 	
+	@Override
 	public void clearAbilityData() {
 		abilityData.clear();
 	}
