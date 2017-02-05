@@ -133,7 +133,9 @@ public class AvatarUiRenderer extends Gui {
 		mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
 		
 		// Background of chi bar
-		drawTexturedModalRect(0, 0, 0, textureY, width, height);
+		drawTexturedModalRect(0, 0, 0, 36, 100, 9);
+		// Foreground of chi bar
+		drawTexturedModalRect(0, 0, 0, 27, (int) (total / chi.getMaxChi()), 9);
 		
 	}
 	

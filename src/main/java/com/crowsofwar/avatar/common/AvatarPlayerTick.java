@@ -30,6 +30,7 @@ public class AvatarPlayerTick {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(e.player);
 		if (data != null) {
 			data.decrementCooldown();
+			// data.chi().setTotalChi(data.chi().getMaxChi() / 2);
 		}
 		
 	}

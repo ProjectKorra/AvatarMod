@@ -48,6 +48,8 @@ public class Chi {
 		this.max = 20;
 		this.total = 10;
 		this.availableMark = 8;
+		
+		System.out.println("Construct new CHI");
 	}
 	
 	/**
@@ -67,6 +69,7 @@ public class Chi {
 	public void setTotalChi(float total) {
 		if (total > max) total = max;
 		this.total = total;
+		save();
 	}
 	
 	/**
@@ -88,6 +91,7 @@ public class Chi {
 	public void setMaxChi(float max) {
 		this.max = max;
 		if (max < total) setTotalChi(max);
+		save();
 	}
 	
 	/**
