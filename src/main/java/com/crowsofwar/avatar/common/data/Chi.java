@@ -110,7 +110,8 @@ public class Chi {
 	 */
 	public void setAvailableChi(float available) {
 		if (available > total) available = total;
-		this.availableMark = total - available;
+		float subtract = getAvailableChi() - available;
+		this.total -= subtract;
 		save();
 	}
 	
