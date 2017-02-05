@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
@@ -43,6 +45,8 @@ public class AbilityAirGust extends AirAbility {
 		
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
+		
+		if (!ctx.consumeChi(STATS_CONFIG.chiAirGust)) return;
 		
 		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 				Math.toRadians(player.rotationPitch));

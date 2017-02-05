@@ -42,6 +42,8 @@ public class AbilityAirblade extends AirAbility {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		
+		if (!ctx.consumeChi(STATS_CONFIG.chiAirblade)) return;
+		
 		double x = player.rotationPitch;
 		boolean flip = false;
 		if (x < 0) {

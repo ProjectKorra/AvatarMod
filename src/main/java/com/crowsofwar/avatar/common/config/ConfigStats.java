@@ -57,6 +57,9 @@ public class ConfigStats {
 	@Load
 	public FireballSettings fireballSettings = new FireballSettings();
 	
+	@Load
+	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 6f;
+	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {
