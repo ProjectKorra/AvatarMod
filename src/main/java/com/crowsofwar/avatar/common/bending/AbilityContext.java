@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.Vector;
@@ -141,6 +142,20 @@ public class AbilityContext {
 			Thread.dumpStack();
 			return serverLookBlock;
 		}
+	}
+	
+	/**
+	 * Tries to use the given amount of available chi. Returns true if there was
+	 * enough chi to remove and it removed it.
+	 */
+	public boolean consumeChi(float amount) {
+		Chi chi = data.chi();
+		float available = chi.getAvailableChi();
+		if (available >= amount) {
+			chi.setAvailableChi(available - amount);
+			return true;
+		}
+		return false;
 	}
 	
 }
