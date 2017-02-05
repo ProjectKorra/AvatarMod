@@ -17,10 +17,12 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.*;
 
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -51,18 +53,26 @@ public class FirebendingUpdate {
 				FirebendingState fs = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
 				if (fs.isFlamethrowing() && player.ticksExisted % 3 < 2) {
 					
-					Vector look = getLookRectangular(player);
-					Vector eye = getEyePos(player);
-					
-					World world = data.getWorld();
-					
-					EntityFlames flames = new EntityFlames(world, player);
-					flames.velocity().set(look.times(10).plus(getVelocityMpS(player)));
-					flames.setPosition(eye.x(), eye.y(), eye.z());
-					world.spawnEntityInWorld(flames);
-					
-					if (player.ticksExisted % 3 == 0) world.playSound(null, player.getPosition(),
-							SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.2f, 0.8f);
+					Chi chi = data.chi();
+					float required = STATS_CONFIG.chiFlamethrowerSecond;
+					if (chi.getAvailableChi() >= required) {
+						chi.changeTotalChi(-required);
+						chi.changeAvailableChi(-required);
+						
+						Vector look = getLookRectangular(player);
+						Vector eye = getEyePos(player);
+						
+						World world = data.getWorld();
+						
+						EntityFlames flames = new EntityFlames(world, player);
+						flames.velocity().set(look.times(10).plus(getVelocityMpS(player)));
+						flames.setPosition(eye.x(), eye.y(), eye.z());
+						world.spawnEntityInWorld(flames);
+						
+						if (player.ticksExisted % 3 == 0) world.playSound(null, player.getPosition(),
+								SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.2f, 0.8f);
+						
+					}
 					
 				}
 			}

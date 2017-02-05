@@ -48,88 +48,93 @@ public class AbilityMining extends EarthAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = ctx.getPlayerEntity();
-		World world = ctx.getWorld();
-		
-		int chanceMin, chanceMax;
-		float xp = ctx.getData().getAbilityData(this).getXp();
-		if (xp == 100) {
-			chanceMin = 5;
-			chanceMax = 6;
-		} else if (xp >= 75) {
-			chanceMin = 4;
-			chanceMax = 6;
-		} else if (xp >= 50) {
-			chanceMin = 3;
-			chanceMax = 5;
-		} else if (xp >= 25) {
-			chanceMin = 2;
-			chanceMax = 4;
-		} else {
-			chanceMin = 2;
-			chanceMax = 3;
-		}
-		int dist = chanceMin + (int) Math.round(Math.random() * (chanceMax - chanceMin));
-		ctx.getData().getAbilityData(this).addXp(SKILLS_CONFIG.miningUse);
-		
+		if (ctx.consumeChi(STATS_CONFIG.chiMining)) {
+			
+			EntityPlayer player = ctx.getPlayerEntity();
+			World world = ctx.getWorld();
+			
+			int chanceMin, chanceMax;
+			float xp = ctx.getData().getAbilityData(this).getXp();
+			if (xp == 100) {
+				chanceMin = 5;
+				chanceMax = 6;
+			} else if (xp >= 75) {
+				chanceMin = 4;
+				chanceMax = 6;
+			} else if (xp >= 50) {
+				chanceMin = 3;
+				chanceMax = 5;
+			} else if (xp >= 25) {
+				chanceMin = 2;
+				chanceMax = 4;
+			} else {
+				chanceMin = 2;
+				chanceMax = 3;
+			}
+			int dist = chanceMin + (int) Math.round(Math.random() * (chanceMax - chanceMin));
+			ctx.getData().getAbilityData(this).addXp(SKILLS_CONFIG.miningUse);
+			
 		//@formatter:off
 		// 0 = S 0x +z    1 = SW -x +z
 		// 2 = W -x 0z    3 = NW -x -z
 		// 4 = N 0x -z    5 = NE +x -z
 		// 6 = E +x 0z    7 = SE +x +z
 		//@formatter:on
-		int yaw = (int) floor((player.rotationYaw * 8 / 360) + 0.5) & 7;
-		int x = 0, z = 0;
-		if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
-		if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
-		if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
-		if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
-		
-		// Pitch: 0 = forward, 1 = 45 deg up, 2 = 90 deg up
-		// -1 = 45 deg down, -2 = 90 deg down
-		// Use abs and post-mul to fix weirdness with negatives... not totally
-		// investigated
-		int pitch = (int) floor((abs(player.rotationPitch) * 8 / 360) + 0.5) & 7;
-		pitch *= -abs(player.rotationPitch) / player.rotationPitch;
-		
-		// Each starting position of the ray to mine out
-		List<VectorI> rays = new ArrayList<>();
-		rays.add(new VectorI(player.getPosition()));
-		rays.add(new VectorI(player.getPosition().up()));
-		
-		// If yaw is diagonal; SW, NW, NE, SE
-		if (yaw % 2 == 1) {
-			rays.add(new VectorI(player.getPosition().east()));
-			rays.add(new VectorI(player.getPosition().east().up()));
-		}
-		// Add height to excavating a stairway so you don't bump your head
-		if (pitch != 0) {
-			rays.add(new VectorI(player.getPosition().up(2)));
-		}
-		
-		VectorI dir = new VectorI(x, pitch, z);
-		if (abs(pitch) == 2) {
-			dir.setX(0);
-			dir.setZ(0);
-			dir.setY(abs(pitch) / pitch);
-			rays.clear();
-			rays.add(new VectorI(player.getPosition().up(pitch < 0 ? 0 : 1)));
-		}
-		
-		for (VectorI ray : rays) {
-			for (int i = 1; i <= dist; i++) {
-				BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
-				Block block = world.getBlockState(pos).getBlock();
-				
-				boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
-				if (bendable) {
-					AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-					wd.getScheduledDestroyBlocks().add(
-							wd.new ScheduledDestroyBlock(pos, i * 3, !player.capabilities.isCreativeMode));
-				} else if (block != Blocks.AIR) {
-					break;
+			int yaw = (int) floor((player.rotationYaw * 8 / 360) + 0.5) & 7;
+			int x = 0, z = 0;
+			if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
+			if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
+			if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
+			if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
+			
+			// Pitch: 0 = forward, 1 = 45 deg up, 2 = 90 deg up
+			// -1 = 45 deg down, -2 = 90 deg down
+			// Use abs and post-mul to fix weirdness with negatives... not
+			// totally
+			// investigated
+			int pitch = (int) floor((abs(player.rotationPitch) * 8 / 360) + 0.5) & 7;
+			pitch *= -abs(player.rotationPitch) / player.rotationPitch;
+			
+			// Each starting position of the ray to mine out
+			List<VectorI> rays = new ArrayList<>();
+			rays.add(new VectorI(player.getPosition()));
+			rays.add(new VectorI(player.getPosition().up()));
+			
+			// If yaw is diagonal; SW, NW, NE, SE
+			if (yaw % 2 == 1) {
+				rays.add(new VectorI(player.getPosition().east()));
+				rays.add(new VectorI(player.getPosition().east().up()));
+			}
+			// Add height to excavating a stairway so you don't bump your head
+			if (pitch != 0) {
+				rays.add(new VectorI(player.getPosition().up(2)));
+			}
+			
+			VectorI dir = new VectorI(x, pitch, z);
+			if (abs(pitch) == 2) {
+				dir.setX(0);
+				dir.setZ(0);
+				dir.setY(abs(pitch) / pitch);
+				rays.clear();
+				rays.add(new VectorI(player.getPosition().up(pitch < 0 ? 0 : 1)));
+			}
+			
+			for (VectorI ray : rays) {
+				for (int i = 1; i <= dist; i++) {
+					BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
+					Block block = world.getBlockState(pos).getBlock();
+					
+					boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+					if (bendable) {
+						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+						wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3,
+								!player.capabilities.isCreativeMode));
+					} else if (block != Blocks.AIR) {
+						break;
+					}
 				}
 			}
+			
 		}
 		
 	}

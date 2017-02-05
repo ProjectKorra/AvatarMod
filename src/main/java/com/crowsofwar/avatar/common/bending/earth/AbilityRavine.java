@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -44,22 +46,26 @@ public class AbilityRavine extends EarthAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		AbilityData abilityData = ctx.getData().getAbilityData(this);
-		float xp = abilityData.getXp();
-		
-		EntityPlayer player = ctx.getPlayerEntity();
-		World world = ctx.getWorld();
-		
-		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), 0);
-		
-		EntityRavine ravine = new EntityRavine(world);
-		ravine.setOwner(player);
-		ravine.setPosition(player.posX, player.posY, player.posZ);
-		ravine.velocity().set(look.times(10));
-		ravine.setDamageMult(.75f + xp / 100);
-		world.spawnEntityInWorld(ravine);
-		
-		BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, player));
+		if (ctx.consumeChi(STATS_CONFIG.chiRavine)) {
+			
+			AbilityData abilityData = ctx.getData().getAbilityData(this);
+			float xp = abilityData.getXp();
+			
+			EntityPlayer player = ctx.getPlayerEntity();
+			World world = ctx.getWorld();
+			
+			Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), 0);
+			
+			EntityRavine ravine = new EntityRavine(world);
+			ravine.setOwner(player);
+			ravine.setPosition(player.posX, player.posY, player.posZ);
+			ravine.velocity().set(look.times(10));
+			ravine.setDamageMult(.75f + xp / 100);
+			world.spawnEntityInWorld(ravine);
+			
+			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, player));
+			
+		}
 		
 	}
 	

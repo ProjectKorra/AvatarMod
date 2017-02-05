@@ -44,96 +44,101 @@ public class AbilityWall extends EarthAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
-		World world = ctx.getWorld();
-		EnumFacing cardinal = player.getHorizontalFacing();
-		AvatarPlayerData data = ctx.getData();
 		
-		float xp = data.getAbilityData(this).getXp();
-		int whMin, whMax;
-		Random random = new Random();
-		if (xp == 100) {
-			whMin = whMax = 5;
-		} else if (xp >= 75) {
-			whMin = 4;
-			whMax = 5;
-		} else if (xp >= 50) {
-			whMin = 3;
-			whMax = 4;
-		} else if (xp >= 25) {
-			whMin = 2;
-			whMax = 4;
-		} else {
-			whMin = 2;
-			whMax = 3;
-		}
-		
-		data.getAbilityData(this).addXp(SKILLS_CONFIG.wallRaised);
-		
-		if (!ctx.isLookingAtBlock()) return;
-		BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
-		EntityWall wall = new EntityWall(world);
-		
-		Block lookBlock = world.getBlockState(lookPos).getBlock();
-		if (lookBlock == Blocks.TALLGRASS) {
-			lookPos = lookPos.down();
-		} else if (lookBlock == Blocks.DOUBLE_PLANT) {
-			lookPos = lookPos.down(2);
-		}
-		
-		wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
-		for (int i = 0; i < 5; i++) {
+		if (ctx.consumeChi(STATS_CONFIG.chiWall)) {
 			
-			int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
+			EntityPlayer player = ctx.getPlayerEntity();
+			World world = ctx.getWorld();
+			EnumFacing cardinal = player.getHorizontalFacing();
+			AvatarPlayerData data = ctx.getData();
 			
-			int horizMod = -2 + i;
-			int x = lookPos.getX()
-					+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
-			int y = lookPos.getY() - 4;
-			int z = lookPos.getZ()
-					+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
-			
-			EntityWallSegment seg = new EntityWallSegment(world);
-			seg.attachToWall(wall);
-			seg.setPosition(x + .5, y, z + .5);
-			seg.setDirection(cardinal);
-			seg.setOwner(player);
-			
-			boolean foundAir = false, dontBreakMore = false;
-			for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
-				BlockPos pos = new BlockPos(x, y + j, z);
-				IBlockState state = world.getBlockState(pos);
-				boolean bendable = STATS_CONFIG.bendableBlocks.contains(state.getBlock());
-				if (!bendable || dontBreakMore) {
-					state = Blocks.AIR.getDefaultState();
-					dontBreakMore = true;
-				}
-				
-				if (!foundAir && state.getBlock() == Blocks.AIR) {
-					seg.setSize(seg.width, 5 - j - 1);
-					seg.setBlocksOffset(-(j + 1));
-					seg.position().setY(y + j + 1);
-					foundAir = true;
-				}
-				if (foundAir && state.getBlock() != Blocks.AIR) {
-					// Extend bounding box
-					seg.setSize(seg.width, 5 - j);
-					seg.setBlocksOffset(-j);
-					seg.position().setY(y + j);
-				}
-				
-				seg.setBlock(j, state);
-				if (bendable && !dontBreakMore) world.setBlockToAir(pos);
-				
-				if (j == 5 - wallHeight) {
-					dontBreakMore = true;
-				}
-				
+			float xp = data.getAbilityData(this).getXp();
+			int whMin, whMax;
+			Random random = new Random();
+			if (xp == 100) {
+				whMin = whMax = 5;
+			} else if (xp >= 75) {
+				whMin = 4;
+				whMax = 5;
+			} else if (xp >= 50) {
+				whMin = 3;
+				whMax = 4;
+			} else if (xp >= 25) {
+				whMin = 2;
+				whMax = 4;
+			} else {
+				whMin = 2;
+				whMax = 3;
 			}
 			
-			world.spawnEntityInWorld(seg);
+			data.getAbilityData(this).addXp(SKILLS_CONFIG.wallRaised);
+			
+			if (!ctx.isLookingAtBlock()) return;
+			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
+			EntityWall wall = new EntityWall(world);
+			
+			Block lookBlock = world.getBlockState(lookPos).getBlock();
+			if (lookBlock == Blocks.TALLGRASS) {
+				lookPos = lookPos.down();
+			} else if (lookBlock == Blocks.DOUBLE_PLANT) {
+				lookPos = lookPos.down(2);
+			}
+			
+			wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
+			for (int i = 0; i < 5; i++) {
+				
+				int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
+				
+				int horizMod = -2 + i;
+				int x = lookPos.getX()
+						+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
+				int y = lookPos.getY() - 4;
+				int z = lookPos.getZ()
+						+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
+				
+				EntityWallSegment seg = new EntityWallSegment(world);
+				seg.attachToWall(wall);
+				seg.setPosition(x + .5, y, z + .5);
+				seg.setDirection(cardinal);
+				seg.setOwner(player);
+				
+				boolean foundAir = false, dontBreakMore = false;
+				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
+					BlockPos pos = new BlockPos(x, y + j, z);
+					IBlockState state = world.getBlockState(pos);
+					boolean bendable = STATS_CONFIG.bendableBlocks.contains(state.getBlock());
+					if (!bendable || dontBreakMore) {
+						state = Blocks.AIR.getDefaultState();
+						dontBreakMore = true;
+					}
+					
+					if (!foundAir && state.getBlock() == Blocks.AIR) {
+						seg.setSize(seg.width, 5 - j - 1);
+						seg.setBlocksOffset(-(j + 1));
+						seg.position().setY(y + j + 1);
+						foundAir = true;
+					}
+					if (foundAir && state.getBlock() != Blocks.AIR) {
+						// Extend bounding box
+						seg.setSize(seg.width, 5 - j);
+						seg.setBlocksOffset(-j);
+						seg.position().setY(y + j);
+					}
+					
+					seg.setBlock(j, state);
+					if (bendable && !dontBreakMore) world.setBlockToAir(pos);
+					
+					if (j == 5 - wallHeight) {
+						dontBreakMore = true;
+					}
+					
+				}
+				
+				world.spawnEntityInWorld(seg);
+			}
+			world.spawnEntityInWorld(wall);
+			
 		}
-		world.spawnEntityInWorld(wall);
 		
 	}
 	
