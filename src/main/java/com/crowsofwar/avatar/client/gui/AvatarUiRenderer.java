@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 import java.util.Set;
 
@@ -135,7 +136,17 @@ public class AvatarUiRenderer extends Gui {
 		float available = chi.getAvailableChi();
 		float unavailable = total - available;
 		
+		// Dimensions of end result in pixels
+		float scale = 1.1f;
+		float width = 100 * scale;
+		float height = 9 * scale;
+		
 		mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
+		
+		pushMatrix();
+		
+		translate(3, resolution.getScaledHeight() - height - 3, 0);
+		scale(scale, scale, 1);
 		
 		// Background of chi bar
 		drawTexturedModalRect(0, 0, 0, 36, 100, 9);
@@ -143,6 +154,8 @@ public class AvatarUiRenderer extends Gui {
 		drawTexturedModalRect((int) (100 * unavailable / max), 0, 0, 27, (int) (100 * available / max), 9);
 		// Unavailable chi
 		drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
+		
+		popMatrix();
 		
 	}
 	
