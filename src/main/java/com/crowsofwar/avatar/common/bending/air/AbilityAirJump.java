@@ -39,11 +39,15 @@ public class AbilityAirJump extends AirAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		AvatarPlayerData data = ctx.getData();
-		data.addStatusControl(StatusControl.AIR_JUMP);
-		data.sync();
 		
-		if (!ctx.consumeChi(STATS_CONFIG.chiAirJump)) return;
+		AvatarPlayerData data = ctx.getData();
+		
+		if (!data.hasStatusControl(StatusControl.AIR_JUMP) && ctx.consumeChi(STATS_CONFIG.chiAirJump)) {
+			
+			data.addStatusControl(StatusControl.AIR_JUMP);
+			data.sync();
+			
+		}
 	}
 	
 }
