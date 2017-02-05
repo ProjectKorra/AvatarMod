@@ -112,6 +112,7 @@ public class Chi {
 	public void setAvailableChi(float available) {
 		if (available > total) available = total;
 		this.availableMark = total - available;
+		save();
 	}
 	
 	/**
@@ -123,6 +124,7 @@ public class Chi {
 	
 	private void save() {
 		data.getNetworker().changeAndSync(AvatarPlayerData.KEY_CHI, this);
+		data.saveChanges();
 	}
 	
 	/**

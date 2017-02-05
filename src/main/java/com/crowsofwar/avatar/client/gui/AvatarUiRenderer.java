@@ -126,6 +126,8 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderChiBar(ScaledResolution resolution) {
 		
+		GlStateManager.color(1, 1, 1, 1);
+		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		Chi chi = data.chi();
 		float total = chi.getTotalChi();
@@ -135,7 +137,7 @@ public class AvatarUiRenderer extends Gui {
 		// Background of chi bar
 		drawTexturedModalRect(0, 0, 0, 36, 100, 9);
 		// Foreground of chi bar
-		drawTexturedModalRect(0, 0, 0, 27, (int) (total / chi.getMaxChi()), 9);
+		drawTexturedModalRect(0, 0, 0, 27, (int) (100 * total / chi.getMaxChi()), 9);
 		
 	}
 	
