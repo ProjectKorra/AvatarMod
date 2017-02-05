@@ -34,9 +34,8 @@ public class AvatarPlayerTick {
 			if (e.player.ticksExisted % 20 == 0) {
 				Chi chi = data.chi();
 				// chi.addChi(CHI_CONFIG.regenPerSecond);
-				chi.setTotalChi(0);
+				chi.setTotalChi(10);
 				chi.setAvailableChi(5);
-				data.getNetworker().changeAndSync(data.KEY_CHI, chi);
 			}
 		}
 		

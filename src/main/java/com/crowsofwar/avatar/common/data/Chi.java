@@ -66,7 +66,6 @@ public class Chi {
 	 * @see #getTotalChi()
 	 */
 	public void setTotalChi(float total) {
-		if (total > max) total = max;
 		this.total = total;
 		save();
 	}
@@ -74,7 +73,7 @@ public class Chi {
 	/**
 	 * Adds the given amount of chi. The available chi is not affected.
 	 */
-	public void addChi(float amount) {
+	public void addTotalChi(float amount) {
 		if (total < max) {
 			float prev = total;
 			if (total + amount > max) {
@@ -82,7 +81,7 @@ public class Chi {
 			} else {
 				total += amount;
 			}
-			// availableMark += total - prev;
+			availableMark += total - prev;
 			save();
 		}
 	}
@@ -126,8 +125,7 @@ public class Chi {
 	 */
 	public void setAvailableChi(float available) {
 		if (available > total) available = total;
-		float subtract = getAvailableChi() - available;
-		this.total -= subtract;
+		this.availableMark = total - available;
 		save();
 	}
 	
@@ -139,8 +137,21 @@ public class Chi {
 	}
 	
 	private void save() {
+		checkConsistency();
 		data.getNetworker().changeAndSync(AvatarPlayerData.KEY_CHI, this);
 		data.saveChanges();
+	}
+	
+	/**
+	 * Ensures that variables do not conflict with each other or otherwise are
+	 * invalid
+	 */
+	private void checkConsistency() {
+		if (total < 0) total = 0;
+		if (total > max) total = max;
+		
+		if (availableMark > total) availableMark = total;
+		if (availableMark < 0) availableMark = 0;
 	}
 	
 	/**
