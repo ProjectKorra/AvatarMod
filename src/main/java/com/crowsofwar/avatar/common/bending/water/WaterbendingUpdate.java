@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
 import static net.minecraft.init.Blocks.WATER;
@@ -27,6 +28,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
@@ -90,25 +92,33 @@ public class WaterbendingUpdate {
 				data.sync();
 			} else {
 				
-				double speed = .4 + abilityData.getXp() * (.3 / 100);
+				float required = STATS_CONFIG.chiWaterSkateSecond;
+				Chi chi = data.chi();
 				
-				player.setPosition(player.posX, yPos + .2, player.posZ);
-				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(speed);
-				player.motionX = velocity.x();
-				player.motionY = 0;
-				player.motionZ = velocity.z();
-				
-				if (player.ticksExisted % 3 == 0) {
-					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
-							SoundCategory.PLAYERS, 1, 1);
-					particles.spawnParticles(world, ParticleType.SPLASH, 2, 4,
-							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
+				if (chi.getAvailableChi() >= required) {
+					chi.changeTotalChi(-required);
+					chi.changeAvailableChi(-required);
+					
+					double speed = .4 + abilityData.getXp() * (.3 / 100);
+					
+					player.setPosition(player.posX, yPos + .2, player.posZ);
+					Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(speed);
+					player.motionX = velocity.x();
+					player.motionY = 0;
+					player.motionZ = velocity.z();
+					
+					if (player.ticksExisted % 3 == 0) {
+						world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
+								SoundCategory.PLAYERS, 1, 1);
+						particles.spawnParticles(world, ParticleType.SPLASH, 2, 4,
+								Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
+					}
+					
+					if (player.ticksExisted % 10 == 0) {
+						abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
+					}
+					
 				}
-				
-				if (player.ticksExisted % 10 == 0) {
-					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
-				}
-				
 			}
 			
 		} else if (data.hasStatusControl(StatusControl.SKATING_JUMP)) {

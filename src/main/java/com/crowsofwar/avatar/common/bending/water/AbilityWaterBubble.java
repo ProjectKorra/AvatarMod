@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -56,23 +57,27 @@ public class AbilityWaterBubble extends WaterAbility {
 			IBlockState lookingAtBlock = world.getBlockState(lookPos);
 			if (lookingAtBlock.getBlock() == Blocks.WATER) {
 				
-				if (bendingState.getBubble(world) != null) {
-					bendingState.getBubble(world).setBehavior(new WaterBubbleBehavior.Drop());
-					// prevent bubble from removing status control
-					bendingState.getBubble(world).setOwner(null);
-					bendingState.setBubble(null);
+				if (ctx.consumeChi(STATS_CONFIG.chiWaterBubble)) {
+					
+					if (bendingState.getBubble(world) != null) {
+						bendingState.getBubble(world).setBehavior(new WaterBubbleBehavior.Drop());
+						// prevent bubble from removing status control
+						bendingState.getBubble(world).setOwner(null);
+						bendingState.setBubble(null);
+					}
+					
+					Vector pos = ctx.getLookPos();
+					EntityWaterBubble bubble = new EntityWaterBubble(world);
+					bubble.setPosition(pos.x(), pos.y(), pos.z());
+					bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
+					bubble.setOwner(player);
+					world.spawnEntityInWorld(bubble);
+					data.addStatusControl(StatusControl.THROW_BUBBLE);
+					data.sync();
+					world.setBlockToAir(lookPos);
+					bendingState.setBubble(bubble);
+					
 				}
-				
-				Vector pos = ctx.getLookPos();
-				EntityWaterBubble bubble = new EntityWaterBubble(world);
-				bubble.setPosition(pos.x(), pos.y(), pos.z());
-				bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
-				bubble.setOwner(player);
-				world.spawnEntityInWorld(bubble);
-				data.addStatusControl(StatusControl.THROW_BUBBLE);
-				data.sync();
-				world.setBlockToAir(lookPos);
-				bendingState.setBubble(bubble);
 			}
 		}
 	}

@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.AbilityContext;
@@ -59,27 +61,31 @@ public class AbilityWaterArc extends WaterAbility {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
 				
-				AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5,
-						player.posZ - 5, player.posX + 5, player.posY + 5, player.posZ + 5);
-				List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
-						arc -> arc.getOwner() == player
-								&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
-				
-				for (EntityWaterArc arc : existing) {
-					arc.setBehavior(new WaterArcBehavior.Thrown());
+				if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
+					
+					AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5,
+							player.posZ - 5, player.posX + 5, player.posY + 5, player.posZ + 5);
+					List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class,
+							boundingBox, arc -> arc.getOwner() == player
+									&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
+					
+					for (EntityWaterArc arc : existing) {
+						arc.setBehavior(new WaterArcBehavior.Thrown());
+					}
+					
+					EntityWaterArc water = new EntityWaterArc(world);
+					water.setOwner(player);
+					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
+					water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
+					
+					water.setBehavior(new WaterArcBehavior.PlayerControlled());
+					
+					world.spawnEntityInWorld(water);
+					
+					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
+					ctx.getData().sync();
+					
 				}
-				
-				EntityWaterArc water = new EntityWaterArc(world);
-				water.setOwner(player);
-				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
-				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
-				
-				water.setBehavior(new WaterArcBehavior.PlayerControlled());
-				
-				world.spawnEntityInWorld(water);
-				
-				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
-				ctx.getData().sync();
 				
 			}
 		}

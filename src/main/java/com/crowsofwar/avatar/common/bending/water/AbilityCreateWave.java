@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -35,9 +37,9 @@ public class AbilityCreateWave extends WaterAbility {
 	}
 	
 	@Override
-	public void execute(AbilityContext data) {
-		EntityPlayer player = data.getPlayerEntity();
-		World world = data.getWorld();
+	public void execute(AbilityContext ctx) {
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = ctx.getWorld();
 		
 		Vector look = Vector.getLookRectangular(player);
 		look.setY(0);
@@ -51,16 +53,23 @@ public class AbilityCreateWave extends WaterAbility {
 			
 			for (int i = 0; i < 3; i++) {
 				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
-					EntityWave wave = new EntityWave(world);
-					wave.setOwner(player);
-					wave.velocity().set(look.times(10));
-					wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
-					wave.setDamageMultiplier(1 + data.getData().getAbilityData(this).getXp() / 100f);
 					
-					wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+					if (ctx.consumeChi(STATS_CONFIG.chiWave)) {
+						
+						EntityWave wave = new EntityWave(world);
+						wave.setOwner(player);
+						wave.velocity().set(look.times(10));
+						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
+						wave.setDamageMultiplier(1 + ctx.getData().getAbilityData(this).getXp() / 100f);
+						
+						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+						
+						world.spawnEntityInWorld(wave);
+						
+					}
 					
-					world.spawnEntityInWorld(wave);
 					break;
+					
 				}
 				pos.add(0, 1, 0);
 			}

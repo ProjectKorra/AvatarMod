@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -72,10 +74,16 @@ public class AbilityLightFire extends FireAbility {
 				
 			} else if (world.getBlockState(blockPos).getBlock() == Blocks.AIR
 					&& Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
-				world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
-				world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-						SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS,
-						0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
+				
+				if (ctx.consumeChi(STATS_CONFIG.chiLightFire)) {
+					
+					world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
+					world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+							SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS,
+							0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
+					
+				}
+				
 			}
 		}
 	}
