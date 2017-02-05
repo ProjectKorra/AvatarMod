@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.Chi;
 
@@ -31,11 +33,14 @@ public class AvatarPlayerTick {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(e.player);
 		if (data != null) {
 			data.decrementCooldown();
-			if (e.player.ticksExisted % 20 == 0) {
+			if (!e.player.worldObj.isRemote) {
 				Chi chi = data.chi();
-				// chi.addChi(CHI_CONFIG.regenPerSecond);
-				chi.setTotalChi(10);
-				chi.setAvailableChi(5);
+				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
+				
+				if (chi.getAvailableChi() < 8) {
+					chi.changeAvailableChi(1 / 20f);
+				}
+				
 			}
 		}
 		

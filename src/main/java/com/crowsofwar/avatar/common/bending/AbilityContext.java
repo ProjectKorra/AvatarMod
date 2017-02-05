@@ -152,7 +152,8 @@ public class AbilityContext {
 		Chi chi = data.chi();
 		float available = chi.getAvailableChi();
 		if (available >= amount) {
-			chi.setAvailableChi(available - amount);
+			chi.changeTotalChi(-amount);
+			chi.changeAvailableChi(-amount);
 			return true;
 		}
 		return false;

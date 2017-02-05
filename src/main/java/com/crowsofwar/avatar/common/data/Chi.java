@@ -71,19 +71,20 @@ public class Chi {
 	}
 	
 	/**
-	 * Adds the given amount of chi. The available chi is not affected.
+	 * Adds the given amount of chi. The available chi is not affected. Accepts
+	 * negative amounts (subtraction).
 	 */
-	public void addTotalChi(float amount) {
-		if (total < max) {
-			float prev = total;
-			if (total + amount > max) {
-				total = max;
-			} else {
-				total += amount;
-			}
-			availableMark += total - prev;
-			save();
+	public void changeTotalChi(float amount) {
+		float prev = total;
+		if (total + amount > max) {
+			total = max;
+		} else if (total + amount < 0) {
+			total = 0;
+		} else {
+			total += amount;
 		}
+		availableMark += total - prev;
+		save();
 	}
 	
 	/**
@@ -127,6 +128,14 @@ public class Chi {
 		if (available > total) available = total;
 		this.availableMark = total - available;
 		save();
+	}
+	
+	/**
+	 * Adds the given amount of available chi. The total chi is not affected
+	 * (just moves available chi mark).
+	 */
+	public void changeAvailableChi(float amount) {
+		setAvailableChi(getAvailableChi() + amount);
 	}
 	
 	/**
