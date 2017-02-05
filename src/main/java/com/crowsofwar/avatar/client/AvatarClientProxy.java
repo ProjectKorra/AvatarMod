@@ -22,6 +22,7 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;

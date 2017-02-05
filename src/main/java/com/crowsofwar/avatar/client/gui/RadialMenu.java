@@ -24,7 +24,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
