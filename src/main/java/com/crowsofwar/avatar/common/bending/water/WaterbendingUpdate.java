@@ -92,7 +92,7 @@ public class WaterbendingUpdate {
 				data.sync();
 			} else {
 				
-				float required = STATS_CONFIG.chiWaterSkateSecond;
+				float required = STATS_CONFIG.chiWaterSkateSecond / 20f;
 				Chi chi = data.chi();
 				
 				if (chi.getAvailableChi() >= required) {

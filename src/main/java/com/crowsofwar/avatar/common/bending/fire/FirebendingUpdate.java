@@ -54,7 +54,7 @@ public class FirebendingUpdate {
 				if (fs.isFlamethrowing() && player.ticksExisted % 3 < 2) {
 					
 					Chi chi = data.chi();
-					float required = STATS_CONFIG.chiFlamethrowerSecond;
+					float required = STATS_CONFIG.chiFlamethrowerSecond / 20f;
 					if (chi.getAvailableChi() >= required) {
 						chi.changeTotalChi(-required);
 						chi.changeAvailableChi(-required);
