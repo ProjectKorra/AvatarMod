@@ -37,8 +37,8 @@ public class AvatarPlayerTick {
 				Chi chi = data.chi();
 				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
 				
-				if (chi.getAvailableChi() < 8) {
-					chi.changeAvailableChi(1 / 20f);
+				if (chi.getAvailableChi() < chi.getMaxChi() * CHI_CONFIG.availableThreshold) {
+					chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);
 				}
 				
 			}
