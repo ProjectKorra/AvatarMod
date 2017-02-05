@@ -96,7 +96,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		bendingStateList = new ArrayList<BendingState>();
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
-		chi = new Chi();
+		chi = new Chi(this);
 		
 		networker = new Networker(!isClient, PacketCPlayerData.class,
 				net -> new PacketCPlayerData(net, playerID));

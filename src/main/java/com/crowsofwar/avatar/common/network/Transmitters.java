@@ -180,7 +180,7 @@ public class Transmitters {
 		
 		@Override
 		public Chi read(ByteBuf buf, PlayerDataContext ctx) {
-			Chi chi = new Chi();
+			Chi chi = new Chi(ctx.getData());
 			chi.fromBytes(buf);
 			return chi;
 		}

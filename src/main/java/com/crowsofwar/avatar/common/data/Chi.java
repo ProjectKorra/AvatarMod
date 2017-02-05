@@ -34,12 +34,16 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class Chi {
 	
+	private final AvatarPlayerData data;
+	
 	// These fields are not for modification directly; use getters/setters
 	private float max;
 	private float total;
 	private float availableMark;
 	
-	public Chi() {
+	public Chi(AvatarPlayerData data) {
+		this.data = data;
+		
 		// Default values for testing
 		this.max = 20;
 		this.total = 10;
@@ -111,6 +115,10 @@ public class Chi {
 	 */
 	public float getAvailableMaxChi() {
 		return max - availableMark;
+	}
+	
+	private void save() {
+		data.getNetworker().changeAndSync(AvatarPlayerData.KEY_CHI, this);
 	}
 	
 	/**
