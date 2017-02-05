@@ -71,6 +71,13 @@ public class AvatarUiRenderer extends Gui {
 		
 		ScaledResolution resolution = e.getResolution();
 		
+		renderRadialMenu(resolution);
+		renderStatusControls(resolution);
+		renderChiBar(resolution);
+		
+	}
+	
+	private void renderRadialMenu(ScaledResolution resolution) {
 		int mouseX = Mouse.getX() * resolution.getScaledWidth() / mc.displayWidth;
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
@@ -95,7 +102,9 @@ public class AvatarUiRenderer extends Gui {
 						(1 - timeSinceStart / timeToFade) * CLIENT_CONFIG.radialMenuAlpha, scale);
 			}
 		}
-		
+	}
+	
+	private void renderStatusControls(ScaledResolution resolution) {
 		Set<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.thePlayer)
 				.getActiveStatusControls();
 		for (StatusControl statusControl : statusControls) {
@@ -116,6 +125,9 @@ public class AvatarUiRenderer extends Gui {
 					statusControl.getTextureU(), statusControl.getTextureV(), 16, 16);
 			GlStateManager.popMatrix();
 		}
+	}
+	
+	private void renderChiBar(ScaledResolution resolution) {
 		
 	}
 	
