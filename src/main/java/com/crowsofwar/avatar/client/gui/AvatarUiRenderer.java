@@ -155,6 +155,9 @@ public class AvatarUiRenderer extends Gui {
 		// Unavailable chi
 		drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
 		
+		drawString(mc.fontRendererObj, ((int) total) + "/" + ((int) max) + "," + ((int) available), 0, -20,
+				0xffffff);
+		
 		popMatrix();
 		
 	}

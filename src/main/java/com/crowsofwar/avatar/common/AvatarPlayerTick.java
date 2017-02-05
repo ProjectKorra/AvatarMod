@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Chi;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -30,6 +31,13 @@ public class AvatarPlayerTick {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(e.player);
 		if (data != null) {
 			data.decrementCooldown();
+			if (e.player.ticksExisted % 20 == 0) {
+				Chi chi = data.chi();
+				// chi.addChi(CHI_CONFIG.regenPerSecond);
+				chi.setTotalChi(0);
+				chi.setAvailableChi(5);
+				data.getNetworker().changeAndSync(data.KEY_CHI, chi);
+			}
 		}
 		
 	}

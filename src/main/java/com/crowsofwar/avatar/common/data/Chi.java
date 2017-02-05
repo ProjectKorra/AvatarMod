@@ -72,6 +72,22 @@ public class Chi {
 	}
 	
 	/**
+	 * Adds the given amount of chi. The available chi is not affected.
+	 */
+	public void addChi(float amount) {
+		if (total < max) {
+			float prev = total;
+			if (total + amount > max) {
+				total = max;
+			} else {
+				total += amount;
+			}
+			// availableMark += total - prev;
+			save();
+		}
+	}
+	
+	/**
 	 * Gets the maximum amount of chi possible. However, not all of this chi
 	 * would be usable at one time
 	 * 

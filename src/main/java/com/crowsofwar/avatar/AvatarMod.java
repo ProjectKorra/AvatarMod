@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
+import com.crowsofwar.avatar.common.config.ConfigChi;
 import com.crowsofwar.avatar.common.config.ConfigClient;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
@@ -107,6 +108,7 @@ public class AvatarMod {
 		ConfigStats.load();
 		ConfigSkills.load();
 		ConfigClient.load();
+		ConfigChi.load();
 		
 		BendingManager.init();
 		
