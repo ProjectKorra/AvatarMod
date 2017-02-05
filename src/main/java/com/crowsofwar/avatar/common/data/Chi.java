@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.data;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -132,6 +133,18 @@ public class Chi {
 		nbt.setFloat("Max", max);
 		nbt.setFloat("Current", total);
 		nbt.setFloat("AvailableMark", availableMark);
+	}
+	
+	public void toBytes(ByteBuf buf) {
+		buf.writeFloat(max);
+		buf.writeFloat(total);
+		buf.writeFloat(availableMark);
+	}
+	
+	public void fromBytes(ByteBuf buf) {
+		max = buf.readFloat();
+		total = buf.readFloat();
+		availableMark = buf.readFloat();
 	}
 	
 }

@@ -59,6 +59,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 			3);
 	public static final Networker.Property<Set<StatusControl>> KEY_STATUS_CONTROLS = new Property<>(4);
 	public static final Networker.Property<Boolean> KEY_SKATING = new Property<>(5);
+	public static final Networker.Property<Chi> KEY_CHI = new Property<>(6);
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
@@ -72,7 +73,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	
 	private Map<BendingAbility, AbilityData> abilityData;
 	
-	private final Chi chi;
+	private Chi chi;
 	
 	private final Networker networker;
 	private final boolean isClient;
@@ -104,6 +105,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		networker.register(abilityData, Transmitters.ABILITY_DATA_MAP, KEY_ABILITY_DATA);
 		networker.register(statusControls, Transmitters.STATUS_CONTROLS, KEY_STATUS_CONTROLS);
 		networker.register(skating, Transmitters.BOOLEAN, KEY_SKATING);
+		networker.register(chi, Transmitters.CHI, KEY_CHI);
 		
 	}
 	
@@ -559,6 +561,11 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	@Override
 	public Chi chi() {
 		return chi;
+	}
+	
+	@Override
+	public void setChi(Chi chi) {
+		this.chi = chi;
 	}
 	
 }

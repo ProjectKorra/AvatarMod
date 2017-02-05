@@ -139,4 +139,6 @@ public interface BendingData {
 	 */
 	Chi chi();
 	
+	void setChi(Chi chi);
+	
 }
