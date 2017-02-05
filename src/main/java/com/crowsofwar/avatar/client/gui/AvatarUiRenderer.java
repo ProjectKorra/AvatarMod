@@ -151,7 +151,7 @@ public class AvatarUiRenderer extends Gui {
 		// Background of chi bar
 		drawTexturedModalRect(0, 0, 0, 36, 100, 9);
 		// Available chi
-		drawTexturedModalRect((int) (100 * unavailable / max), 0, 0, 27, (int) (100 * available / max), 9);
+		drawTexturedModalRect((int) (100 * unavailable / max), 0, 1, 27, (int) (100 * available / max), 9);
 		// Unavailable chi
 		drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
 		
