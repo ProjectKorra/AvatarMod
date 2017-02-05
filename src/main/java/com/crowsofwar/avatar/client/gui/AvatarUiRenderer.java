@@ -131,13 +131,18 @@ public class AvatarUiRenderer extends Gui {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		Chi chi = data.chi();
 		float total = chi.getTotalChi();
+		float max = chi.getMaxChi();
+		float available = chi.getAvailableChi();
+		float unavailable = total - available;
 		
 		mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
 		
 		// Background of chi bar
 		drawTexturedModalRect(0, 0, 0, 36, 100, 9);
-		// Foreground of chi bar
-		drawTexturedModalRect(0, 0, 0, 27, (int) (100 * total / chi.getMaxChi()), 9);
+		// Available chi
+		drawTexturedModalRect((int) (100 * unavailable / max), 0, 0, 27, (int) (100 * available / max), 9);
+		// Unavailable chi
+		drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
 		
 	}
 	

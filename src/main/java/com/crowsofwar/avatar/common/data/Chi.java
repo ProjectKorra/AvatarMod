@@ -49,7 +49,6 @@ public class Chi {
 		this.total = 10;
 		this.availableMark = 8;
 		
-		System.out.println("Construct new CHI");
 	}
 	
 	/**

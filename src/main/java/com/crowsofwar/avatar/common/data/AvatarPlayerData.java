@@ -541,7 +541,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	public void decrementCooldown() {
 		if (abilityCooldown > 0) {
 			abilityCooldown--;
-			saveChanges();
+			if (abilityCooldown == 0) saveChanges();
 		}
 	}
 	
