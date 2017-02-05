@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -110,13 +112,23 @@ public class Chi {
 		return max - availableMark;
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt) {
+	/**
+	 * Reads the chi information to NBT. This creates a subcompound in the
+	 * parameter
+	 */
+	public void readFromNBT(NBTTagCompound compound) {
+		NBTTagCompound nbt = findNestedCompound(compound, "ChiData");
 		this.max = nbt.getFloat("Max");
 		this.total = nbt.getFloat("Current");
 		this.availableMark = nbt.getFloat("AvailableMark");
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) {
+	/**
+	 * Writes the chi information to NBT. This creates a subcompound in the
+	 * parameter
+	 */
+	public void writeToNBT(NBTTagCompound compound) {
+		NBTTagCompound nbt = findNestedCompound(compound, "ChiData");
 		nbt.setFloat("Max", max);
 		nbt.setFloat("Current", total);
 		nbt.setFloat("AvailableMark", availableMark);

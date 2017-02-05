@@ -72,6 +72,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	
 	private Map<BendingAbility, AbilityData> abilityData;
 	
+	private final Chi chi;
+	
 	private final Networker networker;
 	private final boolean isClient;
 	
@@ -93,6 +95,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		bendingStateList = new ArrayList<BendingState>();
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
+		chi = new Chi();
 		
 		networker = new Networker(!isClient, PacketCPlayerData.class,
 				net -> new PacketCPlayerData(net, playerID));
@@ -144,6 +147,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		skating = readFrom.getBoolean("WaterSkating");
 		abilityCooldown = readFrom.getInteger("AbilityCooldown");
 		
+		chi.readFromNBT(readFrom);
+		
 	}
 	
 	@Override
@@ -168,6 +173,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		writeTo.setInteger("TimeInAir", timeInAir);
 		writeTo.setBoolean("WaterSkating", skating);
 		writeTo.setInteger("AbilityCooldown", abilityCooldown);
+		
+		chi.writeToNBT(writeTo);
 		
 	}
 	
@@ -547,6 +554,11 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	
 	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
 		return fetcher;
+	}
+	
+	@Override
+	public Chi chi() {
+		return chi;
 	}
 	
 }

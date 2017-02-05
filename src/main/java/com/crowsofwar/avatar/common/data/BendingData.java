@@ -134,4 +134,9 @@ public interface BendingData {
 	
 	void clearAbilityData();
 	
+	/**
+	 * Gets the chi information about the bender
+	 */
+	Chi chi();
+	
 }
