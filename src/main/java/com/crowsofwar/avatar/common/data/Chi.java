@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 /**
  * Represents a bender's energy to use abilities. Chi is required to execute an
  * ability and also will regenerate over time.
@@ -31,13 +33,13 @@ public class Chi {
 	
 	// These fields are not for modification directly; use getters/setters
 	private float max;
-	private float current;
+	private float total;
 	private float availableMark;
 	
 	public Chi() {
 		// Default values for testing
 		this.max = 20;
-		this.current = 10;
+		this.total = 10;
 		this.availableMark = 8;
 	}
 	
@@ -47,7 +49,7 @@ public class Chi {
 	 * @see #setTotalChi(float)
 	 */
 	public float getTotalChi() {
-		return current;
+		return total;
 	}
 	
 	/**
@@ -56,7 +58,8 @@ public class Chi {
 	 * @see #getTotalChi()
 	 */
 	public void setTotalChi(float total) {
-		this.current = total;
+		if (total > max) total = max;
+		this.total = total;
 	}
 	
 	/**
@@ -77,6 +80,7 @@ public class Chi {
 	 */
 	public void setMaxChi(float max) {
 		this.max = max;
+		if (max < total) setTotalChi(max);
 	}
 	
 	/**
@@ -85,7 +89,7 @@ public class Chi {
 	 * @see #setAvailableChi(float)
 	 */
 	public float getAvailableChi() {
-		return current - availableMark;
+		return total - availableMark;
 	}
 	
 	/**
@@ -95,7 +99,8 @@ public class Chi {
 	 * @see #getAvailableChi()
 	 */
 	public void setAvailableChi(float available) {
-		this.availableMark = current - available;
+		if (available > total) available = total;
+		this.availableMark = total - available;
 	}
 	
 	/**
@@ -103,6 +108,18 @@ public class Chi {
 	 */
 	public float getAvailableMaxChi() {
 		return max - availableMark;
+	}
+	
+	public void readFromNBT(NBTTagCompound nbt) {
+		this.max = nbt.getFloat("Max");
+		this.total = nbt.getFloat("Current");
+		this.availableMark = nbt.getFloat("AvailableMark");
+	}
+	
+	public void writeToNBT(NBTTagCompound nbt) {
+		nbt.setFloat("Max", max);
+		nbt.setFloat("Current", total);
+		nbt.setFloat("AvailableMark", availableMark);
 	}
 	
 }
