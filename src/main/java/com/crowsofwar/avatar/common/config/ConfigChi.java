@@ -31,7 +31,7 @@ public class ConfigChi {
 	private ConfigChi() {}
 	
 	@Load
-	public float regenPerSecond = .2f, availablePerSecond = .1f, availableThreshold = .25f;
+	public float regenPerSecond = .2f, availablePerSecond = .4f, availableThreshold = .25f;
 	
 	public static void load() {
 		ConfigLoader.load(CHI_CONFIG, "avatar/chi.yml");

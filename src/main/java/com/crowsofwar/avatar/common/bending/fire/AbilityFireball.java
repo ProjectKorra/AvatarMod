@@ -45,13 +45,13 @@ public class AbilityFireball extends FireAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
+		EntityPlayer player = ctx.getPlayerEntity();
+		World world = ctx.getWorld();
+		AvatarPlayerData data = ctx.getData();
+		
+		if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
+		
 		if (ctx.consumeChi(STATS_CONFIG.chiFireball)) {
-			
-			EntityPlayer player = ctx.getPlayerEntity();
-			World world = ctx.getWorld();
-			AvatarPlayerData data = ctx.getData();
-			
-			if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
 			
 			Vector target;
 			if (ctx.isLookingAtBlock()) {

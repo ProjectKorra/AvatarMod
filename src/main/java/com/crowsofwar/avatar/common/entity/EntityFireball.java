@@ -155,6 +155,11 @@ public class EntityFireball extends AvatarEntity {
 		expandedHitbox = bb.expand(0.35, 0.35, 0.35);
 	}
 	
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 0;
+	}
+	
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
