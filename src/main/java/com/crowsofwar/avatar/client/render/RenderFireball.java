@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 /**
  * 
@@ -64,24 +65,30 @@ public class RenderFireball extends Render<EntityFireball> {
 		
 		enableBlend();
 		
-		renderCube(x, y, z, //
-				0, 8 / 256.0, 0, 8 / 256.0, //
-				.5f, //
-				0, ticks / 25f, 0);
-		
-		int i = 15728880;
-        int j = i % 65536;
-        int k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
-		
-		disableLighting();
-			pushMatrix();
-				renderCube(x, y, z, //
-						8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
-						size, //
-						rotation * .2f, rotation, rotation * -.4f);
-			popMatrix();
-		enableLighting();
+		if (MinecraftForgeClient.getRenderPass() == 0) {
+			
+			renderCube(x, y, z, //
+					0, 8 / 256.0, 0, 8 / 256.0, //
+					.5f, //
+					0, ticks / 25f, 0);
+			
+			int i = 15728880;
+	        int j = i % 65536;
+	        int k = i / 65536;
+	        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
+	        
+		} else {
+			
+			disableLighting();
+				pushMatrix();
+					renderCube(x, y, z, //
+							8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
+							size, //
+							rotation * .2f, rotation, rotation * -.4f);
+				popMatrix();
+			enableLighting();
+			
+		}
 		
 	}
 	// @formatter:on
