@@ -55,6 +55,7 @@ import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
@@ -111,6 +112,7 @@ public class AvatarMod {
 		ConfigChi.load();
 		
 		BendingManager.init();
+		AvatarItems.init();
 		
 		EarthSoundHandler.register();
 		
