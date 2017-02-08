@@ -41,7 +41,7 @@ public final class GoreCoreNBTUtil {
 		nbt.setLong(key + "LeastSig", uuid.getLeastSignificantBits());
 	}
 	
-	public static NBTTagCompound findNestedCompound(NBTTagCompound nbt, String key) {
+	public static NBTTagCompound nestedCompound(NBTTagCompound nbt, String key) {
 		if (nbt.hasKey(key)) {
 			return nbt.getCompoundTag(key);
 		} else {
@@ -174,7 +174,7 @@ public final class GoreCoreNBTUtil {
 	 *            The ItemStack to get the compound for
 	 * @return The stack's data compound
 	 */
-	public static NBTTagCompound getStackCompound(ItemStack stack) {
+	public static NBTTagCompound stackCompound(ItemStack stack) {
 		if (stack.getTagCompound() == null) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			stack.setTagCompound(nbt);

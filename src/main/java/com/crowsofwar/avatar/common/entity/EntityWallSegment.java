@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -241,14 +241,14 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		wallReference.readFromNBT(findNestedCompound(nbt, "Parent"));
+		wallReference.readFromNBT(nestedCompound(nbt, "Parent"));
 		ownerAttribute.load(nbt);
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		wallReference.writeToNBT(findNestedCompound(nbt, "Parent"));
+		wallReference.writeToNBT(nestedCompound(nbt, "Parent"));
 		ownerAttribute.save(nbt);
 	}
 	

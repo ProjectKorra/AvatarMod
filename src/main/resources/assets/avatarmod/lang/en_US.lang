@@ -95,4 +95,4 @@ death.attack.avatar_airblade=%1$s was sliced by %2$s
 
 item.avatarmod:scroll.name=Scroll
 
-avatar.tooltip.scroll=Testing
+avatar.tooltip.scroll=%d points

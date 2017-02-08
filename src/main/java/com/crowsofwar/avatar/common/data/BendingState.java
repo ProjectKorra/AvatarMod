@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingController;
@@ -113,7 +113,7 @@ public abstract class BendingState {
 	public final void write(NBTTagCompound nbt) {
 		
 		nbt.setInteger("ControllerID", getId());
-		NBTTagCompound stateData = findNestedCompound(nbt, "StateData");
+		NBTTagCompound stateData = nestedCompound(nbt, "StateData");
 		stateData.setInteger("ProgressPoints", progressionPoints);
 		this.writeToNBT(stateData);
 		
@@ -124,7 +124,7 @@ public abstract class BendingState {
 	 */
 	public final void read(NBTTagCompound nbt) {
 		
-		NBTTagCompound stateData = findNestedCompound(nbt, "StateData");
+		NBTTagCompound stateData = nestedCompound(nbt, "StateData");
 		progressionPoints = stateData.getInteger("ProgressPoints");
 		readFromNBT(stateData);
 	}

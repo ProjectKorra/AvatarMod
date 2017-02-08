@@ -16,12 +16,16 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
+
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,11 +42,24 @@ public class ItemScroll extends Item {
 	}
 	
 	@Override
+	public EnumRarity getRarity(ItemStack stack) {
+		NBTTagCompound nbt = stackCompound(stack);
+		int pts = nbt.getInteger("Points");
+		if (pts >= 3) return EnumRarity.EPIC;
+		if (pts == 2) return EnumRarity.RARE;
+		if (pts == 1) return EnumRarity.UNCOMMON;
+		return EnumRarity.COMMON;
+	}
+	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltips,
 			boolean advanced) {
 		
-		tooltips.add(I18n.format("avatar.tooltip.scroll"));
+		NBTTagCompound nbt = stackCompound(stack);
+		int pts = nbt.getInteger("Points");
+		
+		tooltips.add(I18n.format("avatar.tooltip.scroll", pts));
 		
 	}
 	

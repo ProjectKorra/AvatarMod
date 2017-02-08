@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import javax.annotation.Nullable;
 
@@ -58,12 +58,12 @@ public class WaterbendingState extends BendingState {
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		waterBubble.readFromNBT(findNestedCompound(nbt, "WaterBubble"));
+		waterBubble.readFromNBT(nestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		waterBubble.writeToNBT(findNestedCompound(nbt, "WaterBubble"));
+		waterBubble.writeToNBT(nestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
