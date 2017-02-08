@@ -16,10 +16,10 @@
 */
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 
@@ -35,9 +35,11 @@ public class AvatarItemRenderRegister {
 	}
 	
 	private static void register(Item item, int meta) {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta,
-				new ModelResourceLocation(AvatarInfo.MOD_ID + ":" + item.getUnlocalizedName().substring(5),
-						"inventory"));
+		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+		ModelResourceLocation mrl = new ModelResourceLocation(item.getUnlocalizedName().substring(5),
+				"inventory");
+		System.out.println(mrl);
+		mesher.register(item, meta, mrl);
 	}
 	
 }
