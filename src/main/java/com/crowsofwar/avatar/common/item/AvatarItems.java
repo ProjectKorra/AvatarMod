@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.AvatarInfo;
+
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -33,6 +35,7 @@ public class AvatarItems {
 	}
 	
 	private static void registerItem(Item item) {
+		item.setRegistryName(AvatarInfo.MOD_ID, item.getUnlocalizedName().substring(5));
 		item.setUnlocalizedName(item.getRegistryName().toString());
 		GameRegistry.register(item);
 	}
