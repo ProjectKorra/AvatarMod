@@ -142,6 +142,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 				AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 		mc.effectRenderer.registerParticle(AvatarParticles.getParticleAir().getParticleID(),
 				AvatarParticleAir::new);
+		AvatarItemRenderRegister.register();
 	}
 	
 	@Override
