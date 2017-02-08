@@ -39,6 +39,7 @@ public class ItemScroll extends Item {
 	public ItemScroll() {
 		setUnlocalizedName("scroll");
 		setMaxStackSize(1);
+		setCreativeTab(AvatarItems.tabItems);
 	}
 	
 	@Override

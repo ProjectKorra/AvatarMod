@@ -18,7 +18,10 @@ package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -28,10 +31,25 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  */
 public class AvatarItems {
 	
+	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
+		@Override
+		public ItemStack getTabIconItem() {
+			return stackScroll;
+		}
+	};
+	
 	public static Item itemScroll;
+	
+	private static ItemStack stackScroll;
 	
 	public static void init() {
 		registerItem(itemScroll = new ItemScroll());
+		
+		stackScroll = new ItemStack(itemScroll);
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setInteger("Points", 2);
+		stackScroll.setTagCompound(nbt);
+		
 	}
 	
 	private static void registerItem(Item item) {
