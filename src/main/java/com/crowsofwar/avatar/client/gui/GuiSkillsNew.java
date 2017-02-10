@@ -35,7 +35,8 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	public GuiSkillsNew() {
-		super(new ContainerSkillsGui(Minecraft.getMinecraft().thePlayer));
+		super(new ContainerSkillsGui(Minecraft.getMinecraft().thePlayer,
+				Minecraft.getMinecraft().displayWidth));
 	}
 	
 	@Override

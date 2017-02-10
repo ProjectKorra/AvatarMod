@@ -29,10 +29,25 @@ public class ContainerSkillsGui extends Container {
 	
 	private final EntityPlayer player;
 	
-	public ContainerSkillsGui(EntityPlayer player) {
+	public ContainerSkillsGui(EntityPlayer player, int width) {
 		this.player = player;
 		
 		addSlotToContainer(new Slot(new SkillsGuiInventory(), 0, 0, 0));
+		
+		// Main inventory
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 9; col++) {
+				int id = col + row * 9 + 9;
+				addSlotToContainer(
+						new Slot(player.inventory, row + col * 9 + 9, 8 + col * 18, 120 + row * 18));
+			}
+		}
+		
+		// Hotbar
+		for (int i = 0; i < 9; i++) {
+			addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 178));
+		}
+		
 	}
 	
 	@Override
