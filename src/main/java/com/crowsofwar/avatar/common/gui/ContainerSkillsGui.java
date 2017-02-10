@@ -16,9 +16,14 @@
 */
 package com.crowsofwar.avatar.common.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 /**
  * 
@@ -32,20 +37,26 @@ public class ContainerSkillsGui extends Container {
 	public ContainerSkillsGui(EntityPlayer player, int width) {
 		this.player = player;
 		
-		addSlotToContainer(new Slot(new SkillsGuiInventory(), 0, 0, 0));
+		IInventory inv = new SkillsGuiInventory();
+		
+		addSlotToContainer(new Slot(inv, 0, 0, 0));
+		inv.setInventorySlotContents(0, new ItemStack(Items.BONE));
+		
+		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
 		// Main inventory
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 9; col++) {
 				int id = col + row * 9 + 9;
-				addSlotToContainer(
-						new Slot(player.inventory, row + col * 9 + 9, 8 + col * 18, 120 + row * 18));
+				addSlotToContainer(new Slot(player.inventory, id, res.getScaledWidth() + (col - 9) * 18,
+						res.getScaledHeight() - 4 * 18 - 3 + row * 18));
 			}
 		}
 		
 		// Hotbar
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 178));
+			addSlotToContainer(new Slot(player.inventory, i, res.getScaledWidth() + (i - 9) * 18,
+					res.getScaledHeight() - 18));
 		}
 		
 	}

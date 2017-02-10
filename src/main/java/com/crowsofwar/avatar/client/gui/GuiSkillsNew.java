@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
 /**
@@ -37,6 +38,12 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	public GuiSkillsNew() {
 		super(new ContainerSkillsGui(Minecraft.getMinecraft().thePlayer,
 				Minecraft.getMinecraft().displayWidth));
+		
+		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+		
+		xSize = res.getScaledWidth();
+		ySize = res.getScaledHeight();
+		
 	}
 	
 	@Override
@@ -71,6 +78,12 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 			drawTexturedModalRect(0, 0, 0, 1, 40, 13);
 			drawTexturedModalRect(0, 0, 0, 14, (int) (abilityData.getXp() / 100 * 40), 13);
+			
+		popMatrix();
+		
+		// GuiCrafting
+		
+		pushMatrix();
 			
 		popMatrix();
 		
