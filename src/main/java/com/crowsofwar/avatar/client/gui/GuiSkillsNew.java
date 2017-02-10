@@ -16,11 +16,16 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
+import static net.minecraft.client.renderer.GlStateManager.disableBlend;
+import static net.minecraft.client.renderer.GlStateManager.enableBlend;
+
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * 
@@ -35,6 +40,17 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		
+		int iconSize = 256, iconCrop = 80;
+		
+		enableBlend();
+		
+		GlStateManager.translate((width - iconSize) / 2f, height / 2f - iconSize + iconCrop, 0);
+		
+		mc.renderEngine.bindTexture(AvatarUiTextures.getAbilityTexture(BendingAbility.ABILITY_AIR_BUBBLE));
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		
+		disableBlend();
 		
 	}
 	
