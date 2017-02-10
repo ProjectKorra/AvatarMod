@@ -82,6 +82,8 @@ public class AbilityData {
 	}
 	
 	public void setRoadblocklevel(float level) {
+		if (level < 0) level = 0;
+		if (level > 100) level = 100;
 		this.roadblock = level;
 	}
 	
@@ -108,10 +110,12 @@ public class AbilityData {
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(ability.getId()); // ability ID read from createFromBytes
 		buf.writeFloat(xp);
+		buf.writeFloat(roadblock);
 	}
 	
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
+		roadblock = buf.readFloat();
 	}
 	
 	/**
