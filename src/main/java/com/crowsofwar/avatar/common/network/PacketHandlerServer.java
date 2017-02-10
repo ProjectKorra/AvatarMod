@@ -25,12 +25,15 @@ import java.util.List;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
+import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
@@ -105,6 +108,8 @@ public class PacketHandlerServer implements IPacketHandler {
 			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
 		
 		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
+		
+		if (packet instanceof PacketSSkillsMenu) return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -250,6 +255,13 @@ public class PacketHandlerServer implements IPacketHandler {
 			}
 			
 		}
+		
+		return null;
+	}
+	
+	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_SKILLS, player.worldObj, 0, 0, 0);
 		
 		return null;
 	}
