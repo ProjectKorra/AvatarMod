@@ -59,7 +59,7 @@ public class AbilityData {
 		if (xp == this.xp) return;
 		if (xp < 0) xp = 0;
 		if (xp > 100) xp = 100;
-		if (xp > roadblock) xp = roadblock;
+		if (xp > this.xp && xp > roadblock) xp = roadblock;
 		this.xp = xp;
 		data.saveChanges();
 		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
@@ -100,6 +100,7 @@ public class AbilityData {
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
 		roadblock = nbt.getFloat("Roadblock");
+		if (roadblock == 0) roadblock = 33;
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
