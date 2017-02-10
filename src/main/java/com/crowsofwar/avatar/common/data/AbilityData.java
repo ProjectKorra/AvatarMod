@@ -34,11 +34,13 @@ public class AbilityData {
 	private final AvatarPlayerData data;
 	private final BendingAbility ability;
 	private float xp;
+	private float roadblock;
 	
 	public AbilityData(AvatarPlayerData data, BendingAbility ability) {
 		this.data = data;
 		this.ability = ability;
 		this.xp = 0;
+		this.roadblock = 33;
 	}
 	
 	public BendingAbility getAbility() {
@@ -57,6 +59,7 @@ public class AbilityData {
 		if (xp == this.xp) return;
 		if (xp < 0) xp = 0;
 		if (xp > 100) xp = 100;
+		if (xp > roadblock) xp = roadblock;
 		this.xp = xp;
 		data.saveChanges();
 		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
@@ -74,12 +77,32 @@ public class AbilityData {
 		data.sync();
 	}
 	
+	public float getRoadblockLevel() {
+		return roadblock;
+	}
+	
+	public void setRoadblocklevel(float level) {
+		this.roadblock = level;
+	}
+	
+	/**
+	 * Adds 33.3 to the roadblock.
+	 */
+	public void incrementRoadblock() {
+		if (roadblock < 100) {
+			roadblock += 33 + 1f / 3;
+			if (roadblock >= 99 && roadblock < 100) roadblock = 100;
+		}
+	}
+	
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
+		roadblock = nbt.getFloat("Roadblock");
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("Xp", xp);
+		nbt.setFloat("Roadblock", roadblock);
 	}
 	
 	public void toBytes(ByteBuf buf) {
