@@ -17,12 +17,14 @@
 
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.gui.AvatarGuiHandler.GUI_ID_SKILLS;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.client.gui.GuiSkillsNew;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
@@ -147,6 +149,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@Override
 	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
+		
+		if (id == GUI_ID_SKILLS) return new GuiSkillsNew();
+		
 		return null;
 	}
 	

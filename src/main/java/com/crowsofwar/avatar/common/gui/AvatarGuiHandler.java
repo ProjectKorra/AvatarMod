@@ -25,8 +25,13 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 
 public class AvatarGuiHandler implements IGuiHandler {
 	
+	public static final int GUI_ID_SKILLS = 1;
+	
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+		
+		if (id == GUI_ID_SKILLS) return new ContainerSkillsGui();
+		
 		return null;
 	}
 	
