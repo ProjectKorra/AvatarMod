@@ -16,16 +16,16 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
-import static net.minecraft.client.renderer.GlStateManager.disableBlend;
-import static net.minecraft.client.renderer.GlStateManager.enableBlend;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * 
@@ -41,16 +41,41 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		
+		//@formatter:off
+		
 		int iconSize = 256, iconCrop = 80;
+		int barSize = 80;
+		int middlePadding = 20;
 		
 		enableBlend();
 		
-		GlStateManager.translate((width - iconSize) / 2f, height / 2f - iconSize + iconCrop, 0);
+		pushMatrix();
 		
-		mc.renderEngine.bindTexture(AvatarUiTextures.getAbilityTexture(BendingAbility.ABILITY_AIR_BUBBLE));
-		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			translate((width - iconSize) / 2f, height / 2f - iconSize + iconCrop, 0);
+			
+			mc.renderEngine.bindTexture(AvatarUiTextures.getAbilityTexture(BendingAbility.ABILITY_AIR_BUBBLE));
+			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		
+		popMatrix();
+		
+		pushMatrix();
+			
+			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
+			
+			translate(width / 2f - barSize - middlePadding / 2f, height / 2f + middlePadding / 2f, 0);
+			
+			scale(barSize / 40f, barSize / 40f, 1);
+			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
+			drawTexturedModalRect(0, 0, 0, 1, 40, 13);
+			drawTexturedModalRect(0, 0, 0, 14, (int) (abilityData.getXp() / 100 * 40), 13);
+			
+		popMatrix();
 		
 		disableBlend();
+		
+		//@formatter:on
 		
 	}
 	
