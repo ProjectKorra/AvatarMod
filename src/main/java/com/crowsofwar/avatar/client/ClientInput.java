@@ -43,6 +43,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -158,6 +159,8 @@ public class ClientInput implements IControlsHandler {
 		for (BendingController controller : keyboardBending) {
 			openBendingMenu(controller);
 		}
+		if (isControlPressed(AvatarControl.KEY_SKILLS))
+			AvatarMod.network.sendToServer(new PacketSSkillsMenu());
 		
 	}
 	
