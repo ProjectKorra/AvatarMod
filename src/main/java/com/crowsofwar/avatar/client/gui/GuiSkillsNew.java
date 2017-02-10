@@ -17,12 +17,25 @@
 package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.common.gui.AvatarGui;
+import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class GuiSkillsNew implements AvatarGui {
+public class GuiSkillsNew extends GuiContainer implements AvatarGui {
+	
+	public GuiSkillsNew() {
+		super(new ContainerSkillsGui(Minecraft.getMinecraft().thePlayer));
+	}
+	
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		
+	}
 	
 }
