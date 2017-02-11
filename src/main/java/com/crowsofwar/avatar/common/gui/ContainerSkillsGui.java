@@ -18,8 +18,9 @@ package com.crowsofwar.avatar.common.gui;
 
 import static net.minecraft.item.ItemStack.field_190927_a;
 
+import com.crowsofwar.avatar.common.item.AvatarItems;
+
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -39,8 +40,12 @@ public class ContainerSkillsGui extends Container {
 		
 		IInventory inv = new SkillsGuiInventory();
 		
-		addSlotToContainer(new Slot(inv, 0, (width - 18) / 2 + 20, (height - 18) / 2 + 22));
-		inv.setInventorySlotContents(0, new ItemStack(Items.BONE));
+		addSlotToContainer(new Slot(inv, 0, (width - 18) / 2 + 20, (height - 18) / 2 + 22) {
+			@Override
+			public boolean isItemValid(ItemStack stack) {
+				return stack.getItem() == AvatarItems.itemScroll;
+			}
+		});
 		
 		// Main inventory
 		for (int row = 0; row < 3; row++) {
@@ -65,8 +70,6 @@ public class ContainerSkillsGui extends Container {
 	
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		
-		System.out.println("TransferStackInSlot" + index);
 		
 		Slot slot = inventorySlots.get(index);
 		
