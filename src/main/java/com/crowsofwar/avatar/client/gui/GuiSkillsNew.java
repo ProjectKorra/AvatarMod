@@ -92,10 +92,10 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		pushMatrix();
 			
-			translate(width - 162, height - 76, 0);
+			translate(width - 169, height - 83, 0);
 			
 			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-			drawTexturedModalRect(0, 0, 0, 54, 162, 76);
+			drawTexturedModalRect(0, 0, 0, 54, 169, 85);
 			
 		popMatrix();
 		
