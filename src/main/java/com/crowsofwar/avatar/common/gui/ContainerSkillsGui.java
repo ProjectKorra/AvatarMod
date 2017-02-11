@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.gui;
 
+import static net.minecraft.item.ItemStack.field_190927_a;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
@@ -59,6 +61,34 @@ public class ContainerSkillsGui extends Container {
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
 		return true;
+	}
+	
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+		
+		System.out.println("TransferStackInSlot" + index);
+		
+		Slot slot = inventorySlots.get(index);
+		
+		if (slot != null && slot.getHasStack()) {
+			ItemStack stack = slot.getStack();
+			ItemStack copy = stack.copy();
+			
+			if (index == 0) {
+				if (!mergeItemStack(stack, 1, 37, true)) {
+					return field_190927_a;
+				}
+			} else {
+				if (!mergeItemStack(stack, 0, 1, true)) {
+					return field_190927_a;
+				}
+			}
+			
+			return stack;
+			
+		}
+		
+		return field_190927_a;
 	}
 	
 }

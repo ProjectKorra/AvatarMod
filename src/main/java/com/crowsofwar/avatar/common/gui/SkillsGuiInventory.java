@@ -26,7 +26,7 @@ import net.minecraft.inventory.InventoryBasic;
 public class SkillsGuiInventory extends InventoryBasic {
 	
 	public SkillsGuiInventory() {
-		super("container.avatar.skills", false, 3);
+		super("container.avatar.skills", false, 1);
 	}
 	
 }
