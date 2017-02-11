@@ -44,14 +44,14 @@ public class ContainerSkillsGui extends Container {
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 9; col++) {
 				int id = col + row * 9 + 9;
-				addSlotToContainer(new Slot(player.inventory, id, width + (col - 9) * 18,
+				addSlotToContainer(new Slot(player.inventory, id, width + 1 + (col - 9) * 18,
 						height - 4 * 18 - 3 + row * 18));
 			}
 		}
 		
 		// Hotbar
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(player.inventory, i, width + (i - 9) * 18, height - 18));
+			addSlotToContainer(new Slot(player.inventory, i, width + 1 + (i - 9) * 18, height - 17));
 		}
 		
 	}
