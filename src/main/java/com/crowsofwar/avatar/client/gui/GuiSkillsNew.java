@@ -26,8 +26,10 @@ import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.item.ItemStack;
 
 /**
  * 
@@ -36,6 +38,8 @@ import net.minecraft.client.gui.inventory.GuiContainer;
  */
 public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
+	private GuiButton btnConfirmScroll;
+	
 	public GuiSkillsNew() {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth(), screenHeight()));
 		
@@ -43,6 +47,23 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		xSize = res.getScaledWidth();
 		ySize = res.getScaledHeight();
+		
+	}
+	
+	@Override
+	public void initGui() {
+		super.initGui();
+		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+		btnConfirmScroll = addButton(new GuiButton(0, 0, 0, 115, 20, "Remove Roadblock"));
+	}
+	
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+		
+		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
+		ItemStack scroll = container.getSlot(0).getStack();
+		btnConfirmScroll.enabled = scroll != ItemStack.field_190927_a;
 		
 	}
 	
@@ -56,6 +77,9 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		int iconSize = 256, iconCrop = 80;
 		int barSize = 80;
 		int middlePadding = 20;
+		
+		btnConfirmScroll.xPosition = inventorySlots.getSlot(0).xDisplayPosition + 20;
+		btnConfirmScroll.yPosition = inventorySlots.getSlot(0).yDisplayPosition - 2;
 		
 		enableBlend();
 		
