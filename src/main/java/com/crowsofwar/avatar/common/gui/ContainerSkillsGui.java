@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -34,13 +33,14 @@ import net.minecraft.item.ItemStack;
 public class ContainerSkillsGui extends Container {
 	
 	private final EntityPlayer player;
+	private final SkillsGuiInventory inventory;
 	
 	public ContainerSkillsGui(EntityPlayer player, int width, int height) {
 		this.player = player;
 		
-		IInventory inv = new SkillsGuiInventory();
+		inventory = new SkillsGuiInventory();
 		
-		addSlotToContainer(new Slot(inv, 0, (width - 18) / 2 + 20, (height - 18) / 2 + 22) {
+		addSlotToContainer(new Slot(inventory, 0, (width - 18) / 2 + 20, (height - 18) / 2 + 22) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return stack.getItem() == AvatarItems.itemScroll;
@@ -92,6 +92,16 @@ public class ContainerSkillsGui extends Container {
 		}
 		
 		return field_190927_a;
+	}
+	
+	@Override
+	public void onContainerClosed(EntityPlayer player) {
+		super.onContainerClosed(player);
+		ItemStack scroll = inventory.getStackInSlot(0);
+		if (scroll != field_190927_a) {
+			player.dropItem(scroll, false);
+			inventory.setInventorySlotContents(0, field_190927_a);
+		}
 	}
 	
 }
