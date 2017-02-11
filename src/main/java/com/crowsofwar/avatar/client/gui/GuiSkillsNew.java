@@ -19,11 +19,13 @@ package com.crowsofwar.avatar.client.gui;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -65,6 +67,13 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		ItemStack scroll = container.getSlot(0).getStack();
 		btnConfirmScroll.enabled = scroll != ItemStack.field_190927_a;
 		
+	}
+	
+	@Override
+	protected void actionPerformed(GuiButton button) {
+		if (button == btnConfirmScroll) {
+			AvatarMod.network.sendToServer(new PacketSUseScroll());
+		}
 	}
 	
 	@Override

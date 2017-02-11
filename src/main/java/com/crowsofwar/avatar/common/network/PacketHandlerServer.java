@@ -32,9 +32,12 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
@@ -46,6 +49,8 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -110,6 +115,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
 		
 		if (packet instanceof PacketSSkillsMenu) return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
+		
+		if (packet instanceof PacketSUseScroll) return handleUseScroll((PacketSUseScroll) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -262,6 +269,21 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_SKILLS, player.worldObj, 0, 0, 0);
+		
+		return null;
+	}
+	
+	private IMessage handleUseScroll(PacketSUseScroll packet, MessageContext ctx) {
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		
+		Container container = player.openContainer;
+		if (container instanceof ContainerSkillsGui) {
+			ContainerSkillsGui skills = (ContainerSkillsGui) container;
+			ItemStack stack = skills.inventorySlots.get(0).getStack();
+			if (stack.getItem() == AvatarItems.itemScroll) {
+				skills.inventorySlots.get(0).putStack(ItemStack.field_190927_a);
+			}
+		}
 		
 		return null;
 	}
