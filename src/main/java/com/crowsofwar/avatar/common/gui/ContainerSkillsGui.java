@@ -37,7 +37,7 @@ public class ContainerSkillsGui extends Container {
 		
 		IInventory inv = new SkillsGuiInventory();
 		
-		addSlotToContainer(new Slot(inv, 0, 0, 0));
+		addSlotToContainer(new Slot(inv, 0, (width - 18) / 2 + 20, (height - 18) / 2 + 22));
 		inv.setInventorySlotContents(0, new ItemStack(Items.BONE));
 		
 		// Main inventory
