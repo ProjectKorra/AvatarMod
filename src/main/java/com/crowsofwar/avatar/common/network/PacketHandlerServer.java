@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.network;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,6 +31,7 @@ import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -276,12 +278,27 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseScroll(PacketSUseScroll packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		
-		Container container = player.openContainer;
-		if (container instanceof ContainerSkillsGui) {
-			ContainerSkillsGui skills = (ContainerSkillsGui) container;
-			ItemStack stack = skills.inventorySlots.get(0).getStack();
-			if (stack.getItem() == AvatarItems.itemScroll) {
-				skills.inventorySlots.get(0).putStack(ItemStack.field_190927_a);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
+		
+		if (abilityData.getRoadblockLevel() < 100) {
+			Container container = player.openContainer;
+			if (container instanceof ContainerSkillsGui) {
+				ContainerSkillsGui skills = (ContainerSkillsGui) container;
+				ItemStack stack = skills.inventorySlots.get(0).getStack();
+				if (stack.getItem() == AvatarItems.itemScroll) {
+					
+					int points = stackCompound(stack).getInteger("Points");
+					if (points > 0) {
+						points--;
+						if (points == 0) {
+							skills.inventorySlots.get(0).putStack(ItemStack.field_190927_a);
+						} else {
+							stackCompound(stack).setInteger("Points", points);
+						}
+						abilityData.incrementRoadblock();
+					}
+				}
 			}
 		}
 		
