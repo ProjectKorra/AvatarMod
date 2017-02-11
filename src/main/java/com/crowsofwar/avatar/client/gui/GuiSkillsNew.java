@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
+import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -36,8 +37,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	public GuiSkillsNew() {
-		super(new ContainerSkillsGui(Minecraft.getMinecraft().thePlayer,
-				Minecraft.getMinecraft().displayWidth));
+		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth(), screenHeight()));
 		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
@@ -81,8 +81,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			
 		popMatrix();
 		
-		// GuiCrafting
-		
 		pushMatrix();
 			
 		popMatrix();
@@ -91,6 +89,14 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		//@formatter:on
 		
+	}
+	
+	private static int screenWidth() {
+		return new ScaledResolution(getMinecraft()).getScaledWidth();
+	}
+	
+	private static int screenHeight() {
+		return new ScaledResolution(getMinecraft()).getScaledHeight();
 	}
 	
 }
