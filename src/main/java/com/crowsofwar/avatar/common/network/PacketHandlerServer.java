@@ -281,14 +281,19 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
 		
+		System.out.println(abilityData.getRoadblockLevel());
+		abilityData.setRoadblock(33);
+		
 		if (abilityData.getRoadblockLevel() < 100) {
 			Container container = player.openContainer;
 			if (container instanceof ContainerSkillsGui) {
 				ContainerSkillsGui skills = (ContainerSkillsGui) container;
 				ItemStack stack = skills.inventorySlots.get(0).getStack();
+				System.out.println(stack);
 				if (stack.getItem() == AvatarItems.itemScroll) {
 					
 					int points = stackCompound(stack).getInteger("Points");
+					System.out.println(points);
 					if (points > 0) {
 						points--;
 						if (points == 0) {

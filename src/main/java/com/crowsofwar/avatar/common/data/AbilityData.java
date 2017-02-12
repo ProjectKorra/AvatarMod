@@ -34,7 +34,15 @@ public class AbilityData {
 	private final AvatarPlayerData data;
 	private final BendingAbility ability;
 	private float xp;
-	private float roadblock;
+	/**
+	 * Roadblock level:
+	 * <ul>
+	 * <li>0 = max 33 xp
+	 * <li>1 = max 66 xp
+	 * <li>2 = max 99 xp
+	 * <li>3 = max 100 xp
+	 */
+	private int roadblock;
 	
 	public AbilityData(AvatarPlayerData data, BendingAbility ability) {
 		this.data = data;
@@ -59,7 +67,7 @@ public class AbilityData {
 		if (xp == this.xp) return;
 		if (xp < 0) xp = 0;
 		if (xp > 100) xp = 100;
-		if (xp > this.xp && xp > roadblock) xp = roadblock;
+		if (xp > this.xp && xp > getMaxXp()) xp = getMaxXp();
 		this.xp = xp;
 		data.saveChanges();
 		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
@@ -77,46 +85,49 @@ public class AbilityData {
 		data.sync();
 	}
 	
-	public float getRoadblockLevel() {
+	public int getRoadblockLevel() {
 		return roadblock;
 	}
 	
-	public void setRoadblocklevel(float level) {
+	public void setRoadblock(int level) {
 		if (level < 0) level = 0;
-		if (level > 100) level = 100;
+		if (level > 3) level = 3;
 		this.roadblock = level;
+		data.saveChanges();
+		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
 	}
 	
-	/**
-	 * Adds 33.3 to the roadblock.
-	 */
 	public void incrementRoadblock() {
-		if (roadblock < 100) {
-			roadblock += 33 + 1f / 3;
-			if (roadblock >= 99 && roadblock < 100) roadblock = 100;
-		}
+		setRoadblock(roadblock + 1);
+		data.sync();
+	}
+	
+	public int getMaxXp() {
+		if (roadblock == 0) return 33;
+		if (roadblock == 1) return 66;
+		if (roadblock == 2) return 99;
+		return 100;
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
-		roadblock = nbt.getFloat("Roadblock");
-		if (roadblock == 0) roadblock = 33;
+		roadblock = nbt.getInteger("Roadblock");
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("Xp", xp);
-		nbt.setFloat("Roadblock", roadblock);
+		nbt.setInteger("Roadblock", roadblock);
 	}
 	
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(ability.getId()); // ability ID read from createFromBytes
 		buf.writeFloat(xp);
-		buf.writeFloat(roadblock);
+		buf.writeInt(roadblock);
 	}
 	
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
-		roadblock = buf.readFloat();
+		roadblock = buf.readInt();
 	}
 	
 	/**
