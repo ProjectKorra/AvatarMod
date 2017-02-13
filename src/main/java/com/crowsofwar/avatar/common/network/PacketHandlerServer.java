@@ -296,10 +296,7 @@ public class PacketHandlerServer implements IPacketHandler {
 						} else {
 							stackCompound(stack).setInteger("Points", points);
 						}
-						// abilityData.incrementRoadblock();
-						abilityData.setRoadblock(0);
-						System.out.println("Now: " + abilityData.getRoadblockLevel());
-						data.sync();
+						abilityData.incrementRoadblock();
 					}
 				}
 			}

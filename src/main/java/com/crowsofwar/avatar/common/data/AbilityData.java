@@ -48,7 +48,7 @@ public class AbilityData {
 		this.data = data;
 		this.ability = ability;
 		this.xp = 0;
-		this.roadblock = 33;
+		this.roadblock = 0;
 	}
 	
 	public BendingAbility getAbility() {
@@ -92,9 +92,7 @@ public class AbilityData {
 	public void setRoadblock(int level) {
 		if (level < 0) level = 0;
 		if (level > 3) level = 3;
-		System.out.println("# Set to " + level);
 		this.roadblock = level;
-		System.out.println("#this.roadblock : " + this.roadblock);
 		data.saveChanges();
 		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
 	}
@@ -130,7 +128,6 @@ public class AbilityData {
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
 		roadblock = buf.readInt();
-		// System.out.println("read: " + roadblock);
 	}
 	
 	/**
