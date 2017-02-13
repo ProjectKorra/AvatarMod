@@ -89,6 +89,7 @@ public class Networker {
 			
 			PacketModularData packet = packetCreator.apply(this);
 			AvatarMod.network.sendToAll(packet);
+			changed.clear();
 			
 		}
 	}

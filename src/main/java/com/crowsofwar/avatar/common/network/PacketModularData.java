@@ -52,7 +52,7 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 	 * @param currentData
 	 */
 	public PacketModularData(Networker networker) {
-		this.changed = networker.changed;
+		this.changed = new HashSet<>(networker.changed);
 		this.transmitters = networker.transmitters;
 		this.currentData = networker.currentData;
 	}
