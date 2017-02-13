@@ -107,7 +107,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
 			
 			int roadblock = abilityData.getRoadblockLevel();
-//			System.out.println("> " + roadblock);
 			
 			translate(width / 2f - barSize - middlePadding / 2f, height / 2f + middlePadding / 2f, 0);
 			
