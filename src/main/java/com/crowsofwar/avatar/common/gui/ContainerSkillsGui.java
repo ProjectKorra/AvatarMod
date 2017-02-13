@@ -40,7 +40,8 @@ public class ContainerSkillsGui extends Container {
 		
 		inventory = new SkillsGuiInventory();
 		
-		addSlotToContainer(new Slot(inventory, 0, (width - 18) / 2 + 20, (height - 18) / 2 + 22) {
+		int barHeight = (int) (80f / 56 * 7);
+		addSlotToContainer(new Slot(inventory, 0, (width - 18) / 2 + 1, (height - 18) / 2 + barHeight + 26) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return stack.getItem() == AvatarItems.itemScroll;

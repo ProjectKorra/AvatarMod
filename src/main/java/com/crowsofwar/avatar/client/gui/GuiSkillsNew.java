@@ -84,9 +84,10 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		//@formatter:off
 		
-		int iconSize = 256, iconCrop = 80;
-		int barSize = 80;
-		int middlePadding = 20;
+		float iconSize = 256, iconCrop = 80;
+		float barTexWidth = 56, barTexHeight = 7;
+		float barActualWidth = 80, barScale = barActualWidth / barTexWidth, barActualHeight = barScale * barTexHeight;
+		float middlePadding = 20;
 		
 		btnConfirmScroll.xPosition = inventorySlots.getSlot(0).xDisplayPosition + 20;
 		btnConfirmScroll.yPosition = inventorySlots.getSlot(0).yDisplayPosition - 2;
@@ -108,12 +109,12 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			
 			int roadblock = abilityData.getRoadblockLevel();
 			
-			translate(width / 2f - barSize - middlePadding / 2f, height / 2f + middlePadding / 2f, 0);
+			translate((width - barActualWidth) / 2f, height / 2f + middlePadding / 2f, 0);
 			
-			scale(barSize / 56f, barSize / 56f, 1);
+			scale(barActualWidth / 56f, barActualWidth / 56f, 1);
 			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-			drawTexturedModalRect(0, 0, 0, 137, 57, 7);
-			drawTexturedModalRect(0, 0, 0, 144, (int) (abilityData.getXp() / 100 * 57), 7);
+			drawTexturedModalRect(0, 0, 0, 137, 56, 7);
+			drawTexturedModalRect(0, 0, 0, 144, (int) (abilityData.getXp() / 100 * 56), 7);
 			
 			for (int i = 3; i >= roadblock + 1; i--) {
 				drawTexturedModalRect(i * 17 - 1, 1, i * 17 - 1, 152, 7, 5);
@@ -123,7 +124,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		pushMatrix();
 			
-			translate((width - 18) / 2 + 19, (height - 18) / 2 + 21, 0);
+			translate((width - 18) / 2, (height - 18) / 2 + barActualHeight + 25, 0);
 			
 			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 			drawTexturedModalRect(0, 0, 40, 0, 18, 18);
