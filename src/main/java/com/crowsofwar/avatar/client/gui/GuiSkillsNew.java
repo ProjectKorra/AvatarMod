@@ -56,7 +56,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	public void initGui() {
 		super.initGui();
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		btnConfirmScroll = addButton(new GuiButton(0, 0, 0, 115, 20, "Remove Roadblock"));
+		btnConfirmScroll = addButton(new GuiButtonScrolls(inventorySlots, 0, 115, 20));
 		btnConfirmScroll.enabled = false;
 	}
 	
