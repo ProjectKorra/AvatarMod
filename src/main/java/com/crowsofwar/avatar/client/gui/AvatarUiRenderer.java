@@ -56,6 +56,7 @@ public class AvatarUiRenderer extends Gui {
 	private RadialSegment fadingSegment;
 	private long timeFadeStart;
 	private final Minecraft mc;
+	private int chiMsgFade;
 	
 	public AvatarUiRenderer() {
 		mc = Minecraft.getMinecraft();
@@ -180,6 +181,10 @@ public class AvatarUiRenderer extends Gui {
 	public static void fade(RadialSegment segment) {
 		instance.fadingSegment = segment;
 		instance.timeFadeStart = System.currentTimeMillis();
+	}
+	
+	public static void displayChiMessage() {
+		instance.chiMsgFade = 0;
 	}
 	
 }
