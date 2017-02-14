@@ -73,6 +73,7 @@ public class AvatarUiRenderer extends Gui {
 		renderRadialMenu(resolution);
 		renderStatusControls(resolution);
 		renderChiBar(resolution);
+		renderChiMsg(resolution);
 		
 	}
 	
@@ -160,6 +161,16 @@ public class AvatarUiRenderer extends Gui {
 				0xffffff);
 		
 		popMatrix();
+		
+	}
+	
+	private void renderChiMsg(ScaledResolution res) {
+		
+		if (chiMsgFade != -1) {
+			drawString(mc.fontRendererObj, "Not enough chi", 0, 0, 0xffffff);
+			chiMsgFade++;
+			if (chiMsgFade >= 100) chiMsgFade = -1;
+		}
 		
 	}
 	
