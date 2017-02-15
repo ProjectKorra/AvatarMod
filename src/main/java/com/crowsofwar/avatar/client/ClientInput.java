@@ -17,7 +17,9 @@
 
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
 import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 import java.util.ArrayList;
@@ -32,19 +34,26 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -64,12 +73,14 @@ public class ClientInput implements IControlsHandler {
 	private GameSettings gameSettings;
 	private Map<String, KeyBinding> keybindings;
 	private boolean mouseLeft, mouseRight, mouseMiddle, space;
-	private boolean wasLeft, wasRight, wasMiddle;
+	private boolean wasLeft, wasRight, wasMiddle, wasSpace;
 	
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
 	 */
 	private final List<BendingController> keyboardBending;
+	
+	private final boolean[] wasAbilityDown;
 	
 	private boolean press;
 	
@@ -86,6 +97,8 @@ public class ClientInput implements IControlsHandler {
 		addBendingButton(BendingType.WATERBENDING, Keyboard.KEY_C);
 		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_G);
 		addKeybinding(AvatarControl.KEY_SKILLS, Keyboard.KEY_K, "main");
+		
+		this.wasAbilityDown = new boolean[BendingManager.allAbilities().size()];
 		
 	}
 	
@@ -120,9 +133,11 @@ public class ClientInput implements IControlsHandler {
 			if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
 			if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
 			if (control == CONTROL_SPACE) return space;
+			if (control == CONTROL_SPACE_DOWN) return space && !wasSpace;
 			if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
 			if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
 			if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
+			if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 			AvatarLog.warn("ClientInput- Unknown control: " + control);
 			return false;
 		}
@@ -146,13 +161,34 @@ public class ClientInput implements IControlsHandler {
 		
 	}
 	
+	private boolean isAbilityPressed(BendingAbility ability) {
+		if (CLIENT_CONFIG.keymappings.containsKey(ability)) {
+			int key = CLIENT_CONFIG.keymappings.get(ability);
+			if (key < 0 && Mouse.isButtonDown(key + 100)) return true;
+			if (key >= 0 && Keyboard.isKeyDown(key)) return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void openBendingMenu(BendingController controller) {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
-		if (isControlPressed(controller.getRadialMenu().getKey()) && data.hasBending(controller.getID()))
-			AvatarUiRenderer.openBendingGui(controller.getType());
+		if (isControlPressed(controller.getRadialMenu().getKey()) && !AvatarUiRenderer.hasBendingGui()) {
+			
+			if (data.hasBending(controller.getType())) {
+				AvatarUiRenderer.openBendingGui(controller.getType());
+			} else {
+				
+				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
+				message = ChatSender.instance.processText(message, MSG_DONT_HAVE_BENDING,
+						controller.getControllerName(), mc.thePlayer.getName());
+				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
+				
+			}
+			
+		}
 		
 	}
 	
@@ -161,6 +197,7 @@ public class ClientInput implements IControlsHandler {
 		wasLeft = mouseLeft;
 		wasRight = mouseRight;
 		wasMiddle = mouseMiddle;
+		wasSpace = space;
 		
 		if (mc.inGameHasFocus) {
 			mouseLeft = Mouse.isButtonDown(0);
@@ -197,6 +234,24 @@ public class ClientInput implements IControlsHandler {
 				}
 				
 			}
+			
+			List<BendingAbility> allAbilities = BendingManager.allAbilities();
+			for (int i = 0; i < allAbilities.size(); i++) {
+				BendingAbility ability = allAbilities.get(i);
+				boolean down = isAbilityPressed(ability);
+				
+				if (!CLIENT_CONFIG.conflicts.containsKey(ability))
+					CLIENT_CONFIG.conflicts.put(ability, false);
+				boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
+				
+				if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down
+						&& !wasAbilityDown[i]) {
+					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer, ability.getRaytrace());
+					AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+				}
+				wasAbilityDown[i] = down;
+			}
+			
 		}
 		
 	}

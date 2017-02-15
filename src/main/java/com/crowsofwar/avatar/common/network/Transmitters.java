@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingState;
+import com.crowsofwar.avatar.common.data.Chi;
 
 import io.netty.buffer.ByteBuf;
 
@@ -156,4 +157,33 @@ public class Transmitters {
 			return out;
 		}
 	};
+	
+	public static final DataTransmitter<Boolean, PlayerDataContext> BOOLEAN = new DataTransmitter<Boolean, PlayerDataContext>() {
+		
+		@Override
+		public void write(ByteBuf buf, Boolean t) {
+			buf.writeBoolean(t);
+		}
+		
+		@Override
+		public Boolean read(ByteBuf buf, PlayerDataContext ctx) {
+			return buf.readBoolean();
+		}
+	};
+	
+	public static final DataTransmitter<Chi, PlayerDataContext> CHI = new DataTransmitter<Chi, PlayerDataContext>() {
+		
+		@Override
+		public void write(ByteBuf buf, Chi t) {
+			t.toBytes(buf);
+		}
+		
+		@Override
+		public Chi read(ByteBuf buf, PlayerDataContext ctx) {
+			Chi chi = new Chi(ctx.getData());
+			chi.fromBytes(buf);
+			return chi;
+		}
+	};
+	
 }

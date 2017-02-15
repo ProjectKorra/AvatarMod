@@ -4,12 +4,12 @@
     "modid": "avatarmod",
     "name": "Avatar Mod: Out of the Iceberg",
     "description": "A large, work-in-progress expansion to Minecraft which will allow bending in Minecraft, inspired by the TV show Avatar: The Last Airbender.",
-    "version": "AV_A1.2",
+    "version": "a3.0",
     "mcversion": "1.11",
     "url": "https://github.com/CrowsOfWar/AvatarMod/wiki",
     "updateUrl": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598",
-    "authorList": [ "CrowsOfWar" ],
-    "credits": "Code & art from CrowsOfWar, some ideas from Community",
-    "logoFile": "assets/avatarmod/textures/misc/logo.png"
+    "authorList": [ "CrowsOfWar", "EduMC" ],
+    "credits": "Code by CrowsOfWar, Art by EduMC, Ideas from community, Brainstorming from FavouriteDragon",
+    "logoFile": "assets/avatarmod/textures/misc/logo_956px.png"
   }]
 }

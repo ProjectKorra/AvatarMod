@@ -31,7 +31,9 @@ public enum ParticleType {
 	
 	FLAMES(AvatarParticles.getParticleFlames()),
 	AIR(AvatarParticles.getParticleAir()),
-	CLOUD(EnumParticleTypes.CLOUD);
+	CLOUD(EnumParticleTypes.CLOUD),
+	BUBBLE(EnumParticleTypes.WATER_BUBBLE),
+	SPLASH(EnumParticleTypes.WATER_SPLASH);
 	
 	private final EnumParticleTypes vanillaType;
 	

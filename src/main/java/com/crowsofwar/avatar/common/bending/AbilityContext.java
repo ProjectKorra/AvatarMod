@@ -18,13 +18,17 @@
 package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -141,6 +145,22 @@ public class AbilityContext {
 			Thread.dumpStack();
 			return serverLookBlock;
 		}
+	}
+	
+	/**
+	 * Tries to use the given amount of available chi. Returns true if there was
+	 * enough chi to remove and it removed it.
+	 */
+	public boolean consumeChi(float amount) {
+		Chi chi = data.chi();
+		float available = chi.getAvailableChi();
+		if (available >= amount) {
+			chi.changeTotalChi(-amount);
+			chi.changeAvailableChi(-amount);
+			return true;
+		}
+		AvatarMod.network.sendTo(new PacketCNotEnoughChi(), (EntityPlayerMP) playerEntity);
+		return false;
 	}
 	
 }

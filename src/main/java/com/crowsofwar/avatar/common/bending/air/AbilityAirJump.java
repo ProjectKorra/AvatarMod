@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -37,14 +39,15 @@ public class AbilityAirJump extends AirAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
+		
 		AvatarPlayerData data = ctx.getData();
-		data.addStatusControl(StatusControl.AIR_JUMP);
-		data.sync();
-	}
-	
-	@Override
-	public int getIconIndex() {
-		return 10;
+		
+		if (!data.hasStatusControl(StatusControl.AIR_JUMP) && ctx.consumeChi(STATS_CONFIG.chiAirJump)) {
+			
+			data.addStatusControl(StatusControl.AIR_JUMP);
+			data.sync();
+			
+		}
 	}
 	
 }

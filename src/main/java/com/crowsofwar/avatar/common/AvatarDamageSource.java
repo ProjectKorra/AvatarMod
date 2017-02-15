@@ -79,4 +79,28 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_wave", hit, owner);
 	}
 	
+	/**
+	 * Create a DamageSource for damage caused by a fireball.
+	 * 
+	 * @param hit
+	 *            Who was hit by the fireball
+	 * @param owner
+	 *            Who created the fireball
+	 */
+	public static DamageSource causeFireballDamage(Entity hit, Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner);
+	}
+	
+	/**
+	 * Create a DamageSource for damage caused by an airblade.
+	 * 
+	 * @param hit
+	 *            Who was hit by the airblade
+	 * @param owner
+	 *            Who created the airblade
+	 */
+	public static DamageSource causeAirbladeDamage(Entity hit, Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_airblade", hit, owner);
+	}
+	
 }

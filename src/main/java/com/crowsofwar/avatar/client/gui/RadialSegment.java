@@ -18,7 +18,9 @@
 package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.client.gui.RadialMenu.*;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 
 import net.minecraft.client.Minecraft;
@@ -38,14 +40,13 @@ public class RadialSegment extends Gui {
 	private final Minecraft mc;
 	private final float angle;
 	private final int index;
-	private final int icon;
+	private final BendingAbility ability;
 	
-	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, int icon) {
+	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, BendingAbility ability) {
 		this.gui = gui;
 		this.angle = 22.5f + index * 45;
 		this.index = index;
-		if (icon == -1) icon = 255;
-		this.icon = icon;
+		this.ability = ability;
 		this.theme = theme;
 		this.mc = Minecraft.getMinecraft();
 	}
@@ -81,26 +82,6 @@ public class RadialSegment extends Gui {
 		return angle;
 	}
 	
-	public int getTextureU() {
-		return (icon * 32) % 256;
-	}
-	
-	public int getTextureV() {
-		return (icon / 8) * 32;
-	}
-	
-	/**
-	 * Draw this radial segment.
-	 * 
-	 * @param hover
-	 *            Whether mouse is over it
-	 * @param resolution
-	 *            Resolution MC is at
-	 */
-	public void draw(boolean hover, ScaledResolution resolution) {
-		draw(hover, resolution, 1, 1);
-	}
-	
 	/**
 	 * Draw this radial segment.
 	 * 
@@ -126,6 +107,7 @@ public class RadialSegment extends Gui {
 		GlStateManager.pushMatrix();
 			GlStateManager.translate(width / 2f, height / 2f, 0); 	// Re-center origin
 			GlStateManager.scale(menuScale, menuScale, menuScale); 	// Scale all following arguments
+			GlStateManager.scale(.9f, .9f, 1);
 			GlStateManager.rotate(this.getAngle(), 0, 0, 1);		// All transform operations and the image are rotated
 			GlStateManager.scale(scale, scale, scale);
 			GlStateManager.translate(-segmentX, -segmentY, 0);		// Offset the image to the correct
@@ -135,48 +117,42 @@ public class RadialSegment extends Gui {
 					theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f, alpha);
 			mc.getTextureManager().bindTexture(AvatarUiTextures.radialMenu);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-			// Draw edge
-			GlStateManager.color(theme.getEdge().getRed(hover) / 255f, theme.getEdge().getGreen(hover) / 255f,
-					theme.getEdge().getBlue(hover) / 255f, alpha);
-			mc.getTextureManager().bindTexture(AvatarUiTextures.edge);
-//			GlStateManager.translate(0, 0, 1);
-			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			
 		GlStateManager.popMatrix();
 		
 		// Draw icon
 		GlStateManager.pushMatrix();
-			float iconScale = .8f;
-			float angle = this.getAngle() + 45f;
+			float iconScale = .4f;
+			float angle = this.getAngle() - 20f;
 			angle %= 360;
 			
-			GlStateManager.translate(width / 2f, height / 2f, 0); // Re-center origin
-			GlStateManager.rotate(angle, 0, 0, 1); // Rotation for next translation
-			GlStateManager.scale(scale, scale, scale);
-			GlStateManager.translate(-59, -27, 0); // Translate into correct position
-			GlStateManager.rotate(-angle, 0, 0, 1); // Icon is now at desired position, rotate the
-													// image back
-			// to regular
+			// Recenter over origin
+			translate((width - 256 * iconScale) / 2f, (height - 256 * iconScale) / 2f, 0);
+			// Translate to the correct position
+			rotate(angle, 0, 0, 1);
+			translate(0, -200 * .9f * menuScale * scale, 0);
+			rotate(-angle, 0, 0, 1);
+			// Last transform before draw
+			scale(iconScale, iconScale, 1);
 			
-			// Color to icon RGB
-			GlStateManager.color(theme.getIcon().getRed(hover) / 255f, theme.getIcon().getGreen(hover) / 255f,
-					theme.getIcon().getBlue(hover) / 255f, alpha);
+			// Ensure icon is not overlapped
+			GlStateManager.translate(0, 0, 2);
 			
-			GlStateManager.translate(0, 0, 2); // Ensure icon is not overlapped
-			GlStateManager.scale(iconScale, iconScale, iconScale);  // Scale the icon's recentering
-																	// and actual image
-			GlStateManager.translate(-16 * iconScale, -16 * iconScale, 0); // Re-center the icon.
-			mc.getTextureManager().bindTexture(AvatarUiTextures.icons);
-			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
+			if (ability != null) {
+				mc.getTextureManager().bindTexture(AvatarUiTextures.getAbilityTexture(ability));
+				drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			}
 			
-			float darkenBy = 0.05f;
-			float r = theme.getIcon().getRed(hover) / 255f - darkenBy;
-			float g = theme.getIcon().getGreen(hover) / 255f - darkenBy;
-			float b = theme.getIcon().getBlue(hover) / 255f - darkenBy;
-			float avg = (r + g + b) / 3;
-			GlStateManager.color(avg, avg,
-					avg, alpha);
-			mc.getTextureManager().bindTexture(AvatarUiTextures.blurredIcons);
-			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
+//			float darkenBy = 0.05f;
+//			float r = theme.getIcon().getRed(hover) / 255f - darkenBy;
+//			float g = theme.getIcon().getGreen(hover) / 255f - darkenBy;
+//			float b = theme.getIcon().getBlue(hover) / 255f - darkenBy;
+//			float avg = (r + g + b) / 3;
+//			GlStateManager.color(avg, avg, avg, alpha);
+			
+			// TODO Blurred versions
+//			mc.getTextureManager().bindTexture(AvatarUiTextures.blurredIcons);
+//			drawTexturedModalRect(0, 0, getTextureU(), getTextureV(), 32, 32);
 			
 		GlStateManager.popMatrix();
 		

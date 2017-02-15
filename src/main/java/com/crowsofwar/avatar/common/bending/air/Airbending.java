@@ -17,13 +17,11 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_GUST;
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static com.crowsofwar.avatar.common.bending.BendingType.AIRBENDING;
 
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -38,11 +36,12 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Airbending extends BendingController {
 	
 	private BendingMenuInfo menu;
-	private final BendingAbility abilityAirGust, abilityAirJump;
 	
 	public Airbending() {
-		addAbility(this.abilityAirGust = ABILITY_AIR_GUST);
-		addAbility(this.abilityAirJump = ABILITY_AIR_JUMP);
+		addAbility(ABILITY_AIR_GUST);
+		addAbility(ABILITY_AIR_JUMP);
+		addAbility(ABILITY_AIRBLADE);
+		addAbility(ABILITY_AIR_BUBBLE);
 		
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);
@@ -51,7 +50,7 @@ public class Airbending extends BendingController {
 		ThemeColor edge = new ThemeColor(dark, dark);
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
 		MenuTheme theme = new MenuTheme(background, edge, icon, 0xE8E5DF);
-		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, abilityAirGust, abilityAirJump);
+		this.menu = new BendingMenuInfo(theme, AvatarControl.KEY_AIRBENDING, this);
 	}
 	
 	@Override

@@ -64,8 +64,9 @@ public class AbilityPickUpBlock extends EarthAbility {
 		if (ebs.getPickupBlock() != null) {
 			ebs.getPickupBlock().drop();
 			ebs.setPickupBlock(null);
-			// AvatarMod.network.sendTo(new PacketCPlayerData(data),
-			// (EntityPlayerMP) player);
+			data.removeStatusControl(StatusControl.THROW_BLOCK);
+			data.removeStatusControl(StatusControl.PLACE_BLOCK);
+			data.sync();
 		} else {
 			VectorI target = ctx.verifyClientLookBlock(-1, 5);
 			if (target != null) {
@@ -73,32 +74,36 @@ public class AbilityPickUpBlock extends EarthAbility {
 				Block block = ibs.getBlock();
 				if (STATS_CONFIG.bendableBlocks.contains(block)) {
 					
-					AbilityData abilityData = data.getAbilityData(this);
-					float xp = abilityData.getXp();
-					
-					EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
-					floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);
-					floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
-					
-					double dist = 2.5;
-					Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
-					floating.velocity().add(force);
-					floating.setBehavior(new FloatingBlockBehavior.PickUp(floating));
-					floating.setOwner(player);
-					floating.setDamageMult(.75f + xp / 100);
-					
-					world.spawnEntityInWorld(floating);
-					
-					ebs.setPickupBlock(floating);
-					data.sendBendingState(ebs);
-					
-					world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
-					
-					controller().post(new FloatingBlockEvent.BlockPickedUp(floating, player));
-					
-					data.addStatusControl(StatusControl.PLACE_BLOCK);
-					data.addStatusControl(StatusControl.THROW_BLOCK);
-					data.sync();
+					if (ctx.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+						
+						AbilityData abilityData = data.getAbilityData(this);
+						float xp = abilityData.getXp();
+						
+						EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
+						floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);
+						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
+						
+						double dist = 2.5;
+						Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
+						floating.velocity().add(force);
+						floating.setBehavior(new FloatingBlockBehavior.PickUp());
+						floating.setOwner(player);
+						floating.setDamageMult(.75f + xp / 100);
+						
+						world.spawnEntityInWorld(floating);
+						
+						ebs.setPickupBlock(floating);
+						data.sendBendingState(ebs);
+						
+						world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
+						
+						controller().post(new FloatingBlockEvent.BlockPickedUp(floating, player));
+						
+						data.addStatusControl(StatusControl.PLACE_BLOCK);
+						data.addStatusControl(StatusControl.THROW_BLOCK);
+						data.sync();
+						
+					}
 					
 				} else {
 					world.playSound(null, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
@@ -107,11 +112,6 @@ public class AbilityPickUpBlock extends EarthAbility {
 				
 			}
 		}
-	}
-	
-	@Override
-	public int getIconIndex() {
-		return 0;
 	}
 	
 }

@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.client.gui;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 import java.io.IOException;
@@ -30,12 +31,15 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.config.ConfigClient;
 import com.google.common.collect.EvictingQueue;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
@@ -58,14 +62,19 @@ public class SkillsGui extends GuiScreen {
 	private boolean wasMouseDown;
 	
 	private final BendingController controller;
+	private AbilityCard editing;
 	
 	public SkillsGui(BendingController controller) {
+		mc = Minecraft.getMinecraft();
 		this.controller = controller;
 		this.cards = new ArrayList<>();
 		for (BendingAbility ability : controller.getAllAbilities()) {
-			cards.add(new AbilityCard(ability));
+			AbilityCard card = new AbilityCard(ability);
+			cards.add(card);
+			updateConflicts(card);
 		}
 		lastX = Mouse.getX();
+		this.editing = null;
 	}
 	
 	@Override
@@ -178,12 +187,103 @@ public class SkillsGui extends GuiScreen {
 		recentVelocity.add(Mouse.getDWheel() / 1);
 	}
 	
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		
+		if (keyCode == 1 && editing != null) {
+			CLIENT_CONFIG.keymappings.remove(editing.getAbility());
+			updateConflicts(editing);
+			stopEditing();
+			ConfigClient.save();
+			return;
+		}
+		
+		if (keyCode == mc.gameSettings.keyBindInventory.getKeyCode()) {
+			keyCode = 1;
+		}
+		if (editing != null) {
+			CLIENT_CONFIG.keymappings.put(editing.getAbility(), keyCode);
+			updateConflicts(editing);
+			stopEditing();
+			ConfigClient.save();
+		}
+		
+		super.keyTyped(typedChar, keyCode);
+		
+	}
+	
+	@Override
+	protected void mouseClicked(int x, int y, int button) throws IOException {
+		super.mouseClicked(x, y, button);
+		for (int i = 0; i < cards.size(); i++) {
+			AbilityCard card = cards.get(i);
+			float _actualWidth = res.getScaledWidth() / 7f;
+			float _spacing = res.getScaledWidth() / 8.5f;
+			float minX = (int) (i * (_actualWidth + _spacing)) + (float) scroll / res.getScaleFactor();
+			float maxX = minX + _actualWidth;
+			
+			if (x >= minX && x <= maxX) {
+				
+				float _scaledWidth = 100;
+				float _scale = _actualWidth / _scaledWidth;
+				float _minY = (res.getScaledHeight() - height) / 2 + 50;
+				float minY = _minY + 180 * _scale;
+				float maxY = minY + 30 * _scale;
+				
+				if (y >= minY && y <= maxY) {
+					startEditing(card);
+				}
+				
+			}
+			
+		}
+		
+		if (button == 1) {
+			stopEditing();
+		} else if (button != 0 && editing != null) {
+			CLIENT_CONFIG.keymappings.put(editing.getAbility(), button - 100);
+			updateConflicts(editing);
+			stopEditing();
+		}
+		
+	}
+	
 	private int getMouseX() {
 		return Mouse.getX();
 	}
 	
 	public int getMouseScroll() {
 		return scroll + getMouseX();
+	}
+	
+	private void startEditing(AbilityCard card) {
+		if (editing != null) stopEditing();
+		card.setEditing(true);
+		this.editing = card;
+	}
+	
+	private void stopEditing() {
+		if (editing != null) {
+			editing.setEditing(false);
+			editing = null;
+		}
+	}
+	
+	/**
+	 * Ensures that the card's conflict field is correctly set to the
+	 * conflicting keybinding; null if none
+	 */
+	private void updateConflicts(AbilityCard card) {
+		card.setConflict(null);
+		CLIENT_CONFIG.conflicts.put(card.getAbility(), false);
+		for (KeyBinding kb : mc.gameSettings.keyBindings) {
+			if (CLIENT_CONFIG.keymappings.get(card.getAbility()) != null
+					&& (CLIENT_CONFIG.keymappings.get(card.getAbility()) == kb.getKeyCode())) {
+				card.setConflict(kb);
+				CLIENT_CONFIG.conflicts.put(card.getAbility(), true);
+				break;
+			}
+		}
 	}
 	
 }

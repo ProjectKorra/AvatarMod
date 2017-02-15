@@ -28,7 +28,6 @@ import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -41,21 +40,36 @@ public class ConfigStats {
 	public static final ConfigStats STATS_CONFIG = new ConfigStats();
 	
 	@Load
-	public AttackSettings floatingBlockSettings = new AttackSettings(0.25f, 1),
+	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
 			ravineSettings = new AttackSettings(7, 0.25), //
-			waveSettings = new AttackSettings(9, 6);
+			waveSettings = new AttackSettings(6, 6), //
+			airbladeSettings = new AttackSettings(4, .1);
 	
 	@Load
 	public List<String> bendableBlocksNames;
+	
+	@Load
+	public double wallWaitTime = 10, wallMomentum = 10;
+	
+	@Load
+	public int wallJumpDelay = 10;
+	
+	@Load
+	public FireballSettings fireballSettings = new FireballSettings();
+	
+	@Load
+	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 6f, chiRavine = 3f,
+			chiWall = 5f, chiPickUpBlock = 2.5f, chiMining = 8f, chiFireArc = 2f, chiFireball = 4f,
+			chiFlamethrowerSecond = 2f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
+			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f;
 	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {
 		bendableBlocksNames = new ArrayList<String>();
-		bendableBlocksNames.add(Blocks.STONE.toString());
 		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
 				STONEBRICK, CLAY, HARDENED_CLAY, STAINED_HARDENED_CLAY, COAL_ORE, IRON_ORE, EMERALD_ORE,
-				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE);
+				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE, GRASS);
 	}
 	
 	private void addBendableBlock(Block... blocks) {
@@ -97,6 +111,25 @@ public class ConfigStats {
 			this.damage = damage;
 			this.push = push;
 		}
+		
+	}
+	
+	public static class FireballSettings {
+		
+		@Load
+		public float damage = 6;
+		
+		@Load
+		public int fireTime = 6;
+		
+		@Load
+		public float explosionSize = 1.5f;
+		
+		@Load
+		public boolean damageBlocks = false;
+		
+		@Load
+		public double push = .75;
 		
 	}
 	

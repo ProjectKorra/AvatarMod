@@ -21,6 +21,9 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.config.ConfigChi;
+import com.crowsofwar.avatar.common.config.ConfigClient;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.gorecore.config.ConfigurationException;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
@@ -63,6 +66,9 @@ public class NodeConfig extends NodeFunctional {
 			try {
 				
 				ConfigStats.load();
+				ConfigSkills.load();
+				ConfigClient.load();
+				ConfigChi.load();
 				
 			} catch (ConfigurationException e) {
 				

@@ -34,13 +34,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class EntityArc extends AvatarEntity {
 	
-	private static final int DATAWATCHER_ID = 3, DATAWATCHER_VELOCITY = 4, // 4,5,6
-			DATAWATCHER_GRAVITY = 7;
-	
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.VARINT);
-	private static final DataParameter<Boolean> SYNC_GRAVITY = EntityDataManager.createKey(EntityArc.class,
-			DataSerializers.BOOLEAN);
 	private static final DataParameter<String> SYNC_OWNER_NAME = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.STRING);
 	
@@ -88,8 +83,8 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	protected void entityInit() {
+		super.entityInit();
 		dataManager.register(SYNC_ID, 0);
-		dataManager.register(SYNC_GRAVITY, false);
 	}
 	
 	@Override
@@ -103,10 +98,6 @@ public abstract class EntityArc extends AvatarEntity {
 		}
 		
 		ignoreFrustumCheck = true;
-		
-		if (isGravityEnabled()) {
-			velocity().add(getGravityVector());
-		}
 		
 		Vector velPerTick = velocity().dividedBy(20);
 		moveEntity(MoverType.SELF, velPerTick.x(), velPerTick.y(), velPerTick.z());
@@ -164,11 +155,14 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
 		setDead();
 	}
 	
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {}
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+	}
 	
 	@Override
 	public void setPosition(double x, double y, double z) {
@@ -202,14 +196,25 @@ public abstract class EntityArc extends AvatarEntity {
 		return points[index == 0 ? index : index - 1];
 	}
 	
+	/**
+	 * Get the id of this arc<br />
+	 * NOT TO BE CONFUSED WITH {@link #getAvId()}
+	 */
 	public int getId() {
 		return dataManager.get(SYNC_ID);
 	}
 	
+	/**
+	 * Set the id of this arc<br />
+	 * NOT TO BE CONFUSED WITH {@link #setAvId()}
+	 */
 	public void setId(int id) {
 		dataManager.set(SYNC_ID, id);
 	}
 	
+	/**
+	 * Uses id from {@link #getId()} not {@link #getAvId()}
+	 */
 	public static EntityArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
 			if (obj instanceof EntityArc && ((EntityArc) obj).getId() == id) return (EntityArc) obj;
@@ -227,14 +232,6 @@ public abstract class EntityArc extends AvatarEntity {
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender(float p_70070_1_) {
 		return 15728880;
-	}
-	
-	public boolean isGravityEnabled() {
-		return dataManager.get(SYNC_GRAVITY);
-	}
-	
-	public void setGravityEnabled(boolean enabled) {
-		dataManager.set(SYNC_GRAVITY, enabled);
 	}
 	
 	public EntityPlayer getOwner() {

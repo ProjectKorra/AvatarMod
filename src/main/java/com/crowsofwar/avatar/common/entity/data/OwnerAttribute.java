@@ -19,8 +19,6 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.AvatarLog;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,8 +26,8 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.world.World;
 
 /**
- * An object which is designed to be used with an entity. Manages a synced owner
- * (player entity), storing it, and retrieving it.
+ * Designed to use with an entity. Manages a synchronized owner property,
+ * allowing retrieval and "storage" of a player entity.
  * 
  * @author CrowsOfWar
  */
@@ -103,7 +101,7 @@ public class OwnerAttribute {
 	 */
 	public EntityPlayer getOwner() {
 		
-		if ((ownerCached == null || ownerCached.isDead) && getOwnerName() != null) {
+		if (isCacheInvalid()) {
 			// Slightly cosmetic, but only call setOwner(...) if the player was
 			// found
 			EntityPlayer player = world.getPlayerEntityByName(getOwnerName());
@@ -129,6 +127,26 @@ public class OwnerAttribute {
 			setOwnerCallback.accept(owner);
 		}
 		
+	}
+	
+	/**
+	 * Checks the cache's validity. If it is invalid, resets the cache and
+	 * returns true.
+	 * <p>
+	 * Invalid conditions:
+	 * <ul>
+	 * <li>Cached owner is null
+	 * <li>Cached owner is dead
+	 * <li>Cached owner is not the correct owner
+	 * <li>There is not supposed to be an owner
+	 */
+	private boolean isCacheInvalid() {
+		if (ownerCached == null || ownerCached.isDead || !ownerCached.getName().equals(getOwnerName())
+				|| getOwnerName() == null) {
+			ownerCached = null;
+			return true;
+		}
+		return false;
 	}
 	
 }

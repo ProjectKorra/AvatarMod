@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -44,38 +46,38 @@ public class AbilityFireArc extends FireAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
-		World world = ctx.getWorld();
-		FirebendingState fs = (FirebendingState) ctx.getData().getBendingState(controller());
-		AvatarPlayerData data = ctx.getData();
 		
-		Vector lookPos;
-		if (ctx.isLookingAtBlock()) {
-			lookPos = ctx.getLookPos();
-		} else {
-			Vector look = Vector.fromEntityLook(player);
-			lookPos = Vector.getEyePos(player).plus(look.times(3));
+		if (ctx.consumeChi(STATS_CONFIG.chiFireArc)) {
+			
+			EntityPlayer player = ctx.getPlayerEntity();
+			World world = ctx.getWorld();
+			FirebendingState fs = (FirebendingState) ctx.getData().getBendingState(controller());
+			AvatarPlayerData data = ctx.getData();
+			
+			Vector lookPos;
+			if (ctx.isLookingAtBlock()) {
+				lookPos = ctx.getLookPos();
+			} else {
+				Vector look = Vector.getLookRectangular(player);
+				lookPos = Vector.getEyePos(player).plus(look.times(3));
+			}
+			
+			EntityFireArc fire = new EntityFireArc(world);
+			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
+			fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, player));
+			fire.setOwner(player);
+			fire.setDamageMult(0.75f + ctx.getData().getAbilityData(this).getXp() / 100);
+			
+			world.spawnEntityInWorld(fire);
+			
+			fs.setFireArc(fire);
+			data.sendBendingState(fs);
+			
+			data.addStatusControl(StatusControl.THROW_FIRE);
+			data.sync();
+			
 		}
 		
-		EntityFireArc fire = new EntityFireArc(world);
-		fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
-		fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, player));
-		fire.setOwner(player);
-		fire.setDamageMult(0.75f + ctx.getData().getAbilityData(this).getXp() / 100);
-		
-		world.spawnEntityInWorld(fire);
-		
-		fs.setFireArc(fire);
-		data.sendBendingState(fs);
-		
-		data.addStatusControl(StatusControl.THROW_FIRE);
-		data.sync();
-		
-	}
-	
-	@Override
-	public int getIconIndex() {
-		return 3;
 	}
 	
 }

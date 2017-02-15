@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.getOrCreateNestedCompound;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 import java.util.List;
@@ -140,6 +140,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		
+		super.entityInit();
 		dataManager.register(SYNC_ENTITY_ID, 0);
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
@@ -150,6 +151,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
 		setBlockState(
 				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
 		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
@@ -163,6 +165,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
 		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
 		nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
 		nbt.setDouble("VelocityX", velocity().x());
@@ -171,7 +174,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
-		getBehavior().save(getOrCreateNestedCompound(nbt, "BehaviorData"));
+		getBehavior().save(findNestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
 		ownerAttrib.save(nbt);
 	}
@@ -257,6 +260,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		
+		super.onUpdate();
+		
 		extinguish();
 		
 		if (ticksExisted == 1) {
@@ -284,8 +289,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		
 		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		
-		getBehavior().setEntity(this);
-		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate();
+		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
 		
 	}
@@ -293,7 +297,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	/**
 	 * Called when the block collides with the ground as well as other entities
 	 */
-	public void onCollision() {
+	@Override
+	public void onCollideWithSolid() {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
@@ -358,7 +363,13 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	public boolean canBeCollidedWith() {
-		return false;
+		return true;
+	}
+	
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		// super.applyEntityCollision(entity);
+		// entity.applyEntityCollision(entity);
 	}
 	
 }

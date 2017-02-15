@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-  
+    
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -64,7 +64,6 @@ public class Configuration {
 	
 	private void construct(Map<String, Object> map) {
 		this.map = map;
-		System.out.println("Set map to " + map);
 		this.defaults = new ArrayList<>();
 	}
 	

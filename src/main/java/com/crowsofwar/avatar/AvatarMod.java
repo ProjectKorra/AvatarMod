@@ -21,32 +21,49 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
+import com.crowsofwar.avatar.common.FallAbsorptionHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
+import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
+import com.crowsofwar.avatar.common.bending.water.WaterbendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
+import com.crowsofwar.avatar.common.config.ConfigChi;
+import com.crowsofwar.avatar.common.config.ConfigClient;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
+import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
+import com.crowsofwar.avatar.common.entity.EntityWall;
+import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
+import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
@@ -66,7 +83,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false)
+@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
+		updateJSON = "http://av2.io/updates.json")
+
 public class AvatarMod {
 	
 	@SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
@@ -84,15 +103,21 @@ public class AvatarMod {
 	public void preInit(FMLPreInitializationEvent e) {
 		
 		AvatarLog.log = e.getModLog();
-		ConfigStats.load();
-		ConfigSkills.load();
 		
 		BendingAbility.registerAbilities();
+		
+		ConfigStats.load();
+		ConfigSkills.load();
+		ConfigClient.load();
+		ConfigChi.load();
+		
 		BendingManager.init();
 		
 		EarthSoundHandler.register();
 		
 		AvatarParticles.register();
+		AirbendingEvents.register();
+		FallAbsorptionHandler.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
@@ -100,10 +125,11 @@ public class AvatarMod {
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
 		registerPacket(PacketSUseAbility.class, Side.SERVER);
 		registerPacket(PacketSRequestData.class, Side.SERVER);
-		registerPacket(PacketSUseBendingController.class, Side.SERVER);
 		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
 		registerPacket(PacketCParticles.class, Side.CLIENT);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
+		registerPacket(PacketSWallJump.class, Side.SERVER);
+		registerPacket(PacketCNotEnoughChi.class, Side.CLIENT);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
@@ -113,10 +139,17 @@ public class AvatarMod {
 		FloatingBlockBehavior.register();
 		WaterArcBehavior.register();
 		FireArcBehavior.register();
+		WaterBubbleBehavior.register();
+		WallBehavior.register();
+		FireballBehavior.register();
 		
 		AvatarChatMessages.loadAll();
 		
 		MinecraftForge.EVENT_BUS.register(new FirebendingUpdate());
+		WaterbendingUpdate.register();
+		EarthbendingEvents.register();
+		
+		PacketHandlerServer.register();
 		
 	}
 	
@@ -129,6 +162,12 @@ public class AvatarMod {
 		registerEntity(EntityRavine.class, "Ravine");
 		registerEntity(EntityFlames.class, "Flames");
 		registerEntity(EntityWave.class, "Wave");
+		registerEntity(EntityWaterBubble.class, "WaterBubble");
+		registerEntity(EntityWall.class, "Wall");
+		registerEntity(EntityWallSegment.class, "WallSegment");
+		registerEntity(EntityFireball.class, "Fireball");
+		registerEntity(EntityAirblade.class, "Airblade");
+		registerEntity(EntityAirBubble.class, "AirBubble");
 		proxy.init();
 	}
 	

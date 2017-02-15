@@ -18,12 +18,12 @@
 package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.AvatarMod.proxy;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -45,15 +45,15 @@ public class RadialMenu extends Gui {
 	/**
 	 * Center of rotation X position for radial_segment.png
 	 */
-	public static final int segmentX = 141;
+	public static final int segmentX = 207;
 	/**
 	 * Center of rotation Y position for radial_segment.png
 	 */
-	public static final int segmentY = 200;
+	public static final int segmentY = 296;
 	/**
 	 * Scaling factor for the radial menu
 	 */
-	public static final float menuScale = 0.4f;
+	public static final float menuScale = 0.36f;
 	
 	private RadialSegment[] segments;
 	private AvatarControl pressing;
@@ -102,8 +102,7 @@ public class RadialMenu extends Gui {
 		this.controls = ctrl;
 		
 		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new RadialSegment(this, theme, i,
-					controls[i] == null ? -1 : controls[i].getIconIndex());
+			segments[i] = new RadialSegment(this, theme, i, controls[i]);
 		}
 		
 	}
@@ -115,7 +114,7 @@ public class RadialMenu extends Gui {
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
-			segments[i].draw(hover, resolution, scale, scale);
+			segments[i].draw(hover, resolution, scale * CLIENT_CONFIG.radialMenuAlpha, scale);
 			
 			if (hover) {
 				displaySegmentDetails(controls[i], resolution);
@@ -193,7 +192,8 @@ public class RadialMenu extends Gui {
 		if (Mouse.isButtonDown(0)) {
 			int centeredX = mouseX - resolution.getScaledWidth() / 2;
 			int centeredY = mouseY - resolution.getScaledHeight() / 2;
-			if (Math.sqrt(centeredX * centeredX + centeredY * centeredY) / menuScale < 100) {
+			if (currentMouseover == null
+					&& Math.sqrt(centeredX * centeredX + centeredY * centeredY) / menuScale < 100) {
 				mc.displayGuiScreen(new SkillsGui(controller));
 				return true;
 			}

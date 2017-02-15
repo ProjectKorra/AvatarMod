@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -26,7 +27,6 @@ import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityArc {
@@ -36,6 +36,7 @@ public class EntityAirGust extends EntityArc {
 	public EntityAirGust(World world) {
 		super(world);
 		setSize(0.5f, 0.5f);
+		putsOutFires = true;
 	}
 	
 	@Override
@@ -47,21 +48,6 @@ public class EntityAirGust extends EntityArc {
 				|| ticksExisted > 80) {
 			setDead();
 		}
-	}
-	
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-	}
-	
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		setDead();
-	}
-	
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		
 	}
 	
 	@Override
@@ -119,6 +105,8 @@ public class EntityAirGust extends EntityArc {
 				velocity.setY(1);
 				
 				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+				afterVelocityAdded(entity);
+				
 				setDead();
 				
 			}

@@ -44,12 +44,14 @@ public enum AvatarControl {
 	CONTROL_MIDDLE_CLICK_DOWN("MiddleClickDown"),
 	/** Space key (not jump) is held */
 	CONTROL_SPACE("Space"),
+	CONTROL_SPACE_DOWN("SpaceDown"),
 	/** Left mouse button was just released */
 	CONTROL_LEFT_CLICK_UP("LeftClickUp"),
 	/** Right mouse button was just released */
 	CONTROL_RIGHT_CLICK_UP("RightClickUp"),
 	/** Middle mouse button was just released */
-	CONTROL_MIDDLE_CLICK_UP("MiddleClickUp");
+	CONTROL_MIDDLE_CLICK_UP("MiddleClickUp"),
+	CONTROL_SHIFT("Shift");
 	
 	private String name;
 	private boolean isKey;

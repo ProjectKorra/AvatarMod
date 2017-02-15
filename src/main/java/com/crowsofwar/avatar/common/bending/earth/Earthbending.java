@@ -17,13 +17,11 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_PICK_UP_BLOCK;
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_RAVINE;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
 
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -37,12 +35,12 @@ public class Earthbending extends BendingController {
 	
 	private final BendingMenuInfo menu;
 	
-	private final BendingAbility abilityPickUpBlock, abilityRavine;
-	
 	public Earthbending() {
 		
-		addAbility(this.abilityPickUpBlock = ABILITY_PICK_UP_BLOCK);
-		addAbility(this.abilityRavine = ABILITY_RAVINE);
+		addAbility(ABILITY_PICK_UP_BLOCK);
+		addAbility(ABILITY_RAVINE);
+		addAbility(ABILITY_WALL);
+		addAbility(ABILITY_MINING);
 		
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
@@ -52,7 +50,7 @@ public class Earthbending extends BendingController {
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F),
-				AvatarControl.KEY_EARTHBENDING, abilityPickUpBlock, abilityRavine);
+				AvatarControl.KEY_EARTHBENDING, this);
 		
 	}
 	

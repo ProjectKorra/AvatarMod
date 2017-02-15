@@ -17,22 +17,40 @@
 
 package com.crowsofwar.avatar.common.network;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseBendingController;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
-import com.crowsofwar.gorecore.util.PlayerUUIDs;
+import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleType;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
+import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,12 +63,35 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PacketHandlerServer implements IPacketHandler {
 	
 	public static final IPacketHandler instance;
+	private List<ProcessAbilityRequest> unprocessedAbilityRequests;
 	
 	static {
 		instance = new PacketHandlerServer();
 	}
 	
-	private PacketHandlerServer() {}
+	private PacketHandlerServer() {
+		unprocessedAbilityRequests = new ArrayList<>();
+	}
+	
+	public static void register() {
+		MinecraftForge.EVENT_BUS.register(instance);
+	}
+	
+	@SubscribeEvent
+	public void tick(WorldTickEvent e) {
+		World world = e.world;
+		if (e.phase == TickEvent.Phase.START && !world.isRemote) {
+			Iterator<ProcessAbilityRequest> iterator = unprocessedAbilityRequests.iterator();
+			while (iterator.hasNext()) {
+				ProcessAbilityRequest par = iterator.next();
+				par.ticks--;
+				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0) {
+					par.ability.execute(new AbilityContext(par.data, par.raytrace));
+					iterator.remove();
+				}
+			}
+		}
+	}
 	
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
@@ -60,11 +101,10 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (packet instanceof PacketSRequestData) return handleRequestData((PacketSRequestData) packet, ctx);
 		
-		if (packet instanceof PacketSUseBendingController)
-			return handleUseBendingController((PacketSUseBendingController) packet, ctx);
-		
 		if (packet instanceof PacketSUseStatusControl)
 			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
+		
+		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -81,8 +121,15 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			
 			BendingAbility ability = packet.getAbility();
-			// TODO Verify that the client can actually use that ability
-			ability.execute(new AbilityContext(data, packet.getRaytrace()));
+			if (data.hasBending(ability.getBendingType())) {
+				if (data.getAbilityCooldown() == 0) {
+					ability.execute(new AbilityContext(data, packet.getRaytrace()));
+					data.setAbilityCooldown(15);
+				} else {
+					unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
+							player, data, ability, packet.getRaytrace()));
+				}
+			}
 			
 		}
 		
@@ -92,8 +139,8 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 		
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = PlayerUUIDs
-				.findPlayerInWorldFromUUID(ctx.getServerHandler().playerEntity.worldObj, id);
+		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().playerEntity.worldObj,
+				id);
 		
 		if (player == null) {
 			
@@ -109,26 +156,6 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) data.getNetworker().sendAll();
 		return null;
 		
-	}
-	
-	// TODO remove packet s usebendingcontroller
-	private IMessage handleUseBendingController(PacketSUseBendingController packet, MessageContext ctx) {
-		
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-		World world = player.worldObj;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		
-		if (data != null) {
-			
-			if (data.hasBending(packet.getBendingControllerId())) {
-			} else {
-				AvatarLog.warn("Player '" + player.getName() + "' attempted to activate a BendingController "
-						+ "they don't have; hacking?");
-			}
-			
-		}
-		
-		return null;
 	}
 	
 	/**
@@ -155,6 +182,95 @@ public class PacketHandlerServer implements IPacketHandler {
 		}
 		
 		return null;
+	}
+	
+	private IMessage handleWallJump(PacketSWallJump packet, MessageContext ctx) {
+		
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		World world = player.worldObj;
+		
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		if (data.hasBending(BendingType.AIRBENDING) && !data.isWallJumping()
+				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
+			
+			data.setWallJumping(true);
+			
+			// Detect direction to jump
+			Vector normal = Vector.UP;
+			Block block = null;
+			{
+				BlockPos pos = new BlockPos(player).north();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.NORTH;
+					block = world.getBlockState(pos).getBlock();
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(player).south();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.SOUTH;
+					block = world.getBlockState(pos).getBlock();
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(player).east();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.EAST;
+					block = world.getBlockState(pos).getBlock();
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(player).west();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.WEST;
+					block = world.getBlockState(pos).getBlock();
+				}
+			}
+			
+			if (normal != Vector.UP) {
+				
+				Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
+				Vector n = velocity.reflect(normal).mul(4).subtract(normal.times(0.5)).setY(0.5);
+				n.add(Vector.getLookRectangular(player).mul(.8));
+				
+				if (n.sqrMagnitude() > 1) {
+					n.normalize().mul(1);
+				}
+				
+				player.setVelocity(n.x(), n.y(), n.z());
+				player.connection.sendPacket(new SPacketEntityVelocity(player));
+				
+				new NetworkParticleSpawner().spawnParticles(world, ParticleType.AIR, 4, 10,
+						new Vector(player).plus(n), n.times(3));
+				world.playSound(null, new BlockPos(player), block.getSoundType().getBreakSound(),
+						SoundCategory.PLAYERS, 1, 0.6f);
+				
+				data.setFallAbsorption(3);
+				
+			}
+			
+		}
+		
+		return null;
+	}
+	
+	private static class ProcessAbilityRequest {
+		
+		private int ticks;
+		private final EntityPlayer player;
+		private final AvatarPlayerData data;
+		private final BendingAbility ability;
+		private final Raytrace.Result raytrace;
+		
+		public ProcessAbilityRequest(int ticks, EntityPlayer player, AvatarPlayerData data,
+				BendingAbility ability, Raytrace.Result raytrace) {
+			this.ticks = ticks;
+			this.player = player;
+			this.data = data;
+			this.ability = ability;
+			this.raytrace = raytrace;
+		}
+		
 	}
 	
 }

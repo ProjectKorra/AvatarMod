@@ -41,7 +41,7 @@ public final class GoreCoreNBTUtil {
 		nbt.setLong(key + "LeastSig", uuid.getLeastSignificantBits());
 	}
 	
-	public static NBTTagCompound getOrCreateNestedCompound(NBTTagCompound nbt, String key) {
+	public static NBTTagCompound findNestedCompound(NBTTagCompound nbt, String key) {
 		if (nbt.hasKey(key)) {
 			return nbt.getCompoundTag(key);
 		} else {

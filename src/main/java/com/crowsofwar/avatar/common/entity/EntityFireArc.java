@@ -51,7 +51,7 @@ public class EntityFireArc extends EntityArc {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_BEHAVIOR, new FireArcBehavior.Idle(this));
+		dataManager.register(SYNC_BEHAVIOR, new FireArcBehavior.Idle());
 	}
 	
 	@Override
@@ -71,8 +71,7 @@ public class EntityFireArc extends EntityArc {
 			worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 					SoundCategory.PLAYERS, 1, random.nextFloat() * 0.3f + 1.1f, false);
 		}
-		getBehavior().setEntity(this);
-		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate();
+		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != newBehavior) setBehavior(newBehavior);
 	}
 	

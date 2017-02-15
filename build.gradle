@@ -16,7 +16,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "a2.0"
+version = "a3.0"
 group= "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
 
@@ -26,7 +26,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 minecraft {
     version = "1.11-13.19.0.2180"
     runDir = "run"
-    
+
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -36,7 +36,7 @@ minecraft {
 }
 
 dependencies {
-  
+
     compile files("../libs/joml/joml-1.8.1.jar")
 
     compile files("../libs/yaml/snakeyaml-1.16.jar");
@@ -52,11 +52,11 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
@@ -79,7 +79,7 @@ task sourceZip(type: Zip, dependsOn: 'classes') {
   classifier "src"
   from projectDir
   include "src/**/*"
-  
+
   destinationDir(new File(buildDir, "/libs"))
 
 }

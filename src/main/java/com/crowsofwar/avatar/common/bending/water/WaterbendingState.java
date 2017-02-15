@@ -17,11 +17,15 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.AvatarLog;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+
+import javax.annotation.Nullable;
+
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingState;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.data.CachedEntity;
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,59 +33,47 @@ import net.minecraft.world.World;
 
 public class WaterbendingState extends BendingState {
 	
-	private EntityWaterArc waterArc;
+	private CachedEntity<EntityWaterBubble> waterBubble;
 	
 	public WaterbendingState(AvatarPlayerData data) {
 		super(data);
-		this.waterArc = null;
+		this.waterBubble = new CachedEntity<>(-1);
 	}
 	
-	public EntityWaterArc getWaterArc() {
-		return waterArc;
+	/**
+	 * Gets the instance of EntityWaterBubble which the player is currently
+	 * controlling, which is synced across client and server.
+	 */
+	public @Nullable EntityWaterBubble getBubble(World world) {
+		return waterBubble.getEntity(world);
 	}
 	
-	public int getWaterArcId() {
-		return waterArc == null ? -1 : waterArc.getId();
-	}
-	
-	public void setWaterArc(EntityWaterArc waterArc) {
-		this.waterArc = waterArc;
+	/**
+	 * Sets a synced instance of EntityWaterBubble
+	 */
+	public void setBubble(@Nullable EntityWaterBubble bubble) {
+		this.waterBubble.setEntity(bubble);
 		save();
-	}
-	
-	public boolean isBendingWater() {
-		return waterArc != null;
-	}
-	
-	public void releaseWater() {
-		setWaterArc(null);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		
+		waterBubble.readFromNBT(findNestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		
+		waterBubble.writeToNBT(findNestedCompound(nbt, "WaterBubble"));
 	}
 	
 	@Override
 	public void writeBytes(ByteBuf buf) {
-		buf.writeInt(getWaterArcId());
+		waterBubble.toBytes(buf);
 	}
 	
 	@Override
 	public void readBytes(ByteBuf buf) {
-		World world = data.getPlayerEntity().worldObj;
-		int id = buf.readInt();
-		EntityWaterArc waterArc = null;
-		if (id > -1) {
-			waterArc = EntityWaterArc.findFromId(world, id);
-			if (waterArc == null) AvatarLog.warn("WaterbendingState- Couldn't find water arc with ID " + id);
-		}
-		setWaterArc(waterArc);
+		waterBubble.fromBytes(buf);
 	}
 	
 	@Override

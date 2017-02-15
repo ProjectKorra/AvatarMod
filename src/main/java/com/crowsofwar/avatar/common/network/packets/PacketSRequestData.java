@@ -20,9 +20,9 @@ package com.crowsofwar.avatar.common.network.packets;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.common.network.PacketRedirector;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
+import com.crowsofwar.gorecore.util.AccountUUIDs.AccountId;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
-import com.crowsofwar.gorecore.util.PlayerUUIDs;
-import com.crowsofwar.gorecore.util.PlayerUUIDs.Result;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,13 +43,8 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	}
 	
 	public PacketSRequestData(EntityPlayer player) {
-		Result result = PlayerUUIDs.getUUID(player.getName());
-		if (result.isResultSuccessful()) {
-			this.asking = result.getUUID();
-		} else {
-			System.err.println("Couldn't get UUID for player " + player.getName() + " to send Request");
-			result.logError();
-		}
+		AccountId result = AccountUUIDs.getId(player.getName());
+		this.asking = result.getUUID();
 	}
 	
 	@Override

@@ -21,9 +21,6 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -31,7 +28,6 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -59,69 +55,31 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	
 	public WaterArcBehavior() {}
 	
-	public WaterArcBehavior(EntityWaterArc water) {
-		super(water);
-	}
-	
-	protected void applyGravity() {
-		entity.velocity().add(0, -9.81 / 50, 0);
-	}
-	
 	public static class PlayerControlled extends WaterArcBehavior {
 		
-		public PlayerControlled() {}
-		
-		public PlayerControlled(EntityWaterArc arc, EntityPlayer player) {
-			super(arc);
-		}
-		
-		private EntityPlayer getPlayer() {
-			return entity.getOwner();
-		}
-		
 		@Override
-		public WaterArcBehavior onUpdate() {
+		public WaterArcBehavior onUpdate(EntityWaterArc water) {
 			
-			EntityPlayer player = getPlayer();
-			if (player == null) {
-				return this;
-			}
+			EntityPlayer player = water.getOwner();
 			World world = player.worldObj;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			Raytrace.Result res = Raytrace.getTargetBlock(player, 3, false);
 			
-			if (data != null) {
-				WaterbendingState bendingState = (WaterbendingState) data
-						.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
-				
-				if (bendingState != null && bendingState.isBendingWater()) {
-					
-					EntityWaterArc water = bendingState.getWaterArc();
-					if (water != null) {
-						
-						Raytrace.Result res = Raytrace.getTargetBlock(player, 3, false);
-						
-						Vector lookPos;
-						if (res.hitSomething()) {
-							lookPos = res.getPosPrecise();
-						} else {
-							Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
-									Math.toRadians(player.rotationPitch));
-							lookPos = Vector.getEyePos(player).plus(look.times(3));
-						}
-						
-						Vector motion = lookPos.minus(new Vector(water));
-						motion.mul(.3);
-						water.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
-						
-						if (water.worldObj.isRemote && water.canPlaySplash()) {
-							if (motion.sqrMagnitude() >= 0.004) water.playSplash();
-						}
-					} else {
-						if (!world.isRemote) bendingState.setWaterArc(null);
-					}
-					
-				}
+			Vector target;
+			if (res.hitSomething()) {
+				target = res.getPosPrecise();
+			} else {
+				Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
+						Math.toRadians(player.rotationPitch));
+				target = Vector.getEyePos(player).plus(look.times(3));
+			}
+			
+			Vector motion = target.minus(water.position());
+			motion.mul(.3 * 20);
+			water.velocity().set(motion);
+			
+			if (water.worldObj.isRemote && water.canPlaySplash()) {
+				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
 			}
 			
 			return this;
@@ -144,22 +102,16 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	
 	public static class Thrown extends WaterArcBehavior {
 		
-		public Thrown() {}
-		
-		public Thrown(EntityWaterArc arc) {
-			super(arc);
-		}
-		
 		@Override
-		public WaterArcBehavior onUpdate() {
-			applyGravity();
+		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
+			entity.velocity().add(0, -9.81 / 60, 0);
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().expandXyz(0.9),
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {
-				if (collided != entity.getOwner()) return this;
+				if (collided == entity.getOwner()) return this;
 				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
 						6 * entity.getDamageMult());
@@ -193,14 +145,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	
 	public static class Idle extends WaterArcBehavior {
 		
-		public Idle() {}
-		
-		public Idle(EntityWaterArc arc) {
-			super(arc);
-		}
-		
 		@Override
-		public WaterArcBehavior onUpdate() {
+		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			return this;
 		}
 		

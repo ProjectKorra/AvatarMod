@@ -17,17 +17,33 @@
 
 package com.crowsofwar.avatar.common;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Chi;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class AvatarPlayerTick {
 	
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
-		if (e.side == Side.CLIENT) AvatarPlayerData.fetcher().fetch(e.player);
+		// Also forces loading of data on client
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(e.player);
+		if (data != null) {
+			data.decrementCooldown();
+			if (!e.player.worldObj.isRemote) {
+				Chi chi = data.chi();
+				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
+				
+				if (chi.getAvailableChi() < chi.getMaxChi() * CHI_CONFIG.availableThreshold) {
+					chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);
+				}
+				
+			}
+		}
+		
 	}
 	
 }

@@ -18,16 +18,11 @@
 package com.crowsofwar.avatar.common.entity;
 
 import java.util.Random;
-import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.water.WaterbendingState;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -54,6 +49,7 @@ public class EntityWaterArc extends EntityArc {
 		setSize(.5f, .5f);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
+		this.putsOutFires = true;
 	}
 	
 	public float getDamageMult() {
@@ -131,19 +127,7 @@ public class EntityWaterArc extends EntityArc {
 			lastPlayedSplash++;
 			if (lastPlayedSplash > 20) lastPlayedSplash = -1;
 		}
-		getBehavior().setEntity(this);
-		getBehavior().onUpdate();
-		
-		for (int x = 0; x <= 1; x++) {
-			for (int z = 0; z <= 1; z++) {
-				BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-				if (worldObj.getBlockState(pos).getBlock() == Blocks.FIRE) {
-					worldObj.setBlockToAir(pos);
-					worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-							SoundCategory.PLAYERS, 1, 1, false);
-				}
-			}
-		}
+		getBehavior().onUpdate(this);
 		
 		if (inWater && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
 			// try to go upwards
@@ -165,9 +149,6 @@ public class EntityWaterArc extends EntityArc {
 		// 1, false);
 		// }
 	}
-	
-	@Override
-	public void setFire(int seconds) {}
 	
 	public static EntityWaterArc findFromId(World world, int id) {
 		for (Object obj : world.loadedEntityList) {
@@ -214,15 +195,6 @@ public class EntityWaterArc extends EntityArc {
 		@Override
 		protected void onCollision(Entity entity) {}
 		
-	}
-	
-	@Override
-	protected Consumer<EntityPlayer> getNewOwnerCallback() {
-		return newOwner -> {
-			WaterbendingState state = (WaterbendingState) AvatarPlayerData.fetcher().fetch(newOwner)
-					.getBendingState(BendingType.WATERBENDING.id());
-			state.setWaterArc(this);
-		};
 	}
 	
 }

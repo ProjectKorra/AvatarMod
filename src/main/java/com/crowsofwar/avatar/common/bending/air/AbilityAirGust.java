@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
@@ -44,7 +46,9 @@ public class AbilityAirGust extends AirAbility {
 		EntityPlayer player = ctx.getPlayerEntity();
 		World world = ctx.getWorld();
 		
-		Vector look = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+		if (!ctx.consumeChi(STATS_CONFIG.chiAirGust)) return;
+		
+		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 				Math.toRadians(player.rotationPitch));
 		Vector pos = Vector.getEyePos(player);
 		
@@ -54,11 +58,6 @@ public class AbilityAirGust extends AirAbility {
 		gust.setOwner(player);
 		
 		world.spawnEntityInWorld(gust);
-	}
-	
-	@Override
-	public int getIconIndex() {
-		return 7;
 	}
 	
 }

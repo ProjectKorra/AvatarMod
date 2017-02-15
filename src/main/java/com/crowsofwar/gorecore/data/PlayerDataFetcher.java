@@ -19,8 +19,7 @@ package com.crowsofwar.gorecore.data;
 
 import java.util.UUID;
 
-import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.util.PlayerUUIDs;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -46,7 +45,7 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 	 * @param accountId
 	 *            UUID of the player
 	 * 
-	 * @see PlayerUUIDs
+	 * @see AccountUUIDs
 	 */
 	T fetch(World world, UUID accountId);
 	
@@ -63,14 +62,7 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 		if (world == null) throw new IllegalArgumentException("Cannot get player-data with null World");
 		if (playerName == null)
 			throw new IllegalArgumentException("Cannot get player-data with null player name");
-		PlayerUUIDs.Result result = PlayerUUIDs.getUUID(playerName);
-		if (result.isResultSuccessful()) {
-			return fetch(world, result.getUUID());
-		} else {
-			GoreCore.LOGGER.warn(
-					"Unable to find player " + playerName + "'s UUID for PD fetch: " + result.getOutcome());
-			return null;
-		}
+		return fetch(world, AccountUUIDs.getId(playerName).getUUID());
 	}
 	
 	/**

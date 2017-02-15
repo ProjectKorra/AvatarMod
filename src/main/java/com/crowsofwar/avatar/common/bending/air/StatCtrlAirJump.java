@@ -25,14 +25,17 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * 
@@ -74,6 +77,21 @@ public class StatCtrlAirJump extends StatusControl {
 					new Vector(1, 0, 1));
 			
 			AirJumpParticleSpawner.spawnParticles(player);
+			
+			// Find approximate maximum distance. In actuality, a bit less, due
+			// to max velocity and drag
+			// Using kinematic equation, gravity for players is 32 m/s
+			float fallAbsorption;
+			{
+				float h = (5 + xp / 50) / 8f;
+				float v = 20 * (1 + xp / 250f);
+				fallAbsorption = v * h - 16 * h * h;
+			}
+			fallAbsorption -= 2; // compensate that it may be a bit extra
+			data.setFallAbsorption(fallAbsorption);
+			
+			player.worldObj.playSound(null, new BlockPos(player), SoundEvents.ENTITY_BAT_TAKEOFF,
+					SoundCategory.PLAYERS, 1, .7f);
 			
 		}
 		

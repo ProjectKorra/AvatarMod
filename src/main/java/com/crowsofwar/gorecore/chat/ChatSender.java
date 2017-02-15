@@ -42,7 +42,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ChatSender {
 	
-	private static final ChatSender instance;
+	public static final ChatSender instance;
 	
 	private static final Map<String, ChatMessage> referenceToChatMessage;
 	static final Map<String, ChatMessage> translateKeyToChatMessage;
@@ -121,7 +121,7 @@ public class ChatSender {
 		
 	}
 	
-	private String processText(String text, ChatMessage cm, Object... formatArgs) {
+	public String processText(String text, ChatMessage cm, Object... formatArgs) {
 		MessageConfiguration cfg = cm.getConfig();
 		ChatFormatSet formatSet = new ChatFormatSet();
 		

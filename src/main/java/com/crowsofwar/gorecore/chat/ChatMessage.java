@@ -41,6 +41,10 @@ public class ChatMessage {
 		ChatSender.send(sender, this, formattingArgs);
 	}
 	
+	public String getTranslateKey() {
+		return translateKey;
+	}
+	
 	public String[] getTranslationArgs() {
 		return translateArgs;
 	}

@@ -37,7 +37,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class StatCtrlThrowFire extends StatusControl {
 	
 	public StatCtrlThrowFire() {
-		super(6, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
+		super(6, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 	
 	@Override
@@ -53,11 +53,11 @@ public class StatCtrlThrowFire extends StatusControl {
 			
 			EntityFireArc fire = bendingState.getFireArc();
 			
-			Vector force = Vector.fromYawPitch(Math.toRadians(player.rotationYaw),
+			Vector force = Vector.toRectangular(Math.toRadians(player.rotationYaw),
 					Math.toRadians(player.rotationPitch));
 			force.mul(10);
 			fire.velocity().add(force);
-			fire.setBehavior(new FireArcBehavior.Thrown(fire));
+			fire.setBehavior(new FireArcBehavior.Thrown());
 			
 			bendingState.setNoFireArc();
 			data.sendBendingState(bendingState);

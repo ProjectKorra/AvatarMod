@@ -19,27 +19,40 @@ package com.crowsofwar.avatar.client;
 
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
+import com.crowsofwar.avatar.client.render.RenderAirBubble;
 import com.crowsofwar.avatar.client.render.RenderAirGust;
+import com.crowsofwar.avatar.client.render.RenderAirblade;
 import com.crowsofwar.avatar.client.render.RenderFireArc;
+import com.crowsofwar.avatar.client.render.RenderFireball;
 import com.crowsofwar.avatar.client.render.RenderFlames;
 import com.crowsofwar.avatar.client.render.RenderFloatingBlock;
 import com.crowsofwar.avatar.client.render.RenderRavine;
+import com.crowsofwar.avatar.client.render.RenderWallSegment;
 import com.crowsofwar.avatar.client.render.RenderWaterArc;
+import com.crowsofwar.avatar.client.render.RenderWaterBubble;
 import com.crowsofwar.avatar.client.render.RenderWave;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
+import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
+import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
@@ -49,11 +62,15 @@ import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,10 +81,13 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
+	private boolean displayedMainMenu;
 	
 	@Override
 	public void preInit() {
 		mc = Minecraft.getMinecraft();
+		
+		displayedMainMenu = false;
 		
 		packetHandler = new PacketHandlerClient();
 		AvatarUiRenderer.instance = new AvatarUiRenderer();
@@ -75,6 +95,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		inputHandler = new ClientInput();
 		MinecraftForge.EVENT_BUS.register(inputHandler);
 		MinecraftForge.EVENT_BUS.register(AvatarUiRenderer.instance);
+		MinecraftForge.EVENT_BUS.register(this);
 		
 		clientFetcher = new PlayerDataFetcherClient<AvatarPlayerData>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
@@ -89,6 +110,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityFlames.class,
 				rm -> new RenderFlames(rm, new ClientParticleSpawner()));
 		registerEntityRenderingHandler(EntityWave.class, RenderWave::new);
+		registerEntityRenderingHandler(EntityWaterBubble.class, RenderWaterBubble::new);
+		registerEntityRenderingHandler(EntityWallSegment.class, RenderWallSegment::new);
+		registerEntityRenderingHandler(EntityFireball.class, RenderFireball::new);
+		registerEntityRenderingHandler(EntityAirblade.class, RenderAirblade::new);
+		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
 		
 	}
 	
@@ -136,6 +162,16 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public int getParticleAmount() {
 		return mc.gameSettings.particleSetting;
+	}
+	
+	@SubscribeEvent
+	public void onMainMenu(GuiOpenEvent e) {
+		if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
+			GuiScreen screen = new PreviewWarningGui();
+			mc.displayGuiScreen(screen);
+			e.setGui(screen);
+			displayedMainMenu = true;
+		}
 	}
 	
 }

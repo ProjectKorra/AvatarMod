@@ -17,31 +17,36 @@
 
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
+import com.crowsofwar.avatar.common.bending.earth.AbilityMining;
 import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
+import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
 import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
-import com.crowsofwar.avatar.common.gui.AbilityIcon;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
  * Encapsulates all logic required for a bending ability. There is 1 instance of
  * a bending ability for each ability present - similar to BendingController.
  * 
- * @param <STATE>
- *            The BendingState this ability uses
- * 
  * @author CrowsOfWar
  */
 public abstract class BendingAbility {
 	
 	public static BendingAbility ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE,
-			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER, ABILITY_WATER_ARC, ABILITY_WAVE;
+			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER, ABILITY_WATER_ARC, ABILITY_WAVE,
+			ABILITY_WATER_BUBBLE, ABILITY_WALL, ABILITY_WATER_SKATE, ABILITY_FIREBALL, ABILITY_AIRBLADE,
+			ABILITY_MINING, ABILITY_AIR_BUBBLE;
 	
 	/**
 	 * Creates all abilities. Done before bending controllers are created.
@@ -56,6 +61,13 @@ public abstract class BendingAbility {
 		ABILITY_FLAMETHROWER = new AbilityFlamethrower();
 		ABILITY_WATER_ARC = new AbilityWaterArc();
 		ABILITY_WAVE = new AbilityCreateWave();
+		ABILITY_WATER_BUBBLE = new AbilityWaterBubble();
+		ABILITY_WALL = new AbilityWall();
+		ABILITY_WATER_SKATE = new AbilityWaterSkate();
+		ABILITY_FIREBALL = new AbilityFireball();
+		ABILITY_AIRBLADE = new AbilityAirblade();
+		ABILITY_MINING = new AbilityMining();
+		ABILITY_AIR_BUBBLE = new AbilityAirBubble();
 	}
 	
 	private static int nextId = 1;
@@ -63,7 +75,6 @@ public abstract class BendingAbility {
 	private final BendingType type;
 	protected final int id;
 	private final String name;
-	private final AbilityIcon icon;
 	private Raytrace.Info raytrace;
 	
 	public BendingAbility(BendingType bendingType, String name) {
@@ -71,12 +82,18 @@ public abstract class BendingAbility {
 		this.id = nextId++;
 		this.name = name;
 		BendingManager.registerAbility(this);
-		this.icon = new AbilityIcon(getIconIndex() == -1 ? 255 : getIconIndex());
 		this.raytrace = new Raytrace.Info();
 	}
 	
 	protected BendingController controller() {
 		return BendingManager.getBending(type);
+	}
+	
+	/**
+	 * Get the bending type that this ability belongs to
+	 */
+	public final BendingType getBendingType() {
+		return type;
 	}
 	
 	/**
@@ -92,25 +109,6 @@ public abstract class BendingAbility {
 	 */
 	public final int getId() {
 		return id;
-	}
-	
-	/**
-	 * Get the texture index of this bending ability. -1 for no texture.
-	 */
-	public abstract int getIconIndex();
-	
-	/**
-	 * Get the icon for this ability; null for no icon
-	 */
-	public AbilityIcon getIcon() {
-		return icon;
-	}
-	
-	/**
-	 * Returns whether this bending ability has an icon.
-	 */
-	public boolean hasTexture() {
-		return getIconIndex() > -1;
 	}
 	
 	/**

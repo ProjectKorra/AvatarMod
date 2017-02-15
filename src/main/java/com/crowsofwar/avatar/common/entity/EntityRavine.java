@@ -18,8 +18,8 @@
 package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_RAVINE;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.bending.earth.RavineEvent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
@@ -85,17 +86,13 @@ public class EntityRavine extends AvatarEntity {
 	}
 	
 	@Override
-	protected void entityInit() {
-		
-	}
-	
-	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		
+		super.readEntityFromNBT(nbt);
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
 		setDead();
 	}
 	
@@ -190,6 +187,7 @@ public class EntityRavine extends AvatarEntity {
 						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
 								STATS_CONFIG.ravineSettings.damage * damageMult))
 							attacked++;
+						AvatarUtils.afterVelocityAdded(entity);
 					}
 				}
 			}

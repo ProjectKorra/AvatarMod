@@ -65,6 +65,8 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_PROGRESS_POINT_SET = newChatMessage(CFG, "avatar.cmd.pp.set", "player", "pps", "bending");
 	public static final ChatMessage MSG_PROGRESS_POINT_SET_RANGE = newChatMessage(CFG, "avatar.cmd.pp.set.range");
 	
+	public static final ChatMessage MSG_DONT_HAVE_BENDING = newChatMessage(CFG, "avatar.donthavebending", "bending", "username");
+	
 	/**
 	 * Call the static initializers
 	 */

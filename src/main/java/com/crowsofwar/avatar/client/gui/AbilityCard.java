@@ -17,17 +17,19 @@
 
 package com.crowsofwar.avatar.client.gui;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.AbilityIcon;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -41,10 +43,14 @@ public class AbilityCard extends Gui {
 	private final AvatarPlayerData data;
 	private final Minecraft mc;
 	
+	private boolean editing;
+	private KeyBinding conflict;
+	
 	public AbilityCard(BendingAbility ability) {
 		this.mc = Minecraft.getMinecraft();
 		this.ability = ability;
 		this.data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		this.editing = false;
 	}
 	
 	public BendingAbility getAbility() {
@@ -68,8 +74,6 @@ public class AbilityCard extends Gui {
 		
 		GlStateManager.enableBlend();
 		
-		AbilityIcon icon = ability.getIcon();
-		
 		float spacing = res.getScaledWidth() / 8.5f; // Spacing between each card
 		float actualWidth = res.getScaledWidth() / 7f;  // Width of each card;  1/10 of total width
 		float height = res.getScaledHeight() * 0.6f; // Height of each card; about 1/2 of total height
@@ -90,14 +94,15 @@ public class AbilityCard extends Gui {
 		float innerWidth = scaledWidth - 2 * padding;
 		
 		float iconY = 25;
-		float iconWidth = 80;
-		float iconHeight = 80;
+		float iconSize = 180;
 		
 		float textMinX = 5;
 		float textMaxX = 95;
 		float textY = 123;
 		
 		float progressY = 120;
+		float keybindingY = 180;
+		float keybindingEditY = 200;
 		
 		// Draw card background
 		pushMatrix();
@@ -113,17 +118,42 @@ public class AbilityCard extends Gui {
 			
 			// draw icon
 			pushMatrix();
-				translate(padding, iconY, 0);
-				scale(iconWidth / 32, iconHeight / 32, 1);
-				renderImage(AvatarUiTextures.icons, icon.getMinU(), icon.getMinV(), 32, 32);
+//				translate(padding, iconY, 0);
+				translate((scaledWidth - iconSize) / 2 , -20, 0);
+				scale(iconSize / 256, iconSize / 256, 1);
+				renderImage(AvatarUiTextures.getAbilityTexture(ability), 0, 0, 256, 256);
 			popMatrix();
 			
 			// draw progress bar
 			pushMatrix();
 				translate(10, progressY, 0);
-				scale(iconWidth / 40, iconWidth / 40, 1);
+				scale(2, 2, 1);
 				renderImage(AvatarUiTextures.skillsGui, 0, 1, 40, 13);
 				renderImage(AvatarUiTextures.skillsGui, 0, 14, (int) (data.getAbilityData(ability).getXp() / scaledWidth * 40), 13);
+			popMatrix();
+			
+			// draw keybinding
+			pushMatrix();
+				int color = conflict != null ? 0xff0000 : (editing ? 0xFF5962 : 0xffffff);
+				
+				String key;
+				if (editing) {
+					key = "editing";
+				} else if (conflict != null) {
+					key = "conflict";
+				} else if (CLIENT_CONFIG.keymappings.get(ability) != null) {
+					key = "set";
+				} else {
+					key = "none";
+				}
+				
+				String boundTo = CLIENT_CONFIG.keymappings.get(ability) != null ? GameSettings.getKeyDisplayString(CLIENT_CONFIG.keymappings.get(ability)) : "no key";
+				String conflictStr = conflict == null ? "no conflict" : I18n.format(conflict.getKeyDescription());
+				String firstMsg = I18n.format("avatar.key." + key + "1", boundTo);
+				String secondMsg = I18n.format("avatar.key." + key + "2", conflictStr);
+				
+				renderCenteredString(firstMsg, keybindingY, 1.5f, color);
+				renderCenteredString(secondMsg, keybindingEditY, 1.25f, color);
 			popMatrix();
 			
 		popMatrix();
@@ -144,6 +174,18 @@ public class AbilityCard extends Gui {
 		
 	}
 	// @formatter:on
+	
+	public boolean isEditing() {
+		return editing;
+	}
+	
+	public void setEditing(boolean editing) {
+		this.editing = editing;
+	}
+	
+	public void setConflict(KeyBinding conflict) {
+		this.conflict = conflict;
+	}
 	
 	/**
 	 * Draws the image. Any transformations (e.g. transformation) should be
@@ -176,14 +218,20 @@ public class AbilityCard extends Gui {
 	 *            Y position to draw at
 	 * @param scale
 	 *            Scale of text
+	 * @param color
+	 *            Color of the text
 	 */
-	private void renderCenteredString(String str, float y, float scale) {
+	private void renderCenteredString(String str, float y, float scale, int color) {
 		pushMatrix();
 		// assume padding is 10, innerWidth is 80
 		translate(10 + (80 - mc.fontRendererObj.getStringWidth(str) * scale) / 2, y, 0);
 		scale(scale, scale, 1);
-		drawString(mc.fontRendererObj, str, 0, 0, 0xffffff);
+		drawString(mc.fontRendererObj, str, 0, 0, color);
 		popMatrix();
+	}
+	
+	private void renderCenteredString(String str, float y, float scale) {
+		renderCenteredString(str, y, scale, 0xffffff);
 	}
 	
 }

@@ -17,22 +17,32 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.PlayerData;
 import com.crowsofwar.gorecore.data.WorldDataPlayers;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
 	public static final String WORLD_DATA_KEY = "Avatar";
+	private int nextEntityId;
+	
+	private List<ScheduledDestroyBlock> scheduledDestroyBlocks;
 	
 	public AvatarWorldData() {
 		super(WORLD_DATA_KEY);
-		// TODO Auto-generated constructor stub
+		nextEntityId = 0;
+		scheduledDestroyBlocks = new ArrayList<>();
 	}
 	
 	public AvatarWorldData(String key) {
-		super(WORLD_DATA_KEY);
+		this();
 	}
 	
 	@Override
@@ -42,6 +52,72 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
 	public static AvatarWorldData getDataFromWorld(World world) {
 		return getDataForWorld(AvatarWorldData.class, WORLD_DATA_KEY, world, false);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		nextEntityId = nbt.getInteger("NextEntityId");
+		AvatarUtils.readList(scheduledDestroyBlocks, compound -> {
+			
+			BlockPos pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"),
+					compound.getInteger("z"));
+			return new ScheduledDestroyBlock(pos, compound.getInteger("Ticks"), compound.getBoolean("Drop"));
+			
+		}, nbt, "DestroyBlocks");
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("NextEntityId", nextEntityId);
+		AvatarUtils.writeList(scheduledDestroyBlocks, (compound, sdb) -> {
+			compound.setInteger("x", sdb.pos.getX());
+			compound.setInteger("y", sdb.pos.getY());
+			compound.setInteger("z", sdb.pos.getZ());
+			compound.setInteger("Ticks", sdb.ticks);
+			compound.setBoolean("Drop", sdb.drop);
+		}, nbt, "DestroyBlocks");
+		return nbt;
+	}
+	
+	public int nextEntityId() {
+		return ++nextEntityId;
+	}
+	
+	public List<ScheduledDestroyBlock> getScheduledDestroyBlocks() {
+		return scheduledDestroyBlocks;
+	}
+	
+	public class ScheduledDestroyBlock {
+		
+		private final BlockPos pos;
+		private final boolean drop;
+		private int ticks;
+		
+		public ScheduledDestroyBlock(BlockPos pos, int ticks, boolean drop) {
+			this.pos = pos;
+			this.ticks = ticks;
+			this.drop = drop;
+		}
+		
+		public int getTicks() {
+			return ticks;
+		}
+		
+		public void decrementTicks() {
+			this.ticks--;
+			AvatarWorldData.this.setDirty(true);
+		}
+		
+		public BlockPos getPos() {
+			return pos;
+		}
+		
+		public boolean isDrop() {
+			return drop;
+		}
+		
 	}
 	
 }
