@@ -10,6 +10,7 @@ AV2 Changelog :: version a3.0
 + Added air bubble ability
 + Added version checker
 + Can bind keys to abilities through skills menu
++ Added chi
 
 * New textures for radial menu!!
 * New icons for abilities!!
