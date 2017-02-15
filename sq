@@ -1,0 +1,22 @@
+[1mdiff --git a/docs/index.html b/docs/index.html[m
+[1mindex d5392dfd..4a7d5b5a 100644[m
+[1m--- a/docs/index.html[m
+[1m+++ b/docs/index.html[m
+[36m@@ -100,7 +100,7 @@[m
+             <div class="fg-text">[m
+                 <h1>Available now for Minecraft 1.11</h1>[m
+                 <p>[m
+[31m-                    Alpha release 2.0 is available for download now. Only MC 1.11 on PC is supported. Forge is required.[m
+[32m+[m[32m                    Alpha release 3.0 is available for download now. Only MC 1.11 on PC is supported. Forge is required.[m
+                 </p>[m
+                 <div class="download-widget">[m
+                     <iframe src="https://widget.mcf.li/mc-mods/minecraft/254565-avatar-mod-2-out-of-the-iceberg" width="100%" style="border: none;"></iframe>[m
+[36m@@ -125,7 +125,7 @@[m
+                         <a href="https://github.com/CrowsOfWar/AvatarMod">Sources on Github</a>[m
+                     </div>[m
+                     <div class="link">[m
+[31m-                        <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Roadmap">Roadmap</a>[m
+[32m+[m[32m                        <a href="http://trello.av2.io">Suggestions on Trello</a>[m
+                     </div>[m
+                 </div>[m
+                 <div class="col-md-6">[m
