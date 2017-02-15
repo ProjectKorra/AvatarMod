@@ -36,6 +36,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -176,7 +177,7 @@ public class AvatarUiRenderer extends Gui {
 			// For some reason, any alpha below 4 is displayed at alpha 255
 			if (alphaI < 4) alphaI = 4;
 			
-			String text = TextFormatting.BOLD + "Not enough chi";
+			String text = TextFormatting.BOLD + I18n.format("avatar.nochi");
 			
 			//@formatter:off
 			drawString(mc.fontRendererObj, text,

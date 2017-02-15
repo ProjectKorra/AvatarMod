@@ -51,6 +51,7 @@ avatar.cmd.pp.set=Set [value]${player}[/value]'s [value][translate=avatar.${bend
 avatar.cmd.pp.set.range=[error]Progression points must be more than 0.[/error]
 
 avatar.donthavebending=[error]You haven't learned ${bending} yet. To get it, type in: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
+avatar.nochi=Not enough chi!
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.ravine=Ravine
