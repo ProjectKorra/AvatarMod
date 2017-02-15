@@ -84,7 +84,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
-		updateJSON = "https://raw.githubusercontent.com/CrowsOfWar/AvatarMod/master/updates.json")
+		updateJSON = "http://av2.io/updates.json")
 
 public class AvatarMod {
 	
