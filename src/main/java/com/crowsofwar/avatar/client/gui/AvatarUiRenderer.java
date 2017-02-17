@@ -36,6 +36,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -56,10 +58,12 @@ public class AvatarUiRenderer extends Gui {
 	private RadialSegment fadingSegment;
 	private long timeFadeStart;
 	private final Minecraft mc;
+	private long chiMsgFade;
 	
 	public AvatarUiRenderer() {
 		mc = Minecraft.getMinecraft();
 		instance = this;
+		chiMsgFade = -1;
 	}
 	
 	@SubscribeEvent
@@ -72,6 +76,7 @@ public class AvatarUiRenderer extends Gui {
 		renderRadialMenu(resolution);
 		renderStatusControls(resolution);
 		renderChiBar(resolution);
+		renderChiMsg(resolution);
 		
 	}
 	
@@ -162,6 +167,31 @@ public class AvatarUiRenderer extends Gui {
 		
 	}
 	
+	private void renderChiMsg(ScaledResolution res) {
+		
+		if (chiMsgFade != -1) {
+			
+			float seconds = (System.currentTimeMillis() - chiMsgFade) / 1000f;
+			float alpha = seconds < 1 ? 1 : 1 - (seconds - 1);
+			int alphaI = (int) (alpha * 255);
+			// For some reason, any alpha below 4 is displayed at alpha 255
+			if (alphaI < 4) alphaI = 4;
+			
+			String text = TextFormatting.BOLD + I18n.format("avatar.nochi");
+			
+			//@formatter:off
+			drawString(mc.fontRendererObj, text,
+					(res.getScaledWidth() - mc.fontRendererObj.getStringWidth(text)) / 2,
+					res.getScaledHeight() - mc.fontRendererObj.FONT_HEIGHT - 40,
+					0xffffff | (alphaI << 24));
+			//@formatter:on
+			
+			if (seconds >= 2) chiMsgFade = -1;
+			
+		}
+		
+	}
+	
 	public static void openBendingGui(BendingType bending) {
 		
 		BendingController controller = BendingManager.getBending(bending);
@@ -180,6 +210,10 @@ public class AvatarUiRenderer extends Gui {
 	public static void fade(RadialSegment segment) {
 		instance.fadingSegment = segment;
 		instance.timeFadeStart = System.currentTimeMillis();
+	}
+	
+	public static void displayChiMessage() {
+		instance.chiMsgFade = System.currentTimeMillis();
 	}
 	
 }

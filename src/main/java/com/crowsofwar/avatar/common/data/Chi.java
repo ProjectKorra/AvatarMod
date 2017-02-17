@@ -172,6 +172,11 @@ public class Chi {
 		this.max = nbt.getFloat("Max");
 		this.total = nbt.getFloat("Current");
 		this.availableMark = nbt.getFloat("AvailableMark");
+		if (max == 0) {
+			max = 20;
+			total = 10;
+			availableMark = 8;
+		}
 	}
 	
 	/**

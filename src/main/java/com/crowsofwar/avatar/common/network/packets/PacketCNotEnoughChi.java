@@ -14,27 +14,34 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.config;
+package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.gorecore.config.ConfigLoader;
-import com.crowsofwar.gorecore.config.Load;
+import com.crowsofwar.avatar.common.network.PacketRedirector;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class ConfigChi {
+public class PacketCNotEnoughChi extends AvatarPacket<PacketCNotEnoughChi> {
 	
-	public static final ConfigChi CHI_CONFIG = new ConfigChi();
+	@Override
+	public void fromBytes(ByteBuf buf) {}
 	
-	private ConfigChi() {}
+	@Override
+	public void toBytes(ByteBuf buf) {}
 	
-	@Load
-	public float regenPerSecond = .2f, availablePerSecond = .4f, availableThreshold = .4f;
+	@Override
+	protected Side getRecievedSide() {
+		return Side.CLIENT;
+	}
 	
-	public static void load() {
-		ConfigLoader.load(CHI_CONFIG, "avatar/chi.yml");
+	@Override
+	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCNotEnoughChi> getPacketHandler() {
+		return PacketRedirector::redirectMessage;
 	}
 	
 }

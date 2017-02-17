@@ -58,6 +58,7 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
+import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
@@ -86,7 +87,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
-		updateJSON = "https://raw.githubusercontent.com/CrowsOfWar/AvatarMod/master/updates.json")
+		updateJSON = "http://av2.io/updates.json")
 
 public class AvatarMod {
 	
@@ -134,6 +135,7 @@ public class AvatarMod {
 		registerPacket(PacketSWallJump.class, Side.SERVER);
 		registerPacket(PacketSSkillsMenu.class, Side.SERVER);
 		registerPacket(PacketSUseScroll.class, Side.SERVER);
+		registerPacket(PacketCNotEnoughChi.class, Side.CLIENT);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
