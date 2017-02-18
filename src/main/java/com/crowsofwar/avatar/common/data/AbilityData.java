@@ -32,11 +32,15 @@ import net.minecraft.nbt.NBTTagCompound;
 public class AbilityData {
 	
 	public static final int MAX_LEVEL = 3;
-	public static final int MAX_TRAINABLE_LEVEL = MAX_LEVEL - 1;
 	
 	private final AvatarPlayerData data;
 	private final BendingAbility ability;
 	private float xp;
+	/**
+	 * The current level.
+	 * <p>
+	 * Note that it starts at 0, so 0 = Level I, 1 = Level II, etc.
+	 */
 	private int level;
 	
 	public AbilityData(AvatarPlayerData data, BendingAbility ability) {
@@ -75,32 +79,53 @@ public class AbilityData {
 	 */
 	public void setXp(float xp) {
 		if (xp == this.xp) return;
+		
 		if (xp < 0) xp = 0;
 		if (xp > 100) {
 			xp = 0;
 			addLevel();
 		}
-		if (xp > this.xp && xp > getMaxXp()) xp = getMaxXp();
 		
 		this.xp = xp;
+		
 		data.saveChanges();
 		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
 	}
 	
 	/**
-	 * Add XP to this ability data. However, the added experience will be
-	 * multiplied by a number to add exponential progression. Also syncs the new
-	 * XP.
+	 * Add XP to this ability data. Will be {@link #getXpMultiplier()
+	 * multiplied} for exponential decay. Also syncs the new XP.
 	 */
 	public void addXp(float xp) {
-		xp *= 1 - 0.95 * Math.sqrt(this.xp / 100);
+		
+		xp *= getXpMultiplier();
 		if (xp == 0) return;
+		
 		setXp(this.xp + xp);
 		data.sync();
+		
 	}
 	
 	public boolean isMaxLevel() {
 		return level >= 3;
+	}
+	
+	/**
+	 * Gets the multiplier applied to any XP gains. Tends to lower faster near
+	 * ends of levels, and also is lower as the level increases. The minimum
+	 * value is .5 (unless on level 3).
+	 */
+	public float getXpMultiplier() {
+		if (level == 0) {
+			return 1 - .2f * xp * xp;
+		}
+		if (level == 1) {
+			return .8f - .2f * (xp - 1) * (xp - 1);
+		}
+		if (level == 2) {
+			return .6f - .1f * (xp - 2) * (xp - 2);
+		}
+		return 0;
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
