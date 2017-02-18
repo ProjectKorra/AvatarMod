@@ -144,7 +144,7 @@ public class PacketHandlerClient implements IPacketHandler {
 				Set<Map.Entry<BendingAbility, AbilityData>> entries = ((Map<BendingAbility, AbilityData>) readData
 						.get(KEY_ABILITY_DATA)).entrySet();
 				for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
-					data.getAbilityData(entry.getKey()).setXp(entry.getValue().getTotalXp());
+					data.getAbilityData(entry.getKey()).setXp(entry.getValue().getXp());
 					data.getAbilityData(entry.getKey()).setLevel(entry.getValue().getLevel());
 				}
 			}

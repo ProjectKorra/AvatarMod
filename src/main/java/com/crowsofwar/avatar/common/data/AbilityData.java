@@ -122,8 +122,6 @@ public class AbilityData {
 		xp *= getXpMultiplier();
 		if (xp == 0) return;
 		
-		System.out.println("Adding " + xp);
-		
 		setXp(this.xp + xp);
 		data.sync();
 		
