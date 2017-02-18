@@ -281,7 +281,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
 		
-		if (abilityData.getRoadblockLevel() < 100) {
+		if (!abilityData.isMaxLevel()) {
 			Container container = player.openContainer;
 			if (container instanceof ContainerSkillsGui) {
 				ContainerSkillsGui skills = (ContainerSkillsGui) container;
@@ -296,7 +296,7 @@ public class PacketHandlerServer implements IPacketHandler {
 						} else {
 							stackCompound(stack).setInteger("Points", points);
 						}
-						abilityData.incrementRoadblock();
+						abilityData.addLevel();
 					}
 				}
 			}
