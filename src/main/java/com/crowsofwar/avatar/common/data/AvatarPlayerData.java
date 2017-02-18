@@ -164,8 +164,11 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		AvatarUtils.writeList(statusControls, (nbtTag, control) -> nbtTag.setInteger("Id", control.id()),
 				writeTo, "StatusControls");
 		
-		AvatarUtils.writeMap(abilityData, (nbt, ability) -> nbt.setInteger("Id", ability.getId()),
-				(nbt, data) -> {
+		AvatarUtils.writeMap(abilityData, //
+				(nbt, ability) -> {
+					nbt.setInteger("Id", ability.getId());
+					nbt.setString("_AbilityName", ability.getName());
+				}, (nbt, data) -> {
 					nbt.setInteger("AbilityId", data.getAbility().getId());
 					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");

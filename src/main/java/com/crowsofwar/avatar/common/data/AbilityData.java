@@ -90,6 +90,10 @@ public class AbilityData {
 		return level * 33 + xp * 33f / 100;
 	}
 	
+	public float getXp() {
+		return xp;
+	}
+	
 	/**
 	 * Sets the XP level to the given amount, clamping from 0-100. If more than
 	 * 100, goes to next level. Will also save the AvatarPlayerData. Does not

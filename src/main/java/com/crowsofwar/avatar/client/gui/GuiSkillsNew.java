@@ -114,6 +114,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			scale(barActualWidth / 56f, barActualWidth / 56f, 1);
 			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 			drawTexturedModalRect(0, 0, 0, 137, 56, 7);
+			System.out.println(roadblock + "l," + ((int) abilityData.getXp()) + "% -> " + abilityData.getTotalXp());
 			drawTexturedModalRect(0, 0, 0, 144, (int) (abilityData.getTotalXp() / 100 * 56), 7);
 			
 			for (int i = 3; i >= roadblock + 1; i--) {
