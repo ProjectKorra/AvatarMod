@@ -107,17 +107,14 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			
 			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
 			
-			int roadblock = abilityData.getLevel();
-			
 			translate((width - barActualWidth) / 2f, height / 2f + middlePadding / 2f, 0);
 			
 			scale(barActualWidth / 56f, barActualWidth / 56f, 1);
 			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 			drawTexturedModalRect(0, 0, 0, 137, 56, 7);
-			System.out.println(roadblock + "l," + ((int) abilityData.getXp()) + "% -> " + abilityData.getTotalXp());
 			drawTexturedModalRect(0, 0, 0, 144, (int) (abilityData.getTotalXp() / 100 * 56), 7);
 			
-			for (int i = 3; i >= roadblock + 1; i--) {
+			for (int i = 3; i >= abilityData.getLevel() + 1; i--) {
 				drawTexturedModalRect(i * 17 - 1, 1, i * 17 - 1, 152, 7, 5);
 			}
 			
