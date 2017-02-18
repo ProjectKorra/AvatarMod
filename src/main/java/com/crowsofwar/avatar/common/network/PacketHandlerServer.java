@@ -282,6 +282,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
 		
 		if (!abilityData.isMaxLevel()) {
+			
 			Container container = player.openContainer;
 			if (container instanceof ContainerSkillsGui) {
 				ContainerSkillsGui skills = (ContainerSkillsGui) container;
@@ -296,10 +297,13 @@ public class PacketHandlerServer implements IPacketHandler {
 						} else {
 							stackCompound(stack).setInteger("Points", points);
 						}
-						abilityData.addLevel();
+						
+						abilityData.addXp(27);
+						
 					}
 				}
 			}
+			
 		}
 		
 		return null;

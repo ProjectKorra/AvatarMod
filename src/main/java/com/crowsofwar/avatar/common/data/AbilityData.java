@@ -118,6 +118,8 @@ public class AbilityData {
 		xp *= getXpMultiplier();
 		if (xp == 0) return;
 		
+		System.out.println("Adding " + xp);
+		
 		setXp(this.xp + xp);
 		data.sync();
 		
@@ -133,14 +135,15 @@ public class AbilityData {
 	 * value is .5 (unless on level 3).
 	 */
 	public float getXpMultiplier() {
+		float x = xp / 100;
 		if (level == 0) {
-			return 1 - .2f * xp * xp;
+			return 1 - .2f * x * x;
 		}
 		if (level == 1) {
-			return .8f - .2f * (xp - 1) * (xp - 1);
+			return .8f - .2f * (x - 1) * (x - 1);
 		}
 		if (level == 2) {
-			return .6f - .1f * (xp - 2) * (xp - 2);
+			return .6f - .1f * (x - 2) * (x - 2);
 		}
 		return 0;
 	}
