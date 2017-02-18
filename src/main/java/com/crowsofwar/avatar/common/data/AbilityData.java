@@ -99,46 +99,25 @@ public class AbilityData {
 		data.sync();
 	}
 	
-	public int getRoadblockLevel() {
-		return roadblock;
-	}
-	
-	public void setRoadblock(int level) {
-		if (level < 0) level = 0;
-		if (level > 3) level = 3;
-		this.roadblock = level;
-		data.saveChanges();
-		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
-	}
-	
-	public void incrementRoadblock() {
-		setRoadblock(roadblock + 1);
-		data.sync();
-	}
-	
 	public boolean isMaxLevel() {
 		return level >= 3;
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
-		roadblock = nbt.getInteger("Roadblock");
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("Xp", xp);
-		nbt.setInteger("Roadblock", roadblock);
 	}
 	
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(ability.getId()); // ability ID read from createFromBytes
 		buf.writeFloat(xp);
-		buf.writeInt(roadblock);
 	}
 	
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
-		roadblock = buf.readInt();
 	}
 	
 	/**
