@@ -130,19 +130,23 @@ public class AbilityData {
 	
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
+		level = nbt.getInteger("Level");
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("Xp", xp);
+		nbt.setInteger("Level", level);
 	}
 	
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(ability.getId()); // ability ID read from createFromBytes
 		buf.writeFloat(xp);
+		buf.writeInt(level);
 	}
 	
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
+		level = buf.readInt();
 	}
 	
 	/**
