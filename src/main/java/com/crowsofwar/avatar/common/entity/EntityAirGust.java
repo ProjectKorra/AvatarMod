@@ -97,7 +97,7 @@ public class EntityAirGust extends EntityArc {
 				float xp = 0;
 				if (data != null) {
 					AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_GUST);
-					xp = abilityData.getXp();
+					xp = abilityData.getTotalXp();
 					abilityData.addXp(SKILLS_CONFIG.airGustHit);
 				}
 				

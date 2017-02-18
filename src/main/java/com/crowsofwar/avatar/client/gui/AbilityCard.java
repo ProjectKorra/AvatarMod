@@ -129,7 +129,7 @@ public class AbilityCard extends Gui {
 				translate(10, progressY, 0);
 				scale(2, 2, 1);
 				renderImage(AvatarUiTextures.skillsGui, 0, 1, 40, 13);
-				renderImage(AvatarUiTextures.skillsGui, 0, 14, (int) (data.getAbilityData(ability).getXp() / scaledWidth * 40), 13);
+				renderImage(AvatarUiTextures.skillsGui, 0, 14, (int) (data.getAbilityData(ability).getTotalXp() / scaledWidth * 40), 13);
 			popMatrix();
 			
 			// draw keybinding
@@ -160,7 +160,7 @@ public class AbilityCard extends Gui {
 		
 		pushMatrix();
 			
-			String draw = ((int) data.getAbilityData(ability).getXp()) + "%";
+			String draw = ((int) data.getAbilityData(ability).getTotalXp()) + "%";
 			
 			translate(minX, minY, 0);
 			scale(scale, scale, 1);

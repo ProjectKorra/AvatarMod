@@ -52,7 +52,7 @@ public class AbilityWall extends EarthAbility {
 			EnumFacing cardinal = player.getHorizontalFacing();
 			AvatarPlayerData data = ctx.getData();
 			
-			float xp = data.getAbilityData(this).getXp();
+			float xp = data.getAbilityData(this).getTotalXp();
 			int whMin, whMax;
 			Random random = new Random();
 			if (xp == 100) {

@@ -66,7 +66,7 @@ public class AbilityFireArc extends FireAbility {
 			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
 			fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, player));
 			fire.setOwner(player);
-			fire.setDamageMult(0.75f + ctx.getData().getAbilityData(this).getXp() / 100);
+			fire.setDamageMult(0.75f + ctx.getData().getAbilityData(this).getTotalXp() / 100);
 			
 			world.spawnEntityInWorld(fire);
 			

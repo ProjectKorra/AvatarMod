@@ -77,7 +77,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 					if (ctx.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 						
 						AbilityData abilityData = data.getAbilityData(this);
-						float xp = abilityData.getXp();
+						float xp = abilityData.getTotalXp();
 						
 						EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 						floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);

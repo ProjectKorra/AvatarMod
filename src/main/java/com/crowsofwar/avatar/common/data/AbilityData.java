@@ -31,43 +31,57 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class AbilityData {
 	
+	public static final int MAX_LEVEL = 3;
+	public static final int MAX_TRAINABLE_LEVEL = MAX_LEVEL - 1;
+	
 	private final AvatarPlayerData data;
 	private final BendingAbility ability;
 	private float xp;
-	/**
-	 * Roadblock level:
-	 * <ul>
-	 * <li>0 = max 33 xp
-	 * <li>1 = max 66 xp
-	 * <li>2 = max 99 xp
-	 * <li>3 = max 100 xp
-	 */
-	private int roadblock;
+	private int level;
 	
 	public AbilityData(AvatarPlayerData data, BendingAbility ability) {
 		this.data = data;
 		this.ability = ability;
 		this.xp = 0;
-		this.roadblock = 0;
+		this.level = 0;
 	}
 	
 	public BendingAbility getAbility() {
 		return ability;
 	}
 	
-	public float getXp() {
-		return xp;
+	public int getLevel() {
+		return level;
+	}
+	
+	public void setLevel(int level) {
+		if (level < 0) level = 0;
+		if (level > MAX_LEVEL) level = MAX_LEVEL;
+		this.level = level;
+	}
+	
+	public void addLevel() {
+		setLevel(level + 1);
+	}
+	
+	public float getTotalXp() {
+		return level * 33 + xp / 33f;
 	}
 	
 	/**
-	 * Sets the XP level to the given amount, clamping from 0-100. Will also
-	 * save the AvatarPlayerData. Does not sync new XP.
+	 * Sets the XP level to the given amount, clamping from 0-100. If more than
+	 * 100, goes to next level. Will also save the AvatarPlayerData. Does not
+	 * sync new XP.
 	 */
 	public void setXp(float xp) {
 		if (xp == this.xp) return;
 		if (xp < 0) xp = 0;
-		if (xp > 100) xp = 100;
+		if (xp > 100) {
+			xp = 0;
+			addLevel();
+		}
 		if (xp > this.xp && xp > getMaxXp()) xp = getMaxXp();
+		
 		this.xp = xp;
 		data.saveChanges();
 		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
@@ -102,11 +116,8 @@ public class AbilityData {
 		data.sync();
 	}
 	
-	public int getMaxXp() {
-		if (roadblock == 0) return 33;
-		if (roadblock == 1) return 66;
-		if (roadblock == 2) return 99;
-		return 100;
+	public boolean isMaxLevel() {
+		return level >= 3;
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {

@@ -59,7 +59,7 @@ public class StatCtrlAirJump extends StatusControl {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			if (data != null) {
 				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_JUMP);
-				xp = abilityData.getXp();
+				xp = abilityData.getTotalXp();
 				abilityData.addXp(SKILLS_CONFIG.airJump);
 			}
 			

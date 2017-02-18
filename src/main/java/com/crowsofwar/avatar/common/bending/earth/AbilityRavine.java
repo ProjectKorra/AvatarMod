@@ -49,7 +49,7 @@ public class AbilityRavine extends EarthAbility {
 		if (ctx.consumeChi(STATS_CONFIG.chiRavine)) {
 			
 			AbilityData abilityData = ctx.getData().getAbilityData(this);
-			float xp = abilityData.getXp();
+			float xp = abilityData.getTotalXp();
 			
 			EntityPlayer player = ctx.getPlayerEntity();
 			World world = ctx.getWorld();

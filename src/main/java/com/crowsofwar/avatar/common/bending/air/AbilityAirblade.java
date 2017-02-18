@@ -58,7 +58,7 @@ public class AbilityAirblade extends AirAbility {
 		Vector spawnAt = Vector.getEntityPos(player).add(look).add(0, 1, 0);
 		spawnAt.add(look);
 		
-		float xp = ctx.getData().getAbilityData(this).getXp();
+		float xp = ctx.getData().getAbilityData(this).getTotalXp();
 		
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());

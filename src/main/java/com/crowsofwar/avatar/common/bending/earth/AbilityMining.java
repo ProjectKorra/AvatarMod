@@ -54,7 +54,7 @@ public class AbilityMining extends EarthAbility {
 			World world = ctx.getWorld();
 			
 			int chanceMin, chanceMax;
-			float xp = ctx.getData().getAbilityData(this).getXp();
+			float xp = ctx.getData().getAbilityData(this).getTotalXp();
 			if (xp == 100) {
 				chanceMin = 5;
 				chanceMax = 6;

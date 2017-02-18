@@ -109,10 +109,10 @@ public class EntityFlames extends AvatarEntity {
 					entity -> entity != owner && !(entity instanceof EntityFlames));
 			
 			for (Entity entity : collided) {
-				if (abilityData.getXp() >= 50) {
-					entity.attackEntityFrom(DamageSource.inFire, 2 + (abilityData.getXp() - 50) / 25);
+				if (abilityData.getTotalXp() >= 50) {
+					entity.attackEntityFrom(DamageSource.inFire, 2 + (abilityData.getTotalXp() - 50) / 25);
 				}
-				entity.setFire((int) (3 * 1 + abilityData.getXp() / 100f));
+				entity.setFire((int) (3 * 1 + abilityData.getTotalXp() / 100f));
 			}
 			
 			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());

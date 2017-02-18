@@ -47,7 +47,7 @@ public class AbilityAirBubble extends AirAbility {
 			
 			if (!ctx.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 			
-			float xp = data.getAbilityData(this).getXp();
+			float xp = data.getAbilityData(this).getTotalXp();
 			
 			EntityAirBubble bubble = new EntityAirBubble(world);
 			bubble.setOwner(player);

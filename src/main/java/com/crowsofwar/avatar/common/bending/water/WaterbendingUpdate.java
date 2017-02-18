@@ -99,7 +99,7 @@ public class WaterbendingUpdate {
 					chi.changeTotalChi(-required);
 					chi.changeAvailableChi(-required);
 					
-					double speed = .4 + abilityData.getXp() * (.3 / 100);
+					double speed = .4 + abilityData.getTotalXp() * (.3 / 100);
 					
 					player.setPosition(player.posX, yPos + .2, player.posZ);
 					Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(speed);
