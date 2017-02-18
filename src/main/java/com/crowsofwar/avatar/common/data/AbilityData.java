@@ -54,22 +54,40 @@ public class AbilityData {
 		return ability;
 	}
 	
+	/**
+	 * Get the current level of this ability.
+	 * <p>
+	 * Starts at 0, so 0 is level I, 1 is level II, etc.
+	 */
 	public int getLevel() {
 		return level;
 	}
 	
+	/**
+	 * Sets the current level of the ability to the given amount. Clamps between
+	 * 0 and MAX_LEVEL. Marks dirty, but does not sync.
+	 */
 	public void setLevel(int level) {
 		if (level < 0) level = 0;
 		if (level > MAX_LEVEL) level = MAX_LEVEL;
 		this.level = level;
+		save();
 	}
 	
+	/**
+	 * Increments the level by 1 and syncs the level.
+	 */
 	public void addLevel() {
 		setLevel(level + 1);
+		data.sync();
 	}
 	
+	/**
+	 * Gets the total experience value from 0-100, taking into account the level
+	 * AND current xp.
+	 */
 	public float getTotalXp() {
-		return level * 33 + xp / 33f;
+		return level * 33 + xp * 33f / 100;
 	}
 	
 	/**
@@ -87,9 +105,8 @@ public class AbilityData {
 		}
 		
 		this.xp = xp;
+		save();
 		
-		data.saveChanges();
-		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
 	}
 	
 	/**
@@ -107,7 +124,7 @@ public class AbilityData {
 	}
 	
 	public boolean isMaxLevel() {
-		return level >= 3;
+		return level >= MAX_LEVEL;
 	}
 	
 	/**
@@ -147,6 +164,14 @@ public class AbilityData {
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
 		level = buf.readInt();
+	}
+	
+	/**
+	 * Saves but does not sync
+	 */
+	private void save() {
+		data.saveChanges();
+		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
 	}
 	
 	/**
