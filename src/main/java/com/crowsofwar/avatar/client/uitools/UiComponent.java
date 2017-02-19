@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.client.uitools;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
 
+import net.minecraft.client.renderer.GlStateManager;
+
 /**
  * 
  * 
@@ -35,9 +37,23 @@ public abstract class UiComponent {
 		return transform;
 	}
 	
-	public abstract float width();
+	protected abstract float componentWidth();
 	
-	public abstract float height();
+	protected abstract float componentHeight();
+	
+	/**
+	 * Get the actual scaled width
+	 */
+	public float width() {
+		return componentWidth() * scale();
+	}
+	
+	/**
+	 * Get the actual scaled height
+	 */
+	public float height() {
+		return componentHeight() * scale();
+	}
 	
 	public void draw(float partialTicks) {
 		
@@ -45,6 +61,7 @@ public abstract class UiComponent {
 		pushMatrix();
 			
 			translate(coordinates().xInPixels(), coordinates().yInPixels(), 0);
+			GlStateManager.scale(scale(), scale(), 1f); // unfortunately needed due to shadowing
 			componentDraw(partialTicks);
 			
 		popMatrix();
@@ -82,6 +99,14 @@ public abstract class UiComponent {
 	
 	public void setOffsetScale(float scale) {
 		transform.setOffsetScale(scale);
+	}
+	
+	public float scale() {
+		return transform.scale();
+	}
+	
+	public void setScale(float scale) {
+		transform.setScale(scale);
 	}
 	
 }

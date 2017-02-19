@@ -26,13 +26,14 @@ public class UiTransformStatic implements UiTransform {
 	private final UiComponent component;
 	private StartingPosition pos;
 	private Measurement offset;
-	private float offsetScale;
+	private float offsetScale, componentScale;
 	
 	public UiTransformStatic(UiComponent component) {
 		this.component = component;
 		pos = StartingPosition.TOP_LEFT;
 		offset = Measurement.fromPixels(0, 0);
 		offsetScale = 1;
+		componentScale = 1;
 	}
 	
 	@Override
@@ -70,6 +71,16 @@ public class UiTransformStatic implements UiTransform {
 	@Override
 	public void setOffsetScale(float scale) {
 		this.offsetScale = scale;
+	}
+	
+	@Override
+	public float scale() {
+		return componentScale;
+	}
+	
+	@Override
+	public void setScale(float scale) {
+		this.componentScale = scale;
 	}
 	
 }

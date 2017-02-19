@@ -54,6 +54,17 @@ public interface UiTransform {
 	void setOffset(Measurement offset);
 	
 	/**
+	 * Gets the scale of the actual component. Coordinates may be adjusted to
+	 * accommodate for this.
+	 */
+	float scale();
+	
+	/**
+	 * Sets the scale of the component
+	 */
+	void setScale(float scale);
+	
+	/**
 	 * Returns the value to multiply by the {@link #offset() offsets}.
 	 */
 	float offsetScale();
