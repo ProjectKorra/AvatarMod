@@ -75,7 +75,7 @@ avatar.ability.air_bubble=Air Bubble
 
 avatar.ability.undefined=???
 
-avatar.radial.xp=%1$f%%
+avatar.radial.xp=Level %f, %f%%
 avatar.radial.undefined=Coming soon!
 
 avatar.key.none1=No key

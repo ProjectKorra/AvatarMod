@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -124,19 +125,26 @@ public class RadialMenu extends Gui {
 	}
 	
 	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
-		String translated = I18n
-				.format(ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName());
+		
+		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
+		String name = I18n.format(nameKey);
+		
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
-		drawCenteredString(mc.fontRendererObj, translated, x, y, 0xffffff);
+		drawCenteredString(mc.fontRendererObj, name, x, y, 0xffffff);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		if (data != null) {
+			
+			AbilityData abilityData = data.getAbilityData(ability);
+			
 			String second = I18n.format(ability == null ? "avatar.radial.undefined" : "avatar.radial.xp",
-					(int) data.getAbilityData(ability).getTotalXp());
+					(int) abilityData.getLevel(), (int) abilityData.getXp());
+			
 			drawCenteredString(mc.fontRendererObj, second, x,
 					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),
 					0xffffff);
+			
 		}
 		
 	}
