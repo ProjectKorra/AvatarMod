@@ -38,8 +38,8 @@ public class ScreenInfo {
 	
 	public static void refreshDimensions() {
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		width = res.getScaledWidth();
-		height = res.getScaledHeight();
+		width = res.getScaledWidth() * res.getScaleFactor();
+		height = res.getScaledHeight() * res.getScaleFactor();
 	}
 	
 }
