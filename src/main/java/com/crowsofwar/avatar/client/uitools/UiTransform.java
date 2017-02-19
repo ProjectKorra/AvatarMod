@@ -28,25 +28,35 @@ public interface UiTransform {
 	 */
 	Measurement x();
 	
+	void setX(Measurement x);
+	
 	/**
 	 * The calculated y-position based on position and offset
 	 */
 	Measurement y();
+	
+	void setY(Measurement y);
 	
 	/**
 	 * The starting position, such as top-right
 	 */
 	StartingPosition position();
 	
+	void setPosition(StartingPosition position);
+	
 	/**
 	 * Returns the x-offset from the {@link #position() starting position}.
 	 */
 	Measurement offsetX();
 	
+	void setOffsetX(Measurement x);
+	
 	/**
 	 * Returns the y-offset from the {@link #position() starting position}.
 	 */
 	Measurement offsetY();
+	
+	void setOffsetY(Measurement y);
 	
 	/**
 	 * Returns the value to multiply by the {@link #offsetX() offsets}.
