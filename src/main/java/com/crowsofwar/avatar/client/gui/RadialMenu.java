@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.AvatarMod.proxy;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -27,10 +28,13 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -41,6 +45,8 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
 
 public class RadialMenu extends Gui {
+	
+	private static final ChatMessage MSG_RADIAL_XP = newChatMessage("avatar.radial.xp", "level", "xp");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png
@@ -124,19 +130,28 @@ public class RadialMenu extends Gui {
 	}
 	
 	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
-		String translated = I18n
-				.format(ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName());
+		
+		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
+		String name = I18n.format(nameKey);
+		
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
-		drawCenteredString(mc.fontRendererObj, translated, x, y, 0xffffff);
+		drawCenteredString(mc.fontRendererObj, name, x, y, 0xffffff);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		if (data != null) {
-			String second = I18n.format(ability == null ? "avatar.radial.undefined" : "avatar.radial.xp",
-					(int) data.getAbilityData(ability).getTotalXp());
+			
+			AbilityData abilityData = data.getAbilityData(ability);
+			
+			String second = I18n.format(ability == null ? "avatar.radial.undefined" : "avatar.radial.xp");
+			
+			second = ChatSender.instance.processText(second, MSG_RADIAL_XP, (int) abilityData.getLevel(),
+					(int) abilityData.getXp());
+			
 			drawCenteredString(mc.fontRendererObj, second, x,
 					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),
 					0xffffff);
+			
 		}
 		
 	}
