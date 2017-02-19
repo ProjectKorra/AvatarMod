@@ -69,7 +69,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		ending.setPosition(StartingPosition.TOP_RIGHT);
 		ending.setOffset(Measurement.fromPixels(-100, 200));
 		
-		testComponent.setTransform(new UiTransformTransition(initial, ending, 5));
+		testComponent.setTransform(new UiTransformTransition(initial, ending, 2));
 		
 	}
 	
