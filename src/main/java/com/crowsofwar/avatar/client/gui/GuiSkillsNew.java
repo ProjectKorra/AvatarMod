@@ -22,6 +22,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Measurement;
+import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -65,6 +66,9 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		btnConfirmScroll = addButton(new GuiButtonScrolls(inventorySlots, 0, 115, 20));
 		btnConfirmScroll.enabled = false;
+		
+		ScreenInfo.refreshDimensions();
+		
 	}
 	
 	@Override
