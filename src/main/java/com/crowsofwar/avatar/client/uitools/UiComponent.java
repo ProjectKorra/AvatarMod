@@ -33,6 +33,14 @@ public abstract class UiComponent {
 		return transform;
 	}
 	
-	int width();
+	public abstract float width();
+	
+	public abstract float height();
+	
+	public void draw() {
+		
+	}
+	
+	protected abstract void componentDraw();
 	
 }

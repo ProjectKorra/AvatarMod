@@ -23,10 +23,34 @@ package com.crowsofwar.avatar.client.uitools;
  */
 public interface UiTransform {
 	
-	float x();
+	/**
+	 * The calculated x-position based on position and offset
+	 */
+	Measurement x();
 	
-	float y();
+	/**
+	 * The calculated y-position based on position and offset
+	 */
+	Measurement y();
 	
+	/**
+	 * The starting position, such as top-right
+	 */
+	StartingPosition position();
+	
+	/**
+	 * Returns the x-offset from the {@link #position() starting position}.
+	 */
+	Measurement offsetX();
+	
+	/**
+	 * Returns the y-offset from the {@link #position() starting position}.
+	 */
+	Measurement offsetY();
+	
+	/**
+	 * Returns the value to multiply by the {@link #offsetX() offsets}.
+	 */
 	float offsetScale();
 	
 }
