@@ -65,7 +65,7 @@ public class RadialSegment extends Gui {
 		double r = Math.sqrt(mouseCenteredX * mouseCenteredX + mouseCenteredY * mouseCenteredY)
 				/ RadialMenu.menuScale;
 		double currentAngle = Math.toDegrees(Math.atan2(mouseCenteredY, mouseCenteredX)) + 90;
-		double minAngle = angle - 44;
+		double minAngle = angle - 45;
 		if (minAngle < 0) minAngle += 360;
 		double maxAngle = angle;
 		boolean addCurrentAngle = currentAngle < 0;
