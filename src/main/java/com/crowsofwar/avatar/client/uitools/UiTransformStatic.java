@@ -23,4 +23,53 @@ package com.crowsofwar.avatar.client.uitools;
  */
 public class UiTransformStatic implements UiTransform {
 	
+	private final UiComponent component;
+	private StartingPosition pos;
+	private Measurement offset;
+	private float offsetScale;
+	
+	public UiTransformStatic(UiComponent component) {
+		this.component = component;
+		pos = StartingPosition.TOP_LEFT;
+		offset = Measurement.fromPixels(0, 0);
+		offsetScale = 1;
+	}
+	
+	@Override
+	public Measurement coordinates() {
+		float x = pos.getX() - pos.getMinusX() * component.width() + offset().xInPixels() * offsetScale;
+		float y = pos.getY() - pos.getMinusY() * component.height() + offset().yInPixels() * offsetScale;
+		return Measurement.fromPixels(x, y);
+	}
+	
+	@Override
+	public StartingPosition position() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setPosition(StartingPosition position) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public Measurement offset() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setOffset(Measurement offset) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public float offsetScale() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 }

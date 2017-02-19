@@ -28,13 +28,13 @@ public class StartingPosition {
 	public static StartingPosition TOP_LEFT = new StartingPosition(0, 0, 0, 0);
 	public static StartingPosition TOP_RIGHT = new StartingPosition(screenWidth(), 0, 1, 0);
 	
-	private float x, y, minusWidth, minusHeight;
+	private float x, y, minusX, minusY;
 	
-	private StartingPosition(float x, float y, float minusWidth, float minusHeight) {
+	private StartingPosition(float x, float y, float minusX, float minusY) {
 		this.x = x;
 		this.y = y;
-		this.minusWidth = minusWidth;
-		this.minusHeight = minusHeight;
+		this.minusX = minusX;
+		this.minusY = minusY;
 	}
 	
 	public float getX() {
@@ -49,16 +49,16 @@ public class StartingPosition {
 	 * To achieve the desired x coordinate, the width times this number should
 	 * be subtracted from the x position.
 	 */
-	public float getMinusWidth() {
-		return minusWidth;
+	public float getMinusX() {
+		return minusX;
 	}
 	
 	/**
 	 * To achieve the desired y coordinate, the height times this number should
 	 * be subtracted from the y position.
 	 */
-	public float getMinusHeight() {
-		return minusHeight;
+	public float getMinusY() {
+		return minusY;
 	}
 	
 	public static StartingPosition custom(float x, float y) {
