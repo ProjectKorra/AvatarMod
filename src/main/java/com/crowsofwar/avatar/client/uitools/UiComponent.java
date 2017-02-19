@@ -45,6 +45,10 @@ public abstract class UiComponent extends Gui {
 		return transform;
 	}
 	
+	public void setTransform(UiTransform transform) {
+		this.transform = transform;
+	}
+	
 	protected abstract float componentWidth();
 	
 	protected abstract float componentHeight();
