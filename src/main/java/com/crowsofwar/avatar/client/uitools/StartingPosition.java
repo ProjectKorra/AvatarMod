@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 
 /**
@@ -26,7 +27,7 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 public class StartingPosition {
 	
 	public static StartingPosition TOP_LEFT = new StartingPosition(0, 0, 0, 0);
-	public static StartingPosition TOP_RIGHT = new StartingPosition(screenWidth(), 0, 1, 0);
+	public static StartingPosition TOP_RIGHT = new StartingPosition(1, 0, 1, 0);
 	
 	private float x, y, minusX, minusY;
 	
@@ -38,11 +39,11 @@ public class StartingPosition {
 	}
 	
 	public float getX() {
-		return x;
+		return x * screenWidth();
 	}
 	
 	public float getY() {
-		return y;
+		return y * screenHeight();
 	}
 	
 	/**
