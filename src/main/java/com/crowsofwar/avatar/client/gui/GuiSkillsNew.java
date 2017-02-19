@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
@@ -158,14 +160,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		testComponent.draw(partialTicks);
 		
-	}
-	
-	private static int screenWidth() {
-		return new ScaledResolution(getMinecraft()).getScaledWidth();
-	}
-	
-	private static int screenHeight() {
-		return new ScaledResolution(getMinecraft()).getScaledHeight();
 	}
 	
 }
