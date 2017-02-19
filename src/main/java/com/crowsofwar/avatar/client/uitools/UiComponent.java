@@ -16,12 +16,12 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static net.minecraft.client.renderer.GlStateManager.popMatrix;
 import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -66,9 +66,7 @@ public abstract class UiComponent extends Gui {
 		//@formatter:off
 		pushMatrix();
 		
-		ScaledResolution res = new ScaledResolution(mc);
-		
-			GlStateManager.translate(coordinates().xInPixels() / res.getScaleFactor(), coordinates().yInPixels() / res.getScaleFactor(), 0);
+			GlStateManager.translate(coordinates().xInPixels() / scaleFactor(), coordinates().yInPixels() / scaleFactor(), 0);
 			GlStateManager.scale(scale(), scale(), 1f); // unfortunately needed due to shadowing
 			componentDraw(partialTicks);
 			

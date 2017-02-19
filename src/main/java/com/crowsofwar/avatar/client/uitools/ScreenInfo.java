@@ -26,7 +26,7 @@ import net.minecraft.client.gui.ScaledResolution;
  */
 public class ScreenInfo {
 	
-	private static int width, height;
+	private static int width, height, scale;
 	
 	public static int screenWidth() {
 		return width;
@@ -36,10 +36,15 @@ public class ScreenInfo {
 		return height;
 	}
 	
+	public static int scaleFactor() {
+		return scale;
+	}
+	
 	public static void refreshDimensions() {
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		width = res.getScaledWidth() * res.getScaleFactor();
 		height = res.getScaledHeight() * res.getScaleFactor();
+		scale = res.getScaleFactor();
 	}
 	
 }
