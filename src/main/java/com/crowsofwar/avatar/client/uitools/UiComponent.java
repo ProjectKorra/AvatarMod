@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import static net.minecraft.client.renderer.GlStateManager.*;
+
 /**
  * 
  * 
@@ -26,7 +28,7 @@ public abstract class UiComponent {
 	private UiTransform transform;
 	
 	public UiComponent() {
-		
+		this.transform = new UiTransformStatic(this);
 	}
 	
 	public UiTransform transform() {
@@ -37,10 +39,49 @@ public abstract class UiComponent {
 	
 	public abstract float height();
 	
-	public void draw() {
+	public void draw(float partialTicks) {
+		
+		//@formatter:off
+		pushMatrix();
+			
+			translate(coordinates().xInPixels(), coordinates().yInPixels(), 0);
+			componentDraw(partialTicks);
+			
+		popMatrix();
+		//@formatter:on
 		
 	}
 	
-	protected abstract void componentDraw();
+	protected abstract void componentDraw(float partialTicks);
+	
+	// Delegates to transform
+	
+	public Measurement coordinates() {
+		return transform.coordinates();
+	}
+	
+	public StartingPosition position() {
+		return transform.position();
+	}
+	
+	public void setPosition(StartingPosition position) {
+		transform.setPosition(position);
+	}
+	
+	public Measurement offset() {
+		return transform.offset();
+	}
+	
+	public void setOffset(Measurement offset) {
+		transform.setOffset(offset);
+	}
+	
+	public float offsetScale() {
+		return transform.offsetScale();
+	}
+	
+	public void setOffsetScale(float scale) {
+		transform.setOffsetScale(scale);
+	}
 	
 }

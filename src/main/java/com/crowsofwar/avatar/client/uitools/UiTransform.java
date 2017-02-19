@@ -17,7 +17,12 @@
 package com.crowsofwar.avatar.client.uitools;
 
 /**
- * 
+ * A mutable transformation class which keeps track of a UiComponent's position.
+ * <p>
+ * It starts at a {@link StartingPosition}, which is the component's general
+ * location on the screen (top-right, left, bottom, etc). That can be adjusted
+ * by {@link #offset() offsetting it}. The actual position is found by calling
+ * {@link #coordinates()}.
  * 
  * @author CrowsOfWar
  */
