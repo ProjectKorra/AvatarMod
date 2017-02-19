@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
+
 /**
  * 
  * 
@@ -40,6 +42,7 @@ public class UiTransformStatic implements UiTransform {
 	public Measurement coordinates() {
 		float x = pos.getX() - pos.getMinusX() * component.width() + offset().xInPixels() * offsetScale;
 		float y = pos.getY() - pos.getMinusY() * component.height() + offset().yInPixels() * offsetScale;
+		System.out.println("Screen width" + screenWidth());
 		return Measurement.fromPixels(x, y);
 	}
 	
@@ -50,7 +53,7 @@ public class UiTransformStatic implements UiTransform {
 	
 	@Override
 	public void setPosition(StartingPosition position) {
-		this.pos = pos;
+		this.pos = position;
 	}
 	
 	@Override
