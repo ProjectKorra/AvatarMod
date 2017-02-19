@@ -1,48 +1,6 @@
-AV2 Changelog :: version a3.0
+AV2 Changelog :: version a4.0
 
-+ Added water bubble ability
-+ Added earth wall ability
-+ Added /gorecore fixid, which allows you to sync UUID to online
-+ Added wall-jumping for airbenders
-+ Added fireball ability
-+ Added water skating ability
-+ Added airblade ability
-+ Added air bubble ability
-+ Added version checker
-+ Can bind keys to abilities through skills menu
-+ Added chi
++ Ability Level System
++ New skills menu
 
-* New textures for radial menu!!
-* New icons for abilities!!
-* Changed water skills menu background
-* Removed some unused assets
-* Offline/hacked support for account UUID fetching; generates random UUID
-* Air gust puts out fires
-* New texture for air particles, provided by EduMC
-* Air jump makes sound
-* Flamethrower flames inherit the firebender's velocity
-* Adjusted default values for configuration files
-* By default, config files ignore anything on them and favor the latest default values
-* Earthbenders can bend grass blocks
-* Sort all keys in config file by alphabetical order
-* Using simpler ability names in '/avatar ability...', e.g. AbilityFireArc -> fire_arc
-* Radial menu is semi-transparent and added option for semi transparency in cosmetic.yml
-* Earthbenders receive a 2x bonus to mining speed for bendable blocks (still need pickaxes though)
-* New logo in Mods menu
-* Greatly reduced XP gain when using abilities
-* Allow /avatar bending add ALL
-* Message displayed if can't bend
-* Fire arc looks 'smoother' -- texture animation was previously only 20fps
-
-> Fixed air gust not working on other players in LAN
-> Fixed crashing for hacked players... don't expect it to work on servers though
-> Fixed UUID cache using LF line endings on windows
-> Fixed config files using LF line endings on windows
-> Fixed '/avatar config' not refreshing config values for skills.yml
-> Fixed water arc not damaging enemies
-> Fix weird Block{Minecraft.stone} entry in stats.yml
-> (hopefully) Fixed bug where radial menu keeps reopening
-> Fixed pressing 'e' doesn't close skills menu
-> Fixed UUID cache saving issues when joining MP server
-> Fixed water arc not working on flowing water
-> Fixed airjump not working when start flying
+* Remove small space between radial segment hover
