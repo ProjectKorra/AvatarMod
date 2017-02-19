@@ -25,7 +25,9 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
- * 
+ * Components are a part of a ui. They can be text, images, etc. They have a
+ * manipulable {@link UiTransform transformation} that allows repositioning,
+ * scaling, etc.
  * 
  * @author CrowsOfWar
  */
@@ -36,7 +38,7 @@ public abstract class UiComponent extends Gui {
 	
 	public UiComponent() {
 		this.mc = Minecraft.getMinecraft();
-		this.transform = new UiTransformStatic(this);
+		this.transform = new UiTransformBasic(this);
 	}
 	
 	public UiTransform transform() {

@@ -21,14 +21,14 @@ package com.crowsofwar.avatar.client.uitools;
  * 
  * @author CrowsOfWar
  */
-public class UiTransformStatic implements UiTransform {
+public class UiTransformBasic implements UiTransform {
 	
 	private final UiComponent component;
 	private StartingPosition pos;
 	private Measurement offset;
 	private float offsetScale, componentScale;
 	
-	public UiTransformStatic(UiComponent component) {
+	public UiTransformBasic(UiComponent component) {
 		this.component = component;
 		pos = StartingPosition.TOP_LEFT;
 		offset = Measurement.fromPixels(0, 0);
