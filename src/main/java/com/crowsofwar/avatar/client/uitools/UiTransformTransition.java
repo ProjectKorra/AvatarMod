@@ -49,51 +49,37 @@ public class UiTransformTransition implements UiTransform {
 	
 	@Override
 	public StartingPosition position() {
-		// TODO Auto-generated method stub
-		return null;
+		float x = ending.position().getX() * percentDone() + initial.position().getX() * invPercentDone();
+		float y = ending.position().getY() * percentDone() + initial.position().getY() * invPercentDone();
+		return StartingPosition.custom(x, y);
 	}
 	
 	@Override
-	public void setPosition(StartingPosition position) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setPosition(StartingPosition position) {}
 	
 	@Override
 	public Measurement offset() {
-		// TODO Auto-generated method stub
-		return null;
+		return ending.offset().times(percentDone()).plus(initial.offset().times(invPercentDone()));
 	}
 	
 	@Override
-	public void setOffset(Measurement offset) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setOffset(Measurement offset) {}
 	
 	@Override
 	public float scale() {
-		// TODO Auto-generated method stub
-		return 0;
+		return ending.scale() * percentDone() + initial.scale() * invPercentDone();
 	}
 	
 	@Override
-	public void setScale(float scale) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setScale(float scale) {}
 	
 	@Override
 	public float offsetScale() {
-		// TODO Auto-generated method stub
-		return 0;
+		return ending.offsetScale() * percentDone() + initial.offsetScale() * invPercentDone();
 	}
 	
 	@Override
-	public void setOffsetScale(float scale) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setOffsetScale(float scale) {}
 	
 	@Override
 	public void update(float partialTicks) {
