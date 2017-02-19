@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.client.uitools;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -25,11 +27,13 @@ import net.minecraft.client.renderer.GlStateManager;
  * 
  * @author CrowsOfWar
  */
-public abstract class UiComponent {
+public abstract class UiComponent extends Gui {
 	
+	protected final Minecraft mc;
 	private UiTransform transform;
 	
 	public UiComponent() {
+		this.mc = Minecraft.getMinecraft();
 		this.transform = new UiTransformStatic(this);
 	}
 	
@@ -69,6 +73,10 @@ public abstract class UiComponent {
 		
 	}
 	
+	/**
+	 * Actually draw the component. It is already translated and scaled to the
+	 * correct position.
+	 */
 	protected abstract void componentDraw(float partialTicks);
 	
 	// Delegates to transform
