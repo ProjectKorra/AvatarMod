@@ -21,54 +21,58 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 
 /**
  * A measurement that can either be in screen pixels or percentage of total
- * screen.
+ * screen. Measurements keep track of x and y values, and are immutable.
  * 
  * @author CrowsOfWar
  */
 public class Measurement {
 	
-	private final float pixels;
-	private final int maxPixels;
+	private final float x, y;
 	
-	private Measurement(float px, int maxPixels) {
-		this.pixels = px;
-		this.maxPixels = maxPixels;
+	private Measurement(float x, float y) {
+		this.x = x;
+		this.y = y;
 	}
 	
 	/**
-	 * Returns the measurement in pixels.
+	 * Returns the x-value of the measurement in pixels.
 	 */
-	public float inPixels() {
-		return pixels;
+	public float xInPixels() {
+		return x;
 	}
 	
 	/**
-	 * Returns the measurement in percentage of screen width/height from 0-100.
+	 * Returns the y-value of the measurement in pixels.
 	 */
-	public float inPercent() {
-		return pixels / maxPixels * 100;
+	public float yInPixels() {
+		return y;
 	}
 	
-	public static Measurement fromHorizPixels(float px) {
-		return new Measurement(px, screenWidth());
+	/**
+	 * Returns the x-value of the measurement in percentage of screen width from
+	 * 0-100.
+	 */
+	public float xInPercent() {
+		return x / screenWidth() * 100;
 	}
 	
-	public static Measurement fromVertPixels(float px) {
-		return new Measurement(px, screenHeight());
+	/**
+	 * Returns the y-value of the measurement in percentage of screen height
+	 * from 0-100.
+	 */
+	public float yInPercent() {
+		return y / screenHeight() * 100;
+	}
+	
+	public static Measurement fromPixels(float x, float y) {
+		return new Measurement(x, y);
 	}
 	
 	/**
 	 * Percent is from 0-100.
 	 */
-	public static Measurement fromHorizPct(float percent) {
-		return new Measurement(screenWidth() * percent / 100, screenWidth());
-	}
-	
-	/**
-	 * Percent is from 0-100.
-	 */
-	public static Measurement fromVertPct(float percent) {
-		return new Measurement(screenHeight() * percent / 100, screenHeight());
+	public static Measurement fromPercent(float pctX, float pctY) {
+		return new Measurement(screenWidth() * pctX / 100, screenHeight() * pctY / 100);
 	}
 	
 }

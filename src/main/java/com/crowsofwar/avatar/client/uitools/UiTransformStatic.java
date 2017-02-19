@@ -23,39 +23,4 @@ package com.crowsofwar.avatar.client.uitools;
  */
 public class UiTransformStatic implements UiTransform {
 	
-	@Override
-	public Measurement x() {
-		return null;
-	}
-	
-	@Override
-	public Measurement y() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public StartingPosition position() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public Measurement offsetX() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public Measurement offsetY() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public float offsetScale() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
 }
