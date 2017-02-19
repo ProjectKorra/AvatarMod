@@ -53,4 +53,9 @@ public interface UiTransform {
 	 */
 	float offsetScale();
 	
+	/**
+	 * Set the value to multiply {@link #offset() offset} by.
+	 */
+	void setOffsetScale(float scale);
+	
 }

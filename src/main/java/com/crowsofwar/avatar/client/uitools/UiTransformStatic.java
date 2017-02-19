@@ -44,32 +44,32 @@ public class UiTransformStatic implements UiTransform {
 	
 	@Override
 	public StartingPosition position() {
-		// TODO Auto-generated method stub
-		return null;
+		return pos;
 	}
 	
 	@Override
 	public void setPosition(StartingPosition position) {
-		// TODO Auto-generated method stub
-		
+		this.pos = pos;
 	}
 	
 	@Override
 	public Measurement offset() {
-		// TODO Auto-generated method stub
-		return null;
+		return offset;
 	}
 	
 	@Override
 	public void setOffset(Measurement offset) {
-		// TODO Auto-generated method stub
-		
+		this.offset = offset;
 	}
 	
 	@Override
 	public float offsetScale() {
-		// TODO Auto-generated method stub
-		return 0;
+		return offsetScale;
+	}
+	
+	@Override
+	public void setOffsetScale(float scale) {
+		this.offsetScale = scale;
 	}
 	
 }
