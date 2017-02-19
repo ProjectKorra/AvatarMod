@@ -21,69 +21,80 @@ package com.crowsofwar.avatar.client.uitools;
  * 
  * @author CrowsOfWar
  */
-public class UiTransformBasic implements UiTransform {
+public class UiTransformTransition implements UiTransform {
 	
-	private final UiComponent component;
-	private StartingPosition pos;
-	private Measurement offset;
-	private float offsetScale, componentScale;
+	private final UiTransform initial, ending;
+	private final float maxTicks;
+	private float ticks;
 	
-	public UiTransformBasic(UiComponent component) {
-		this.component = component;
-		pos = StartingPosition.TOP_LEFT;
-		offset = Measurement.fromPixels(0, 0);
-		offsetScale = 1;
-		componentScale = 1;
+	public UiTransformTransition(UiTransform initial, UiTransform ending, float seconds) {
+		this.initial = initial;
+		this.ending = ending;
+		this.maxTicks = seconds * 20;
+	}
+	
+	private float percentDone() {
+		float value = ticks / maxTicks;
+		return value > 1 ? 1 : value;
 	}
 	
 	@Override
 	public Measurement coordinates() {
-		float x = pos.getX() - pos.getMinusX() * component.width() + offset().xInPixels() * offsetScale;
-		float y = pos.getY() - pos.getMinusY() * component.height() + offset().yInPixels() * offsetScale;
-		return Measurement.fromPixels(x, y);
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	@Override
 	public StartingPosition position() {
-		return pos;
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	@Override
 	public void setPosition(StartingPosition position) {
-		this.pos = position;
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
 	public Measurement offset() {
-		return offset;
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	@Override
 	public void setOffset(Measurement offset) {
-		this.offset = offset;
-	}
-	
-	@Override
-	public float offsetScale() {
-		return offsetScale;
-	}
-	
-	@Override
-	public void setOffsetScale(float scale) {
-		this.offsetScale = scale;
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
 	public float scale() {
-		return componentScale;
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	@Override
 	public void setScale(float scale) {
-		this.componentScale = scale;
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
-	public void update(float partialTicks) {}
+	public float offsetScale() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public void setOffsetScale(float scale) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void update(float partialTicks) {
+		ticks += partialTicks;
+	}
 	
 }

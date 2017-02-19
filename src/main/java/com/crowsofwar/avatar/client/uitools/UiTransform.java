@@ -29,6 +29,11 @@ package com.crowsofwar.avatar.client.uitools;
 public interface UiTransform {
 	
 	/**
+	 * Called by the UiComponent to update the transform.
+	 */
+	void update(float partialTicks);
+	
+	/**
 	 * The calculated coordinates based on position and offset
 	 */
 	Measurement coordinates();
