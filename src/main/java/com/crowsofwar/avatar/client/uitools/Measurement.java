@@ -64,6 +64,21 @@ public class Measurement {
 		return y / screenHeight() * 100;
 	}
 	
+	/**
+	 * Returns a new measurement scaled by the given factor.
+	 */
+	public Measurement times(float scl) {
+		return new Measurement(x * scl, y * scl);
+	}
+	
+	/**
+	 * Returns a new measurement based off of this coordinates plus the other
+	 * coordinates.
+	 */
+	public Measurement plus(Measurement m) {
+		return new Measurement(this.x + m.x, this.y + m.y);
+	}
+	
 	public static Measurement fromPixels(float x, float y) {
 		return new Measurement(x, y);
 	}

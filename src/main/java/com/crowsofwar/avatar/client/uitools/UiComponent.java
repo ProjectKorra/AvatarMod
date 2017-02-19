@@ -65,6 +65,8 @@ public abstract class UiComponent extends Gui {
 	
 	public void draw(float partialTicks) {
 		
+		transform.update(partialTicks);
+		
 		//@formatter:off
 		pushMatrix();
 		

@@ -38,10 +38,13 @@ public class UiTransformTransition implements UiTransform {
 		return value > 1 ? 1 : value;
 	}
 	
+	private float invPercentDone() {
+		return 1 - percentDone();
+	}
+	
 	@Override
 	public Measurement coordinates() {
-		// TODO Auto-generated method stub
-		return null;
+		return ending.coordinates().times(percentDone()).plus(initial.coordinates().times(invPercentDone()));
 	}
 	
 	@Override
