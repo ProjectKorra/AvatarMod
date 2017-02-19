@@ -25,7 +25,7 @@ public class UiTransformTransition implements UiTransform {
 	
 	private final UiTransform initial, ending;
 	private final float maxTicks;
-	private float ticks;
+	private float ticks, lastPartialTicks;
 	
 	public UiTransformTransition(UiTransform initial, UiTransform ending, float seconds) {
 		this.initial = initial;
@@ -83,7 +83,10 @@ public class UiTransformTransition implements UiTransform {
 	
 	@Override
 	public void update(float partialTicks) {
-		ticks += partialTicks;
+		float diff = partialTicks - lastPartialTicks;
+		if (diff < 0) diff += 1;
+		ticks += diff;
+		lastPartialTicks = partialTicks;
 	}
 	
 }
