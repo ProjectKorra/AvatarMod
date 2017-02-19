@@ -20,6 +20,9 @@ import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.uitools.ComponentText;
+import com.crowsofwar.avatar.client.uitools.Measurement;
+import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -40,6 +43,7 @@ import net.minecraft.item.ItemStack;
  */
 public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
+	private UiComponent testComponent;
 	private GuiButton btnConfirmScroll;
 	
 	public GuiSkillsNew() {
@@ -49,6 +53,9 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		xSize = res.getScaledWidth();
 		ySize = res.getScaledHeight();
+		
+		testComponent = new ComponentText("Hello!");
+		testComponent.setOffset(Measurement.fromPercent(10, 10));
 		
 	}
 	
@@ -144,6 +151,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		disableBlend();
 		
 		//@formatter:on
+		
+		testComponent.draw(partialTicks);
 		
 	}
 	
