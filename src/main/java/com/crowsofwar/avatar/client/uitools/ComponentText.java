@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.client.uitools;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 
 /**
  * 
@@ -43,7 +44,8 @@ public class ComponentText extends UiComponent {
 	
 	@Override
 	protected float componentWidth() {
-		return fontRender.getStringWidth(text);
+		ScaledResolution res = new ScaledResolution(mc);
+		return fontRender.getStringWidth(text) * res.getScaleFactor();
 	}
 	
 	@Override

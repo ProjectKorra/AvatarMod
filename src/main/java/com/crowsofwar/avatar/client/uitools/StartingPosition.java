@@ -39,7 +39,6 @@ public class StartingPosition {
 	}
 	
 	public float getX() {
-		System.out.println("x: " + x);
 		return x * screenWidth();
 	}
 	
