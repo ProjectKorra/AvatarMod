@@ -36,10 +36,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ItemScroll extends Item {
 	
+	// ItemDye
+	
 	public ItemScroll() {
 		setUnlocalizedName("scroll");
 		setMaxStackSize(1);
 		setCreativeTab(AvatarItems.tabItems);
+		setMaxDamage(0);
+	}
+	
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return super.getUnlocalizedName(stack) + "." + ScrollType.fromId(stack.getMetadata()).displayName();
 	}
 	
 	@Override
@@ -61,6 +69,28 @@ public class ItemScroll extends Item {
 		int pts = nbt.getInteger("Points");
 		
 		tooltips.add(I18n.format("avatar.tooltip.scroll", pts));
+		
+	}
+	
+	public enum ScrollType {
+		ALL,
+		EARTH,
+		FIRE,
+		WATER,
+		AIR;
+		
+		public String displayName() {
+			return name().toLowerCase();
+		}
+		
+		public int id() {
+			return ordinal();
+		}
+		
+		public static ScrollType fromId(int id) {
+			if (id < 0 || id >= values().length) throw new IllegalArgumentException("Invalid id: " + id);
+			return values()[id];
+		}
 		
 	}
 	
