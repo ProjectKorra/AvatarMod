@@ -20,7 +20,8 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 
 /**
- * 
+ * A positioned rectangular frame within the screen which allows positioning of
+ * {@link UiComponent components} within a certain bounds.
  * 
  * @author CrowsOfWar
  */
@@ -38,26 +39,31 @@ public class Frame {
 			return Measurement.fromPixels(screenWidth(), screenHeight());
 		}
 		
+		@Override
+		public Measurement getCoordsMin() {
+			return Measurement.fromPixels(0, 0);
+		}
+		
 	};
 	
 	private final Frame parent;
-	private Measurement position, dimensions;
+	private Measurement offset, dimensions;
 	
 	public Frame(Frame parent) {
 		this.parent = parent;
-		this.position = Measurement.fromPixels(0, 0);
+		this.offset = Measurement.fromPixels(0, 0);
 		this.dimensions = Measurement.fromPixels(screenWidth(), screenHeight());
 	}
 	
 	/**
-	 * Get offset within the frame
+	 * Get offset from the parent frame
 	 */
 	public Measurement getOffset() {
-		return position;
+		return offset;
 	}
 	
-	public void setPosition(Measurement position) {
-		this.position = position;
+	public void setPosition(Measurement offset) {
+		this.offset = offset;
 	}
 	
 	public Measurement getDimensions() {
@@ -69,10 +75,19 @@ public class Frame {
 	}
 	
 	/**
-	 * Get the calculated minimum coordinates of this frame
+	 * Get the calculated coordinates of this frame, based off of parent pos +
+	 * offset. Top-left.
 	 */
 	public Measurement getCoordsMin() {
 		return getOffset().plus(parent.getCoordsMin());
+	}
+	
+	/**
+	 * Get the calculated coordinates of this frame, based off of parent pos +
+	 * offset. Bottom-right.
+	 */
+	public Measurement getCoordsMax() {
+		return getCoordsMin().plus(getDimensions());
 	}
 	
 }
