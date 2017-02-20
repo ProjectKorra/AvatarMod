@@ -73,6 +73,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		// testComponent.setTransform(new UiTransformTransition(initial, ending,
 		// 2));
 		
+		testComponent = new ComponentImage(AvatarUiTextures.icons, 96, 32, 32, 32);
+		
 		Frame frame2 = new Frame();
 		frame2.setPosition(Measurement.fromPercent(10, 10));
 		frame2.setDimensions(Measurement.fromPercent(80, 80));
@@ -84,9 +86,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		UiTransform inFrame = new UiTransformBasic(testComponent);
 		inFrame.setFrame(frame);
 		inFrame.setPosition(StartingPosition.TOP_RIGHT);
-		// testComponent.setTransform(inFrame);
 		
-		testComponent = new ComponentImage(AvatarUiTextures.icons, 96, 32, 32, 32);
 		testComponent.setTransform(inFrame);
 		
 	}

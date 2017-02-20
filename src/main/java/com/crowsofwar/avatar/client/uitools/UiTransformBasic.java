@@ -30,6 +30,8 @@ public class UiTransformBasic implements UiTransform {
 	private Frame frame;
 	
 	public UiTransformBasic(UiComponent component) {
+		if (component == null) throw new IllegalArgumentException("Cannot have null component");
+		
 		this.component = component;
 		pos = StartingPosition.TOP_LEFT;
 		offset = Measurement.fromPixels(0, 0);
