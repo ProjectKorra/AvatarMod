@@ -47,7 +47,8 @@ public class ItemScroll extends Item {
 	
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return super.getUnlocalizedName(stack) + "." + ScrollType.fromId(stack.getMetadata()).displayName();
+		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
+		return super.getUnlocalizedName(stack) + "." + ScrollType.fromId(metadata).displayName();
 	}
 	
 	@Override
