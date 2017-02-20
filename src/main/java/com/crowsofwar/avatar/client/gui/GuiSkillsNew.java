@@ -74,6 +74,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		testComponent.setTransform(new UiTransformTransition(initial, ending, 2));
 		
 		frame = new Frame();
+		frame.setPosition(Measurement.fromPercent(10, 10));
+		frame.setDimensions(Measurement.fromPercent(80, 80));
 		
 	}
 	

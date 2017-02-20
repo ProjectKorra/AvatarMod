@@ -107,8 +107,11 @@ public class Frame extends Gui {
 			
 			enableBlend();
 		
+			scaleFactor();
+			
+			scale(1f / scaleFactor(), 1f / scaleFactor(), 1);
 			translate(getCoordsMin().xInPixels(), getCoordsMin().yInPixels(), 0);
-			scale(dimensions.xInPixels() / 256 / scaleFactor(), dimensions.yInPixels() / 256 / scaleFactor(), 1);
+			scale(dimensions.xInPixels() / 256, dimensions.yInPixels() / 256, 1);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			
 			disableBlend();
