@@ -89,9 +89,9 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		
 		for (int meta = 0; meta < ScrollType.values().length; meta++) {
-			subItems.add(setPoints(new ItemStack(item, meta), 1));
-			subItems.add(setPoints(new ItemStack(item, meta), 3));
-			subItems.add(setPoints(new ItemStack(item, meta), 5));
+			subItems.add(setPoints(new ItemStack(item, 1, meta), 1));
+			subItems.add(setPoints(new ItemStack(item, 1, meta), 3));
+			subItems.add(setPoints(new ItemStack(item, 1, meta), 5));
 		}
 		
 	}
