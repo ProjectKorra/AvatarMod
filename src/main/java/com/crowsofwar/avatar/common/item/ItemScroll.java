@@ -21,11 +21,13 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -80,6 +82,27 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Override
 	public String getModelName(int meta) {
 		return "scroll_" + ScrollType.fromId(meta).displayName();
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		
+		for (int meta = 0; meta < ScrollType.values().length; meta++) {
+			subItems.add(setPoints(new ItemStack(item, meta), 1));
+			subItems.add(setPoints(new ItemStack(item, meta), 3));
+			subItems.add(setPoints(new ItemStack(item, meta), 5));
+		}
+		
+	}
+	
+	public static int getPoints(ItemStack stack) {
+		return stackCompound(stack).getInteger("Points");
+	}
+	
+	public static ItemStack setPoints(ItemStack stack, int points) {
+		stackCompound(stack).setInteger("Points", points);
+		return stack;
 	}
 	
 	public enum ScrollType {
