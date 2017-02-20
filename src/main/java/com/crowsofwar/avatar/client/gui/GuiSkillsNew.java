@@ -23,6 +23,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
+import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
@@ -52,6 +53,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	private UiComponent testComponent;
 	private GuiButton btnConfirmScroll;
+	private Frame frame;
 	
 	public GuiSkillsNew() {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth(), screenHeight()));
@@ -70,6 +72,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		ending.setOffset(Measurement.fromPixels(-100, 200));
 		
 		testComponent.setTransform(new UiTransformTransition(initial, ending, 2));
+		
+		frame = new Frame();
 		
 	}
 	
@@ -170,6 +174,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		//@formatter:on
 		
 		testComponent.draw(partialTicks);
+		frame.draw(partialTicks);
 		
 	}
 	

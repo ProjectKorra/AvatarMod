@@ -56,6 +56,10 @@ public class Frame extends Gui {
 	private final Frame parent;
 	private Measurement offset, dimensions;
 	
+	public Frame() {
+		this(SCREEN);
+	}
+	
 	public Frame(Frame parent) {
 		this.parent = parent;
 		this.offset = Measurement.fromPixels(0, 0);
