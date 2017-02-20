@@ -43,8 +43,7 @@ public class AvatarItemRenderRegister {
 		
 		for (int meta : metadata) {
 			ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-			ModelResourceLocation mrl = new ModelResourceLocation(
-					item.item().getUnlocalizedName().substring(5), "inventory");
+			ModelResourceLocation mrl = new ModelResourceLocation(item.getModelName(meta), "inventory");
 			mesher.register(item.item(), meta, mrl);
 		}
 		
