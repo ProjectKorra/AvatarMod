@@ -22,7 +22,7 @@ import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.uitools.ComponentText;
+import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
@@ -62,7 +62,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		xSize = res.getScaledWidth();
 		ySize = res.getScaledHeight();
 		
-		testComponent = new ComponentText("Hello!");
+		// testComponent = new ComponentText("Hello!");
 		
 		UiTransform initial = new UiTransformBasic(testComponent);
 		initial.setOffset(Measurement.fromPixels(0, 100));
@@ -84,6 +84,9 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		UiTransform inFrame = new UiTransformBasic(testComponent);
 		inFrame.setFrame(frame);
 		inFrame.setPosition(StartingPosition.TOP_RIGHT);
+		// testComponent.setTransform(inFrame);
+		
+		testComponent = new ComponentImage(AvatarUiTextures.icons, 96, 32, 32, 32);
 		testComponent.setTransform(inFrame);
 		
 	}
