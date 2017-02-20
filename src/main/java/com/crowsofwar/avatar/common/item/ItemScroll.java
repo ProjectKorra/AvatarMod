@@ -90,8 +90,8 @@ public class ItemScroll extends Item implements AvatarItem {
 		
 		for (int meta = 0; meta < ScrollType.values().length; meta++) {
 			subItems.add(setPoints(new ItemStack(item, 1, meta), 1));
+			subItems.add(setPoints(new ItemStack(item, 1, meta), 2));
 			subItems.add(setPoints(new ItemStack(item, 1, meta), 3));
-			subItems.add(setPoints(new ItemStack(item, 1, meta), 5));
 		}
 		
 	}
