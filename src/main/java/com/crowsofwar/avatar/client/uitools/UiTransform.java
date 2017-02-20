@@ -79,4 +79,14 @@ public interface UiTransform {
 	 */
 	void setOffsetScale(float scale);
 	
+	/**
+	 * Get the frame that this transform is inside
+	 */
+	Frame getFrame();
+	
+	/**
+	 * Put this transform into the given frame
+	 */
+	void setFrame(Frame frame);
+	
 }

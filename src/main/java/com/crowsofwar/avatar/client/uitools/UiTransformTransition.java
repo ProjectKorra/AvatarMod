@@ -89,4 +89,12 @@ public class UiTransformTransition implements UiTransform {
 		lastPartialTicks = partialTicks;
 	}
 	
+	@Override
+	public Frame getFrame() {
+		return Frame.SCREEN;
+	}
+	
+	@Override
+	public void setFrame(Frame frame) {}
+	
 }

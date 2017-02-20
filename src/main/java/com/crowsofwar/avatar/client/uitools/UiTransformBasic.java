@@ -27,6 +27,7 @@ public class UiTransformBasic implements UiTransform {
 	private StartingPosition pos;
 	private Measurement offset;
 	private float offsetScale, componentScale;
+	private Frame frame;
 	
 	public UiTransformBasic(UiComponent component) {
 		this.component = component;
@@ -34,6 +35,7 @@ public class UiTransformBasic implements UiTransform {
 		offset = Measurement.fromPixels(0, 0);
 		offsetScale = 1;
 		componentScale = 1;
+		frame = Frame.SCREEN;
 	}
 	
 	@Override
@@ -85,5 +87,15 @@ public class UiTransformBasic implements UiTransform {
 	
 	@Override
 	public void update(float partialTicks) {}
+	
+	@Override
+	public Frame getFrame() {
+		return frame;
+	}
+	
+	@Override
+	public void setFrame(Frame frame) {
+		this.frame = frame;
+	}
 	
 }

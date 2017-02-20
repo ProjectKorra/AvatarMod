@@ -127,4 +127,12 @@ public abstract class UiComponent extends Gui {
 		transform.setScale(scale);
 	}
 	
+	public Frame getFrame() {
+		return transform.getFrame();
+	}
+	
+	public void setFrame(Frame frame) {
+		transform.setFrame(frame);
+	}
+	
 }

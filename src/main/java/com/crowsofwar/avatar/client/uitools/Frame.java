@@ -27,7 +27,7 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
  */
 public class Frame {
 	
-	public Frame SCREEN = new Frame(null) {
+	public static final Frame SCREEN = new Frame(null) {
 		
 		@Override
 		public Measurement getOffset() {
