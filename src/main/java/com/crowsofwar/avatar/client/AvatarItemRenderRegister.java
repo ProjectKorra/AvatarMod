@@ -31,14 +31,23 @@ import net.minecraft.item.Item;
 public class AvatarItemRenderRegister {
 	
 	public static void register() {
-		register(AvatarItems.itemScroll, 0);
+		register(AvatarItems.itemScroll, 0, 1, 2, 3, 4);
 	}
 	
-	private static void register(Item item, int meta) {
-		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		ModelResourceLocation mrl = new ModelResourceLocation(item.getUnlocalizedName().substring(5),
-				"inventory");
-		mesher.register(item, meta, mrl);
+	/**
+	 * Registers the specified item with the given metadata(s). Maps it to
+	 * {unlocalizedName}.json. Note that if no metadata is specified, the item
+	 * will not be registered.
+	 */
+	private static void register(Item item, int... metadata) {
+		
+		for (int meta : metadata) {
+			ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+			ModelResourceLocation mrl = new ModelResourceLocation(item.getUnlocalizedName().substring(5),
+					"inventory");
+			mesher.register(item, meta, mrl);
+		}
+		
 	}
 	
 }
