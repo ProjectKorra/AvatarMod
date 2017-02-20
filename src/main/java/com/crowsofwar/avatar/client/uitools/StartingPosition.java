@@ -16,9 +16,6 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
-
 /**
  * 
  * 
@@ -38,12 +35,18 @@ public class StartingPosition {
 		this.minusY = minusY;
 	}
 	
+	/**
+	 * Gets amount of x divided by the frame width (0-1)
+	 */
 	public float getX() {
-		return x * screenWidth();
+		return x;
 	}
 	
+	/**
+	 * Gets amount of y divided by the frame height (0-1)
+	 */
 	public float getY() {
-		return y * screenHeight();
+		return y;
 	}
 	
 	/**

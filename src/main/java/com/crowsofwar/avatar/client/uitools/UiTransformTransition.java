@@ -49,8 +49,11 @@ public class UiTransformTransition implements UiTransform {
 	
 	@Override
 	public StartingPosition position() {
-		float x = ending.position().getX() * percentDone() + initial.position().getX() * invPercentDone();
-		float y = ending.position().getY() * percentDone() + initial.position().getY() * invPercentDone();
+		Measurement dim1 = initial.getFrame().getDimensions(), dim2 = ending.getFrame().getDimensions();
+		float x = ending.position().getX() * dim2.xInPixels() * percentDone()
+				+ initial.position().getX() * dim1.xInPixels() * invPercentDone();
+		float y = ending.position().getY() * dim2.yInPixels() * percentDone()
+				+ initial.position().getY() * dim1.xInPixels() * invPercentDone();
 		return StartingPosition.custom(x, y);
 	}
 	

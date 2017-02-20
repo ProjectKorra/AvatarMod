@@ -40,8 +40,15 @@ public class UiTransformBasic implements UiTransform {
 	
 	@Override
 	public Measurement coordinates() {
-		float x = pos.getX() - pos.getMinusX() * component.width() + offset().xInPixels() * offsetScale;
-		float y = pos.getY() - pos.getMinusY() * component.height() + offset().yInPixels() * offsetScale;
+		float w = frame.getDimensions().xInPixels();
+		float h = frame.getDimensions().yInPixels();
+		
+		float x = frame.getCoordsMin().xInPixels() + pos.getX() * w;
+		x += offset().xInPixels() * offsetScale - pos.getMinusX() * component.width();
+		
+		float y = frame.getCoordsMin().yInPixels() + pos.getY() * h;
+		y += offset().yInPixels() * offsetScale - pos.getMinusY() * component.height();
+		
 		return Measurement.fromPixels(x, y);
 	}
 	
