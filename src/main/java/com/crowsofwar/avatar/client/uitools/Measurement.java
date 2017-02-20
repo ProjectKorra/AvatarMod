@@ -27,9 +27,11 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
  */
 public class Measurement {
 	
+	private final Frame frame;
 	private final float x, y;
 	
-	private Measurement(float x, float y) {
+	private Measurement(Frame frame, float x, float y) {
+		this.frame = frame;
 		this.x = x;
 		this.y = y;
 	}
@@ -68,7 +70,7 @@ public class Measurement {
 	 * Returns a new measurement scaled by the given factor.
 	 */
 	public Measurement times(float scl) {
-		return new Measurement(x * scl, y * scl);
+		return new Measurement(frame, x * scl, y * scl);
 	}
 	
 	/**
@@ -76,18 +78,27 @@ public class Measurement {
 	 * coordinates.
 	 */
 	public Measurement plus(Measurement m) {
-		return new Measurement(this.x + m.x, this.y + m.y);
+		return new Measurement(frame, this.x + m.x, this.y + m.y);
 	}
 	
 	public static Measurement fromPixels(float x, float y) {
-		return new Measurement(x, y);
+		return fromPixels(Frame.SCREEN, x, y);
+	}
+	
+	public static Measurement fromPixels(Frame frame, float x, float y) {
+		return new Measurement(frame, x, y);
+	}
+	
+	public static Measurement fromPercent(float pctX, float pctY) {
+		return fromPercent(Frame.SCREEN, pctX, pctY);
 	}
 	
 	/**
 	 * Percent is from 0-100.
 	 */
-	public static Measurement fromPercent(float pctX, float pctY) {
-		return new Measurement(screenWidth() * pctX / 100, screenHeight() * pctY / 100);
+	public static Measurement fromPercent(Frame frame, float pctX, float pctY) {
+		Measurement dim = frame.getDimensions();
+		return new Measurement(frame, dim.x * pctX / 100, dim.y * pctY / 100);
 	}
 	
 }
