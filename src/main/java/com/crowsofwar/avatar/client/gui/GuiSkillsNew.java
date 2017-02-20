@@ -30,7 +30,6 @@ import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiTransform;
 import com.crowsofwar.avatar.client.uitools.UiTransformBasic;
-import com.crowsofwar.avatar.client.uitools.UiTransformTransition;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -71,11 +70,17 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		ending.setPosition(StartingPosition.TOP_RIGHT);
 		ending.setOffset(Measurement.fromPixels(-100, 200));
 		
-		testComponent.setTransform(new UiTransformTransition(initial, ending, 2));
+		// testComponent.setTransform(new UiTransformTransition(initial, ending,
+		// 2));
 		
 		frame = new Frame();
 		frame.setPosition(Measurement.fromPercent(10, 10));
 		frame.setDimensions(Measurement.fromPercent(80, 80));
+		
+		UiTransform inFrame = new UiTransformBasic(testComponent);
+		inFrame.setFrame(frame);
+		inFrame.setPosition(StartingPosition.TOP_RIGHT);
+		testComponent.setTransform(inFrame);
 		
 	}
 	
