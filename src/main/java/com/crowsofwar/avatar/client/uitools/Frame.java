@@ -18,6 +18,11 @@ package com.crowsofwar.avatar.client.uitools;
 
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
+import static net.minecraft.client.renderer.GlStateManager.*;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * A positioned rectangular frame within the screen which allows positioning of
@@ -25,7 +30,9 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
  * 
  * @author CrowsOfWar
  */
-public class Frame {
+public class Frame extends Gui {
+	
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/gui/box.png");
 	
 	public static final Frame SCREEN = new Frame(null) {
 		
@@ -88,6 +95,19 @@ public class Frame {
 	 */
 	public Measurement getCoordsMax() {
 		return getCoordsMin().plus(getDimensions());
+	}
+	
+	public void draw(float partialTicks) {
+		//@formatter:off
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		pushMatrix();
+			
+			translate(getCoordsMin().xInPixels(), getCoordsMin().yInPixels(), 0);
+			scale(dimensions.xInPixels() / 64, dimensions.yInPixels() / 64, 1);
+			drawTexturedModalRect(0, 0, 0, 0, 64, 64);
+			
+		popMatrix();
+		//@formatter:on
 	}
 	
 }
