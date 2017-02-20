@@ -37,7 +37,7 @@ public class ScreenInfo {
 	}
 	
 	public static int scaleFactor() {
-		return scale;
+		return scale == 0 ? 1 : scale;
 	}
 	
 	public static void refreshDimensions() {
