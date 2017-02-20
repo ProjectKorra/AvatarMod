@@ -19,9 +19,8 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 
 /**
  * 
@@ -42,9 +41,11 @@ public class AvatarItemRenderRegister {
 	private static void register(AvatarItem item, int... metadata) {
 		
 		for (int meta : metadata) {
-			ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-			ModelResourceLocation mrl = new ModelResourceLocation(item.getModelName(meta), "inventory");
-			mesher.register(item.item(), meta, mrl);
+			ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + item.getModelName(meta),
+					"inventory");
+			
+			ModelLoader.setCustomModelResourceLocation(item.item(), meta, mrl);
+			
 		}
 		
 	}
