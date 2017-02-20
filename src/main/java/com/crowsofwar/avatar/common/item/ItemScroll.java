@@ -96,6 +96,12 @@ public class ItemScroll extends Item implements AvatarItem {
 		
 	}
 	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean hasEffect(ItemStack stack) {
+		return getPoints(stack) > 0;
+	}
+	
 	public static int getPoints(ItemStack stack) {
 		return stackCompound(stack).getInteger("Points");
 	}
