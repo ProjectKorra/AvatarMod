@@ -34,9 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * 
  * @author CrowsOfWar
  */
-public class ItemScroll extends Item {
-	
-	// ItemDye
+public class ItemScroll extends Item implements AvatarItem {
 	
 	public ItemScroll() {
 		setUnlocalizedName("scroll");
@@ -71,6 +69,16 @@ public class ItemScroll extends Item {
 		
 		tooltips.add(I18n.format("avatar.tooltip.scroll", pts));
 		
+	}
+	
+	@Override
+	public Item item() {
+		return this;
+	}
+	
+	@Override
+	public String getModelName(int meta) {
+		return "scroll_" + ScrollType.fromId(meta).displayName();
 	}
 	
 	public enum ScrollType {

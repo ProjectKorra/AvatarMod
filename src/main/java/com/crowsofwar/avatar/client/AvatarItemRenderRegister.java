@@ -16,12 +16,12 @@
 */
 package com.crowsofwar.avatar.client;
 
+import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
 
 /**
  * 
@@ -39,13 +39,13 @@ public class AvatarItemRenderRegister {
 	 * {unlocalizedName}.json. Note that if no metadata is specified, the item
 	 * will not be registered.
 	 */
-	private static void register(Item item, int... metadata) {
+	private static void register(AvatarItem item, int... metadata) {
 		
 		for (int meta : metadata) {
 			ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-			ModelResourceLocation mrl = new ModelResourceLocation(item.getUnlocalizedName().substring(5),
-					"inventory");
-			mesher.register(item, meta, mrl);
+			ModelResourceLocation mrl = new ModelResourceLocation(
+					item.item().getUnlocalizedName().substring(5), "inventory");
+			mesher.register(item.item(), meta, mrl);
 		}
 		
 	}
