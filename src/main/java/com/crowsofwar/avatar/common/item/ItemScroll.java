@@ -41,6 +41,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		setMaxStackSize(1);
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
+		setHasSubtypes(true);
 	}
 	
 	@Override
