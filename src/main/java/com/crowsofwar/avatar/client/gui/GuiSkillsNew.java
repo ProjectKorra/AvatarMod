@@ -64,16 +64,19 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		// testComponent = new ComponentText("Hello!");
 		
-		UiTransform initial = new UiTransformBasic(testComponent);
-		initial.setOffset(Measurement.fromPixels(0, 100));
-		UiTransform ending = new UiTransformBasic(testComponent);
-		ending.setPosition(StartingPosition.TOP_RIGHT);
-		ending.setOffset(Measurement.fromPixels(-100, 200));
+		// TRANSITION
+		
+		// UiTransform initial = new UiTransformBasic(testComponent);
+		// initial.setOffset(Measurement.fromPixels(0, 100));
+		// UiTransform ending = new UiTransformBasic(testComponent);
+		// ending.setPosition(StartingPosition.TOP_RIGHT);
+		// ending.setOffset(Measurement.fromPixels(-100, 200));
 		
 		// testComponent.setTransform(new UiTransformTransition(initial, ending,
 		// 2));
 		
 		testComponent = new ComponentImage(AvatarUiTextures.icons, 96, 32, 32, 32);
+		// testComponent = new ComponentText("Hello!");
 		
 		Frame frame2 = new Frame();
 		frame2.setPosition(Measurement.fromPercent(10, 10));

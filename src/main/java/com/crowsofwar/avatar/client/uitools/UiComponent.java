@@ -57,14 +57,14 @@ public abstract class UiComponent extends Gui {
 	 * Get the actual scaled width
 	 */
 	public float width() {
-		return componentWidth() * scale();
+		return componentWidth() * scale() * scaleFactor();
 	}
 	
 	/**
 	 * Get the actual scaled height
 	 */
 	public float height() {
-		return componentHeight() * scale();
+		return componentHeight() * scale() * scaleFactor();
 	}
 	
 	public void draw(float partialTicks) {
