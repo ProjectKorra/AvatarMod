@@ -16,8 +16,7 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 import net.minecraft.client.Minecraft;
@@ -106,9 +105,13 @@ public class Frame extends Gui {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		pushMatrix();
 			
+			enableBlend();
+		
 			translate(getCoordsMin().xInPixels(), getCoordsMin().yInPixels(), 0);
-			scale(dimensions.xInPixels() / 64, dimensions.yInPixels() / 64, 1);
-			drawTexturedModalRect(0, 0, 0, 0, 64, 64);
+			scale(dimensions.xInPixels() / 256 / scaleFactor(), dimensions.yInPixels() / 256 / scaleFactor(), 1);
+			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			
+			disableBlend();
 			
 		popMatrix();
 		//@formatter:on
