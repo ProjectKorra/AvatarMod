@@ -16,8 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
@@ -55,7 +54,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private Frame frame;
 	
 	public GuiSkillsNew() {
-		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth(), screenHeight()));
+		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth() / scaleFactor(),
+				screenHeight() / scaleFactor()));
 		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
