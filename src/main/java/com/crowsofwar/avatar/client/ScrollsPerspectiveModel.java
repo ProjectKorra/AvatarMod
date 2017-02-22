@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.client;
 
 import static net.minecraft.client.Minecraft.getMinecraft;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Matrix4f;
@@ -65,8 +66,7 @@ public class ScrollsPerspectiveModel implements IBakedModel, IPerspectiveAwareMo
 	
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
 	}
 	
 	@Override

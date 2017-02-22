@@ -40,8 +40,8 @@ public class AvatarCustomModelLoader implements ICustomModelLoader {
 	public void onResourceManagerReload(IResourceManager resourceManager) {}
 	
 	@Override
-	public boolean accepts(ResourceLocation modelLocation) {
-		return true;
+	public boolean accepts(ResourceLocation location) {
+		return location == mrlRegular || location == mrlGlow;
 	}
 	
 	@Override
