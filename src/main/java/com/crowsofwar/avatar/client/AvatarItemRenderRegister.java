@@ -46,6 +46,7 @@ public class AvatarItemRenderRegister {
 		System.out.println("=================== Regname: " + AvatarItems.itemScroll.getRegistryName());
 		
 		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlRegular);
+		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlGlow);
 		// ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0,
 		// mrlGlow);
 		
@@ -71,13 +72,13 @@ public class AvatarItemRenderRegister {
 	@SubscribeEvent
 	public void modelBake(ModelBakeEvent e) {
 		
-		Object obj = e.getModelRegistry().getObject(mrlRegular);
+		Object obj = e.getModelRegistry().getObject(mrlGlow);
 		System.out.println("modelbakeevent " + obj);
 		if (obj instanceof IBakedModel) {
 			IBakedModel currentModel = (IBakedModel) obj;
 			ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
 					currentModel);
-			e.getModelRegistry().putObject(mrlRegular, customModel);
+			e.getModelRegistry().putObject(mrlGlow, customModel);
 		}
 		
 	}

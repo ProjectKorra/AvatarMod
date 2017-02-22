@@ -87,9 +87,7 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 		IBakedModel model = getMinecraft().getRenderItem().getItemModelMesher().getModelManager()
 				.getModel(mrl);
 		
-		model = baseModel;
-		
-		if (lastPerspective == TransformType.GUI) System.out.println("Gui quads");
+		// model = baseModel;
 		
 		return model.getQuads(state, side, rand);
 	}
