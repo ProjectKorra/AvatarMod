@@ -69,7 +69,6 @@ public class ScrollsPerspectiveModel implements IBakedModel, IPerspectiveAwareMo
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
 		IBakedModel model = getMinecraft().getRenderItem().getItemModelMesher().getModelManager()
 				.getModel(new ModelResourceLocation("bread", "inventory"));
-		System.out.println("getQuads " + model);
 		return model.getQuads(state, side, rand);
 	}
 	
@@ -85,7 +84,7 @@ public class ScrollsPerspectiveModel implements IBakedModel, IPerspectiveAwareMo
 	
 	@Override
 	public boolean isBuiltInRenderer() {
-		return true;
+		return false;
 	}
 	
 	@Override
