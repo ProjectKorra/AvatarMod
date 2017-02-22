@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.client;
 
 import static net.minecraft.client.Minecraft.getMinecraft;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Matrix4f;
@@ -60,13 +59,18 @@ public class ScrollsPerspectiveModel implements IBakedModel, IPerspectiveAwareMo
 		ModelManager mm = getMinecraft().getRenderItem().getItemModelMesher().getModelManager();
 		ModelResourceLocation mrl = transform == TransformType.GUI ? mrlGlow : mrlRegular;
 		
+		// System.out.println("Model1: " + mm.getModel(mrl));
+		
 		return Pair.of(mm.getModel(mrl), null);
 		
 	}
 	
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		return Collections.emptyList();
+		IBakedModel model = getMinecraft().getRenderItem().getItemModelMesher().getModelManager()
+				.getModel(new ModelResourceLocation("bread", "inventory"));
+		System.out.println("getQuads " + model);
+		return model.getQuads(state, side, rand);
 	}
 	
 	@Override
