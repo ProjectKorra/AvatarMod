@@ -19,9 +19,12 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * 
@@ -30,19 +33,21 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
  */
 public class AvatarItemRenderRegister {
 	
+	private static ModelResourceLocation mrlRegular, mrlGlow;
+	
 	public static void register() {
 		
-		ModelResourceLocation mrlRegular = new ModelResourceLocation("avatarmod:scroll_air", "inventory");
-		ModelResourceLocation mrlGlow = new ModelResourceLocation("avatarmod:scroll_air_glow", "inventory");
+		MinecraftForge.EVENT_BUS.register(new AvatarItemRenderRegister());
+		
+		mrlRegular = new ModelResourceLocation("avatarmod:scroll_air", "inventory");
+		mrlGlow = new ModelResourceLocation("avatarmod:scroll_air_glow", "inventory");
 		
 		System.out.println("=================== MRLs: " + mrlRegular + " // " + mrlGlow);
 		System.out.println("=================== Regname: " + AvatarItems.itemScroll.getRegistryName());
 		
-		ModelLoaderRegistry.registerLoader(new AvatarCustomModelLoader(mrlRegular, mrlGlow));
-		// register(AvatarItems.itemScroll, 0, 1, 2, 3, 4);
-		
 		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlRegular);
-		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlGlow);
+		// ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0,
+		// mrlGlow);
 		
 	}
 	
@@ -59,6 +64,20 @@ public class AvatarItemRenderRegister {
 			
 			ModelLoader.setCustomModelResourceLocation(item.item(), meta, mrl);
 			
+		}
+		
+	}
+	
+	@SubscribeEvent
+	public void modelBake(ModelBakeEvent e) {
+		
+		Object obj = e.getModelRegistry().getObject(mrlRegular);
+		System.out.println("modelbakeevent " + obj);
+		if (obj instanceof IBakedModel) {
+			IBakedModel currentModel = (IBakedModel) obj;
+			ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
+					currentModel);
+			e.getModelRegistry().putObject(mrlRegular, customModel);
 		}
 		
 	}

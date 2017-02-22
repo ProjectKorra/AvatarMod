@@ -85,17 +85,21 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 		IBakedModel model = getMinecraft().getRenderItem().getItemModelMesher().getModelManager()
 				.getModel(mrl);
 		
+		// model = baseModel;
+		
+		if (lastPerspective == TransformType.GUI) System.out.println("Gui quads");
+		
 		return model.getQuads(state, side, rand);
 	}
 	
 	@Override
 	public boolean isAmbientOcclusion() {
-		return false;
+		return baseModel.isAmbientOcclusion();
 	}
 	
 	@Override
 	public boolean isGui3d() {
-		return true;
+		return baseModel.isGui3d();
 	}
 	
 	@Override
@@ -105,12 +109,12 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 	
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
-		return null;
+		return baseModel.getParticleTexture();
 	}
 	
 	@Override
 	public ItemCameraTransforms getItemCameraTransforms() {
-		return cameraTransforms;
+		return baseModel.getItemCameraTransforms();
 	}
 	
 	@Override
