@@ -31,8 +31,18 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 public class AvatarItemRenderRegister {
 	
 	public static void register() {
-		ModelLoaderRegistry.registerLoader(new AvatarCustomModelLoader());
-		register(AvatarItems.itemScroll, 0, 1, 2, 3, 4);
+		
+		ModelResourceLocation mrlRegular = new ModelResourceLocation("avatarmod:scroll_air", "inventory");
+		ModelResourceLocation mrlGlow = new ModelResourceLocation("avatarmod:scroll_air_glow", "inventory");
+		
+		System.out.println("=================== MRLs: " + mrlRegular + " // " + mrlGlow);
+		System.out.println("=================== Regname: " + AvatarItems.itemScroll.getRegistryName());
+		
+		ModelLoaderRegistry.registerLoader(new AvatarCustomModelLoader(mrlRegular, mrlGlow));
+		// register(AvatarItems.itemScroll, 0, 1, 2, 3, 4);
+		
+		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlRegular);
+		
 	}
 	
 	/**

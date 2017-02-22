@@ -31,9 +31,9 @@ public class AvatarCustomModelLoader implements ICustomModelLoader {
 	
 	private final ModelResourceLocation mrlRegular, mrlGlow;
 	
-	public AvatarCustomModelLoader() {
-		this.mrlRegular = new ModelResourceLocation("avatarmod:scroll_air", "inventory");
-		this.mrlGlow = new ModelResourceLocation("avatarmod:scroll_air_glow", "inventory");
+	public AvatarCustomModelLoader(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow) {
+		this.mrlRegular = mrlRegular;
+		this.mrlGlow = mrlGlow;
 	}
 	
 	@Override
