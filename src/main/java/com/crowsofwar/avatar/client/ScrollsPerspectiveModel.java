@@ -76,7 +76,9 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
 		ModelResourceLocation mrl;
 		
-		if (lastPerspective == TransformType.GUI) {
+		// System.out.println(side);
+		
+		if (side == null) {
 			mrl = new ModelResourceLocation("bread", "inventory");
 		} else {
 			mrl = new ModelResourceLocation("cookie", "inventory");
@@ -85,7 +87,7 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 		IBakedModel model = getMinecraft().getRenderItem().getItemModelMesher().getModelManager()
 				.getModel(mrl);
 		
-		// model = baseModel;
+		model = baseModel;
 		
 		if (lastPerspective == TransformType.GUI) System.out.println("Gui quads");
 		

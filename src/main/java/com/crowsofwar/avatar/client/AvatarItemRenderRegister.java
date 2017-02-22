@@ -39,8 +39,8 @@ public class AvatarItemRenderRegister {
 		
 		MinecraftForge.EVENT_BUS.register(new AvatarItemRenderRegister());
 		
-		mrlRegular = new ModelResourceLocation("avatarmod:scroll_air", "inventory");
-		mrlGlow = new ModelResourceLocation("avatarmod:scroll_air_glow", "inventory");
+		mrlRegular = new ModelResourceLocation("avatarmod:scroll_all", "inventory");
+		mrlGlow = new ModelResourceLocation("avatarmod:scroll_all_glow", "inventory");
 		
 		System.out.println("=================== MRLs: " + mrlRegular + " // " + mrlGlow);
 		System.out.println("=================== Regname: " + AvatarItems.itemScroll.getRegistryName());
