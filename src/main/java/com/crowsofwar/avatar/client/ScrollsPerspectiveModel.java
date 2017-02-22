@@ -47,12 +47,11 @@ public class ScrollsPerspectiveModel implements IBakedModel, IPerspectiveAwareMo
 	private final ItemCameraTransforms cameraTransforms;
 	private final ItemOverrideList overrideList;
 	
-	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow,
-			ItemCameraTransforms cameraTransforms, ItemOverrideList overrideList) {
+	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow) {
 		this.mrlRegular = mrlRegular;
 		this.mrlGlow = mrlGlow;
-		this.cameraTransforms = cameraTransforms;
-		this.overrideList = overrideList;
+		this.cameraTransforms = ItemCameraTransforms.DEFAULT;
+		this.overrideList = ItemOverrideList.NONE;
 	}
 	
 	@Override
