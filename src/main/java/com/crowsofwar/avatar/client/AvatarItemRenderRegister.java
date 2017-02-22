@@ -42,13 +42,8 @@ public class AvatarItemRenderRegister {
 		mrlRegular = new ModelResourceLocation("avatarmod:scroll_all", "inventory");
 		mrlGlow = new ModelResourceLocation("avatarmod:scroll_all_glow", "inventory");
 		
-		System.out.println("=================== MRLs: " + mrlRegular + " // " + mrlGlow);
-		System.out.println("=================== Regname: " + AvatarItems.itemScroll.getRegistryName());
-		
 		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlGlow);
 		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlRegular);
-		// ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0,
-		// mrlGlow);
 		
 	}
 	

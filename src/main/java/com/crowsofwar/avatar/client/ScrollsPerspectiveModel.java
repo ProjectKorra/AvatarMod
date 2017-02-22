@@ -48,8 +48,6 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 	private final ItemOverrideList overrideList;
 	private final IBakedModel baseModel, baseModelGlow;
 	
-	private TransformType lastPerspective;
-	
 	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow,
 			IBakedModel baseModel, IBakedModel baseModelGlow) {
 		this.mrlRegular = mrlRegular;
@@ -62,37 +60,16 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 	
 	@Override
 	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType transform) {
+		
 		ModelManager mm = getMinecraft().getRenderItem().getItemModelMesher().getModelManager();
 		ModelResourceLocation mrl = transform == TransformType.GUI ? mrlGlow : mrlRegular;
 		
-		// System.out.println("Model1: " + mm.getModel(mrl));
-		
-		lastPerspective = transform;
-		
 		return Pair.of(mm.getModel(mrl), null);
-		
 	}
 	
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		ModelResourceLocation mrl;
-		
-		// System.out.println(side);
-		
-		if (side == null) {
-			mrl = new ModelResourceLocation("bread", "inventory");
-		} else {
-			mrl = new ModelResourceLocation("cookie", "inventory");
-		}
-		
-		IBakedModel model = getMinecraft().getRenderItem().getItemModelMesher().getModelManager()
-				.getModel(mrl);
-		
-		model = baseModel;
-		
-		// model = baseModel;
-		
-		return model.getQuads(state, side, rand);
+		return baseModel.getQuads(state, side, rand);
 	}
 	
 	@Override
