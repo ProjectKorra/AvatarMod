@@ -42,6 +42,7 @@ public class AvatarItemRenderRegister {
 		// register(AvatarItems.itemScroll, 0, 1, 2, 3, 4);
 		
 		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlRegular);
+		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlGlow);
 		
 	}
 	

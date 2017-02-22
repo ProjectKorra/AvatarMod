@@ -41,7 +41,12 @@ public class AvatarCustomModelLoader implements ICustomModelLoader {
 	
 	@Override
 	public boolean accepts(ResourceLocation location) {
-		return location == mrlRegular || location == mrlGlow;
+		if (location.toString().contains("avatarmod")) {
+			System.out.println("Approving: " + location);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override
