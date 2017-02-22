@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 
 /**
  * 
@@ -30,6 +31,7 @@ import net.minecraftforge.client.model.ModelLoader;
 public class AvatarItemRenderRegister {
 	
 	public static void register() {
+		ModelLoaderRegistry.registerLoader(new AvatarCustomModelLoader());
 		register(AvatarItems.itemScroll, 0, 1, 2, 3, 4);
 	}
 	
