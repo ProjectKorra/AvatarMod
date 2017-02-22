@@ -41,17 +41,22 @@ import net.minecraftforge.client.model.IPerspectiveAwareModel;
  * 
  * @author CrowsOfWar
  */
-public class ScrollsPerspectiveModel implements IBakedModel, IPerspectiveAwareModel {
+public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 	
 	private final ModelResourceLocation mrlRegular, mrlGlow;
 	private final ItemCameraTransforms cameraTransforms;
 	private final ItemOverrideList overrideList;
+	private final IBakedModel baseModel;
 	
-	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow) {
+	private TransformType lastPerspective;
+	
+	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow,
+			IBakedModel baseModel) {
 		this.mrlRegular = mrlRegular;
 		this.mrlGlow = mrlGlow;
 		this.cameraTransforms = ItemCameraTransforms.DEFAULT;
 		this.overrideList = ItemOverrideList.NONE;
+		this.baseModel = baseModel;
 	}
 	
 	@Override
@@ -61,14 +66,25 @@ public class ScrollsPerspectiveModel implements IBakedModel, IPerspectiveAwareMo
 		
 		// System.out.println("Model1: " + mm.getModel(mrl));
 		
+		lastPerspective = transform;
+		
 		return Pair.of(mm.getModel(mrl), null);
 		
 	}
 	
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+		ModelResourceLocation mrl;
+		
+		if (lastPerspective == TransformType.GUI) {
+			mrl = new ModelResourceLocation("bread", "inventory");
+		} else {
+			mrl = new ModelResourceLocation("cookie", "inventory");
+		}
+		
 		IBakedModel model = getMinecraft().getRenderItem().getItemModelMesher().getModelManager()
-				.getModel(new ModelResourceLocation("bread", "inventory"));
+				.getModel(mrl);
+		
 		return model.getQuads(state, side, rand);
 	}
 	
