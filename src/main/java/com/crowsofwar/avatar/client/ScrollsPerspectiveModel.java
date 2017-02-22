@@ -46,17 +46,18 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 	private final ModelResourceLocation mrlRegular, mrlGlow;
 	private final ItemCameraTransforms cameraTransforms;
 	private final ItemOverrideList overrideList;
-	private final IBakedModel baseModel;
+	private final IBakedModel baseModel, baseModelGlow;
 	
 	private TransformType lastPerspective;
 	
 	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow,
-			IBakedModel baseModel) {
+			IBakedModel baseModel, IBakedModel baseModelGlow) {
 		this.mrlRegular = mrlRegular;
 		this.mrlGlow = mrlGlow;
 		this.cameraTransforms = ItemCameraTransforms.DEFAULT;
 		this.overrideList = ItemOverrideList.NONE;
 		this.baseModel = baseModel;
+		this.baseModelGlow = baseModelGlow;
 	}
 	
 	@Override
@@ -86,6 +87,8 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 		
 		IBakedModel model = getMinecraft().getRenderItem().getItemModelMesher().getModelManager()
 				.getModel(mrl);
+		
+		model = baseModel;
 		
 		// model = baseModel;
 		
