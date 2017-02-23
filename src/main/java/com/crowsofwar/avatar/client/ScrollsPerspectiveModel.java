@@ -24,6 +24,8 @@ import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Optional;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -64,7 +66,10 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 		ModelManager mm = getMinecraft().getRenderItem().getItemModelMesher().getModelManager();
 		ModelResourceLocation mrl = transform == TransformType.GUI ? mrlGlow : mrlRegular;
 		
-		return Pair.of(mm.getModel(mrl), null);
+		Matrix4f mat = IPerspectiveAwareModel.MapWrapper
+				.handlePerspective(this, part -> Optional.absent(), transform).getRight();
+		
+		return Pair.of(mm.getModel(mrl), mat);
 	}
 	
 	@Override
