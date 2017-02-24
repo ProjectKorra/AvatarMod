@@ -30,12 +30,10 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 
 /**
@@ -66,12 +64,8 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 		ModelManager mm = getMinecraft().getRenderItem().getItemModelMesher().getModelManager();
 		ModelResourceLocation mrl = transform == TransformType.GUI ? mrlGlow : mrlRegular;
 		
-		// Matrix4f mat = IPerspectiveAwareModel.MapWrapper
-		// .handlePerspective(this, part -> Optional.absent(),
-		// transform).getRight();
-		
-		ItemTransformVec3f itemTransform = baseModel.getItemCameraTransforms().getTransform(transform);
-		Matrix4f mat = ForgeHooksClient.getMatrix(itemTransform);
+		Matrix4f mat = baseModel instanceof IPerspectiveAwareModel
+				? ((IPerspectiveAwareModel) baseModel).handlePerspective(transform).getRight() : null;
 		
 		return Pair.of(mm.getModel(mrl), mat);
 	}
