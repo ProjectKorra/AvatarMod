@@ -14,13 +14,15 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.client.gui;
+package com.crowsofwar.avatar.client.gui.skills;
 
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.gui.GuiButtonScrolls;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
@@ -62,7 +64,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		xSize = res.getScaledWidth();
 		ySize = res.getScaledHeight();
 		
-		// testComponent = new ComponentText("Hello!");
+		ScreenInfo.refreshDimensions();
 		
 		// TRANSITION
 		
