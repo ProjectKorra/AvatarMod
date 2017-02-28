@@ -17,13 +17,9 @@
 package com.crowsofwar.avatar.client.gui.skills;
 
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
-import static net.minecraft.client.renderer.GlStateManager.*;
 
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.gui.GuiButtonScrolls;
-import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
@@ -31,12 +27,9 @@ import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiTransform;
 import com.crowsofwar.avatar.client.uitools.UiTransformBasic;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -51,8 +44,9 @@ import net.minecraft.item.ItemStack;
  */
 public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
+	private AbilityTab[] tabs;
+	
 	private UiComponent testComponent;
-	private GuiButton btnConfirmScroll;
 	private Frame frame;
 	
 	public GuiSkillsNew() {
@@ -66,6 +60,9 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		ScreenInfo.refreshDimensions();
 		
+		tabs = new AbilityTab[] { new AbilityTab(ABILITY_AIR_BUBBLE), new AbilityTab(ABILITY_AIR_GUST),
+				new AbilityTab(ABILITY_AIR_JUMP), new AbilityTab(ABILITY_AIRBLADE) };
+		
 		// TRANSITION
 		
 		// UiTransform initial = new UiTransformBasic(testComponent);
@@ -77,7 +74,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		// testComponent.setTransform(new UiTransformTransition(initial, ending,
 		// 2));
 		
-		testComponent = new ComponentImage(AvatarUiTextures.icons, 96, 32, 32, 32);
 		// testComponent = new ComponentText("Hello!");
 		
 		Frame frame2 = new Frame();
@@ -100,8 +96,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	public void initGui() {
 		super.initGui();
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		btnConfirmScroll = addButton(new GuiButtonScrolls(inventorySlots, 0, 115, 20));
-		btnConfirmScroll.enabled = false;
 		
 		ScreenInfo.refreshDimensions();
 		
@@ -113,87 +107,20 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
 		ItemStack scroll = container.getSlot(0).getStack();
-		btnConfirmScroll.enabled = scroll != ItemStack.field_190927_a;
 		
 	}
 	
 	@Override
-	protected void actionPerformed(GuiButton button) {
-		if (button == btnConfirmScroll) {
-			AvatarMod.network.sendToServer(new PacketSUseScroll());
-		}
-	}
+	protected void actionPerformed(GuiButton button) {}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
-		//@formatter:off
-		
-		float iconSize = 256, iconCrop = 80;
-		float barTexWidth = 56, barTexHeight = 7;
-		float barActualWidth = 80, barScale = barActualWidth / barTexWidth, barActualHeight = barScale * barTexHeight;
-		float middlePadding = 20;
-		
-		btnConfirmScroll.xPosition = inventorySlots.getSlot(0).xDisplayPosition + 20;
-		btnConfirmScroll.yPosition = inventorySlots.getSlot(0).yDisplayPosition - 2;
-		
-		enableBlend();
-		
-		pushMatrix();
-		
-			translate((width - iconSize) / 2f, height / 2f - iconSize + iconCrop, 0);
-			
-			mc.renderEngine.bindTexture(AvatarUiTextures.getAbilityTexture(BendingAbility.ABILITY_AIR_BUBBLE));
-			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-		
-		popMatrix();
-		
-		pushMatrix();
-			
-			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
-			
-			String text = "Level " + abilityData.getLevel() + ", " + ((int) abilityData.getXp()) + "%";
-			drawString(fontRendererObj, text, (width - fontRendererObj.getStringWidth(text)) / 2, height / 2 + fontRendererObj.FONT_HEIGHT, 0xffffff);
-			
-//			translate((width - barActualWidth) / 2f, height / 2f + middlePadding / 2f, 0);
-//			
-//			scale(barActualWidth / 56f, barActualWidth / 56f, 1);
-//			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-//			drawTexturedModalRect(0, 0, 0, 137, 56, 7);
-//			drawTexturedModalRect(0, 0, 0, 144, (int) (abilityData.getTotalXp() / 100 * 56), 7);
-//			
-//			for (int i = 3; i >= abilityData.getLevel() + 1; i--) {
-//				drawTexturedModalRect(i * 17 - 1, 1, i * 17 - 1, 152, 7, 5);
-//			}
-			
-		popMatrix();
-		
-		pushMatrix();
-			
-			translate((width - 18) / 2, (height - 18) / 2 + barActualHeight + 25, 0);
-			
-			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-			drawTexturedModalRect(0, 0, 40, 0, 18, 18);
-			
-		popMatrix();
-		
-		pushMatrix();
-			
-			translate(width - 169, height - 83, 0);
-			
-			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-			drawTexturedModalRect(0, 0, 0, 54, 169, 85);
-			
-		popMatrix();
-		
-		disableBlend();
-		
-		//@formatter:on
-		
-		testComponent.draw(partialTicks);
-		frame.draw(partialTicks);
+		for (AbilityTab tab : tabs) {
+			tab.draw(partialTicks);
+		}
 		
 	}
 	
