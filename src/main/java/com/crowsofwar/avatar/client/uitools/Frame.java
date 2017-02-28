@@ -101,7 +101,6 @@ public class Frame extends Gui {
 	}
 	
 	public void draw(float partialTicks) {
-		if (parent != null) parent.draw(partialTicks);
 		
 		//@formatter:off
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);

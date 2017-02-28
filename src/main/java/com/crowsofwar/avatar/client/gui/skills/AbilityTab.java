@@ -43,28 +43,31 @@ public class AbilityTab {
 	public AbilityTab(BendingAbility ability) {
 		
 		fromPixels(0, 0);
+		fromPercent(0, 0);
 		
 		this.ability = ability;
 		
-		float width = 25f, height = 2 / 3f;
+		float width = 25f, height = 100 * 2 / 3f;
 		
 		frame = new Frame();
 		frame.setDimensions(fromPercent(width, height));
 		frame.setPosition(fromPercent((100 - width) / 2, (100 - height) / 2));
 		
 		text = new ComponentText(I18n.format("avatar.ability." + ability.getName()));
+		text.setFrame(frame);
 		text.setPosition(StartingPosition.MIDDLE_TOP);
 		
 		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frame);
-		// icon.setPosition(StartingPosition.MIDDLE_TOP);
-		icon.setOffset(fromPixels(frame, 0, text.height()));
+		icon.setPosition(StartingPosition.MIDDLE_TOP);
+		icon.setOffset(fromPixels(frame, 0, -text.height() - icon.height() * 50 / 256));
 		
-		System.out.println("Icon coords: " + icon.coordinates().xInPercent());
+		System.out.println("Icon coords: " + icon.coordinates().yInPercent());
 		
 	}
 	
 	public void draw(float partialTicks) {
+		frame.draw(partialTicks);
 		icon.draw(partialTicks);
 		text.draw(partialTicks);
 	}
