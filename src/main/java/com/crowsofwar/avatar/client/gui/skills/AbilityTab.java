@@ -16,9 +16,14 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
+import com.crowsofwar.avatar.client.uitools.Frame;
+import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
@@ -32,15 +37,26 @@ import net.minecraft.client.resources.I18n;
 public class AbilityTab {
 	
 	private final BendingAbility ability;
+	private Frame frame;
 	private UiComponent icon, text;
 	
 	public AbilityTab(BendingAbility ability) {
 		
 		this.ability = ability;
 		
-		this.icon = new ComponentImage(AvatarUiTextures.getAbilityTexture(ability), 0, 0, 256, 256);
+		float width = 25f, height = 2 / 3f;
 		
-		this.text = new ComponentText(I18n.format("avatar.ability." + ability.getName()));
+		frame = new Frame();
+		frame.setDimensions(fromPercent(width, height));
+		frame.setPosition(fromPercent((100 - width) / 2, (100 - height) / 2));
+		
+		text = new ComponentText(I18n.format("avatar.ability." + ability.getName()));
+		text.setPosition(StartingPosition.MIDDLE_TOP);
+		
+		icon = new ComponentImage(AvatarUiTextures.getAbilityTexture(ability), 0, 0, 256, 256);
+		icon.setFrame(frame);
+		icon.setPosition(StartingPosition.MIDDLE_TOP);
+		icon.setOffset(fromPixels(frame, 0, text.height()));
 		
 	}
 	
