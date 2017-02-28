@@ -21,12 +21,8 @@ import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
 
 import com.crowsofwar.avatar.client.uitools.Frame;
-import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
-import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.client.uitools.UiTransform;
-import com.crowsofwar.avatar.client.uitools.UiTransformBasic;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -62,33 +58,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		tabs = new AbilityTab[] { new AbilityTab(ABILITY_AIR_BUBBLE), new AbilityTab(ABILITY_AIR_GUST),
 				new AbilityTab(ABILITY_AIR_JUMP), new AbilityTab(ABILITY_AIRBLADE) };
-		
-		// TRANSITION
-		
-		// UiTransform initial = new UiTransformBasic(testComponent);
-		// initial.setOffset(Measurement.fromPixels(0, 100));
-		// UiTransform ending = new UiTransformBasic(testComponent);
-		// ending.setPosition(StartingPosition.TOP_RIGHT);
-		// ending.setOffset(Measurement.fromPixels(-100, 200));
-		
-		// testComponent.setTransform(new UiTransformTransition(initial, ending,
-		// 2));
-		
-		// testComponent = new ComponentText("Hello!");
-		
-		Frame frame2 = new Frame();
-		frame2.setPosition(Measurement.fromPercent(10, 10));
-		frame2.setDimensions(Measurement.fromPercent(80, 80));
-		
-		frame = new Frame(frame2);
-		frame.setPosition(Measurement.fromPercent(frame2, 10, 10));
-		frame.setDimensions(Measurement.fromPercent(frame2, 80, 80));
-		
-		UiTransform inFrame = new UiTransformBasic(testComponent);
-		inFrame.setFrame(frame);
-		inFrame.setPosition(StartingPosition.TOP_RIGHT);
-		
-		testComponent.setTransform(inFrame);
 		
 	}
 	
