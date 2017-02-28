@@ -20,6 +20,10 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
 
+import java.io.IOException;
+
+import org.lwjgl.input.Mouse;
+
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
@@ -81,6 +85,12 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	}
 	
 	@Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+		scroll += Mouse.getDWheel() / 3;
+	}
+	
+	@Override
 	protected void actionPerformed(GuiButton button) {}
 	
 	@Override
@@ -89,7 +99,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
 		for (int i = 0; i < tabs.length; i++) {
-			tabs[i].draw(partialTicks, scroll + i * tabs[i].width());
+			tabs[i].draw(partialTicks, scroll + 1.2f * i * tabs[i].width());
 		}
 		
 	}
