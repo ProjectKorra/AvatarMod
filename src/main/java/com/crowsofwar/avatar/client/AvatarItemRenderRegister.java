@@ -16,8 +16,11 @@
 */
 package com.crowsofwar.avatar.client;
 
+import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
+
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -33,17 +36,29 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class AvatarItemRenderRegister {
 	
-	private static ModelResourceLocation mrlRegular, mrlGlow;
+	private static ModelResourceLocation[] locationsRegular, locationsGlow;
 	
 	public static void register() {
 		
 		MinecraftForge.EVENT_BUS.register(new AvatarItemRenderRegister());
 		
-		mrlRegular = new ModelResourceLocation("avatarmod:scroll_all", "inventory");
-		mrlGlow = new ModelResourceLocation("avatarmod:scroll_all_glow", "inventory");
+		// Setup scrolls
+		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
+		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
 		
-		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlGlow);
-		ModelLoader.setCustomModelResourceLocation(AvatarItems.itemScroll, 0, mrlRegular);
+		for (int i = 0; i < ScrollType.amount(); i++) {
+			
+			ScrollType type = ScrollType.fromId(i);
+			
+			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
+					"inventory");
+			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
+					"inventory");
+			
+			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsGlow[i]);
+			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsRegular[i]);
+			
+		}
 		
 	}
 	
@@ -67,13 +82,19 @@ public class AvatarItemRenderRegister {
 	@SubscribeEvent
 	public void modelBake(ModelBakeEvent e) {
 		
-		Object obj = e.getModelRegistry().getObject(mrlRegular);
-		System.out.println("modelbakeevent " + obj);
-		if (obj instanceof IBakedModel) {
-			IBakedModel currentModel = (IBakedModel) obj;
-			ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
-					currentModel, e.getModelRegistry().getObject(mrlGlow));
-			e.getModelRegistry().putObject(mrlRegular, customModel);
+		for (int i = 0; i < ScrollType.amount(); i++) {
+			
+			ModelResourceLocation mrlRegular = locationsRegular[i];
+			ModelResourceLocation mrlGlow = locationsGlow[i];
+			
+			Object obj = e.getModelRegistry().getObject(mrlRegular);
+			if (obj instanceof IBakedModel) {
+				IBakedModel currentModel = (IBakedModel) obj;
+				ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
+						currentModel, e.getModelRegistry().getObject(mrlGlow));
+				e.getModelRegistry().putObject(mrlRegular, customModel);
+			}
+			
 		}
 		
 	}

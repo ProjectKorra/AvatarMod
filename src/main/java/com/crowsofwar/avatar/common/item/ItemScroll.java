@@ -131,6 +131,10 @@ public class ItemScroll extends Item implements AvatarItem {
 			return values()[id];
 		}
 		
+		public static int amount() {
+			return values().length;
+		}
+		
 	}
 	
 }
