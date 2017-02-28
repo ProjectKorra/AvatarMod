@@ -16,6 +16,9 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import static net.minecraft.client.renderer.GlStateManager.disableBlend;
+import static net.minecraft.client.renderer.GlStateManager.enableBlend;
+
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -48,8 +51,10 @@ public class ComponentImage extends UiComponent {
 	
 	@Override
 	protected void componentDraw(float partialTicks) {
+		enableBlend();
 		mc.renderEngine.bindTexture(texture);
 		drawTexturedModalRect(0, 0, u, v, texWidth, texHeight);
+		disableBlend();
 	}
 	
 }

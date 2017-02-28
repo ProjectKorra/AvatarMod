@@ -87,8 +87,10 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
+		tabs[0].draw(partialTicks);
+		
 		for (AbilityTab tab : tabs) {
-			tab.draw(partialTicks);
+			// tab.draw(partialTicks);
 		}
 		
 	}

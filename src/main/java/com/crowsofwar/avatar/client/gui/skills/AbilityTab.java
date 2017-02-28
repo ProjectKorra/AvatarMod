@@ -16,10 +16,10 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
@@ -42,6 +42,8 @@ public class AbilityTab {
 	
 	public AbilityTab(BendingAbility ability) {
 		
+		fromPixels(0, 0);
+		
 		this.ability = ability;
 		
 		float width = 25f, height = 2 / 3f;
@@ -53,10 +55,12 @@ public class AbilityTab {
 		text = new ComponentText(I18n.format("avatar.ability." + ability.getName()));
 		text.setPosition(StartingPosition.MIDDLE_TOP);
 		
-		icon = new ComponentImage(AvatarUiTextures.getAbilityTexture(ability), 0, 0, 256, 256);
+		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frame);
-		icon.setPosition(StartingPosition.MIDDLE_TOP);
+		// icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(frame, 0, text.height()));
+		
+		System.out.println("Icon coords: " + icon.coordinates().xInPercent());
 		
 	}
 	
