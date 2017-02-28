@@ -41,6 +41,7 @@ import net.minecraft.item.ItemStack;
 public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	private AbilityTab[] tabs;
+	private int scroll;
 	
 	private UiComponent testComponent;
 	private Frame frame;
@@ -87,10 +88,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
-		tabs[0].draw(partialTicks);
-		
-		for (AbilityTab tab : tabs) {
-			// tab.draw(partialTicks);
+		for (int i = 0; i < tabs.length; i++) {
+			tabs[i].draw(partialTicks, scroll + i * tabs[i].width());
 		}
 		
 	}

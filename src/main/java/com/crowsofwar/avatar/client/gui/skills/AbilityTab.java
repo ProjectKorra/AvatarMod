@@ -23,6 +23,7 @@ import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
+import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -66,10 +67,23 @@ public class AbilityTab {
 		
 	}
 	
-	public void draw(float partialTicks) {
+	public void draw(float partialTicks, float scroll) {
+		
+		float width = 25f, height = 100 * 2 / 3f;
+		Measurement base = fromPercent((100 - width) / 2, (100 - height) / 2);
+		frame.setPosition(base.plus(fromPixels(scroll, 0)));
+		
 		frame.draw(partialTicks);
 		icon.draw(partialTicks);
 		text.draw(partialTicks);
+		
+	}
+	
+	/**
+	 * Width in px
+	 */
+	public float width() {
+		return frame.getDimensions().xInPixels();
 	}
 	
 }
