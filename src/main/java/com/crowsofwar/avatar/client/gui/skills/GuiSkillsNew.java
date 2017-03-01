@@ -26,7 +26,6 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
-import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -47,7 +46,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private AbilityTab[] tabs;
 	private int scroll;
 	
-	private UiComponent testComponent;
+	private WindowAbility window;
 	private Frame frame;
 	
 	public GuiSkillsNew() {
@@ -88,6 +87,11 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		scroll += Mouse.getDWheel() / 3;
+		
+		if (Mouse.isButtonDown(0)) {
+			openWindow(tabs[1]);
+		}
+		
 	}
 	
 	@Override
@@ -102,6 +106,18 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			tabs[i].draw(partialTicks, scroll + 1.2f * i * tabs[i].width());
 		}
 		
+		if (isWindowOpen()) {
+			window.draw(partialTicks);
+		}
+		
+	}
+	
+	private boolean isWindowOpen() {
+		return window != null;
+	}
+	
+	private void openWindow(AbilityTab tab) {
+		window = new WindowAbility(tab.getAbility());
 	}
 	
 }

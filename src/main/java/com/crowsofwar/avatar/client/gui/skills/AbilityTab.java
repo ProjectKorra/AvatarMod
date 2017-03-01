@@ -86,4 +86,8 @@ public class AbilityTab {
 		return frame.getDimensions().xInPixels();
 	}
 	
+	public BendingAbility getAbility() {
+		return ability;
+	}
+	
 }
