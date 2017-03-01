@@ -67,9 +67,7 @@ public class AbilityTab {
 	
 	public void draw(float partialTicks, float scroll) {
 		
-		float width = 25f, height = 100 * 2 / 3f;
-		Measurement base = fromPercent((100 - width) / 2, (100 - height) / 2);
-		frame.setPosition(base.plus(fromPixels(scroll, 0)));
+		updateFramePos(scroll);
 		
 		frame.draw(partialTicks);
 		icon.draw(partialTicks);
@@ -86,6 +84,20 @@ public class AbilityTab {
 	
 	public BendingAbility getAbility() {
 		return ability;
+	}
+	
+	public boolean isMouseHover(float mouseX, float mouseY, float scroll) {
+		updateFramePos(scroll);
+		Measurement min = frame.getCoordsMin();
+		Measurement max = frame.getCoordsMax();
+		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
+				&& mouseY < max.yInPixels();
+	}
+	
+	private void updateFramePos(float scroll) {
+		float width = 25f, height = 100 * 2 / 3f;
+		Measurement base = fromPercent((100 - width) / 2, (100 - height) / 2);
+		frame.setPosition(base.plus(fromPixels(scroll, 0)));
 	}
 	
 }

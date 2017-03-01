@@ -89,7 +89,12 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		scroll += Mouse.getDWheel() / 3;
 		
 		if (Mouse.isButtonDown(0)) {
-			openWindow(tabs[2]);
+			for (AbilityTab tab : tabs) {
+				if (tab.isMouseHover(Mouse.getX(), Mouse.getY(), scroll)) {
+					openWindow(tab);
+					break;
+				}
+			}
 		}
 		
 	}
