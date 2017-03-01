@@ -64,6 +64,7 @@ public class WindowAbility {
 	public void draw(float partialTicks) {
 		
 		overlay.draw(partialTicks);
+		frame.draw(partialTicks);
 		title.draw(partialTicks);
 		icon.draw(partialTicks);
 		

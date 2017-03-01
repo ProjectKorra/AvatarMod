@@ -103,6 +103,7 @@ public class Frame extends Gui {
 	public void draw(float partialTicks) {
 		
 		//@formatter:off
+		color(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		pushMatrix();
 			

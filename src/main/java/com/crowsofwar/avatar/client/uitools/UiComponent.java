@@ -17,8 +17,7 @@
 package com.crowsofwar.avatar.client.uitools;
 
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-import static net.minecraft.client.renderer.GlStateManager.popMatrix;
-import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -70,6 +69,7 @@ public abstract class UiComponent extends Gui {
 	public void draw(float partialTicks) {
 		
 		transform.update(partialTicks);
+		color(1, 1, 1, 1);
 		
 		//@formatter:off
 		pushMatrix();
