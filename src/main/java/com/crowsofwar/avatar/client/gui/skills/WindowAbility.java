@@ -57,7 +57,7 @@ public class WindowAbility {
 		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frame);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
-		icon.setOffset(fromPixels(0, title.height()));
+		icon.setOffset(fromPixels(0, title.height()).plus(fromPercent(0, -35)));
 		
 		overlay = new ComponentOverlay();
 		
