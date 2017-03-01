@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * 
@@ -48,9 +49,10 @@ public class WindowAbility {
 		frame.setDimensions(fromPercent(80, 80));
 		frame.setPosition(fromPercent((100 - 80) / 2, (100 - 80) / 2));
 		
-		title = new ComponentText(I18n.format("avatar.ability." + ability.getName()));
+		title = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.ability." + ability.getName()));
 		title.setFrame(frame);
 		title.setPosition(StartingPosition.MIDDLE_TOP);
+		title.setScale(1.4f);
 		
 		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frame);
