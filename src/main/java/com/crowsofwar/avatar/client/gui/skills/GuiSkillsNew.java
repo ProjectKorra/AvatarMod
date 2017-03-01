@@ -117,12 +117,26 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 	}
 	
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		if (isWindowOpen()
+				&& (keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode))) {
+			closeWindow();
+		} else {
+			super.keyTyped(typedChar, keyCode);
+		}
+	}
+	
 	private boolean isWindowOpen() {
 		return window != null;
 	}
 	
 	private void openWindow(AbilityTab tab) {
 		window = new WindowAbility(tab.getAbility());
+	}
+	
+	private void closeWindow() {
+		window = null;
 	}
 	
 }
