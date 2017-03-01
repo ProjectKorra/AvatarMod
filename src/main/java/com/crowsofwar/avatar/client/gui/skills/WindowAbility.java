@@ -40,7 +40,7 @@ public class WindowAbility {
 	
 	private final BendingAbility ability;
 	private Frame frame;
-	private UiComponent icon, title, overlay;
+	private UiComponent icon, title, overlay, level;
 	
 	public WindowAbility(BendingAbility ability) {
 		this.ability = ability;
@@ -59,6 +59,10 @@ public class WindowAbility {
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(0, title.height()).plus(fromPercent(0, -35)));
 		
+		level = new ComponentAbilityIcon(ability);
+		level.setFrame(frame);
+		level.setPosition(StartingPosition.TOP_RIGHT);
+		
 		overlay = new ComponentOverlay();
 		
 	}
@@ -69,6 +73,7 @@ public class WindowAbility {
 		frame.draw(partialTicks);
 		title.draw(partialTicks);
 		icon.draw(partialTicks);
+		level.draw(partialTicks);
 		
 	}
 	
