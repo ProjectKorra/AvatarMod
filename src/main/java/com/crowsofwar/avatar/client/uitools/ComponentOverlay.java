@@ -42,10 +42,12 @@ public class ComponentOverlay extends UiComponent {
 	
 	@Override
 	protected void componentDraw(float partialTicks) {
+		
 		mc.renderEngine.bindTexture(AvatarUiTextures.WHITE);
 		GlStateManager.enableBlend();
 		GlStateManager.color(0, 0, 0, .5f);
-		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		drawTexturedModalRect(0, 0, 0, 0, screenWidth(), screenHeight());
+		
 		GlStateManager.disableBlend();
 	}
 	

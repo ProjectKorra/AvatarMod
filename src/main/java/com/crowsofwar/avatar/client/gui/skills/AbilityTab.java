@@ -63,8 +63,6 @@ public class AbilityTab {
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(frame, 0, -text.height() - icon.height() * 50 / 256));
 		
-		System.out.println("Icon coords: " + icon.coordinates().yInPercent());
-		
 	}
 	
 	public void draw(float partialTicks, float scroll) {
