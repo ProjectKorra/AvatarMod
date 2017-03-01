@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.ComponentOverlay;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
+import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -75,6 +76,13 @@ public class WindowAbility {
 		icon.draw(partialTicks);
 		level.draw(partialTicks);
 		
+	}
+	
+	public boolean isMouseHover(float mouseX, float mouseY) {
+		Measurement min = frame.getCoordsMin();
+		Measurement max = frame.getCoordsMax();
+		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
+				&& mouseY < max.yInPixels();
 	}
 	
 }
