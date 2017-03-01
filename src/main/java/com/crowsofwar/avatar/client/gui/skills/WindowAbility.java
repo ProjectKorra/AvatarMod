@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
+import com.crowsofwar.avatar.client.uitools.ComponentOverlay;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
@@ -38,7 +39,7 @@ public class WindowAbility {
 	
 	private final BendingAbility ability;
 	private Frame frame;
-	private UiComponent icon, title;
+	private UiComponent icon, title, overlay;
 	
 	public WindowAbility(BendingAbility ability) {
 		this.ability = ability;
@@ -56,11 +57,16 @@ public class WindowAbility {
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(0, title.height()));
 		
+		overlay = new ComponentOverlay();
+		
 	}
 	
 	public void draw(float partialTicks) {
+		
+		overlay.draw(partialTicks);
 		title.draw(partialTicks);
 		icon.draw(partialTicks);
+		
 	}
 	
 }

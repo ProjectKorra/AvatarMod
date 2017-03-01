@@ -48,6 +48,8 @@ public class AvatarUiTextures {
 	public static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
 			"textures/gui/status_controls.png");
 	
+	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
+	
 	private static final Map<BendingAbility, ResourceLocation> abilityTextures = new HashMap<>();
 	
 	public static ResourceLocation getAbilityTexture(BendingAbility ability) {
