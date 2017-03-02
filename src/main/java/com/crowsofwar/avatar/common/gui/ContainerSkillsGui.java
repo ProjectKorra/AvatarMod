@@ -35,13 +35,13 @@ public class ContainerSkillsGui extends Container {
 	private final EntityPlayer player;
 	private final SkillsGuiInventory inventory;
 	
-	public ContainerSkillsGui(EntityPlayer player, int width, int height, int scale) {
+	public ContainerSkillsGui(EntityPlayer player, int width, int height) {
 		this.player = player;
 		
 		inventory = new SkillsGuiInventory();
 		
-		int scrollX = (width - 16 * scale) / 2 / scale;
-		int scrollY = (height - 16 * scale) / 2 / scale;
+		int scrollX = (width - 16) / 2;
+		int scrollY = (height - 16) / 2;
 		
 		addSlotToContainer(new Slot(inventory, 0, scrollX, scrollY) {
 			@Override
@@ -50,20 +50,18 @@ public class ContainerSkillsGui extends Container {
 			}
 		});
 		
-		int w = width / scale, h = height / scale;
-		
 		// Main inventory
 		for (int r = 0; r < 3; r++) {
 			for (int c = 0; c < 9; c++) {
 				int id = c + r * 9 + 9;
-				addSlotToContainer(
-						new Slot(player.inventory, id, w + 1 + (c - 9) * 18, h - 4 * 18 - 3 + r * 18));
+				addSlotToContainer(new Slot(player.inventory, id, width + 1 + (c - 9) * 18,
+						height - 4 * 18 - 3 + r * 18));
 			}
 		}
 		
 		// Hotbar
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(player.inventory, i, w + 1 + (i - 9) * 18, h - 17));
+			addSlotToContainer(new Slot(player.inventory, i, width + 1 + (i - 9) * 18, height - 17));
 		}
 		
 	}

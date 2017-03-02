@@ -50,7 +50,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private Frame frame;
 	
 	public GuiSkillsNew() {
-		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth(), screenHeight(), scaleFactor()));
+		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth() / scaleFactor(),
+				screenHeight() / scaleFactor()));
 		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
