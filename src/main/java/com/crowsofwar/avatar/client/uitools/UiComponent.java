@@ -74,7 +74,9 @@ public abstract class UiComponent extends Gui {
 		//@formatter:off
 		pushMatrix();
 		
-			GlStateManager.translate(coordinates().xInPixels() / scaleFactor(), coordinates().yInPixels() / scaleFactor(), 0);
+			float x = coordinates().xInPixels() / scaleFactor();
+			float y = coordinates().yInPixels() / scaleFactor();
+			GlStateManager.translate((int) x, (int) y, 0);
 			GlStateManager.scale(scale(), scale(), 1f); // unfortunately needed due to shadowing
 			componentDraw(partialTicks);
 			

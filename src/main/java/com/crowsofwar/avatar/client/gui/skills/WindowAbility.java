@@ -65,7 +65,7 @@ public class WindowAbility {
 		level.setFrame(frame);
 		level.setPosition(StartingPosition.TOP_RIGHT);
 		
-		scrollBg = new ComponentImage(AvatarUiTextures.skillsGui, 40, 0, 16, 16);
+		scrollBg = new ComponentImage(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
 		scrollBg.setPosition(StartingPosition.MIDDLE_CENTER);
 		// Not setting frame since should be absolutely positioned
 		

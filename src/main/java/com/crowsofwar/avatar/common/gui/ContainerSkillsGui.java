@@ -46,9 +46,6 @@ public class ContainerSkillsGui extends Container {
 		System.out.println(scrollX + "," + scrollY);
 		System.out.println(width + "x" + height + "*" + scaleFactor());
 		
-		// scrollX = (1920 - 64) / 2 / 4;
-		// scrollY = 0;
-		
 		addSlotToContainer(new Slot(inventory, 0, scrollX, scrollY) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
