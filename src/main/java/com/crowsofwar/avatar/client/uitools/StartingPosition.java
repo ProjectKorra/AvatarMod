@@ -27,7 +27,8 @@ public class StartingPosition {
 	public static StartingPosition TOP_RIGHT = new StartingPosition(1, 0, 1, 0),
 			MIDDLE_TOP = new StartingPosition(.5f, 0, .5f, 0),
 			MIDDLE_CENTER = new StartingPosition(.5f, .5f, .5f, .5f),
-			MIDDLE_BOTTOM = new StartingPosition(.5f, 1, .5f, 1);
+			MIDDLE_BOTTOM = new StartingPosition(.5f, 1, .5f, 1),
+			BOTTOM_RIGHT = new StartingPosition(1, 1, 1, 1);
 	
 	private float x, y, minusX, minusY;
 	

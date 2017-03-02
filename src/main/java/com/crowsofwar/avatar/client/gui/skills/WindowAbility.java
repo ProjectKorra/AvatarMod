@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTextur
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.ComponentOverlay;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
@@ -41,7 +42,7 @@ public class WindowAbility {
 	
 	private final BendingAbility ability;
 	private Frame frame;
-	private UiComponent icon, title, overlay, level;
+	private UiComponent icon, title, overlay, level, scrollBg, invBg;
 	
 	public WindowAbility(BendingAbility ability) {
 		this.ability = ability;
@@ -64,6 +65,14 @@ public class WindowAbility {
 		level.setFrame(frame);
 		level.setPosition(StartingPosition.TOP_RIGHT);
 		
+		scrollBg = new ComponentImage(AvatarUiTextures.skillsGui, 40, 0, 16, 16);
+		scrollBg.setPosition(StartingPosition.MIDDLE_CENTER);
+		// Not setting frame since should be absolutely positioned
+		
+		invBg = new ComponentImage(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
+		invBg.setPosition(StartingPosition.BOTTOM_RIGHT);
+		// Not setting frame since should be absolutely positioned
+		
 		overlay = new ComponentOverlay();
 		
 	}
@@ -75,6 +84,8 @@ public class WindowAbility {
 		title.draw(partialTicks);
 		icon.draw(partialTicks);
 		level.draw(partialTicks);
+		scrollBg.draw(partialTicks);
+		invBg.draw(partialTicks);
 		
 	}
 	
