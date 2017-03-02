@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.gui;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static net.minecraft.item.ItemStack.field_190927_a;
 
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -36,15 +35,13 @@ public class ContainerSkillsGui extends Container {
 	private final EntityPlayer player;
 	private final SkillsGuiInventory inventory;
 	
-	public ContainerSkillsGui(EntityPlayer player, int width, int height) {
+	public ContainerSkillsGui(EntityPlayer player, int width, int height, int scale) {
 		this.player = player;
 		
 		inventory = new SkillsGuiInventory();
 		
-		int scrollX = (width - 16 * scaleFactor()) / 2 / scaleFactor();
-		int scrollY = (height - 16 * scaleFactor()) / 2 / scaleFactor();
-		System.out.println(scrollX + "," + scrollY);
-		System.out.println(width + "x" + height + "*" + scaleFactor());
+		int scrollX = (width - 16 * scale) / 2 / scale;
+		int scrollY = (height - 16 * scale) / 2 / scale;
 		
 		addSlotToContainer(new Slot(inventory, 0, scrollX, scrollY) {
 			@Override
@@ -53,7 +50,7 @@ public class ContainerSkillsGui extends Container {
 			}
 		});
 		
-		int w = width / scaleFactor(), h = height / scaleFactor();
+		int w = width / scale, h = height / scale;
 		
 		// Main inventory
 		for (int r = 0; r < 3; r++) {
