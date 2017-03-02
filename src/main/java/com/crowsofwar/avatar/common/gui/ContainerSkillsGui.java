@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.gui;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static net.minecraft.item.ItemStack.field_190927_a;
 
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -40,26 +41,31 @@ public class ContainerSkillsGui extends Container {
 		
 		inventory = new SkillsGuiInventory();
 		
-		int barHeight = (int) (80f / 56 * 7);
-		addSlotToContainer(new Slot(inventory, 0, (width - 18) / 2 + 1, (height - 18) / 2 + barHeight + 26) {
+		int scrollX = (width - 18) / 2;
+		int scrollY = (height - 18) / 2;
+		// System.out.println(width + " x " + height);
+		
+		addSlotToContainer(new Slot(inventory, 0, scrollX / scaleFactor(), scrollY / scaleFactor()) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return stack.getItem() == AvatarItems.itemScroll;
 			}
 		});
 		
+		int w = width / scaleFactor(), h = height / scaleFactor();
+		
 		// Main inventory
-		for (int row = 0; row < 3; row++) {
-			for (int col = 0; col < 9; col++) {
-				int id = col + row * 9 + 9;
-				addSlotToContainer(new Slot(player.inventory, id, width + 1 + (col - 9) * 18,
-						height - 4 * 18 - 3 + row * 18));
+		for (int r = 0; r < 3; r++) {
+			for (int c = 0; c < 9; c++) {
+				int id = c + r * 9 + 9;
+				addSlotToContainer(
+						new Slot(player.inventory, id, w + 1 + (c - 9) * 18, h - 4 * 18 - 3 + r * 18));
 			}
 		}
 		
 		// Hotbar
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(player.inventory, i, width + 1 + (i - 9) * 18, height - 17));
+			addSlotToContainer(new Slot(player.inventory, i, w + 1 + (i - 9) * 18, h - 17));
 		}
 		
 	}
