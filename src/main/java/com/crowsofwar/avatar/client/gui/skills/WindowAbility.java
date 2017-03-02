@@ -96,4 +96,11 @@ public class WindowAbility {
 				&& mouseY < max.yInPixels();
 	}
 	
+	public boolean isInventoryMouseHover(float mouseX, float mouseY) {
+		Measurement min = invBg.coordinates();
+		Measurement max = min.plus(fromPixels(invBg.width(), invBg.height()));
+		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
+				&& mouseY < max.yInPixels();
+	}
+	
 }

@@ -90,14 +90,15 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		if (Mouse.isButtonDown(0)) {
 			
+			int mouseX = Mouse.getX(), mouseY = screenHeight() - Mouse.getY();
+			
 			if (isWindowOpen()) {
-				if (!window.isMouseHover(Mouse.getX(), Mouse.getY())) {
+				if (!window.isMouseHover(mouseX, mouseY) && !window.isInventoryMouseHover(mouseX, mouseY)) {
 					closeWindow();
 				}
 			} else {
 				for (int i = 0; i < tabs.length; i++) {
-					if (tabs[i].isMouseHover(Mouse.getX(), Mouse.getY(),
-							scroll + 1.2f * i * tabs[i].width())) {
+					if (tabs[i].isMouseHover(mouseX, mouseY, scroll + 1.2f * i * tabs[i].width())) {
 						openWindow(tabs[i]);
 						break;
 					}
