@@ -41,11 +41,15 @@ public class ContainerSkillsGui extends Container {
 		
 		inventory = new SkillsGuiInventory();
 		
-		int scrollX = (width - 18) / 2;
-		int scrollY = (height - 18) / 2;
-		// System.out.println(width + " x " + height);
+		int scrollX = (width - 16 * scaleFactor()) / 2 / scaleFactor();
+		int scrollY = (height - 16 * scaleFactor()) / 2 / scaleFactor();
+		System.out.println(scrollX + "," + scrollY);
+		System.out.println(width + "x" + height + "*" + scaleFactor());
 		
-		addSlotToContainer(new Slot(inventory, 0, scrollX / scaleFactor(), scrollY / scaleFactor()) {
+		// scrollX = (1920 - 64) / 2 / 4;
+		// scrollY = 0;
+		
+		addSlotToContainer(new Slot(inventory, 0, scrollX, scrollY) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return stack.getItem() == AvatarItems.itemScroll;

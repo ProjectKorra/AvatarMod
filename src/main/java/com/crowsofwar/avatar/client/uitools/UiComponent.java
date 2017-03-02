@@ -53,14 +53,14 @@ public abstract class UiComponent extends Gui {
 	protected abstract float componentHeight();
 	
 	/**
-	 * Get the actual scaled width
+	 * Get the actual width that is seen on-screen, in pixels
 	 */
 	public float width() {
 		return componentWidth() * scale() * scaleFactor();
 	}
 	
 	/**
-	 * Get the actual scaled height
+	 * Get the actual height that is seen on-screen, in pixels
 	 */
 	public float height() {
 		return componentHeight() * scale() * scaleFactor();
