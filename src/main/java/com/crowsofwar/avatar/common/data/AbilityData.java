@@ -42,12 +42,14 @@ public class AbilityData {
 	 * Note that it starts at 0, so 0 = Level I, 1 = Level II, etc.
 	 */
 	private int level;
+	private AbilityTreePath path;
 	
 	public AbilityData(AvatarPlayerData data, BendingAbility ability) {
 		this.data = data;
 		this.ability = ability;
 		this.xp = 0;
 		this.level = 0;
+		this.path = AbilityTreePath.MAIN;
 	}
 	
 	public BendingAbility getAbility() {
@@ -71,6 +73,7 @@ public class AbilityData {
 		if (level < 0) level = 0;
 		if (level > MAX_LEVEL) level = MAX_LEVEL;
 		this.level = level;
+		checkPath();
 		save();
 	}
 	
@@ -80,6 +83,37 @@ public class AbilityData {
 	public void addLevel() {
 		setLevel(level + 1);
 		data.sync();
+	}
+	
+	/**
+	 * Get the current path we are on. Note that while path other than MAIN only
+	 * matters in level IV, it can be other than MAIN on levels I,II, or III,
+	 * but will be ignored. On level IV however, path cannot be MAIN and will
+	 * either be FIRST or SECOND.
+	 */
+	public AbilityTreePath getPath() {
+		return path;
+	}
+	
+	/**
+	 * Set the current path. For details about valid values, see
+	 * {@link #getPath()}.
+	 */
+	public void setPath(AbilityTreePath path) {
+		this.path = path;
+		checkPath();
+		save();
+		data.sync();
+	}
+	
+	/**
+	 * Ensures ability path is correct - on level 4, if still on MAIN path, will
+	 * switch to FIRST automatically
+	 */
+	private void checkPath() {
+		if (level == 3 && path == AbilityTreePath.MAIN) {
+			setPath(AbilityTreePath.FIRST);
+		}
 	}
 	
 	/**
@@ -153,22 +187,26 @@ public class AbilityData {
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
 		level = nbt.getInteger("Level");
+		path = AbilityTreePath.fromId(nbt.getInteger("Path"));
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("Xp", xp);
 		nbt.setInteger("Level", level);
+		nbt.setInteger("Path", path.id());
 	}
 	
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(ability.getId()); // ability ID read from createFromBytes
 		buf.writeFloat(xp);
 		buf.writeInt(level);
+		buf.writeInt(path.id());
 	}
 	
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
 		level = buf.readInt();
+		path = AbilityTreePath.fromId(buf.readInt());
 	}
 	
 	/**
@@ -195,6 +233,30 @@ public class AbilityData {
 			abilityData.fromBytes(buf);
 			return abilityData;
 		}
+	}
+	
+	/**
+	 * Describes which path the abilityData is currently taking. Main path is
+	 * for levels 1, 2, and 3. For level 4, either FIRST or SECOND path can be
+	 * chosen.
+	 */
+	public enum AbilityTreePath {
+		
+		MAIN,
+		FIRST,
+		SECOND;
+		
+		public int id() {
+			return ordinal();
+		}
+		
+		public static AbilityTreePath fromId(int id) {
+			if (id < 0 || id >= values().length)
+				throw new IllegalArgumentException("No AbilityTreePath for id: " + id);
+			
+			return values()[id];
+		}
+		
 	}
 	
 }
