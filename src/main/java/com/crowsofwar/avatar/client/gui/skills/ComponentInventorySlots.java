@@ -16,8 +16,12 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import static net.minecraft.client.renderer.GlStateManager.color;
+
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -28,11 +32,15 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ComponentInventorySlots extends UiComponent {
 	
-	private final int cols, rows;
+	private final Container container;
+	
+	private final int cols, rows, minIndex, maxIndex;
 	private int width, height;
 	
 	private ResourceLocation texture;
 	private int u, v;
+	
+	private boolean visible;
 	
 	/**
 	 * Creates a grid of inventory slots with the given dimensions. This assumes
@@ -47,15 +55,22 @@ public class ComponentInventorySlots extends UiComponent {
 	 * @param maxIndex
 	 *            Maximum slot index
 	 */
-	public ComponentInventorySlots(int cols, int rows, int minIndex, int maxIndex) {
+	public ComponentInventorySlots(Container container, int cols, int rows, int minIndex, int maxIndex) {
+		
+		this.container = container;
+		
 		this.cols = cols;
 		this.rows = rows;
 		this.width = cols * 18;
 		this.height = rows * 18;
+		this.minIndex = minIndex;
+		this.maxIndex = maxIndex;
 		
 		this.texture = null;
 		this.u = -1;
 		this.v = -1;
+		
+		this.visible = true;
 		
 	}
 	
@@ -72,19 +87,46 @@ public class ComponentInventorySlots extends UiComponent {
 	
 	@Override
 	protected float componentWidth() {
-		return 0;
+		return width;
 	}
 	
 	@Override
 	protected float componentHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return height;
 	}
 	
 	@Override
 	protected void componentDraw(float partialTicks) {
-		// TODO Auto-generated method stub
+		// Check visibility
+		for (int i = minIndex; i <= maxIndex; i++) {
+			Slot slot = container.getSlot(i);
+			if (isVisible()) {
+				int x = (int) coordinates().xInPixels();
+				int y = (int) coordinates().yInPixels();
+				
+				slot.xDisplayPosition = 18 * (i % cols) + x;
+				slot.yDisplayPosition = 18 * (i / cols) + y;
+			} else {
+				slot.xDisplayPosition = -18;
+				slot.yDisplayPosition = -18;
+			}
+		}
 		
+		// Draw texture?
+		if (texture != null) {
+			mc.renderEngine.bindTexture(texture);
+			color(1, 1, 1, 1);
+			drawTexturedModalRect(0, 0, u, v, width, height);
+		}
+		
+	}
+	
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 	
 }
