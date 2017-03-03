@@ -43,17 +43,15 @@ public class ComponentInventorySlots extends UiComponent {
 	private boolean visible;
 	
 	/**
+	 * Creates only one inventory slot at the given index.
+	 */
+	public ComponentInventorySlots(Container container, int index) {
+		this(container, 1, 1, index, index);
+	}
+	
+	/**
 	 * Creates a grid of inventory slots with the given dimensions. This assumes
-	 * the indices are in row-major order.
-	 * 
-	 * @param cols
-	 *            The number of columns (x) in this grid
-	 * @param rows
-	 *            The number of rows (y) in this grid
-	 * @param minIndex
-	 *            Minimum slot index
-	 * @param maxIndex
-	 *            Maximum slot index
+	 * the indices are in row-major order. Min/max index are inclusive.
 	 */
 	public ComponentInventorySlots(Container container, int cols, int rows, int minIndex, int maxIndex) {
 		
