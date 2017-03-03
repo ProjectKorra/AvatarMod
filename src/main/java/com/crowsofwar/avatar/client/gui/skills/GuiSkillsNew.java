@@ -27,6 +27,7 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
+import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -68,6 +69,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		scrollSlot = new ComponentInventorySlots(inventorySlots, 0);
 		scrollSlot.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
+		scrollSlot.setPosition(StartingPosition.MIDDLE_CENTER);
+		scrollSlot.setVisible(false);
 		
 	}
 	

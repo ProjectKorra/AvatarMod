@@ -42,7 +42,7 @@ public class WindowAbility {
 	
 	private final BendingAbility ability;
 	private Frame frame;
-	private UiComponent icon, title, overlay, level, scrollBg, invBg;
+	private UiComponent icon, title, overlay, level, invBg;
 	
 	public WindowAbility(BendingAbility ability) {
 		this.ability = ability;
@@ -65,10 +65,6 @@ public class WindowAbility {
 		level.setFrame(frame);
 		level.setPosition(StartingPosition.TOP_RIGHT);
 		
-		scrollBg = new ComponentImage(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
-		scrollBg.setPosition(StartingPosition.MIDDLE_CENTER);
-		// Not setting frame since should be absolutely positioned
-		
 		invBg = new ComponentImage(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
 		invBg.setPosition(StartingPosition.BOTTOM_RIGHT);
 		// Not setting frame since should be absolutely positioned
@@ -84,7 +80,6 @@ public class WindowAbility {
 		title.draw(partialTicks);
 		icon.draw(partialTicks);
 		level.draw(partialTicks);
-		scrollBg.draw(partialTicks);
 		invBg.draw(partialTicks);
 		
 	}
