@@ -101,6 +101,10 @@ death.attack.avatar_airblade=%1$s was sliced by %2$s
 
 itemGroup.avatar.items=Avatar Items
 
-item.avatarmod:scroll.name=Scroll
+item.avatarmod:scroll.all.name=Scroll 
+item.avatarmod:scroll.air.name=Airbending Scroll
+item.avatarmod:scroll.fire.name=Firebending Scroll
+item.avatarmod:scroll.earth.name=Earthbending Scroll
+item.avatarmod:scroll.water.name=Waterbending Scroll
 
 avatar.tooltip.scroll=%d points

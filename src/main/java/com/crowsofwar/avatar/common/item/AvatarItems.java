@@ -38,7 +38,7 @@ public class AvatarItems {
 		}
 	};
 	
-	public static Item itemScroll;
+	public static ItemScroll itemScroll;
 	
 	private static ItemStack stackScroll;
 	

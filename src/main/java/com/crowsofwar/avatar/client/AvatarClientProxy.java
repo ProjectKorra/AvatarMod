@@ -118,6 +118,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityAirblade.class, RenderAirblade::new);
 		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
 		
+		AvatarItemRenderRegister.register();
+		
 	}
 	
 	@Override
@@ -144,7 +146,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 				AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 		mc.effectRenderer.registerParticle(AvatarParticles.getParticleAir().getParticleID(),
 				AvatarParticleAir::new);
-		AvatarItemRenderRegister.register();
 	}
 	
 	@Override

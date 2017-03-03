@@ -21,11 +21,13 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -34,12 +36,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * 
  * @author CrowsOfWar
  */
-public class ItemScroll extends Item {
+public class ItemScroll extends Item implements AvatarItem {
 	
 	public ItemScroll() {
 		setUnlocalizedName("scroll");
 		setMaxStackSize(1);
 		setCreativeTab(AvatarItems.tabItems);
+		setMaxDamage(0);
+		setHasSubtypes(true);
+	}
+	
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
+		return super.getUnlocalizedName(stack) + "." + ScrollType.fromId(metadata).displayName();
 	}
 	
 	@Override
@@ -61,6 +71,69 @@ public class ItemScroll extends Item {
 		int pts = nbt.getInteger("Points");
 		
 		tooltips.add(I18n.format("avatar.tooltip.scroll", pts));
+		
+	}
+	
+	@Override
+	public Item item() {
+		return this;
+	}
+	
+	@Override
+	public String getModelName(int meta) {
+		return "scroll_" + ScrollType.fromId(meta).displayName();
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		
+		for (int meta = 0; meta < ScrollType.values().length; meta++) {
+			subItems.add(setPoints(new ItemStack(item, 1, meta), 1));
+			subItems.add(setPoints(new ItemStack(item, 1, meta), 2));
+			subItems.add(setPoints(new ItemStack(item, 1, meta), 3));
+		}
+		
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean hasEffect(ItemStack stack) {
+		return getPoints(stack) > 0;
+	}
+	
+	public static int getPoints(ItemStack stack) {
+		return stackCompound(stack).getInteger("Points");
+	}
+	
+	public static ItemStack setPoints(ItemStack stack, int points) {
+		stackCompound(stack).setInteger("Points", points);
+		return stack;
+	}
+	
+	public enum ScrollType {
+		ALL,
+		EARTH,
+		FIRE,
+		WATER,
+		AIR;
+		
+		public String displayName() {
+			return name().toLowerCase();
+		}
+		
+		public int id() {
+			return ordinal();
+		}
+		
+		public static ScrollType fromId(int id) {
+			if (id < 0 || id >= values().length) throw new IllegalArgumentException("Invalid id: " + id);
+			return values()[id];
+		}
+		
+		public static int amount() {
+			return values().length;
+		}
 		
 	}
 	

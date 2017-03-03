@@ -16,12 +16,18 @@
 */
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.common.item.AvatarItems;
+import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemModelMesher;
+import com.crowsofwar.avatar.common.item.AvatarItem;
+import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * 
@@ -30,15 +36,67 @@ import net.minecraft.item.Item;
  */
 public class AvatarItemRenderRegister {
 	
+	private static ModelResourceLocation[] locationsRegular, locationsGlow;
+	
 	public static void register() {
-		register(AvatarItems.itemScroll, 0);
+		
+		MinecraftForge.EVENT_BUS.register(new AvatarItemRenderRegister());
+		
+		// Setup scrolls
+		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
+		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
+		
+		for (int i = 0; i < ScrollType.amount(); i++) {
+			
+			ScrollType type = ScrollType.fromId(i);
+			
+			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
+					"inventory");
+			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
+					"inventory");
+			
+			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsGlow[i]);
+			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsRegular[i]);
+			
+		}
+		
 	}
 	
-	private static void register(Item item, int meta) {
-		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		ModelResourceLocation mrl = new ModelResourceLocation(item.getUnlocalizedName().substring(5),
-				"inventory");
-		mesher.register(item, meta, mrl);
+	/**
+	 * Registers the specified item with the given metadata(s). Maps it to
+	 * {unlocalizedName}.json. Note that if no metadata is specified, the item
+	 * will not be registered.
+	 */
+	private static void register(AvatarItem item, int... metadata) {
+		
+		for (int meta : metadata) {
+			ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + item.getModelName(meta),
+					"inventory");
+			
+			ModelLoader.setCustomModelResourceLocation(item.item(), meta, mrl);
+			
+		}
+		
+	}
+	
+	@SubscribeEvent
+	public void modelBake(ModelBakeEvent e) {
+		
+		for (int i = 0; i < ScrollType.amount(); i++) {
+			
+			ModelResourceLocation mrlRegular = locationsRegular[i];
+			ModelResourceLocation mrlGlow = locationsGlow[i];
+			
+			Object obj = e.getModelRegistry().getObject(mrlRegular);
+			if (obj instanceof IBakedModel) {
+				IBakedModel currentModel = (IBakedModel) obj;
+				ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
+						currentModel, e.getModelRegistry().getObject(mrlGlow));
+				e.getModelRegistry().putObject(mrlRegular, customModel);
+			}
+			
+		}
+		
 	}
 	
 }
