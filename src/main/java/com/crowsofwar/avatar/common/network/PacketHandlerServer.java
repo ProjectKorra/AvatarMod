@@ -36,6 +36,7 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -289,18 +290,22 @@ public class PacketHandlerServer implements IPacketHandler {
 				ItemStack stack = skills.inventorySlots.get(0).getStack();
 				if (stack.getItem() == AvatarItems.itemScroll) {
 					
-					int points = stackCompound(stack).getInteger("Points");
-					if (points > 0) {
-						points--;
-						if (points == 0) {
-							skills.inventorySlots.get(0).putStack(ItemStack.field_190927_a);
-						} else {
-							stackCompound(stack).setInteger("Points", points);
+					// Try to use this scroll
+					ScrollType type = ScrollType.fromId(stack.getMetadata());
+					if (type.accepts(packet.getAbility().getBendingType())) {
+						int points = stackCompound(stack).getInteger("Points");
+						if (points > 0) {
+							points--;
+							if (points == 0) {
+								skills.inventorySlots.get(0).putStack(ItemStack.field_190927_a);
+							} else {
+								stackCompound(stack).setInteger("Points", points);
+							}
+							
+							abilityData.addXp(27);
 						}
-						
-						abilityData.addXp(27);
-						
 					}
+					
 				}
 			}
 			

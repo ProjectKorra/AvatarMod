@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.common.item;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 
 import java.util.List;
+import java.util.function.Predicate;
+
+import com.crowsofwar.avatar.common.bending.BendingType;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -112,11 +115,17 @@ public class ItemScroll extends Item implements AvatarItem {
 	}
 	
 	public enum ScrollType {
-		ALL,
-		EARTH,
-		FIRE,
-		WATER,
-		AIR;
+		ALL(type -> true),
+		EARTH(type -> type == BendingType.EARTHBENDING),
+		FIRE(type -> type == BendingType.FIREBENDING),
+		WATER(type -> type == BendingType.WATERBENDING),
+		AIR(type -> type == BendingType.AIRBENDING);
+		
+		private final Predicate<BendingType> test;
+		
+		private ScrollType(Predicate<BendingType> test) {
+			this.test = test;
+		}
 		
 		public String displayName() {
 			return name().toLowerCase();
@@ -124,6 +133,10 @@ public class ItemScroll extends Item implements AvatarItem {
 		
 		public int id() {
 			return ordinal();
+		}
+		
+		public boolean accepts(BendingType type) {
+			return test.test(type);
 		}
 		
 		public static ScrollType fromId(int id) {
