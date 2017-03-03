@@ -42,11 +42,14 @@ import net.minecraft.util.text.TextFormatting;
 public class WindowAbility {
 	
 	private final BendingAbility ability;
+	private final GuiSkillsNew gui;
 	private Frame frame;
-	private UiComponent icon, title, overlay, level, invBg, treeView, button;
+	private UiComponent icon, title, overlay, level, invBg, treeView;
+	private ComponentCustomButton button;
 	
 	public WindowAbility(BendingAbility ability, GuiSkillsNew gui) {
 		this.ability = ability;
+		this.gui = gui;
 		
 		frame = new Frame();
 		frame.setDimensions(fromPercent(80, 80));
@@ -85,6 +88,8 @@ public class WindowAbility {
 	}
 	
 	public void draw(float partialTicks) {
+		
+		button.setEnabled(gui.inventorySlots.getSlot(0).getHasStack());
 		
 		overlay.draw(partialTicks);
 		frame.draw(partialTicks);

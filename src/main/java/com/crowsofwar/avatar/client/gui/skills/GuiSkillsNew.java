@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -59,7 +60,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private ComponentInventorySlots scrollSlot, inventory, hotbar;
 	
 	public GuiSkillsNew() {
-		super(new ContainerSkillsGui(getMinecraft().thePlayer));
+		super(new ContainerSkillsGui(getMinecraft().thePlayer, BendingType.AIRBENDING));
 		
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		

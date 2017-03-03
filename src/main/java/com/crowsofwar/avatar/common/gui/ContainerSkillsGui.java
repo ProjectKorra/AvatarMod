@@ -18,7 +18,9 @@ package com.crowsofwar.avatar.common.gui;
 
 import static net.minecraft.item.ItemStack.field_190927_a;
 
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -37,7 +39,7 @@ public class ContainerSkillsGui extends Container {
 	
 	private int invIndex, hotbarIndex;
 	
-	public ContainerSkillsGui(EntityPlayer player) {
+	public ContainerSkillsGui(EntityPlayer player, BendingType type) {
 		this.player = player;
 		
 		inventory = new SkillsGuiInventory();
@@ -45,7 +47,8 @@ public class ContainerSkillsGui extends Container {
 		addSlotToContainer(new Slot(inventory, 0, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return stack.getItem() == AvatarItems.itemScroll;
+				return stack.getItem() == AvatarItems.itemScroll
+						&& ScrollType.fromId(stack.getMetadata()).accepts(type);
 			}
 		});
 		

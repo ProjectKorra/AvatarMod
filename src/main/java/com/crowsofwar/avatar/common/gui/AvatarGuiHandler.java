@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.gui;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingType;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -30,7 +31,7 @@ public class AvatarGuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
-		if (id == GUI_ID_SKILLS) return new ContainerSkillsGui(player);
+		if (id == GUI_ID_SKILLS) return new ContainerSkillsGui(player, BendingType.AIRBENDING);
 		
 		return null;
 	}
