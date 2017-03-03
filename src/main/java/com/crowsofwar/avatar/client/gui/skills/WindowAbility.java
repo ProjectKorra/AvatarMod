@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.ComponentOverlay;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
@@ -42,9 +43,9 @@ public class WindowAbility {
 	
 	private final BendingAbility ability;
 	private Frame frame;
-	private UiComponent icon, title, overlay, level, invBg, treeView;
+	private UiComponent icon, title, overlay, level, invBg, treeView, button;
 	
-	public WindowAbility(BendingAbility ability) {
+	public WindowAbility(BendingAbility ability, GuiSkillsNew gui) {
 		this.ability = ability;
 		
 		frame = new Frame();
@@ -73,6 +74,13 @@ public class WindowAbility {
 		treeView.setFrame(frame);
 		treeView.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		
+		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18, () -> {
+			System.out.println("HELLO!");
+		});
+		button.setFrame(frame);
+		button.setPosition(StartingPosition.MIDDLE_CENTER);
+		button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
+		
 		overlay = new ComponentOverlay();
 		
 	}
@@ -86,6 +94,7 @@ public class WindowAbility {
 		level.draw(partialTicks);
 		// invBg.draw(partialTicks);
 		treeView.draw(partialTicks);
+		button.draw(partialTicks);
 		
 	}
 	

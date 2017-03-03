@@ -169,7 +169,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	}
 	
 	private void openWindow(AbilityTab tab) {
-		window = new WindowAbility(tab.getAbility());
+		window = new WindowAbility(tab.getAbility(), this);
 		scrollSlot.setVisible(true);
 		inventory.setVisible(true);
 		hotbar.setVisible(true);
@@ -182,6 +182,10 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		inventory.setVisible(false);
 		hotbar.setVisible(false);
 		scrollSlot.setFrame(Frame.SCREEN);
+	}
+	
+	public ComponentInventorySlots getScrollSlot() {
+		return scrollSlot;
 	}
 	
 }
