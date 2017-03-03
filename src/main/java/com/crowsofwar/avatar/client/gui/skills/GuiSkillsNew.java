@@ -25,18 +25,22 @@ import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -186,6 +190,19 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	public ComponentInventorySlots getScrollSlot() {
 		return scrollSlot;
+	}
+	
+	/**
+	 * Called when the 'use scroll' button is clicked
+	 */
+	public void useScroll(BendingAbility ability) {
+		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
+		Slot slot = container.getSlot(0);
+		
+		if (slot.getHasStack()) {
+			AvatarMod.network.sendToServer(new PacketSUseScroll(ability));
+		}
+		
 	}
 	
 }

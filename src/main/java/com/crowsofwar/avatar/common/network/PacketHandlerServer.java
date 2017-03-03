@@ -279,7 +279,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_BUBBLE);
+		AbilityData abilityData = data.getAbilityData(packet.getAbility());
 		
 		if (!abilityData.isMaxLevel()) {
 			

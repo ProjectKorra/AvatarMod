@@ -74,9 +74,8 @@ public class WindowAbility {
 		treeView.setFrame(frame);
 		treeView.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		
-		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18, () -> {
-			System.out.println("HELLO!");
-		});
+		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
+				() -> gui.useScroll(ability));
 		button.setFrame(frame);
 		button.setPosition(StartingPosition.MIDDLE_CENTER);
 		button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
