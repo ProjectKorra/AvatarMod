@@ -158,7 +158,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private void closeWindow() {
 		window = null;
 		scrollSlot.setVisible(false);
-		scrollSlot.setFrame(null);
+		scrollSlot.setFrame(Frame.SCREEN);
 	}
 	
 }
