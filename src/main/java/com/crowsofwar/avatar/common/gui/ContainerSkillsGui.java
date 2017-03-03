@@ -37,15 +37,12 @@ public class ContainerSkillsGui extends Container {
 	
 	private int invIndex, hotbarIndex;
 	
-	public ContainerSkillsGui(EntityPlayer player, int width, int height) {
+	public ContainerSkillsGui(EntityPlayer player) {
 		this.player = player;
 		
 		inventory = new SkillsGuiInventory();
 		
-		int scrollX = (width - 16) / 2;
-		int scrollY = (height - 16) / 2;
-		
-		addSlotToContainer(new Slot(inventory, 0, scrollX, scrollY) {
+		addSlotToContainer(new Slot(inventory, 0, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return stack.getItem() == AvatarItems.itemScroll;
@@ -66,7 +63,7 @@ public class ContainerSkillsGui extends Container {
 		
 		// Hotbar
 		for (int i = 0; i < 9; i++) {
-			Slot slot = new Slot(player.inventory, i, width + 1 + (i - 9) * 18, height - 17);
+			Slot slot = new Slot(player.inventory, i, 100, 100);
 			addSlotToContainer(slot);
 			if (i == 0) {
 				hotbarIndex = slot.slotNumber;

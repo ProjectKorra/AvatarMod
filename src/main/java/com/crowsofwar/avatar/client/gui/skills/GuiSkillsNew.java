@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.client.gui.skills;
 
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
 
@@ -55,8 +55,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private ComponentInventorySlots scrollSlot, inventory, hotbar;
 	
 	public GuiSkillsNew() {
-		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth() / scaleFactor(),
-				screenHeight() / scaleFactor()));
+		super(new ContainerSkillsGui(getMinecraft().thePlayer));
 		
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		
@@ -85,7 +84,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		hotbar = new ComponentInventorySlots(inventorySlots, 9, 1, skillsContainer.getHotbarIndex(),
 				skillsContainer.getHotbarIndex() + 8);
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
-		// hotbar.setOffset(fromPixels(-7, 0));
 		hotbar.setVisible(false);
 		
 	}

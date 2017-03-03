@@ -30,7 +30,7 @@ public class AvatarGuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
-		if (id == GUI_ID_SKILLS) return new ContainerSkillsGui(player, 1, 1);
+		if (id == GUI_ID_SKILLS) return new ContainerSkillsGui(player);
 		
 		return null;
 	}
