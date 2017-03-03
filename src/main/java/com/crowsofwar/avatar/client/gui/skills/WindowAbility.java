@@ -42,7 +42,7 @@ public class WindowAbility {
 	
 	private final BendingAbility ability;
 	private Frame frame;
-	private UiComponent icon, title, overlay, level, invBg;
+	private UiComponent icon, title, overlay, level, invBg, treeView;
 	
 	public WindowAbility(BendingAbility ability) {
 		this.ability = ability;
@@ -69,6 +69,10 @@ public class WindowAbility {
 		invBg.setPosition(StartingPosition.BOTTOM_RIGHT);
 		// Not setting frame since should be absolutely positioned
 		
+		treeView = new ComponentAbilityTree(ability);
+		treeView.setFrame(frame);
+		treeView.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		
 		overlay = new ComponentOverlay();
 		
 	}
@@ -81,6 +85,7 @@ public class WindowAbility {
 		icon.draw(partialTicks);
 		level.draw(partialTicks);
 		invBg.draw(partialTicks);
+		treeView.draw(partialTicks);
 		
 	}
 	
