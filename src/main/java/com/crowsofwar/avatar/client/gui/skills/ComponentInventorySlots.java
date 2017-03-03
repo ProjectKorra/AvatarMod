@@ -63,8 +63,8 @@ public class ComponentInventorySlots extends UiComponent {
 		
 		this.cols = cols;
 		this.rows = rows;
-		this.width = cols * 16;
-		this.height = rows * 16;
+		this.width = cols * 18;
+		this.height = rows * 18;
 		this.minIndex = minIndex;
 		this.maxIndex = maxIndex;
 		
@@ -108,8 +108,10 @@ public class ComponentInventorySlots extends UiComponent {
 				int x = (int) coordinates().xInPixels() + (int) padding.xInPixels() * scaleFactor();
 				int y = (int) coordinates().yInPixels() + (int) padding.yInPixels() * scaleFactor();
 				
-				slot.xDisplayPosition = 18 * scaleFactor() * (i % cols) + x;
-				slot.yDisplayPosition = 18 * scaleFactor() * (i / cols) + y;
+				int j = i - minIndex;
+				
+				slot.xDisplayPosition = 18 * scaleFactor() * (j % cols) + x;
+				slot.yDisplayPosition = 18 * scaleFactor() * (j / cols) + y;
 				slot.xDisplayPosition /= scaleFactor();
 				slot.yDisplayPosition /= scaleFactor();
 				slot.xDisplayPosition++;
