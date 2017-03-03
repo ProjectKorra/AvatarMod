@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
 
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -49,6 +50,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private WindowAbility window;
 	private Frame frame;
 	
+	private ComponentInventorySlots scrollSlot;
+	
 	public GuiSkillsNew() {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth() / scaleFactor(),
 				screenHeight() / scaleFactor()));
@@ -62,6 +65,9 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		tabs = new AbilityTab[] { new AbilityTab(ABILITY_AIR_BUBBLE), new AbilityTab(ABILITY_AIR_GUST),
 				new AbilityTab(ABILITY_AIR_JUMP), new AbilityTab(ABILITY_AIRBLADE) };
+		
+		scrollSlot = new ComponentInventorySlots(inventorySlots, 0);
+		scrollSlot.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
 		
 	}
 	
@@ -125,6 +131,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			window.draw(partialTicks);
 		}
 		
+		scrollSlot.draw(partialTicks);
+		
 	}
 	
 	@Override
@@ -143,10 +151,14 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	private void openWindow(AbilityTab tab) {
 		window = new WindowAbility(tab.getAbility());
+		scrollSlot.setVisible(true);
+		scrollSlot.setFrame(window.getFrame());
 	}
 	
 	private void closeWindow() {
 		window = null;
+		scrollSlot.setVisible(false);
+		scrollSlot.setFrame(null);
 	}
 	
 }

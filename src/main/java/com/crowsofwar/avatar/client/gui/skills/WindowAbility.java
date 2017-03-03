@@ -103,4 +103,8 @@ public class WindowAbility {
 				&& mouseY < max.yInPixels();
 	}
 	
+	public Frame getFrame() {
+		return frame;
+	}
+	
 }
