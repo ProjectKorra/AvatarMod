@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
@@ -51,7 +52,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private WindowAbility window;
 	private Frame frame;
 	
-	private ComponentInventorySlots scrollSlot;
+	private ComponentInventorySlots scrollSlot, inventory, hotbar;
 	
 	public GuiSkillsNew() {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth() / scaleFactor(),
@@ -71,6 +72,16 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		scrollSlot.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
 		scrollSlot.setPosition(StartingPosition.MIDDLE_CENTER);
 		scrollSlot.setVisible(false);
+		
+		inventory = new ComponentInventorySlots(getMinecraft().thePlayer.inventoryContainer, 9, 3, 9, 35);
+		inventory.useTexture(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
+		inventory.setPosition(StartingPosition.BOTTOM_RIGHT);
+		inventory.setOffset(fromPixels(0, -22));
+		inventory.setVisible(false);
+		
+		hotbar = new ComponentInventorySlots(getMinecraft().thePlayer.inventoryContainer, 9, 0, 0, 8);
+		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
+		hotbar.setVisible(false);
 		
 	}
 	
@@ -135,6 +146,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		}
 		
 		scrollSlot.draw(partialTicks);
+		inventory.draw(partialTicks);
+		hotbar.draw(partialTicks);
 		
 	}
 	
@@ -155,12 +168,16 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private void openWindow(AbilityTab tab) {
 		window = new WindowAbility(tab.getAbility());
 		scrollSlot.setVisible(true);
+		inventory.setVisible(true);
+		hotbar.setVisible(true);
 		scrollSlot.setFrame(window.getFrame());
 	}
 	
 	private void closeWindow() {
 		window = null;
 		scrollSlot.setVisible(false);
+		inventory.setVisible(false);
+		hotbar.setVisible(false);
 		scrollSlot.setFrame(Frame.SCREEN);
 	}
 	
