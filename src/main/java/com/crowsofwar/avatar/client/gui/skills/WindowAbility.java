@@ -84,7 +84,7 @@ public class WindowAbility {
 		title.draw(partialTicks);
 		icon.draw(partialTicks);
 		level.draw(partialTicks);
-		invBg.draw(partialTicks);
+		// invBg.draw(partialTicks);
 		treeView.draw(partialTicks);
 		
 	}

@@ -103,12 +103,20 @@ public class ComponentInventorySlots extends UiComponent {
 				int x = (int) coordinates().xInPixels();
 				int y = (int) coordinates().yInPixels();
 				
-				slot.xDisplayPosition = 16 * (i % cols) + x;
-				slot.yDisplayPosition = 16 * (i / cols) + y;
+				slot.xDisplayPosition = 18 * scaleFactor() * (i % cols) + x;
+				slot.yDisplayPosition = 18 * scaleFactor() * (i / cols) + y;
 				slot.xDisplayPosition /= scaleFactor();
 				slot.yDisplayPosition /= scaleFactor();
 				slot.xDisplayPosition++;
 				slot.yDisplayPosition++;
+				
+				// System.out.println("Mod to " + slot.xDisplayPosition + "," +
+				// slot.yDisplayPosition);
+				
+				if (container == mc.thePlayer.inventoryContainer && i == 9) {
+					System.out.println(slot.hashCode());
+				}
+				
 			} else {
 				slot.xDisplayPosition = -18;
 				slot.yDisplayPosition = -18;

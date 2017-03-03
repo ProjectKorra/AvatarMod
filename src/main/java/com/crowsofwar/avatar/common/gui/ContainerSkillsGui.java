@@ -54,8 +54,11 @@ public class ContainerSkillsGui extends Container {
 		for (int r = 0; r < 3; r++) {
 			for (int c = 0; c < 9; c++) {
 				int id = c + r * 9 + 9;
-				addSlotToContainer(new Slot(player.inventory, id, width + 1 + (c - 9) * 18,
-						height - 4 * 18 - 3 + r * 18));
+				Slot s = new Slot(player.inventory, id, 100, 100);
+				addSlotToContainer(s);
+				if (id == 9) {
+					System.out.println("Hash " + s.hashCode());
+				}
 			}
 		}
 		
