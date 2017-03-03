@@ -57,6 +57,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, screenWidth() / scaleFactor(),
 				screenHeight() / scaleFactor()));
 		
+		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
+		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
 		xSize = res.getScaledWidth();
@@ -72,13 +74,15 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		scrollSlot.setPosition(StartingPosition.MIDDLE_CENTER);
 		scrollSlot.setVisible(false);
 		
-		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, 9, 35);
+		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(),
+				skillsContainer.getInvIndex() + 26);
 		inventory.useTexture(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
-		inventory.setPosition(StartingPosition.TOP_LEFT);
+		inventory.setPosition(StartingPosition.BOTTOM_RIGHT);
 		inventory.setVisible(false);
 		
-		hotbar = new ComponentInventorySlots(inventorySlots, 9, 0, 0, 8);
-		hotbar.setPosition(StartingPosition.TOP_LEFT);
+		hotbar = new ComponentInventorySlots(inventorySlots, 9, 0, skillsContainer.getHotbarIndex(),
+				skillsContainer.getHotbarIndex() + 8);
+		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
 		
 	}

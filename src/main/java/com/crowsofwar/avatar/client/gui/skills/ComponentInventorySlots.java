@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static net.minecraft.client.renderer.GlStateManager.color;
 
+import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 
 import net.minecraft.inventory.Container;
@@ -40,6 +41,8 @@ public class ComponentInventorySlots extends UiComponent {
 	
 	private ResourceLocation texture;
 	private int u, v;
+	
+	private Measurement padding;
 	
 	private boolean visible;
 	
@@ -71,6 +74,8 @@ public class ComponentInventorySlots extends UiComponent {
 		
 		this.visible = true;
 		
+		this.padding = Measurement.fromPixels(0, 0);
+		
 	}
 	
 	/**
@@ -100,8 +105,8 @@ public class ComponentInventorySlots extends UiComponent {
 		for (int i = minIndex; i <= maxIndex; i++) {
 			Slot slot = container.getSlot(i);
 			if (isVisible()) {
-				int x = (int) coordinates().xInPixels();
-				int y = (int) coordinates().yInPixels();
+				int x = (int) coordinates().xInPixels() + (int) padding.xInPixels() * scaleFactor();
+				int y = (int) coordinates().yInPixels() + (int) padding.yInPixels() * scaleFactor();
 				
 				slot.xDisplayPosition = 18 * scaleFactor() * (i % cols) + x;
 				slot.yDisplayPosition = 18 * scaleFactor() * (i / cols) + y;
@@ -109,13 +114,6 @@ public class ComponentInventorySlots extends UiComponent {
 				slot.yDisplayPosition /= scaleFactor();
 				slot.xDisplayPosition++;
 				slot.yDisplayPosition++;
-				
-				// System.out.println("Mod to " + slot.xDisplayPosition + "," +
-				// slot.yDisplayPosition);
-				
-				if (container == mc.thePlayer.inventoryContainer && i == 9) {
-					System.out.println(slot.hashCode());
-				}
 				
 			} else {
 				slot.xDisplayPosition = -18;
@@ -138,6 +136,17 @@ public class ComponentInventorySlots extends UiComponent {
 	
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+	
+	public Measurement getPadding() {
+		return padding;
+	}
+	
+	/**
+	 * Set offset from texture to start of slots
+	 */
+	public void setPadding(Measurement padding) {
+		this.padding = padding;
 	}
 	
 }

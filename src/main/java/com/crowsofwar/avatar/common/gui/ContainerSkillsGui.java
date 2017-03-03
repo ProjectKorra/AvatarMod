@@ -35,6 +35,8 @@ public class ContainerSkillsGui extends Container {
 	private final EntityPlayer player;
 	private final SkillsGuiInventory inventory;
 	
+	private int invIndex, hotbarIndex;
+	
 	public ContainerSkillsGui(EntityPlayer player, int width, int height) {
 		this.player = player;
 		
@@ -54,17 +56,21 @@ public class ContainerSkillsGui extends Container {
 		for (int r = 0; r < 3; r++) {
 			for (int c = 0; c < 9; c++) {
 				int id = c + r * 9 + 9;
-				Slot s = new Slot(player.inventory, id, 100, 100);
-				addSlotToContainer(s);
-				if (id == 9) {
-					System.out.println("Hash " + s.hashCode());
+				Slot slot = new Slot(player.inventory, id, 100, 100);
+				addSlotToContainer(slot);
+				if (r == 0 && c == 0) {
+					invIndex = slot.slotNumber;
 				}
 			}
 		}
 		
 		// Hotbar
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(player.inventory, i, width + 1 + (i - 9) * 18, height - 17));
+			Slot slot = new Slot(player.inventory, i, width + 1 + (i - 9) * 18, height - 17);
+			addSlotToContainer(slot);
+			if (i == 0) {
+				hotbarIndex = slot.slotNumber;
+			}
 		}
 		
 	}
@@ -108,6 +114,14 @@ public class ContainerSkillsGui extends Container {
 			player.dropItem(scroll, false);
 			inventory.setInventorySlotContents(0, field_190927_a);
 		}
+	}
+	
+	public int getInvIndex() {
+		return invIndex;
+	}
+	
+	public int getHotbarIndex() {
+		return hotbarIndex;
 	}
 	
 }
