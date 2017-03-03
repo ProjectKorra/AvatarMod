@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static net.minecraft.client.renderer.GlStateManager.color;
 
 import com.crowsofwar.avatar.client.uitools.UiComponent;
@@ -59,8 +60,8 @@ public class ComponentInventorySlots extends UiComponent {
 		
 		this.cols = cols;
 		this.rows = rows;
-		this.width = cols * 18;
-		this.height = rows * 18;
+		this.width = cols * 16;
+		this.height = rows * 16;
 		this.minIndex = minIndex;
 		this.maxIndex = maxIndex;
 		
@@ -102,8 +103,12 @@ public class ComponentInventorySlots extends UiComponent {
 				int x = (int) coordinates().xInPixels();
 				int y = (int) coordinates().yInPixels();
 				
-				slot.xDisplayPosition = 18 * (i % cols) + x;
-				slot.yDisplayPosition = 18 * (i / cols) + y;
+				slot.xDisplayPosition = 16 * (i % cols) + x;
+				slot.yDisplayPosition = 16 * (i / cols) + y;
+				slot.xDisplayPosition /= scaleFactor();
+				slot.yDisplayPosition /= scaleFactor();
+				slot.xDisplayPosition++;
+				slot.yDisplayPosition++;
 			} else {
 				slot.xDisplayPosition = -18;
 				slot.yDisplayPosition = -18;
@@ -111,7 +116,7 @@ public class ComponentInventorySlots extends UiComponent {
 		}
 		
 		// Draw texture?
-		if (texture != null) {
+		if (isVisible() && texture != null) {
 			mc.renderEngine.bindTexture(texture);
 			color(1, 1, 1, 1);
 			drawTexturedModalRect(0, 0, u, v, width, height);
