@@ -21,6 +21,8 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 
 import org.lwjgl.input.Mouse;
 
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -34,7 +36,7 @@ public class ComponentCustomButton extends UiComponent {
 	private final int startU, startV, width, height;
 	private final Runnable onClick;
 	
-	private boolean enabled;
+	private boolean enabled, wasDown;
 	
 	/**
 	 * Create a custom button. U and V specified should be initial U/V for
@@ -83,6 +85,14 @@ public class ComponentCustomButton extends UiComponent {
 		}
 		
 		drawTexturedModalRect(0, 0, u, startV, width, height);
+		
+		boolean down = Mouse.isButtonDown(0);
+		if (enabled && down && !wasDown && hover) {
+			onClick.run();
+			mc.getSoundHandler()
+					.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		}
+		wasDown = down;
 		
 	}
 	
