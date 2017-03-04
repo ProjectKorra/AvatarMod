@@ -61,8 +61,10 @@ public class ComponentAbilityTree extends UiComponent {
 		};
 		// @formatter:on
 		
+		// Draw levels I, II, III
 		for (int i = 0; i < reachedLevel.length; i++) {
-			drawTexturedModalRect(i * 16, 0, i * 16, reachedLevel[i] ? 240 : 224, 16, 16);
+			drawTexturedModalRect(i * 31, 0, i * 16, reachedLevel[i] ? 240 : 224, 16, 16);
+			drawTexturedModalRect(i * 31 + 16, 0, 80, reachedLevel[i] ? 248 : 252, 15, 4);
 		}
 		
 		if (data.getLevel() >= 3) {
