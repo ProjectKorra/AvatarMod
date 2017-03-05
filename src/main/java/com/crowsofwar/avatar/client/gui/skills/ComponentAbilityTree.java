@@ -95,12 +95,12 @@ public class ComponentAbilityTree extends UiComponent {
 		if (!firstGray) {
 			drawTexturedModalRect(3 * 31, -12, 48, 240, 16, 16);
 		} else {
-			drawTexturedModalRect(3 * 31, -12, 47, 224, 16, 16);
+			drawTexturedModalRect(3 * 31, -12, 48, 224, 16, 16);
 		}
 		if (!secondGray) {
 			drawTexturedModalRect(3 * 31, 12, 64, 240, 16, 16);
 		} else {
-			drawTexturedModalRect(3 * 31, 12, 47, 224, 16, 16);
+			drawTexturedModalRect(3 * 31, 12, 48, 224, 16, 16);
 		}
 		
 	}
