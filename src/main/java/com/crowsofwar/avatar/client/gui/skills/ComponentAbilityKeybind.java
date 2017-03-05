@@ -39,6 +39,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	private boolean editing;
 	private Conflictable conflict;
+	private Integer editContents;
 	
 	public ComponentAbilityKeybind(BendingAbility ability) {
 		this.ability = ability;
@@ -80,7 +81,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	private void updateText() {
 		
 		// Keycode mapped to this ability - may be null!
-		Integer keymapping = CLIENT_CONFIG.keymappings.get(ability);
+		Integer keymapping = currentKey();
 		
 		String key;
 		
@@ -105,6 +106,45 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	private boolean hasConflict() {
 		return conflict != null;
+	}
+	
+	@Override
+	protected void click(int button) {
+		
+		if (editing) {
+			// Stop editing
+			
+			if (button == 0) {
+				// Store on LMB
+				editing = false;
+				storeKey(editContents);
+			} else if (button == 2) {
+				// Discard on RMB
+				editing = false;
+				storeKey(null);
+			} else {
+				// Accept MMB and extra mouse buttons
+				editContents = button - 100;
+			}
+			
+		} else {
+			// Start editing
+			editing = true;
+			editContents = hasKeybinding() ? currentKey() : null;
+		}
+		
+	}
+	
+	private Integer currentKey() {
+		return CLIENT_CONFIG.keymappings.get(ability);
+	}
+	
+	private boolean hasKeybinding() {
+		return currentKey() != null;
+	}
+	
+	private void storeKey(Integer key) {
+		CLIENT_CONFIG.keymappings.put(ability, key);
 	}
 	
 	interface Conflictable {
