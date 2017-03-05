@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
+import org.lwjgl.input.Keyboard;
+
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
@@ -138,7 +140,11 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	@Override
 	public void keyPressed(int keyCode) {
-		if (editing) {
+		
+		if (keyCode == Keyboard.KEY_ESCAPE) {
+			editing = false;
+			updateText();
+		} else if (editing) {
 			editContents = keyCode;
 			updateText();
 		}
@@ -154,6 +160,10 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	private void storeKey(Integer key) {
 		CLIENT_CONFIG.keymappings.put(ability, key);
+	}
+	
+	public boolean isEditing() {
+		return editing;
 	}
 	
 	interface Conflictable {

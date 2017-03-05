@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
+import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
 
 import java.io.IOException;
 
@@ -41,6 +42,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -162,11 +164,16 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if (isWindowOpen()) {
-			if (keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode)) {
+			KeyBinding invKb = mc.gameSettings.keyBindInventory;
+			
+			if (window.isEditing() && keyCode == KEY_ESCAPE) {
+				window.keyTyped(keyCode);
+			} else if (keyCode == 1 || invKb.isActiveAndMatches(keyCode)) {
 				closeWindow();
 			} else {
 				window.keyTyped(keyCode);
 			}
+			
 		} else {
 			super.keyTyped(typedChar, keyCode);
 		}

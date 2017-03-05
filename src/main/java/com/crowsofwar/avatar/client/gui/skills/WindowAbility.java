@@ -140,4 +140,8 @@ public class WindowAbility {
 		return frame;
 	}
 	
+	public boolean isEditing() {
+		return keybind.isEditing();
+	}
+	
 }
