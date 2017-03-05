@@ -21,12 +21,14 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 
 import org.lwjgl.input.Mouse;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSAbilityPath;
 
 /**
  * 
@@ -130,11 +132,13 @@ public class ComponentAbilityTree extends UiComponent {
 			float maxY2 = minY2 + scaleFactor() * 16;
 			
 			if (mouseX >= minX && mouseX <= maxX) {
-				if (mouseY >= minY1 && mouseY <= maxY1) {
+				if (mouseY >= minY1 && mouseY <= maxY1 && path != AbilityTreePath.FIRST) {
 					System.out.println("Click 1");
+					AvatarMod.network.sendToServer(new PacketSAbilityPath(ability, AbilityTreePath.FIRST));
 				}
-				if (mouseY >= minY2 && mouseY <= maxY2) {
+				if (mouseY >= minY2 && mouseY <= maxY2 && path != AbilityTreePath.SECOND) {
 					System.out.println("Click 2");
+					AvatarMod.network.sendToServer(new PacketSAbilityPath(ability, AbilityTreePath.SECOND));
 				}
 			}
 			
