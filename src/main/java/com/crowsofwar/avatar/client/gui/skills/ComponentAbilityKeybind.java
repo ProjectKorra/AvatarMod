@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
@@ -33,7 +34,7 @@ import net.minecraft.client.settings.KeyBinding;
 public class ComponentAbilityKeybind extends UiComponent {
 	
 	private final BendingAbility ability;
-	private String currentText;
+	private String text1, text2;
 	private int color;
 	
 	private boolean editing;
@@ -41,7 +42,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	public ComponentAbilityKeybind(BendingAbility ability) {
 		this.ability = ability;
-		this.currentText = "";
+		this.text1 = this.text2 = "";
 		this.color = 0xffffff;
 		
 		this.editing = false;
@@ -53,18 +54,22 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	@Override
 	protected float componentWidth() {
-		return mc.fontRendererObj.getStringWidth(currentText);
+		int w1 = mc.fontRendererObj.getStringWidth(text1);
+		int w2 = mc.fontRendererObj.getStringWidth(text2);
+		return Math.max(w1, w2);
 	}
 	
 	@Override
 	protected float componentHeight() {
-		return mc.fontRendererObj.FONT_HEIGHT;
+		return mc.fontRendererObj.FONT_HEIGHT * 2;
 	}
 	
 	@Override
 	protected void componentDraw(float partialTicks) {
 		
-		mc.fontRendererObj.drawString(currentText, 0, 0, color);
+		FontRenderer fr = mc.fontRendererObj;
+		fr.drawString(text1, 0, 0, color);
+		fr.drawString(text2, 0, fr.FONT_HEIGHT, color);
 		
 	}
 	
@@ -90,8 +95,11 @@ public class ComponentAbilityKeybind extends UiComponent {
 			key = keymapping != null ? "set" : "none";
 		}
 		
-		currentText = I18n.format("avatar.key." + key + "1",
-				keymapping == null ? "no key" : GameSettings.getKeyDisplayString(keymapping));
+		String keymappingStr = keymapping == null ? "no key" : GameSettings.getKeyDisplayString(keymapping);
+		String conflictStr = conflict == null ? "no conflict" : conflict.getName();
+		
+		text1 = I18n.format("avatar.key." + key + "1", keymappingStr);
+		text2 = I18n.format("avatar.key." + key + "2", conflictStr);
 		
 	}
 	
