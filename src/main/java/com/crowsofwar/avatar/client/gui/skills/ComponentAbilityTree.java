@@ -38,13 +38,11 @@ import com.crowsofwar.avatar.common.network.packets.PacketSAbilityPath;
 public class ComponentAbilityTree extends UiComponent {
 	
 	private final BendingAbility ability;
-	private final AbilityData data;
 	
 	private boolean wasDown;
 	
 	public ComponentAbilityTree(BendingAbility ability) {
 		this.ability = ability;
-		this.data = AvatarPlayerData.fetcher().fetch(mc.thePlayer).getAbilityData(ability);
 		
 		this.wasDown = false;
 	}
@@ -61,6 +59,8 @@ public class ComponentAbilityTree extends UiComponent {
 	
 	@Override
 	protected void componentDraw(float partialTicks) {
+		
+		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer).getAbilityData(ability);
 		
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		
