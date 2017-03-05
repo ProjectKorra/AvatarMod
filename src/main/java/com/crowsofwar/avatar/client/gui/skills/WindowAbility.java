@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
+import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
 import net.minecraft.client.resources.I18n;
@@ -43,6 +44,8 @@ public class WindowAbility {
 	
 	private final BendingAbility ability;
 	private final GuiSkillsNew gui;
+	private final UiComponentHandler handler;
+	
 	private Frame frame;
 	private UiComponent icon, title, overlay, level, invBg, treeView;
 	private ComponentAbilityKeybind keybind;
@@ -51,43 +54,52 @@ public class WindowAbility {
 	public WindowAbility(BendingAbility ability, GuiSkillsNew gui) {
 		this.ability = ability;
 		this.gui = gui;
+		this.handler = new UiComponentHandler();
 		
 		frame = new Frame();
 		frame.setDimensions(fromPercent(80, 80));
 		frame.setPosition(fromPercent((100 - 80) / 2, (100 - 80) / 2));
 		
+		overlay = new ComponentOverlay();
+		handler.add(overlay);
+		
 		title = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.ability." + ability.getName()));
 		title.setFrame(frame);
 		title.setPosition(StartingPosition.MIDDLE_TOP);
 		title.setScale(1.4f);
+		handler.add(title);
 		
 		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frame);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(0, title.height()).plus(fromPercent(0, -35)));
+		handler.add(icon);
 		
 		level = new ComponentAbilityIcon(ability);
 		level.setFrame(frame);
 		level.setPosition(StartingPosition.TOP_RIGHT);
+		handler.add(level);
 		
 		invBg = new ComponentImage(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
 		invBg.setPosition(StartingPosition.BOTTOM_RIGHT);
 		// Not setting frame since should be absolutely positioned
+		// Don't add invBg since it shouldn't be rendered
 		
 		treeView = new ComponentAbilityTree(ability);
 		treeView.setFrame(frame);
 		treeView.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		treeView.setOffset(Measurement.fromPercent(frame, 0, -30));
+		handler.add(treeView);
 		
 		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
 				() -> gui.useScroll(ability));
 		button.setFrame(frame);
 		button.setPosition(StartingPosition.MIDDLE_CENTER);
 		button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
+		handler.add(button);
 		
 		keybind = new ComponentAbilityKeybind(ability);
-		
-		overlay = new ComponentOverlay();
+		handler.add(keybind);
 		
 	}
 	
@@ -95,14 +107,7 @@ public class WindowAbility {
 		
 		button.setEnabled(gui.inventorySlots.getSlot(0).getHasStack());
 		
-		overlay.draw(partialTicks);
-		frame.draw(partialTicks);
-		title.draw(partialTicks);
-		icon.draw(partialTicks);
-		level.draw(partialTicks);
-		// invBg.draw(partialTicks);
-		treeView.draw(partialTicks);
-		button.draw(partialTicks);
+		handler.draw(partialTicks);
 		
 	}
 	

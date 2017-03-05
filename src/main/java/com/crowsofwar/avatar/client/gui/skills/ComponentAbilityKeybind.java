@@ -63,7 +63,8 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	@Override
 	protected void componentDraw(float partialTicks) {
-		// TODO Auto-generated method stub
+		
+		mc.fontRendererObj.drawString(currentText, 0, 0, color);
 		
 	}
 	
