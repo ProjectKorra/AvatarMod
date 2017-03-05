@@ -105,9 +105,9 @@ public class ComponentAbilityTree extends UiComponent {
 		
 		AbilityTreePath path = data.getPath();
 		if (path == AbilityTreePath.FIRST) {
-			drawTexturedModalRect(3 * 31 - 1, -13, 0, 206, 18, 18);
+			drawTexturedModalRect(3 * 31 - 2, -14, 0, 204, 20, 20);
 		} else if (path == AbilityTreePath.SECOND) {
-			drawTexturedModalRect(3 * 31 - 1, 11, 0, 206, 18, 18);
+			drawTexturedModalRect(3 * 31 - 2, 10, 0, 204, 20, 20);
 		}
 		
 	}
