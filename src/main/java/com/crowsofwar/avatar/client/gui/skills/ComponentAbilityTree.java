@@ -66,15 +66,27 @@ public class ComponentAbilityTree extends UiComponent {
 			drawTexturedModalRect(i * 31, 0, i * 16, reachedLevel[i] ? 240 : 224, 16, 16);
 			
 			// Draw bar
-			drawTexturedModalRect(i * 31 + 16, (16 - 8) / 2, 80, 240, 15, 8);
-			
-			if (reachedLevel[i]) {
+			if (i != reachedLevel.length - 1) {
+				drawTexturedModalRect(i * 31 + 16, (16 - 8) / 2, 80, 240, 15, 8);
 				
-				float xp = data.getLevel() == i ? data.getXp() : 100;
-				
-				drawTexturedModalRect(i * 31 + 16, (16 - 8) / 2, 80, 248, (int) (xp / 100 * 15), 8);
+				if (reachedLevel[i]) {
+					float xp = data.getLevel() == i ? data.getXp() : 100;
+					
+					drawTexturedModalRect(i * 31 + 16, (16 - 8) / 2, 80, 248, (int) (xp / 100 * 15), 8);
+				}
 			}
 			
+		}
+		
+		// Draw pipes between level III and the two different level IVs
+		drawTexturedModalRect(reachedLevel.length * 31 - 16, -8, 80, 224, 16, 16);
+		drawTexturedModalRect(reachedLevel.length * 31 - 16, 8, 80, 208, 16, 16);
+		
+		if (data.getLevel() >= 2) {
+			drawTexturedModalRect(reachedLevel.length * 31 - 16, -8, 96, 224, (int) (data.getXp() / 100 * 16),
+					16);
+			drawTexturedModalRect(reachedLevel.length * 31 - 16, 8, 96, 208, (int) (data.getXp() / 100 * 16),
+					16);
 		}
 		
 		if (data.getLevel() >= 3) {
