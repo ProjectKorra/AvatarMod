@@ -71,7 +71,6 @@ public class ComponentAbilityTree extends UiComponent {
 				
 				if (reachedLevel[i]) {
 					float xp = data.getLevel() == i ? data.getXp() : 100;
-					
 					drawTexturedModalRect(i * 31 + 16, (16 - 8) / 2, 80, 248, (int) (xp / 100 * 15), 8);
 				}
 			}
@@ -83,16 +82,25 @@ public class ComponentAbilityTree extends UiComponent {
 		drawTexturedModalRect(reachedLevel.length * 31 - 16, 8, 80, 208, 16, 16);
 		
 		if (data.getLevel() >= 2) {
-			drawTexturedModalRect(reachedLevel.length * 31 - 16, -8, 96, 224, (int) (data.getXp() / 100 * 16),
-					16);
-			drawTexturedModalRect(reachedLevel.length * 31 - 16, 8, 96, 208, (int) (data.getXp() / 100 * 16),
-					16);
+			float xp = data.getLevel() == 3 ? 100 : data.getXp();
+			
+			drawTexturedModalRect(reachedLevel.length * 31 - 16, -8, 96, 224, (int) (xp / 100 * 16), 16);
+			drawTexturedModalRect(reachedLevel.length * 31 - 16, 8, 96, 208, (int) (xp / 100 * 16), 16);
 		}
 		
-		if (data.getLevel() >= 3) {
-			drawTexturedModalRect(3 * 31, 0, data.getPath() == AbilityTreePath.FIRST ? 48 : 64, 240, 16, 16);
+		// Draw level IVs
+		boolean firstGray = data.getLevel() < 3 || data.getPath() != AbilityTreePath.FIRST;
+		boolean secondGray = data.getLevel() < 3 || data.getPath() != AbilityTreePath.SECOND;
+		
+		if (!firstGray) {
+			drawTexturedModalRect(3 * 31, -12, 48, 240, 16, 16);
 		} else {
-			drawTexturedModalRect(3 * 31, 0, 47, 224, 16, 16);
+			drawTexturedModalRect(3 * 31, -12, 47, 224, 16, 16);
+		}
+		if (!secondGray) {
+			drawTexturedModalRect(3 * 31, 12, 64, 240, 16, 16);
+		} else {
+			drawTexturedModalRect(3 * 31, 12, 47, 224, 16, 16);
 		}
 		
 	}
