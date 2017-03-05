@@ -81,7 +81,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	private void updateText() {
 		
 		// Keycode mapped to this ability - may be null!
-		Integer keymapping = currentKey();
+		Integer keymapping = editing ? editContents : currentKey();
 		
 		String key;
 		
@@ -118,10 +118,9 @@ public class ComponentAbilityKeybind extends UiComponent {
 				// Store on LMB
 				editing = false;
 				storeKey(editContents);
-			} else if (button == 2) {
+			} else if (button == 1) {
 				// Discard on RMB
 				editing = false;
-				storeKey(null);
 			} else {
 				// Accept MMB and extra mouse buttons
 				editContents = button - 100;
@@ -133,12 +132,15 @@ public class ComponentAbilityKeybind extends UiComponent {
 			editContents = hasKeybinding() ? currentKey() : null;
 		}
 		
+		updateText();
+		
 	}
 	
 	@Override
 	public void keyPressed(int keyCode) {
 		if (editing) {
 			editContents = keyCode;
+			updateText();
 		}
 	}
 	

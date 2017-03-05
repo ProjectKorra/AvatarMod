@@ -96,10 +96,12 @@ public abstract class UiComponent extends Gui {
 	
 	public final void mouseClicked(float mouseX, float mouseY, int button) {
 		Measurement min = coordinates().times(1f / scaleFactor());
-		Measurement max = min.plus(fromPixels(getFrame(), width(), height()).times(scaleFactor()));
+		Measurement max = min.plus(fromPixels(width(), height()));
 		
 		if (this instanceof ComponentAbilityKeybind) {
 			System.out.println(mouseX + ">" + min.xInPixels() + "," + max.xInPixels());
+			System.out.println(mouseY + ">" + min.yInPixels() + "," + max.yInPixels());
+			System.out.println("-----");
 		}
 		
 		if (mouseX >= min.xInPixels() && mouseX <= max.xInPixels() && mouseY >= min.yInPixels()
