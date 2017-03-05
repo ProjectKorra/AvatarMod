@@ -99,6 +99,9 @@ public class WindowAbility {
 		handler.add(button);
 		
 		keybind = new ComponentAbilityKeybind(ability);
+		keybind.setFrame(frame);
+		keybind.setPosition(StartingPosition.custom(0.5f, 0.5f, 1, 0.5f));
+		keybind.setOffset(Measurement.fromPercent(-4, 0));
 		handler.add(keybind);
 		
 	}

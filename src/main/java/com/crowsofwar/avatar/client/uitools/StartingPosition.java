@@ -73,4 +73,8 @@ public class StartingPosition {
 		return new StartingPosition(x, y, .5f, .5f);
 	}
 	
+	public static StartingPosition custom(float x, float y, float mx, float my) {
+		return new StartingPosition(x, y, mx, my);
+	}
+	
 }
