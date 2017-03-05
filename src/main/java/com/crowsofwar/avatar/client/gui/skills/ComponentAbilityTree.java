@@ -16,6 +16,11 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
+
+import org.lwjgl.input.Mouse;
+
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -33,9 +38,13 @@ public class ComponentAbilityTree extends UiComponent {
 	private final BendingAbility ability;
 	private final AbilityData data;
 	
+	private boolean wasDown;
+	
 	public ComponentAbilityTree(BendingAbility ability) {
 		this.ability = ability;
 		this.data = AvatarPlayerData.fetcher().fetch(mc.thePlayer).getAbilityData(ability);
+		
+		this.wasDown = false;
 	}
 	
 	@Override
@@ -109,6 +118,28 @@ public class ComponentAbilityTree extends UiComponent {
 		} else if (path == AbilityTreePath.SECOND) {
 			drawTexturedModalRect(3 * 31 - 2, 10, 0, 204, 20, 20);
 		}
+		
+		boolean down = Mouse.isButtonDown(0);
+		if (down && !wasDown) {
+			int mouseX = Mouse.getX(), mouseY = screenHeight() - Mouse.getY();
+			float minX = coordinates().xInPixels() + scaleFactor() * (48 + 30 + 16);
+			float maxX = minX + scaleFactor() * 16;
+			float minY1 = coordinates().yInPixels() + scaleFactor() * (-12);
+			float maxY1 = minY1 + scaleFactor() * 16;
+			float minY2 = coordinates().yInPixels() + scaleFactor() * (12);
+			float maxY2 = minY2 + scaleFactor() * 16;
+			
+			if (mouseX >= minX && mouseX <= maxX) {
+				if (mouseY >= minY1 && mouseY <= maxY1) {
+					System.out.println("Click 1");
+				}
+				if (mouseY >= minY2 && mouseY <= maxY2) {
+					System.out.println("Click 2");
+				}
+			}
+			
+		}
+		wasDown = down;
 		
 	}
 	
