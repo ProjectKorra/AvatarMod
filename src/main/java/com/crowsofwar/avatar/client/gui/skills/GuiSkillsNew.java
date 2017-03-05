@@ -24,6 +24,7 @@ import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
 
 import java.io.IOException;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
@@ -175,7 +176,15 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			}
 			
 		} else {
-			super.keyTyped(typedChar, keyCode);
+			
+			if (keyCode == Keyboard.KEY_A || keyCode == Keyboard.KEY_LEFT) {
+				scroll += 25;
+			} else if (keyCode == Keyboard.KEY_D || keyCode == Keyboard.KEY_RIGHT) {
+				scroll -= 25;
+			} else {
+				super.keyTyped(typedChar, keyCode);
+			}
+			
 		}
 	}
 	

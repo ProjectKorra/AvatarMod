@@ -143,6 +143,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 		
 		if (keyCode == Keyboard.KEY_ESCAPE) {
 			editing = false;
+			storeKey(null);
 			updateText();
 		} else if (editing) {
 			editContents = keyCode;
