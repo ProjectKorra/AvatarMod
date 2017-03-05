@@ -103,6 +103,13 @@ public class ComponentAbilityTree extends UiComponent {
 			drawTexturedModalRect(3 * 31, 12, 48, 224, 16, 16);
 		}
 		
+		AbilityTreePath path = data.getPath();
+		if (path == AbilityTreePath.FIRST) {
+			drawTexturedModalRect(3 * 31 - 1, -13, 0, 206, 18, 18);
+		} else if (path == AbilityTreePath.SECOND) {
+			drawTexturedModalRect(3 * 31 - 1, 11, 0, 206, 18, 18);
+		}
+		
 	}
 	
 }
