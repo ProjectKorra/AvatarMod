@@ -45,6 +45,7 @@ public class WindowAbility {
 	private final GuiSkillsNew gui;
 	private Frame frame;
 	private UiComponent icon, title, overlay, level, invBg, treeView;
+	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
 	public WindowAbility(BendingAbility ability, GuiSkillsNew gui) {
@@ -83,6 +84,8 @@ public class WindowAbility {
 		button.setFrame(frame);
 		button.setPosition(StartingPosition.MIDDLE_CENTER);
 		button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
+		
+		keybind = new ComponentAbilityKeybind(ability);
 		
 		overlay = new ComponentOverlay();
 		
