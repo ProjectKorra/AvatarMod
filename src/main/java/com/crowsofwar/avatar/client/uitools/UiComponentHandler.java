@@ -48,4 +48,8 @@ public class UiComponentHandler {
 			component.draw(partialTicks);
 	}
 	
+	public void click(float x, float y, int button) {
+		
+	}
+	
 }

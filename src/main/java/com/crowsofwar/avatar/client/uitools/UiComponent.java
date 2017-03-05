@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
@@ -66,7 +67,7 @@ public abstract class UiComponent extends Gui {
 		return componentHeight() * scale() * scaleFactor();
 	}
 	
-	public void draw(float partialTicks) {
+	public final void draw(float partialTicks) {
 		
 		transform.update(partialTicks);
 		color(1, 1, 1, 1);
@@ -90,6 +91,19 @@ public abstract class UiComponent extends Gui {
 	 * correct position.
 	 */
 	protected abstract void componentDraw(float partialTicks);
+	
+	public final void mouseClicked(float mouseX, float mouseY, int button) {
+		Measurement min = coordinates();
+		Measurement max = min.plus(fromPixels(getFrame(), width(), height()));
+		if (mouseX >= min.xInPixels() && mouseX <= max.xInPixels() && mouseY >= min.yInPixels()
+				&& mouseY <= max.yInPixels()) {
+			click(button);
+		}
+	}
+	
+	protected void click(int button) {
+		
+	}
 	
 	// Delegates to transform
 	

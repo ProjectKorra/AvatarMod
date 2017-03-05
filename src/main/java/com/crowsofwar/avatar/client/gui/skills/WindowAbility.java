@@ -128,6 +128,10 @@ public class WindowAbility {
 				&& mouseY < max.yInPixels();
 	}
 	
+	public void mouseClicked(float x, float y, int button) {
+		handler.click(x, y, button);
+	}
+	
 	public Frame getFrame() {
 		return frame;
 	}

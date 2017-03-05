@@ -169,6 +169,12 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		}
 	}
 	
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+		window.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
 	private boolean isWindowOpen() {
 		return window != null;
 	}
