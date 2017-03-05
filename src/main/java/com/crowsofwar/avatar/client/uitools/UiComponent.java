@@ -20,6 +20,8 @@ import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
+import com.crowsofwar.avatar.client.gui.skills.ComponentAbilityKeybind;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -93,8 +95,13 @@ public abstract class UiComponent extends Gui {
 	protected abstract void componentDraw(float partialTicks);
 	
 	public final void mouseClicked(float mouseX, float mouseY, int button) {
-		Measurement min = coordinates();
-		Measurement max = min.plus(fromPixels(getFrame(), width(), height()));
+		Measurement min = coordinates().times(1f / scaleFactor());
+		Measurement max = min.plus(fromPixels(getFrame(), width(), height()).times(scaleFactor()));
+		
+		if (this instanceof ComponentAbilityKeybind) {
+			System.out.println(mouseX + ">" + min.xInPixels() + "," + max.xInPixels());
+		}
+		
 		if (mouseX >= min.xInPixels() && mouseX <= max.xInPixels() && mouseY >= min.yInPixels()
 				&& mouseY <= max.yInPixels()) {
 			click(button);
