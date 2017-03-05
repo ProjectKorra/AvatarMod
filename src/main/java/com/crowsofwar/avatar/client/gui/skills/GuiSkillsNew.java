@@ -161,9 +161,12 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		if (isWindowOpen()
-				&& (keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode))) {
-			closeWindow();
+		if (isWindowOpen()) {
+			if (keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode)) {
+				closeWindow();
+			} else {
+				window.keyTyped(keyCode);
+			}
 		} else {
 			super.keyTyped(typedChar, keyCode);
 		}
@@ -172,7 +175,9 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		window.mouseClicked(mouseX, mouseY, mouseButton);
+		if (window != null) {
+			window.mouseClicked(mouseX, mouseY, mouseButton);
+		}
 	}
 	
 	private boolean isWindowOpen() {

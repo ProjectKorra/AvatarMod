@@ -132,6 +132,10 @@ public class WindowAbility {
 		handler.click(x, y, button);
 	}
 	
+	public void keyTyped(int key) {
+		handler.type(key);
+	}
+	
 	public Frame getFrame() {
 		return frame;
 	}

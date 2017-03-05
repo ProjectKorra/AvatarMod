@@ -105,6 +105,8 @@ public abstract class UiComponent extends Gui {
 		
 	}
 	
+	public void keyPressed(int keyCode) {}
+	
 	// Delegates to transform
 	
 	public Measurement coordinates() {

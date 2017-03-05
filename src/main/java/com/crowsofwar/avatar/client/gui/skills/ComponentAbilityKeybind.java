@@ -135,6 +135,13 @@ public class ComponentAbilityKeybind extends UiComponent {
 		
 	}
 	
+	@Override
+	public void keyPressed(int keyCode) {
+		if (editing) {
+			editContents = keyCode;
+		}
+	}
+	
 	private Integer currentKey() {
 		return CLIENT_CONFIG.keymappings.get(ability);
 	}

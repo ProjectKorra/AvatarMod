@@ -49,7 +49,13 @@ public class UiComponentHandler {
 	}
 	
 	public void click(float x, float y, int button) {
-		
+		for (UiComponent component : components)
+			component.mouseClicked(x, y, button);
+	}
+	
+	public void type(int key) {
+		for (UiComponent component : components)
+			component.keyPressed(key);
 	}
 	
 }
