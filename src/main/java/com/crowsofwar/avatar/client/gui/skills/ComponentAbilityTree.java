@@ -64,13 +64,13 @@ public class ComponentAbilityTree extends UiComponent {
 		// Draw levels I, II, III
 		for (int i = 0; i < reachedLevel.length; i++) {
 			drawTexturedModalRect(i * 31, 0, i * 16, reachedLevel[i] ? 240 : 224, 16, 16);
-			drawTexturedModalRect(i * 31 + 16, 0, 80, reachedLevel[i] ? 248 : 252, 15, 4);
+			drawTexturedModalRect(i * 31 + 16, (16 - 8) / 2, 80, reachedLevel[i] ? 248 : 240, 15, 8);
 		}
 		
 		if (data.getLevel() >= 3) {
-			drawTexturedModalRect(3 * 16, 0, data.getPath() == AbilityTreePath.FIRST ? 48 : 64, 240, 16, 16);
+			drawTexturedModalRect(3 * 31, 0, data.getPath() == AbilityTreePath.FIRST ? 48 : 64, 240, 16, 16);
 		} else {
-			drawTexturedModalRect(3 * 16, 0, 47, 224, 16, 16);
+			drawTexturedModalRect(3 * 31, 0, 47, 224, 16, 16);
 		}
 		
 	}

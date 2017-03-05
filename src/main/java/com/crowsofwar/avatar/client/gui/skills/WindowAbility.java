@@ -76,6 +76,7 @@ public class WindowAbility {
 		treeView = new ComponentAbilityTree(ability);
 		treeView.setFrame(frame);
 		treeView.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		treeView.setOffset(Measurement.fromPercent(frame, 0, -30));
 		
 		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
 				() -> gui.useScroll(ability));
