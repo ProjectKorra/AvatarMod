@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,10 @@ public class ComponentLongText extends UiComponent {
 	
 	private List<String> lines;
 	
+	/**
+	 * Creates a multiline text component. Note that only the x value of the
+	 * width will be used; y is ignored.
+	 */
 	public ComponentLongText(String text, Measurement width) {
 		this.text = text;
 		this.width = width;
@@ -41,7 +47,7 @@ public class ComponentLongText extends UiComponent {
 	
 	@Override
 	protected float componentWidth() {
-		return width.xInPixels();
+		return width.xInPixels() / scaleFactor();
 	}
 	
 	@Override
@@ -66,8 +72,8 @@ public class ComponentLongText extends UiComponent {
 		String[] words = text.split(" ");
 		for (String word : words) {
 			
-			String wouldBe = currentLine + word;
-			if (fr.getStringWidth(wouldBe) > width.xInPixels()) {
+			String wouldBe = currentLine + word + " ";
+			if (fr.getStringWidth(wouldBe) > width.xInPixels() / scaleFactor()) {
 				// The line is too long, push it onto lines and reset
 				lines.add(currentLine);
 				currentLine = "";
