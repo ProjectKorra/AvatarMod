@@ -23,6 +23,7 @@ import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
+import com.crowsofwar.avatar.client.uitools.ComponentLongText;
 import com.crowsofwar.avatar.client.uitools.ComponentOverlay;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
@@ -82,7 +83,8 @@ public class WindowAbility {
 		icon.setOffset(fromPixels(0, title.height()).plus(fromPercent(0, -35)));
 		handler.add(icon);
 		
-		description = new ComponentText(I18n.format("avatar.ability." + ability.getName() + ".desc"));
+		description = new ComponentLongText(I18n.format("avatar.ability." + ability.getName() + ".desc"),
+				fromPercent(frameLeft, 100, 0));
 		description.setFrame(frameLeft);
 		description.setPosition(StartingPosition.custom(0.5f, 0.5f, 0.5f, -1f));
 		handler.add(description);
