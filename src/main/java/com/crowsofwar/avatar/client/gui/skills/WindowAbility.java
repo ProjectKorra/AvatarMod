@@ -47,7 +47,7 @@ public class WindowAbility {
 	private final UiComponentHandler handler;
 	
 	private Frame frame;
-	private UiComponent icon, title, overlay, level, invBg, treeView;
+	private UiComponent icon, title, overlay, level, invBg, treeView, description;
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
@@ -60,23 +60,35 @@ public class WindowAbility {
 		frame.setDimensions(fromPercent(80, 80));
 		frame.setPosition(fromPercent((100 - 80) / 2, (100 - 80) / 2));
 		
+		Frame frameLeft = new Frame(frame);
+		frameLeft.setDimensions(fromPercent(frame, 30, 100));
+		
+		Frame frameRight = new Frame(frame);
+		frameRight.setDimensions(fromPercent(frame, 60, 100));
+		frameRight.setPosition(fromPercent(frame, 40, 0));
+		
 		overlay = new ComponentOverlay();
 		handler.add(overlay);
 		
 		title = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.ability." + ability.getName()));
-		title.setFrame(frame);
+		title.setFrame(frameLeft);
 		title.setPosition(StartingPosition.MIDDLE_TOP);
 		title.setScale(1.4f);
 		handler.add(title);
 		
 		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
-		icon.setFrame(frame);
+		icon.setFrame(frameLeft);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(0, title.height()).plus(fromPercent(0, -35)));
 		handler.add(icon);
 		
+		description = new ComponentText(I18n.format("avatar.ability." + ability.getName() + ".desc"));
+		description.setFrame(frameLeft);
+		description.setPosition(StartingPosition.custom(0.5f, 0.5f, 0.5f, -1f));
+		handler.add(description);
+		
 		level = new ComponentAbilityIcon(ability);
-		level.setFrame(frame);
+		level.setFrame(frameRight);
 		level.setPosition(StartingPosition.TOP_RIGHT);
 		handler.add(level);
 		
@@ -86,22 +98,22 @@ public class WindowAbility {
 		// Don't add invBg since it shouldn't be rendered
 		
 		treeView = new ComponentAbilityTree(ability);
-		treeView.setFrame(frame);
+		treeView.setFrame(frameRight);
 		treeView.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		treeView.setOffset(Measurement.fromPercent(frame, 0, -30));
+		treeView.setOffset(Measurement.fromPercent(frameRight, 0, -30));
 		handler.add(treeView);
 		
 		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
 				() -> gui.useScroll(ability));
-		button.setFrame(frame);
+		button.setFrame(frameRight);
 		button.setPosition(StartingPosition.MIDDLE_CENTER);
 		button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
 		handler.add(button);
 		
 		keybind = new ComponentAbilityKeybind(ability);
-		keybind.setFrame(frame);
+		keybind.setFrame(frameRight);
 		keybind.setPosition(StartingPosition.custom(0.5f, 0.5f, 1, 0.5f));
-		keybind.setOffset(Measurement.fromPercent(-4, 0));
+		keybind.setOffset(Measurement.fromPercent(frameRight, -4, 0));
 		handler.add(keybind);
 		
 	}
