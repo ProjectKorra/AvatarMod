@@ -54,6 +54,7 @@ avatar.donthavebending=[error]You haven't learned ${bending} yet. To get it, typ
 avatar.nochi=Not enough chi!
 
 avatar.ability.pickup_block=Pick Up Block
+avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
 avatar.ability.ravine=Ravine
 avatar.ability.earth_wall=Wall
 avatar.ability.mine_blocks=Mine Blocks
@@ -69,9 +70,13 @@ avatar.ability.water_bubble=Water Bubble
 avatar.ability.water_skate=Water Skate
 
 avatar.ability.air_gust=Air Gust
+avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
 avatar.ability.air_jump=Air Jump
+avatar.ability.air_jump.desc=Manipulate the air around you to boost off the ground. Perfect for catching up to an unsuspecting enemy.
 avatar.ability.airblade=Airblade
+avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh. Can be deadly in quick succession.
 avatar.ability.air_bubble=Air Bubble
+avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.
 
 avatar.ability.undefined=???
 
