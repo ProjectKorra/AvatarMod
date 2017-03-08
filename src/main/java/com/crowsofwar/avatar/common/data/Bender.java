@@ -55,6 +55,14 @@ public interface Bender {
 		return getEntity() instanceof EntityPlayer;
 	}
 	
+	default boolean isNull() {
+		return false;
+	}
+	
+	default BenderInfo getInfo() {
+		return new BenderInfo(this);
+	}
+	
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */

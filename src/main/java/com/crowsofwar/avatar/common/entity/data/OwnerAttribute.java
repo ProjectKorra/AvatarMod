@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity.data;
 import java.util.function.Consumer;
 
 import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.NoBender;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,7 +40,7 @@ public class OwnerAttribute {
 	private final DataParameter<BenderInfo> sync;
 	private final Entity entity;
 	private final World world;
-	private final Consumer<EntityPlayer> setOwnerCallback;
+	private final Consumer<EntityLivingBase> setOwnerCallback;
 	
 	private EntityLivingBase ownerCached;
 	
@@ -69,12 +70,12 @@ public class OwnerAttribute {
 	 *            Called when the owner has been changed.
 	 */
 	public OwnerAttribute(Entity entity, DataParameter<BenderInfo> sync,
-			Consumer<EntityPlayer> setOwnerCallback) {
+			Consumer<EntityLivingBase> setOwnerCallback) {
 		this.entity = entity;
 		this.sync = sync;
 		this.world = entity.worldObj;
 		this.setOwnerCallback = setOwnerCallback;
-		this.entity.getDataManager().register(sync, "");
+		this.entity.getDataManager().register(sync, new NoBender().getInfo());
 	}
 	
 	public void save(NBTTagCompound nbt) {
