@@ -26,7 +26,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public interface BenderEntity {
+public interface Bender {
 	
 	/**
 	 * For players, returns the username. For mobs, returns the mob's name (e.g.

@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
@@ -40,7 +41,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class AbilityContext {
 	
 	private final AvatarPlayerData data;
-	private final BenderEntity bender;
+	private final Bender bender;
 	
 	private final VectorI clientLookBlock;
 	private VectorI serverLookBlock;
@@ -67,8 +68,12 @@ public class AbilityContext {
 		return data;
 	}
 	
-	public BenderEntity getBenderEntity() {
+	public Bender getBender() {
 		return bender;
+	}
+	
+	public EntityLivingBase getBenderEntity() {
+		return bender.getEntity();
 	}
 	
 	public World getWorld() {

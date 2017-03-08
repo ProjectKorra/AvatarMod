@@ -22,7 +22,7 @@ import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -39,12 +39,12 @@ public class AbilityAirblade extends AirAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
 		if (!ctx.consumeChi(STATS_CONFIG.chiAirblade)) return;
 		
-		double x = player.rotationPitch;
+		double x = bender.rotationPitch;
 		boolean flip = false;
 		if (x < 0) {
 			x = -x;
@@ -54,8 +54,8 @@ public class AbilityAirblade extends AirAbility {
 		if (flip) pitch = -pitch;
 		pitch = Math.toRadians(pitch);
 		
-		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), pitch);
-		Vector spawnAt = Vector.getEntityPos(player).add(look).add(0, 1, 0);
+		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw), pitch);
+		Vector spawnAt = Vector.getEntityPos(bender).add(look).add(0, 1, 0);
 		spawnAt.add(look);
 		
 		float xp = ctx.getData().getAbilityData(this).getTotalXp();
@@ -64,7 +64,7 @@ public class AbilityAirblade extends AirAbility {
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 		airblade.velocity().set(look.times(25));
 		airblade.setDamage(STATS_CONFIG.airbladeSettings.damage * (1 + xp * .015f));
-		airblade.setOwner(player);
+		airblade.setOwner(bender);
 		world.spawnEntityInWorld(airblade);
 		
 	}

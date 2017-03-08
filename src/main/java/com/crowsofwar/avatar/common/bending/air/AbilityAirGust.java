@@ -23,7 +23,7 @@ import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -43,19 +43,19 @@ public class AbilityAirGust extends AirAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
 		if (!ctx.consumeChi(STATS_CONFIG.chiAirGust)) return;
 		
-		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
-				Math.toRadians(player.rotationPitch));
-		Vector pos = Vector.getEyePos(player);
+		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw),
+				Math.toRadians(bender.rotationPitch));
+		Vector pos = Vector.getEyePos(bender);
 		
 		EntityAirGust gust = new EntityAirGust(world);
 		gust.velocity().set(look.times(25));
 		gust.setPosition(pos.x(), pos.y(), pos.z());
-		gust.setOwner(player);
+		gust.setOwner(bender);
 		
 		world.spawnEntityInWorld(gust);
 	}

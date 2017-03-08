@@ -24,7 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
  * 
  * @author CrowsOfWar
  */
-public class PlayerBender implements BenderEntity {
+public class PlayerBender implements Bender {
 	
 	private final EntityPlayer player;
 	

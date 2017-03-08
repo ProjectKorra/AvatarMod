@@ -23,7 +23,7 @@ import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -39,7 +39,7 @@ public class AbilityAirBubble extends AirAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		AvatarPlayerData data = ctx.getData();
 		
@@ -50,8 +50,8 @@ public class AbilityAirBubble extends AirAbility {
 			float xp = data.getAbilityData(this).getTotalXp();
 			
 			EntityAirBubble bubble = new EntityAirBubble(world);
-			bubble.setOwner(player);
-			bubble.setPosition(player.posX, player.posY, player.posZ);
+			bubble.setOwner(bender);
+			bubble.setPosition(bender.posX, bender.posY, bender.posZ);
 			bubble.setHealth(15 + xp / 10f);
 			world.spawnEntityInWorld(bubble);
 			
