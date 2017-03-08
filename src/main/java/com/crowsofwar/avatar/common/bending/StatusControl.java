@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateStart;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowBubble;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**

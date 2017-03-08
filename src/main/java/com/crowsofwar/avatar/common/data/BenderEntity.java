@@ -14,40 +14,33 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
+package com.crowsofwar.avatar.common.data;
 
-package com.crowsofwar.avatar.common.bending.air;
-
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
 
 /**
- * 
+ * A wrapper for any mob/player that can bend to provide greater abstraction
+ * over useful methods.
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirJump extends AirAbility {
+public interface BenderEntity {
 	
 	/**
-	 * @param controller
+	 * For players, returns the username. For mobs, returns the mob's name (e.g.
+	 * Chicken).
 	 */
-	public AbilityAirJump() {
-		super("air_jump");
-	}
+	String getName();
 	
-	@Override
-	public void execute(AbilityContext ctx) {
-		
-		AvatarPlayerData data = ctx.getData();
-		
-		if (!data.hasStatusControl(StatusControl.AIR_JUMP) && ctx.consumeChi(STATS_CONFIG.chiAirJump)) {
-			
-			data.addStatusControl(StatusControl.AIR_JUMP);
-			data.sync();
-			
-		}
-	}
+	/**
+	 * Return this bender in entity form
+	 */
+	EntityLivingBase getEntity();
+	
+	/**
+	 * Get the world this entity is currently in
+	 */
+	World getWorld();
 	
 }

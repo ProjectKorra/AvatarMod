@@ -15,12 +15,10 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.common.bending;
+package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
@@ -42,7 +40,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class AbilityContext {
 	
 	private final AvatarPlayerData data;
-	private final EntityPlayer playerEntity;
+	private final BenderEntity bender;
 	
 	private final VectorI clientLookBlock;
 	private VectorI serverLookBlock;
@@ -69,12 +67,12 @@ public class AbilityContext {
 		return data;
 	}
 	
-	public EntityPlayer getPlayerEntity() {
-		return playerEntity;
+	public BenderEntity getBenderEntity() {
+		return bender;
 	}
 	
 	public World getWorld() {
-		return playerEntity == null ? null : playerEntity.worldObj;
+		return bender == null ? null : bender.getWorld();
 	}
 	
 	public VectorI getClientLookBlock() {
