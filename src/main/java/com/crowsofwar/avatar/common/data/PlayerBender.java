@@ -18,41 +18,23 @@ package com.crowsofwar.avatar.common.data;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 /**
- * A wrapper for any mob/player that can bend to provide greater abstraction
- * over useful methods.
+ * 
  * 
  * @author CrowsOfWar
  */
-public interface BenderEntity {
+public class PlayerBender implements BenderEntity {
 	
-	/**
-	 * For players, returns the username. For mobs, returns the mob's name (e.g.
-	 * Chicken).
-	 */
-	default String getName() {
-		return getEntity().getName();
+	private final EntityPlayer player;
+	
+	public PlayerBender(EntityPlayer player) {
+		this.player = player;
 	}
 	
-	/**
-	 * Return this bender in entity form
-	 */
-	EntityLivingBase getEntity();
-	
-	/**
-	 * Get the world this entity is currently in
-	 */
-	default World getWorld() {
-		return getEntity().worldObj;
-	}
-	
-	/**
-	 * Returns whether this bender is a player
-	 */
-	default boolean isPlayer() {
-		return getEntity() instanceof EntityPlayer;
+	@Override
+	public EntityLivingBase getEntity() {
+		return player;
 	}
 	
 }

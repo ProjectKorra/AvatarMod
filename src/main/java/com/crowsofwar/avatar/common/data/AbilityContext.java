@@ -57,7 +57,7 @@ public class AbilityContext {
 	 */
 	public AbilityContext(AvatarPlayerData data, Raytrace.Result raytrace) {
 		this.data = data;
-		this.playerEntity = data.getPlayerEntity();
+		this.bender = new PlayerBender(data.getPlayerEntity());
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
 		this.lookPos = raytrace.getPosPrecise();
