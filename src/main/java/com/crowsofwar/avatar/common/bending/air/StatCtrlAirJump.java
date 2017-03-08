@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
@@ -51,32 +51,32 @@ public class StatCtrlAirJump extends StatusControl {
 	@Override
 	public boolean execute(AbilityContext context) {
 		
-		EntityPlayer player = context.getPlayerEntity();
+		EntityLivingBase bender = context.getBenderEntity();
 		
-		if (player.onGround) {
+		if (bender.onGround) {
 			
 			float xp = 0;
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(bender);
 			if (data != null) {
 				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_JUMP);
 				xp = abilityData.getTotalXp();
 				abilityData.addXp(SKILLS_CONFIG.airJump);
 			}
 			
-			Vector rotations = new Vector(Math.toRadians((player.rotationPitch) / 1),
-					Math.toRadians(player.rotationYaw), 0);
+			Vector rotations = new Vector(Math.toRadians((bender.rotationPitch) / 1),
+					Math.toRadians(bender.rotationYaw), 0);
 			
 			Vector velocity = rotations.toRectangular();
 			velocity.setY(Math.pow(velocity.y(), .1));
 			velocity.mul(1 + xp / 250.0);
-			player.addVelocity(velocity.x(), velocity.y(), velocity.z());
-			((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
+			bender.addVelocity(velocity.x(), velocity.y(), velocity.z());
+			((EntityPlayerMP) bender).connection.sendPacket(new SPacketEntityVelocity(bender));
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(player.worldObj, ParticleType.AIR, 2, 6, new Vector(player),
+			spawner.spawnParticles(bender.worldObj, ParticleType.AIR, 2, 6, new Vector(bender),
 					new Vector(1, 0, 1));
 			
-			AirJumpParticleSpawner.spawnParticles(player);
+			AirJumpParticleSpawner.spawnParticles(bender);
 			
 			// Find approximate maximum distance. In actuality, a bit less, due
 			// to max velocity and drag
@@ -90,12 +90,12 @@ public class StatCtrlAirJump extends StatusControl {
 			fallAbsorption -= 2; // compensate that it may be a bit extra
 			data.setFallAbsorption(fallAbsorption);
 			
-			player.worldObj.playSound(null, new BlockPos(player), SoundEvents.ENTITY_BAT_TAKEOFF,
+			bender.worldObj.playSound(null, new BlockPos(bender), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
 			
 		}
 		
-		return player.onGround;
+		return bender.onGround;
 		
 	}
 	

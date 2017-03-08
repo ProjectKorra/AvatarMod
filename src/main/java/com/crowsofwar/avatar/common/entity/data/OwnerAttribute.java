@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity.data;
 import java.util.function.Consumer;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -119,7 +120,7 @@ public class OwnerAttribute {
 	 * @param owner
 	 *            Owner to set to. Can set to null...
 	 */
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		this.ownerCached = owner;
 		setOwnerName(owner == null ? "" : owner.getName());
 		

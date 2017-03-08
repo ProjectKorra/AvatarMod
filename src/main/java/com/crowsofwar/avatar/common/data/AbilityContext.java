@@ -164,7 +164,7 @@ public class AbilityContext {
 		}
 		
 		if (bender.isPlayer()) {
-			AvatarMod.network.sendTo(new PacketCNotEnoughChi(), (EntityPlayerMP) playerEntity);
+			AvatarMod.network.sendTo(new PacketCNotEnoughChi(), (EntityPlayerMP) bender.getEntity());
 		}
 		
 		return false;
