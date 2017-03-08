@@ -43,4 +43,6 @@ public interface BenderEntity {
 	 */
 	World getWorld();
 	
+	boolean isPlayer();
+	
 }

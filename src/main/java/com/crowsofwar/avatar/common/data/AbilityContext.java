@@ -131,7 +131,7 @@ public class AbilityContext {
 	public VectorI verifyClientLookBlock(double raycastDist, double maxDeviation) {
 		if (clientLookBlock == null) return null;
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookBlock;
-		Result res = Raytrace.getTargetBlock(playerEntity, raycastDist);
+		Result res = Raytrace.getTargetBlock(bender.getEntity(), raycastDist);
 		if (!res.hitSomething()) return null;
 		this.serverLookBlock = res.getPos();
 		double dist = serverLookBlock.dist(clientLookBlock);
@@ -157,7 +157,11 @@ public class AbilityContext {
 			chi.changeAvailableChi(-amount);
 			return true;
 		}
-		AvatarMod.network.sendTo(new PacketCNotEnoughChi(), (EntityPlayerMP) playerEntity);
+		
+		if (bender.isPlayer()) {
+			AvatarMod.network.sendTo(new PacketCNotEnoughChi(), (EntityPlayerMP) playerEntity);
+		}
+		
 		return false;
 	}
 	
