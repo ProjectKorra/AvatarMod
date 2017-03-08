@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import java.util.function.Consumer;
 
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.NoBender;
 
@@ -131,6 +132,10 @@ public class OwnerAttribute {
 			setOwnerCallback.accept(owner);
 		}
 		
+	}
+	
+	public Bender getOwnerBender() {
+		return Bender.create(getOwner());
 	}
 	
 	/**

@@ -25,7 +25,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -75,7 +75,11 @@ public abstract class AvatarEntity extends Entity {
 				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
 	}
 	
-	public EntityPlayer getOwner() {
+	/**
+	 * Get the "owner", or the creator, of this entity. Most AvatarEntities have
+	 * an owner, though some do not.
+	 */
+	public EntityLivingBase getOwner() {
 		return null;
 	}
 	

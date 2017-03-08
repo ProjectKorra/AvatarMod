@@ -63,6 +63,8 @@ public interface Bender {
 		return new BenderInfo(this);
 	}
 	
+	BendingData getData();
+	
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */

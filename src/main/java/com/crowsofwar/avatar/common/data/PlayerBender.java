@@ -37,4 +37,9 @@ public class PlayerBender implements Bender {
 		return player;
 	}
 	
+	@Override
+	public BendingData getData() {
+		return AvatarPlayerData.fetcher().fetch(player);
+	}
+	
 }

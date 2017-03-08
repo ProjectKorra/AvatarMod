@@ -23,18 +23,19 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
@@ -45,8 +46,8 @@ import net.minecraft.world.World;
  */
 public class EntityAirblade extends AvatarEntity {
 	
-	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityAirblade.class,
-			DataSerializers.STRING);
+	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityAirblade.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	
 	private final OwnerAttribute ownerAttr;
 	private float damage;
@@ -86,7 +87,7 @@ public class EntityAirblade extends AvatarEntity {
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 				
 				if (getOwner() != null) {
-					AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+					BendingData data = getOwnerBender().getData();
 					data.getAbilityData(BendingAbility.ABILITY_AIRBLADE).addXp(SKILLS_CONFIG.airbladeHit);
 				}
 				
@@ -97,12 +98,17 @@ public class EntityAirblade extends AvatarEntity {
 		
 	}
 	
-	public EntityPlayer getOwner() {
+	@Override
+	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		ownerAttr.setOwner(owner);
+	}
+	
+	public Bender getOwnerBender() {
+		return ownerAttr.getOwnerBender();
 	}
 	
 	public void setDamage(float damage) {

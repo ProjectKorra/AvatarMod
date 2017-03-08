@@ -51,4 +51,9 @@ public class NoBender implements Bender {
 		return true;
 	}
 	
+	@Override
+	public BendingData getData() {
+		return null;
+	}
+	
 }
