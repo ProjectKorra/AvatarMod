@@ -55,4 +55,11 @@ public interface Bender {
 		return getEntity() instanceof EntityPlayer;
 	}
 	
+	/**
+	 * Creates an appropriate Bender instance for that entity
+	 */
+	public static Bender create(EntityLivingBase entity) {
+		return new PlayerBender((EntityPlayer) entity);
+	}
+	
 }

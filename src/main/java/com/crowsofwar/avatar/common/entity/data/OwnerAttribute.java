@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import java.util.function.Consumer;
 
+import com.crowsofwar.avatar.common.data.BenderInfo;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,12 +36,12 @@ import net.minecraft.world.World;
  */
 public class OwnerAttribute {
 	
-	private final DataParameter<String> sync;
+	private final DataParameter<BenderInfo> sync;
 	private final Entity entity;
 	private final World world;
 	private final Consumer<EntityPlayer> setOwnerCallback;
 	
-	private EntityPlayer ownerCached;
+	private EntityLivingBase ownerCached;
 	
 	/**
 	 * Create a new owner attribute.
@@ -50,7 +52,7 @@ public class OwnerAttribute {
 	 *            Synchronization key. You don't have to register to entity's
 	 *            data manager.
 	 */
-	public OwnerAttribute(Entity entity, DataParameter<String> sync) {
+	public OwnerAttribute(Entity entity, DataParameter<BenderInfo> sync) {
 		this(entity, sync, player -> {
 		});
 	}
@@ -66,7 +68,7 @@ public class OwnerAttribute {
 	 * @param setOwnerCallback
 	 *            Called when the owner has been changed.
 	 */
-	public OwnerAttribute(Entity entity, DataParameter<String> sync,
+	public OwnerAttribute(Entity entity, DataParameter<BenderInfo> sync,
 			Consumer<EntityPlayer> setOwnerCallback) {
 		this.entity = entity;
 		this.sync = sync;
@@ -76,20 +78,20 @@ public class OwnerAttribute {
 	}
 	
 	public void save(NBTTagCompound nbt) {
-		nbt.setString("Owner", getOwnerName());
+		getOwnerInfo().writeToNbt(nbt);
 	}
 	
 	public void load(NBTTagCompound nbt) {
-		setOwnerName(nbt.getString("Owner"));
+		setOwnerInfo(BenderInfo.readFromNbt(nbt));
 		getOwner(); // Look up owner in world
 	}
 	
-	private String getOwnerName() {
+	private BenderInfo getOwnerInfo() {
 		return entity.getDataManager().get(sync);
 	}
 	
-	private void setOwnerName(String name) {
-		entity.getDataManager().set(sync, name);
+	private void setOwnerInfo(BenderInfo info) {
+		entity.getDataManager().set(sync, info);
 	}
 	
 	/**
@@ -100,13 +102,13 @@ public class OwnerAttribute {
 	 * look for a player in the world with that name. Will then call
 	 * {@link #setOwner(EntityPlayer)}.
 	 */
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		
 		if (isCacheInvalid()) {
-			// Slightly cosmetic, but only call setOwner(...) if the player was
-			// found
-			EntityPlayer player = world.getPlayerEntityByName(getOwnerName());
-			if (player != null) setOwner(player);
+			EntityLivingBase entity = getOwnerInfo().find(world).getEntity();
+			if (entity != null) {
+				ownerCached = entity;
+			}
 		}
 		
 		return ownerCached;
@@ -122,7 +124,7 @@ public class OwnerAttribute {
 	 */
 	public void setOwner(EntityLivingBase owner) {
 		this.ownerCached = owner;
-		setOwnerName(owner == null ? "" : owner.getName());
+		setOwnerInfo(new BenderInfo(owner));
 		
 		if (owner != null) {
 			setOwnerCallback.accept(owner);
@@ -142,8 +144,8 @@ public class OwnerAttribute {
 	 * <li>There is not supposed to be an owner
 	 */
 	private boolean isCacheInvalid() {
-		if (ownerCached == null || ownerCached.isDead || !ownerCached.getName().equals(getOwnerName())
-				|| getOwnerName() == null) {
+		if (ownerCached == null || ownerCached.isDead || !ownerCached.getName().equals(getOwnerInfo())
+				|| getOwnerInfo() == null) {
 			ownerCached = null;
 			return true;
 		}

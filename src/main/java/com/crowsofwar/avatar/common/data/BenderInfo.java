@@ -22,6 +22,7 @@ import java.util.UUID;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -35,6 +36,10 @@ public class BenderInfo {
 	private final boolean player;
 	private final UUID id;
 	
+	public BenderInfo(EntityLivingBase entity) {
+		this(Bender.create(entity));
+	}
+	
 	public BenderInfo(Bender bender) {
 		player = bender.isPlayer();
 		if (player) {
@@ -44,9 +49,17 @@ public class BenderInfo {
 		}
 	}
 	
-	private BenderInfo(boolean player, UUID id) {
+	public BenderInfo(boolean player, UUID id) {
 		this.player = player;
 		this.id = id;
+	}
+	
+	public boolean isPlayer() {
+		return player;
+	}
+	
+	public UUID getId() {
+		return id;
 	}
 	
 	public Bender find(World world) {

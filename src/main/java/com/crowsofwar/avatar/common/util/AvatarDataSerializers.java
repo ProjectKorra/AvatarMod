@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.util;
 
 import java.io.IOException;
 
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
@@ -71,10 +72,30 @@ public class AvatarDataSerializers {
 			return new DataParameter<>(id, this);
 		}
 	};
+	public static final DataSerializer<BenderInfo> SERIALIZER_BENDER = new AvatarSerializer<BenderInfo>() {
+		
+		@Override
+		public void write(PacketBuffer buf, BenderInfo info) {
+			buf.writeBoolean(info.isPlayer());
+			buf.writeUuid(info.getId());
+		}
+		
+		@Override
+		public BenderInfo read(PacketBuffer buf) throws IOException {
+			return new BenderInfo(buf.readBoolean(), buf.readUuid());
+		}
+		
+		@Override
+		public DataParameter<BenderInfo> createKey(int id) {
+			return new DataParameter<>(id, this);
+		}
+		
+	};
 	
 	public static void register() {
 		DataSerializers.registerSerializer(SERIALIZER_BLOCK);
 		DataSerializers.registerSerializer(SERIALIZER_VECTOR);
+		DataSerializers.registerSerializer(SERIALIZER_BENDER);
 	}
 	
 	private static abstract class AvatarSerializer<T> implements DataSerializer<T> {
