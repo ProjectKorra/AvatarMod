@@ -20,11 +20,15 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -44,8 +48,8 @@ import net.minecraft.world.World;
  */
 public class EntityAirBubble extends AvatarEntity {
 	
-	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityAirBubble.class,
-			DataSerializers.STRING);
+	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityAirBubble.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityAirBubble.class,
@@ -70,11 +74,12 @@ public class EntityAirBubble extends AvatarEntity {
 		dataManager.register(SYNC_HEALTH, 20f);
 	}
 	
-	public EntityPlayer getOwner() {
+	@Override
+	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		ownerAttr.setOwner(owner);
 	}
 	
@@ -82,10 +87,10 @@ public class EntityAirBubble extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		EntityPlayer owner = getOwner();
+		Bender owner = ownerAttr.getOwnerBender();
 		if (owner != null) {
-			setPosition(owner.posX, owner.posY, owner.posZ);
-			if (owner.isDead) {
+			setPosition(owner.x(), owner.y(), owner.z());
+			if (owner.isDead()) {
 				dissipateSmall();
 			}
 			

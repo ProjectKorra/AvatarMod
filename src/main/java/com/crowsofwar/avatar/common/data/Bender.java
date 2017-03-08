@@ -17,6 +17,8 @@
 package com.crowsofwar.avatar.common.data;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -65,11 +67,31 @@ public interface Bender {
 	
 	BendingData getData();
 	
+	default double x() {
+		return getEntity().posX;
+	}
+	
+	default double y() {
+		return getEntity().posY;
+	}
+	
+	default double z() {
+		return getEntity().posZ;
+	}
+	
+	default boolean isDead() {
+		return getEntity().isDead;
+	}
+	
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */
 	public static Bender create(EntityLivingBase entity) {
 		return new PlayerBender((EntityPlayer) entity);
+	}
+	
+	default IAttributeInstance getEntityAttribute(IAttribute movementSpeed) {
+		return getEntity().getEntityAttribute(attribute);
 	}
 	
 }
