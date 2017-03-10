@@ -73,38 +73,36 @@ public class ComponentAbilityTree extends UiComponent {
 		
 		// Draw levels I, II, III
 		for (int i = 0; i < reachedLevel.length; i++) {
-			drawTexturedModalRect(i * 31, 0, i * 16, reachedLevel[i] ? 240 : 224, 16, 16);
+			drawTexturedModalRect(i * 33, 0, i * 18 + 166, reachedLevel[i] ? 220 : 202, 18, 18);
 			
 			// Draw bar
 			if (i != reachedLevel.length - 1) {
-				drawTexturedModalRect(i * 31 + 16, (16 - 8) / 2, 80, 240, 15, 8);
+				drawTexturedModalRect(i * 33 + 18, (18 - 8) / 2, 80, 240, 15, 8);
 				
 				if (reachedLevel[i]) {
 					float xp = data.getLevel() == i ? data.getXp() : 100;
-					int x = i * 31 + 16;
-					int y = (16 - 8) / 2;
-					drawTexturedModalRect(x, y, 80, 248, (int) (xp / 100 * 15), 8);
+					drawTexturedModalRect(i * 33 + 18, (18 - 8) / 2, 80, 248, (int) (xp / 100 * 15), 8);
 					
 				}
 			}
 			
 			if (reachedLevel[i]) {
 				slot1.setOffset(Measurement.fromPixels(//
-						coordinates().xInPixels() + i * 31 * scaleFactor(), //
+						coordinates().xInPixels() + i * 33 * scaleFactor(), //
 						coordinates().yInPixels() + 0));
 			}
 			
 		}
 		
 		// Draw pipes between level III and the two different level IVs
-		drawTexturedModalRect(reachedLevel.length * 31 - 16, -8, 80, 224, 16, 16);
-		drawTexturedModalRect(reachedLevel.length * 31 - 16, 8, 80, 208, 16, 16);
+		drawTexturedModalRect(reachedLevel.length * 33 - 16, -8, 80, 224, 16, 16);
+		drawTexturedModalRect(reachedLevel.length * 33 - 16, 8, 80, 208, 16, 16);
 		
 		if (data.getLevel() >= 2) {
 			float xp = data.getLevel() == 3 ? 100 : data.getXp();
 			
-			drawTexturedModalRect(reachedLevel.length * 31 - 16, -8, 96, 224, (int) (xp / 100 * 16), 16);
-			drawTexturedModalRect(reachedLevel.length * 31 - 16, 8, 96, 208, (int) (xp / 100 * 16), 16);
+			drawTexturedModalRect(reachedLevel.length * 33 - 16, -8, 96, 224, (int) (xp / 100 * 16), 16);
+			drawTexturedModalRect(reachedLevel.length * 33 - 16, 8, 96, 208, (int) (xp / 100 * 16), 16);
 		}
 		
 		// Draw level IVs
@@ -112,19 +110,19 @@ public class ComponentAbilityTree extends UiComponent {
 		boolean secondGray = data.getLevel() < 3 || data.getPath() != AbilityTreePath.SECOND;
 		
 		if (!firstGray) {
-			drawTexturedModalRect(3 * 31, -12, 48, 240, 16, 16);
+			drawTexturedModalRect(3 * 33, -12, 220, 220, 18, 18);
 		} else {
-			drawTexturedModalRect(3 * 31, -12, 48, 224, 16, 16);
+			drawTexturedModalRect(3 * 33, -12, 220, 203, 18, 18);
 		}
 		if (!secondGray) {
-			drawTexturedModalRect(3 * 31, 12, 64, 240, 16, 16);
+			drawTexturedModalRect(3 * 33, 12, 238, 240, 18, 18);
 		} else {
-			drawTexturedModalRect(3 * 31, 12, 48, 224, 16, 16);
+			drawTexturedModalRect(3 * 33, 12, 238, 202, 18, 18);
 		}
 		
-		int level4FirstX = 3 * 31 - 2;
+		int level4FirstX = 3 * 33 - 2;
 		int level4FirstY = -14;
-		int level4SecondX = 3 * 31 - 2;
+		int level4SecondX = 3 * 33 - 2;
 		int level4SecondY = 10;
 		
 		if (data.getLevel() == 2) {
