@@ -102,20 +102,19 @@ public class WindowAbility {
 		
 		slot1 = new ComponentInventorySlots(gui.inventorySlots, 0);
 		slot1.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
-		slot1.setPosition(StartingPosition.MIDDLE_CENTER);
-		handler.add(slot1);
-		
 		slot2 = new ComponentInventorySlots(gui.inventorySlots, 0);
 		slot2.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
-		slot2.setPosition(StartingPosition.MIDDLE_CENTER);
 		slot2.setOffset(Measurement.fromPixels(frameRight, slot1.width() + 10, 0));
-		handler.add(slot2);
+		// Add slots later so on top of treeView
 		
 		treeView = new ComponentAbilityTree(ability, slot1, slot2);
 		treeView.setFrame(frameRight);
 		treeView.setPosition(StartingPosition.TOP_LEFT);
 		treeView.setOffset(Measurement.fromPercent(frameRight, 0, 20));
 		handler.add(treeView);
+		
+		handler.add(slot1);
+		handler.add(slot2);
 		
 		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
 				() -> gui.useScroll(ability));

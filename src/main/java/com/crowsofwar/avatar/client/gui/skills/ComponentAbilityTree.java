@@ -23,6 +23,7 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -74,6 +75,8 @@ public class ComponentAbilityTree extends UiComponent {
 		};
 		// @formatter:on
 		
+		slot2.setVisible(data.getLevel() == 2);
+		
 		// Draw levels I, II, III
 		for (int i = 0; i < reachedLevel.length; i++) {
 			drawTexturedModalRect(i * 31, 0, i * 16, reachedLevel[i] ? 240 : 224, 16, 16);
@@ -84,8 +87,17 @@ public class ComponentAbilityTree extends UiComponent {
 				
 				if (reachedLevel[i]) {
 					float xp = data.getLevel() == i ? data.getXp() : 100;
-					drawTexturedModalRect(i * 31 + 16, (16 - 8) / 2, 80, 248, (int) (xp / 100 * 15), 8);
+					int x = i * 31 + 16;
+					int y = (16 - 8) / 2;
+					drawTexturedModalRect(x, y, 80, 248, (int) (xp / 100 * 15), 8);
+					
 				}
+			}
+			
+			if (reachedLevel[i]) {
+				slot1.setOffset(Measurement.fromPixels(//
+						coordinates().xInPixels() + i * 31 * scaleFactor(), //
+						coordinates().yInPixels() + 0));
 			}
 			
 		}
