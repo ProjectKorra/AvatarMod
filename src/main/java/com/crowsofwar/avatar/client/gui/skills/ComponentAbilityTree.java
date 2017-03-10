@@ -49,7 +49,7 @@ public class ComponentAbilityTree extends UiComponent {
 	
 	@Override
 	protected float componentWidth() {
-		return 64;
+		return 64 + 30 + 16;
 	}
 	
 	@Override

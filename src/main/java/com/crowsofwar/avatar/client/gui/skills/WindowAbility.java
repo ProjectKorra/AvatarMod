@@ -101,15 +101,16 @@ public class WindowAbility {
 		
 		treeView = new ComponentAbilityTree(ability);
 		treeView.setFrame(frameRight);
-		treeView.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		treeView.setOffset(Measurement.fromPercent(frameRight, 0, -30));
+		treeView.setPosition(StartingPosition.TOP_LEFT);
+		treeView.setOffset(Measurement.fromPercent(frameRight, 0, 20));
 		handler.add(treeView);
 		
 		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
 				() -> gui.useScroll(ability));
 		button.setFrame(frameRight);
-		button.setPosition(StartingPosition.MIDDLE_CENTER);
-		button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
+		button.setPosition(StartingPosition.TOP_LEFT);
+		// button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
+		button.setOffset(treeView.offset().plus(fromPixels(frameRight, treeView.width() + 100, 0)));
 		handler.add(button);
 		
 		keybind = new ComponentAbilityKeybind(ability);
