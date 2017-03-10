@@ -90,6 +90,7 @@ public class ComponentAbilityTree extends UiComponent {
 				slot1.setOffset(Measurement.fromPixels(//
 						coordinates().xInPixels() + i * 33 * scaleFactor(), //
 						coordinates().yInPixels() + 0));
+				slot1.useTexture(AvatarUiTextures.skillsGui, 166 + i * 18, 238, 18, 18);
 			}
 			
 		}
@@ -112,18 +113,18 @@ public class ComponentAbilityTree extends UiComponent {
 		if (!firstGray) {
 			drawTexturedModalRect(3 * 33, -12, 220, 220, 18, 18);
 		} else {
-			drawTexturedModalRect(3 * 33, -12, 220, 203, 18, 18);
+			drawTexturedModalRect(3 * 33, -12, 220, 202, 18, 18);
 		}
 		if (!secondGray) {
-			drawTexturedModalRect(3 * 33, 12, 238, 240, 18, 18);
+			drawTexturedModalRect(3 * 33, 12, 238, 220, 18, 18);
 		} else {
 			drawTexturedModalRect(3 * 33, 12, 238, 202, 18, 18);
 		}
 		
-		int level4FirstX = 3 * 33 - 2;
-		int level4FirstY = -14;
-		int level4SecondX = 3 * 33 - 2;
-		int level4SecondY = 10;
+		int level4FirstX = 3 * 33;
+		int level4FirstY = -12;
+		int level4SecondX = 3 * 33;
+		int level4SecondY = 12;
 		
 		if (data.getLevel() == 2) {
 			
@@ -133,9 +134,12 @@ public class ComponentAbilityTree extends UiComponent {
 			float s2y = coordinates().yInPixels() + level4SecondY * scaleFactor();
 			
 			slot1.setOffset(Measurement.fromPixels(s1x, s1y));
+			slot1.useTexture(AvatarUiTextures.skillsGui, 220, 238, 18, 18);
 			slot1.setVisible(true);
+			slot2.useTexture(AvatarUiTextures.skillsGui, 238, 238, 18, 18);
 			slot2.setOffset(Measurement.fromPixels(s2x, s2y));
 			slot2.setVisible(true);
+			
 		}
 		
 	}
