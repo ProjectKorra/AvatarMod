@@ -122,6 +122,13 @@ public class ContainerSkillsGui extends Container {
 			player.dropItem(scroll, false);
 			inventory.setInventorySlotContents(0, field_190927_a);
 		}
+		
+		ItemStack scroll2 = inventory.getStackInSlot(1);
+		if (scroll2 != field_190927_a) {
+			player.dropItem(scroll2, false);
+			inventory.setInventorySlotContents(1, field_190927_a);
+		}
+		
 	}
 	
 	public int getInvIndex() {
