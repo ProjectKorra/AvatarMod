@@ -49,6 +49,7 @@ public class WindowAbility {
 	
 	private Frame frame;
 	private UiComponent icon, title, overlay, level, invBg, treeView, description;
+	private ComponentInventorySlots slot1, slot2;
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
@@ -99,7 +100,18 @@ public class WindowAbility {
 		// Not setting frame since should be absolutely positioned
 		// Don't add invBg since it shouldn't be rendered
 		
-		treeView = new ComponentAbilityTree(ability);
+		slot1 = new ComponentInventorySlots(gui.inventorySlots, 0);
+		slot1.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
+		slot1.setPosition(StartingPosition.MIDDLE_CENTER);
+		handler.add(slot1);
+		
+		slot2 = new ComponentInventorySlots(gui.inventorySlots, 0);
+		slot2.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
+		slot2.setPosition(StartingPosition.MIDDLE_CENTER);
+		slot2.setOffset(Measurement.fromPixels(frameRight, slot1.width() + 10, 0));
+		handler.add(slot2);
+		
+		treeView = new ComponentAbilityTree(ability, slot1, slot2);
 		treeView.setFrame(frameRight);
 		treeView.setPosition(StartingPosition.TOP_LEFT);
 		treeView.setOffset(Measurement.fromPercent(frameRight, 0, 20));

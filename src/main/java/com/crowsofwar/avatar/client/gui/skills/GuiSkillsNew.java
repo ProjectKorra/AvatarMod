@@ -60,7 +60,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	private WindowAbility window;
 	private Frame frame;
 	
-	private ComponentInventorySlots scrollSlot, inventory, hotbar;
+	private ComponentInventorySlots inventory, hotbar;
 	
 	public GuiSkillsNew() {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, BendingType.AIRBENDING));
@@ -76,11 +76,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 		
 		tabs = new AbilityTab[] { new AbilityTab(ABILITY_AIR_BUBBLE), new AbilityTab(ABILITY_AIR_GUST),
 				new AbilityTab(ABILITY_AIR_JUMP), new AbilityTab(ABILITY_AIRBLADE) };
-		
-		scrollSlot = new ComponentInventorySlots(inventorySlots, 0);
-		scrollSlot.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
-		scrollSlot.setPosition(StartingPosition.MIDDLE_CENTER);
-		scrollSlot.setVisible(false);
 		
 		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(),
 				skillsContainer.getInvIndex() + 26);
@@ -156,7 +151,6 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 			window.draw(partialTicks);
 		}
 		
-		scrollSlot.draw(partialTicks);
 		inventory.draw(partialTicks);
 		hotbar.draw(partialTicks);
 		
@@ -202,22 +196,14 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	private void openWindow(AbilityTab tab) {
 		window = new WindowAbility(tab.getAbility(), this);
-		scrollSlot.setVisible(true);
 		inventory.setVisible(true);
 		hotbar.setVisible(true);
-		scrollSlot.setFrame(window.getFrame());
 	}
 	
 	private void closeWindow() {
 		window = null;
-		scrollSlot.setVisible(false);
 		inventory.setVisible(false);
 		hotbar.setVisible(false);
-		scrollSlot.setFrame(Frame.SCREEN);
-	}
-	
-	public ComponentInventorySlots getScrollSlot() {
-		return scrollSlot;
 	}
 	
 	/**

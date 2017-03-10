@@ -38,13 +38,15 @@ import com.crowsofwar.avatar.common.network.packets.PacketSAbilityPath;
 public class ComponentAbilityTree extends UiComponent {
 	
 	private final BendingAbility ability;
-	
+	private final ComponentInventorySlots slot1, slot2;
 	private boolean wasDown;
 	
-	public ComponentAbilityTree(BendingAbility ability) {
+	public ComponentAbilityTree(BendingAbility ability, ComponentInventorySlots slot1,
+			ComponentInventorySlots slot2) {
 		this.ability = ability;
-		
 		this.wasDown = false;
+		this.slot1 = slot1;
+		this.slot2 = slot2;
 	}
 	
 	@Override
@@ -133,11 +135,9 @@ public class ComponentAbilityTree extends UiComponent {
 			
 			if (mouseX >= minX && mouseX <= maxX) {
 				if (mouseY >= minY1 && mouseY <= maxY1 && path != AbilityTreePath.FIRST) {
-					System.out.println("Click 1");
 					AvatarMod.network.sendToServer(new PacketSAbilityPath(ability, AbilityTreePath.FIRST));
 				}
 				if (mouseY >= minY2 && mouseY <= maxY2 && path != AbilityTreePath.SECOND) {
-					System.out.println("Click 2");
 					AvatarMod.network.sendToServer(new PacketSAbilityPath(ability, AbilityTreePath.SECOND));
 				}
 			}

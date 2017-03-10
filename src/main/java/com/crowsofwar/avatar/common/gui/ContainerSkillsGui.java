@@ -51,6 +51,14 @@ public class ContainerSkillsGui extends Container {
 						&& ScrollType.fromId(stack.getMetadata()).accepts(type);
 			}
 		});
+		// Second scroll slot
+		addSlotToContainer(new Slot(inventory, 1, 100, 100) {
+			@Override
+			public boolean isItemValid(ItemStack stack) {
+				return stack.getItem() == AvatarItems.itemScroll
+						&& ScrollType.fromId(stack.getMetadata()).accepts(type);
+			}
+		});
 		
 		// Main inventory
 		for (int r = 0; r < 3; r++) {
