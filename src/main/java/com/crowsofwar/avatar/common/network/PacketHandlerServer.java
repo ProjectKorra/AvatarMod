@@ -32,13 +32,11 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-import com.crowsofwar.avatar.common.network.packets.PacketSAbilityPath;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -122,8 +120,6 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSSkillsMenu) return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
 		
 		if (packet instanceof PacketSUseScroll) return handleUseScroll((PacketSUseScroll) packet, ctx);
-		
-		if (packet instanceof PacketSAbilityPath) return handleAbilityPath((PacketSAbilityPath) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -313,17 +309,6 @@ public class PacketHandlerServer implements IPacketHandler {
 				}
 			}
 			
-		}
-		
-		return null;
-	}
-	
-	private IMessage handleAbilityPath(PacketSAbilityPath packet, MessageContext ctx) {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(ctx.getServerHandler().playerEntity);
-		AbilityData abilityData = data.getAbilityData(packet.getAbility());
-		
-		if (!abilityData.isMaxLevel() && packet.getPath() != AbilityTreePath.MAIN) {
-			abilityData.setPath(packet.getPath());
 		}
 		
 		return null;

@@ -17,11 +17,7 @@
 package com.crowsofwar.avatar.client.gui.skills;
 
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 
-import org.lwjgl.input.Mouse;
-
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
@@ -29,7 +25,6 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketSAbilityPath;
 
 /**
  * 
@@ -40,12 +35,10 @@ public class ComponentAbilityTree extends UiComponent {
 	
 	private final BendingAbility ability;
 	private final ComponentInventorySlots slot1, slot2;
-	private boolean wasDown;
 	
 	public ComponentAbilityTree(BendingAbility ability, ComponentInventorySlots slot1,
 			ComponentInventorySlots slot2) {
 		this.ability = ability;
-		this.wasDown = false;
 		this.slot1 = slot1;
 		this.slot2 = slot2;
 	}
@@ -134,13 +127,6 @@ public class ComponentAbilityTree extends UiComponent {
 		int level4SecondX = 3 * 31 - 2;
 		int level4SecondY = 10;
 		
-		AbilityTreePath path = data.getPath();
-		if (path == AbilityTreePath.FIRST) {
-			drawTexturedModalRect(level4FirstX, level4FirstY, 0, 204, 20, 20);
-		} else if (path == AbilityTreePath.SECOND) {
-			drawTexturedModalRect(level4SecondX, level4SecondY, 0, 204, 20, 20);
-		}
-		
 		if (data.getLevel() == 2) {
 			
 			float s1x = coordinates().xInPixels() + level4FirstX * scaleFactor();
@@ -153,28 +139,6 @@ public class ComponentAbilityTree extends UiComponent {
 			slot2.setOffset(Measurement.fromPixels(s2x, s2y));
 			slot2.setVisible(true);
 		}
-		
-		boolean down = Mouse.isButtonDown(0);
-		if (down && !wasDown) {
-			int mouseX = Mouse.getX(), mouseY = screenHeight() - Mouse.getY();
-			float minX = coordinates().xInPixels() + scaleFactor() * (48 + 30 + 16);
-			float maxX = minX + scaleFactor() * 16;
-			float minY1 = coordinates().yInPixels() + scaleFactor() * (-12);
-			float maxY1 = minY1 + scaleFactor() * 16;
-			float minY2 = coordinates().yInPixels() + scaleFactor() * (12);
-			float maxY2 = minY2 + scaleFactor() * 16;
-			
-			if (mouseX >= minX && mouseX <= maxX) {
-				if (mouseY >= minY1 && mouseY <= maxY1 && path != AbilityTreePath.FIRST) {
-					AvatarMod.network.sendToServer(new PacketSAbilityPath(ability, AbilityTreePath.FIRST));
-				}
-				if (mouseY >= minY2 && mouseY <= maxY2 && path != AbilityTreePath.SECOND) {
-					AvatarMod.network.sendToServer(new PacketSAbilityPath(ability, AbilityTreePath.SECOND));
-				}
-			}
-			
-		}
-		wasDown = down;
 		
 	}
 	
