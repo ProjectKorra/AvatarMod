@@ -75,6 +75,7 @@ public class ComponentAbilityTree extends UiComponent {
 		};
 		// @formatter:on
 		
+		slot1.setVisible(data.getLevel() != 3);
 		slot2.setVisible(data.getLevel() == 2);
 		
 		// Draw levels I, II, III
@@ -128,11 +129,29 @@ public class ComponentAbilityTree extends UiComponent {
 			drawTexturedModalRect(3 * 31, 12, 48, 224, 16, 16);
 		}
 		
+		int level4FirstX = 3 * 31 - 2;
+		int level4FirstY = -14;
+		int level4SecondX = 3 * 31 - 2;
+		int level4SecondY = 10;
+		
 		AbilityTreePath path = data.getPath();
 		if (path == AbilityTreePath.FIRST) {
-			drawTexturedModalRect(3 * 31 - 2, -14, 0, 204, 20, 20);
+			drawTexturedModalRect(level4FirstX, level4FirstY, 0, 204, 20, 20);
 		} else if (path == AbilityTreePath.SECOND) {
-			drawTexturedModalRect(3 * 31 - 2, 10, 0, 204, 20, 20);
+			drawTexturedModalRect(level4SecondX, level4SecondY, 0, 204, 20, 20);
+		}
+		
+		if (data.getLevel() == 2) {
+			
+			float s1x = coordinates().xInPixels() + level4FirstX * scaleFactor();
+			float s1y = coordinates().yInPixels() + level4FirstY * scaleFactor();
+			float s2x = coordinates().xInPixels() + level4SecondX * scaleFactor();
+			float s2y = coordinates().yInPixels() + level4SecondY * scaleFactor();
+			
+			slot1.setOffset(Measurement.fromPixels(s1x, s1y));
+			slot1.setVisible(true);
+			slot2.setOffset(Measurement.fromPixels(s2x, s2y));
+			slot2.setVisible(true);
 		}
 		
 		boolean down = Mouse.isButtonDown(0);

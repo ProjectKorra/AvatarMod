@@ -102,7 +102,7 @@ public class WindowAbility {
 		
 		slot1 = new ComponentInventorySlots(gui.inventorySlots, 0);
 		slot1.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
-		slot2 = new ComponentInventorySlots(gui.inventorySlots, 0);
+		slot2 = new ComponentInventorySlots(gui.inventorySlots, 1);
 		slot2.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
 		slot2.setOffset(Measurement.fromPixels(frameRight, slot1.width() + 10, 0));
 		// Add slots later so on top of treeView
