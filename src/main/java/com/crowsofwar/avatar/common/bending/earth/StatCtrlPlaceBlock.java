@@ -27,7 +27,7 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -55,7 +55,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 		BendingController controller = (BendingController) BendingManager
 				.getBending(BendingType.EARTHBENDING);
 		
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
 		
 		EntityFloatingBlock floating = ebs.getPickupBlock();

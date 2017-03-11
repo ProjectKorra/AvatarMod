@@ -22,7 +22,7 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -47,7 +47,7 @@ public class AbilityFireball extends FireAbility {
 		
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		
 		if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
 		

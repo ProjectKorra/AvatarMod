@@ -21,7 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -52,7 +52,7 @@ public class AbilityFireArc extends FireAbility {
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			FirebendingState fs = (FirebendingState) ctx.getData().getBendingState(controller());
-			AvatarPlayerData data = ctx.getData();
+			BendingData data = ctx.getData();
 			
 			Vector lookPos;
 			if (ctx.isLookingAtBlock()) {

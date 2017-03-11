@@ -22,7 +22,7 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -44,7 +44,7 @@ public class StatCtrlThrowFire extends StatusControl {
 	public boolean execute(AbilityContext context) {
 		
 		EntityLivingBase entity = context.getBenderEntity();
-		AvatarPlayerData data = context.getData();
+		BendingData data = context.getData();
 		
 		FirebendingState bendingState = (FirebendingState) data
 				.getBendingState(BendingManager.getBending(BendingType.FIREBENDING));

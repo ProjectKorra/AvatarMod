@@ -145,4 +145,12 @@ public interface BendingData {
 	
 	default void sync() {}
 	
+	boolean isSkating();
+	
+	void setSkating(boolean skating);
+	
+	float getFallAbsorption();
+	
+	void setFallAbsorption(float amount);
+	
 }

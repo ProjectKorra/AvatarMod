@@ -23,7 +23,7 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -52,7 +52,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.worldObj;
 		EntityFloatingBlock floating = ebs.getPickupBlock();
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		
 		if (floating != null) {
 			

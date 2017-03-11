@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class AbilityFlamethrower extends FireAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.START_FLAMETHROW);
 		data.sync();
 	}

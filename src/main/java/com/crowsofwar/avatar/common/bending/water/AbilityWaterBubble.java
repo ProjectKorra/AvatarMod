@@ -22,7 +22,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -48,7 +48,7 @@ public class AbilityWaterBubble extends WaterAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 		WaterbendingState bendingState = (WaterbendingState) data.getBendingState(WATERBENDING);
 		
