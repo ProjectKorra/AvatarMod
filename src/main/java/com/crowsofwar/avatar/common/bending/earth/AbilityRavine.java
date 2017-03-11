@@ -26,7 +26,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -51,19 +51,19 @@ public class AbilityRavine extends EarthAbility {
 			AbilityData abilityData = ctx.getData().getAbilityData(this);
 			float xp = abilityData.getTotalXp();
 			
-			EntityPlayer player = ctx.getPlayerEntity();
+			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			
-			Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), 0);
+			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 			
 			EntityRavine ravine = new EntityRavine(world);
-			ravine.setOwner(player);
-			ravine.setPosition(player.posX, player.posY, player.posZ);
+			ravine.setOwner(entity);
+			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
 			ravine.velocity().set(look.times(10));
 			ravine.setDamageMult(.75f + xp / 100);
 			world.spawnEntityInWorld(ravine);
 			
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, player));
+			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, entity));
 			
 		}
 		

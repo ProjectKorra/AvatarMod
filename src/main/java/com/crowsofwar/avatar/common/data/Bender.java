@@ -61,6 +61,8 @@ public interface Bender {
 	
 	BendingData getData();
 	
+	boolean isCreativeMode();
+	
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */

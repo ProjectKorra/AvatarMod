@@ -29,7 +29,7 @@ import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -50,7 +50,7 @@ public class AbilityMining extends EarthAbility {
 		
 		if (ctx.consumeChi(STATS_CONFIG.chiMining)) {
 			
-			EntityPlayer player = ctx.getPlayerEntity();
+			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			
 			int chanceMin, chanceMax;
@@ -80,7 +80,7 @@ public class AbilityMining extends EarthAbility {
 		// 4 = N 0x -z    5 = NE +x -z
 		// 6 = E +x 0z    7 = SE +x +z
 		//@formatter:on
-			int yaw = (int) floor((player.rotationYaw * 8 / 360) + 0.5) & 7;
+			int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
 			int x = 0, z = 0;
 			if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
 			if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
@@ -92,22 +92,22 @@ public class AbilityMining extends EarthAbility {
 			// Use abs and post-mul to fix weirdness with negatives... not
 			// totally
 			// investigated
-			int pitch = (int) floor((abs(player.rotationPitch) * 8 / 360) + 0.5) & 7;
-			pitch *= -abs(player.rotationPitch) / player.rotationPitch;
+			int pitch = (int) floor((abs(entity.rotationPitch) * 8 / 360) + 0.5) & 7;
+			pitch *= -abs(entity.rotationPitch) / entity.rotationPitch;
 			
 			// Each starting position of the ray to mine out
 			List<VectorI> rays = new ArrayList<>();
-			rays.add(new VectorI(player.getPosition()));
-			rays.add(new VectorI(player.getPosition().up()));
+			rays.add(new VectorI(entity.getPosition()));
+			rays.add(new VectorI(entity.getPosition().up()));
 			
 			// If yaw is diagonal; SW, NW, NE, SE
 			if (yaw % 2 == 1) {
-				rays.add(new VectorI(player.getPosition().east()));
-				rays.add(new VectorI(player.getPosition().east().up()));
+				rays.add(new VectorI(entity.getPosition().east()));
+				rays.add(new VectorI(entity.getPosition().east().up()));
 			}
 			// Add height to excavating a stairway so you don't bump your head
 			if (pitch != 0) {
-				rays.add(new VectorI(player.getPosition().up(2)));
+				rays.add(new VectorI(entity.getPosition().up(2)));
 			}
 			
 			VectorI dir = new VectorI(x, pitch, z);
@@ -116,8 +116,10 @@ public class AbilityMining extends EarthAbility {
 				dir.setZ(0);
 				dir.setY(abs(pitch) / pitch);
 				rays.clear();
-				rays.add(new VectorI(player.getPosition().up(pitch < 0 ? 0 : 1)));
+				rays.add(new VectorI(entity.getPosition().up(pitch < 0 ? 0 : 1)));
 			}
+			
+			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 			
 			for (VectorI ray : rays) {
 				for (int i = 1; i <= dist; i++) {
@@ -126,9 +128,10 @@ public class AbilityMining extends EarthAbility {
 					
 					boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
 					if (bendable) {
-						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-						wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3,
-								!player.capabilities.isCreativeMode));
+						
+						boolean drop = !ctx.getBender().isCreativeMode();
+						wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3, drop));
+						
 					} else if (block != Blocks.AIR) {
 						break;
 					}

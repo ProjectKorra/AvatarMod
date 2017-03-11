@@ -42,4 +42,9 @@ public class PlayerBender implements Bender {
 		return AvatarPlayerData.fetcher().fetch(player);
 	}
 	
+	@Override
+	public boolean isCreativeMode() {
+		return player.capabilities.isCreativeMode;
+	}
+	
 }
