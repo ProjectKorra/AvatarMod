@@ -302,8 +302,6 @@ public class PacketHandlerServer implements IPacketHandler {
 					abilityData.setPath(AbilityTreePath.SECOND);
 				}
 				
-				System.out.println("activeslot " + activeSlot.slotNumber);
-				
 				if (activeSlot != null) {
 					ItemStack stack = activeSlot.getStack();
 					if (stack.getItem() == AvatarItems.itemScroll) {
@@ -315,7 +313,7 @@ public class PacketHandlerServer implements IPacketHandler {
 							if (points > 0) {
 								points--;
 								if (points == 0) {
-									skills.inventorySlots.get(0).putStack(ItemStack.field_190927_a);
+									activeSlot.putStack(ItemStack.field_190927_a);
 								} else {
 									stackCompound(stack).setInteger("Points", points);
 								}

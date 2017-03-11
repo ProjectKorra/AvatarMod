@@ -171,4 +171,11 @@ public class WindowAbility {
 		return keybind.isEditing();
 	}
 	
+	public void onClose() {
+		slot1.setVisible(false);
+		slot2.setVisible(false);
+		slot1.draw(0);
+		slot2.draw(0);
+	}
+	
 }

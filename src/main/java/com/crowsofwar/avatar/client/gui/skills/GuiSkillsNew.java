@@ -200,9 +200,11 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	}
 	
 	private void closeWindow() {
+		window.onClose();
 		window = null;
 		inventory.setVisible(false);
 		hotbar.setVisible(false);
+		
 	}
 	
 	/**
