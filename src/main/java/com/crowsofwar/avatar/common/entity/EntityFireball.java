@@ -19,18 +19,20 @@ package com.crowsofwar.avatar.common.entity;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -46,8 +48,8 @@ import net.minecraftforge.event.ForgeEventFactory;
  */
 public class EntityFireball extends AvatarEntity {
 	
-	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityFireball.class,
-			DataSerializers.STRING);
+	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityFireball.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	public static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
 	
@@ -93,11 +95,11 @@ public class EntityFireball extends AvatarEntity {
 		
 	}
 	
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		ownerAttr.setOwner(owner);
 	}
 	
@@ -162,7 +164,7 @@ public class EntityFireball extends AvatarEntity {
 	
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			BendingData data = Bender.create(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIREBALL);
 			if (!worldObj.isRemote) data.sync();
 		}

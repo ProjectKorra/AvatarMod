@@ -27,7 +27,7 @@ import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -45,20 +45,20 @@ public class StatCtrlThrowFireball extends StatusControl {
 	
 	@Override
 	public boolean execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
 		double size = 6;
-		Vec3d playerPos = player.getPositionVector();
+		Vec3d playerPos = entity.getPositionVector();
 		AxisAlignedBB boundingBox = new AxisAlignedBB(playerPos.subtract(size, size, size),
 				playerPos.addVector(size, size, size));
 		
 		List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class, //
 				boundingBox, //
-				fireball -> fireball.getOwner() == player);
+				fireball -> fireball.getOwner() == entity);
 		
 		for (EntityFireball fireball : fireballs) {
-			fireball.velocity().add(Vector.getLookRectangular(player).mul(25));
+			fireball.velocity().add(Vector.getLookRectangular(entity).mul(25));
 			fireball.setBehavior(new FireballBehavior.Thrown());
 		}
 		

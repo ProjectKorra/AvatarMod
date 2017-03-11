@@ -26,7 +26,7 @@ import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -49,7 +49,7 @@ public class AbilityFireArc extends FireAbility {
 		
 		if (ctx.consumeChi(STATS_CONFIG.chiFireArc)) {
 			
-			EntityPlayer player = ctx.getPlayerEntity();
+			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			FirebendingState fs = (FirebendingState) ctx.getData().getBendingState(controller());
 			AvatarPlayerData data = ctx.getData();
@@ -58,14 +58,14 @@ public class AbilityFireArc extends FireAbility {
 			if (ctx.isLookingAtBlock()) {
 				lookPos = ctx.getLookPos();
 			} else {
-				Vector look = Vector.getLookRectangular(player);
-				lookPos = Vector.getEyePos(player).plus(look.times(3));
+				Vector look = Vector.getLookRectangular(entity);
+				lookPos = Vector.getEyePos(entity).plus(look.times(3));
 			}
 			
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
-			fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, player));
-			fire.setOwner(player);
+			fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, entity));
+			fire.setOwner(entity);
 			fire.setDamageMult(0.75f + ctx.getData().getAbilityData(this).getTotalXp() / 100);
 			
 			world.spawnEntityInWorld(fire);

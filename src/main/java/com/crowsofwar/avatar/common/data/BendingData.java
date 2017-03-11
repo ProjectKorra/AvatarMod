@@ -141,4 +141,6 @@ public interface BendingData {
 	
 	void setChi(Chi chi);
 	
+	default void sync() {}
+	
 }

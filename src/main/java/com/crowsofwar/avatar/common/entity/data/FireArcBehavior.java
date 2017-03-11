@@ -25,13 +25,13 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.fire.FirebendingState;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
@@ -60,18 +60,18 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 		
 		public PlayerControlled() {}
 		
-		public PlayerControlled(EntityFireArc arc, EntityPlayer player) {}
+		public PlayerControlled(EntityFireArc arc, EntityLivingBase player) {}
 		
 		@Override
 		public FireArcBehavior onUpdate(EntityFireArc entity) {
 			
-			EntityPlayer player = entity.getOwner();
-			if (player == null) {
+			EntityLivingBase owner = entity.getOwner();
+			if (owner == null) {
 				return this;
 			}
-			World world = player.worldObj;
+			World world = owner.worldObj;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = Bender.create(owner).getData();
 			
 			if (data != null) {
 				FirebendingState bendingState = (FirebendingState) data
@@ -82,9 +82,9 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					EntityFireArc fire = bendingState.getFireArc();
 					if (fire != null) {
 						
-						Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
-								Math.toRadians(player.rotationPitch));
-						Vector lookPos = Vector.getEyePos(player).plus(look.times(3));
+						Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
+								Math.toRadians(owner.rotationPitch));
+						Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
 						Vector motion = lookPos.minus(new Vector(fire));
 						motion.mul(.3);
 						fire.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
@@ -131,7 +131,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 						6 * entity.getDamageMult());
 				
 				if (!entity.worldObj.isRemote) {
-					AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
+					BendingData data = Bender.create(entity.getOwner()).getData();
 					if (data != null) {
 						data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC)
 								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);

@@ -27,7 +27,7 @@ import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -45,7 +45,7 @@ public class AbilityFireball extends FireAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		AvatarPlayerData data = ctx.getData();
 		
@@ -57,8 +57,8 @@ public class AbilityFireball extends FireAbility {
 			if (ctx.isLookingAtBlock()) {
 				target = ctx.getLookPos();
 			} else {
-				Vector playerPos = getEyePos(player);
-				target = playerPos.plus(getLookRectangular(player).times(2.5));
+				Vector playerPos = getEyePos(entity);
+				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 			
 			float xp = data.getAbilityData(this).getTotalXp();
@@ -67,7 +67,7 @@ public class AbilityFireball extends FireAbility {
 			
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.position().set(target);
-			fireball.setOwner(player);
+			fireball.setOwner(entity);
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			fireball.setDamage(damage);
 			world.spawnEntityInWorld(fireball);

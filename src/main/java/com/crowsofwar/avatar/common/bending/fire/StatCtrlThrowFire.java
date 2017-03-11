@@ -27,7 +27,7 @@ import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -43,7 +43,7 @@ public class StatCtrlThrowFire extends StatusControl {
 	@Override
 	public boolean execute(AbilityContext context) {
 		
-		EntityPlayer player = context.getPlayerEntity();
+		EntityLivingBase entity = context.getBenderEntity();
 		AvatarPlayerData data = context.getData();
 		
 		FirebendingState bendingState = (FirebendingState) data
@@ -53,8 +53,8 @@ public class StatCtrlThrowFire extends StatusControl {
 			
 			EntityFireArc fire = bendingState.getFireArc();
 			
-			Vector force = Vector.toRectangular(Math.toRadians(player.rotationYaw),
-					Math.toRadians(player.rotationPitch));
+			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
+					Math.toRadians(entity.rotationPitch));
 			force.mul(10);
 			fire.velocity().add(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
