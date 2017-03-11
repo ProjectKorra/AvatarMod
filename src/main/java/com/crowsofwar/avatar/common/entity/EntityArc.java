@@ -19,11 +19,13 @@ package com.crowsofwar.avatar.common.entity;
 
 import java.util.function.Consumer;
 
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -36,8 +38,8 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.VARINT);
-	private static final DataParameter<String> SYNC_OWNER_NAME = EntityDataManager.createKey(EntityArc.class,
-			DataSerializers.STRING);
+	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager.createKey(EntityArc.class,
+			AvatarDataSerializers.SERIALIZER_BENDER);
 	
 	private static int nextId = 1;
 	private ControlPoint[] points;
@@ -58,7 +60,7 @@ public abstract class EntityArc extends AvatarEntity {
 			setId(nextId++);
 		}
 		
-		ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, getNewOwnerCallback());
+		ownerAttrib = new OwnerAttribute(this, SYNC_OWNER, getNewOwnerCallback());
 		
 	}
 	
@@ -76,7 +78,7 @@ public abstract class EntityArc extends AvatarEntity {
 	/**
 	 * Get a callback which is called when the owner is changed.
 	 */
-	protected Consumer<EntityPlayer> getNewOwnerCallback() {
+	protected Consumer<EntityLivingBase> getNewOwnerCallback() {
 		return newOwner -> {
 		};
 	}
@@ -234,11 +236,11 @@ public abstract class EntityArc extends AvatarEntity {
 		return 15728880;
 	}
 	
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		return ownerAttrib.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		this.ownerAttrib.setOwner(owner);
 		for (ControlPoint cp : points)
 			cp.setOwner(owner);

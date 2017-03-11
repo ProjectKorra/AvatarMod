@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
-import com.crowsofwar.avatar.common.data.NoBender;
+import com.crowsofwar.avatar.common.data.NoBenderInfo;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -76,7 +76,7 @@ public class OwnerAttribute {
 		this.sync = sync;
 		this.world = entity.worldObj;
 		this.setOwnerCallback = setOwnerCallback;
-		this.entity.getDataManager().register(sync, new NoBender().getInfo());
+		this.entity.getDataManager().register(sync, new NoBenderInfo());
 	}
 	
 	public void save(NBTTagCompound nbt) {

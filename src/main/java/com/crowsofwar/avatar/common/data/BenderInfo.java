@@ -36,6 +36,14 @@ public class BenderInfo {
 	private final boolean player;
 	private final UUID id;
 	
+	/**
+	 * Creates bender info with null info, should only be used by NoBenderInfo
+	 */
+	protected BenderInfo() {
+		player = false;
+		id = null;
+	}
+	
 	public BenderInfo(EntityLivingBase entity) {
 		this(Bender.create(entity));
 	}
