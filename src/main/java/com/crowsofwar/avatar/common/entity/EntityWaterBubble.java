@@ -18,20 +18,22 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,8 +47,8 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
-	private static final DataParameter<String> SYNC_OWNER = EntityDataManager
-			.createKey(EntityWaterBubble.class, DataSerializers.STRING);
+	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityWaterBubble.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	
 	private final OwnerAttribute ownerAttrib;
 	
@@ -104,7 +106,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		if (!worldObj.isRemote && inWaterSource) {
 			setDead();
 			if (getOwner() != null) {
-				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+				BendingData data = Bender.create(getOwner()).getData();
 				if (data != null) {
 					data.removeStatusControl(StatusControl.THROW_BUBBLE);
 					data.sync();
@@ -138,11 +140,11 @@ public class EntityWaterBubble extends AvatarEntity {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		return ownerAttrib.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer player) {
+	public void setOwner(EntityLivingBase player) {
 		ownerAttrib.setOwner(player);
 	}
 	

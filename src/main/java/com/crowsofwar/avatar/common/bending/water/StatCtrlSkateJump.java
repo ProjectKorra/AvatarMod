@@ -25,7 +25,7 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -41,20 +41,20 @@ public class StatCtrlSkateJump extends StatusControl {
 	@Override
 	public boolean execute(AbilityContext ctx) {
 		AvatarPlayerData data = ctx.getData();
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		if (data.isSkating()) {
 			data.setSkating(false);
 			data.sync();
 			
-			Vector velocity = Vector.getLookRectangular(player);
+			Vector velocity = Vector.getLookRectangular(entity);
 			velocity.mul(1.5);
-			player.motionX = velocity.x() * 2;
-			player.motionY = velocity.y();
-			player.motionZ = velocity.z() * 2;
+			entity.motionX = velocity.x() * 2;
+			entity.motionY = velocity.y();
+			entity.motionZ = velocity.z() * 2;
 			
 			data.setFallAbsorption(6);
 			
-			AvatarUtils.afterVelocityAdded(player);
+			AvatarUtils.afterVelocityAdded(entity);
 			
 		}
 		

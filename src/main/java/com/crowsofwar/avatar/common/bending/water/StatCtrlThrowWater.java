@@ -27,7 +27,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -45,21 +45,21 @@ public class StatCtrlThrowWater extends StatusControl {
 	@Override
 	public boolean execute(AbilityContext ctx) {
 		
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		AvatarPlayerData data = ctx.getData();
 		World world = ctx.getWorld();
 		
-		AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5, player.posZ - 5,
-				player.posX + 5, player.posY + 5, player.posZ + 5);
+		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,
+				entity.posX + 5, entity.posY + 5, entity.posZ + 5);
 		List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
-				arc -> arc.getOwner() == player
+				arc -> arc.getOwner() == entity
 						&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
 		
 		for (EntityWaterArc arc : existing) {
 			arc.setBehavior(new WaterArcBehavior.Thrown());
 			
-			Vector force = Vector.toRectangular(Math.toRadians(player.rotationYaw),
-					Math.toRadians(player.rotationPitch));
+			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
+					Math.toRadians(entity.rotationPitch));
 			force.mul(10);
 			arc.velocity().add(force);
 			arc.setBehavior(new WaterArcBehavior.Thrown());

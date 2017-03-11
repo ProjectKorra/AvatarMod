@@ -28,7 +28,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -54,7 +54,7 @@ public class AbilityWaterArc extends WaterAbility {
 	public void execute(AbilityContext ctx) {
 		WaterbendingState bendingState = (WaterbendingState) ctx.getData().getBendingState(controller());
 		World world = ctx.getWorld();
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		
 		VectorI targetPos = ctx.getClientLookBlock();
 		if (targetPos != null) {
@@ -63,10 +63,10 @@ public class AbilityWaterArc extends WaterAbility {
 				
 				if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
 					
-					AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5,
-							player.posZ - 5, player.posX + 5, player.posY + 5, player.posZ + 5);
+					AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5,
+							entity.posZ - 5, entity.posX + 5, entity.posY + 5, entity.posZ + 5);
 					List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class,
-							boundingBox, arc -> arc.getOwner() == player
+							boundingBox, arc -> arc.getOwner() == entity
 									&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
 					
 					for (EntityWaterArc arc : existing) {
@@ -74,7 +74,7 @@ public class AbilityWaterArc extends WaterAbility {
 					}
 					
 					EntityWaterArc water = new EntityWaterArc(world);
-					water.setOwner(player);
+					water.setOwner(entity);
 					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 					water.setDamageMult(1 + ctx.getData().getAbilityData(this).getTotalXp() / 200);
 					

@@ -26,7 +26,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
@@ -38,12 +38,12 @@ public class AbilityCreateWave extends WaterAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
-		Vector look = Vector.getLookRectangular(player);
+		Vector look = Vector.getLookRectangular(entity);
 		look.setY(0);
-		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(player).add(0, -1, 0),
+		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).add(0, -1, 0),
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
 			
@@ -57,7 +57,7 @@ public class AbilityCreateWave extends WaterAbility {
 					if (ctx.consumeChi(STATS_CONFIG.chiWave)) {
 						
 						EntityWave wave = new EntityWave(world);
-						wave.setOwner(player);
+						wave.setOwner(entity);
 						wave.velocity().set(look.times(10));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
 						wave.setDamageMultiplier(1 + ctx.getData().getAbilityData(this).getTotalXp() / 100f);
