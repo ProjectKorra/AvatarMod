@@ -44,7 +44,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -211,9 +210,8 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	 */
 	public void useScroll(BendingAbility ability) {
 		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
-		Slot slot = container.getSlot(0);
 		
-		if (slot.getHasStack()) {
+		if (container.getSlot(0).getHasStack() || container.getSlot(1).getHasStack()) {
 			AvatarMod.network.sendToServer(new PacketSUseScroll(ability));
 		}
 		

@@ -134,7 +134,8 @@ public class WindowAbility {
 	
 	public void draw(float partialTicks) {
 		
-		button.setEnabled(gui.inventorySlots.getSlot(0).getHasStack());
+		button.setEnabled(
+				gui.inventorySlots.getSlot(0).getHasStack() || gui.inventorySlots.getSlot(1).getHasStack());
 		
 		handler.draw(partialTicks);
 		

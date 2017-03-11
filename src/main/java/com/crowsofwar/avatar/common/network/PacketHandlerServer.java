@@ -32,6 +32,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -53,6 +54,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.SoundCategory;
@@ -287,26 +289,44 @@ public class PacketHandlerServer implements IPacketHandler {
 			Container container = player.openContainer;
 			if (container instanceof ContainerSkillsGui) {
 				ContainerSkillsGui skills = (ContainerSkillsGui) container;
-				ItemStack stack = skills.inventorySlots.get(0).getStack();
-				if (stack.getItem() == AvatarItems.itemScroll) {
-					
-					// Try to use this scroll
-					ScrollType type = ScrollType.fromId(stack.getMetadata());
-					if (type.accepts(packet.getAbility().getBendingType())) {
-						int points = stackCompound(stack).getInteger("Points");
-						if (points > 0) {
-							points--;
-							if (points == 0) {
-								skills.inventorySlots.get(0).putStack(ItemStack.field_190927_a);
-							} else {
-								stackCompound(stack).setInteger("Points", points);
-							}
-							
-							abilityData.addXp(27);
-						}
-					}
-					
+				
+				Slot slot1 = skills.getSlot(0);
+				Slot slot2 = skills.getSlot(1);
+				
+				Slot activeSlot = null;
+				if (slot1.getHasStack()) {
+					activeSlot = slot1;
+					abilityData.setPath(AbilityTreePath.FIRST);
+				} else if (slot2.getHasStack()) {
+					activeSlot = slot2;
+					abilityData.setPath(AbilityTreePath.SECOND);
 				}
+				
+				System.out.println("activeslot " + activeSlot.slotNumber);
+				
+				if (activeSlot != null) {
+					ItemStack stack = activeSlot.getStack();
+					if (stack.getItem() == AvatarItems.itemScroll) {
+						
+						// Try to use this scroll
+						ScrollType type = ScrollType.fromId(stack.getMetadata());
+						if (type.accepts(packet.getAbility().getBendingType())) {
+							int points = stackCompound(stack).getInteger("Points");
+							if (points > 0) {
+								points--;
+								if (points == 0) {
+									skills.inventorySlots.get(0).putStack(ItemStack.field_190927_a);
+								} else {
+									stackCompound(stack).setInteger("Points", points);
+								}
+								
+								abilityData.addXp(27);
+							}
+						}
+						
+					}
+				}
+				
 			}
 			
 		}
