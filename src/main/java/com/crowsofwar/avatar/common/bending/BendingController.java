@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.util.event.EventNotifier;
@@ -120,7 +120,7 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	 * 
 	 * @return
 	 */
-	public BendingState createState(AvatarPlayerData data) {
+	public BendingState createState(BendingData data) {
 		return null;
 	}
 	

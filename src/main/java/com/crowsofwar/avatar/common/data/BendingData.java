@@ -16,8 +16,11 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -34,9 +37,11 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 public abstract class BendingData {
 	
 	private final Set<BendingController> bendings;
+	private final Map<BendingController, BendingState> bendingStates;
 	
 	public BendingData() {
 		bendings = new HashSet<>();
+		bendingStates = new HashMap<>();
 	}
 	
 	// ================================================================================
@@ -97,13 +102,41 @@ public abstract class BendingData {
 		removeBending(BendingManager.getBending(type));
 	}
 	
-	List<BendingController> getBendingControllers();
+	public List<BendingController> getAllBending() {
+		return new ArrayList<>(bendings);
+	}
+	
+	// ================================================================================
+	// BENDING STATES
+	// ================================================================================
+	
+	public boolean hasBendingState(BendingController controller) {
+		return bendingStates.get(controller) != null;
+	}
+	
+	public boolean hasBendingState(BendingType type) {
+		return hasBendingState(BendingManager.getBending(type));
+	}
 	
 	/**
-	 * Get the BendingController with that type. Returns null if there is no
-	 * bending controller for that type.
+	 * Get extra metadata for the given bending controller, returns null if no
+	 * Bending controller.
+	 * 
+	 * @see #getBendingState(BendingType)
 	 */
-	BendingController getBendingController(BendingType type);
+	public BendingState getBendingState(BendingController controller) {
+		if (!hasBending(controller)) {
+			return null;
+		}
+		
+		BendingState state = bendingStates.get(controller);
+		if (state == null) {
+			state = controller.createState(this);
+			addBendingState(state);
+		}
+		
+		return state;
+	}
 	
 	/**
 	 * Gets extra metadata for the given bending controller with that type, or
@@ -112,37 +145,37 @@ public abstract class BendingData {
 	 * Will automatically create a state and sync changes if the controller is
 	 * present.
 	 */
-	BendingState getBendingState(BendingType type);
+	public BendingState getBendingState(BendingType type) {
+		return getBendingState(BendingManager.getBending(type));
+	}
 	
 	/**
-	 * Get extra metadata for the given bending controller, returns null if no
-	 * Bending controller.
-	 * 
-	 * @see #getBendingState(BendingType)
+	 * Adds the bending state to this player data, not replacing the existing
+	 * one of that type if necessary.
 	 */
-	BendingState getBendingState(BendingController controller);
-	
-	/**
-	 * Returns whether a bending state for the bending controller is present.
-	 * Does not add one if necessary.
-	 */
-	boolean hasBendingState(BendingController controller);
-	
-	List<BendingState> getAllBendingStates();
-	
-	void clearBendingStates();
-	
-	/**
-	 * Adds the bending state to this player data, replacing the existing one of
-	 * that type if necessary.
-	 */
-	void addBendingState(BendingState state);
+	public void addBendingState(BendingState state) {
+		BendingType type = state.getType();
+		if (hasBending(type) && !hasBendingState(type)) {
+			bendingStates.put(BendingManager.getBending(type), state);
+			save();
+		}
+	}
 	
 	/**
 	 * Removes that bending state from this player data. Note: Must be the exact
 	 * instance already present to successfully occur.
 	 */
-	void removeBendingState(BendingState state);
+	public void removeBendingState(BendingState state) {
+		BendingType type = state.getType();
+		if (hasBendingState(type)) {
+			bendingStates.remove(type);
+			save();
+		}
+	}
+	
+	public List<BendingState> getAllBendingStates() {
+		return new ArrayList<>(bendingStates.values());
+	}
 	
 	Set<StatusControl> getActiveStatusControls();
 	

@@ -66,7 +66,6 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	private Map<BendingType, BendingController> bendingControllers;
 	private List<BendingController> bendingControllerList;
 	
-	private Map<BendingType, BendingState> bendingStates;
 	private List<BendingState> bendingStateList;
 	
 	private Set<StatusControl> statusControls;
@@ -312,7 +311,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public List<BendingController> getBendingControllers() {
+	public List<BendingController> getAllBending() {
 		return bendingControllerList;
 	}
 	
