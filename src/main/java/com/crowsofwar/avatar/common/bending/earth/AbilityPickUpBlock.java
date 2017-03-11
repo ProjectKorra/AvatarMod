@@ -24,7 +24,8 @@ import java.util.Random;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -32,7 +33,7 @@ import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
@@ -56,10 +57,11 @@ public class AbilityPickUpBlock extends EarthAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller());
-		EntityPlayer player = data.getPlayerEntity();
-		World world = data.getWorld();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
 		
 		if (ebs.getPickupBlock() != null) {
 			ebs.getPickupBlock().drop();
@@ -81,13 +83,13 @@ public class AbilityPickUpBlock extends EarthAbility {
 						
 						EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 						floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);
-						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
+						floating.setItemDropsEnabled(!bender.isCreativeMode());
 						
 						double dist = 2.5;
 						Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
 						floating.velocity().add(force);
 						floating.setBehavior(new FloatingBlockBehavior.PickUp());
-						floating.setOwner(player);
+						floating.setOwner(entity);
 						floating.setDamageMult(.75f + xp / 100);
 						
 						world.spawnEntityInWorld(floating);
@@ -97,7 +99,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 						
 						world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 						
-						controller().post(new FloatingBlockEvent.BlockPickedUp(floating, player));
+						controller().post(new FloatingBlockEvent.BlockPickedUp(floating, entity));
 						
 						data.addStatusControl(StatusControl.PLACE_BLOCK);
 						data.addStatusControl(StatusControl.THROW_BLOCK);
@@ -106,7 +108,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 					}
 					
 				} else {
-					world.playSound(null, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
+					world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
 							SoundCategory.PLAYERS, 1, (float) (random.nextGaussian() / 0.25 + 0.375));
 				}
 				

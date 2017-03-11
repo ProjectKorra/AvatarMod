@@ -20,7 +20,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -41,7 +41,7 @@ public class AbilityAirBubble extends AirAbility {
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		
 		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 			

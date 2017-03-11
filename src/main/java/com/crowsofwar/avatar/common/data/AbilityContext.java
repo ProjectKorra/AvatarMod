@@ -64,7 +64,7 @@ public class AbilityContext {
 		this.lookPos = raytrace.getPosPrecise();
 	}
 	
-	public AvatarPlayerData getData() {
+	public BendingData getData() {
 		return data;
 	}
 	

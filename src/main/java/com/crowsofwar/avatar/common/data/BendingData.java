@@ -141,6 +141,8 @@ public interface BendingData {
 	
 	void setChi(Chi chi);
 	
+	void sendBendingState(BendingState state);
+	
 	default void sync() {}
 	
 }

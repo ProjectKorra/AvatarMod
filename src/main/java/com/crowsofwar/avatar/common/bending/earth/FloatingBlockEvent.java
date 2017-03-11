@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * An event caused by a floating block.
@@ -46,15 +45,15 @@ public class FloatingBlockEvent {
 	 */
 	public static class BlockPickedUp extends FloatingBlockEvent {
 		
-		private final EntityPlayer player;
+		private final EntityLivingBase bender;
 		
-		public BlockPickedUp(EntityFloatingBlock floating, EntityPlayer player) {
+		public BlockPickedUp(EntityFloatingBlock floating, EntityLivingBase bender) {
 			super(floating);
-			this.player = player;
+			this.bender = bender;
 		}
 		
-		public EntityPlayer getPlayer() {
-			return player;
+		public EntityLivingBase getBender() {
+			return bender;
 		}
 		
 	}

@@ -21,7 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class AbilityAirJump extends AirAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		
 		if (!data.hasStatusControl(StatusControl.AIR_JUMP) && ctx.consumeChi(STATS_CONFIG.chiAirJump)) {
 			

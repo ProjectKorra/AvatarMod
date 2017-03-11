@@ -23,7 +23,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.data.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
@@ -50,7 +50,7 @@ public class AbilityWall extends EarthAbility {
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			EnumFacing cardinal = entity.getHorizontalFacing();
-			AvatarPlayerData data = ctx.getData();
+			BendingData data = ctx.getData();
 			
 			float xp = data.getAbilityData(this).getTotalXp();
 			int whMin, whMax;
