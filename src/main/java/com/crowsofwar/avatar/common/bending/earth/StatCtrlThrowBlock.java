@@ -28,7 +28,7 @@ import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -49,15 +49,15 @@ public class StatCtrlThrowBlock extends StatusControl {
 				.getBending(BendingType.EARTHBENDING);
 		
 		EarthbendingState ebs = (EarthbendingState) ctx.getData().getBendingState(controller);
-		EntityPlayer player = ctx.getPlayerEntity();
-		World world = player.worldObj;
+		EntityLivingBase entity = ctx.getBenderEntity();
+		World world = entity.worldObj;
 		EntityFloatingBlock floating = ebs.getPickupBlock();
 		AvatarPlayerData data = ctx.getData();
 		
 		if (floating != null) {
 			
-			float yaw = (float) Math.toRadians(player.rotationYaw);
-			float pitch = (float) Math.toRadians(player.rotationPitch);
+			float yaw = (float) Math.toRadians(entity.rotationYaw);
+			float pitch = (float) Math.toRadians(entity.rotationPitch);
 			
 			// Calculate force and everything
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
@@ -65,7 +65,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
 			ebs.setPickupBlock(null);
 			
-			controller.post(new FloatingBlockEvent.BlockThrown(floating, player));
+			controller.post(new FloatingBlockEvent.BlockThrown(floating, entity));
 			
 			data.removeStatusControl(PLACE_BLOCK);
 			data.sync();

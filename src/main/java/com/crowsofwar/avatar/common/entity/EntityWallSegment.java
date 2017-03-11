@@ -21,16 +21,19 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -59,8 +62,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
 	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
-	private static final DataParameter<String> SYNC_OWNER = EntityDataManager
-			.createKey(EntityWallSegment.class, DataSerializers.STRING);
+	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityWallSegment.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
 	static {
@@ -109,11 +112,11 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		wall.addSegment(this);
 	}
 	
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		return ownerAttribute.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		ownerAttribute.setOwner(owner);
 	}
 	
@@ -278,7 +281,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		((AvatarEntity) entity).onCollideWithSolid();
 		entity.setDead();
 		if (getOwner() != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			BendingData data = ownerAttribute.getOwnerBender().getData();
 			data.getAbilityData(BendingAbility.ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
 		}
 	}

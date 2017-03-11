@@ -21,7 +21,7 @@ import com.crowsofwar.avatar.common.entity.EntityRavine;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -48,14 +48,14 @@ public abstract class RavineEvent {
 	 */
 	public static class Created extends RavineEvent {
 		
-		private final EntityPlayer creator;
+		private final EntityLivingBase creator;
 		
-		public Created(EntityRavine ravine, EntityPlayer creator) {
+		public Created(EntityRavine ravine, EntityLivingBase creator) {
 			super(ravine);
 			this.creator = creator;
 		}
 		
-		public EntityPlayer getCreator() {
+		public EntityLivingBase getCreator() {
 			return creator;
 		}
 		

@@ -29,7 +29,7 @@ import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -47,9 +47,9 @@ public class AbilityWall extends EarthAbility {
 		
 		if (ctx.consumeChi(STATS_CONFIG.chiWall)) {
 			
-			EntityPlayer player = ctx.getPlayerEntity();
+			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
-			EnumFacing cardinal = player.getHorizontalFacing();
+			EnumFacing cardinal = entity.getHorizontalFacing();
 			AvatarPlayerData data = ctx.getData();
 			
 			float xp = data.getAbilityData(this).getTotalXp();
@@ -100,7 +100,7 @@ public class AbilityWall extends EarthAbility {
 				seg.attachToWall(wall);
 				seg.setPosition(x + .5, y, z + .5);
 				seg.setDirection(cardinal);
-				seg.setOwner(player);
+				seg.setOwner(entity);
 				
 				boolean foundAir = false, dontBreakMore = false;
 				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {

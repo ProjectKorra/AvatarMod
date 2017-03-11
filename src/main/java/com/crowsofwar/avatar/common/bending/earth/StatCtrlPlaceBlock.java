@@ -50,19 +50,19 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext context) {
+	public boolean execute(AbilityContext ctx) {
 		
 		BendingController controller = (BendingController) BendingManager
 				.getBending(BendingType.EARTHBENDING);
 		
-		AvatarPlayerData data = context.getData();
+		AvatarPlayerData data = ctx.getData();
 		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
 		
 		EntityFloatingBlock floating = ebs.getPickupBlock();
 		if (floating != null) {
 			// TODO Verify look at block
-			VectorI looking = context.getClientLookBlock();
-			EnumFacing lookingSide = context.getLookSide();
+			VectorI looking = ctx.getClientLookBlock();
+			EnumFacing lookingSide = ctx.getLookSide();
 			if (looking != null && lookingSide != null) {
 				looking.offset(lookingSide);
 				
@@ -72,7 +72,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				floating.velocity().add(force);
 				ebs.dropBlock();
 				
-				controller.post(new FloatingBlockEvent.BlockPlaced(floating, context.getPlayerEntity()));
+				controller.post(new FloatingBlockEvent.BlockPlaced(floating, ctx.getBenderEntity()));
 				
 				data.removeStatusControl(THROW_BLOCK);
 				data.sync();

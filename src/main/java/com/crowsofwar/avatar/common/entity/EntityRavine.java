@@ -27,20 +27,25 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.earth.RavineEvent;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -54,9 +59,12 @@ import net.minecraft.world.World;
  */
 public class EntityRavine extends AvatarEntity {
 	
+	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityRavine.class, AvatarDataSerializers.SERIALIZER_BENDER);
+	
 	private final IEntityProperty<Vector> propVelocity;
 	private Vector initialPosition;
-	private EntityPlayer owner;
+	private final OwnerAttribute ownerAttr;
 	
 	private float damageMult;
 	
@@ -70,6 +78,7 @@ public class EntityRavine extends AvatarEntity {
 		setSize(1, 1);
 		
 		this.damageMult = 1;
+		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 		
 	}
 	
@@ -77,8 +86,12 @@ public class EntityRavine extends AvatarEntity {
 		this.damageMult = mult;
 	}
 	
-	public void setOwner(EntityPlayer owner) {
-		this.owner = owner;
+	public EntityLivingBase getOwner() {
+		return ownerAttr.getOwner();
+	}
+	
+	public void setOwner(EntityLivingBase owner) {
+		ownerAttr.setOwner(owner);
 	}
 	
 	public double getSqrDistanceTravelled() {
@@ -175,7 +188,7 @@ public class EntityRavine extends AvatarEntity {
 		// Push collided entities back
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != owner);
+					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
@@ -184,7 +197,7 @@ public class EntityRavine extends AvatarEntity {
 						
 						Vector push = velocity.copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
 						entity.addVelocity(push.x(), push.y(), push.z());
-						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
+						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, getOwner()),
 								STATS_CONFIG.ravineSettings.damage * damageMult))
 							attacked++;
 						AvatarUtils.afterVelocityAdded(entity);
@@ -193,8 +206,8 @@ public class EntityRavine extends AvatarEntity {
 			}
 		}
 		
-		if (!worldObj.isRemote && owner != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+		if (!worldObj.isRemote && getOwner() != null) {
+			BendingData data = ownerAttr.getOwnerBender().getData();
 			if (data != null) {
 				data.getAbilityData(ABILITY_RAVINE).addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}

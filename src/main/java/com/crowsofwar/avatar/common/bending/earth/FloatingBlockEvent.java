@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -65,15 +66,15 @@ public class FloatingBlockEvent {
 	 */
 	public static class BlockPlaced extends FloatingBlockEvent {
 		
-		private final EntityPlayer player;
+		private final EntityLivingBase placer;
 		
-		public BlockPlaced(EntityFloatingBlock floating, EntityPlayer player) {
+		public BlockPlaced(EntityFloatingBlock floating, EntityLivingBase placer) {
 			super(floating);
-			this.player = player;
+			this.placer = placer;
 		}
 		
-		public EntityPlayer getPlayer() {
-			return player;
+		public EntityLivingBase getPlacer() {
+			return placer;
 		}
 		
 	}
@@ -100,15 +101,15 @@ public class FloatingBlockEvent {
 	 */
 	public static class BlockThrown extends FloatingBlockEvent {
 		
-		private final EntityPlayer player;
+		private final EntityLivingBase entity;
 		
-		public BlockThrown(EntityFloatingBlock floating, EntityPlayer player) {
+		public BlockThrown(EntityFloatingBlock floating, EntityLivingBase entity) {
 			super(floating);
-			this.player = player;
+			this.entity = entity;
 		}
 		
-		public EntityPlayer getPlayer() {
-			return player;
+		public EntityLivingBase getEntity() {
+			return entity;
 		}
 		
 	}
