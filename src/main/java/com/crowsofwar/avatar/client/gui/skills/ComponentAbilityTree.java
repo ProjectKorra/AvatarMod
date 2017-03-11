@@ -68,8 +68,8 @@ public class ComponentAbilityTree extends UiComponent {
 		};
 		// @formatter:on
 		
-		slot1.setVisible(data.getLevel() != 3);
-		slot2.setVisible(data.getLevel() == 2);
+		slot1.setVisible(data.getLevel() != 3 && data.getXp() == 100);
+		slot2.setVisible(data.getLevel() == 2 && data.getXp() == 100);
 		
 		// Draw levels I, II, III
 		for (int i = 0; i < reachedLevel.length; i++) {

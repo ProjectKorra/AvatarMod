@@ -284,7 +284,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		AbilityData abilityData = data.getAbilityData(packet.getAbility());
 		
-		if (!abilityData.isMaxLevel()) {
+		if (!abilityData.isMaxLevel() && abilityData.getXp() == 100) {
 			
 			Container container = player.openContainer;
 			if (container instanceof ContainerSkillsGui) {
@@ -318,7 +318,7 @@ public class PacketHandlerServer implements IPacketHandler {
 									stackCompound(stack).setInteger("Points", points);
 								}
 								
-								abilityData.addXp(27);
+								abilityData.addLevel();
 							}
 						}
 						
