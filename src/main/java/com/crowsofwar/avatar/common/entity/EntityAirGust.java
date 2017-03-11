@@ -22,8 +22,8 @@ import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 

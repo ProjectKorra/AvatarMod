@@ -14,42 +14,38 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.data;
+package com.crowsofwar.avatar.common.data.ctx;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import java.util.UUID;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class PlayerBender implements Bender {
+public class NoBenderInfo extends BenderInfo {
 	
-	private final EntityPlayer player;
+	private static UUID ID_ZERO = new UUID(0, 0);
 	
-	public PlayerBender(EntityPlayer player) {
-		this.player = player;
+	@Override
+	public boolean isPlayer() {
+		return false;
 	}
 	
 	@Override
-	public EntityLivingBase getEntity() {
-		return player;
+	public UUID getId() {
+		return ID_ZERO;
 	}
 	
 	@Override
-	public BendingData getData() {
-		return AvatarPlayerData.fetcher().fetch(player);
+	public Bender find(World world) {
+		return null;
 	}
 	
 	@Override
-	public boolean isCreativeMode() {
-		return player.capabilities.isCreativeMode;
-	}
-	
-	@Override
-	public boolean isFlying() {
-		return player.capabilities.isFlying;
-	}
+	public void writeToNbt(NBTTagCompound nbt) {}
 	
 }

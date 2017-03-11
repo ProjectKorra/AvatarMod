@@ -20,8 +20,8 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE_DOWN;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 

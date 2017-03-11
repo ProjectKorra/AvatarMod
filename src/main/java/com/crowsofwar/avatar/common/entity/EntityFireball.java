@@ -19,9 +19,9 @@ package com.crowsofwar.avatar.common.entity;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;

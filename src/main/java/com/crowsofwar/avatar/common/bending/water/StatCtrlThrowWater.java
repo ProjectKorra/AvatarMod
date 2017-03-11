@@ -21,8 +21,8 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;

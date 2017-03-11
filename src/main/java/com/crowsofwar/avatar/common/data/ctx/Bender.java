@@ -14,7 +14,9 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.data;
+package com.crowsofwar.avatar.common.data.ctx;
+
+import com.crowsofwar.avatar.common.data.BendingData;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

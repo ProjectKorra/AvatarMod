@@ -21,8 +21,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.gorecore.util.Vector;
 

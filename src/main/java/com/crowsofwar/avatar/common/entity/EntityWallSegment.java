@@ -21,8 +21,8 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;

@@ -20,7 +20,7 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
 import net.minecraft.entity.EntityLivingBase;

@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.util;
 
 import java.io.IOException;
 
-import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;

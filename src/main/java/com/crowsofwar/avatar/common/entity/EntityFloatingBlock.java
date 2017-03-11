@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;

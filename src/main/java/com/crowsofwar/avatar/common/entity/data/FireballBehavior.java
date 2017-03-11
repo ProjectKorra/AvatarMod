@@ -24,8 +24,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.gorecore.util.Vector;
 

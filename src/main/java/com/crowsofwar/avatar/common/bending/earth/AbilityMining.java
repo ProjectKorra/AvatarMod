@@ -24,8 +24,8 @@ import static java.lang.Math.floor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crowsofwar.avatar.common.data.AbilityContext;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;

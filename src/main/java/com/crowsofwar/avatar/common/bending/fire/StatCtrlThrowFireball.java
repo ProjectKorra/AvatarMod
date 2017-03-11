@@ -22,7 +22,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;

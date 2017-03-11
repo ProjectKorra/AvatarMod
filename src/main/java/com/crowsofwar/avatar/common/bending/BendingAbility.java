@@ -33,7 +33,7 @@ import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
-import com.crowsofwar.avatar.common.data.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**

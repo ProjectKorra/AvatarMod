@@ -15,10 +15,13 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.common.data;
+package com.crowsofwar.avatar.common.data.ctx;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;

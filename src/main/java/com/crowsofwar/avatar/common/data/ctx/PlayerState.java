@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.common.data;
+package com.crowsofwar.avatar.common.data.ctx;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.util.Raytrace;

@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.data.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
