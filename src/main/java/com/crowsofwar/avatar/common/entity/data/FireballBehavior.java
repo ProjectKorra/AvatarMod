@@ -24,13 +24,13 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
@@ -125,7 +125,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			motion.setY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
+			BendingData data = Bender.create(entity.getOwner()).getData();
 			if (!collided.worldObj.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
 				data.getAbilityData(ABILITY_FIREBALL).addXp(xp);
@@ -156,16 +156,16 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 		
 		@Override
 		public FireballBehavior onUpdate(EntityFireball entity) {
-			EntityPlayer player = entity.getOwner();
+			EntityLivingBase owner = entity.getOwner();
 			
-			if (player == null) return this;
+			if (owner == null) return this;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = Bender.create(owner).getData();
 			
-			double yaw = Math.toRadians(player.rotationYaw);
-			double pitch = Math.toRadians(player.rotationPitch);
+			double yaw = Math.toRadians(owner.rotationYaw);
+			double pitch = Math.toRadians(owner.rotationPitch);
 			Vector forward = Vector.toRectangular(yaw, pitch);
-			Vector eye = Vector.getEyePos(player);
+			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);

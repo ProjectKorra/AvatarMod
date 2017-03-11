@@ -27,13 +27,13 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
@@ -190,7 +190,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			// Add XP
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
+			BendingData data = Bender.create(entity.getOwner()).getData();
 			if (!collided.worldObj.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.blockThrowHit;
 				if (collided.getHealth() <= 0) {
@@ -228,7 +228,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			if (velocity.y() <= 0) {
 				velocity.setY(0);
 				entity.velocity().set(velocity);
-				return new PlayerControlled(entity, entity.getOwner());
+				return new PlayerControlled();
 			}
 			
 			return this;
@@ -252,20 +252,18 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		public PlayerControlled() {}
 		
-		public PlayerControlled(EntityFloatingBlock entity, EntityPlayer player) {}
-		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			EntityPlayer player = entity.getOwner();
+			EntityLivingBase owner = entity.getOwner();
 			
-			if (player == null) return this;
+			if (owner == null) return this;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = Bender.create(owner).getData();
 			
-			double yaw = Math.toRadians(player.rotationYaw);
-			double pitch = Math.toRadians(player.rotationPitch);
+			double yaw = Math.toRadians(owner.rotationYaw);
+			double pitch = Math.toRadians(owner.rotationPitch);
 			Vector forward = Vector.toRectangular(yaw, pitch);
-			Vector eye = Vector.getEyePos(player);
+			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);

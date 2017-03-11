@@ -17,12 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -76,21 +77,21 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
-			EntityPlayer player = entity.getOwner();
+			EntityLivingBase owner = entity.getOwner();
 			
-			if (player == null) return this;
+			if (owner == null) return this;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = Bender.create(owner).getData();
 			
 			Vector target;
-			Raytrace.Result raytrace = Raytrace.getTargetBlock(player, 3, false);
+			Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 3, false);
 			if (raytrace.hitSomething()) {
 				target = raytrace.getPosPrecise().plus(0, .2, 0);
 			} else {
-				double yaw = Math.toRadians(player.rotationYaw);
-				double pitch = Math.toRadians(player.rotationPitch);
+				double yaw = Math.toRadians(owner.rotationYaw);
+				double pitch = Math.toRadians(owner.rotationPitch);
 				Vector forward = Vector.toRectangular(yaw, pitch);
-				Vector eye = Vector.getEyePos(player);
+				Vector eye = Vector.getEyePos(owner);
 				target = forward.times(3).plus(eye);
 			}
 			
