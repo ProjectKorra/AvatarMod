@@ -63,6 +63,8 @@ public interface Bender {
 	
 	boolean isCreativeMode();
 	
+	boolean isFlying();
+	
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */

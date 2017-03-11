@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
@@ -37,6 +38,7 @@ import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,8 +71,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
 			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
 	
-	private static final DataParameter<String> SYNC_OWNER_NAME = createKey(EntityFloatingBlock.class,
-			DataSerializers.STRING);
+	private static final DataParameter<BenderInfo> SYNC_OWNER = createKey(EntityFloatingBlock.class,
+			AvatarDataSerializers.SERIALIZER_BENDER);
 	
 	private static int nextBlockID = 0;
 	
@@ -104,11 +106,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			setID(nextBlockID++);
 		}
 		this.enableItemDrops = true;
-		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, newOwner -> {
-			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetch(newOwner)
-					.getBendingState(EARTHBENDING);
-			if (state != null) state.setPickupBlock(this);
-		});
+		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER, this::onNewOwner);
 		this.damageMult = 1;
 		
 	}
@@ -327,11 +325,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setBehavior(new FloatingBlockBehavior.Fall());
 	}
 	
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		return ownerAttrib.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		ownerAttrib.setOwner(owner);
 	}
 	
@@ -347,6 +345,12 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
+	}
+	
+	private void onNewOwner(EntityLivingBase owner) {
+		EarthbendingState state = (EarthbendingState) Bender.create(owner).getData()
+				.getBendingState(EARTHBENDING);
+		if (state != null) state.setPickupBlock(this);
 	}
 	
 	@Override

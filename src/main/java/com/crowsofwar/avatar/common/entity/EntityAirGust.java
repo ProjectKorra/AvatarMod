@@ -22,7 +22,8 @@ import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -93,7 +94,7 @@ public class EntityAirGust extends EntityArc {
 			if (!entity.worldObj.isRemote && entity != owner
 					&& entity != GoreCore.proxy.getClientSidePlayer()) {
 				
-				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+				BendingData data = Bender.create(owner).getData();
 				float xp = 0;
 				if (data != null) {
 					AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_GUST);

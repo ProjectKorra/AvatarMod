@@ -47,4 +47,9 @@ public class PlayerBender implements Bender {
 		return player.capabilities.isCreativeMode;
 	}
 	
+	@Override
+	public boolean isFlying() {
+		return player.capabilities.isFlying;
+	}
+	
 }

@@ -19,9 +19,9 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -32,7 +32,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -87,21 +86,23 @@ public class EntityAirBubble extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		Bender owner = ownerAttr.getOwnerBender();
-		if (owner != null) {
-			setPosition(owner.x(), owner.y(), owner.z());
-			if (owner.isDead()) {
+		EntityLivingBase ownerEnt = ownerAttr.getOwner();
+		Bender ownerBender = ownerAttr.getOwnerBender();
+		
+		if (ownerEnt != null) {
+			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
+			if (ownerEnt.isDead) {
 				dissipateSmall();
 			}
 			
 			if (!isDissipating()) {
-				IAttributeInstance attribute = owner
+				IAttributeInstance attribute = ownerEnt
 						.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 					attribute.applyModifier(SLOW_ATTR);
 				}
-				if (!owner.onGround && !owner.isInWater() && !owner.capabilities.isFlying)
-					owner.motionY += .03;
+				if (!ownerEnt.onGround && !ownerEnt.isInWater() && !ownerBender.isFlying())
+					ownerEnt.motionY += .03;
 			}
 			
 		}
@@ -126,7 +127,7 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	public void setDead() {
 		super.setDead();
-		EntityPlayer owner = getOwner();
+		EntityLivingBase owner = getOwner();
 		if (owner != null) {
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
@@ -235,7 +236,7 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			BendingData data = Bender.create(getOwner()).getData();
 			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
 			data.sync();
