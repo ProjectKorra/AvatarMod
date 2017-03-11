@@ -16,11 +16,13 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 
@@ -29,12 +31,31 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
  * 
  * @author CrowsOfWar
  */
-public interface BendingData {
+public abstract class BendingData {
+	
+	private final Set<BendingController> bendings;
+	
+	public BendingData() {
+		bendings = new HashSet<>();
+	}
+	
+	// ================================================================================
+	// BENDINGS METHODS
+	// ================================================================================
+	
+	/**
+	 * Check if the player has that bending controller
+	 */
+	public boolean hasBending(BendingController bending) {
+		return bendings.contains(bending);
+	}
 	
 	/**
 	 * Check if the player has that type of bending
 	 */
-	boolean hasBending(BendingType type);
+	public boolean hasBending(BendingType type) {
+		return hasBending(BendingManager.getBending(type));
+	}
 	
 	/**
 	 * If the bending controller is not already present, adds the bending
@@ -42,27 +63,39 @@ public interface BendingData {
 	 * <p>
 	 * Also adds the state if it isn't present.
 	 */
-	void addBending(BendingController bending);
+	public void addBending(BendingController bending) {
+		if (bendings.add(bending)) {
+			save();
+		}
+	}
 	
 	/**
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
 	 */
-	void addBending(BendingType type);
+	public void addBending(BendingType type) {
+		addBending(BendingManager.getBending(type));
+	}
 	
 	/**
 	 * Remove the specified bending controller and its associated state. Please
 	 * note, this will be saved, so is permanent (unless another bending
 	 * controller is added).
 	 */
-	void removeBending(BendingController bending);
+	public void removeBending(BendingController bending) {
+		if (bendings.remove(bending)) {
+			save();
+		}
+	}
 	
 	/**
 	 * Remove the bending controller and its state with that type.
 	 * 
 	 * @see #removeBending(BendingController)
 	 */
-	void removeBending(BendingType type);
+	public void removeBending(BendingType type) {
+		removeBending(BendingManager.getBending(type));
+	}
 	
 	List<BendingController> getBendingControllers();
 	
@@ -152,5 +185,10 @@ public interface BendingData {
 	float getFallAbsorption();
 	
 	void setFallAbsorption(float amount);
+	
+	/**
+	 * Save this BendingData
+	 */
+	protected abstract void save();
 	
 }
