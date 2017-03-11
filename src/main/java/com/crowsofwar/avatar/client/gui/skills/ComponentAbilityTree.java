@@ -68,6 +68,10 @@ public class ComponentAbilityTree extends UiComponent {
 		};
 		// @formatter:on
 		
+		if (ability == BendingAbility.ABILITY_AIR_GUST) {
+			// System.out.println(Arrays.toString(reachedLevel));
+		}
+		
 		slot1.setVisible(data.getLevel() != 3 && data.getXp() == 100);
 		slot2.setVisible(data.getLevel() == 2 && data.getXp() == 100);
 		
@@ -82,11 +86,10 @@ public class ComponentAbilityTree extends UiComponent {
 				if (reachedLevel[i]) {
 					float xp = data.getLevel() == i ? data.getXp() : 100;
 					drawTexturedModalRect(i * 33 + 18, (18 - 8) / 2, 80, 248, (int) (xp / 100 * 15), 8);
-					
 				}
 			}
 			
-			if (reachedLevel[i]) {
+			if (i > 0 && !reachedLevel[i] && reachedLevel[i - 1]) {
 				slot1.setOffset(Measurement.fromPixels(//
 						coordinates().xInPixels() + i * 33 * scaleFactor(), //
 						coordinates().yInPixels() + 0));
