@@ -19,8 +19,13 @@ package com.crowsofwar.avatar.common;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -43,6 +48,15 @@ public class AvatarPlayerTick {
 				}
 				
 			}
+			
+			List<TickHandler> tickHandlers = data.getAllTickHandlers();
+			if (tickHandlers != null) {
+				AbilityContext ctx = new AbilityContext(data, new Raytrace.Result());
+				for (TickHandler handler : tickHandlers) {
+					handler.tick(ctx);
+				}
+			}
+			
 		}
 		
 	}
