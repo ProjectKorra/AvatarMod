@@ -182,7 +182,8 @@ public interface BendingData {
 		STATUS_CONTROLS(Transmitters.STATUS_CONTROLS, data -> data.getAllStatusControls()),
 		ABILITY_DATA(Transmitters.ABILITY_DATA_MAP, data -> data.getAllAbilityData()),
 		CHI(Transmitters.CHI, data -> data.chi()),
-		MISC(Transmitters.CHI, data -> null);
+		MISC(Transmitters.CHI, data -> null),
+		TICK_HANDLERS(Transmitters.TICK_HANDLERS, data -> data.getAllTickHandlers());
 		
 		private final Networker.Property<?> property;
 		private final Function<BendingData, Object> getter;

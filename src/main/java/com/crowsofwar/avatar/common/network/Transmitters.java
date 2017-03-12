@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.TickHandler;
 
 import io.netty.buffer.ByteBuf;
 
@@ -141,6 +142,28 @@ public class Transmitters {
 			chi.fromBytes(buf);
 			return chi;
 		}
+	};
+	
+	public static final DataTransmitter<List<TickHandler>, PlayerDataContext> TICK_HANDLERS = new DataTransmitter<List<TickHandler>, PlayerDataContext>() {
+		
+		@Override
+		public void write(ByteBuf buf, List<TickHandler> list) {
+			buf.writeInt(list.size());
+			for (TickHandler handler : list) {
+				buf.writeInt(handler.id());
+			}
+		}
+		
+		@Override
+		public List<TickHandler> read(ByteBuf buf, PlayerDataContext ctx) {
+			List<TickHandler> list = new ArrayList<>();
+			int length = buf.readInt();
+			for (int i = 0; i < length; i++) {
+				list.add(TickHandler.fromBytes(buf));
+			}
+			return list;
+		}
+		
 	};
 	
 }

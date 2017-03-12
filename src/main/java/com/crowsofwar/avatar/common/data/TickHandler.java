@@ -16,7 +16,12 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+
+import io.netty.buffer.ByteBuf;
 
 /**
  * 
@@ -25,6 +30,34 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
  */
 public abstract class TickHandler {
 	
+	private static int nextId = 1;
+	private static Map<Integer, TickHandler> allHandlers;
+	private final int id;
+	
+	public TickHandler() {
+		if (allHandlers == null) allHandlers = new HashMap<>();
+		
+		id = nextId++;
+		allHandlers.put(id, this);
+		
+	}
+	
 	public abstract void tick(BendingData data, Bender bender);
+	
+	public int id() {
+		return id;
+	}
+	
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(id);
+	}
+	
+	public static TickHandler fromId(int id) {
+		
+	}
+	
+	public static TickHandler fromBytes(ByteBuf buf) {
+		
+	}
 	
 }
