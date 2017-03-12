@@ -57,7 +57,6 @@ public class AbilityAirBubble extends AirAbility {
 			
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.addStatusControl(StatusControl.BUBBLE_CONTRACT);
-			data.sync();
 		}
 		
 	}

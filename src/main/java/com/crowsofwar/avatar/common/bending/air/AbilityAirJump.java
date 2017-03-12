@@ -45,7 +45,6 @@ public class AbilityAirJump extends AirAbility {
 		if (!data.hasStatusControl(StatusControl.AIR_JUMP) && ctx.consumeChi(STATS_CONFIG.chiAirJump)) {
 			
 			data.addStatusControl(StatusControl.AIR_JUMP);
-			data.sync();
 			
 		}
 	}

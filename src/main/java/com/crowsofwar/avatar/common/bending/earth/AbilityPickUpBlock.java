@@ -58,7 +58,6 @@ public class AbilityPickUpBlock extends EarthAbility {
 	public void execute(AbilityContext ctx) {
 		
 		BendingData data = ctx.getData();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller());
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
@@ -95,7 +94,6 @@ public class AbilityPickUpBlock extends EarthAbility {
 						world.spawnEntityInWorld(floating);
 						
 						ebs.setPickupBlock(floating);
-						data.sendBendingState(ebs);
 						
 						world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 						
@@ -103,7 +101,6 @@ public class AbilityPickUpBlock extends EarthAbility {
 						
 						data.addStatusControl(StatusControl.PLACE_BLOCK);
 						data.addStatusControl(StatusControl.THROW_BLOCK);
-						data.sync();
 						
 					}
 					
