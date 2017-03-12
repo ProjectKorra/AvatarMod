@@ -17,12 +17,15 @@
 package com.crowsofwar.avatar.common.data;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbstractBendingData.DataCategory;
+import com.crowsofwar.avatar.common.network.DataTransmitter;
+import com.crowsofwar.avatar.common.network.Networker;
+import com.crowsofwar.avatar.common.network.Transmitters;
 
 /**
  * 
@@ -133,5 +136,37 @@ public interface BendingData {
 	 * Save this BendingData
 	 */
 	void save(DataCategory category, DataCategory... addditionalCategories);
+	
+	public enum DataCategory {
+		
+		BENDING(Transmitters.CONTROLLER_LIST, data -> data.getAllBending()),
+		STATUS_CONTROLS(Transmitters.STATUS_CONTROLS, data -> data.getAllStatusControls()),
+		ABILITY_DATA(Transmitters.ABILITY_DATA_MAP, data -> data.getAllAbilityData()),
+		CHI(Transmitters.CHI, data -> data.chi()),
+		MISC(Transmitters.CHI, data -> null);
+		
+		private final Networker.Property<?> property;
+		private final Function<BendingData, Object> getter;
+		private final DataTransmitter<?, ?> transmitter;
+		
+		private DataCategory(DataTransmitter transmitter, Function<BendingData, Object> getter) {
+			property = new Networker.Property<>(ordinal() + 1);
+			this.getter = getter;
+			this.transmitter = transmitter;
+		}
+		
+		public Networker.Property<?> property() {
+			return property;
+		}
+		
+		public Object get(BendingData data) {
+			return getter.apply(data);
+		}
+		
+		public DataTransmitter<?, ?> getTransmitter() {
+			return transmitter;
+		}
+		
+	}
 	
 }

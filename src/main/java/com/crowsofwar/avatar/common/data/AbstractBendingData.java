@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbstractBendingData.DataCategory;
 
 /**
  * 
@@ -288,37 +289,5 @@ public abstract class AbstractBendingData implements BendingData {
 	 */
 	@Override
 	public abstract void save(DataCategory category, DataCategory... addditionalCategories);
-	
-	public enum DataCategory {
-		
-		BENDING,
-		STATUS_CONTROLS,
-		ABILITY_DATA,
-		CHI,
-		MISC
-		
-		// BENDING(data -> data.getAllBending()),
-		// STATUS_CONTROLS(data -> data.getAllStatusControls()),
-		// ABILITY_DATA(data -> data.getAllAbilityData()),
-		// CHI(data -> data.getChi()),
-		// MISC(data -> null);
-		//
-		// private final Networker.Property<?> property;
-		// private final Function<BendingData, Object> getter;
-		//
-		// private DataCategory(Function<BendingData, Object> getter) {
-		// property = new Networker.Property<>(ordinal() + 1);
-		// this.getter = getter;
-		// }
-		//
-		// public Networker.Property<?> property() {
-		// return property;
-		// }
-		//
-		// public Object get(BendingData data) {
-		// return getter.apply(data);
-		// }
-		
-	}
 	
 }

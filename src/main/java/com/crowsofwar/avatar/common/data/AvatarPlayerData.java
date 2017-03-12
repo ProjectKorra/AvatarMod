@@ -26,10 +26,10 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbstractBendingData.DataCategory;
+import com.crowsofwar.avatar.common.network.DataTransmitter;
 import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.Networker.Property;
-import com.crowsofwar.avatar.common.network.Transmitters;
+import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.DataSaver;
@@ -63,11 +63,15 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		boolean isClient = player instanceof AbstractClientPlayer;
 		networker = new Networker(!isClient, PacketCPlayerData.class,
 				net -> new PacketCPlayerData(net, playerID));
-		networker.register(bendingControllerList, Transmitters.CONTROLLER_LIST, KEY_CONTROLLERS);
-		networker.register(abilityData, Transmitters.ABILITY_DATA_MAP, KEY_ABILITY_DATA);
-		networker.register(statusControls, Transmitters.STATUS_CONTROLS, KEY_STATUS_CONTROLS);
-		networker.register(skating, Transmitters.BOOLEAN, KEY_SKATING);
-		networker.register(chi, Transmitters.CHI, KEY_CHI);
+		
+		for (DataCategory category : DataCategory.values()) {
+			
+			networker.register(//
+					category.get(this), //
+					(DataTransmitter<Object, PlayerDataContext>) category.getTransmitter(), //
+					(Networker.Property<Object>) category.property());
+			
+		}
 		
 	}
 	
@@ -128,19 +132,20 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		writeTo.setBoolean("WaterSkating", skating);
 		writeTo.setInteger("AbilityCooldown", abilityCooldown);
 		
-		chi.writeToNBT(writeTo);
+		chi().writeToNBT(writeTo);
 		
 	}
 	
-	// /**
-	// * Synchronizes all <b>changed</b> values with the client.
-	// */
-	// public void sync() {
-	// networker.sendUpdated();
-	// }
-	
 	public void save(DataCategory category, DataCategory... additionalCategories) {
-		networker.markChanged(category.property(), data);
+		
+		networker.markChanged((Networker.Property<Object>) category.property(), (Object) category.get(this));
+		for (DataCategory cat : additionalCategories) {
+			networker.markChanged((Networker.Property<Object>) cat.property(), (Object) cat.get(this));
+		}
+		
+		networker.sendUpdated();
+		saveChanges();
+		
 	}
 	
 	public Networker getNetworker() {
@@ -155,5 +160,9 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
 		return fetcher;
 	}
+	
+	// ================================================================================
+	// DELEGATES
+	// ================================================================================
 	
 }
