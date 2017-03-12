@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -45,14 +46,15 @@ public class StatCtrlThrowBlock extends StatusControl {
 	@Override
 	public boolean execute(AbilityContext ctx) {
 		
-		BendingController controller = (BendingController) BendingManager
-				.getBending(BendingType.EARTHBENDING);
+		BendingController controller = BendingManager.getBending(BendingType.EARTHBENDING);
 		
-		EarthbendingState ebs = (EarthbendingState) ctx.getData().getBendingState(controller);
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.worldObj;
-		EntityFloatingBlock floating = ebs.getPickupBlock();
 		BendingData data = ctx.getData();
+		
+		EntityFloatingBlock floating = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
+				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
+						&& fb.getOwner() == ctx.getBenderEntity());
 		
 		if (floating != null) {
 			
@@ -63,12 +65,10 @@ public class StatCtrlThrowBlock extends StatusControl {
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
 			floating.velocity().add(lookDir.times(35));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
-			ebs.setPickupBlock(null);
 			
 			controller.post(new FloatingBlockEvent.BlockThrown(floating, entity));
 			
 			data.removeStatusControl(PLACE_BLOCK);
-			data.sync();
 			
 		}
 		

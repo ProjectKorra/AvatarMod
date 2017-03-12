@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.BackedVector;
@@ -138,11 +139,10 @@ public abstract class AvatarEntity extends Entity {
 		return entities.isEmpty() ? null : (T) entities.get(0);
 	}
 	
-	public static <T extends AvatarEntity> T lookupEntity(World world, EntityLivingBase owner, Class<T> cls) {
+	public static <T extends AvatarEntity> T lookupEntity(World world, Class<T> cls, Predicate<T> predicate) {
 		List<Entity> entities = world.loadedEntityList;
 		for (Entity ent : entities) {
-			if (ent instanceof AvatarEntity && ((AvatarEntity) ent).getOwner() == owner
-					&& ent.getClass().isAssignableFrom(cls)) {
+			if (ent.getClass().isAssignableFrom(cls) && predicate.test((T) ent)) {
 				return (T) ent;
 			}
 		}

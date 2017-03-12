@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -52,13 +53,14 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	@Override
 	public boolean execute(AbilityContext ctx) {
 		
-		BendingController controller = (BendingController) BendingManager
-				.getBending(BendingType.EARTHBENDING);
+		BendingController controller = BendingManager.getBending(BendingType.EARTHBENDING);
 		
 		BendingData data = ctx.getData();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
 		
-		EntityFloatingBlock floating = ebs.getPickupBlock();
+		EntityFloatingBlock floating = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
+				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
+						&& fb.getOwner() == ctx.getBenderEntity());
+		
 		if (floating != null) {
 			// TODO Verify look at block
 			VectorI looking = ctx.getClientLookBlock();
@@ -70,12 +72,10 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				Vector force = looking.precision().minus(new Vector(floating));
 				force.normalize();
 				floating.velocity().add(force);
-				ebs.dropBlock();
 				
 				controller.post(new FloatingBlockEvent.BlockPlaced(floating, ctx.getBenderEntity()));
 				
 				data.removeStatusControl(THROW_BLOCK);
-				data.sync();
 				
 				data.getAbilityData(ABILITY_PICK_UP_BLOCK).addXp(SKILLS_CONFIG.blockPlaced);
 				

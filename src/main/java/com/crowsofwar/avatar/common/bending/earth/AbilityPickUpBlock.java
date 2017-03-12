@@ -63,8 +63,10 @@ public class AbilityPickUpBlock extends EarthAbility {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		
-		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(world, entity,
-				EntityFloatingBlock.class);
+		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
+				EntityFloatingBlock.class,
+				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
+						&& fb.getOwner() == ctx.getBenderEntity());
 		
 		if (currentBlock != null) {
 			currentBlock.drop();
