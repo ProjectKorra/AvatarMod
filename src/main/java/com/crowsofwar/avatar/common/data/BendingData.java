@@ -35,6 +35,10 @@ import com.crowsofwar.avatar.common.network.Transmitters;
  */
 public interface BendingData {
 	
+	// ================================================================================
+	// BENDING CONTROLLERS
+	// ================================================================================
+	
 	/**
 	 * Check if the player has that bending controller
 	 */
@@ -77,6 +81,10 @@ public interface BendingData {
 	
 	void clearBending();
 	
+	// ================================================================================
+	// STATUS CONTROLS
+	// ================================================================================
+	
 	boolean hasStatusControl(StatusControl control);
 	
 	void addStatusControl(StatusControl control);
@@ -86,6 +94,10 @@ public interface BendingData {
 	List<StatusControl> getAllStatusControls();
 	
 	void clearStatusControls();
+	
+	// ================================================================================
+	// ABILITY DATA
+	// ================================================================================
 	
 	boolean hasAbilityData(BendingAbility ability);
 	
@@ -108,12 +120,34 @@ public interface BendingData {
 	 */
 	void clearAbilityData();
 	
+	// ================================================================================
+	// CHI
+	// ================================================================================
+	
 	/**
 	 * Gets the chi information about the bender
 	 */
 	Chi chi();
 	
 	void setChi(Chi chi);
+	
+	// ================================================================================
+	// TICK HANDLERS
+	// ================================================================================
+	
+	boolean hasTickHandler(TickHandler handler);
+	
+	void addTickHandler(TickHandler handler);
+	
+	void removeTickHandler(TickHandler handler);
+	
+	List<TickHandler> getAllTickHandlers();
+	
+	void clearTickHandlers();
+	
+	// ================================================================================
+	// MISC
+	// ================================================================================
 	
 	boolean isSkating();
 	

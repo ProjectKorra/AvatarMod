@@ -292,6 +292,31 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
+	public boolean hasTickHandler(TickHandler handler) {
+		return bendingData.hasTickHandler(handler);
+	}
+	
+	@Override
+	public void addTickHandler(TickHandler handler) {
+		bendingData.addTickHandler(handler);
+	}
+	
+	@Override
+	public void removeTickHandler(TickHandler handler) {
+		bendingData.removeTickHandler(handler);
+	}
+	
+	@Override
+	public List<TickHandler> getAllTickHandlers() {
+		return bendingData.getAllTickHandlers();
+	}
+	
+	@Override
+	public void clearTickHandlers() {
+		bendingData.clearTickHandlers();
+	}
+	
+	@Override
 	public boolean isSkating() {
 		return bendingData.isSkating();
 	}

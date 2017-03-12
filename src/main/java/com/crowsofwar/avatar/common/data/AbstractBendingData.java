@@ -39,6 +39,7 @@ public abstract class AbstractBendingData implements BendingData {
 	private final Set<BendingController> bendings;
 	private final Set<StatusControl> statusControls;
 	private final Map<BendingAbility, AbilityData> abilityData;
+	private final Set<TickHandler> tickHandlers;
 	private Chi chi;
 	
 	private float fallAbsorption;
@@ -51,6 +52,7 @@ public abstract class AbstractBendingData implements BendingData {
 		bendings = new HashSet<>();
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
+		tickHandlers = new HashSet<>();
 		chi = new Chi(this);
 	}
 	
@@ -227,6 +229,39 @@ public abstract class AbstractBendingData implements BendingData {
 	public void setChi(Chi chi) {
 		this.chi = chi;
 		save(DataCategory.CHI);
+	}
+	
+	// ================================================================================
+	// TICK HANDLERS
+	// ================================================================================
+	
+	@Override
+	public boolean hasTickHandler(TickHandler handler) {
+		return tickHandlers.contains(handler);
+	}
+	
+	@Override
+	public void addTickHandler(TickHandler handler) {
+		if (tickHandlers.add(handler)) {
+			save(DataCategory.TICK_HANDLERS);
+		}
+	}
+	
+	@Override
+	public void removeTickHandler(TickHandler handler) {
+		if (tickHandlers.remove(handler)) {
+			save(DataCategory.TICK_HANDLERS);
+		}
+	}
+	
+	@Override
+	public List<TickHandler> getAllTickHandlers() {
+		return new ArrayList<>(tickHandlers);
+	}
+	
+	@Override
+	public void clearTickHandlers() {
+		tickHandlers.clear();
 	}
 	
 	// ================================================================================
