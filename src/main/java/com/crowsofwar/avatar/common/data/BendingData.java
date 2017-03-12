@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -74,6 +75,8 @@ public interface BendingData {
 	
 	List<BendingController> getAllBending();
 	
+	void clearBending();
+	
 	boolean hasStatusControl(StatusControl control);
 	
 	void addStatusControl(StatusControl control);
@@ -97,6 +100,8 @@ public interface BendingData {
 	 * Gets a list of all ability data contained in this player data.
 	 */
 	List<AbilityData> getAllAbilityData();
+	
+	Map<BendingAbility, AbilityData> getAbilityDataMap();
 	
 	/**
 	 * Removes all ability data associations

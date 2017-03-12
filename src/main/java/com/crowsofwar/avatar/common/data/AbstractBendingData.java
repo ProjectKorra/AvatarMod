@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbstractBendingData.DataCategory;
 
 /**
  * 
@@ -124,6 +123,11 @@ public abstract class AbstractBendingData implements BendingData {
 		return new ArrayList<>(bendings);
 	}
 	
+	@Override
+	public void clearBending() {
+		bendings.clear();
+	}
+	
 	// ================================================================================
 	// STATUS CONTROLS
 	// ================================================================================
@@ -192,6 +196,11 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public List<AbilityData> getAllAbilityData() {
 		return new ArrayList<>(abilityData.values());
+	}
+	
+	@Override
+	public Map<BendingAbility, AbilityData> getAbilityDataMap() {
+		return new HashMap<>(abilityData);
 	}
 	
 	/**

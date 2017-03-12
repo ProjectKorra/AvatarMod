@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,45 +91,57 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	protected void readPlayerDataFromNBT(NBTTagCompound readFrom) {
 		
 		AvatarPlayerData playerData = this;
-		AvatarUtils.readList(bendingControllerList,
+		
+		List<BendingController> bendings = new ArrayList<>();
+		AvatarUtils.readList(bendings,
 				compound -> BendingController.find(compound.getInteger("ControllerID")), readFrom,
 				"BendingControllers");
-		
-		bendingControllers.clear();
-		for (BendingController controller : bendingControllerList) {
-			bendingControllers.put(controller.getType(), controller);
+		clearBending();
+		for (BendingController bending : bendings) {
+			addBending(bending);
 		}
 		
-		AvatarUtils.readList(statusControls, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")),
-				readFrom, "StatusControls");
+		List<StatusControl> scs = new ArrayList<>();
+		AvatarUtils.readList(scs, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), readFrom,
+				"StatusControls");
+		clearStatusControls();
+		for (StatusControl sc : scs) {
+			addStatusControl(sc);
+		}
 		
+		Map<BendingAbility, AbilityData> abilityData = new HashMap<>();
 		AvatarUtils.readMap(abilityData, nbt -> BendingManager.getAbility(nbt.getInteger("Id")), nbt -> {
 			BendingAbility ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
 			AbilityData data = new AbilityData(this, ability);
 			data.readFromNbt(nbt);
 			return data;
 		}, readFrom, "AbilityData");
+		clearAbilityData();
+		for (Map.Entry<BendingAbility, AbilityData> entry : abilityData.entrySet()) {
+			setAbilityData(entry.getKey(), entry.getValue());
+		}
 		
-		wallJumping = readFrom.getBoolean("WallJumping");
-		fallAbsorption = readFrom.getFloat("FallAbsorption");
-		timeInAir = readFrom.getInteger("TimeInAir");
-		skating = readFrom.getBoolean("WaterSkating");
-		abilityCooldown = readFrom.getInteger("AbilityCooldown");
+		setWallJumping(readFrom.getBoolean("WallJumping"));
+		setFallAbsorption(readFrom.getFloat("FallAbsorption"));
+		setTimeInAir(readFrom.getInteger("TimeInAir"));
+		setSkating(readFrom.getBoolean("WaterSkating"));
+		setAbilityCooldown(readFrom.getInteger("AbilityCooldown"));
 		
-		chi.readFromNBT(readFrom);
+		chi().readFromNBT(readFrom);
 		
 	}
 	
 	@Override
 	protected void writePlayerDataToNBT(NBTTagCompound writeTo) {
 		
-		AvatarUtils.writeList(bendingControllerList,
+		AvatarUtils.writeList(getAllBending(),
 				(compound, controller) -> compound.setInteger("ControllerID", controller.getID()), writeTo,
 				"BendingControllers");
-		AvatarUtils.writeList(statusControls, (nbtTag, control) -> nbtTag.setInteger("Id", control.id()),
-				writeTo, "StatusControls");
 		
-		AvatarUtils.writeMap(abilityData, //
+		AvatarUtils.writeList(getAllStatusControls(),
+				(nbtTag, control) -> nbtTag.setInteger("Id", control.id()), writeTo, "StatusControls");
+		
+		AvatarUtils.writeMap(getAbilityDataMap(), //
 				(nbt, ability) -> {
 					nbt.setInteger("Id", ability.getId());
 					nbt.setString("_AbilityName", ability.getName());
@@ -136,11 +150,11 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");
 		
-		writeTo.setBoolean("WallJumping", wallJumping);
-		writeTo.setFloat("FallAbsorption", fallAbsorption);
-		writeTo.setInteger("TimeInAir", timeInAir);
-		writeTo.setBoolean("WaterSkating", skating);
-		writeTo.setInteger("AbilityCooldown", abilityCooldown);
+		writeTo.setBoolean("WallJumping", isWallJumping());
+		writeTo.setFloat("FallAbsorption", getFallAbsorption());
+		writeTo.setInteger("TimeInAir", getTimeInAir());
+		writeTo.setBoolean("WaterSkating", isSkating());
+		writeTo.setInteger("AbilityCooldown", getAbilityCooldown());
 		
 		chi().writeToNBT(writeTo);
 		
@@ -212,6 +226,11 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
+	public void clearBending() {
+		bendingData.clearBending();
+	}
+	
+	@Override
 	public boolean hasStatusControl(StatusControl control) {
 		return bendingData.hasStatusControl(control);
 	}
@@ -254,6 +273,11 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	@Override
 	public List<AbilityData> getAllAbilityData() {
 		return bendingData.getAllAbilityData();
+	}
+	
+	@Override
+	public Map<BendingAbility, AbilityData> getAbilityDataMap() {
+		return bendingData.getAbilityDataMap();
 	}
 	
 	@Override
