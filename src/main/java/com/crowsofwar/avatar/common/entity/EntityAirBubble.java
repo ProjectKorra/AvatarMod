@@ -188,7 +188,7 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (!isEntityInvulnerable(source)) {
-			setHealth(getHealth() - (float) amount);
+			setHealth(getHealth() - amount);
 			setBeenAttacked();
 			return true;
 		}
@@ -239,7 +239,6 @@ public class EntityAirBubble extends AvatarEntity {
 			BendingData data = Bender.create(getOwner()).getData();
 			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-			data.sync();
 			
 			IAttributeInstance attribute = getOwner()
 					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);

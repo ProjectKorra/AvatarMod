@@ -88,7 +88,6 @@ public class EntityFireArc extends EntityArc {
 			data.removeStatusControl(StatusControl.THROW_FIRE);
 			if (!worldObj.isRemote) {
 				data.removeStatusControl(StatusControl.THROW_FIRE);
-				data.sync();
 			}
 		}
 	}

@@ -27,7 +27,6 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
-import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
 import com.crowsofwar.avatar.common.bending.water.WaterbendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.ConfigChi;
@@ -72,7 +71,6 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -153,7 +151,6 @@ public class AvatarMod {
 		
 		AvatarChatMessages.loadAll();
 		
-		MinecraftForge.EVENT_BUS.register(new FirebendingUpdate());
 		WaterbendingUpdate.register();
 		EarthbendingEvents.register();
 		

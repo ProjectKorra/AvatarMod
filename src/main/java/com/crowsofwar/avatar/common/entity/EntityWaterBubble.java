@@ -109,7 +109,6 @@ public class EntityWaterBubble extends AvatarEntity {
 				BendingData data = Bender.create(getOwner()).getData();
 				if (data != null) {
 					data.removeStatusControl(StatusControl.THROW_BUBBLE);
-					data.sync();
 				}
 			}
 		}
@@ -140,6 +139,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
+	@Override
 	public EntityLivingBase getOwner() {
 		return ownerAttrib.getOwner();
 	}

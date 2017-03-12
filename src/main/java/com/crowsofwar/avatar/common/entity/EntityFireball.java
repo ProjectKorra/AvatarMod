@@ -95,6 +95,7 @@ public class EntityFireball extends AvatarEntity {
 		
 	}
 	
+	@Override
 	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();
 	}
@@ -166,7 +167,6 @@ public class EntityFireball extends AvatarEntity {
 		if (getOwner() != null) {
 			BendingData data = Bender.create(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIREBALL);
-			if (!worldObj.isRemote) data.sync();
 		}
 	}
 	

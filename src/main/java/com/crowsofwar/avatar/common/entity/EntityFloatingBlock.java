@@ -17,15 +17,12 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 import java.util.List;
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
@@ -106,7 +103,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			setID(nextBlockID++);
 		}
 		this.enableItemDrops = true;
-		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER, this::onNewOwner);
+		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
 		this.damageMult = 1;
 		
 	}
@@ -213,7 +210,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	public static EntityFloatingBlock getFromID(World world, int id) {
 		for (int i = 0; i < world.loadedEntityList.size(); i++) {
-			Entity e = (Entity) world.loadedEntityList.get(i);
+			Entity e = world.loadedEntityList.get(i);
 			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id)
 				return (EntityFloatingBlock) e;
 		}
@@ -325,6 +322,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setBehavior(new FloatingBlockBehavior.Fall());
 	}
 	
+	@Override
 	public EntityLivingBase getOwner() {
 		return ownerAttrib.getOwner();
 	}
@@ -345,12 +343,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
-	}
-	
-	private void onNewOwner(EntityLivingBase owner) {
-		EarthbendingState state = (EarthbendingState) Bender.create(owner).getData()
-				.getBendingState(EARTHBENDING);
-		if (state != null) state.setPickupBlock(this);
 	}
 	
 	@Override

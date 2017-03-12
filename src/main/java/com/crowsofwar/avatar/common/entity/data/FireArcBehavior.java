@@ -21,11 +21,7 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.fire.FirebendingState;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
@@ -72,30 +68,12 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			}
 			World world = owner.worldObj;
 			
-			BendingData data = Bender.create(owner).getData();
-			
-			if (data != null) {
-				FirebendingState bendingState = (FirebendingState) data
-						.getBendingState(BendingManager.getBending(BendingType.FIREBENDING));
-				
-				if (bendingState != null && bendingState.isManipulatingFire()) {
-					
-					EntityFireArc fire = bendingState.getFireArc();
-					if (fire != null) {
-						
-						Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
-								Math.toRadians(owner.rotationPitch));
-						Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
-						Vector motion = lookPos.minus(new Vector(fire));
-						motion.mul(.3);
-						fire.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
-						
-					} else {
-						if (!world.isRemote) bendingState.setFireArc(null);
-					}
-					
-				}
-			}
+			Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
+					Math.toRadians(owner.rotationPitch));
+			Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
+			Vector motion = lookPos.minus(new Vector(entity));
+			motion.mul(.3);
+			entity.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
 			
 			return this;
 			
