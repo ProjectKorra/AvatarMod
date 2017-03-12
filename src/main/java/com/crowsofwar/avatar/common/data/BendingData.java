@@ -41,6 +41,9 @@ public abstract class BendingData {
 	private final Map<BendingAbility, AbilityData> abilityData;
 	private Chi chi;
 	
+	private float fallAbsorption;
+	private boolean skating;
+	
 	public BendingData() {
 		bendings = new HashSet<>();
 		statusControls = new HashSet<>();
@@ -194,15 +197,25 @@ public abstract class BendingData {
 		save(DataCategory.CHI);
 	}
 	
-	void sendBendingState(BendingState state);
+	// ================================================================================
+	// MISC
+	// ================================================================================
 	
-	boolean isSkating();
+	public boolean isSkating() {
+		return skating;
+	}
 	
-	void setSkating(boolean skating);
+	public void setSkating(boolean skating) {
+		this.skating = skating;
+	}
 	
-	float getFallAbsorption();
+	public float getFallAbsorption() {
+		return fallAbsorption;
+	}
 	
-	void setFallAbsorption(float amount);
+	public void setFallAbsorption(float fallAbsorption) {
+		this.fallAbsorption = fallAbsorption;
+	}
 	
 	/**
 	 * Save this BendingData
