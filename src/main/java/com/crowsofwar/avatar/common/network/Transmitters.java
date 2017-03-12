@@ -32,7 +32,9 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BendingData.DataCategory;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.MiscData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 
 import io.netty.buffer.ByteBuf;
@@ -164,6 +166,21 @@ public class Transmitters {
 			return list;
 		}
 		
+	};
+	
+	public static final DataTransmitter<MiscData, PlayerDataContext> MISC = new DataTransmitter<MiscData, PlayerDataContext>() {
+		
+		@Override
+		public void write(ByteBuf buf, MiscData t) {
+			t.toBytes(buf);
+		}
+		
+		@Override
+		public MiscData read(ByteBuf buf, PlayerDataContext ctx) {
+			MiscData misc = new MiscData(() -> ctx.getData().save(DataCategory.MISC));
+			misc.fromBytes(buf);
+			return misc;
+		}
 	};
 	
 }

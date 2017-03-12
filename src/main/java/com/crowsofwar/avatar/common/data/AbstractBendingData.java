@@ -41,12 +41,7 @@ public abstract class AbstractBendingData implements BendingData {
 	private final Map<BendingAbility, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
 	private Chi chi;
-	
-	private float fallAbsorption;
-	private boolean skating;
-	private int timeInAir;
-	private int abilityCooldown;
-	private boolean wallJumping;
+	private MiscData miscData;
 	
 	public AbstractBendingData() {
 		bendings = new HashSet<>();
@@ -54,6 +49,7 @@ public abstract class AbstractBendingData implements BendingData {
 		abilityData = new HashMap<>();
 		tickHandlers = new HashSet<>();
 		chi = new Chi(this);
+		miscData = new MiscData(() -> save(DataCategory.MISC));
 	}
 	
 	// ================================================================================
@@ -269,63 +265,63 @@ public abstract class AbstractBendingData implements BendingData {
 	// ================================================================================
 	
 	@Override
+	public MiscData getMiscData() {
+		return miscData;
+	}
+	
+	@Override
 	public boolean isSkating() {
-		return skating;
+		return miscData.isSkating();
 	}
 	
 	@Override
 	public void setSkating(boolean skating) {
-		this.skating = skating;
+		miscData.setSkating(skating);
 	}
 	
 	@Override
 	public float getFallAbsorption() {
-		return fallAbsorption;
+		return miscData.getFallAbsorption();
 	}
 	
 	@Override
 	public void setFallAbsorption(float fallAbsorption) {
-		if (fallAbsorption == 0 || fallAbsorption > this.fallAbsorption) this.fallAbsorption = fallAbsorption;
+		miscData.setFallAbsorption(fallAbsorption);
 	}
 	
 	@Override
 	public int getTimeInAir() {
-		return timeInAir;
+		return miscData.getTimeInAir();
 	}
 	
 	@Override
 	public void setTimeInAir(int time) {
-		this.timeInAir = time;
+		miscData.setTimeInAir(time);
 	}
 	
 	@Override
 	public int getAbilityCooldown() {
-		return abilityCooldown;
+		return miscData.getAbilityCooldown();
 	}
 	
 	@Override
 	public void setAbilityCooldown(int cooldown) {
-		if (cooldown < 0) cooldown = 0;
-		this.abilityCooldown = cooldown;
-		save(DataCategory.MISC);
+		miscData.setAbilityCooldown(cooldown);
 	}
 	
 	@Override
 	public void decrementCooldown() {
-		if (abilityCooldown > 0) {
-			abilityCooldown--;
-			save(DataCategory.MISC);
-		}
+		miscData.decrementCooldown();
 	}
 	
 	@Override
 	public boolean isWallJumping() {
-		return wallJumping;
+		return miscData.isWallJumping();
 	}
 	
 	@Override
 	public void setWallJumping(boolean wallJumping) {
-		this.wallJumping = wallJumping;
+		miscData.setWallJumping(wallJumping);
 	}
 	
 	/**

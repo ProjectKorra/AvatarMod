@@ -149,6 +149,8 @@ public interface BendingData {
 	// MISC
 	// ================================================================================
 	
+	MiscData getMiscData();
+	
 	boolean isSkating();
 	
 	void setSkating(boolean skating);
@@ -182,7 +184,7 @@ public interface BendingData {
 		STATUS_CONTROLS(Transmitters.STATUS_CONTROLS, data -> data.getAllStatusControls()),
 		ABILITY_DATA(Transmitters.ABILITY_DATA_MAP, data -> data.getAllAbilityData()),
 		CHI(Transmitters.CHI, data -> data.chi()),
-		MISC(Transmitters.CHI, data -> null),
+		MISC(Transmitters.MISC, data -> data.getMiscData()),
 		TICK_HANDLERS(Transmitters.TICK_HANDLERS, data -> data.getAllTickHandlers());
 		
 		private final Networker.Property<?> property;

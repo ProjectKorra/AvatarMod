@@ -317,6 +317,11 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
+	public MiscData getMiscData() {
+		return bendingData.getMiscData();
+	}
+	
+	@Override
 	public boolean isSkating() {
 		return bendingData.isSkating();
 	}
