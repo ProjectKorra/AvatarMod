@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -31,7 +30,6 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.DataTransmitter;
 import com.crowsofwar.avatar.common.network.Networker;
-import com.crowsofwar.avatar.common.network.Networker.Property;
 import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -46,15 +44,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class AvatarPlayerData extends PlayerData implements BendingData {
-	
-	// TODO change player data lists into sets, when applicable
-	
-	public static final Networker.Property<List<BendingController>> KEY_CONTROLLERS = new Property<>(1);
-	public static final Networker.Property<Map<BendingAbility, AbilityData>> KEY_ABILITY_DATA = new Property<>(
-			2);
-	public static final Networker.Property<Set<StatusControl>> KEY_STATUS_CONTROLS = new Property<>(3);
-	public static final Networker.Property<Boolean> KEY_SKATING = new Property<>(4);
-	public static final Networker.Property<Chi> KEY_CHI = new Property<>(5);
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	

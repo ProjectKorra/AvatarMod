@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.data.AvatarPlayerData.*;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -32,6 +30,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData.DataCategory;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.Networker;
@@ -124,19 +123,20 @@ public class PacketHandlerClient implements IPacketHandler {
 			
 			Map<Networker.Property, Object> readData = packet.interpretData(data.getNetworker(),
 					new PlayerDataContext(data));
-			if (readData.containsKey(KEY_CONTROLLERS)) {
+			
+			if (readData.containsKey(DataCategory.BENDING.property())) {
 				data.clearBending();
-				List<BendingController> bending = (List<BendingController>) readData.get(KEY_CONTROLLERS);
+				List<BendingController> bending = (List<BendingController>) readData
+						.get(DataCategory.BENDING.property());
 				for (BendingController controller : bending) {
 					data.addBending(controller);
 				}
 			}
 			
-			if (readData.containsKey(KEY_ABILITY_DATA)) {
-				System.out.println("Ability data --> " + readData.get(KEY_ABILITY_DATA));
+			if (readData.containsKey(DataCategory.ABILITY_DATA.property())) {
 				data.clearAbilityData();
 				Set<Map.Entry<BendingAbility, AbilityData>> entries = ((Map<BendingAbility, AbilityData>) readData
-						.get(KEY_ABILITY_DATA)).entrySet();
+						.get(DataCategory.ABILITY_DATA.property())).entrySet();
 				for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
 					data.getAbilityData(entry.getKey()).setXp(entry.getValue().getXp());
 					data.getAbilityData(entry.getKey()).setLevel(entry.getValue().getLevel());
@@ -144,20 +144,21 @@ public class PacketHandlerClient implements IPacketHandler {
 				}
 			}
 			
-			if (readData.containsKey(KEY_STATUS_CONTROLS)) {
+			if (readData.containsKey(DataCategory.STATUS_CONTROLS.property())) {
 				data.clearStatusControls();
-				Set<StatusControl> controls = (Set<StatusControl>) readData.get(KEY_STATUS_CONTROLS);
+				Set<StatusControl> controls = (Set<StatusControl>) readData
+						.get(DataCategory.STATUS_CONTROLS.property());
 				for (StatusControl control : controls) {
 					data.addStatusControl(control);
 				}
 			}
 			
-			if (readData.containsKey(KEY_SKATING)) {
-				data.setSkating((Boolean) readData.get(KEY_SKATING));
+			if (readData.containsKey(DataCategory.MISC.property())) {
+				// TODO set misc
 			}
 			
-			if (readData.containsKey(KEY_CHI)) {
-				data.setChi((Chi) readData.get(KEY_CHI));
+			if (readData.containsKey(DataCategory.CHI.property())) {
+				data.setChi((Chi) readData.get(DataCategory.CHI.property()));
 			}
 			
 		}
