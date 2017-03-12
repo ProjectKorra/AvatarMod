@@ -2,6 +2,10 @@ AV2 Changelog :: version a4.0
 
 + Ability Level System
 + New skills menu
++ Scrolls item
+
+- Removed progression points
+- Internal: removed bending states
 
 * Remove small space between radial segment hover
 * Generally triple xp gains to account for levels

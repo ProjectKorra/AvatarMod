@@ -58,7 +58,7 @@ public class NodeBendingList extends NodeFunctional {
 			
 		} else {
 			
-			if (data.isBender()) {
+			if (!data.getAllBending().isEmpty()) {
 				
 				List<BendingController> allControllers = data.getAllBending();
 				AvatarChatMessages.MSG_BENDING_LIST_TOP.send(sender, playerName, allControllers.size());
