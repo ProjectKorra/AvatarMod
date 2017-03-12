@@ -61,6 +61,7 @@ public abstract class AbstractBendingData implements BendingData {
 	/**
 	 * Check if the player has that bending controller
 	 */
+	@Override
 	public boolean hasBending(BendingController bending) {
 		return bendings.contains(bending);
 	}
@@ -68,6 +69,7 @@ public abstract class AbstractBendingData implements BendingData {
 	/**
 	 * Check if the player has that type of bending
 	 */
+	@Override
 	public boolean hasBending(BendingType type) {
 		return hasBending(BendingManager.getBending(type));
 	}
@@ -78,6 +80,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * <p>
 	 * Also adds the state if it isn't present.
 	 */
+	@Override
 	public void addBending(BendingController bending) {
 		if (bendings.add(bending)) {
 			save(DataCategory.BENDING);
@@ -88,6 +91,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
 	 */
+	@Override
 	public void addBending(BendingType type) {
 		addBending(BendingManager.getBending(type));
 	}
@@ -97,6 +101,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * note, this will be saved, so is permanent (unless another bending
 	 * controller is added).
 	 */
+	@Override
 	public void removeBending(BendingController bending) {
 		if (bendings.remove(bending)) {
 			save(DataCategory.BENDING);
@@ -108,10 +113,12 @@ public abstract class AbstractBendingData implements BendingData {
 	 * 
 	 * @see #removeBending(BendingController)
 	 */
+	@Override
 	public void removeBending(BendingType type) {
 		removeBending(BendingManager.getBending(type));
 	}
 	
+	@Override
 	public List<BendingController> getAllBending() {
 		return new ArrayList<>(bendings);
 	}
@@ -120,26 +127,31 @@ public abstract class AbstractBendingData implements BendingData {
 	// STATUS CONTROLS
 	// ================================================================================
 	
+	@Override
 	public boolean hasStatusControl(StatusControl control) {
 		return statusControls.contains(control);
 	}
 	
+	@Override
 	public void addStatusControl(StatusControl control) {
 		if (statusControls.add(control)) {
 			save(DataCategory.STATUS_CONTROLS);
 		}
 	}
 	
+	@Override
 	public void removeStatusControl(StatusControl control) {
 		if (statusControls.remove(control)) {
 			save(DataCategory.STATUS_CONTROLS);
 		}
 	}
 	
+	@Override
 	public List<StatusControl> getAllStatusControls() {
 		return new ArrayList<>(statusControls);
 	}
 	
+	@Override
 	public void clearStatusControls() {
 		statusControls.clear();
 	}
@@ -148,6 +160,7 @@ public abstract class AbstractBendingData implements BendingData {
 	// ABILITY DATA
 	// ================================================================================
 	
+	@Override
 	public boolean hasAbilityData(BendingAbility ability) {
 		return abilityData.get(ability) != null;
 	}
@@ -155,6 +168,7 @@ public abstract class AbstractBendingData implements BendingData {
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
+	@Override
 	public AbilityData getAbilityData(BendingAbility ability) {
 		AbilityData data = abilityData.get(ability);
 		if (data == null) {
@@ -166,6 +180,7 @@ public abstract class AbstractBendingData implements BendingData {
 		return data;
 	}
 	
+	@Override
 	public void setAbilityData(BendingAbility ability, AbilityData data) {
 		abilityData.put(ability, data);
 	}
@@ -173,6 +188,7 @@ public abstract class AbstractBendingData implements BendingData {
 	/**
 	 * Gets a list of all ability data contained in this player data.
 	 */
+	@Override
 	public List<AbilityData> getAllAbilityData() {
 		return new ArrayList<>(abilityData.values());
 	}
@@ -180,6 +196,7 @@ public abstract class AbstractBendingData implements BendingData {
 	/**
 	 * Removes all ability data associations
 	 */
+	@Override
 	public void clearAbilityData() {
 		abilityData.clear();
 	}
@@ -191,10 +208,12 @@ public abstract class AbstractBendingData implements BendingData {
 	/**
 	 * Gets the chi information about the bender
 	 */
+	@Override
 	public Chi chi() {
 		return chi;
 	}
 	
+	@Override
 	public void setChi(Chi chi) {
 		this.chi = chi;
 		save(DataCategory.CHI);
@@ -204,40 +223,49 @@ public abstract class AbstractBendingData implements BendingData {
 	// MISC
 	// ================================================================================
 	
+	@Override
 	public boolean isSkating() {
 		return skating;
 	}
 	
+	@Override
 	public void setSkating(boolean skating) {
 		this.skating = skating;
 	}
 	
+	@Override
 	public float getFallAbsorption() {
 		return fallAbsorption;
 	}
 	
+	@Override
 	public void setFallAbsorption(float fallAbsorption) {
 		if (fallAbsorption == 0 || fallAbsorption > this.fallAbsorption) this.fallAbsorption = fallAbsorption;
 	}
 	
+	@Override
 	public int getTimeInAir() {
 		return timeInAir;
 	}
 	
+	@Override
 	public void setTimeInAir(int time) {
 		this.timeInAir = time;
 	}
 	
+	@Override
 	public int getAbilityCooldown() {
 		return abilityCooldown;
 	}
 	
+	@Override
 	public void setAbilityCooldown(int cooldown) {
 		if (cooldown < 0) cooldown = 0;
 		this.abilityCooldown = cooldown;
 		save(DataCategory.MISC);
 	}
 	
+	@Override
 	public void decrementCooldown() {
 		if (abilityCooldown > 0) {
 			abilityCooldown--;
@@ -245,10 +273,12 @@ public abstract class AbstractBendingData implements BendingData {
 		}
 	}
 	
+	@Override
 	public boolean isWallJumping() {
 		return wallJumping;
 	}
 	
+	@Override
 	public void setWallJumping(boolean wallJumping) {
 		this.wallJumping = wallJumping;
 	}
@@ -256,14 +286,39 @@ public abstract class AbstractBendingData implements BendingData {
 	/**
 	 * Save this BendingData
 	 */
+	@Override
 	public abstract void save(DataCategory category, DataCategory... addditionalCategories);
 	
 	public enum DataCategory {
+		
 		BENDING,
 		STATUS_CONTROLS,
 		ABILITY_DATA,
 		CHI,
 		MISC
+		
+		// BENDING(data -> data.getAllBending()),
+		// STATUS_CONTROLS(data -> data.getAllStatusControls()),
+		// ABILITY_DATA(data -> data.getAllAbilityData()),
+		// CHI(data -> data.getChi()),
+		// MISC(data -> null);
+		//
+		// private final Networker.Property<?> property;
+		// private final Function<BendingData, Object> getter;
+		//
+		// private DataCategory(Function<BendingData, Object> getter) {
+		// property = new Networker.Property<>(ordinal() + 1);
+		// this.getter = getter;
+		// }
+		//
+		// public Networker.Property<?> property() {
+		// return property;
+		// }
+		//
+		// public Object get(BendingData data) {
+		// return getter.apply(data);
+		// }
+		
 	}
 	
 }
