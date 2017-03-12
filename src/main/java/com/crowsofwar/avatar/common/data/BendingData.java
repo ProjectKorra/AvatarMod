@@ -182,7 +182,7 @@ public interface BendingData {
 		
 		BENDING(Transmitters.CONTROLLER_LIST, data -> data.getAllBending()),
 		STATUS_CONTROLS(Transmitters.STATUS_CONTROLS, data -> data.getAllStatusControls()),
-		ABILITY_DATA(Transmitters.ABILITY_DATA_MAP, data -> data.getAllAbilityData()),
+		ABILITY_DATA(Transmitters.ABILITY_DATA_MAP, data -> data.getAbilityDataMap()),
 		CHI(Transmitters.CHI, data -> data.chi()),
 		MISC(Transmitters.MISC, data -> data.getMiscData()),
 		TICK_HANDLERS(Transmitters.TICK_HANDLERS, data -> data.getAllTickHandlers());

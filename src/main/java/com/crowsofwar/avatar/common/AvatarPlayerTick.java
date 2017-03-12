@@ -32,6 +32,7 @@ public class AvatarPlayerTick {
 		// Also forces loading of data on client
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(e.player);
 		if (data != null) {
+			
 			data.decrementCooldown();
 			if (!e.player.worldObj.isRemote) {
 				Chi chi = data.chi();

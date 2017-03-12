@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -93,10 +92,10 @@ public class Transmitters {
 		}
 	};
 	
-	public static final DataTransmitter<Set<StatusControl>, PlayerDataContext> STATUS_CONTROLS = new DataTransmitter<Set<StatusControl>, PlayerDataContext>() {
+	public static final DataTransmitter<List<StatusControl>, PlayerDataContext> STATUS_CONTROLS = new DataTransmitter<List<StatusControl>, PlayerDataContext>() {
 		
 		@Override
-		public void write(ByteBuf buf, Set<StatusControl> t) {
+		public void write(ByteBuf buf, List<StatusControl> t) {
 			buf.writeInt(t.size());
 			for (StatusControl sc : t) {
 				buf.writeInt(sc.id());
@@ -104,9 +103,9 @@ public class Transmitters {
 		}
 		
 		@Override
-		public Set<StatusControl> read(ByteBuf buf, PlayerDataContext ctx) {
+		public List<StatusControl> read(ByteBuf buf, PlayerDataContext ctx) {
 			int size = buf.readInt();
-			Set<StatusControl> out = new HashSet<>();
+			List<StatusControl> out = new ArrayList<>();
 			for (int i = 0; i < size; i++) {
 				StatusControl sc = StatusControl.lookup(buf.readInt());
 				if (sc == null)

@@ -133,6 +133,7 @@ public class PacketHandlerClient implements IPacketHandler {
 			}
 			
 			if (readData.containsKey(KEY_ABILITY_DATA)) {
+				System.out.println("Ability data --> " + readData.get(KEY_ABILITY_DATA));
 				data.clearAbilityData();
 				Set<Map.Entry<BendingAbility, AbilityData>> entries = ((Map<BendingAbility, AbilityData>) readData
 						.get(KEY_ABILITY_DATA)).entrySet();
