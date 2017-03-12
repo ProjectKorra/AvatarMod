@@ -25,6 +25,7 @@ import java.util.UUID;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.DataTransmitter;
 import com.crowsofwar.avatar.common.network.Networker;
@@ -56,6 +57,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
 	private final Networker networker;
+	private final AbstractBendingData bendingData;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
@@ -63,6 +65,14 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		boolean isClient = player instanceof AbstractClientPlayer;
 		networker = new Networker(!isClient, PacketCPlayerData.class,
 				net -> new PacketCPlayerData(net, playerID));
+		
+		bendingData = new AbstractBendingData() {
+			
+			@Override
+			public void save(DataCategory category, DataCategory... addditionalCategories) {
+				AvatarPlayerData.this.save(category, addditionalCategories);
+			}
+		};
 		
 		for (DataCategory category : DataCategory.values()) {
 			
@@ -136,11 +146,12 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 	}
 	
+	@Override
 	public void save(DataCategory category, DataCategory... additionalCategories) {
 		
-		networker.markChanged((Networker.Property<Object>) category.property(), (Object) category.get(this));
+		networker.markChanged((Networker.Property<Object>) category.property(), category.get(this));
 		for (DataCategory cat : additionalCategories) {
-			networker.markChanged((Networker.Property<Object>) cat.property(), (Object) cat.get(this));
+			networker.markChanged((Networker.Property<Object>) cat.property(), cat.get(this));
 		}
 		
 		networker.sendUpdated();
@@ -153,8 +164,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
-		fetcher = new PlayerDataFetcherSided<AvatarPlayerData>(clientFetcher,
-				new PlayerDataFetcherServer<AvatarPlayerData>(AvatarWorldData::getDataFromWorld));
+		fetcher = new PlayerDataFetcherSided<>(clientFetcher,
+				new PlayerDataFetcherServer<>(AvatarWorldData::getDataFromWorld));
 	}
 	
 	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
@@ -164,5 +175,155 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	// ================================================================================
 	// DELEGATES
 	// ================================================================================
+	
+	@Override
+	public boolean hasBending(BendingController bending) {
+		return bendingData.hasBending(bending);
+	}
+	
+	@Override
+	public boolean hasBending(BendingType type) {
+		return bendingData.hasBending(type);
+	}
+	
+	@Override
+	public void addBending(BendingController bending) {
+		bendingData.addBending(bending);
+	}
+	
+	@Override
+	public void addBending(BendingType type) {
+		bendingData.addBending(type);
+	}
+	
+	@Override
+	public void removeBending(BendingController bending) {
+		bendingData.removeBending(bending);
+	}
+	
+	@Override
+	public void removeBending(BendingType type) {
+		bendingData.removeBending(type);
+	}
+	
+	@Override
+	public List<BendingController> getAllBending() {
+		return bendingData.getAllBending();
+	}
+	
+	@Override
+	public boolean hasStatusControl(StatusControl control) {
+		return bendingData.hasStatusControl(control);
+	}
+	
+	@Override
+	public void addStatusControl(StatusControl control) {
+		bendingData.addStatusControl(control);
+	}
+	
+	@Override
+	public void removeStatusControl(StatusControl control) {
+		bendingData.removeStatusControl(control);
+	}
+	
+	@Override
+	public List<StatusControl> getAllStatusControls() {
+		return bendingData.getAllStatusControls();
+	}
+	
+	@Override
+	public void clearStatusControls() {
+		bendingData.clearStatusControls();
+	}
+	
+	@Override
+	public boolean hasAbilityData(BendingAbility ability) {
+		return bendingData.hasAbilityData(ability);
+	}
+	
+	@Override
+	public AbilityData getAbilityData(BendingAbility ability) {
+		return bendingData.getAbilityData(ability);
+	}
+	
+	@Override
+	public void setAbilityData(BendingAbility ability, AbilityData data) {
+		bendingData.setAbilityData(ability, data);
+	}
+	
+	@Override
+	public List<AbilityData> getAllAbilityData() {
+		return bendingData.getAllAbilityData();
+	}
+	
+	@Override
+	public void clearAbilityData() {
+		bendingData.clearAbilityData();
+	}
+	
+	@Override
+	public Chi chi() {
+		return bendingData.chi();
+	}
+	
+	@Override
+	public void setChi(Chi chi) {
+		bendingData.setChi(chi);
+	}
+	
+	@Override
+	public boolean isSkating() {
+		return bendingData.isSkating();
+	}
+	
+	@Override
+	public void setSkating(boolean skating) {
+		bendingData.setSkating(skating);
+	}
+	
+	@Override
+	public float getFallAbsorption() {
+		return bendingData.getFallAbsorption();
+	}
+	
+	@Override
+	public void setFallAbsorption(float fallAbsorption) {
+		bendingData.setFallAbsorption(fallAbsorption);
+	}
+	
+	@Override
+	public int getTimeInAir() {
+		return bendingData.getTimeInAir();
+	}
+	
+	@Override
+	public void setTimeInAir(int time) {
+		bendingData.setTimeInAir(time);
+	}
+	
+	@Override
+	public int getAbilityCooldown() {
+		return bendingData.getAbilityCooldown();
+	}
+	
+	@Override
+	public void setAbilityCooldown(int cooldown) {
+		bendingData.setAbilityCooldown(cooldown);
+	}
+	
+	@Override
+	public void decrementCooldown() {
+		bendingData.decrementCooldown();
+	}
+	
+	@Override
+	public boolean isWallJumping() {
+		return bendingData.isWallJumping();
+	}
+	
+	@Override
+	public void setWallJumping(boolean wallJumping) {
+		bendingData.setWallJumping(wallJumping);
+	}
 	
 }
