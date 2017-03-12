@@ -34,14 +34,14 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class Chi {
 	
-	private final AvatarPlayerData data;
+	private final BendingData data;
 	
 	// These fields are not for modification directly; use getters/setters
 	private float max;
 	private float total;
 	private float availableMark;
 	
-	public Chi(AvatarPlayerData data) {
+	public Chi(BendingData data) {
 		this.data = data;
 		
 		// Default values for testing

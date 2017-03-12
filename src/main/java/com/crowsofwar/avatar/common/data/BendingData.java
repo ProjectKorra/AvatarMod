@@ -37,11 +37,15 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 public abstract class BendingData {
 	
 	private final Set<BendingController> bendings;
-	private final Map<BendingController, BendingState> bendingStates;
+	private final Set<StatusControl> statusControls;
+	private final Map<BendingAbility, AbilityData> abilityData;
+	private final Chi chi;
 	
 	public BendingData() {
 		bendings = new HashSet<>();
-		bendingStates = new HashMap<>();
+		statusControls = new HashSet<>();
+		abilityData = new HashMap<>();
+		chi = new Chi(this);
 	}
 	
 	// ================================================================================
@@ -107,105 +111,87 @@ public abstract class BendingData {
 	}
 	
 	// ================================================================================
-	// BENDING STATES
+	// STATUS CONTROLS
 	// ================================================================================
 	
-	public boolean hasBendingState(BendingController controller) {
-		return bendingStates.get(controller) != null;
+	public boolean hasStatusControl(StatusControl control) {
+		return statusControls.contains(control);
 	}
 	
-	public boolean hasBendingState(BendingType type) {
-		return hasBendingState(BendingManager.getBending(type));
-	}
-	
-	/**
-	 * Get extra metadata for the given bending controller, returns null if no
-	 * Bending controller.
-	 * 
-	 * @see #getBendingState(BendingType)
-	 */
-	public BendingState getBendingState(BendingController controller) {
-		if (!hasBending(controller)) {
-			return null;
-		}
-		
-		BendingState state = bendingStates.get(controller);
-		if (state == null) {
-			state = controller.createState(this);
-			addBendingState(state);
-		}
-		
-		return state;
-	}
-	
-	/**
-	 * Gets extra metadata for the given bending controller with that type, or
-	 * null if there is no bending controller.
-	 * <p>
-	 * Will automatically create a state and sync changes if the controller is
-	 * present.
-	 */
-	public BendingState getBendingState(BendingType type) {
-		return getBendingState(BendingManager.getBending(type));
-	}
-	
-	/**
-	 * Adds the bending state to this player data, not replacing the existing
-	 * one of that type if necessary.
-	 */
-	public void addBendingState(BendingState state) {
-		BendingType type = state.getType();
-		if (hasBending(type) && !hasBendingState(type)) {
-			bendingStates.put(BendingManager.getBending(type), state);
+	public void addStatusControl(StatusControl control) {
+		if (statusControls.add(control)) {
 			save();
 		}
 	}
 	
-	/**
-	 * Removes that bending state from this player data. Note: Must be the exact
-	 * instance already present to successfully occur.
-	 */
-	public void removeBendingState(BendingState state) {
-		BendingType type = state.getType();
-		if (hasBendingState(type)) {
-			bendingStates.remove(type);
+	public void removeStatusControl(StatusControl control) {
+		if (statusControls.remove(control)) {
 			save();
 		}
 	}
 	
-	public List<BendingState> getAllBendingStates() {
-		return new ArrayList<>(bendingStates.values());
+	public List<StatusControl> getAllStatusControls() {
+		return new ArrayList<>(statusControls);
 	}
 	
-	Set<StatusControl> getActiveStatusControls();
+	public void clearStatusControls() {
+		statusControls.clear();
+	}
 	
-	boolean hasStatusControl(StatusControl status);
+	// ================================================================================
+	// ABILITY DATA
+	// ================================================================================
 	
-	void addStatusControl(StatusControl control);
-	
-	void removeStatusControl(StatusControl control);
-	
-	void clearStatusControls();
+	public boolean hasAbilityData(BendingAbility ability) {
+		return abilityData.get(ability) != null;
+	}
 	
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
-	AbilityData getAbilityData(BendingAbility ability);
+	public AbilityData getAbilityData(BendingAbility ability) {
+		AbilityData data = abilityData.get(ability);
+		if (data == null) {
+			data = new AbilityData(this, ability);
+			abilityData.put(ability, data);
+			save();
+		}
+		
+		return data;
+	}
+	
+	public void setAbilityData(BendingAbility ability, AbilityData data) {
+		abilityData.put(ability, data);
+	}
 	
 	/**
-	 * Gets a list of all ability data contained in this player data. The list
-	 * is immutable.
+	 * Gets a list of all ability data contained in this player data.
 	 */
-	List<AbilityData> getAllAbilityData();
+	public List<AbilityData> getAllAbilityData() {
+		return new ArrayList<>(abilityData.values());
+	}
 	
-	void clearAbilityData();
+	/**
+	 * Removes all ability data associations
+	 */
+	public void clearAbilityData() {
+		abilityData.clear();
+	}
+	
+	// ================================================================================
+	// CHI
+	// ================================================================================
 	
 	/**
 	 * Gets the chi information about the bender
 	 */
-	Chi chi();
+	public Chi chi() {
+		return chi;
+	}
 	
-	void setChi(Chi chi);
+	public void setChi(Chi chi) {
+		this.chi = chi;
+	}
 	
 	void sendBendingState(BendingState state);
 	

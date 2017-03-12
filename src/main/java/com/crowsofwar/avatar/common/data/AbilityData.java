@@ -33,7 +33,7 @@ public class AbilityData {
 	
 	public static final int MAX_LEVEL = 3;
 	
-	private final AvatarPlayerData data;
+	private final BendingData data;
 	private final BendingAbility ability;
 	private float xp;
 	/**
@@ -44,7 +44,7 @@ public class AbilityData {
 	private int level;
 	private AbilityTreePath path;
 	
-	public AbilityData(AvatarPlayerData data, BendingAbility ability) {
+	public AbilityData(BendingData data, BendingAbility ability) {
 		this.data = data;
 		this.ability = ability;
 		this.xp = 0;
@@ -215,6 +215,7 @@ public class AbilityData {
 	private void save() {
 		data.saveChanges();
 		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
+		data.save();
 	}
 	
 	/**
