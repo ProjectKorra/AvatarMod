@@ -146,7 +146,7 @@ public class PacketHandlerClient implements IPacketHandler {
 			
 			if (readData.containsKey(DataCategory.STATUS_CONTROLS.property())) {
 				data.clearStatusControls();
-				Set<StatusControl> controls = (Set<StatusControl>) readData
+				List<StatusControl> controls = (List<StatusControl>) readData
 						.get(DataCategory.STATUS_CONTROLS.property());
 				for (StatusControl control : controls) {
 					data.addStatusControl(control);

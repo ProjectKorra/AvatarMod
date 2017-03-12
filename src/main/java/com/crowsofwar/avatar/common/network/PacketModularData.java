@@ -85,6 +85,7 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 			out.put(key, read);
 		}
 		return out;
+		
 	}
 	
 	@Override
