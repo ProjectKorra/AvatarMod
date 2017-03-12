@@ -59,11 +59,11 @@ public abstract class TickHandler {
 	}
 	
 	public static TickHandler fromId(int id) {
-		
+		return allHandlers.get(id);
 	}
 	
 	public static TickHandler fromBytes(ByteBuf buf) {
-		
+		return fromId(buf.readInt());
 	}
 	
 }
