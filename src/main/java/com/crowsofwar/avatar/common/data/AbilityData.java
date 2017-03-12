@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.data.BendingData.DataCategory;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -82,7 +83,6 @@ public class AbilityData {
 	 */
 	public void addLevel() {
 		setLevel(level + 1);
-		data.sync();
 	}
 	
 	/**
@@ -103,7 +103,6 @@ public class AbilityData {
 		this.path = path;
 		checkPath();
 		save();
-		data.sync();
 	}
 	
 	/**
@@ -149,7 +148,7 @@ public class AbilityData {
 	
 	/**
 	 * Add XP to this ability data. Will be {@link #getXpMultiplier()
-	 * multiplied} for exponential decay. Also syncs the new XP.
+	 * multiplied} for exponential decay.
 	 */
 	public void addXp(float xp) {
 		
@@ -157,7 +156,6 @@ public class AbilityData {
 		if (xp == 0) return;
 		
 		setXp(this.xp + xp);
-		data.sync();
 		
 	}
 	
@@ -213,9 +211,7 @@ public class AbilityData {
 	 * Saves but does not sync
 	 */
 	private void save() {
-		data.saveChanges();
-		data.getNetworker().markChanged(AvatarPlayerData.KEY_ABILITY_DATA, data.abilityData());
-		data.save();
+		data.save(DataCategory.ABILITY_DATA);
 	}
 	
 	/**

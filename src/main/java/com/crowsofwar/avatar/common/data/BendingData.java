@@ -39,7 +39,7 @@ public abstract class BendingData {
 	private final Set<BendingController> bendings;
 	private final Set<StatusControl> statusControls;
 	private final Map<BendingAbility, AbilityData> abilityData;
-	private final Chi chi;
+	private Chi chi;
 	
 	public BendingData() {
 		bendings = new HashSet<>();
@@ -74,7 +74,7 @@ public abstract class BendingData {
 	 */
 	public void addBending(BendingController bending) {
 		if (bendings.add(bending)) {
-			save();
+			save(DataCategory.BENDING);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public abstract class BendingData {
 	 */
 	public void removeBending(BendingController bending) {
 		if (bendings.remove(bending)) {
-			save();
+			save(DataCategory.BENDING);
 		}
 	}
 	
@@ -120,13 +120,13 @@ public abstract class BendingData {
 	
 	public void addStatusControl(StatusControl control) {
 		if (statusControls.add(control)) {
-			save();
+			save(DataCategory.STATUS_CONTROLS);
 		}
 	}
 	
 	public void removeStatusControl(StatusControl control) {
 		if (statusControls.remove(control)) {
-			save();
+			save(DataCategory.STATUS_CONTROLS);
 		}
 	}
 	
@@ -154,7 +154,7 @@ public abstract class BendingData {
 		if (data == null) {
 			data = new AbilityData(this, ability);
 			abilityData.put(ability, data);
-			save();
+			save(DataCategory.BENDING);
 		}
 		
 		return data;
@@ -191,11 +191,10 @@ public abstract class BendingData {
 	
 	public void setChi(Chi chi) {
 		this.chi = chi;
+		save(DataCategory.CHI);
 	}
 	
 	void sendBendingState(BendingState state);
-	
-	default void sync() {}
 	
 	boolean isSkating();
 	
@@ -208,6 +207,13 @@ public abstract class BendingData {
 	/**
 	 * Save this BendingData
 	 */
-	protected abstract void save();
+	public abstract void save(DataCategory category, DataCategory... addditionalCategories);
+	
+	public enum DataCategory {
+		BENDING,
+		STATUS_CONTROLS,
+		ABILITY_DATA,
+		CHI
+	}
 	
 }
