@@ -513,23 +513,6 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		if (amount == 0 || amount > this.fallAbsorption) this.fallAbsorption = amount;
 	}
 	
-	public int getTimeInAir() {
-		return timeInAir;
-	}
-	
-	public void setTimeInAir(int time) {
-		this.timeInAir = time;
-	}
-	
-	public boolean isSkating() {
-		return skating;
-	}
-	
-	public void setSkating(boolean skating) {
-		this.skating = skating;
-		networker.markChanged(KEY_SKATING, skating);
-	}
-	
 	public int getAbilityCooldown() {
 		return abilityCooldown;
 	}
