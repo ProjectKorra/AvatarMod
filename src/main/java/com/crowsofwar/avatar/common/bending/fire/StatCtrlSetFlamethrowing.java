@@ -24,6 +24,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -52,12 +53,7 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 		World world = ctx.getWorld();
 		
 		if (data.hasBending(BendingType.FIREBENDING)) {
-			FirebendingState state = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
-			state.setFlamethrowing(setting);
-			if (setting) {
-				data.addStatusControl(STOP_FLAMETHROW);
-				data.sync();
-			}
+			data.addTickHandler(TickHandler.FLAMETHROWER);
 		}
 		
 		return true;

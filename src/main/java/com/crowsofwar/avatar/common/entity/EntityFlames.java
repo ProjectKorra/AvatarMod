@@ -24,7 +24,8 @@ import java.util.Random;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -32,8 +33,8 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -55,7 +56,7 @@ public class EntityFlames extends AvatarEntity {
 	/**
 	 * The owner, null client side
 	 */
-	private EntityPlayer owner;
+	private EntityLivingBase owner;
 	
 	/**
 	 * @param worldIn
@@ -66,7 +67,7 @@ public class EntityFlames extends AvatarEntity {
 		setSize(0.1f, 0.1f);
 	}
 	
-	public EntityFlames(World world, EntityPlayer owner) {
+	public EntityFlames(World world, EntityLivingBase owner) {
 		this(world);
 		this.owner = owner;
 	}
@@ -102,7 +103,7 @@ public class EntityFlames extends AvatarEntity {
 		}
 		
 		if (!worldObj.isRemote) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+			BendingData data = Bender.create(owner).getData();
 			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FLAMETHROWER);
 			
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
