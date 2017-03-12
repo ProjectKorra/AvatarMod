@@ -20,11 +20,10 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -45,14 +44,14 @@ public class StatCtrlThrowBubble extends StatusControl {
 	@Override
 	public boolean execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
-		WaterbendingState state = (WaterbendingState) data
-				.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
 		
-		EntityWaterBubble bubble = state.getBubble(ctx.getWorld());
+		EntityWaterBubble bubble = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterBubble.class, //
+				bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
+						&& bub.getOwner() == ctx.getBenderEntity());
+		
 		if (bubble != null) {
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
 			bubble.velocity().set(Vector.getLookRectangular(ctx.getBenderEntity()).mul(10));
-			state.setBubble(null);
 		}
 		
 		return true;

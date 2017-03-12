@@ -17,12 +17,11 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -41,26 +40,22 @@ public class StatCtrlThrowFire extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext context) {
+	public boolean execute(AbilityContext ctx) {
 		
-		EntityLivingBase entity = context.getBenderEntity();
-		BendingData data = context.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
 		
-		FirebendingState bendingState = (FirebendingState) data
-				.getBendingState(BendingManager.getBending(BendingType.FIREBENDING));
+		EntityFireArc fire = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFireArc.class, //
+				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
+						&& arc.getOwner() == ctx.getBenderEntity());
 		
-		if (bendingState.isManipulatingFire()) {
-			
-			EntityFireArc fire = bendingState.getFireArc();
+		if (fire != null) {
 			
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
 			force.mul(10);
 			fire.velocity().add(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
-			
-			bendingState.setNoFireArc();
-			data.sendBendingState(bendingState);
 			
 			return true;
 			

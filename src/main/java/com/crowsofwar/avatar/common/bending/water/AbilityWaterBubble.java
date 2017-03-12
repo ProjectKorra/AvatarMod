@@ -17,12 +17,12 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -50,7 +50,6 @@ public class AbilityWaterBubble extends WaterAbility {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		WaterbendingState bendingState = (WaterbendingState) data.getBendingState(WATERBENDING);
 		
 		if (ctx.isLookingAtBlock()) {
 			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
@@ -59,11 +58,14 @@ public class AbilityWaterBubble extends WaterAbility {
 				
 				if (ctx.consumeChi(STATS_CONFIG.chiWaterBubble)) {
 					
-					if (bendingState.getBubble(world) != null) {
-						bendingState.getBubble(world).setBehavior(new WaterBubbleBehavior.Drop());
+					EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
+							bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
+									&& bub.getOwner() == entity);
+					
+					if (existing != null) {
+						existing.setBehavior(new WaterBubbleBehavior.Drop());
 						// prevent bubble from removing status control
-						bendingState.getBubble(world).setOwner(null);
-						bendingState.setBubble(null);
+						existing.setOwner(null);
 					}
 					
 					Vector pos = ctx.getLookPos();
@@ -73,9 +75,7 @@ public class AbilityWaterBubble extends WaterAbility {
 					bubble.setOwner(entity);
 					world.spawnEntityInWorld(bubble);
 					data.addStatusControl(StatusControl.THROW_BUBBLE);
-					data.sync();
 					world.setBlockToAir(lookPos);
-					bendingState.setBubble(bubble);
 					
 				}
 			}

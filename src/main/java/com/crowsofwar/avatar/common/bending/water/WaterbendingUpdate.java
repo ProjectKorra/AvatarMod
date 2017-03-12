@@ -74,7 +74,6 @@ public class WaterbendingUpdate {
 				data.removeStatusControl(SKATING_START);
 				data.setSkating(true);
 				data.addStatusControl(SKATING_JUMP);
-				data.sync();
 			}
 		}
 	}
@@ -89,7 +88,6 @@ public class WaterbendingUpdate {
 			
 			if (!player.worldObj.isRemote && !shouldSkate(player)) {
 				data.setSkating(false);
-				data.sync();
 			} else {
 				
 				float required = STATS_CONFIG.chiWaterSkateSecond / 20f;
@@ -123,7 +121,6 @@ public class WaterbendingUpdate {
 			
 		} else if (data.hasStatusControl(StatusControl.SKATING_JUMP)) {
 			data.removeStatusControl(StatusControl.SKATING_JUMP);
-			data.sync();
 		}
 	}
 	

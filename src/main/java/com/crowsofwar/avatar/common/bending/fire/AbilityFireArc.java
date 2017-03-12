@@ -51,7 +51,6 @@ public class AbilityFireArc extends FireAbility {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
-			FirebendingState fs = (FirebendingState) ctx.getData().getBendingState(controller());
 			BendingData data = ctx.getData();
 			
 			Vector lookPos;
@@ -70,11 +69,7 @@ public class AbilityFireArc extends FireAbility {
 			
 			world.spawnEntityInWorld(fire);
 			
-			fs.setFireArc(fire);
-			data.sendBendingState(fs);
-			
 			data.addStatusControl(StatusControl.THROW_FIRE);
-			data.sync();
 			
 		}
 		

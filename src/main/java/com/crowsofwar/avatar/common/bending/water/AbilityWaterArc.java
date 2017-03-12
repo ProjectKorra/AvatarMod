@@ -52,7 +52,6 @@ public class AbilityWaterArc extends WaterAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		WaterbendingState bendingState = (WaterbendingState) ctx.getData().getBendingState(controller());
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		
@@ -83,7 +82,6 @@ public class AbilityWaterArc extends WaterAbility {
 					world.spawnEntityInWorld(water);
 					
 					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
-					ctx.getData().sync();
 					
 				}
 				

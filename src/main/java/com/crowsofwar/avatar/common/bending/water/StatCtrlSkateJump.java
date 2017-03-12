@@ -44,7 +44,6 @@ public class StatCtrlSkateJump extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		if (data.isSkating()) {
 			data.setSkating(false);
-			data.sync();
 			
 			Vector velocity = Vector.getLookRectangular(entity);
 			velocity.mul(1.5);

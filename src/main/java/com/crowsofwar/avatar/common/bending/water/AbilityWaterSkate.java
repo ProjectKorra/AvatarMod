@@ -35,7 +35,6 @@ public class AbilityWaterSkate extends WaterAbility {
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.SKATING_START);
-		data.sync();
 	}
 	
 }

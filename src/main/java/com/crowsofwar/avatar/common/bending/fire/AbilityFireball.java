@@ -73,7 +73,6 @@ public class AbilityFireball extends FireAbility {
 			world.spawnEntityInWorld(fireball);
 			
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
-			data.sync();
 			
 		}
 		

@@ -39,7 +39,6 @@ public class AbilityFlamethrower extends FireAbility {
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.START_FLAMETHROW);
-		data.sync();
 	}
 	
 }
