@@ -138,6 +138,18 @@ public abstract class AvatarEntity extends Entity {
 		return entities.isEmpty() ? null : (T) entities.get(0);
 	}
 	
+	public static <T extends AvatarEntity> T lookupEntity(World world, EntityLivingBase owner, Class<T> cls) {
+		List<Entity> entities = world.loadedEntityList;
+		for (Entity ent : entities) {
+			if (ent instanceof AvatarEntity && ((AvatarEntity) ent).getOwner() == owner
+					&& ent.getClass().isAssignableFrom(cls)) {
+				return (T) ent;
+			}
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public boolean canBeCollidedWith() {
 		return true;
@@ -175,7 +187,7 @@ public abstract class AvatarEntity extends Entity {
 				int j = 0;
 				
 				for (int k = 0; k < list.size(); ++k) {
-					if (!((Entity) list.get(k)).isRiding()) {
+					if (!list.get(k).isRiding()) {
 						++j;
 					}
 				}
@@ -186,7 +198,7 @@ public abstract class AvatarEntity extends Entity {
 			}
 			
 			for (int l = 0; l < list.size(); ++l) {
-				Entity entity = (Entity) list.get(l);
+				Entity entity = list.get(l);
 				entity.applyEntityCollision(this);
 				onCollideWithEntity(entity);
 			}

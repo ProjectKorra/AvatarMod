@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -62,12 +63,13 @@ public class AbilityPickUpBlock extends EarthAbility {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		
-		if (ebs.getPickupBlock() != null) {
-			ebs.getPickupBlock().drop();
-			ebs.setPickupBlock(null);
+		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(world, entity,
+				EntityFloatingBlock.class);
+		
+		if (currentBlock != null) {
+			currentBlock.drop();
 			data.removeStatusControl(StatusControl.THROW_BLOCK);
 			data.removeStatusControl(StatusControl.PLACE_BLOCK);
-			data.sync();
 		} else {
 			VectorI target = ctx.verifyClientLookBlock(-1, 5);
 			if (target != null) {
@@ -92,8 +94,6 @@ public class AbilityPickUpBlock extends EarthAbility {
 						floating.setDamageMult(.75f + xp / 100);
 						
 						world.spawnEntityInWorld(floating);
-						
-						ebs.setPickupBlock(floating);
 						
 						world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 						
