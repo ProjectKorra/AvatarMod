@@ -19,7 +19,8 @@ package com.crowsofwar.avatar.common.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 import io.netty.buffer.ByteBuf;
 
@@ -29,6 +30,8 @@ import io.netty.buffer.ByteBuf;
  * @author CrowsOfWar
  */
 public abstract class TickHandler {
+	
+	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
 	
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
@@ -42,7 +45,10 @@ public abstract class TickHandler {
 		
 	}
 	
-	public abstract void tick(BendingData data, Bender bender);
+	/**
+	 * Ticks and returns whether to remove (false to stay)
+	 */
+	public abstract boolean tick(AbilityContext ctx);
 	
 	public int id() {
 		return id;
