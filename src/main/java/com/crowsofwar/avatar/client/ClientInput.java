@@ -224,7 +224,7 @@ public class ClientInput implements IControlsHandler {
 			if (data != null) {
 				
 				Collection<AvatarControl> pressed = getAllPressed();
-				Collection<StatusControl> statusControls = data.getActiveStatusControls();
+				Collection<StatusControl> statusControls = data.getAllStatusControls();
 				
 				Iterator<StatusControl> sci = statusControls.iterator();
 				while (sci.hasNext()) {
@@ -261,7 +261,7 @@ public class ClientInput implements IControlsHandler {
 	
 	@Override
 	public List<AvatarControl> getAllPressed() {
-		List<AvatarControl> list = new ArrayList<AvatarControl>();
+		List<AvatarControl> list = new ArrayList<>();
 		
 		for (int i = 0; i < AvatarControl.values().length; i++) {
 			AvatarControl control = AvatarControl.values()[i];

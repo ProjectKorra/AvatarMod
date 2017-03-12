@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.client.gui;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
-import java.util.Set;
+import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
@@ -108,8 +108,8 @@ public class AvatarUiRenderer extends Gui {
 	}
 	
 	private void renderStatusControls(ScaledResolution resolution) {
-		Set<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.thePlayer)
-				.getActiveStatusControls();
+		List<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.thePlayer)
+				.getAllStatusControls();
 		for (StatusControl statusControl : statusControls) {
 			mc.getTextureManager().bindTexture(AvatarUiTextures.STATUS_CONTROL_ICONS);
 			int centerX = resolution.getScaledWidth() / 2;

@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.util.event.EventNotifier;
 import com.crowsofwar.avatar.common.util.event.Observer;
@@ -108,21 +106,6 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	 * Gets an identifier for this bending controller.
 	 */
 	public abstract BendingType getType();
-	
-	/**
-	 * Called to create an BendingState for the player. This allows the
-	 * BendingController to store specific metadata for each player, making
-	 * things much easier. <br />
-	 * <br />
-	 * Keep in mind - when loading a saved state, it will be read from NBT.
-	 * However, when creating a new bending state when an ability is activated,
-	 * it will NOT read from NBT. So ensure that all values are initialized.
-	 * 
-	 * @return
-	 */
-	public BendingState createState(BendingData data) {
-		return null;
-	}
 	
 	/**
 	 * Get information about this bending controller's radial menu.

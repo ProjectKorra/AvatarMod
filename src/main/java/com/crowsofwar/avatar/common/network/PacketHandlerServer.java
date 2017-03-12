@@ -32,8 +32,8 @@ import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -191,10 +191,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			StatusControl sc = packet.getStatusControl();
 			if (data.hasStatusControl(sc)) {
 				if (sc.execute(new AbilityContext(data, packet.getRaytrace()))) {
-					
 					data.removeStatusControl(packet.getStatusControl());
-					data.sync();
-					
 				}
 			}
 			
