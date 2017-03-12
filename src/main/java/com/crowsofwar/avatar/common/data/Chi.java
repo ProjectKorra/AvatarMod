@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.data;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
+import com.crowsofwar.avatar.common.data.BendingData.DataCategory;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -147,8 +149,7 @@ public class Chi {
 	
 	private void save() {
 		checkConsistency();
-		data.getNetworker().changeAndSync(AvatarPlayerData.KEY_CHI, this);
-		data.saveChanges();
+		data.save(DataCategory.CHI);
 	}
 	
 	/**

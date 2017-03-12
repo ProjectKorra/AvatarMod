@@ -297,6 +297,6 @@ public abstract class AbstractBendingData implements BendingData {
 	 * Save this BendingData
 	 */
 	@Override
-	public abstract void save(DataCategory category, DataCategory... addditionalCategories);
+	public abstract void save(DataCategory category);
 	
 }

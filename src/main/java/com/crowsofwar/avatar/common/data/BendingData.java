@@ -140,7 +140,7 @@ public interface BendingData {
 	/**
 	 * Save this BendingData
 	 */
-	void save(DataCategory category, DataCategory... addditionalCategories);
+	void save(DataCategory category);
 	
 	public enum DataCategory {
 		

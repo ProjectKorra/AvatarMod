@@ -71,8 +71,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		bendingData = new AbstractBendingData() {
 			
 			@Override
-			public void save(DataCategory category, DataCategory... addditionalCategories) {
-				AvatarPlayerData.this.save(category, addditionalCategories);
+			public void save(DataCategory category) {
+				AvatarPlayerData.this.save(category);
 			}
 		};
 		
@@ -161,13 +161,9 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void save(DataCategory category, DataCategory... additionalCategories) {
+	public void save(DataCategory category) {
 		
 		networker.markChanged((Networker.Property<Object>) category.property(), category.get(this));
-		for (DataCategory cat : additionalCategories) {
-			networker.markChanged((Networker.Property<Object>) cat.property(), cat.get(this));
-		}
-		
 		networker.sendUpdated();
 		saveChanges();
 		
