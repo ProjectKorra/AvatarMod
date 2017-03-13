@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 /**
@@ -35,6 +36,7 @@ public class StatCtrlSkateStart extends StatusControl {
 	
 	@Override
 	public boolean execute(AbilityContext ctx) {
+		ctx.getData().addTickHandler(TickHandler.WATER_SKATE);
 		return true;
 	}
 	

@@ -27,8 +27,10 @@ import static net.minecraft.init.Blocks.WATER;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
@@ -36,39 +38,37 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class WaterbendingUpdate {
+public class WaterSkateHandler extends TickHandler {
 	
 	private final ParticleSpawner particles;
 	
-	private WaterbendingUpdate() {
+	public WaterSkateHandler() {
 		particles = new NetworkParticleSpawner();
 	}
 	
-	@SubscribeEvent
-	public void onPlayerTick(PlayerTickEvent e) {
-		EntityPlayer player = e.player;
-		World world = player.worldObj;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		tryStartSkating(data, player);
-		skate(data, player);
+	@Override
+	public boolean tick(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+		World world = ctx.getWorld();
+		BendingData data = ctx.getData();
+		tryStartSkating(data, entity);
+		skate(data, entity);
+		return !data.isSkating();
 	}
 	
-	private void tryStartSkating(AvatarPlayerData data, EntityPlayer player) {
+	private void tryStartSkating(BendingData data, EntityLivingBase player) {
 		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
 			if (shouldSkate(player)) {
 				data.removeStatusControl(SKATING_START);
@@ -78,7 +78,7 @@ public class WaterbendingUpdate {
 		}
 	}
 	
-	private void skate(AvatarPlayerData data, EntityPlayer player) {
+	private void skate(BendingData data, EntityLivingBase player) {
 		if (data.isSkating()) {
 			
 			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
@@ -127,7 +127,7 @@ public class WaterbendingUpdate {
 	/**
 	 * Determine if the player is in the ideal conditions to water-skate.
 	 */
-	private boolean shouldSkate(EntityPlayer player) {
+	private boolean shouldSkate(EntityLivingBase player) {
 		IBlockState below = player.worldObj.getBlockState(new BlockPos(player.getPosition()).down());
 		int surface = getSurfacePos(player);
 		
@@ -141,7 +141,7 @@ public class WaterbendingUpdate {
 	 * position at the surface. If the player is out of the water, returns the
 	 * player's ypos. If the player is too deep, returns -1.
 	 */
-	private int getSurfacePos(EntityPlayer player) {
+	private int getSurfacePos(EntityLivingBase player) {
 		
 		World world = player.worldObj;
 		if (!player.isInWater()) return (int) player.posY;
@@ -156,10 +156,6 @@ public class WaterbendingUpdate {
 		
 		return (int) player.posY + increased;
 		
-	}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new WaterbendingUpdate());
 	}
 	
 }

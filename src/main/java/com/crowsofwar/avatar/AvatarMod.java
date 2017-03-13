@@ -27,7 +27,6 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
 import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
-import com.crowsofwar.avatar.common.bending.water.WaterbendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.ConfigChi;
 import com.crowsofwar.avatar.common.config.ConfigClient;
@@ -151,7 +150,6 @@ public class AvatarMod {
 		
 		AvatarChatMessages.loadAll();
 		
-		WaterbendingUpdate.register();
 		EarthbendingEvents.register();
 		
 		PacketHandlerServer.register();
