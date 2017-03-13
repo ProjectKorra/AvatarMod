@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * 
@@ -48,6 +49,20 @@ public class MiscData {
 		timeInAir = buf.readInt();
 		abilityCooldown = buf.readInt();
 		wallJumping = buf.readBoolean();
+	}
+	
+	public void readFromNbt(NBTTagCompound nbt) {
+		fallAbsorption = nbt.getFloat("FallAbsorption");
+		timeInAir = nbt.getInteger("TimeInAir");
+		abilityCooldown = nbt.getInteger("AbilityCooldown");
+		wallJumping = nbt.getBoolean("WallJumping");
+	}
+	
+	public void writeToNbt(NBTTagCompound nbt) {
+		nbt.setFloat("FallAbsorption", fallAbsorption);
+		nbt.setInteger("TimeInAir", timeInAir);
+		nbt.setInteger("AbilityCooldown", abilityCooldown);
+		nbt.setBoolean("WallJumping", wallJumping);
 	}
 	
 	public float getFallAbsorption() {

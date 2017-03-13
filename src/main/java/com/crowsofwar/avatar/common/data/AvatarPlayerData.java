@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,10 +112,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 			setAbilityData(entry.getKey(), entry.getValue());
 		}
 		
-		setWallJumping(readFrom.getBoolean("WallJumping"));
-		setFallAbsorption(readFrom.getFloat("FallAbsorption"));
-		setTimeInAir(readFrom.getInteger("TimeInAir"));
-		setAbilityCooldown(readFrom.getInteger("AbilityCooldown"));
+		getMiscData().readFromNbt(nestedCompound(readFrom, "Misc"));
 		
 		chi().readFromNBT(readFrom);
 		
@@ -138,10 +137,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");
 		
-		writeTo.setBoolean("WallJumping", isWallJumping());
-		writeTo.setFloat("FallAbsorption", getFallAbsorption());
-		writeTo.setInteger("TimeInAir", getTimeInAir());
-		writeTo.setInteger("AbilityCooldown", getAbilityCooldown());
+		getMiscData().writeToNbt(nestedCompound(writeTo, "Misc"));
 		
 		chi().writeToNBT(writeTo);
 		
