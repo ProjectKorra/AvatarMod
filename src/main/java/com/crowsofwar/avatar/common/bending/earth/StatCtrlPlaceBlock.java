@@ -34,7 +34,9 @@ import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 
 /**
  * 
@@ -73,7 +75,11 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				force.normalize();
 				floating.velocity().add(force);
 				
-				controller.post(new FloatingBlockEvent.BlockPlaced(floating, ctx.getBenderEntity()));
+				SoundType sound = floating.getBlock().getSoundType();
+				if (sound != null) {
+					floating.worldObj.playSound(null, floating.getPosition(), sound.getPlaceSound(),
+							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+				}
 				
 				data.removeStatusControl(THROW_BLOCK);
 				

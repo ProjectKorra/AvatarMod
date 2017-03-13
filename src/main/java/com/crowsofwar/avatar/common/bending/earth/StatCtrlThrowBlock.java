@@ -66,8 +66,6 @@ public class StatCtrlThrowBlock extends StatusControl {
 			floating.velocity().add(lookDir.times(35));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
 			
-			controller.post(new FloatingBlockEvent.BlockThrown(floating, entity));
-			
 			data.removeStatusControl(PLACE_BLOCK);
 			
 		}

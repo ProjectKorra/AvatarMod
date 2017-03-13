@@ -23,9 +23,6 @@ import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-import com.crowsofwar.avatar.common.util.event.EventNotifier;
-import com.crowsofwar.avatar.common.util.event.Observer;
-import com.crowsofwar.avatar.common.util.event.Subject;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
@@ -51,7 +48,7 @@ import net.minecraft.nbt.NBTTagCompound;
  *            The BendingState this controller is using
  * 
  */
-public abstract class BendingController implements ReadableWritable, Subject {
+public abstract class BendingController implements ReadableWritable {
 	
 	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
 		@Override
@@ -83,11 +80,9 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	public static final Random random = new Random();
 	
 	private final List<BendingAbility> abilities;
-	private final Subject eventNotifier;
 	
 	public BendingController() {
 		this.abilities = new ArrayList<>();
-		this.eventNotifier = new EventNotifier();
 	}
 	
 	protected void addAbility(BendingAbility ability) {
@@ -126,21 +121,6 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {}
-	
-	@Override
-	public <E> void addObserver(Observer<E> obs, Class<E> eventClass) {
-		eventNotifier.addObserver(obs, eventClass);
-	}
-	
-	@Override
-	public <E> void removeObserver(Observer<E> obs, Class<E> eventClass) {
-		eventNotifier.removeObserver(obs, eventClass);
-	}
-	
-	@Override
-	public void post(Object e) {
-		eventNotifier.post(e);
-	}
 	
 	public static BendingController find(int id) {
 		

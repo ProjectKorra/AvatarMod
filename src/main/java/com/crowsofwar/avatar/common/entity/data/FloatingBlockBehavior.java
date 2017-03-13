@@ -24,21 +24,20 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -107,8 +106,11 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				entity.setDead();
 				entity.worldObj.setBlockState(new BlockPos(entity), entity.getBlockState());
 				
-				BendingManager.getBending(BendingType.EARTHBENDING)
-						.post(new FloatingBlockEvent.BlockPlacedReached(entity));
+				SoundType sound = entity.getBlock().getSoundType();
+				if (sound != null) {
+					entity.worldObj.playSound(null, entity.getPosition(), sound.getPlaceSound(),
+							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+				}
 				
 			}
 			
@@ -148,8 +150,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			if (entity.isCollided) {
 				if (!entity.worldObj.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
-				BendingManager.getBending(BendingType.EARTHBENDING)
-						.post(new FloatingBlockEvent.BlockThrownReached(entity));
+				
+				World world = entity.worldObj;
+				Block block = entity.getBlockState().getBlock();
+				SoundType sound = block.getSoundType();
+				if (sound != null) {
+					entity.worldObj.playSound(null, entity.getPosition(), sound.getBreakSound(),
+							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+				}
 				
 			}
 			

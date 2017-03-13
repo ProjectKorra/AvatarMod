@@ -33,6 +33,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -99,7 +100,11 @@ public class AbilityPickUpBlock extends EarthAbility {
 						
 						world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
 						
-						controller().post(new FloatingBlockEvent.BlockPickedUp(floating, entity));
+						SoundType sound = block.getSoundType();
+						if (sound != null) {
+							world.playSound(null, floating.getPosition(), sound.getBreakSound(),
+									SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+						}
 						
 						data.addStatusControl(StatusControl.PLACE_BLOCK);
 						data.addStatusControl(StatusControl.THROW_BLOCK);
