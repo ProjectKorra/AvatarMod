@@ -28,7 +28,6 @@ public class MiscData {
 	private final Runnable save;
 	
 	private float fallAbsorption;
-	private boolean skating;
 	private int timeInAir;
 	private int abilityCooldown;
 	private boolean wallJumping;
@@ -39,7 +38,6 @@ public class MiscData {
 	
 	public void toBytes(ByteBuf buf) {
 		buf.writeFloat(fallAbsorption);
-		buf.writeBoolean(skating);
 		buf.writeInt(timeInAir);
 		buf.writeInt(abilityCooldown);
 		buf.writeBoolean(wallJumping);
@@ -47,18 +45,9 @@ public class MiscData {
 	
 	public void fromBytes(ByteBuf buf) {
 		fallAbsorption = buf.readFloat();
-		skating = buf.readBoolean();
 		timeInAir = buf.readInt();
 		abilityCooldown = buf.readInt();
 		wallJumping = buf.readBoolean();
-	}
-	
-	public boolean isSkating() {
-		return skating;
-	}
-	
-	public void setSkating(boolean skating) {
-		this.skating = skating;
 	}
 	
 	public float getFallAbsorption() {

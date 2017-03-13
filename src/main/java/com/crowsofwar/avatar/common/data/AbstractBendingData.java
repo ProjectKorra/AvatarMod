@@ -275,16 +275,6 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public boolean isSkating() {
-		return miscData.isSkating();
-	}
-	
-	@Override
-	public void setSkating(boolean skating) {
-		miscData.setSkating(skating);
-	}
-	
-	@Override
 	public float getFallAbsorption() {
 		return miscData.getFallAbsorption();
 	}

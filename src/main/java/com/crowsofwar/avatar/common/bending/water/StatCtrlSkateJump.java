@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE_
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -42,8 +43,8 @@ public class StatCtrlSkateJump extends StatusControl {
 	public boolean execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();
-		if (data.isSkating()) {
-			data.setSkating(false);
+		if (data.hasTickHandler(TickHandler.WATER_SKATE)) {
+			data.removeTickHandler(TickHandler.WATER_SKATE);
 			
 			Vector velocity = Vector.getLookRectangular(entity);
 			velocity.mul(1.5);

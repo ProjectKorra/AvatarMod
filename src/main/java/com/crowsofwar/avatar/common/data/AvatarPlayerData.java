@@ -113,7 +113,6 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		setWallJumping(readFrom.getBoolean("WallJumping"));
 		setFallAbsorption(readFrom.getFloat("FallAbsorption"));
 		setTimeInAir(readFrom.getInteger("TimeInAir"));
-		setSkating(readFrom.getBoolean("WaterSkating"));
 		setAbilityCooldown(readFrom.getInteger("AbilityCooldown"));
 		
 		chi().readFromNBT(readFrom);
@@ -142,7 +141,6 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		writeTo.setBoolean("WallJumping", isWallJumping());
 		writeTo.setFloat("FallAbsorption", getFallAbsorption());
 		writeTo.setInteger("TimeInAir", getTimeInAir());
-		writeTo.setBoolean("WaterSkating", isSkating());
 		writeTo.setInteger("AbilityCooldown", getAbilityCooldown());
 		
 		chi().writeToNBT(writeTo);
@@ -313,16 +311,6 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	@Override
 	public void setMiscData(MiscData miscData) {
 		bendingData.setMiscData(miscData);
-	}
-	
-	@Override
-	public boolean isSkating() {
-		return bendingData.isSkating();
-	}
-	
-	@Override
-	public void setSkating(boolean skating) {
-		bendingData.setSkating(skating);
 	}
 	
 	@Override

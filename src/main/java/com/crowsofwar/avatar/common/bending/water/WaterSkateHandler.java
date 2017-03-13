@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
-import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -25,7 +23,6 @@ import static java.lang.Math.toRadians;
 import static net.minecraft.init.Blocks.WATER;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
@@ -63,65 +60,54 @@ public class WaterSkateHandler extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
-		tryStartSkating(data, entity);
-		skate(data, entity);
-		return !data.isSkating();
+		return skate(data, entity);
 	}
 	
-	private void tryStartSkating(BendingData data, EntityLivingBase player) {
-		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
-			if (shouldSkate(player)) {
-				data.removeStatusControl(SKATING_START);
-				data.setSkating(true);
-				data.addStatusControl(SKATING_JUMP);
-			}
-		}
-	}
-	
-	private void skate(BendingData data, EntityLivingBase player) {
-		if (data.isSkating()) {
+	/**
+	 * Moves the player and returns whether to stop skating.
+	 */
+	private boolean skate(BendingData data, EntityLivingBase player) {
+		
+		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
+		
+		World world = player.worldObj;
+		int yPos = getSurfacePos(player);
+		
+		if (!player.worldObj.isRemote && !shouldSkate(player)) {
+			return true;
+		} else {
 			
-			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
+			float required = STATS_CONFIG.chiWaterSkateSecond / 20f;
+			Chi chi = data.chi();
 			
-			World world = player.worldObj;
-			int yPos = getSurfacePos(player);
-			
-			if (!player.worldObj.isRemote && !shouldSkate(player)) {
-				data.setSkating(false);
-			} else {
+			if (chi.getAvailableChi() >= required) {
+				chi.changeTotalChi(-required);
+				chi.changeAvailableChi(-required);
 				
-				float required = STATS_CONFIG.chiWaterSkateSecond / 20f;
-				Chi chi = data.chi();
+				double speed = .4 + abilityData.getTotalXp() * (.3 / 100);
 				
-				if (chi.getAvailableChi() >= required) {
-					chi.changeTotalChi(-required);
-					chi.changeAvailableChi(-required);
-					
-					double speed = .4 + abilityData.getTotalXp() * (.3 / 100);
-					
-					player.setPosition(player.posX, yPos + .2, player.posZ);
-					Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(speed);
-					player.motionX = velocity.x();
-					player.motionY = 0;
-					player.motionZ = velocity.z();
-					
-					if (player.ticksExisted % 3 == 0) {
-						world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
-								SoundCategory.PLAYERS, 1, 1);
-						particles.spawnParticles(world, ParticleType.SPLASH, 2, 4,
-								Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
-					}
-					
-					if (player.ticksExisted % 10 == 0) {
-						abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
-					}
-					
+				player.setPosition(player.posX, yPos + .2, player.posZ);
+				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(speed);
+				player.motionX = velocity.x();
+				player.motionY = 0;
+				player.motionZ = velocity.z();
+				
+				if (player.ticksExisted % 3 == 0) {
+					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
+							SoundCategory.PLAYERS, 1, 1);
+					particles.spawnParticles(world, ParticleType.SPLASH, 2, 4,
+							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
 				}
+				
+				if (player.ticksExisted % 10 == 0) {
+					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
+				}
+				
 			}
+			return false;
 			
-		} else if (data.hasStatusControl(StatusControl.SKATING_JUMP)) {
-			data.removeStatusControl(StatusControl.SKATING_JUMP);
 		}
+		
 	}
 	
 	/**
@@ -130,6 +116,8 @@ public class WaterSkateHandler extends TickHandler {
 	private boolean shouldSkate(EntityLivingBase player) {
 		IBlockState below = player.worldObj.getBlockState(new BlockPos(player.getPosition()).down());
 		int surface = getSurfacePos(player);
+		
+		System.out.println(below.getBlock());
 		
 		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER)
 				&& surface != -1 && surface - player.posY <= 3;

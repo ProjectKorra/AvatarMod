@@ -153,10 +153,6 @@ public interface BendingData {
 	
 	void setMiscData(MiscData miscData);
 	
-	boolean isSkating();
-	
-	void setSkating(boolean skating);
-	
 	float getFallAbsorption();
 	
 	void setFallAbsorption(float fallAbsorption);
