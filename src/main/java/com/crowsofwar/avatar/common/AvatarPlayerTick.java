@@ -53,7 +53,11 @@ public class AvatarPlayerTick {
 			if (tickHandlers != null) {
 				AbilityContext ctx = new AbilityContext(data, new Raytrace.Result());
 				for (TickHandler handler : tickHandlers) {
-					handler.tick(ctx);
+					if (handler.tick(ctx)) {
+						// Can use this since the list is a COPY of the
+						// underlying list
+						data.removeTickHandler(handler);
+					}
 				}
 			}
 			

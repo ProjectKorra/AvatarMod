@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
+import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -23,6 +25,7 @@ import static java.lang.Math.toRadians;
 import static net.minecraft.init.Blocks.WATER;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
@@ -60,7 +63,34 @@ public class WaterSkateHandler extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
-		return skate(data, entity);
+		
+		// The tick handler may be active while the player hasn't started
+		// skating yet. To see if they have started skating, check if has they
+		// have SKATING_JUMP StatusControl.
+		
+		if (!data.hasStatusControl(SKATING_JUMP)) {
+			tryStartSkating(data, entity);
+		}
+		
+		if (data.hasStatusControl(SKATING_JUMP) && skate(data, entity)) {
+			data.removeStatusControl(StatusControl.SKATING_JUMP);
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	private void tryStartSkating(BendingData data, EntityLivingBase player) {
+		
+		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
+			if (shouldSkate(player)) {
+				data.removeStatusControl(SKATING_START);
+				data.addStatusControl(SKATING_JUMP);
+			}
+			
+		}
+		
 	}
 	
 	/**
@@ -116,8 +146,6 @@ public class WaterSkateHandler extends TickHandler {
 	private boolean shouldSkate(EntityLivingBase player) {
 		IBlockState below = player.worldObj.getBlockState(new BlockPos(player.getPosition()).down());
 		int surface = getSurfacePos(player);
-		
-		System.out.println(below.getBlock());
 		
 		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER)
 				&& surface != -1 && surface - player.posY <= 3;
