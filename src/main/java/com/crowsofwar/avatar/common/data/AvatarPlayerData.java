@@ -116,6 +116,15 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 		chi().readFromNBT(readFrom);
 		
+		List<TickHandler> tickHandlers = new ArrayList<>();
+		AvatarUtils.readList(tickHandlers, //
+				nbt -> TickHandler.fromId(nbt.getInteger("Id")), //
+				readFrom, "TickHandlers");
+		clearTickHandlers();
+		for (TickHandler handler : tickHandlers) {
+			addTickHandler(handler);
+		}
+		
 	}
 	
 	@Override
@@ -140,6 +149,10 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		getMiscData().writeToNbt(nestedCompound(writeTo, "Misc"));
 		
 		chi().writeToNBT(writeTo);
+		
+		AvatarUtils.writeList(getAllTickHandlers(), //
+				(nbt, handler) -> nbt.setInteger("Id", handler.id()), //
+				writeTo, "TickHandlers");
 		
 	}
 	
