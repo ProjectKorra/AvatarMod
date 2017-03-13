@@ -151,6 +151,8 @@ public interface BendingData {
 	
 	MiscData getMiscData();
 	
+	void setMiscData(MiscData miscData);
+	
 	boolean isSkating();
 	
 	void setSkating(boolean skating);

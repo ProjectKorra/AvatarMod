@@ -32,6 +32,8 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData.DataCategory;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.MiscData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.PlayerDataContext;
@@ -154,11 +156,20 @@ public class PacketHandlerClient implements IPacketHandler {
 			}
 			
 			if (readData.containsKey(DataCategory.MISC.property())) {
-				// TODO set misc
+				data.setMiscData((MiscData) readData.get(DataCategory.MISC.property()));
 			}
 			
 			if (readData.containsKey(DataCategory.CHI.property())) {
 				data.setChi((Chi) readData.get(DataCategory.CHI.property()));
+			}
+			
+			if (readData.containsKey(DataCategory.TICK_HANDLERS.property())) {
+				data.clearTickHandlers();
+				List<TickHandler> tickHandlers = (List<TickHandler>) readData
+						.get(DataCategory.TICK_HANDLERS.property());
+				for (TickHandler tickHandler : tickHandlers) {
+					data.addTickHandler(tickHandler);
+				}
 			}
 			
 		}

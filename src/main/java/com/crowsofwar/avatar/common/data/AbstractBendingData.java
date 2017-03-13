@@ -270,6 +270,11 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
+	public void setMiscData(MiscData md) {
+		this.miscData = md;
+	}
+	
+	@Override
 	public boolean isSkating() {
 		return miscData.isSkating();
 	}
