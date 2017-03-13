@@ -24,9 +24,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.earth.RavineEvent;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
@@ -42,6 +39,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -49,6 +47,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -86,6 +85,7 @@ public class EntityRavine extends AvatarEntity {
 		this.damageMult = mult;
 	}
 	
+	@Override
 	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();
 	}
@@ -123,7 +123,6 @@ public class EntityRavine extends AvatarEntity {
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
 		if (getSqrDistanceTravelled() > 100) {
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.End(this));
 			setDead();
 		}
 		
@@ -135,14 +134,12 @@ public class EntityRavine extends AvatarEntity {
 				SoundCategory.PLAYERS, 1, 1, false);
 		
 		if (!worldObj.getBlockState(below).isNormalCube()) {
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
 			setDead();
 		}
 		
 		// Destroy if in a block
 		IBlockState inBlock = worldObj.getBlockState(getPosition());
 		if (inBlock.isFullBlock()) {
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
 			setDead();
 		}
 		
@@ -151,8 +148,19 @@ public class EntityRavine extends AvatarEntity {
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 			
 			if (inBlock.getBlockHardness(worldObj, getPosition()) == 0) {
-				BendingManager.getBending(BendingType.EARTHBENDING)
-						.post(new RavineEvent.DestroyBlock(this, inBlock, inPos));
+				
+				// Play sound
+				
+				Block destroyed = inBlock.getBlock();
+				SoundEvent sound;
+				if (destroyed == Blocks.FIRE) {
+					sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
+				} else {
+					sound = destroyed.getSoundType().getBreakSound();
+				}
+				worldObj.playSound(null, getPosition(), sound, SoundCategory.BLOCKS, 1, 1);
+				
+				// Spawn particles
 				
 				for (int i = 0; i < 7; i++) {
 					worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
@@ -160,6 +168,8 @@ public class EntityRavine extends AvatarEntity {
 							3 * (rand.nextGaussian() - 0.5), Block.getStateId(inBlock));
 				}
 				worldObj.setBlockToAir(getPosition());
+				
+				// Create drops
 				
 				if (!worldObj.isRemote) {
 					List<ItemStack> drops = inBlock.getBlock().getDrops(worldObj, inPos, inBlock, 0);
@@ -175,7 +185,6 @@ public class EntityRavine extends AvatarEntity {
 				
 			} else {
 				
-				BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
 				setDead();
 				
 			}
@@ -192,9 +201,6 @@ public class EntityRavine extends AvatarEntity {
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-						BendingManager.getBending(BendingType.EARTHBENDING)
-								.post(new RavineEvent.HitEntity(this, entity));
-						
 						Vector push = velocity.copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
 						entity.addVelocity(push.x(), push.y(), push.z());
 						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, getOwner()),

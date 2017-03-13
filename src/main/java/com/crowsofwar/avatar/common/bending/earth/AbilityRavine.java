@@ -19,8 +19,6 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
@@ -62,8 +60,6 @@ public class AbilityRavine extends EarthAbility {
 			ravine.velocity().set(look.times(10));
 			ravine.setDamageMult(.75f + xp / 100);
 			world.spawnEntityInWorld(ravine);
-			
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, entity));
 			
 		}
 		
