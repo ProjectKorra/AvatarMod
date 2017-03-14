@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.entity.data.EntityBenderData;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,6 +27,7 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
@@ -35,11 +37,14 @@ import net.minecraft.world.World;
  */
 public class EntityHumanBender extends EntityCreature implements Bender {
 	
+	private EntityBenderData data;
+	
 	/**
 	 * @param world
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
+		data = new EntityBenderData(this);
 	}
 	
 	@Override
@@ -51,14 +56,25 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 	}
 	
 	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		data.readFromNbt(nbt);
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		data.writeToNbt(nbt);
+	}
+	
+	@Override
 	public EntityLivingBase getEntity() {
 		return this;
 	}
 	
 	@Override
 	public BendingData getData() {
-		// TODO Auto-generated method stub
-		return null;
+		return data;
 	}
 	
 	@Override
