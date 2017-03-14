@@ -16,16 +16,22 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
+
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.EntityBenderData;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.ai.EntityAIAttackRanged;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -55,11 +61,14 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	@Override
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true,
-				false, player -> true));
+		this.targetTasks.addTask(1,
+				new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, player -> {
+					// System.out.println("Considering " + player);
+					return true;
+				}));
 		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-		// this.tasks.addTask(4, new EntityAIAttackRanged(this, 6, 200, 10));
+		this.tasks.addTask(4, new EntityAIAttackRanged(this, 6, 40, 10));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 	}
 	
@@ -71,6 +80,7 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
+		System.out.println(getAttackTarget());
 		super.writeEntityToNBT(nbt);
 		data.writeToNbt(nbt);
 	}
@@ -103,7 +113,12 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
 		
-		System.out.println("Attack " + target);
+		Vector rotations = getRotationTo(getEntityPos(this), getEntityPos(target));
+		rotationYaw = (float) toDegrees(rotations.y());
+		rotationPitch = (float) toDegrees(rotations.x());
+		
+		data.chi().setMaxChi(10);
+		data.chi().setAvailableChi(10);
 		
 		BendingAbility ability = BendingAbility.ABILITY_AIR_GUST;
 		Raytrace.Result raytrace = Raytrace.getTargetBlock(this, ability.getRaytrace());

@@ -71,7 +71,11 @@ public interface Bender {
 	 * Creates an appropriate Bender instance for that entity
 	 */
 	public static Bender create(EntityLivingBase entity) {
-		return new PlayerBender((EntityPlayer) entity);
+		if (entity instanceof Bender) {
+			return (Bender) entity;
+		} else {
+			return new PlayerBender((EntityPlayer) entity);
+		}
 	}
 	
 }
