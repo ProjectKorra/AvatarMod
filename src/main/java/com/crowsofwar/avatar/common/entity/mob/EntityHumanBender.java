@@ -16,12 +16,17 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.EntityBenderData;
+import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.ai.EntityAIAttackRanged;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
@@ -35,7 +40,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class EntityHumanBender extends EntityCreature implements Bender {
+public class EntityHumanBender extends EntityCreature implements Bender, IRangedAttackMob {
 	
 	private EntityBenderData data;
 	
@@ -52,6 +57,7 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+		this.tasks.addTask(6, new EntityAIAttackRanged(this, 6, 200, 10));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 	}
 	
@@ -90,6 +96,15 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 	@Override
 	public boolean isPlayer() {
 		return false;
+	}
+	
+	@Override
+	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
+		BendingAbility ability = BendingAbility.ABILITY_AIR_GUST;
+		Raytrace.Result raytrace = Raytrace.getTargetBlock(this, ability.getRaytrace());
+		
+		ability.execute(new AbilityContext(data, this, this, raytrace));
+		
 	}
 	
 }

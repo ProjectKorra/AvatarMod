@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class AbilityContext {
 	
-	private final AvatarPlayerData data;
+	private final BendingData data;
 	private final Bender bender;
 	
 	private final VectorI clientLookBlock;
@@ -65,6 +65,17 @@ public class AbilityContext {
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
 		this.lookPos = raytrace.getPosPrecise();
+	}
+	
+	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender,
+			Raytrace.Result raytrace) {
+		
+		this.data = data;
+		this.bender = bender;
+		this.clientLookBlock = raytrace.getPos();
+		this.lookSide = raytrace.getSide();
+		this.lookPos = raytrace.getPosPrecise();
+		
 	}
 	
 	public BendingData getData() {
