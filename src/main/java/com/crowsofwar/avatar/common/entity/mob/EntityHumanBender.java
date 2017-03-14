@@ -26,8 +26,8 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.ai.EntityAIAttackRanged;
 import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
@@ -55,9 +55,11 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	@Override
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true,
+				false, player -> true));
 		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-		this.tasks.addTask(6, new EntityAIAttackRanged(this, 6, 200, 10));
+		// this.tasks.addTask(4, new EntityAIAttackRanged(this, 6, 200, 10));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 	}
 	
@@ -100,6 +102,9 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
+		
+		System.out.println("Attack " + target);
+		
 		BendingAbility ability = BendingAbility.ABILITY_AIR_GUST;
 		Raytrace.Result raytrace = Raytrace.getTargetBlock(this, ability.getRaytrace());
 		
