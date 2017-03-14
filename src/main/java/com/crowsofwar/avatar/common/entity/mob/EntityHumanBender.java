@@ -62,10 +62,7 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.targetTasks.addTask(1,
-				new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, player -> {
-					// System.out.println("Considering " + player);
-					return true;
-				}));
+				new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
 		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(4, new EntityAIAttackRanged(this, 6, 40, 10));
@@ -80,7 +77,6 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
-		System.out.println(getAttackTarget());
 		super.writeEntityToNBT(nbt);
 		data.writeToNbt(nbt);
 	}
@@ -118,6 +114,7 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 		rotationPitch = (float) toDegrees(rotations.x());
 		
 		data.chi().setMaxChi(10);
+		data.chi().setTotalChi(10);
 		data.chi().setAvailableChi(10);
 		
 		BendingAbility ability = BendingAbility.ABILITY_AIR_GUST;

@@ -171,6 +171,7 @@ public class AbilityContext {
 	public boolean consumeChi(float amount) {
 		Chi chi = data.chi();
 		float available = chi.getAvailableChi();
+		System.out.println("Available/Needed " + available + "/" + amount);
 		if (available >= amount) {
 			chi.changeTotalChi(-amount);
 			chi.changeAvailableChi(-amount);
