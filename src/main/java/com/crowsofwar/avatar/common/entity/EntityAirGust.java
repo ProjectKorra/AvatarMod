@@ -24,7 +24,6 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
@@ -91,8 +90,7 @@ public class EntityAirGust extends EntityArc {
 		
 		@Override
 		protected void onCollision(Entity entity) {
-			if (!entity.worldObj.isRemote && entity != owner
-					&& entity != GoreCore.proxy.getClientSidePlayer()) {
+			if (!entity.worldObj.isRemote && entity != owner) {
 				
 				BendingData data = Bender.create(owner).getData();
 				float xp = 0;
