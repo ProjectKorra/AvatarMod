@@ -67,7 +67,7 @@ public abstract class UiComponent extends Gui {
 		return componentHeight() * scale() * scaleFactor();
 	}
 	
-	public final void draw(float partialTicks) {
+	public void draw(float partialTicks) {
 		
 		transform.update(partialTicks);
 		color(1, 1, 1, 1);

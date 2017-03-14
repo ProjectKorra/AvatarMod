@@ -49,6 +49,7 @@ public class WindowAbility {
 	
 	private Frame frame;
 	private UiComponent icon, title, overlay, level, invBg, treeView, description;
+	private ComponentInventorySlots slot1, slot2;
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
@@ -99,17 +100,28 @@ public class WindowAbility {
 		// Not setting frame since should be absolutely positioned
 		// Don't add invBg since it shouldn't be rendered
 		
-		treeView = new ComponentAbilityTree(ability);
+		slot1 = new ComponentInventorySlots(gui.inventorySlots, 0);
+		slot1.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
+		slot2 = new ComponentInventorySlots(gui.inventorySlots, 1);
+		slot2.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
+		slot2.setOffset(Measurement.fromPixels(frameRight, slot1.width() + 10, 0));
+		// Add slots later so on top of treeView
+		
+		treeView = new ComponentAbilityTree(ability, slot1, slot2);
 		treeView.setFrame(frameRight);
-		treeView.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		treeView.setOffset(Measurement.fromPercent(frameRight, 0, -30));
+		treeView.setPosition(StartingPosition.TOP_LEFT);
+		treeView.setOffset(Measurement.fromPercent(frameRight, 0, 20));
 		handler.add(treeView);
+		
+		handler.add(slot1);
+		handler.add(slot2);
 		
 		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
 				() -> gui.useScroll(ability));
 		button.setFrame(frameRight);
-		button.setPosition(StartingPosition.MIDDLE_CENTER);
-		button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
+		button.setPosition(StartingPosition.TOP_LEFT);
+		// button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
+		button.setOffset(treeView.offset().plus(fromPixels(frameRight, treeView.width() + 100, 0)));
 		handler.add(button);
 		
 		keybind = new ComponentAbilityKeybind(ability);
@@ -122,7 +134,8 @@ public class WindowAbility {
 	
 	public void draw(float partialTicks) {
 		
-		button.setEnabled(gui.inventorySlots.getSlot(0).getHasStack());
+		button.setEnabled(
+				gui.inventorySlots.getSlot(0).getHasStack() || gui.inventorySlots.getSlot(1).getHasStack());
 		
 		handler.draw(partialTicks);
 		
@@ -156,6 +169,13 @@ public class WindowAbility {
 	
 	public boolean isEditing() {
 		return keybind.isEditing();
+	}
+	
+	public void onClose() {
+		slot1.setVisible(false);
+		slot2.setVisible(false);
+		slot1.draw(0);
+		slot2.draw(0);
 	}
 	
 }

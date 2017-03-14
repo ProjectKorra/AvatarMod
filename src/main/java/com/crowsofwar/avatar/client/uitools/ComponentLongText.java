@@ -70,19 +70,24 @@ public class ComponentLongText extends UiComponent {
 		String currentLine = "";
 		
 		String[] words = text.split(" ");
-		for (String word : words) {
+		
+		for (int i = 0; i < words.length; i++) {
 			
+			String word = words[i];
 			String wouldBe = currentLine + word + " ";
 			if (fr.getStringWidth(wouldBe) > width.xInPixels() / scaleFactor()) {
 				// The line is too long, push it onto lines and reset
 				lines.add(currentLine);
 				currentLine = "";
+				i--;
 			} else {
 				// The line isn't long yet, so keep adding more words
 				currentLine = wouldBe;
 			}
 			
 		}
+		
+		lines.add(currentLine);
 		
 	}
 	

@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -47,8 +48,20 @@ public class ContainerSkillsGui extends Container {
 		addSlotToContainer(new Slot(inventory, 0, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return stack.getItem() == AvatarItems.itemScroll
-						&& ScrollType.fromId(stack.getMetadata()).accepts(type);
+				ScrollType scrollType = ScrollType.fromId(stack.getMetadata());
+				Item item = stack.getItem();
+				Slot other = getSlot(1);
+				return item == AvatarItems.itemScroll && scrollType.accepts(type) && !other.getHasStack();
+			}
+		});
+		// Second scroll slot
+		addSlotToContainer(new Slot(inventory, 1, 100, 100) {
+			@Override
+			public boolean isItemValid(ItemStack stack) {
+				ScrollType scrollType = ScrollType.fromId(stack.getMetadata());
+				Item item = stack.getItem();
+				Slot other = getSlot(0);
+				return item == AvatarItems.itemScroll && scrollType.accepts(type) && !other.getHasStack();
 			}
 		});
 		
@@ -114,6 +127,13 @@ public class ContainerSkillsGui extends Container {
 			player.dropItem(scroll, false);
 			inventory.setInventorySlotContents(0, field_190927_a);
 		}
+		
+		ItemStack scroll2 = inventory.getStackInSlot(1);
+		if (scroll2 != field_190927_a) {
+			player.dropItem(scroll2, false);
+			inventory.setInventorySlotContents(1, field_190927_a);
+		}
+		
 	}
 	
 	public int getInvIndex() {
