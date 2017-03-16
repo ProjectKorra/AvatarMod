@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
+import com.crowsofwar.avatar.common.util.UtilityGL11Debug;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -84,6 +85,11 @@ public class AvatarUiRenderer extends Gui {
 		int mouseX = Mouse.getX() * resolution.getScaledWidth() / mc.displayWidth;
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
+		
+		if (currentBendingMenu != null) {
+			System.out.println("\n\n------------");
+			UtilityGL11Debug.dumpAllIsEnabled();
+		}
 		
 		if (currentBendingMenu != null) {
 			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {
