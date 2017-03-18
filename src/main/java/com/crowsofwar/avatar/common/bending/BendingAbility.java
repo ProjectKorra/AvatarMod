@@ -77,15 +77,19 @@ public abstract class BendingAbility {
 	protected final int id;
 	private final String name;
 	private Raytrace.Info raytrace;
-	private final AbilityAi ai;
+	private AbilityAi ai;
 	
-	public BendingAbility(BendingType bendingType, String name, AbilityAi ai) {
+	public BendingAbility(BendingType bendingType, String name) {
 		this.type = bendingType;
 		this.id = nextId++;
 		this.name = name;
-		BendingManager.registerAbility(this);
 		this.raytrace = new Raytrace.Info();
-		this.ai = ai;
+		this.ai = createAi();
+		BendingManager.registerAbility(this);
+	}
+	
+	protected AbilityAi createAi() {
+		return new DefaultAbilityAi(this);
 	}
 	
 	protected BendingController controller() {
