@@ -133,7 +133,6 @@ public class OwnerAttribute {
 		if (owner != null) {
 			setOwnerCallback.accept(owner);
 		}
-		System.out.println("Set owner to " + owner);
 		
 	}
 	
@@ -163,7 +162,6 @@ public class OwnerAttribute {
 			}
 		}
 		boolean idConsistent = id != null && getOwnerInfo().getId().equals(id);
-		System.out.println(idConsistent);
 		
 		if (ownerCached == null || ownerCached.isDead || !idConsistent || getOwnerInfo() == null) {
 			ownerCached = null;
