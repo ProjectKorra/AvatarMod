@@ -128,6 +128,8 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 		BendingAbility ability = BendingAbility.ABILITY_AIR_GUST;
 		Raytrace.Result raytrace = Raytrace.getTargetBlock(this, ability.getRaytrace());
 		
+		ability.getAi().start(this, this);
+		
 		ability.execute(new AbilityContext(data, this, this, raytrace));
 		
 	}
