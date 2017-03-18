@@ -23,7 +23,7 @@ import static java.lang.Math.toDegrees;
 import com.crowsofwar.avatar.common.bending.AbilityAi;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -37,17 +37,18 @@ public class AbilityAirGustAi extends AbilityAi {
 	
 	/**
 	 * @param ability
+	 * @param entity
+	 * @param bender
 	 */
-	protected AbilityAirGustAi(BendingAbility ability) {
-		super(ability);
+	protected AbilityAirGustAi(BendingAbility ability, EntityLivingBase entity, Bender bender) {
+		super(ability, entity, bender);
 	}
 	
 	@Override
-	protected void startExec(AbilityContext ctx) {
-		
-		EntityLivingBase entity = ctx.getBenderEntity();
+	protected void startExec() {
+		// EntityLivingBase entity = ctx.getBenderEntity();
 		EntityLivingBase target = entity.getAITarget();
-		BendingData data = ctx.getData();
+		BendingData data = bender.getData();
 		
 		if (target != null) {
 			
@@ -59,10 +60,14 @@ public class AbilityAirGustAi extends AbilityAi {
 			data.chi().setTotalChi(10);
 			data.chi().setAvailableChi(10);
 			
-			execAbility(ctx);
+			execAbility();
 			
 		}
-		
+	}
+	
+	@Override
+	public boolean shouldExecute() {
+		return entity.getAITarget() != null;
 	}
 	
 }

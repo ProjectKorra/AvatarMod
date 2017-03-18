@@ -16,7 +16,9 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * Ability AI that does nothing
@@ -25,11 +27,16 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
  */
 public class DefaultAbilityAi extends AbilityAi {
 	
-	protected DefaultAbilityAi(BendingAbility ability) {
-		super(ability);
+	protected DefaultAbilityAi(BendingAbility ability, EntityLivingBase entity, Bender bender) {
+		super(ability, entity, bender);
 	}
 	
 	@Override
-	protected void startExec(AbilityContext ctx) {}
+	protected void startExec() {}
+	
+	@Override
+	public boolean shouldExecute() {
+		return false;
+	}
 	
 }

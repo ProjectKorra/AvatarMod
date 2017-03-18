@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIBase;
 
 /**
  * Represents behavior needed for activation of an ability by a mob/AI. Before
@@ -38,49 +39,33 @@ import net.minecraft.entity.EntityLivingBase;
  * 
  * @author CrowsOfWar
  */
-public abstract class AbilityAi {
+public abstract class AbilityAi extends EntityAIBase {
 	
-	private final BendingAbility ability;
+	protected final BendingAbility ability;
+	protected final EntityLivingBase entity;
+	protected final Bender bender;
 	
-	protected AbilityAi(BendingAbility ability) {
+	protected AbilityAi(BendingAbility ability, EntityLivingBase entity, Bender bender) {
 		this.ability = ability;
+		this.entity = entity;
+		this.bender = bender;
 	}
 	
-	/**
-	 * Start to execute this ability. If {@link #isContinuous()}, call
-	 * {@link #continueExec(EntityLivingBase, Bender) continueExec} afterwards.
-	 */
-	public void start(EntityLivingBase entity, Bender bender) {
-		startExec(createCtx(entity, bender));
+	@Override
+	public void startExecuting() {
+		startExec();
 	}
 	
-	protected abstract void startExec(AbilityContext ctx);
-	
-	/**
-	 * Continues executing this ability. Returns whether to keep calling
-	 * {@link #continueExec(EntityLivingBase, Bender) continueExec}. Only
-	 * necessary to call if {@link #isContinuous()} returns true.
-	 */
-	public boolean continueExec(EntityLivingBase entity, Bender bender) {
+	@Override
+	public boolean continueExecuting() {
 		return false;
 	}
 	
-	protected AbilityContext createCtx(EntityLivingBase entity, Bender bender) {
-		return new AbilityContext(bender.getData(), entity, bender,
-				Raytrace.getTargetBlock(entity, ability.getRaytrace()));
-	}
+	protected abstract void startExec();
 	
-	/**
-	 * Returns whether this ability requires calls to
-	 * {@link #continueExec(EntityLivingBase, Bender) continueExec} after
-	 * initially calling {@link #start(EntityLivingBase, Bender) start}.
-	 */
-	public boolean isContinuous() {
-		return false;
-	}
-	
-	protected void execAbility(AbilityContext ctx) {
-		ability.execute(ctx);
+	protected void execAbility() {
+		ability.execute(new AbilityContext(bender.getData(), entity, bender,
+				Raytrace.getTargetBlock(entity, ability.getRaytrace())));
 	}
 	
 }
