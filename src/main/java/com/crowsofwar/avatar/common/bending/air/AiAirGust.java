@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
@@ -40,7 +41,7 @@ public class AiAirGust extends AbilityAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiAirGust(BendingAbility ability, EntityLivingBase entity, Bender bender) {
+	protected AiAirGust(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
 	

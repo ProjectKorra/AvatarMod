@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
@@ -63,7 +64,7 @@ public class AbilityAirGust extends AirAbility {
 	}
 	
 	@Override
-	public AbilityAi getAi(EntityLivingBase entity, Bender bender) {
+	public AbilityAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirGust(this, entity, bender);
 	}
 	

@@ -37,7 +37,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
 
 /**
  * Encapsulates all logic required for a bending ability. There is 1 instance of
@@ -143,7 +143,7 @@ public abstract class BendingAbility {
 		return name;
 	}
 	
-	public AbilityAi getAi(EntityLivingBase entity, Bender bender) {
+	public AbilityAi getAi(EntityLiving entity, Bender bender) {
 		return new DefaultAbilityAi(this, entity, bender);
 	}
 	

@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
@@ -43,10 +44,10 @@ import net.minecraft.entity.ai.EntityAIBase;
 public abstract class AbilityAi extends EntityAIBase {
 	
 	protected final BendingAbility ability;
-	protected final EntityLivingBase entity;
+	protected final EntityLiving entity;
 	protected final Bender bender;
 	
-	protected AbilityAi(BendingAbility ability, EntityLivingBase entity, Bender bender) {
+	protected AbilityAi(BendingAbility ability, EntityLiving entity, Bender bender) {
 		this.ability = ability;
 		this.entity = entity;
 		this.bender = bender;

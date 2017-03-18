@@ -22,7 +22,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
 
 /**
  * 
@@ -38,7 +38,7 @@ public class AiFireball extends AbilityAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiFireball(BendingAbility ability, EntityLivingBase entity, Bender bender) {
+	protected AiFireball(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
 	}
@@ -64,7 +64,7 @@ public class AiFireball extends AbilityAi {
 	
 	@Override
 	public boolean shouldExecute() {
-		return entity.getAITarget() != null;
+		return entity.getAttackTarget() != null;
 	}
 	
 	@Override
