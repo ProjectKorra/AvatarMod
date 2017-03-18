@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.AbilityAi;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -62,8 +63,8 @@ public class AbilityAirGust extends AirAbility {
 	}
 	
 	@Override
-	protected AbilityAi createAi() {
-		return new AbilityAirGustAi(this);
+	public AbilityAi getAi(EntityLivingBase entity, Bender bender) {
+		return new AiAirGust(this, entity, bender);
 	}
 	
 }

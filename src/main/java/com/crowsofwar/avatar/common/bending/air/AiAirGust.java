@@ -33,14 +33,14 @@ import net.minecraft.entity.EntityLivingBase;
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirGustAi extends AbilityAi {
+public class AiAirGust extends AbilityAi {
 	
 	/**
 	 * @param ability
 	 * @param entity
 	 * @param bender
 	 */
-	protected AbilityAirGustAi(BendingAbility ability, EntityLivingBase entity, Bender bender) {
+	protected AiAirGust(BendingAbility ability, EntityLivingBase entity, Bender bender) {
 		super(ability, entity, bender);
 	}
 	

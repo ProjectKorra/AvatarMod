@@ -34,7 +34,10 @@ import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
+
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * Encapsulates all logic required for a bending ability. There is 1 instance of
@@ -77,19 +80,13 @@ public abstract class BendingAbility {
 	protected final int id;
 	private final String name;
 	private Raytrace.Info raytrace;
-	private AbilityAi ai;
 	
 	public BendingAbility(BendingType bendingType, String name) {
 		this.type = bendingType;
 		this.id = nextId++;
 		this.name = name;
 		this.raytrace = new Raytrace.Info();
-		this.ai = createAi();
 		BendingManager.registerAbility(this);
-	}
-	
-	protected AbilityAi createAi() {
-		return new DefaultAbilityAi(this);
 	}
 	
 	protected BendingController controller() {
@@ -146,8 +143,8 @@ public abstract class BendingAbility {
 		return name;
 	}
 	
-	public AbilityAi getAi() {
-		return ai;
+	public AbilityAi getAi(EntityLivingBase entity, Bender bender) {
+		return new DefaultAbilityAi(this, entity, bender);
 	}
 	
 }
