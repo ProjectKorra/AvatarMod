@@ -110,14 +110,10 @@ public class OwnerAttribute {
 		
 		if (isCacheInvalid()) {
 			Bender bender = getOwnerInfo().find(world);
-			System.out.println("Cache invalid; bender " + bender);
 			if (bender != null) {
-				System.out.println(" > successfully found entity");
 				ownerCached = bender.getEntity();
 			}
 		}
-		
-		System.out.println("Owner is " + ownerCached);
 		
 		return ownerCached;
 	}
