@@ -55,12 +55,11 @@ public class AiFireball extends AbilityAi {
 		data.chi().setTotalChi(10);
 		data.chi().setAvailableChi(10);
 		execAbility();
-		System.out.println("Execute");
+		data.setAbilityCooldown(100);
 	}
 	
 	@Override
 	public boolean continueExecuting() {
-		System.out.println("Continue " + timeExecuting);
 		
 		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
 		entity.rotationYaw = (float) toDegrees(rotations.y());
@@ -74,11 +73,12 @@ public class AiFireball extends AbilityAi {
 		} else {
 			return true;
 		}
+		
 	}
 	
 	@Override
 	public boolean shouldExecute() {
-		return entity.getAttackTarget() != null;
+		return entity.getAttackTarget() != null && bender.getData().getAbilityCooldown() == 0;
 	}
 	
 	@Override
