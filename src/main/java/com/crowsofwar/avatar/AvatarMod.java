@@ -187,7 +187,7 @@ public class AvatarMod {
 	
 	private void registerEntity(Class<? extends Entity> entity, String name) {
 		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name,
-				nextEntityID++, this, 64, 20, true);
+				nextEntityID++, this, 64, 3, true);
 	}
 	
 }
