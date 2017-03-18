@@ -77,7 +77,7 @@ public class BenderInfo {
 			List<Entity> entities = world.loadedEntityList;
 			for (Entity entity : entities) {
 				if (entity.getPersistentID() == id) {
-					// Return Bender object based on this entity
+					return (Bender) entity;
 				}
 			}
 			return null;

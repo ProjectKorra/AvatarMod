@@ -64,7 +64,7 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.targetTasks.addTask(3,
 				new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
-		this.targetTasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
+		this.targetTasks.addTask(2, BendingAbility.ABILITY_FIREBALL.getAi(this, this));
 		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(4, new EntityAIAttackRanged(this, 0.25, 40, 30));
