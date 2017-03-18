@@ -16,11 +16,16 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
+
 import com.crowsofwar.avatar.common.bending.AbilityAi;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLiving;
 
@@ -45,14 +50,23 @@ public class AiFireball extends AbilityAi {
 	
 	@Override
 	protected void startExec() {
+		BendingData data = bender.getData();
+		data.chi().setMaxChi(10);
+		data.chi().setTotalChi(10);
+		data.chi().setAvailableChi(10);
 		execAbility();
-		
+		System.out.println("Execute");
 	}
 	
 	@Override
 	public boolean continueExecuting() {
 		System.out.println("Continue " + timeExecuting);
-		if (timeExecuting >= 200) {
+		
+		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
+		entity.rotationYaw = (float) toDegrees(rotations.y());
+		entity.rotationPitch = (float) toDegrees(rotations.x());
+		
+		if (timeExecuting >= 40) {
 			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_FIREBALL);
 			timeExecuting = 0;

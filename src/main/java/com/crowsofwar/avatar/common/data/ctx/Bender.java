@@ -71,10 +71,14 @@ public interface Bender {
 	 * Creates an appropriate Bender instance for that entity
 	 */
 	public static Bender create(EntityLivingBase entity) {
-		if (entity instanceof Bender) {
+		if (entity == null) {
+			throw new IllegalArgumentException("Cannot create bender for null entity");
+		} else if (entity instanceof Bender) {
 			return (Bender) entity;
-		} else {
+		} else if (entity instanceof EntityPlayer) {
 			return new PlayerBender((EntityPlayer) entity);
+		} else {
+			throw new IllegalArgumentException("Unsure how to create bender for entity " + entity);
 		}
 	}
 	
