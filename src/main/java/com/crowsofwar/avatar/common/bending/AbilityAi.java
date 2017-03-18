@@ -23,7 +23,18 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
- * 
+ * Represents behavior needed for activation of an ability by a mob/AI. Before
+ * most abilities are activated, some sort of preparation is required; for
+ * example, air gust requires the user to aim at an enemy entity. This class
+ * wraps all the preparatory behavior so the ability can be activated at the
+ * appropriate time.
+ * <p>
+ * There is one instance of AbilityAi per ability. To start execution, call
+ * {@link #start(EntityLivingBase, Bender) start}. {@link #isContinuous() Some
+ * abilities} will require more calls to
+ * {@link #continueExec(EntityLivingBase, Bender) continueExec}. Internally,
+ * each AI sets the appropriate state of the entity, then calls
+ * {@link BendingAbility#execute(AbilityContext)}.
  * 
  * @author CrowsOfWar
  */
@@ -37,7 +48,7 @@ public abstract class AbilityAi {
 	
 	/**
 	 * Start to execute this ability. If {@link #isContinuous()}, call
-	 * {@link #continueExec(EntityLivingBase, Bender) continueExec}.
+	 * {@link #continueExec(EntityLivingBase, Bender) continueExec} afterwards.
 	 */
 	public void start(EntityLivingBase entity, Bender bender) {
 		startExec(createCtx(entity, bender));
@@ -47,8 +58,8 @@ public abstract class AbilityAi {
 	
 	/**
 	 * Continues executing this ability. Returns whether to keep calling
-	 * {@link #continueExec(EntityLivingBase, Bender) continueExec}. Only call
-	 * if {@link #isContinuous()}.
+	 * {@link #continueExec(EntityLivingBase, Bender) continueExec}. Only
+	 * necessary to call if {@link #isContinuous()} returns true.
 	 */
 	public boolean continueExec(EntityLivingBase entity, Bender bender) {
 		return false;
@@ -59,6 +70,11 @@ public abstract class AbilityAi {
 				Raytrace.getTargetBlock(entity, ability.getRaytrace()));
 	}
 	
+	/**
+	 * Returns whether this ability requires calls to
+	 * {@link #continueExec(EntityLivingBase, Bender) continueExec} after
+	 * initially calling {@link #start(EntityLivingBase, Bender) start}.
+	 */
 	public boolean isContinuous() {
 		return false;
 	}

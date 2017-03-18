@@ -16,17 +16,10 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.EntityBenderData;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -117,20 +110,8 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
 		
-		Vector rotations = getRotationTo(getEntityPos(this), getEntityPos(target));
-		rotationYaw = (float) toDegrees(rotations.y());
-		rotationPitch = (float) toDegrees(rotations.x());
-		
-		data.chi().setMaxChi(10);
-		data.chi().setTotalChi(10);
-		data.chi().setAvailableChi(10);
-		
 		BendingAbility ability = BendingAbility.ABILITY_AIR_GUST;
-		Raytrace.Result raytrace = Raytrace.getTargetBlock(this, ability.getRaytrace());
-		
 		ability.getAi().start(this, this);
-		
-		ability.execute(new AbilityContext(data, this, this, raytrace));
 		
 	}
 	
