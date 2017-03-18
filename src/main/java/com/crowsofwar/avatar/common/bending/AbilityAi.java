@@ -16,10 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.ctx.AiContext;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.util.Raytrace;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -28,19 +29,27 @@ import net.minecraft.entity.Entity;
  */
 public abstract class AbilityAi {
 	
-	public void start(Entity entity, Bender bender) {
-		startExec(new AiContext(settings, entity, bender));
+	private final BendingAbility ability;
+	
+	protected AbilityAi(BendingAbility ability) {
+		this.ability = ability;
 	}
 	
-	public abstract void startExec(AiContext ctx);
+	public void start(EntityLivingBase entity, Bender bender) {
+		startExec(createCtx(entity, bender));
+	}
 	
-	public abstract boolean continueExec(AiContext ctx);
+	public void continueExec(EntityLivingBase entity, Bender bender) {
+		continueExec(createCtx(entity, bender));
+	}
 	
-	public static class AiSettings {
-		
-		private final boolean onlyOnce;
-		private final boolean targetEntity;
-		
+	protected abstract void startExec(AbilityContext ctx);
+	
+	protected abstract boolean continueExec(AbilityContext ctx);
+	
+	private AbilityContext createCtx(EntityLivingBase entity, Bender bender) {
+		return new AbilityContext(bender.getData(), entity, bender,
+				Raytrace.getTargetBlock(entity, ability.getRaytrace()));
 	}
 	
 }

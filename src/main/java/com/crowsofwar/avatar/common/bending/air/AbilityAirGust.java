@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.bending.air;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.AiContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -59,10 +58,6 @@ public class AbilityAirGust extends AirAbility {
 		gust.setOwner(bender);
 		
 		world.spawnEntityInWorld(gust);
-	}
-	
-	public void aiExec(AiContext ctx) {
-		
 	}
 	
 }
