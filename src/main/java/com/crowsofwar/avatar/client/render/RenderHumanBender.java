@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +35,7 @@ public class RenderHumanBender extends RenderLivingBase<EntityHumanBender> {
 	 * @param renderManager
 	 */
 	public RenderHumanBender(RenderManager renderManager) {
-		super(renderManager, new ModelTest(), 0.5f);
+		super(renderManager, new ModelBiped(), 0.5f);
 	}
 	
 	@Override
