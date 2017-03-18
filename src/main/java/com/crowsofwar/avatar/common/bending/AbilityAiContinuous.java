@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.entity.EntityLivingBase;
 
@@ -27,44 +26,22 @@ import net.minecraft.entity.EntityLivingBase;
  * 
  * @author CrowsOfWar
  */
-public abstract class AbilityAi {
+public abstract class AbilityAiContinuous extends AbilityAi {
 	
-	private final BendingAbility ability;
-	
-	protected AbilityAi(BendingAbility ability) {
-		this.ability = ability;
+	protected AbilityAiContinuous(BendingAbility ability) {
+		super(ability);
 	}
 	
-	/**
-	 * Start to execute this ability. If {@link #isContinuous()}, call
-	 * {@link #continueExec(EntityLivingBase, Bender) continueExec}.
-	 */
-	public void start(EntityLivingBase entity, Bender bender) {
-		startExec(createCtx(entity, bender));
-	}
-	
-	protected abstract void startExec(AbilityContext ctx);
-	
-	/**
-	 * Continues executing this ability. Returns whether to keep calling
-	 * {@link #continueExec(EntityLivingBase, Bender) continueExec}. Only call
-	 * if {@link #isContinuous()}.
-	 */
+	@Override
 	public boolean continueExec(EntityLivingBase entity, Bender bender) {
-		return false;
+		return continueExec(createCtx(entity, bender));
 	}
 	
-	protected AbilityContext createCtx(EntityLivingBase entity, Bender bender) {
-		return new AbilityContext(bender.getData(), entity, bender,
-				Raytrace.getTargetBlock(entity, ability.getRaytrace()));
-	}
+	protected abstract boolean continueExec(AbilityContext ctx);
 	
+	@Override
 	public boolean isContinuous() {
-		return false;
-	}
-	
-	protected void execAbility(AbilityContext ctx) {
-		ability.execute(ctx);
+		return true;
 	}
 	
 }
