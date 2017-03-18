@@ -110,6 +110,7 @@ public class EntityHumanBender extends EntityCreature implements Bender, IRanged
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
 		
+		setRevengeTarget(target);
 		BendingAbility ability = BendingAbility.ABILITY_AIR_GUST;
 		ability.getAi().start(this, this);
 		
