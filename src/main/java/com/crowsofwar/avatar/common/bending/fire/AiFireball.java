@@ -14,17 +14,13 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.bending.air;
-
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
+package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.AbilityAi;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
 
@@ -33,43 +29,47 @@ import net.minecraft.entity.EntityLivingBase;
  * 
  * @author CrowsOfWar
  */
-public class AiAirGust extends AbilityAi {
+public class AiFireball extends AbilityAi {
+	
+	private int timeExecuting;
 	
 	/**
 	 * @param ability
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiAirGust(BendingAbility ability, EntityLivingBase entity, Bender bender) {
+	protected AiFireball(BendingAbility ability, EntityLivingBase entity, Bender bender) {
 		super(ability, entity, bender);
+		timeExecuting = 0;
 	}
 	
 	@Override
 	protected void startExec() {
-		// EntityLivingBase entity = ctx.getBenderEntity();
-		EntityLivingBase target = entity.getAITarget();
-		BendingData data = bender.getData();
+		execAbility();
 		
-		if (target != null) {
-			
-			Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
-			entity.rotationYaw = (float) toDegrees(rotations.y());
-			entity.rotationPitch = (float) toDegrees(rotations.x());
-			
-			data.chi().setMaxChi(10);
-			data.chi().setTotalChi(10);
-			data.chi().setAvailableChi(10);
-			
-			execAbility();
-			
-			data.setAbilityCooldown(20);
-			
+	}
+	
+	@Override
+	public boolean continueExecuting() {
+		System.out.println("Continue " + timeExecuting);
+		if (timeExecuting >= 200) {
+			BendingData data = bender.getData();
+			execStatusControl(StatusControl.THROW_FIREBALL);
+			timeExecuting = 0;
+			return false;
+		} else {
+			return true;
 		}
 	}
 	
 	@Override
 	public boolean shouldExecute() {
-		return entity.getAITarget() != null && bender.getData().getAbilityCooldown() == 0;
+		return entity.getAITarget() != null;
+	}
+	
+	@Override
+	public void updateTask() {
+		timeExecuting++;
 	}
 	
 }

@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -66,6 +67,16 @@ public abstract class AbilityAi extends EntityAIBase {
 	protected void execAbility() {
 		ability.execute(new AbilityContext(bender.getData(), entity, bender,
 				Raytrace.getTargetBlock(entity, ability.getRaytrace())));
+	}
+	
+	protected void execStatusControl(StatusControl sc) {
+		BendingData data = bender.getData();
+		if (data.hasStatusControl(sc)) {
+			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
+			if (sc.execute(new AbilityContext(data, entity, bender, raytrace))) {
+				data.removeStatusControl(sc);
+			}
+		}
 	}
 	
 }
