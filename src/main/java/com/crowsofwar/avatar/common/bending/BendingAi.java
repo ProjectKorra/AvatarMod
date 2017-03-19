@@ -44,20 +44,34 @@ public abstract class BendingAi extends EntityAIBase {
 	protected final EntityLiving entity;
 	protected final Bender bender;
 	
+	protected int timeExecuting;
+	
 	protected BendingAi(BendingAbility ability, EntityLiving entity, Bender bender) {
 		this.ability = ability;
 		this.entity = entity;
 		this.bender = bender;
+		this.timeExecuting = 0;
 	}
 	
 	@Override
 	public void startExecuting() {
+		timeExecuting = 0;
 		startExec();
 	}
 	
 	@Override
 	public boolean continueExecuting() {
 		return false;
+	}
+	
+	@Override
+	public void resetTask() {
+		timeExecuting = 0;
+	}
+	
+	@Override
+	public void updateTask() {
+		timeExecuting++;
 	}
 	
 	protected abstract void startExec();

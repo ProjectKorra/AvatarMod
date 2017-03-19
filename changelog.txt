@@ -11,3 +11,5 @@ AV2 Changelog :: version a4.0
 * Abilities have multiple levels + xp instead of only 1 XP bar
 * Adjusted xp curves based on level
 * Generally triple xp gains to account for levels
+
+> Fix airblade weirdness

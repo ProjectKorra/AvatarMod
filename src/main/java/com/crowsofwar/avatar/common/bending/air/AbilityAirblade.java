@@ -17,11 +17,15 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.abs;
 
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
@@ -44,15 +48,11 @@ public class AbilityAirblade extends AirAbility {
 		
 		if (!ctx.consumeChi(STATS_CONFIG.chiAirblade)) return;
 		
-		double x = bender.rotationPitch;
-		boolean flip = false;
-		if (x < 0) {
-			x = -x;
-			flip = true;
+		double pitchDeg = bender.rotationPitch;
+		if (abs(pitchDeg) > 30) {
+			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
 		}
-		double pitch = -1.0 / ((.015 * x + .1825) * (.015 * x + .1825)) + 30;
-		if (flip) pitch = -pitch;
-		pitch = Math.toRadians(pitch);
+		float pitch = (float) Math.toRadians(pitchDeg);
 		
 		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw), pitch);
 		Vector spawnAt = Vector.getEntityPos(bender).add(look).add(0, 1, 0);
@@ -67,6 +67,11 @@ public class AbilityAirblade extends AirAbility {
 		airblade.setOwner(bender);
 		world.spawnEntityInWorld(airblade);
 		
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiAirblade(this, entity, bender);
 	}
 	
 }
