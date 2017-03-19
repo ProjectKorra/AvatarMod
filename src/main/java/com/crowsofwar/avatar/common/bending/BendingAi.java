@@ -80,8 +80,11 @@ public abstract class BendingAi extends EntityAIBase {
 	 * Executes the ability's main code (the part used for players)
 	 */
 	protected void execAbility() {
-		ability.execute(new AbilityContext(bender.getData(), entity, bender,
-				Raytrace.getTargetBlock(entity, ability.getRaytrace())));
+		if (bender.getData().getAbilityCooldown() == 0) {
+			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
+			AbilityContext ctx = new AbilityContext(bender.getData(), entity, bender, raytrace);
+			ability.execute(ctx);
+		}
 	}
 	
 	/**

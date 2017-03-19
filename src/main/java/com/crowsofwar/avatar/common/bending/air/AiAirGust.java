@@ -20,8 +20,8 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
-import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
@@ -62,7 +62,6 @@ public class AiAirGust extends BendingAi {
 			data.chi().setAvailableChi(10);
 			
 			execAbility();
-			
 			data.setAbilityCooldown(20);
 			
 		}
@@ -70,7 +69,8 @@ public class AiAirGust extends BendingAi {
 	
 	@Override
 	public boolean shouldExecute() {
-		return entity.getAITarget() != null && bender.getData().getAbilityCooldown() == 0;
+		return entity.getAttackTarget() != null
+				&& entity.getDistanceSqToEntity(entity.getAttackTarget()) < 4 * 4;
 	}
 	
 }

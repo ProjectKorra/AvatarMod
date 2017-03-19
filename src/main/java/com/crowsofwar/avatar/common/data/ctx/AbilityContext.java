@@ -169,6 +169,10 @@ public class AbilityContext {
 	 * enough chi to remove and it removed it.
 	 */
 	public boolean consumeChi(float amount) {
+		
+		// TODO Account for entity Chi?
+		if (!bender.isPlayer()) return true;
+		
 		Chi chi = data.chi();
 		float available = chi.getAvailableChi();
 		if (available >= amount) {
