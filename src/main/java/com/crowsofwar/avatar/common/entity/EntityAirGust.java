@@ -100,7 +100,7 @@ public class EntityAirGust extends EntityArc {
 					abilityData.addXp(SKILLS_CONFIG.airGustHit);
 				}
 				
-				Vector velocity = velocity().times(0.3).times(1 + xp / 200.0);
+				Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
 				velocity.setY(1);
 				
 				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());

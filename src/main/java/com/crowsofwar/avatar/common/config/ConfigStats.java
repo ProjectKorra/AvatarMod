@@ -43,7 +43,7 @@ public class ConfigStats {
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(6, 6), //
-			airbladeSettings = new AttackSettings(4, .1);
+			airbladeSettings = new AttackSettings(4, .03);
 	
 	@Load
 	public List<String> bendableBlocksNames;
@@ -66,7 +66,7 @@ public class ConfigStats {
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {
-		bendableBlocksNames = new ArrayList<String>();
+		bendableBlocksNames = new ArrayList<>();
 		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
 				STONEBRICK, CLAY, HARDENED_CLAY, STAINED_HARDENED_CLAY, COAL_ORE, IRON_ORE, EMERALD_ORE,
 				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE, GRASS);
