@@ -22,32 +22,29 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
 /**
- * Represents behavior needed for activation of an ability by a mob/AI. Before
- * most abilities are activated, some sort of preparation is required; for
- * example, air gust requires the user to aim at an enemy entity. This class
- * wraps all the preparatory behavior so the ability can be activated at the
- * appropriate time.
+ * Represents behavior needed for use of an ability by a mob. When most
+ * abilities are activated, some sort of preparation or strategy is required.
+ * For example, air gust is only useful when an enemy is too close, and requires
+ * the user to aim at an enemy entity. This class wraps all of this behavior so
+ * the ability can be activated at the appropriate time.
  * <p>
- * There is one instance of AbilityAi per ability. To start execution, call
- * {@link #start(EntityLivingBase, Bender) start}. {@link #isContinuous() Some
- * abilities} will require more calls to
- * {@link #continueExec(EntityLivingBase, Bender) continueExec}. Internally,
- * each AI sets the appropriate state of the entity, then calls
- * {@link BendingAbility#execute(AbilityContext)}.
+ * BendingAi is a subclass of EntityAIBase, meaning that a new instance is
+ * applied per-entity in its tasks list. A new instance of a BendingAi is
+ * acquired via the ability's {@link BendingAbility#getAi(EntityLiving, Bender)
+ * getAi method} for the specific mob.
  * 
  * @author CrowsOfWar
  */
-public abstract class AbilityAi extends EntityAIBase {
+public abstract class BendingAi extends EntityAIBase {
 	
 	protected final BendingAbility ability;
 	protected final EntityLiving entity;
 	protected final Bender bender;
 	
-	protected AbilityAi(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected BendingAi(BendingAbility ability, EntityLiving entity, Bender bender) {
 		this.ability = ability;
 		this.entity = entity;
 		this.bender = bender;
@@ -65,11 +62,17 @@ public abstract class AbilityAi extends EntityAIBase {
 	
 	protected abstract void startExec();
 	
+	/**
+	 * Executes the ability's main code (the part used for players)
+	 */
 	protected void execAbility() {
 		ability.execute(new AbilityContext(bender.getData(), entity, bender,
 				Raytrace.getTargetBlock(entity, ability.getRaytrace())));
 	}
 	
+	/**
+	 * If the status control is present, uses up the status control
+	 */
 	protected void execStatusControl(StatusControl sc) {
 		BendingData data = bender.getData();
 		if (data.hasStatusControl(sc)) {

@@ -20,7 +20,7 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
-import com.crowsofwar.avatar.common.bending.AbilityAi;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -34,7 +34,7 @@ import net.minecraft.entity.EntityLiving;
  * 
  * @author CrowsOfWar
  */
-public class AiFireball extends AbilityAi {
+public class AiFireball extends BendingAi {
 	
 	private int timeExecuting;
 	

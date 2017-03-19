@@ -143,7 +143,10 @@ public abstract class BendingAbility {
 		return name;
 	}
 	
-	public AbilityAi getAi(EntityLiving entity, Bender bender) {
+	/**
+	 * Creates a new instance of AI for the given entity/bender.
+	 */
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new DefaultAbilityAi(this, entity, bender);
 	}
 	
