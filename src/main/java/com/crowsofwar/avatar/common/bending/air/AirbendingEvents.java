@@ -27,12 +27,15 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.DamageSource;
@@ -79,9 +82,9 @@ public class AirbendingEvents {
 	@SubscribeEvent
 	public void airBubbleShield(LivingAttackEvent e) {
 		World world = e.getEntity().worldObj;
-		if (!world.isRemote && e.getEntity() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) e.getEntity();
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		if (!world.isRemote) {
+			EntityLivingBase player = (EntityLivingBase) e.getEntity();
+			BendingData data = Bender.create(player).getData();
 			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 				
 				List<EntityAirBubble> entities = player.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
