@@ -72,7 +72,7 @@ public interface Bender {
 	 */
 	public static Bender create(EntityLivingBase entity) {
 		if (entity == null) {
-			throw new IllegalArgumentException("Cannot create bender for null entity");
+			return null;
 		} else if (entity instanceof Bender) {
 			return (Bender) entity;
 		} else if (entity instanceof EntityPlayer) {
