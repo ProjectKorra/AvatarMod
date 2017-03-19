@@ -31,7 +31,9 @@ import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 
 /**
  * 
@@ -39,6 +41,9 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class EntityHumanBender extends EntityCreature implements Bender {
+	
+	public static final ResourceLocation LOOT_TABLE = LootTableList
+			.register(new ResourceLocation("avatarmod", "human_bender"));
 	
 	private EntityBenderData data;
 	
@@ -115,6 +120,11 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 	@Override
 	public boolean isPlayer() {
 		return false;
+	}
+	
+	@Override
+	protected ResourceLocation getLootTable() {
+		return LOOT_TABLE;
 	}
 	
 }
