@@ -136,8 +136,16 @@ public class OwnerAttribute {
 		
 	}
 	
+	/**
+	 * Get the owner as a Bender. Null if owner not present.
+	 */
 	public Bender getOwnerBender() {
-		return Bender.create(getOwner());
+		EntityLivingBase owner = getOwner();
+		if (owner == null) {
+			return null;
+		} else {
+			return Bender.create(owner);
+		}
 	}
 	
 	/**
