@@ -48,6 +48,7 @@ public class AiAirblade extends BendingAi {
 	
 	@Override
 	public boolean continueExecuting() {
+		entity.rotationYaw = entity.rotationYawHead;
 		if (timeExecuting >= 15) {
 			execAbility();
 			return false;
