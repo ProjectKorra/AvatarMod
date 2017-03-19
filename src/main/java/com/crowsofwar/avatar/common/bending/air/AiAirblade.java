@@ -16,9 +16,14 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
+
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,14 +47,18 @@ public class AiAirblade extends BendingAi {
 	@Override
 	protected void startExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		entity.getLookHelper().setLookPositionWithEntity(target, 20, 20);
-		
+		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
+		entity.rotationYaw = (float) toDegrees(rotations.y());
+		entity.rotationPitch = (float) toDegrees(rotations.x());
 	}
 	
 	@Override
 	public boolean continueExecuting() {
 		entity.rotationYaw = entity.rotationYawHead;
-		if (timeExecuting >= 15) {
+		if (timeExecuting >= 40 && entity.getAttackTarget() != null) {
+			Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
+			entity.rotationYaw = (float) toDegrees(rotations.y());
+			entity.rotationPitch = (float) toDegrees(rotations.x());
 			execAbility();
 			return false;
 		}

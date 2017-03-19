@@ -82,4 +82,8 @@ public interface Bender {
 		}
 	}
 	
+	public static boolean isBenderSupported(EntityLivingBase entity) {
+		return entity == null || entity instanceof EntityPlayer || entity instanceof Bender;
+	}
+	
 }

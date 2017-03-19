@@ -48,7 +48,7 @@ public class AiAirGust extends BendingAi {
 	@Override
 	protected void startExec() {
 		// EntityLivingBase entity = ctx.getBenderEntity();
-		EntityLivingBase target = entity.getAITarget();
+		EntityLivingBase target = entity.getAttackTarget();
 		BendingData data = bender.getData();
 		
 		if (target != null) {

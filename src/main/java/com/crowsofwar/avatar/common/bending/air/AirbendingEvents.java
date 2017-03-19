@@ -82,21 +82,21 @@ public class AirbendingEvents {
 	@SubscribeEvent
 	public void airBubbleShield(LivingAttackEvent e) {
 		World world = e.getEntity().worldObj;
-		if (!world.isRemote) {
-			EntityLivingBase player = (EntityLivingBase) e.getEntity();
-			BendingData data = Bender.create(player).getData();
+		EntityLivingBase inBubble = (EntityLivingBase) e.getEntity();
+		if (!world.isRemote && Bender.isBenderSupported(inBubble)) {
+			BendingData data = Bender.create(inBubble).getData();
 			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 				
-				List<EntityAirBubble> entities = player.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
-						player.getEntityBoundingBox(), bubble -> bubble.getOwner() == player);
+				List<EntityAirBubble> entities = inBubble.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
+						inBubble.getEntityBoundingBox(), bubble -> bubble.getOwner() == inBubble);
 				for (EntityAirBubble bubble : entities) {
 					bubble.setHealth(bubble.getHealth() - e.getAmount());
 					e.setCanceled(true);
 					
 					DamageSource source = e.getSource();
-					Entity entity = source.getEntity();
-					if (entity != null && (entity instanceof AvatarEntity || entity instanceof EntityArrow)) {
-						entity.setDead();
+					Entity sourceEntity = source.getEntity();
+					if (sourceEntity != null && (sourceEntity instanceof AvatarEntity || sourceEntity instanceof EntityArrow)) {
+						sourceEntity.setDead();
 						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
 					}
 					
