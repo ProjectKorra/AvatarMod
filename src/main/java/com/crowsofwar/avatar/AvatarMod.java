@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar;
 
+import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
+
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
@@ -168,6 +170,7 @@ public class AvatarMod {
 		registerEntity(EntityAirblade.class, "Airblade");
 		registerEntity(EntityAirBubble.class, "AirBubble");
 		registerEntity(EntityHumanBender.class, "HumanBender");
+		registerEgg(new ResourceLocation("avatarmod", "HumanBender"), 0xffffff, 0xffffff);
 		proxy.init();
 	}
 	

@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import javax.annotation.Nullable;
+
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -23,15 +25,21 @@ import com.crowsofwar.avatar.common.entity.data.EntityBenderData;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
@@ -66,17 +74,33 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		
-		this.targetTasks.addTask(3,
+		this.targetTasks.addTask(6,
 				new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
 		this.targetTasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
-		this.targetTasks.addTask(2, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
-		this.targetTasks.addTask(2, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
+		this.targetTasks.addTask(5, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
+		this.targetTasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
+		this.targetTasks.addTask(3, new EntityAIAttackMelee(this, 0.35, true));
 		
 		this.tasks.addTask(2, new EntityAiKeepDistance(this, 3, 2));
 		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 		
+	}
+	
+	@Override
+	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
+		super.setEquipmentBasedOnDifficulty(difficulty);
+		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
+		System.out.println("ALALA");
+	}
+	
+	@Override
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
+			@Nullable IEntityLivingData livingdata) {
+		livingdata = super.onInitialSpawn(difficulty, livingdata);
+		setEquipmentBasedOnDifficulty(difficulty);
+		return livingdata;
 	}
 	
 	@Override
