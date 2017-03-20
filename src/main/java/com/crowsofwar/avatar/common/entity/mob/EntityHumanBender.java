@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import javax.annotation.Nullable;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.EntityBenderData;
@@ -82,18 +83,16 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 		
 		this.targetTasks.addTask(2,
 				new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
-		// this.tasks.addTask(2,
-		// BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
-		// this.tasks.addTask(5,
-		// BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
-		// this.tasks.addTask(1,
-		// BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
-		this.tasks.addTask(3, new EntityAIAttackMelee(this, 1, true));
 		
-		// this.tasks.addTask(2, new EntityAiKeepDistance(this, 3, 2));
-		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
-		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-		this.tasks.addTask(7, new EntityAILookIdle(this));
+		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
+		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
+		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
+		
+		// this.tasks.addTask(5, new EntityAiKeepDistance(this, 3, 2));
+		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
+		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+		this.tasks.addTask(8, new EntityAILookIdle(this));
 		
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
 		
@@ -181,7 +180,6 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 	public void onUpdate() {
 		super.onUpdate();
 		data.decrementCooldown();
-		System.out.println(getAttackTarget());
 	}
 	
 	@Override
