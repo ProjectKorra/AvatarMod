@@ -23,6 +23,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 import java.util.Set;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -31,7 +32,6 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-import com.crowsofwar.avatar.common.util.UtilityGL11Debug;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -86,10 +86,9 @@ public class AvatarUiRenderer extends Gui {
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
 		
-		if (currentBendingMenu != null) {
-			System.out.println("\n\n------------");
-			UtilityGL11Debug.dumpAllIsEnabled();
-		}
+		// For some reason, not including this will cause weirdness in 3rd
+		// person
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		
 		if (currentBendingMenu != null) {
 			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {

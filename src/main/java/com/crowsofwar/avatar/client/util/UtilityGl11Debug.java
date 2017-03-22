@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.util;
+package com.crowsofwar.avatar.client.util;
 
 import java.nio.ByteBuffer;
 
@@ -6,9 +6,11 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 /**
- * User: The Grey Ghost Date: 9/02/14
+ * Utility to output all current openGL settings.
+ * 
+ * @author The Grey Ghost 9/02/14
  */
-public class UtilityGL11Debug {
+public class UtilityGl11Debug {
 	public class GLproperty {
 		public GLproperty(int init_gLconstant, String init_name, String init_description,
 				String init_category, String init_fetchCommand) {
@@ -26,7 +28,7 @@ public class UtilityGL11Debug {
 		public String fetchCommand;
 	};
 	
-	public static UtilityGL11Debug instance = new UtilityGL11Debug();
+	public static UtilityGl11Debug instance = new UtilityGl11Debug();
 	
 	public GLproperty[] propertyList = {
 			new GLproperty(GL11.GL_CURRENT_COLOR, "GL_CURRENT_COLOR", "Current color", "current",
