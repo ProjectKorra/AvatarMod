@@ -82,7 +82,7 @@ public class PlayerBender implements Bender {
 					int newMetadata = stack.getMetadata() - amount;
 					if (newMetadata < 0) newMetadata = 0;
 					amount -= oldMetadata - newMetadata;
-					System.out.println("Consuming " + (oldMetadata - newMetadata) + " water in slot " + i);
+					stack.setItemDamage(newMetadata);
 				}
 				i++;
 			}
