@@ -61,6 +61,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		public WaterArcBehavior onUpdate(EntityWaterArc water) {
 			
 			EntityPlayer player = water.getOwner();
+			if (player == null) return this;
+			
 			World world = player.worldObj;
 			
 			Raytrace.Result res = Raytrace.getTargetBlock(player, 3, false);

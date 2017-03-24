@@ -228,7 +228,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			if (velocity.y() <= 0) {
 				velocity.setY(0);
 				entity.velocity().set(velocity);
-				return new PlayerControlled(entity, entity.getOwner());
+				return new PlayerControlled();
 			}
 			
 			return this;
@@ -251,8 +251,6 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 	public static class PlayerControlled extends FloatingBlockBehavior {
 		
 		public PlayerControlled() {}
-		
-		public PlayerControlled(EntityFloatingBlock entity, EntityPlayer player) {}
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
