@@ -72,6 +72,8 @@ public class FirebendingUpdate {
 						if (player.ticksExisted % 3 == 0) world.playSound(null, player.getPosition(),
 								SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.2f, 0.8f);
 						
+					} else {
+						fs.setFlamethrowing(false);
 					}
 					
 				}
