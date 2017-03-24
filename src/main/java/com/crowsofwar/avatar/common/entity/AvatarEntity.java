@@ -140,6 +140,11 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	@Override
+	public boolean canBeAttackedWithItem() {
+		return false;
+	}
+	
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		collideWithNearbyEntities();
@@ -161,7 +166,7 @@ public abstract class AvatarEntity extends Entity {
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				ent -> EntitySelectors.<Entity>getTeamCollisionPredicate(this).apply(ent)
+				ent -> EntitySelectors.<Entity> getTeamCollisionPredicate(this).apply(ent)
 						&& canCollideWith(ent));
 		
 		if (!list.isEmpty()) {
