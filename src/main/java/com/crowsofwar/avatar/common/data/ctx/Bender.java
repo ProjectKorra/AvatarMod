@@ -68,6 +68,13 @@ public interface Bender {
 	boolean isFlying();
 	
 	/**
+	 * If any water pouches are in the inventory, checks if there is enough
+	 * water. If there is, consumes the total amount of water in those pouches
+	 * and returns true.
+	 */
+	boolean consumeWaterLevel(int amount);
+	
+	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */
 	public static Bender create(EntityLivingBase entity) {
