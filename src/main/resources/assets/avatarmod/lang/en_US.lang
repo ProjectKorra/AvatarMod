@@ -113,3 +113,5 @@ item.avatarmod:scroll.earth.name=Earthbending Scroll
 item.avatarmod:scroll.water.name=Waterbending Scroll
 
 avatar.tooltip.scroll=%d points
+avatar.tooltip.water_pouch=%d/3 Water
+avatar.tooltip.water_pouch.empty=Empty
