@@ -3,3 +3,9 @@ AV2 Changelog :: version a3.1
 + Added allowAirBubbleElytra option to stats.yml; default false
 
 > Fix elytra flight allowing infinite height
+> Fix problem with radial menu in 3rd person
+> Fix air bubble blocking fall damage, etc
+> Fix flamethrower not stopping when reached 0 chi
+> Don't play punch sound when clicking on an avatar entity
+> Fix rare crash with water arc
+> Don't display chi if don't have bending
