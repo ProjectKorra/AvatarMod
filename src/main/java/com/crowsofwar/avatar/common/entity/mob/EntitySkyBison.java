@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
 
@@ -43,6 +44,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -61,8 +63,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	
+	private static final DataParameter<Boolean> SYNC_SITTING = EntityDataManager
+			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
+	private EntityAiBisonSit aiBisonSit;
 	
 	/**
 	 * @param world
@@ -89,6 +95,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
 		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
 		
+		this.tasks.addTask(4, new EntityAiBisonSit(this));
 		this.tasks.addTask(5, new EntityAiBisonFollowOwner(this));
 		this.tasks.addTask(6, new EntityAiBisonWander(this));
 		
@@ -145,22 +152,37 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.setOwner(owner);
 	}
 	
+	public boolean isSitting() {
+		return dataManager.get(SYNC_SITTING);
+	}
+	
+	public void setSitting(boolean sitting) {
+		dataManager.set(SYNC_SITTING, sitting);
+	}
+	
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
+		
 		if (stack.getItem() == Items.APPLE && !hasOwner()) {
 			System.out.println("Tame");
 			playTameEffect(true);
 			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
 			return true;
-		} else if (stack.getItem() == Items.CARROT && hasOwner()) {
+		}
+		
+		if (stack.getItem() == Items.CARROT && hasOwner()) {
 			playTameEffect(false);
 			System.out.println("Untame");
 			setOwnerId(null);
 			return true;
-		} else {
-			return super.processInteract(player, hand);
 		}
+		
+		if (stack == field_190927_a) {
+			aiBisonSit.toggleSitting();
+		}
+		
+		return super.processInteract(player, hand);
 		
 	}
 	
