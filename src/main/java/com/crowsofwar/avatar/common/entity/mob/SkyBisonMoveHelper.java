@@ -38,19 +38,18 @@ public class SkyBisonMoveHelper extends EntityMoveHelper {
 	@Override
 	public void onUpdateMoveHelper() {
 		if (this.action == EntityMoveHelper.Action.MOVE_TO) {
-			double d0 = this.posX - this.entity.posX;
-			double d1 = this.posY - this.entity.posY;
-			double d2 = this.posZ - this.entity.posZ;
-			double d3 = d0 * d0 + d1 * d1 + d2 * d2;
 			
 			if (this.courseChangeCooldown-- <= 0) {
 				this.courseChangeCooldown += this.entity.getRNG().nextInt(5) + 2;
-				d3 = MathHelper.sqrt_double(d3);
+				double x = this.posX - this.entity.posX;
+				double y = this.posY - this.entity.posY;
+				double z = this.posZ - this.entity.posZ;
+				double distance = MathHelper.sqrt_double(x * x + y * y + z * z);
 				
-				if (this.isNotColliding(this.posX, this.posY, this.posZ, d3)) {
-					this.entity.motionX += d0 / d3 * 0.1D;
-					this.entity.motionY += d1 / d3 * 0.1D;
-					this.entity.motionZ += d2 / d3 * 0.1D;
+				if (this.isNotColliding(this.posX, this.posY, this.posZ, distance)) {
+					this.entity.motionX += x / distance * 0.1D;
+					this.entity.motionY += y / distance * 0.1D;
+					this.entity.motionZ += z / distance * 0.1D;
 				} else {
 					this.action = EntityMoveHelper.Action.WAIT;
 				}

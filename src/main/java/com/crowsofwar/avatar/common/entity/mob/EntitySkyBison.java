@@ -18,8 +18,13 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 /**
@@ -34,6 +39,13 @@ public class EntitySkyBison extends EntityBender {
 	 */
 	public EntitySkyBison(World world) {
 		super(world);
+		moveHelper = new SkyBisonMoveHelper(this);
+	}
+	
+	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(2);
 	}
 	
 	@Override
@@ -48,6 +60,73 @@ public class EntitySkyBison extends EntityBender {
 		
 		this.tasks.addTask(6, new EntityAiWanderFly(this));
 		
+	}
+	
+	// ================================================================================
+	// COPIED FROM ENTITYFLYING
+	// ================================================================================
+	
+	@Override
+	public void fall(float distance, float damageMultiplier) {}
+	
+	@Override
+	protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {}
+	
+	@Override
+	public void moveEntityWithHeading(float strafe, float forward) {
+		if (this.isInWater()) {
+			this.moveRelative(strafe, forward, 0.02F);
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.motionX *= 0.800000011920929D;
+			this.motionY *= 0.800000011920929D;
+			this.motionZ *= 0.800000011920929D;
+		} else if (this.isInLava()) {
+			this.moveRelative(strafe, forward, 0.02F);
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.motionX *= 0.5D;
+			this.motionY *= 0.5D;
+			this.motionZ *= 0.5D;
+		} else {
+			float f = 0.91F;
+			
+			if (this.onGround) {
+				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
+						MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1,
+						MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
+			}
+			
+			float f1 = 0.16277136F / (f * f * f);
+			this.moveRelative(strafe, forward, this.onGround ? 0.1F * f1 : 0.02F);
+			f = 0.91F;
+			
+			if (this.onGround) {
+				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
+						MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1,
+						MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
+			}
+			
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.motionX *= f;
+			this.motionY *= f;
+			this.motionZ *= f;
+		}
+		
+		this.prevLimbSwingAmount = this.limbSwingAmount;
+		double d1 = this.posX - this.prevPosX;
+		double d0 = this.posZ - this.prevPosZ;
+		float f2 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+		
+		if (f2 > 1.0F) {
+			f2 = 1.0F;
+		}
+		
+		this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
+		this.limbSwing += this.limbSwingAmount;
+	}
+	
+	@Override
+	public boolean isOnLadder() {
+		return false;
 	}
 	
 }

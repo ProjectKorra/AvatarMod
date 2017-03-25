@@ -41,17 +41,18 @@ public class EntityAiWanderFly extends EntityAIBase {
 	 */
 	@Override
 	public boolean shouldExecute() {
-		EntityMoveHelper entitymovehelper = this.entity.getMoveHelper();
+		EntityMoveHelper moveHelper = entity.getMoveHelper();
 		
-		if (!entitymovehelper.isUpdating()) {
+		if (!moveHelper.isUpdating()) {
 			return true;
 		} else {
-			double d0 = entitymovehelper.getX() - this.entity.posX;
-			double d1 = entitymovehelper.getY() - this.entity.posY;
-			double d2 = entitymovehelper.getZ() - this.entity.posZ;
-			double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-			return d3 < 1.0D || d3 > 3600.0D;
+			double dx = moveHelper.getX() - this.entity.posX;
+			double dy = moveHelper.getY() - this.entity.posY;
+			double dz = moveHelper.getZ() - this.entity.posZ;
+			double distToTargetSq = dx * dx + dy * dy + dz * dz;
+			return distToTargetSq < 1.0D || distToTargetSq > 3600.0D;
 		}
+		
 	}
 	
 	/**
@@ -67,11 +68,11 @@ public class EntityAiWanderFly extends EntityAIBase {
 	 */
 	@Override
 	public void startExecuting() {
-		Random random = this.entity.getRNG();
-		double d0 = this.entity.posX + (random.nextFloat() * 2.0F - 1.0F) * 16.0F;
-		double d1 = this.entity.posY + (random.nextFloat() * 2.0F - 1.0F) * 16.0F;
-		double d2 = this.entity.posZ + (random.nextFloat() * 2.0F - 1.0F) * 16.0F;
-		this.entity.getMoveHelper().setMoveTo(d0, d1, d2, 1.0D);
+		Random random = entity.getRNG();
+		double x = entity.posX + (random.nextFloat() * 2 - 1) * 16.0F;
+		double y = entity.posY + (random.nextFloat() * 2 - 1) * 16.0F;
+		double z = entity.posZ + (random.nextFloat() * 2 - 1) * 16.0F;
+		this.entity.getMoveHelper().setMoveTo(x, y, z, 1.0D);
 	}
 	
 }
