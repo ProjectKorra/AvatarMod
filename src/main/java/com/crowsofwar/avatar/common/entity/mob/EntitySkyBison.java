@@ -68,7 +68,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
-	private EntityAiBisonSit aiBisonSit;
 	
 	/**
 	 * @param world
@@ -179,7 +178,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		}
 		
 		if (stack == field_190927_a) {
-			aiBisonSit.toggleSitting();
+			setSitting(!isSitting());
 		}
 		
 		return super.processInteract(player, hand);

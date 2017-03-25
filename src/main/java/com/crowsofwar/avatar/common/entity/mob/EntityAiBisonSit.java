@@ -16,7 +16,11 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.gorecore.util.Vector;
+
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -26,30 +30,30 @@ import net.minecraft.entity.ai.EntityAIBase;
 public class EntityAiBisonSit extends EntityAIBase {
 	
 	private final EntitySkyBison bison;
-	private boolean toggle;
 	
 	public EntityAiBisonSit(EntitySkyBison bison) {
 		this.bison = bison;
 	}
 	
-	public void toggleSitting() {
-		toggle = true;
-	}
-	
 	@Override
 	public boolean shouldExecute() {
-		return toggle;
+		return bison.isSitting();
 	}
 	
 	@Override
 	public void startExecuting() {
-		toggle = false;
+		World world = bison.worldObj;
+		Vector bisonPos = Vector.getEntityPos(bison);
 		
-		if (bison.isSitting()) {
-			
-		} else {
-			
+		int y;
+		for (y = (int) bisonPos.y(); y > 0; y--) {
+			if (!world.isAirBlock(new BlockPos(bisonPos.x(), y, bisonPos.z()))) {
+				break;
+			}
 		}
+		
+		Vector targetPos = bisonPos.copy().setY(y);
+		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1);
 		
 	}
 	
