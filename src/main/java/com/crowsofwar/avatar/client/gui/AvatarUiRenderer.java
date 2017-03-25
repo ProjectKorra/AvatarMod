@@ -140,6 +140,9 @@ public class AvatarUiRenderer extends Gui {
 		GlStateManager.color(1, 1, 1, 1);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		
+		if (!data.isBender()) return;
+		
 		Chi chi = data.chi();
 		float total = chi.getTotalChi();
 		float max = chi.getMaxChi();
