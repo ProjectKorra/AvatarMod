@@ -19,13 +19,9 @@ package com.crowsofwar.avatar.common.entity.mob;
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.entity.data.EntityBenderData;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -41,7 +37,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -54,19 +49,16 @@ import net.minecraft.world.storage.loot.LootTableList;
  * 
  * @author CrowsOfWar
  */
-public class EntityHumanBender extends EntityCreature implements Bender {
+public class EntityHumanBender extends EntityBender {
 	
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "human_bender"));
-	
-	private EntityBenderData data;
 	
 	/**
 	 * @param world
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
-		data = new EntityBenderData(this);
 	}
 	
 	@Override
@@ -165,56 +157,8 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 	}
 	
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		data.readFromNbt(nbt);
-	}
-	
-	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		data.writeToNbt(nbt);
-	}
-	
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		data.decrementCooldown();
-	}
-	
-	@Override
-	public EntityLivingBase getEntity() {
-		return this;
-	}
-	
-	@Override
-	public BendingData getData() {
-		return data;
-	}
-	
-	@Override
-	public boolean isCreativeMode() {
-		return false;
-	}
-	
-	@Override
-	public boolean isFlying() {
-		return false;
-	}
-	
-	@Override
-	public boolean isPlayer() {
-		return false;
-	}
-	
-	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
-	}
-	
-	@Override
-	public boolean consumeWaterLevel(int amount) {
-		return false;
 	}
 	
 }
