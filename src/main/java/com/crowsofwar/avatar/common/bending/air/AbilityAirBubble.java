@@ -24,6 +24,9 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 /**
@@ -43,7 +46,10 @@ public class AbilityAirBubble extends AirAbility {
 		World world = ctx.getWorld();
 		AvatarPlayerData data = ctx.getData();
 		
-		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
+		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+		
+		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
 			
 			if (!ctx.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 			

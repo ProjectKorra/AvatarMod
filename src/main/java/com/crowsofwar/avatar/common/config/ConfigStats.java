@@ -63,10 +63,13 @@ public class ConfigStats {
 			chiFlamethrowerSecond = 2f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
 			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f;
 	
+	@Load
+	public boolean allowAirBubbleElytra = false;
+	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {
-		bendableBlocksNames = new ArrayList<String>();
+		bendableBlocksNames = new ArrayList<>();
 		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
 				STONEBRICK, CLAY, HARDENED_CLAY, STAINED_HARDENED_CLAY, COAL_ORE, IRON_ORE, EMERALD_ORE,
 				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE, GRASS);

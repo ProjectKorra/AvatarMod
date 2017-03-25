@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -30,6 +32,9 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -70,6 +75,7 @@ public class EntityAirBubble extends AvatarEntity {
 		dataManager.register(SYNC_HEALTH, 20f);
 	}
 	
+	@Override
 	public EntityPlayer getOwner() {
 		return ownerAttr.getOwner();
 	}
@@ -84,8 +90,12 @@ public class EntityAirBubble extends AvatarEntity {
 		
 		EntityPlayer owner = getOwner();
 		if (owner != null) {
+			
+			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+			
 			setPosition(owner.posX, owner.posY, owner.posZ);
-			if (owner.isDead) {
+			if (owner.isDead || !elytraOk) {
 				dissipateSmall();
 			}
 			
@@ -95,7 +105,8 @@ public class EntityAirBubble extends AvatarEntity {
 				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 					attribute.applyModifier(SLOW_ATTR);
 				}
-				if (!owner.onGround && !owner.isInWater() && !owner.capabilities.isFlying)
+				if (!owner.onGround && !owner.isInWater() && !owner.capabilities.isFlying
+						&& chest.getItem() != Items.ELYTRA)
 					owner.motionY += .03;
 			}
 			
@@ -182,7 +193,7 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (!isEntityInvulnerable(source)) {
-			setHealth(getHealth() - (float) amount);
+			setHealth(getHealth() - amount);
 			setBeenAttacked();
 			return true;
 		}
