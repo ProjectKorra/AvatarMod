@@ -59,12 +59,14 @@ public class AvatarUiRenderer extends Gui {
 	private RadialSegment fadingSegment;
 	private long timeFadeStart;
 	private final Minecraft mc;
-	private long chiMsgFade;
+	private long errorMsgFade;
+	private String errorMsg;
 	
 	public AvatarUiRenderer() {
 		mc = Minecraft.getMinecraft();
 		instance = this;
-		chiMsgFade = -1;
+		errorMsgFade = -1;
+		errorMsg = "";
 	}
 	
 	@SubscribeEvent
@@ -177,9 +179,9 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderChiMsg(ScaledResolution res) {
 		
-		if (chiMsgFade != -1) {
+		if (errorMsgFade != -1) {
 			
-			float seconds = (System.currentTimeMillis() - chiMsgFade) / 1000f;
+			float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
 			float alpha = seconds < 1 ? 1 : 1 - (seconds - 1);
 			int alphaI = (int) (alpha * 255);
 			// For some reason, any alpha below 4 is displayed at alpha 255
@@ -194,7 +196,7 @@ public class AvatarUiRenderer extends Gui {
 					0xffffff | (alphaI << 24));
 			//@formatter:on
 			
-			if (seconds >= 2) chiMsgFade = -1;
+			if (seconds >= 2) errorMsgFade = -1;
 			
 		}
 		
@@ -220,8 +222,9 @@ public class AvatarUiRenderer extends Gui {
 		instance.timeFadeStart = System.currentTimeMillis();
 	}
 	
-	public static void displayChiMessage() {
-		instance.chiMsgFade = System.currentTimeMillis();
+	public static void displayErrorMessage(String message) {
+		instance.errorMsgFade = System.currentTimeMillis();
+		instance.errorMsg = message;
 	}
 	
 }

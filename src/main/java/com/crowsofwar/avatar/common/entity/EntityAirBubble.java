@@ -20,9 +20,11 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.UUID;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -31,6 +33,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -93,9 +96,13 @@ public class EntityAirBubble extends AvatarEntity {
 			
 			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+			if (!elytraOk && !worldObj.isRemote) {
+				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
+						(EntityPlayerMP) owner);
+			}
 			
 			setPosition(owner.posX, owner.posY, owner.posZ);
-			if (owner.isDead || !elytraOk) {
+			if (owner.isDead) {
 				dissipateSmall();
 			}
 			

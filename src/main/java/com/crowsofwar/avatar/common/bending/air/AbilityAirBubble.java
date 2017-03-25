@@ -18,12 +18,15 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -48,6 +51,11 @@ public class AbilityAirBubble extends AirAbility {
 		
 		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+		
+		if (!elytraOk) {
+			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
+					(EntityPlayerMP) player);
+		}
 		
 		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
 			

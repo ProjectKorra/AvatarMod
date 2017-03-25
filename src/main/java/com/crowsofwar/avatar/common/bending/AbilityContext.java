@@ -21,7 +21,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.Vector;
@@ -159,7 +159,7 @@ public class AbilityContext {
 			chi.changeAvailableChi(-amount);
 			return true;
 		}
-		AvatarMod.network.sendTo(new PacketCNotEnoughChi(), (EntityPlayerMP) playerEntity);
+		AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.nochi"), (EntityPlayerMP) playerEntity);
 		return false;
 	}
 	
