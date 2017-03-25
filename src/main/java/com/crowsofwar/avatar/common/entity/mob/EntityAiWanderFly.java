@@ -18,7 +18,8 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import java.util.Random;
 
-import net.minecraft.entity.EntityCreature;
+import com.crowsofwar.gorecore.util.Vector;
+
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
 
@@ -29,9 +30,9 @@ import net.minecraft.entity.ai.EntityMoveHelper;
  */
 public class EntityAiWanderFly extends EntityAIBase {
 	
-	private final EntityCreature entity;
+	private final EntitySkyBison entity;
 	
-	public EntityAiWanderFly(EntityCreature entity) {
+	public EntityAiWanderFly(EntitySkyBison entity) {
 		this.entity = entity;
 		this.setMutexBits(1);
 	}
@@ -69,9 +70,10 @@ public class EntityAiWanderFly extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		Random random = entity.getRNG();
-		double x = entity.posX + (random.nextFloat() * 2 - 1) * 16.0F;
-		double y = entity.posY + (random.nextFloat() * 2 - 1) * 16.0F;
-		double z = entity.posZ + (random.nextFloat() * 2 - 1) * 16.0F;
+		Vector original = entity.getOriginalPos();
+		double x = original.x() + (random.nextFloat() * 2 - 1) * 32;
+		double y = original.y() + (random.nextFloat() * 2 - 1) * 32;
+		double z = original.z() + (random.nextFloat() * 2 - 1) * 32;
 		this.entity.getMoveHelper().setMoveTo(x, y, z, 1.0D);
 	}
 	

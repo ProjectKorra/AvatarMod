@@ -21,6 +21,7 @@ import static java.lang.Math.*;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -593,6 +594,15 @@ public class Vector {
 		buf.writeDouble(z());
 	}
 	
+	/**
+	 * Writes this vector directly to the NBT provided.
+	 */
+	public void writeToNbt(NBTTagCompound nbt) {
+		nbt.setDouble("x", x());
+		nbt.setDouble("y", y());
+		nbt.setDouble("z", z());
+	}
+	
 	@Override
 	public String toString() {
 		return "(" + x() + ", " + y() + ", " + z() + ")";
@@ -638,7 +648,7 @@ public class Vector {
 		double d0 = x;
 		double d1 = y;
 		double d2 = z;
-		double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+		double d3 = MathHelper.sqrt_double(d0 * d0 + d2 * d2);
 		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
 		double rotX = -Math.atan2(d1, d3);
 		double rotZ = 0;
@@ -758,6 +768,15 @@ public class Vector {
 	 */
 	public static Vector fromBytes(ByteBuf buf) {
 		return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
+	}
+	
+	/**
+	 * Creates a new vector from the x,y,z information in NBT. Reads directly
+	 * off the NBT compound provided.
+	 */
+	
+	public static Vector readFromNbt(NBTTagCompound nbt) {
+		return new Vector(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z"));
 	}
 	
 }
