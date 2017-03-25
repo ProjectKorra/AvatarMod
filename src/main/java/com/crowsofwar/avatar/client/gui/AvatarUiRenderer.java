@@ -187,7 +187,7 @@ public class AvatarUiRenderer extends Gui {
 			// For some reason, any alpha below 4 is displayed at alpha 255
 			if (alphaI < 4) alphaI = 4;
 			
-			String text = TextFormatting.BOLD + I18n.format("avatar.nochi");
+			String text = TextFormatting.BOLD + I18n.format(errorMsg);
 			
 			//@formatter:off
 			drawString(mc.fontRendererObj, text,

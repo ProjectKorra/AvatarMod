@@ -99,6 +99,7 @@ public class EntityAirBubble extends AvatarEntity {
 			if (!elytraOk && !worldObj.isRemote) {
 				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
 						(EntityPlayerMP) owner);
+				dissipateSmall();
 			}
 			
 			setPosition(owner.posX, owner.posY, owner.posZ);
