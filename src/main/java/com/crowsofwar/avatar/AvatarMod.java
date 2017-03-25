@@ -54,6 +54,7 @@ import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
@@ -169,8 +170,8 @@ public class AvatarMod {
 		registerEntity(EntityFireball.class, "Fireball");
 		registerEntity(EntityAirblade.class, "Airblade");
 		registerEntity(EntityAirBubble.class, "AirBubble");
-		registerEntity(EntityHumanBender.class, "HumanBender");
-		registerEgg(new ResourceLocation("avatarmod", "HumanBender"), 0xffffff, 0xffffff);
+		registerEntity(EntityHumanBender.class, "HumanBender", 0xffffff, 0xffffff);
+		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
 		proxy.init();
 	}
 	
@@ -191,6 +192,11 @@ public class AvatarMod {
 	private void registerEntity(Class<? extends Entity> entity, String name) {
 		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name,
 				nextEntityID++, this, 64, 3, true);
+	}
+	
+	private void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
+		registerEntity(entity, name);
+		registerEgg(new ResourceLocation("avatarmod", name), primary, secondary);
 	}
 	
 }
