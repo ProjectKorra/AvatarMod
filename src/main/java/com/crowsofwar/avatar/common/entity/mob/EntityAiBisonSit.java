@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import java.util.Random;
+
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
@@ -54,7 +56,11 @@ public class EntityAiBisonSit extends EntityAIBase {
 			}
 		}
 		
-		Vector targetPos = bisonPos.copy().setY(y - 1);
+		Random random = bison.getRNG();
+		Vector randomized = new Vector((random.nextDouble() * 2 - 1) * 2, 0,
+				(random.nextDouble() * 2 - 1) * 2);
+		
+		Vector targetPos = bisonPos.copy().setY(y - 1).plus(randomized);
 		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1);
 		
 		System.out.println("Move to " + targetPos);
