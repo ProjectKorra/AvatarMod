@@ -79,6 +79,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_SITTING, false);
+	}
+	
+	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(2);
@@ -115,6 +121,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super.readEntityFromNBT(nbt);
 		originalPos = Vector.readFromNbt(nbt);
 		ownerAttr.load(nbt);
+		setSitting(nbt.getBoolean("Sitting"));
 	}
 	
 	@Override
@@ -122,6 +129,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super.writeEntityToNBT(nbt);
 		originalPos.writeToNbt(nbt);
 		ownerAttr.save(nbt);
+		nbt.setBoolean("Sitting", isSitting());
 	}
 	
 	public Vector getOriginalPos() {
