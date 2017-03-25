@@ -90,11 +90,11 @@ public class OwnerAttribute {
 		getOwner(); // Look up owner in world
 	}
 	
-	private BenderInfo getOwnerInfo() {
+	public BenderInfo getOwnerInfo() {
 		return entity.getDataManager().get(sync);
 	}
 	
-	private void setOwnerInfo(BenderInfo info) {
+	public void setOwnerInfo(BenderInfo info) {
 		entity.getDataManager().set(sync, info);
 	}
 	
@@ -146,6 +146,10 @@ public class OwnerAttribute {
 		} else {
 			return Bender.create(owner);
 		}
+	}
+	
+	public UUID getId() {
+		return getOwnerInfo().getId();
 	}
 	
 	/**

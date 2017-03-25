@@ -16,30 +16,47 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import java.util.UUID;
+
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
 /**
- * EntityGhast
+ * EntityGhast EntityTameable
  * 
  * @author CrowsOfWar
  */
-public class EntitySkyBison extends EntityBender {
+public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
+	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_BENDER);
+	
+	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	
 	/**
@@ -48,6 +65,7 @@ public class EntitySkyBison extends EntityBender {
 	public EntitySkyBison(World world) {
 		super(world);
 		moveHelper = new SkyBisonMoveHelper(this);
+		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 	}
 	
 	@Override
@@ -84,12 +102,48 @@ public class EntitySkyBison extends EntityBender {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		originalPos = Vector.readFromNbt(nbt);
+		ownerAttr.load(nbt);
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		originalPos.writeToNbt(nbt);
+		ownerAttr.save(nbt);
+	}
+	
+	public Vector getOriginalPos() {
+		return originalPos;
+	}
+	
+	@Override
+	public UUID getOwnerId() {
+		return ownerAttr.getId();
+	}
+	
+	public void setOwnerId(UUID id) {
+		ownerAttr.setOwnerInfo(new BenderInfo(true, id));
+	}
+	
+	@Override
+	public EntityPlayer getOwner() {
+		return (EntityPlayer) ownerAttr.getOwner();
+	}
+	
+	public void setOwner(EntityPlayer owner) {
+		ownerAttr.setOwner(owner);
+	}
+	
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		ItemStack stack = player.getHeldItem(hand);
+		if (stack.getItem() == Items.APPLE) {
+			System.out.println("Tame");
+			return true;
+		} else {
+			return super.processInteract(player, hand);
+		}
+		
 	}
 	
 	// ================================================================================
@@ -159,8 +213,27 @@ public class EntitySkyBison extends EntityBender {
 		return false;
 	}
 	
-	public Vector getOriginalPos() {
-		return originalPos;
+	// ================================================================================
+	// COPIED FROM ENTITYTAMEABLE
+	// ================================================================================
+	
+	protected void playTameEffect(boolean play) {
+		EnumParticleTypes enumparticletypes = EnumParticleTypes.HEART;
+		
+		if (!play) {
+			enumparticletypes = EnumParticleTypes.SMOKE_NORMAL;
+		}
+		
+		for (int i = 0; i < 7; ++i) {
+			double d0 = this.rand.nextGaussian() * 0.02D;
+			double d1 = this.rand.nextGaussian() * 0.02D;
+			double d2 = this.rand.nextGaussian() * 0.02D;
+			this.worldObj.spawnParticle(enumparticletypes,
+					this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
+					this.posY + 0.5D + this.rand.nextFloat() * this.height,
+					this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, d0, d1, d2,
+					new int[0]);
+		}
 	}
 	
 }
