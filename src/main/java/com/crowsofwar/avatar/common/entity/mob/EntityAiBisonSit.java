@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -47,13 +48,16 @@ public class EntityAiBisonSit extends EntityAIBase {
 		
 		int y;
 		for (y = (int) bisonPos.y(); y > 0; y--) {
-			if (!world.isAirBlock(new BlockPos(bisonPos.x(), y, bisonPos.z()))) {
+			BlockPos pos = new BlockPos(bisonPos.x(), y, bisonPos.z());
+			if (world.isSideSolid(pos, EnumFacing.UP)) {
 				break;
 			}
 		}
 		
-		Vector targetPos = bisonPos.copy().setY(y);
+		Vector targetPos = bisonPos.copy().setY(y - 1);
 		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1);
+		
+		System.out.println("Move to " + targetPos);
 		
 	}
 	

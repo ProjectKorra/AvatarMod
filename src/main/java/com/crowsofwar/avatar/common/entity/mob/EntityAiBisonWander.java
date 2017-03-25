@@ -42,6 +42,9 @@ public class EntityAiBisonWander extends EntityAIBase {
 	 */
 	@Override
 	public boolean shouldExecute() {
+		
+		if (entity.isSitting()) return false;
+		
 		EntityMoveHelper moveHelper = entity.getMoveHelper();
 		
 		if (!moveHelper.isUpdating()) {

@@ -185,8 +185,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			return true;
 		}
 		
-		if (stack == field_190927_a) {
+		if (stack == field_190927_a && hand == EnumHand.MAIN_HAND) {
 			setSitting(!isSitting());
+			System.out.println("Set sitting " + isSitting());
 		}
 		
 		return super.processInteract(player, hand);

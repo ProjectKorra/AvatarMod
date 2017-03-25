@@ -46,7 +46,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 		EntityPlayer owner = bison.getOwner();
 		if (owner != null) {
 			double distSq = bison.getDistanceSqToEntity(owner);
-			return distSq >= 6 * 6;
+			return distSq >= 6 * 6 && !bison.isSitting();
 		}
 		
 		return false;
