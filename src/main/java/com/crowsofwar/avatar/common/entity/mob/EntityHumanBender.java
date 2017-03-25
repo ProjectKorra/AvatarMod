@@ -212,4 +212,9 @@ public class EntityHumanBender extends EntityCreature implements Bender {
 		return LOOT_TABLE;
 	}
 	
+	@Override
+	public boolean consumeWaterLevel(int amount) {
+		return false;
+	}
+	
 }
