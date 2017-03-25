@@ -28,9 +28,11 @@ import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -186,6 +188,35 @@ public class AbilityContext {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Consumes the given amount of water either from direct water source, or
+	 * from a water pouch.
+	 * <p>
+	 * First looks to see if looking at water block - any values >= 3 will also
+	 * consume the water block. Then, tries to see if there is a water pouch
+	 * with sufficient amount of water.
+	 */
+	public boolean consumeWater(int amount) {
+		
+		World world = bender.getWorld();
+		
+		VectorI targetPos = getClientLookBlock();
+		if (targetPos != null) {
+			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
+				
+				if (amount >= 3) {
+					world.setBlockToAir(targetPos.toBlockPos());
+				}
+				return true;
+				
+			}
+		}
+		
+		return bender.consumeWaterLevel(amount);
+		
 	}
 	
 }

@@ -39,11 +39,13 @@ public class AvatarItems {
 	};
 	
 	public static ItemScroll itemScroll;
+	public static ItemWaterPouch itemWaterPouch;
 	
 	private static ItemStack stackScroll;
 	
 	public static void init() {
 		registerItem(itemScroll = new ItemScroll());
+		registerItem(itemWaterPouch = new ItemWaterPouch());
 		
 		stackScroll = new ItemStack(itemScroll);
 		NBTTagCompound nbt = new NBTTagCompound();

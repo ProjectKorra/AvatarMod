@@ -113,5 +113,8 @@ item.avatarmod:scroll.air.name=Airbending Scroll
 item.avatarmod:scroll.fire.name=Firebending Scroll
 item.avatarmod:scroll.earth.name=Earthbending Scroll
 item.avatarmod:scroll.water.name=Waterbending Scroll
+item.avatarmod:water_pouch.name=Water Skin
 
 avatar.tooltip.scroll=%d points
+avatar.tooltip.water_pouch=%d/3 Water
+avatar.tooltip.water_pouch.empty=Empty

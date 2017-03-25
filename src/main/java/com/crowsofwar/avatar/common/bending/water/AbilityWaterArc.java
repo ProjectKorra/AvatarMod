@@ -18,6 +18,8 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 import java.util.List;
 
@@ -25,9 +27,8 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
-import com.crowsofwar.gorecore.util.VectorI;
+import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -55,37 +56,40 @@ public class AbilityWaterArc extends WaterAbility {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		
-		VectorI targetPos = ctx.getClientLookBlock();
-		if (targetPos != null) {
-			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
-			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
+		Vector targetPos = null;
+		if (ctx.getClientLookBlock() != null) {
+			targetPos = ctx.getClientLookBlock().precision().plus(0.5, -0.5, 0.5);
+		} else {
+			targetPos = getEntityPos(entity).plus(getLookRectangular(entity).times(4));
+		}
+		
+		if (ctx.consumeWater(1)) {
+			
+			if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
 				
-				if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
-					
-					AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5,
-							entity.posZ - 5, entity.posX + 5, entity.posY + 5, entity.posZ + 5);
-					List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class,
-							boundingBox, arc -> arc.getOwner() == entity
-									&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
-					
-					for (EntityWaterArc arc : existing) {
-						arc.setBehavior(new WaterArcBehavior.Thrown());
-					}
-					
-					EntityWaterArc water = new EntityWaterArc(world);
-					water.setOwner(entity);
-					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
-					water.setDamageMult(1 + ctx.getData().getAbilityData(this).getTotalXp() / 200);
-					
-					water.setBehavior(new WaterArcBehavior.PlayerControlled());
-					
-					world.spawnEntityInWorld(water);
-					
-					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
-					
+				AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5,
+						entity.posZ - 5, entity.posX + 5, entity.posY + 5, entity.posZ + 5);
+				List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
+						arc -> arc.getOwner() == entity
+								&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
+				
+				for (EntityWaterArc arc : existing) {
+					arc.setBehavior(new WaterArcBehavior.Thrown());
 				}
 				
+				EntityWaterArc water = new EntityWaterArc(world);
+				water.setOwner(entity);
+				water.setPosition(targetPos.x(), targetPos.y(), targetPos.z());
+				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getTotalXp() / 200);
+				
+				water.setBehavior(new WaterArcBehavior.PlayerControlled());
+				
+				world.spawnEntityInWorld(water);
+				
+				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
+				
 			}
+			
 		}
 		
 	}
