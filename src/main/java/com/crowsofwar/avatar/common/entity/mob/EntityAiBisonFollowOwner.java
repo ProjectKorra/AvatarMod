@@ -16,24 +16,24 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import java.util.Random;
+import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class EntityAiWanderFly extends EntityAIBase {
+public class EntityAiBisonFollowOwner extends EntityAIBase {
 	
-	private final EntitySkyBison entity;
+	private final EntitySkyBison bison;
 	
-	public EntityAiWanderFly(EntitySkyBison entity) {
-		this.entity = entity;
+	public EntityAiBisonFollowOwner(EntitySkyBison bison) {
+		this.bison = bison;
 		this.setMutexBits(1);
 	}
 	
@@ -42,23 +42,17 @@ public class EntityAiWanderFly extends EntityAIBase {
 	 */
 	@Override
 	public boolean shouldExecute() {
-		EntityMoveHelper moveHelper = entity.getMoveHelper();
 		
-		if (!moveHelper.isUpdating()) {
-			return true;
-		} else {
-			double dx = moveHelper.getX() - this.entity.posX;
-			double dy = moveHelper.getY() - this.entity.posY;
-			double dz = moveHelper.getZ() - this.entity.posZ;
-			double distToTargetSq = dx * dx + dy * dy + dz * dz;
-			return distToTargetSq < 1.0D || distToTargetSq > 3600.0D;
+		EntityPlayer owner = bison.getOwner();
+		if (owner != null) {
+			double distSq = bison.getDistanceSqToEntity(owner);
+			return distSq >= 6 * 6;
 		}
+		
+		return false;
 		
 	}
 	
-	/**
-	 * Returns whether an in-progress EntityAIBase should continue executing
-	 */
 	@Override
 	public boolean continueExecuting() {
 		return false;
@@ -69,12 +63,17 @@ public class EntityAiWanderFly extends EntityAIBase {
 	 */
 	@Override
 	public void startExecuting() {
-		Random random = entity.getRNG();
-		Vector original = entity.getOriginalPos();
-		double x = original.x() + (random.nextFloat() * 2 - 1) * 32;
-		double y = original.y() + (random.nextFloat() * 2 - 1) * 32;
-		double z = original.z() + (random.nextFloat() * 2 - 1) * 32;
-		this.entity.getMoveHelper().setMoveTo(x, y, z, 1.0D);
+		
+		EntityPlayer owner = bison.getOwner();
+		if (owner == null) return;
+		
+		double dist = bison.getDistanceToEntity(owner);
+		
+		Vector direction = getEyePos(owner).minus(getEyePos(bison)).normalize();
+		Vector targetPos = getEyePos(bison).plus(direction.times(dist * 0.8));
+		
+		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1.0D);
+		
 	}
 	
 }

@@ -16,14 +16,19 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static net.minecraft.util.EnumParticleTypes.HEART;
+import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
+
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
@@ -84,7 +89,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
 		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
 		
-		this.tasks.addTask(6, new EntityAiWanderFly(this));
+		this.tasks.addTask(5, new EntityAiBisonFollowOwner(this));
+		this.tasks.addTask(6, new EntityAiBisonWander(this));
 		
 	}
 	
@@ -122,7 +128,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	public void setOwnerId(UUID id) {
-		ownerAttr.setOwnerInfo(new BenderInfo(true, id));
+		ownerAttr.setOwnerInfo(id == null ? new NoBenderInfo() : new BenderInfo(true, id));
+	}
+	
+	public boolean hasOwner() {
+		System.out.println(ownerAttr.getOwnerInfo().getId());
+		return getOwnerId() != null;
 	}
 	
 	@Override
@@ -137,8 +148,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack.getItem() == Items.APPLE) {
+		if (stack.getItem() == Items.APPLE && !hasOwner()) {
 			System.out.println("Tame");
+			playTameEffect(true);
+			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
+			return true;
+		} else if (stack.getItem() == Items.CARROT && hasOwner()) {
+			playTameEffect(false);
+			System.out.println("Untame");
+			setOwnerId(null);
 			return true;
 		} else {
 			return super.processInteract(player, hand);
@@ -217,23 +235,20 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	// COPIED FROM ENTITYTAMEABLE
 	// ================================================================================
 	
-	protected void playTameEffect(boolean play) {
-		EnumParticleTypes enumparticletypes = EnumParticleTypes.HEART;
+	protected void playTameEffect(boolean success) {
+		EnumParticleTypes particle = success ? HEART : SMOKE_NORMAL;
 		
-		if (!play) {
-			enumparticletypes = EnumParticleTypes.SMOKE_NORMAL;
-		}
-		
-		for (int i = 0; i < 7; ++i) {
-			double d0 = this.rand.nextGaussian() * 0.02D;
-			double d1 = this.rand.nextGaussian() * 0.02D;
-			double d2 = this.rand.nextGaussian() * 0.02D;
-			this.worldObj.spawnParticle(enumparticletypes,
+		for (int i = 0; i < 7; i++) {
+			double mx = this.rand.nextGaussian() * 0.02D;
+			double my = this.rand.nextGaussian() * 0.02D;
+			double mz = this.rand.nextGaussian() * 0.02D;
+			this.worldObj.spawnParticle(particle,
 					this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
 					this.posY + 0.5D + this.rand.nextFloat() * this.height,
-					this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, d0, d1, d2,
-					new int[0]);
+					this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, //
+					mx, my, mz, new int[0]);
 		}
+		
 	}
 	
 }

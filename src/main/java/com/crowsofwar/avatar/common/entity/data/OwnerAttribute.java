@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -165,14 +164,7 @@ public class OwnerAttribute {
 	 */
 	private boolean isCacheInvalid() {
 		
-		UUID id = null;
-		if (ownerCached != null) {
-			if (ownerCached instanceof EntityPlayer) {
-				id = AccountUUIDs.getId(ownerCached.getName()).getUUID();
-			} else {
-				id = ownerCached.getPersistentID();
-			}
-		}
+		UUID id = getOwnerInfo().getId();
 		boolean idConsistent = id != null && getOwnerInfo().getId().equals(id);
 		
 		if (ownerCached == null || ownerCached.isDead || !idConsistent || getOwnerInfo() == null) {

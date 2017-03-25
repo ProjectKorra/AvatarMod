@@ -28,8 +28,6 @@ import net.minecraft.world.World;
  */
 public class NoBenderInfo extends BenderInfo {
 	
-	private static UUID ID_ZERO = new UUID(0, 0);
-	
 	@Override
 	public boolean isPlayer() {
 		return false;
@@ -37,7 +35,7 @@ public class NoBenderInfo extends BenderInfo {
 	
 	@Override
 	public UUID getId() {
-		return ID_ZERO;
+		return null;
 	}
 	
 	@Override
