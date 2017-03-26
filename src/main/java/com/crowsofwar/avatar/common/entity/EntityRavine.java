@@ -202,4 +202,9 @@ public class EntityRavine extends AvatarEntity {
 		
 	}
 	
+	@Override
+	protected void updateHidden() {
+		setHidden(false);
+	}
+	
 }

@@ -220,7 +220,7 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	protected void updateHidden() {
-		setHidden(getOwner() != null);
+		setHidden(getOwner() == null);
 	}
 	
 	/**

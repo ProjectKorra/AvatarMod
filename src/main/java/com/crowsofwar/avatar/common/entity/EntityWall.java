@@ -169,4 +169,9 @@ public class EntityWall extends AvatarEntity {
 		return super.canCollideWith(entity) && !(entity instanceof EntityWallSegment);
 	}
 	
+	@Override
+	protected void updateHidden() {
+		setHidden(false);
+	}
+	
 }

@@ -195,7 +195,8 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		// System.out.println(getOwner() == null);
+		return pass == 1 && !isHidden();
 	}
 	
 	@Override

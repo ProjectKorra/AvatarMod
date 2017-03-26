@@ -234,6 +234,7 @@ public abstract class EntityArc extends AvatarEntity {
 		return 15728880;
 	}
 	
+	@Override
 	public EntityPlayer getOwner() {
 		return ownerAttrib.getOwner();
 	}
@@ -246,7 +247,7 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return pass == 1 && !isHidden();
 	}
 	
 	/**
