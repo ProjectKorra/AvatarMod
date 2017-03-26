@@ -46,7 +46,7 @@ public class NodeAbilityGet extends NodeFunctional {
 		public BendingAbility convert(String str) {
 			List<BendingAbility> allAbilities = BendingManager.allAbilities();
 			for (BendingAbility ability : allAbilities) {
-				if (ability.getName().equals(str)) return ability;
+				if (ability.getName().equals(str.toLowerCase())) return ability;
 			}
 			
 			throw new TreeCommandException(Reason.NOT_OPTION);

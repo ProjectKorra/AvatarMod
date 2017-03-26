@@ -45,7 +45,8 @@ public interface IArgument<T> {
 	T getDefaultValue();
 	
 	/**
-	 * Return a value based off of the given input.
+	 * Return a value based off of the given input. The input's case should be
+	 * ignored.
 	 * 
 	 * @param input
 	 *            Input string

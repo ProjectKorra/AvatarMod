@@ -34,7 +34,7 @@ public class ArgumentList {
 			Object out = null;
 			if (i < userInput.length) { // If possible, prefer user input over
 										// default
-				out = argument.convert(userInput[i].toLowerCase());
+				out = argument.convert(userInput[i]);
 			} else { // Try to use the default value if the argument is optional
 				if (argument.isOptional()) { // Argument has a default value,
 												// which can be used
