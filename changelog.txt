@@ -2,6 +2,8 @@ AV2 Changelog :: version a3.1
 
 + Added allowAirBubbleElytra option to stats.yml; default false
 
+* By default, mining takes only 4 instead of 8 chi
+
 > Fix elytra flight allowing infinite height
 > Fix problem with radial menu in 3rd person
 > Fix air bubble blocking fall damage, etc
