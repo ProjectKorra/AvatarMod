@@ -66,6 +66,9 @@ public class ConfigStats {
 	@Load
 	public boolean allowAirBubbleElytra = false;
 	
+	@Load
+	public double waterArcSearchRadius = 4, waterArcAngles = 8;
+	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {
