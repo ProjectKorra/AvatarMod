@@ -151,6 +151,7 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	@Override
 	public void applyEntityCollision(Entity entity) {
+		if (isHidden()) return;
 		if (entity == getOwner()) return;
 		if (entity instanceof AvatarEntity || entity instanceof EntityArrow) return;
 		

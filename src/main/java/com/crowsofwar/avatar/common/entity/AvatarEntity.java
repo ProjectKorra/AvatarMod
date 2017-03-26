@@ -150,7 +150,7 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public boolean canBeCollidedWith() {
-		return true;
+		return !isHidden();
 	}
 	
 	@Override
@@ -237,7 +237,7 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {
-		return getEntityBoundingBox();
+		return isHidden() ? null : getEntityBoundingBox();
 	}
 	
 	@Override
