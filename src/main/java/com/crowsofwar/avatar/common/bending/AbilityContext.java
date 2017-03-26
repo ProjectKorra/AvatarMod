@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -152,6 +154,10 @@ public class AbilityContext {
 	 * enough chi to remove and it removed it.
 	 */
 	public boolean consumeChi(float amount) {
+		if (playerEntity.isCreative() && CHI_CONFIG.infiniteInCreative) {
+			return true;
+		}
+		
 		Chi chi = data.chi();
 		float available = chi.getAvailableChi();
 		if (available >= amount) {

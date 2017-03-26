@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.*;
 
@@ -55,9 +56,15 @@ public class FirebendingUpdate {
 					
 					Chi chi = data.chi();
 					float required = STATS_CONFIG.chiFlamethrowerSecond / 20f;
-					if (chi.getAvailableChi() >= required) {
-						chi.changeTotalChi(-required);
-						chi.changeAvailableChi(-required);
+					
+					boolean infinite = player.isCreative() && CHI_CONFIG.infiniteInCreative;
+					
+					if (chi.getAvailableChi() >= required || infinite) {
+						
+						if (!infinite) {
+							chi.changeTotalChi(-required);
+							chi.changeAvailableChi(-required);
+						}
 						
 						Vector look = getLookRectangular(player);
 						Vector eye = getEyePos(player);

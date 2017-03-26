@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -95,9 +96,14 @@ public class WaterbendingUpdate {
 				float required = STATS_CONFIG.chiWaterSkateSecond / 20f;
 				Chi chi = data.chi();
 				
-				if (chi.getAvailableChi() >= required) {
-					chi.changeTotalChi(-required);
-					chi.changeAvailableChi(-required);
+				boolean infinite = player.isCreative() && CHI_CONFIG.infiniteInCreative;
+				
+				if (chi.getAvailableChi() >= required || infinite) {
+					
+					if (!infinite) {
+						chi.changeTotalChi(-required);
+						chi.changeAvailableChi(-required);
+					}
 					
 					double speed = .4 + abilityData.getXp() * (.3 / 100);
 					
