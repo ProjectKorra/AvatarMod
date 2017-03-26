@@ -28,13 +28,13 @@ public class ArgumentList {
 	
 	public ArgumentList(String[] userInput, IArgument<?>[] arguments) {
 		
-		argumentValues = new HashMap<IArgument<?>, Object>();
+		argumentValues = new HashMap<>();
 		for (int i = 0; i < arguments.length; i++) {
 			IArgument<?> argument = arguments[i];
 			Object out = null;
 			if (i < userInput.length) { // If possible, prefer user input over
 										// default
-				out = argument.convert(userInput[i]);
+				out = argument.convert(userInput[i].toLowerCase());
 			} else { // Try to use the default value if the argument is optional
 				if (argument.isOptional()) { // Argument has a default value,
 												// which can be used
