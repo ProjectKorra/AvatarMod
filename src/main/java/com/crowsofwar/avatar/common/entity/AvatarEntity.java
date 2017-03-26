@@ -46,10 +46,13 @@ import net.minecraft.world.World;
  */
 public abstract class AvatarEntity extends Entity {
 	
-	private final Vector internalVelocity;
-	private final Vector internalPosition;
+	public static final DataParameter<Boolean> SYNC_HIDDEN = EntityDataManager.createKey(AvatarEntity.class,
+			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
 			DataSerializers.VARINT);
+	
+	private final Vector internalVelocity;
+	private final Vector internalPosition;
 	
 	protected boolean putsOutFires;
 	protected boolean flammable;
@@ -73,6 +76,7 @@ public abstract class AvatarEntity extends Entity {
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
 				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+		dataManager.register(SYNC_HIDDEN, false);
 	}
 	
 	public EntityPlayer getOwner() {
@@ -103,14 +107,24 @@ public abstract class AvatarEntity extends Entity {
 		dataManager.set(SYNC_ID, id);
 	}
 	
+	public boolean isHidden() {
+		return dataManager.get(SYNC_HIDDEN);
+	}
+	
+	public void setHidden(boolean hidden) {
+		dataManager.set(SYNC_HIDDEN, hidden);
+	}
+	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setAvId(nbt.getInteger("AvId"));
+		// Not necessary to check hidden
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("AvId", getAvId());
+		// Not necessary to check hidden
 	}
 	
 	//@formatter:off
@@ -146,6 +160,12 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public void onUpdate() {
+		
+		updateHidden();
+		if (isHidden()) {
+			return;
+		}
+		
 		super.onUpdate();
 		collideWithNearbyEntities();
 		if (putsOutFires && ticksExisted % 2 == 0) {
@@ -161,12 +181,13 @@ public abstract class AvatarEntity extends Entity {
 				}
 			}
 		}
+		
 	}
 	
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				ent -> EntitySelectors.<Entity> getTeamCollisionPredicate(this).apply(ent)
+				ent -> EntitySelectors.<Entity>getTeamCollisionPredicate(this).apply(ent)
 						&& canCollideWith(ent));
 		
 		if (!list.isEmpty()) {
@@ -176,7 +197,7 @@ public abstract class AvatarEntity extends Entity {
 				int j = 0;
 				
 				for (int k = 0; k < list.size(); ++k) {
-					if (!((Entity) list.get(k)).isRiding()) {
+					if (!list.get(k).isRiding()) {
 						++j;
 					}
 				}
@@ -187,7 +208,7 @@ public abstract class AvatarEntity extends Entity {
 			}
 			
 			for (int l = 0; l < list.size(); ++l) {
-				Entity entity = (Entity) list.get(l);
+				Entity entity = list.get(l);
 				entity.applyEntityCollision(this);
 				onCollideWithEntity(entity);
 			}
@@ -196,6 +217,10 @@ public abstract class AvatarEntity extends Entity {
 	
 	protected boolean canCollideWith(Entity entity) {
 		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
+	}
+	
+	protected void updateHidden() {
+		setHidden(getOwner() != null);
 	}
 	
 	/**
@@ -228,6 +253,11 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	public void setFire(int seconds) {
 		if (!putsOutFires && !flammable) super.setFire(seconds);
+	}
+	
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return super.shouldRenderInPass(pass) && !isHidden();
 	}
 	
 	// disable stepping sounds
