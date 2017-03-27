@@ -33,21 +33,16 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -149,39 +144,7 @@ public class EntityRavine extends AvatarEntity {
 			
 			if (inBlock.getBlockHardness(worldObj, getPosition()) == 0) {
 				
-				// Play sound
-				
-				Block destroyed = inBlock.getBlock();
-				SoundEvent sound;
-				if (destroyed == Blocks.FIRE) {
-					sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
-				} else {
-					sound = destroyed.getSoundType().getBreakSound();
-				}
-				worldObj.playSound(null, getPosition(), sound, SoundCategory.BLOCKS, 1, 1);
-				
-				// Spawn particles
-				
-				for (int i = 0; i < 7; i++) {
-					worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
-							3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
-							3 * (rand.nextGaussian() - 0.5), Block.getStateId(inBlock));
-				}
-				worldObj.setBlockToAir(getPosition());
-				
-				// Create drops
-				
-				if (!worldObj.isRemote) {
-					List<ItemStack> drops = inBlock.getBlock().getDrops(worldObj, inPos, inBlock, 0);
-					for (ItemStack stack : drops) {
-						EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
-						item.setDefaultPickupDelay();
-						item.motionX *= 2;
-						item.motionY *= 1.2;
-						item.motionZ *= 2;
-						worldObj.spawnEntityInWorld(item);
-					}
-				}
+				breakBlock(getPosition());
 				
 			} else {
 				

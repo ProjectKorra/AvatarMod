@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -71,8 +72,12 @@ public class EntityAirblade extends AvatarEntity {
 		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
 		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) setDead();
 		
-		Block inBlock = worldObj.getBlockState(getPosition()).getBlock();
+		IBlockState inBlockState = worldObj.getBlockState(getPosition());
+		Block inBlock = inBlockState.getBlock();
 		if (inBlock == Blocks.WATER) setDead();
+		if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj, getPosition()) == 0) {
+			breakBlock(getPosition());
+		}
 		
 		if (!isDead && !worldObj.isRemote) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,

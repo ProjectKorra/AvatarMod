@@ -3,7 +3,6 @@ AV2 Changelog :: version a4.0
 + Ability Level System
 + New skills menu
 + Scrolls item
-+ Added choppableBlocksNames to stats.yml
 
 - Removed progression points
 - Internal: removed bending states
