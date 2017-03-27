@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getVelocityMpS;
+import static java.lang.Math.toRadians;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -88,11 +89,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
-				Vector look = Vector.toRectangular(yawRandom, pitchRandom);
+				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 				
 				EntityFlames flames = new EntityFlames(world, entity);
 				flames.velocity().set(look.times(speedMult).plus(getVelocityMpS(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
+				flames.setLightsFires(lightsFires);
 				world.spawnEntityInWorld(flames);
 				
 				if (entity.ticksExisted % 3 == 0) world.playSound(null, entity.getPosition(),
