@@ -82,7 +82,8 @@ public class EntityAirblade extends AvatarEntity {
 		if (inBlock == Blocks.WATER) setDead();
 		
 		if (!worldObj.isRemote) {
-			if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj, getPosition()) == 0) {
+			if (chopBlocks && inBlock != Blocks.AIR
+					&& inBlockState.getBlockHardness(worldObj, getPosition()) == 0) {
 				breakBlock(getPosition());
 				motionX *= 0.6;
 				motionY *= 0.6;

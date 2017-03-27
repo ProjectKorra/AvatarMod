@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -38,8 +39,14 @@ public class AvatarPlayerTick {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(e.player);
 		if (data != null) {
 			
+			EntityPlayer player = e.player;
+			
+			if (!player.worldObj.isRemote && player.ticksExisted == 0) {
+				data.getNetworker().markAllChanged();
+			}
+			
 			data.decrementCooldown();
-			if (!e.player.worldObj.isRemote) {
+			if (!player.worldObj.isRemote) {
 				Chi chi = data.chi();
 				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
 				
