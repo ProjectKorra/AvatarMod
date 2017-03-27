@@ -17,6 +17,8 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 import static java.lang.Math.abs;
 
 import com.crowsofwar.avatar.common.bending.BendingAi;
@@ -68,6 +70,8 @@ public class AbilityAirblade extends AirAbility {
 		airblade.setDamage(STATS_CONFIG.airbladeSettings.damage * (1 + xp * .015f));
 		airblade.setOwner(bender);
 		airblade.setChopBlocks(abilityData.getLevel() >= 2);
+		airblade.setPiercing(abilityData.getLevel() == 3 && abilityData.getPath() == SECOND);
+		airblade.setChainAttack(abilityData.getLevel() == 3 && abilityData.getPath() == FIRST);
 		world.spawnEntityInWorld(airblade);
 		
 	}

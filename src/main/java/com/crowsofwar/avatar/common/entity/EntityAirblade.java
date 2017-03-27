@@ -39,6 +39,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -59,6 +60,10 @@ public class EntityAirblade extends AvatarEntity {
 	 */
 	private boolean chopBlocks;
 	
+	private boolean piercing;
+	
+	private boolean chainAttack;
+	
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(1.5f, .2f);
@@ -75,11 +80,18 @@ public class EntityAirblade extends AvatarEntity {
 		IBlockState inBlockState = worldObj.getBlockState(getPosition());
 		Block inBlock = inBlockState.getBlock();
 		if (inBlock == Blocks.WATER) setDead();
-		if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj, getPosition()) == 0) {
-			breakBlock(getPosition());
-			motionX *= 0.6;
-			motionY *= 0.6;
-			motionZ *= 0.6;
+		
+		if (!worldObj.isRemote) {
+			if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj, getPosition()) == 0) {
+				breakBlock(getPosition());
+				motionX *= 0.6;
+				motionY *= 0.6;
+				motionZ *= 0.6;
+			}
+			if (piercing && inBlock != Blocks.AIR
+					&& inBlockState.getBlockHardness(worldObj, getPosition()) <= 0.5) {
+				breakBlock(getPosition());
+			}
 		}
 		
 		if (!isDead && !worldObj.isRemote) {
@@ -92,7 +104,12 @@ public class EntityAirblade extends AvatarEntity {
 				if (collided instanceof EntityLivingBase) {
 					
 					EntityLivingBase lb = (EntityLivingBase) collided;
-					lb.attackEntityFrom(AvatarDamageSource.causeAirbladeDamage(collided, getOwner()), damage);
+					DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner()),
+							damage;
+					if (piercing) {
+						source.setDamageBypassesArmor();
+					}
+					lb.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
 					
 				}
 				
@@ -138,12 +155,30 @@ public class EntityAirblade extends AvatarEntity {
 		this.chopBlocks = chopBlocks;
 	}
 	
+	public boolean isPiercing() {
+		return piercing;
+	}
+	
+	public void setPiercing(boolean piercing) {
+		this.piercing = piercing;
+	}
+	
+	public boolean isChainAttack() {
+		return chainAttack;
+	}
+	
+	public void setChainAttack(boolean chainAttack) {
+		this.chainAttack = chainAttack;
+	}
+	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
 		damage = nbt.getFloat("Damage");
 		chopBlocks = nbt.getBoolean("ChopBlocks");
+		piercing = nbt.getBoolean("Piercing");
+		chainAttack = nbt.getBoolean("ChainAttack");
 	}
 	
 	@Override
@@ -152,6 +187,8 @@ public class EntityAirblade extends AvatarEntity {
 		ownerAttr.save(nbt);
 		nbt.setFloat("Damage", damage);
 		nbt.setBoolean("ChopBlocks", chopBlocks);
+		nbt.setBoolean("Piercing", piercing);
+		nbt.setBoolean("ChainAttack", chainAttack);
 	}
 	
 }
