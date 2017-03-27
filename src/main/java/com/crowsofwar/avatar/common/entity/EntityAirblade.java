@@ -77,6 +77,9 @@ public class EntityAirblade extends AvatarEntity {
 		if (inBlock == Blocks.WATER) setDead();
 		if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj, getPosition()) == 0) {
 			breakBlock(getPosition());
+			motionX *= 0.6;
+			motionY *= 0.6;
+			motionZ *= 0.6;
 		}
 		
 		if (!isDead && !worldObj.isRemote) {
@@ -125,6 +128,14 @@ public class EntityAirblade extends AvatarEntity {
 	
 	public void setDamage(float damage) {
 		this.damage = damage;
+	}
+	
+	public boolean canChopBlocks() {
+		return chopBlocks;
+	}
+	
+	public void setChopBlocks(boolean chopBlocks) {
+		this.chopBlocks = chopBlocks;
 	}
 	
 	@Override
