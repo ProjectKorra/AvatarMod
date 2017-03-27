@@ -16,10 +16,14 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_FLAMETHROWER;
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.*;
+import static com.crowsofwar.gorecore.util.Vector.getEyePos;
+import static com.crowsofwar.gorecore.util.Vector.getVelocityMpS;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -61,13 +65,33 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					chi.changeAvailableChi(-required);
 				}
 				
-				Vector look = getLookRectangular(entity);
 				Vector eye = getEyePos(entity);
 				
 				World world = ctx.getWorld();
 				
+				AbilityData abilityData = data.getAbilityData(ABILITY_FLAMETHROWER);
+				AbilityTreePath path = abilityData.getPath();
+				float totalXp = abilityData.getTotalXp();
+				
+				double speedMult = 6 + 5 * totalXp / 100;
+				double randomness = 20 - 10 * totalXp / 100;
+				boolean lightsFires = false;
+				if (abilityData.getLevel() == 3 && path == AbilityTreePath.FIRST) {
+					speedMult = 15;
+					randomness = 1;
+				}
+				if (abilityData.getLevel() == 3 && path == AbilityTreePath.SECOND) {
+					speedMult = 8;
+					randomness = 20;
+					lightsFires = true;
+				}
+				
+				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
+				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
+				Vector look = Vector.toRectangular(yawRandom, pitchRandom);
+				
 				EntityFlames flames = new EntityFlames(world, entity);
-				flames.velocity().set(look.times(10).plus(getVelocityMpS(entity)));
+				flames.velocity().set(look.times(speedMult).plus(getVelocityMpS(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				world.spawnEntityInWorld(flames);
 				
