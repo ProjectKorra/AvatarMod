@@ -54,8 +54,19 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		
 		if (entity.ticksExisted % 3 < 2) {
 			
+			AbilityData abilityData = data.getAbilityData(ABILITY_FLAMETHROWER);
+			AbilityTreePath path = abilityData.getPath();
+			float totalXp = abilityData.getTotalXp();
+			int level = abilityData.getLevel();
+			
 			Chi chi = data.chi();
 			float required = STATS_CONFIG.chiFlamethrowerSecond / 20f;
+			if (level == 3 && path == AbilityTreePath.FIRST) {
+				required *= 1.5f;
+			}
+			if (level == 3 && path == AbilityTreePath.SECOND) {
+				required *= 2;
+			}
 			
 			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
 			
@@ -70,18 +81,14 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				
 				World world = ctx.getWorld();
 				
-				AbilityData abilityData = data.getAbilityData(ABILITY_FLAMETHROWER);
-				AbilityTreePath path = abilityData.getPath();
-				float totalXp = abilityData.getTotalXp();
-				
 				double speedMult = 6 + 5 * totalXp / 100;
 				double randomness = 20 - 10 * totalXp / 100;
 				boolean lightsFires = false;
-				if (abilityData.getLevel() == 3 && path == AbilityTreePath.FIRST) {
+				if (level == 3 && path == AbilityTreePath.FIRST) {
 					speedMult = 15;
 					randomness = 1;
 				}
-				if (abilityData.getLevel() == 3 && path == AbilityTreePath.SECOND) {
+				if (level == 3 && path == AbilityTreePath.SECOND) {
 					speedMult = 8;
 					randomness = 20;
 					lightsFires = true;
