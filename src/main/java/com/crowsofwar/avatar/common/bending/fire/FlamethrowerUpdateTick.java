@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.*;
 
@@ -23,6 +24,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -43,14 +45,21 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
 		
 		if (entity.ticksExisted % 3 < 2) {
 			
 			Chi chi = data.chi();
 			float required = STATS_CONFIG.chiFlamethrowerSecond / 20f;
-			if (chi.getAvailableChi() >= required) {
-				chi.changeTotalChi(-required);
-				chi.changeAvailableChi(-required);
+			
+			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
+			
+			if (chi.getAvailableChi() >= required || infinite) {
+				
+				if (!infinite) {
+					chi.changeTotalChi(-required);
+					chi.changeAvailableChi(-required);
+				}
 				
 				Vector look = getLookRectangular(entity);
 				Vector eye = getEyePos(entity);
@@ -65,11 +74,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				if (entity.ticksExisted % 3 == 0) world.playSound(null, entity.getPosition(),
 						SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.2f, 0.8f);
 				
+			} else {
+				return true;
 			}
-			
 		}
 		
 		return false;
+		
 	}
 	
 }

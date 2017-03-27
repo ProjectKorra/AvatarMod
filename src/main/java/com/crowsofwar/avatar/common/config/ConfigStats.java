@@ -59,9 +59,15 @@ public class ConfigStats {
 	
 	@Load
 	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 6f, chiRavine = 3f,
-			chiWall = 5f, chiPickUpBlock = 2.5f, chiMining = 8f, chiFireArc = 2f, chiFireball = 4f,
+			chiWall = 5f, chiPickUpBlock = 2.5f, chiMining = 4f, chiFireArc = 2f, chiFireball = 4f,
 			chiFlamethrowerSecond = 2f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
 			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f;
+	
+	@Load
+	public boolean allowAirBubbleElytra = false;
+	
+	@Load
+	public double waterArcSearchRadius = 4, waterArcAngles = 8;
 	
 	public List<Block> bendableBlocks;
 	

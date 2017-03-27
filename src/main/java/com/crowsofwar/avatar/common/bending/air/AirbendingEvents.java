@@ -90,14 +90,14 @@ public class AirbendingEvents {
 				List<EntityAirBubble> entities = inBubble.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
 						inBubble.getEntityBoundingBox(), bubble -> bubble.getOwner() == inBubble);
 				for (EntityAirBubble bubble : entities) {
-					bubble.setHealth(bubble.getHealth() - e.getAmount());
-					e.setCanceled(true);
 					
 					DamageSource source = e.getSource();
 					Entity sourceEntity = source.getEntity();
 					if (sourceEntity != null && (sourceEntity instanceof AvatarEntity || sourceEntity instanceof EntityArrow)) {
 						sourceEntity.setDead();
 						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
+						bubble.setHealth(bubble.getHealth() - e.getAmount());
+						e.setCanceled(true);
 					}
 					
 				}

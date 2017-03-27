@@ -18,20 +18,23 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
+import static java.lang.Math.toRadians;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -46,9 +49,6 @@ public class AbilityWaterArc extends WaterAbility {
 	 */
 	public AbilityWaterArc() {
 		super("water_arc");
-		requireRaytrace(-1, false);
-		getRaytrace().setPredicate(
-				(pos, state) -> state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER);
 	}
 	
 	@Override
@@ -56,19 +56,21 @@ public class AbilityWaterArc extends WaterAbility {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		
-		Vector targetPos = null;
-		if (ctx.getClientLookBlock() != null) {
-			targetPos = ctx.getClientLookBlock().precision().plus(0.5, -0.5, 0.5);
-		} else {
-			targetPos = getEntityPos(entity).plus(getLookRectangular(entity).times(4));
-		}
+		Vector targetPos = getClosestWaterBlock(entity);
 		
-		if (ctx.consumeWater(1)) {
+		if (targetPos != null || ctx.consumeWater(1)) {
+			
+			if (targetPos == null) {
+				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
+			}
 			
 			if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
 				
+				// Remove existing water arc
+				
 				AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5,
 						entity.posZ - 5, entity.posX + 5, entity.posY + 5, entity.posZ + 5);
+				
 				List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
 						arc -> arc.getOwner() == entity
 								&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
@@ -77,10 +79,12 @@ public class AbilityWaterArc extends WaterAbility {
 					arc.setBehavior(new WaterArcBehavior.Thrown());
 				}
 				
+				// Spawn new water arc
+				
 				EntityWaterArc water = new EntityWaterArc(world);
 				water.setOwner(entity);
-				water.setPosition(targetPos.x(), targetPos.y(), targetPos.z());
-				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getTotalXp() / 200);
+				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
+				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
 				
 				water.setBehavior(new WaterArcBehavior.PlayerControlled());
 				
@@ -89,8 +93,35 @@ public class AbilityWaterArc extends WaterAbility {
 				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
 				
 			}
+		}
+	}
+	
+	private Vector getClosestWaterBlock(EntityLivingBase entity) {
+		World world = entity.worldObj;
+		
+		Vector eye = Vector.getEyePos(entity);
+		
+		double range = STATS_CONFIG.waterArcSearchRadius;
+		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
+			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
+				
+				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
+				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
+				
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
+						|| state.getBlock() == Blocks.FLOWING_WATER;
+				
+				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
+				if (result.hitSomething()) {
+					return result.getPosPrecise();
+				}
+				
+			}
 			
 		}
+		
+		return null;
 		
 	}
 	

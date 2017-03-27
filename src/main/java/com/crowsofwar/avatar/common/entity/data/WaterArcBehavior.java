@@ -63,6 +63,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			EntityLivingBase owner = water.getOwner();
 			World world = owner.worldObj;
 			
+			if (owner == null) return this;
+			
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 			
 			Vector target;

@@ -47,10 +47,13 @@ import net.minecraft.world.World;
  */
 public abstract class AvatarEntity extends Entity {
 	
-	private final Vector internalVelocity;
-	private final Vector internalPosition;
+	public static final DataParameter<Boolean> SYNC_HIDDEN = EntityDataManager.createKey(AvatarEntity.class,
+			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
 			DataSerializers.VARINT);
+	
+	private final Vector internalVelocity;
+	private final Vector internalPosition;
 	
 	protected boolean putsOutFires;
 	protected boolean flammable;
@@ -74,6 +77,7 @@ public abstract class AvatarEntity extends Entity {
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
 				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+		dataManager.register(SYNC_HIDDEN, false);
 	}
 	
 	/**
@@ -108,14 +112,24 @@ public abstract class AvatarEntity extends Entity {
 		dataManager.set(SYNC_ID, id);
 	}
 	
+	public boolean isHidden() {
+		return dataManager.get(SYNC_HIDDEN);
+	}
+	
+	public void setHidden(boolean hidden) {
+		dataManager.set(SYNC_HIDDEN, hidden);
+	}
+	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setAvId(nbt.getInteger("AvId"));
+		// Not necessary to check hidden
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("AvId", getAvId());
+		// Not necessary to check hidden
 	}
 	
 	//@formatter:off
@@ -152,11 +166,22 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public boolean canBeCollidedWith() {
-		return true;
+		return !isHidden();
+	}
+	
+	@Override
+	public boolean canBeAttackedWithItem() {
+		return false;
 	}
 	
 	@Override
 	public void onUpdate() {
+		
+		updateHidden();
+		if (isHidden()) {
+			return;
+		}
+		
 		super.onUpdate();
 		collideWithNearbyEntities();
 		if (putsOutFires && ticksExisted % 2 == 0) {
@@ -172,6 +197,7 @@ public abstract class AvatarEntity extends Entity {
 				}
 			}
 		}
+		
 	}
 	
 	// copied from EntityLivingBase -- mostly
@@ -209,6 +235,10 @@ public abstract class AvatarEntity extends Entity {
 		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
 	}
 	
+	protected void updateHidden() {
+		setHidden(getOwner() == null);
+	}
+	
 	/**
 	 * Called when this AvatarEntity collides with another entity. Not to be
 	 * confused with the vanilla {@link #applyEntityCollision(Entity)}, which is
@@ -223,7 +253,7 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {
-		return getEntityBoundingBox();
+		return isHidden() ? null : getEntityBoundingBox();
 	}
 	
 	@Override
@@ -239,6 +269,11 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	public void setFire(int seconds) {
 		if (!putsOutFires && !flammable) super.setFire(seconds);
+	}
+	
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return super.shouldRenderInPass(pass) && !isHidden();
 	}
 	
 	// disable stepping sounds

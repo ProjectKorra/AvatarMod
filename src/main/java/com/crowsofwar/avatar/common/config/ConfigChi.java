@@ -33,6 +33,9 @@ public class ConfigChi {
 	@Load
 	public float regenPerSecond = .2f, availablePerSecond = .4f, availableThreshold = .4f;
 	
+	@Load
+	public boolean infiniteInCreative = true;
+	
 	public static void load() {
 		ConfigLoader.load(CHI_CONFIG, "avatar/chi.yml");
 	}

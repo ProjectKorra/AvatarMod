@@ -28,7 +28,7 @@ public class ArgumentList {
 	
 	public ArgumentList(String[] userInput, IArgument<?>[] arguments) {
 		
-		argumentValues = new HashMap<IArgument<?>, Object>();
+		argumentValues = new HashMap<>();
 		for (int i = 0; i < arguments.length; i++) {
 			IArgument<?> argument = arguments[i];
 			Object out = null;

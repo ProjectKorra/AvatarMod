@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.network.packets;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -26,13 +27,25 @@ import net.minecraftforge.fml.relauncher.Side;
  * 
  * @author CrowsOfWar
  */
-public class PacketCNotEnoughChi extends AvatarPacket<PacketCNotEnoughChi> {
+public class PacketCErrorMessage extends AvatarPacket<PacketCErrorMessage> {
+	
+	private String message;
+	
+	public PacketCErrorMessage() {}
+	
+	public PacketCErrorMessage(String message) {
+		this.message = message;
+	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {}
+	public void fromBytes(ByteBuf buf) {
+		message = ByteBufUtils.readUTF8String(buf);
+	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {}
+	public void toBytes(ByteBuf buf) {
+		ByteBufUtils.writeUTF8String(buf, message);
+	}
 	
 	@Override
 	protected Side getRecievedSide() {
@@ -40,8 +53,12 @@ public class PacketCNotEnoughChi extends AvatarPacket<PacketCNotEnoughChi> {
 	}
 	
 	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCNotEnoughChi> getPacketHandler() {
+	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCErrorMessage> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
+	}
+	
+	public String getMessage() {
+		return message;
 	}
 	
 }

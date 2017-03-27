@@ -16,13 +16,17 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import java.util.UUID;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -32,7 +36,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -86,10 +94,21 @@ public class EntityAirBubble extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		EntityLivingBase ownerEnt = ownerAttr.getOwner();
-		Bender ownerBender = ownerAttr.getOwnerBender();
-		
+		EntityLivingBase ownerEnt = getOwner();
 		if (ownerEnt != null) {
+			
+			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
+			
+			Bender ownerBender = ownerAttr.getOwnerBender();
+			
+			ItemStack chest = ownerEnt.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+			if (!elytraOk && !worldObj.isRemote) {
+				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
+						(EntityPlayerMP) ownerEnt);
+				dissipateSmall();
+			}
+			
 			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
 			if (ownerEnt.isDead) {
 				dissipateSmall();
@@ -101,8 +120,11 @@ public class EntityAirBubble extends AvatarEntity {
 				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 					attribute.applyModifier(SLOW_ATTR);
 				}
-				if (!ownerEnt.onGround && !ownerEnt.isInWater() && !ownerBender.isFlying())
+				
+				if (!ownerEnt.onGround && !ownerEnt.isInWater() && !ownerBender.isFlying()
+						&& chest.getItem() != Items.ELYTRA)
 					ownerEnt.motionY += .03;
+				
 			}
 			
 		}
@@ -138,6 +160,7 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	@Override
 	public void applyEntityCollision(Entity entity) {
+		if (isHidden()) return;
 		if (entity == getOwner()) return;
 		if (entity instanceof AvatarEntity || entity instanceof EntityArrow) return;
 		
@@ -182,7 +205,7 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return pass == 1 && !isHidden();
 	}
 	
 	@Override

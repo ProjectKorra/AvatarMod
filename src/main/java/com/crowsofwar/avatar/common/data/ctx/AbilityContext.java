@@ -17,12 +17,14 @@
 
 package com.crowsofwar.avatar.common.data.ctx;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.Vector;
@@ -174,6 +176,9 @@ public class AbilityContext {
 		
 		// TODO Account for entity Chi?
 		if (!bender.isPlayer()) return true;
+		if (bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative) {
+			return true;
+		}
 		
 		Chi chi = data.chi();
 		float available = chi.getAvailableChi();
@@ -184,7 +189,8 @@ public class AbilityContext {
 		}
 		
 		if (bender.isPlayer()) {
-			AvatarMod.network.sendTo(new PacketCNotEnoughChi(), (EntityPlayerMP) bender.getEntity());
+			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.nochi"),
+					(EntityPlayerMP) bender.getEntity());
 		}
 		
 		return false;

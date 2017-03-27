@@ -59,7 +59,7 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
-import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
@@ -133,7 +133,7 @@ public class AvatarMod {
 		registerPacket(PacketSWallJump.class, Side.SERVER);
 		registerPacket(PacketSSkillsMenu.class, Side.SERVER);
 		registerPacket(PacketSUseScroll.class, Side.SERVER);
-		registerPacket(PacketCNotEnoughChi.class, Side.CLIENT);
+		registerPacket(PacketCErrorMessage.class, Side.CLIENT);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		

@@ -156,7 +156,7 @@ public abstract class TreeCommand implements ICommand {
 				IArgument<?>[] nodeArgs = node.getArgumentList();
 				IArgument<?> useArg = nodeArgs[sentArgs.length - 1 - nodeIndex];
 				List<String> suggestions = nodeArgs[sentArgs.length - 1 - nodeIndex]
-						.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1]);
+						.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1].toLowerCase());
 				
 				String lastArg = sentArgs[sentArgs.length - 1];
 				List<String> ret = suggestions.stream().filter(suggestion -> suggestion.startsWith(lastArg))

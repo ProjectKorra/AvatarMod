@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -31,6 +32,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
@@ -72,7 +74,7 @@ public class WaterSkateHandler extends TickHandler {
 			tryStartSkating(data, entity);
 		}
 		
-		if (data.hasStatusControl(SKATING_JUMP) && skate(data, entity)) {
+		if (data.hasStatusControl(SKATING_JUMP) && skate(data, entity, ctx.getBender())) {
 			data.removeStatusControl(StatusControl.SKATING_JUMP);
 			return true;
 		} else {
@@ -96,7 +98,7 @@ public class WaterSkateHandler extends TickHandler {
 	/**
 	 * Moves the player and returns whether to stop skating.
 	 */
-	private boolean skate(BendingData data, EntityLivingBase player) {
+	private boolean skate(BendingData data, EntityLivingBase player, Bender bender) {
 		
 		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
 		
@@ -110,11 +112,16 @@ public class WaterSkateHandler extends TickHandler {
 			float required = STATS_CONFIG.chiWaterSkateSecond / 20f;
 			Chi chi = data.chi();
 			
-			if (chi.getAvailableChi() >= required) {
-				chi.changeTotalChi(-required);
-				chi.changeAvailableChi(-required);
+			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
+			
+			if (chi.getAvailableChi() >= required || infinite) {
 				
-				double speed = .4 + abilityData.getTotalXp() * (.3 / 100);
+				if (!infinite) {
+					chi.changeTotalChi(-required);
+					chi.changeAvailableChi(-required);
+				}
+				
+				double speed = .4 + abilityData.getXp() * (.3 / 100);
 				
 				player.setPosition(player.posX, yPos + .2, player.posZ);
 				Vector velocity = toRectangular(toRadians(player.rotationYaw), 0).mul(speed);
@@ -134,9 +141,13 @@ public class WaterSkateHandler extends TickHandler {
 				}
 				
 			}
-			return false;
+			
+			if (player.ticksExisted % 10 == 0) {
+				abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
+			}
 			
 		}
+		return false;
 		
 	}
 	

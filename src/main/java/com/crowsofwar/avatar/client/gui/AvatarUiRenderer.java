@@ -23,6 +23,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -58,12 +59,14 @@ public class AvatarUiRenderer extends Gui {
 	private RadialSegment fadingSegment;
 	private long timeFadeStart;
 	private final Minecraft mc;
-	private long chiMsgFade;
+	private long errorMsgFade;
+	private String errorMsg;
 	
 	public AvatarUiRenderer() {
 		mc = Minecraft.getMinecraft();
 		instance = this;
-		chiMsgFade = -1;
+		errorMsgFade = -1;
+		errorMsg = "";
 	}
 	
 	@SubscribeEvent
@@ -84,6 +87,10 @@ public class AvatarUiRenderer extends Gui {
 		int mouseX = Mouse.getX() * resolution.getScaledWidth() / mc.displayWidth;
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
+		
+		// For some reason, not including this will cause weirdness in 3rd
+		// person
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		
 		if (currentBendingMenu != null) {
 			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {
@@ -135,6 +142,9 @@ public class AvatarUiRenderer extends Gui {
 		GlStateManager.color(1, 1, 1, 1);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		
+		if (data.getAllBending().isEmpty()) return;
+		
 		Chi chi = data.chi();
 		float total = chi.getTotalChi();
 		float max = chi.getMaxChi();
@@ -169,15 +179,15 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderChiMsg(ScaledResolution res) {
 		
-		if (chiMsgFade != -1) {
+		if (errorMsgFade != -1) {
 			
-			float seconds = (System.currentTimeMillis() - chiMsgFade) / 1000f;
+			float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
 			float alpha = seconds < 1 ? 1 : 1 - (seconds - 1);
 			int alphaI = (int) (alpha * 255);
 			// For some reason, any alpha below 4 is displayed at alpha 255
 			if (alphaI < 4) alphaI = 4;
 			
-			String text = TextFormatting.BOLD + I18n.format("avatar.nochi");
+			String text = TextFormatting.BOLD + I18n.format(errorMsg);
 			
 			//@formatter:off
 			drawString(mc.fontRendererObj, text,
@@ -186,7 +196,7 @@ public class AvatarUiRenderer extends Gui {
 					0xffffff | (alphaI << 24));
 			//@formatter:on
 			
-			if (seconds >= 2) chiMsgFade = -1;
+			if (seconds >= 2) errorMsgFade = -1;
 			
 		}
 		
@@ -212,8 +222,9 @@ public class AvatarUiRenderer extends Gui {
 		instance.timeFadeStart = System.currentTimeMillis();
 	}
 	
-	public static void displayChiMessage() {
-		instance.chiMsgFade = System.currentTimeMillis();
+	public static void displayErrorMessage(String message) {
+		instance.errorMsgFade = System.currentTimeMillis();
+		instance.errorMsg = message;
 	}
 	
 }

@@ -18,15 +18,21 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 /**
@@ -46,7 +52,15 @@ public class AbilityAirBubble extends AirAbility {
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 		
-		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
+		ItemStack chest = bender.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+		
+		if (!elytraOk && bender instanceof EntityPlayerMP) {
+			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
+					(EntityPlayerMP) bender);
+		}
+		
+		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
 			
 			if (!ctx.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 			

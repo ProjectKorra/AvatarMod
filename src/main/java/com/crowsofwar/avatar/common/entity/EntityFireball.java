@@ -160,7 +160,7 @@ public class EntityFireball extends AvatarEntity {
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 0 || pass == 1;
+		return (pass == 0 || pass == 1) && !isHidden();
 	}
 	
 	private void removeStatCtrl() {

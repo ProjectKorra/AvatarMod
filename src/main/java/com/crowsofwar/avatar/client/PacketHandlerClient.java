@@ -37,7 +37,7 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.PlayerDataContext;
-import com.crowsofwar.avatar.common.network.packets.PacketCNotEnoughChi;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
@@ -72,8 +72,8 @@ public class PacketHandlerClient implements IPacketHandler {
 		if (packet instanceof PacketCPlayerData)
 			return handlePacketNewPlayerData((PacketCPlayerData) packet, ctx);
 		
-		if (packet instanceof PacketCNotEnoughChi)
-			return handlePacketNotEnoughChi((PacketCNotEnoughChi) packet, ctx);
+		if (packet instanceof PacketCErrorMessage)
+			return handlePacketNotEnoughChi((PacketCErrorMessage) packet, ctx);
 		
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 		
@@ -177,9 +177,9 @@ public class PacketHandlerClient implements IPacketHandler {
 		return null;
 	}
 	
-	private IMessage handlePacketNotEnoughChi(PacketCNotEnoughChi packet, MessageContext ctx) {
+	private IMessage handlePacketNotEnoughChi(PacketCErrorMessage packet, MessageContext ctx) {
 		
-		AvatarUiRenderer.displayChiMessage();
+		AvatarUiRenderer.displayErrorMessage(packet.getMessage());
 		
 		return null;
 	}

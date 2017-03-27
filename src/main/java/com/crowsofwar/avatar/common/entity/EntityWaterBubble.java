@@ -150,7 +150,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return pass == 1 && !isHidden();
 	}
 	
 }

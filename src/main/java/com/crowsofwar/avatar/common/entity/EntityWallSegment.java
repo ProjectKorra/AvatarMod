@@ -112,6 +112,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		wall.addSegment(this);
 	}
 	
+	@Override
 	public EntityLivingBase getOwner() {
 		return ownerAttribute.getOwner();
 	}
@@ -198,6 +199,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	
 	@Override
 	public void applyEntityCollision(Entity entity) {
+		
+		if (isHidden()) return;
 		
 		// Note... only called server-side
 		double amt = 0.4;
