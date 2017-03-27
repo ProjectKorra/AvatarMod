@@ -165,6 +165,16 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 	}
 	
+	public void saveAll() {
+		
+		for (DataCategory category : DataCategory.values()) {
+			networker.markChanged((Networker.Property<Object>) category.property(), category.get(this));
+		}
+		networker.sendUpdated();
+		saveChanges();
+		
+	}
+	
 	public Networker getNetworker() {
 		return networker;
 	}

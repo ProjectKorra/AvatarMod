@@ -171,7 +171,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		
-		if (data != null) data.getNetworker().sendAll();
+		if (data != null) data.saveAll();
 		return null;
 		
 	}

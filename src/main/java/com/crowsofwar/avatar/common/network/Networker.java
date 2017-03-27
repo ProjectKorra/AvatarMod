@@ -94,18 +94,6 @@ public class Networker {
 		}
 	}
 	
-	public void sendAll() {
-		if (server) {
-			PacketModularData packet = packetCreator.apply(this);
-			packet.changed = allKeys;
-			AvatarMod.network.sendToAll(packet);
-		}
-	}
-	
-	public void markAllChanged() {
-		changed.addAll(allKeys);
-	}
-	
 	public static class Property<T> {
 		
 		private final int id;

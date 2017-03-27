@@ -42,7 +42,7 @@ public class AvatarPlayerTick {
 			EntityPlayer player = e.player;
 			
 			if (!player.worldObj.isRemote && player.ticksExisted == 0) {
-				data.getNetworker().markAllChanged();
+				data.saveAll();
 			}
 			
 			data.decrementCooldown();
