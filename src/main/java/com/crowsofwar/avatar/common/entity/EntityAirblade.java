@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -52,6 +53,11 @@ public class EntityAirblade extends AvatarEntity {
 	private final OwnerAttribute ownerAttr;
 	private float damage;
 	
+	/**
+	 * Whether can chop blocks such as grass, wheat, etc.
+	 */
+	private boolean chopBlocks;
+	
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(1.5f, .2f);
@@ -65,7 +71,8 @@ public class EntityAirblade extends AvatarEntity {
 		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
 		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) setDead();
 		
-		if (worldObj.getBlockState(getPosition()).getBlock() == Blocks.WATER) setDead();
+		Block inBlock = worldObj.getBlockState(getPosition()).getBlock();
+		if (inBlock == Blocks.WATER) setDead();
 		
 		if (!isDead && !worldObj.isRemote) {
 			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
@@ -120,6 +127,7 @@ public class EntityAirblade extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
 		damage = nbt.getFloat("Damage");
+		chopBlocks = nbt.getBoolean("ChopBlocks");
 	}
 	
 	@Override
@@ -127,6 +135,7 @@ public class EntityAirblade extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
 		nbt.setFloat("Damage", damage);
+		nbt.setBoolean("ChopBlocks", chopBlocks);
 	}
 	
 }

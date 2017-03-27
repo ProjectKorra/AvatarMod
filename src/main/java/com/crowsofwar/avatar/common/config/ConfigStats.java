@@ -49,6 +49,9 @@ public class ConfigStats {
 	public List<String> bendableBlocksNames;
 	
 	@Load
+	public List<String> choppableBlocksNames;
+	
+	@Load
 	public double wallWaitTime = 10, wallMomentum = 10;
 	
 	@Load
@@ -70,12 +73,16 @@ public class ConfigStats {
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
 	
 	public List<Block> bendableBlocks;
+	public List<Block> choppableBlocks;
 	
 	private ConfigStats() {
 		bendableBlocksNames = new ArrayList<>();
 		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
 				STONEBRICK, CLAY, HARDENED_CLAY, STAINED_HARDENED_CLAY, COAL_ORE, IRON_ORE, EMERALD_ORE,
 				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE, GRASS);
+		
+		choppableBlocksNames = new ArrayList<>();
+		addChoppableBlock(TALLGRASS, RED_FLOWER, YELLOW_FLOWER, WHEAT, CARROTS, POTATOES, BEETROOTS);
 	}
 	
 	private void addBendableBlock(Block... blocks) {
@@ -93,6 +100,26 @@ public class ConfigStats {
 						"Invalid bendable blocks entry: " + blockName + "; does not exist");
 			} else {
 				bendableBlocks.add(b);
+			}
+		}
+		
+	}
+	
+	private void addChoppableBlock(Block... blocks) {
+		for (Block block : blocks)
+			choppableBlocksNames.add(Block.REGISTRY.getNameForObject(block).toString());
+	}
+	
+	private void loadChoppableBlocks() {
+		choppableBlocks = new ArrayList<>();
+		
+		for (String blockName : choppableBlocksNames) {
+			Block b = Block.REGISTRY.getObject(new ResourceLocation(blockName));
+			if (b == null) {
+				AvatarLog.warn(WarningType.CONFIGURATION,
+						"Invalid bendable blocks entry: " + blockName + "; does not exist");
+			} else {
+				choppableBlocks.add(b);
 			}
 		}
 		
