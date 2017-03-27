@@ -20,7 +20,7 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -37,7 +37,7 @@ public class StatCtrlBubbleExpand extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
+	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		
 		List<EntityAirBubble> entities = entity.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,

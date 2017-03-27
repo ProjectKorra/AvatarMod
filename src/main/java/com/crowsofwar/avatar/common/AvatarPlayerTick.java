@@ -24,7 +24,7 @@ import java.util.List;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -51,7 +51,7 @@ public class AvatarPlayerTick {
 			
 			List<TickHandler> tickHandlers = data.getAllTickHandlers();
 			if (tickHandlers != null) {
-				AbilityContext ctx = new AbilityContext(data, new Raytrace.Result());
+				BendingContext ctx = new BendingContext(data, new Raytrace.Result());
 				for (TickHandler handler : tickHandlers) {
 					if (handler.tick(ctx)) {
 						// Can use this since the list is a COPY of the

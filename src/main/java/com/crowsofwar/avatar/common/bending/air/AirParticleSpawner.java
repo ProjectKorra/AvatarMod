@@ -17,8 +17,8 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
@@ -36,7 +36,7 @@ public class AirParticleSpawner extends TickHandler {
 	private static final ParticleSpawner particles = new ClientParticleSpawner();
 	
 	@Override
-	public boolean tick(AbilityContext ctx) {
+	public boolean tick(BendingContext ctx) {
 		EntityLivingBase target = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		

@@ -23,8 +23,8 @@ import static com.crowsofwar.gorecore.util.Vector.*;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -41,7 +41,7 @@ import net.minecraft.world.World;
 public class FlamethrowerUpdateTick extends TickHandler {
 	
 	@Override
-	public boolean tick(AbilityContext ctx) {
+	public boolean tick(BendingContext ctx) {
 		
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();

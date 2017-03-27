@@ -22,7 +22,7 @@ import java.util.List;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -43,7 +43,7 @@ public class StatCtrlThrowWater extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
+	public boolean execute(BendingContext ctx) {
 		
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();

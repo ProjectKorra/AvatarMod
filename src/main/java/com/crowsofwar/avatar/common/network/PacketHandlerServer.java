@@ -34,6 +34,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -99,7 +100,7 @@ public class PacketHandlerServer implements IPacketHandler {
 				ProcessAbilityRequest par = iterator.next();
 				par.ticks--;
 				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0) {
-					par.ability.execute(new AbilityContext(par.data, par.raytrace));
+					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability));
 					iterator.remove();
 				}
 			}
@@ -140,7 +141,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			BendingAbility ability = packet.getAbility();
 			if (data.hasBending(ability.getBendingType())) {
 				if (data.getAbilityCooldown() == 0) {
-					ability.execute(new AbilityContext(data, packet.getRaytrace()));
+					ability.execute(new AbilityContext(data, packet.getRaytrace(), ability));
 					data.setAbilityCooldown(15);
 				} else {
 					unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
@@ -188,7 +189,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
 			if (data.hasStatusControl(sc)) {
-				if (sc.execute(new AbilityContext(data, packet.getRaytrace()))) {
+				if (sc.execute(new BendingContext(data, packet.getRaytrace()))) {
 					data.removeStatusControl(packet.getStatusControl());
 				}
 			}

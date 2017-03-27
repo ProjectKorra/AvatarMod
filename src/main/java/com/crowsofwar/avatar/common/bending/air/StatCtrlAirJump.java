@@ -25,8 +25,8 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
@@ -51,7 +51,7 @@ public class StatCtrlAirJump extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
+	public boolean execute(BendingContext ctx) {
 		
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
