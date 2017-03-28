@@ -46,6 +46,12 @@ public class AirParticleSpawner extends TickHandler {
 		particles.spawnParticles(target.worldObj, ParticleType.AIR, 1, 1, pos, new Vector(0.7, 0.2, 0.7));
 		
 		if (target.isInWater() || target.onGround || bender.isFlying()) {
+			
+			if (target.onGround) {
+				System.out.println("Smash!");
+			}
+			bender.getData().setSmashGround(false);
+			
 			return true;
 		}
 		

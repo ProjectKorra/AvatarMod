@@ -377,4 +377,14 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		bendingData.setWallJumping(wallJumping);
 	}
 	
+	@Override
+	public boolean willSmashGround() {
+		return bendingData.willSmashGround();
+	}
+	
+	@Override
+	public void setSmashGround(boolean smash) {
+		bendingData.setSmashGround(smash);
+	}
+	
 }
