@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -25,6 +27,9 @@ import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -48,7 +53,20 @@ public class AirParticleSpawner extends TickHandler {
 		if (target.isInWater() || target.onGround || bender.isFlying()) {
 			
 			if (target.onGround) {
-				System.out.println("Smash!");
+				
+				double range = 3;
+				
+				World world = target.worldObj;
+				AxisAlignedBB box = new AxisAlignedBB(target.posX - range, target.posY - range,
+						target.posZ - range, target.posX + range, target.posY + range, target.posZ + range);
+				
+				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+				for (EntityLivingBase entity : nearby) {
+					if (entity != target) {
+						entity.attackEntityFrom(DamageSource.fall, 5);
+					}
+				}
+				
 			}
 			bender.getData().setSmashGround(false);
 			
