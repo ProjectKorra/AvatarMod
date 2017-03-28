@@ -17,12 +17,15 @@
 package com.crowsofwar.avatar.client.uitools;
 
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static net.minecraft.client.renderer.GlStateManager.*;
+
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
  * Components are a part of a ui. They can be text, images, etc. They have a
@@ -109,6 +112,17 @@ public abstract class UiComponent extends Gui {
 	}
 	
 	public void keyPressed(int keyCode) {}
+	
+	public void hover(float mouseX, float mouseY) {}
+	
+	protected void drawHoveringText(List<String> textLines, float x, float y) {
+		
+		int width = screenWidth() / scaleFactor();
+		int height = screenHeight() / scaleFactor();
+		
+		GuiUtils.drawHoveringText(textLines, (int) x, (int) y, width, height, -1, mc.fontRendererObj);
+		
+	}
 	
 	// Delegates to transform
 	

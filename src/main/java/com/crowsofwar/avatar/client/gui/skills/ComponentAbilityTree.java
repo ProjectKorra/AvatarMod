@@ -18,6 +18,9 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
@@ -144,6 +147,15 @@ public class ComponentAbilityTree extends UiComponent {
 			slot2.setVisible(true);
 			
 		}
+		
+	}
+	
+	@Override
+	public void hover(float mouseX, float mouseY) {
+		List<String> lines = new ArrayList<>();
+		lines.add("Hello!");
+		lines.add("Description");
+		drawHoveringText(lines, mouseX - 10, mouseY);
 		
 	}
 	

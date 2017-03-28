@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.client.gui.skills;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+
+import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
@@ -33,6 +36,7 @@ import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
@@ -137,7 +141,13 @@ public class WindowAbility {
 		button.setEnabled(
 				gui.inventorySlots.getSlot(0).getHasStack() || gui.inventorySlots.getSlot(1).getHasStack());
 		
-		handler.draw(partialTicks);
+		Minecraft mc = Minecraft.getMinecraft();
+		int width = screenWidth() / scaleFactor();
+		int height = screenHeight() / scaleFactor();
+		int mouseX = Mouse.getX() * width / mc.displayWidth;
+		int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
+		
+		handler.draw(partialTicks, mouseX, mouseY);
 		
 	}
 	

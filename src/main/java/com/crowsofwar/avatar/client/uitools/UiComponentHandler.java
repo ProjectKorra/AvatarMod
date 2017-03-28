@@ -16,9 +16,13 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.lwjgl.input.Mouse;
 
 /**
  * Handles calls to all UI components, so they don't need to be worried about
@@ -43,9 +47,20 @@ public class UiComponentHandler {
 		components.add(component);
 	}
 	
-	public void draw(float partialTicks) {
-		for (UiComponent component : components)
+	public void draw(float partialTicks, float mouseX, float mouseY) {
+		for (UiComponent component : components) {
 			component.draw(partialTicks);
+			
+			float mx2 = Mouse.getX();
+			float my2 = screenHeight() - Mouse.getY();
+			
+			Measurement coords = component.coordinates();
+			if (mx2 >= coords.xInPixels() && mx2 <= coords.xInPixels() + component.width()) {
+				if (my2 >= coords.yInPixels() && my2 <= coords.yInPixels() + component.height()) {
+					component.hover(mouseX, mouseY);
+				}
+			}
+		}
 	}
 	
 	public void click(float x, float y, int button) {
