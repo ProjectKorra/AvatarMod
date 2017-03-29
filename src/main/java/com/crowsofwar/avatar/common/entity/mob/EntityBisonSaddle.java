@@ -51,7 +51,7 @@ public class EntityBisonSaddle extends AvatarEntity {
 	
 	@Override
 	protected void entityInit() {
-		
+		super.entityInit();
 	}
 	
 	@Override

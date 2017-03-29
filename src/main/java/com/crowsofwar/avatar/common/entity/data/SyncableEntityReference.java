@@ -56,7 +56,8 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	 *            <code>this</code>. Not the entity being referenced
 	 * @param sync
 	 *            DataParameter used to sync. Should NOT be created specifically
-	 *            for this SyncableEntityReference - use a constant
+	 *            for this SyncableEntityReference - use a constant. Will not
+	 *            register to entity DataManager.
 	 */
 	public SyncableEntityReference(Entity entity, DataParameter<Integer> sync) {
 		this.using = entity;

@@ -106,6 +106,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_SITTING, false);
+		for (int i = 0; i < MAX_SADDLES; i++) {
+			dataManager.register(SYNC_SADDLES[i], -1);
+		}
 	}
 	
 	@Override
