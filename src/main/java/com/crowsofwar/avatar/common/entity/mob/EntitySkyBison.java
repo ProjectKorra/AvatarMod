@@ -98,6 +98,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		saddlesRef = new ArrayList<>();
 		for (int i = 0; i < MAX_SADDLES; i++) {
 			saddlesRef.add(new SyncableEntityReference(this, SYNC_SADDLES[i]));
+			saddlesRef.get(i).allowNullSaving();
 		}
 		setSize(width, height);
 	}
@@ -248,6 +249,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 				double dz = Math.cos(angle) * 3;
 				
 				saddle.setPosition(centerX + dx, centerY, centerZ + dz);
+				
+				System.out.println("Update saddle " + i);
 				
 			}
 			

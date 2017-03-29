@@ -47,6 +47,7 @@ public class EntityBisonSaddle extends AvatarEntity {
 	public EntityBisonSaddle(World world) {
 		super(world);
 		bisonAttr = new OwnerAttribute(this, SYNC_OWNER);
+		setSize(0.5f, 0.5f);
 	}
 	
 	@Override
@@ -62,6 +63,7 @@ public class EntityBisonSaddle extends AvatarEntity {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		bisonAttr.save(nbt);
+		System.out.println("A saddle exists; tied to " + getBison());
 	}
 	
 	@Nullable
