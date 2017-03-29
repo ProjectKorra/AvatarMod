@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.CachedEntity;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 
@@ -40,7 +41,7 @@ import net.minecraft.network.datasync.DataParameter;
  */
 public class SyncableEntityReference<T extends AvatarEntity> {
 	
-	private final AvatarEntity using;
+	private final Entity using;
 	private final DataParameter<Integer> sync;
 	private final CachedEntity<T> cache;
 	private boolean allowNullSaving;
@@ -55,10 +56,10 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	 *            DataParameter used to sync. Should NOT be created specifically
 	 *            for this SyncableEntityReference - use a constant
 	 */
-	public SyncableEntityReference(AvatarEntity entity, DataParameter<Integer> sync) {
+	public SyncableEntityReference(Entity entity, DataParameter<Integer> sync) {
 		this.using = entity;
 		this.sync = sync;
-		this.cache = new CachedEntity<T>(-1);
+		this.cache = new CachedEntity<>(-1);
 		this.allowNullSaving = false;
 	}
 	

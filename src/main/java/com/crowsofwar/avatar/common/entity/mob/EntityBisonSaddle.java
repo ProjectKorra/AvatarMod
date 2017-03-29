@@ -19,10 +19,10 @@ package com.crowsofwar.avatar.common.entity.mob;
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -34,7 +34,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class EntityBisonSaddle extends Entity {
+public class EntityBisonSaddle extends AvatarEntity {
 	
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
 			.createKey(EntityBisonSaddle.class, AvatarDataSerializers.SERIALIZER_BENDER);

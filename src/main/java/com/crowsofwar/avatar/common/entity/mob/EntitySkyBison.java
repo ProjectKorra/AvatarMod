@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
@@ -70,7 +71,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	
-	private static final DataParameter<BenderInfo>[] SYNC_SADDLES;
+	private static final DataParameter<Integer>[] SYNC_SADDLES;
 	
 	private static final DataParameter<Boolean> SYNC_SITTING = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
@@ -78,13 +79,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	static {
 		SYNC_SADDLES = new DataParameter[MAX_SADDLES];
 		for (int i = 0; i < SYNC_SADDLES.length; i++) {
-			SYNC_SADDLES[i] = EntityDataManager.createKey(EntitySkyBison.class,
-					AvatarDataSerializers.SERIALIZER_BENDER);
+			SYNC_SADDLES[i] = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.VARINT);
 		}
 	}
 	
 	private final OwnerAttribute ownerAttr;
-	private final List<OwnerAttribute> saddlesAttr;
+	private final List<SyncableEntityReference<EntityBisonSaddle>> saddlesRef;
 	private Vector originalPos;
 	
 	/**
@@ -94,9 +94,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super(world);
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		saddlesAttr = new ArrayList<>();
+		saddlesRef = new ArrayList<>();
 		for (int i = 0; i < MAX_SADDLES; i++) {
-			saddlesAttr.add(new OwnerAttribute(this, SYNC_SADDLES[i]));
+			saddlesRef.add(new SyncableEntityReference(this, SYNC_SADDLES[i]));
 		}
 		setSize(width, height);
 	}
@@ -145,6 +145,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		originalPos = Vector.readFromNbt(nbt);
 		ownerAttr.load(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
+		
+		for (SyncableEntityReference<EntityBisonSaddle> ref : saddlesRef) {
+			ref.readFromNBT(nbt);
+		}
+		
 	}
 	
 	@Override
@@ -153,6 +158,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		originalPos.writeToNbt(nbt);
 		ownerAttr.save(nbt);
 		nbt.setBoolean("Sitting", isSitting());
+		
+		for (SyncableEntityReference<EntityBisonSaddle> ref : saddlesRef) {
+			ref.writeToNBT(nbt);
+		}
+		
 	}
 	
 	public Vector getOriginalPos() {
@@ -188,6 +198,16 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	public void setSitting(boolean sitting) {
 		dataManager.set(SYNC_SITTING, sitting);
+	}
+	
+	@Nullable
+	public EntityBisonSaddle getSaddle(int index) {
+		SyncableEntityReference<EntityBisonSaddle> attr = saddlesRef.get(index);
+		return attr.getEntity();
+	}
+	
+	public void setSaddle(int index, @Nullable EntityBisonSaddle saddle) {
+		saddlesRef.get(index).setEntity(saddle);
 	}
 	
 	@Override
