@@ -27,6 +27,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 /**
@@ -65,13 +66,19 @@ public class EntityBisonSaddle extends AvatarEntity {
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		bisonAttr.save(nbt);
-		System.out.println("A saddle exists; tied to " + getBison());
 	}
 	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		System.out.println("Saddle " + getAvId() + " reporting for duty");
+		if (worldObj.isRemote) {
+			worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 0, 0, 0);
+		}
+		
+		if (!worldObj.isRemote && getBison() == null) {
+			setDead();
+		}
+		
 	}
 	
 	@Nullable
