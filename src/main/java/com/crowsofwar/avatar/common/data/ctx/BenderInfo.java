@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.data.ctx;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.Entity;
@@ -66,11 +68,14 @@ public class BenderInfo {
 		return player;
 	}
 	
+	@Nullable
 	public UUID getId() {
 		return id;
 	}
 	
 	public Bender find(World world) {
+		if (id == null) return null;
+		
 		if (player) {
 			return new PlayerBender(AccountUUIDs.findEntityFromUUID(world, id));
 		} else {
@@ -89,11 +94,13 @@ public class BenderInfo {
 	 */
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setBoolean("Player", player);
-		nbt.setUniqueId("Id", id);
+		nbt.setUniqueId("Id", id == null ? new UUID(0, 0) : id);
 	}
 	
 	public static BenderInfo readFromNbt(NBTTagCompound nbt) {
-		return new BenderInfo(nbt.getBoolean("Player"), nbt.getUniqueId("Id"));
+		UUID id = nbt.getUniqueId("Id");
+		id = id.getLeastSignificantBits() == 0 && id.getMostSignificantBits() == 0 ? null : id;
+		return new BenderInfo(nbt.getBoolean("Player"), id);
 	}
 	
 }
