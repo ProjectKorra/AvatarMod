@@ -136,6 +136,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			@Nullable IEntityLivingData livingdata) {
 		
 		originalPos = Vector.getEntityPos(this);
+		
+		for (int i = 0; i < MAX_SADDLES; i++) {
+			EntityBisonSaddle saddle = new EntityBisonSaddle(worldObj);
+			saddle.setBison(this);
+			worldObj.spawnEntityInWorld(saddle);
+			saddlesRef.get(i).setEntity(saddle);
+		}
+		
 		return super.onInitialSpawn(difficulty, livingdata);
 		
 	}
