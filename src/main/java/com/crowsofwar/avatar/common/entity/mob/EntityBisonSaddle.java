@@ -57,13 +57,21 @@ public class EntityBisonSaddle extends AvatarEntity {
 	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
 		bisonAttr.load(nbt);
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
 		bisonAttr.save(nbt);
 		System.out.println("A saddle exists; tied to " + getBison());
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		System.out.println("Saddle " + getAvId() + " reporting for duty");
 	}
 	
 	@Nullable

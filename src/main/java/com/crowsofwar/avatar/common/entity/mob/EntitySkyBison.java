@@ -98,7 +98,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		saddlesRef = new ArrayList<>();
 		for (int i = 0; i < MAX_SADDLES; i++) {
 			saddlesRef.add(new SyncableEntityReference(this, SYNC_SADDLES[i]));
-			saddlesRef.get(i).allowNullSaving();
 		}
 		setSize(width, height);
 	}
@@ -144,8 +143,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		for (int i = 0; i < MAX_SADDLES; i++) {
 			EntityBisonSaddle saddle = new EntityBisonSaddle(worldObj);
 			saddle.setBison(this);
+			saddle.setPosition(posX, posY, posZ);
+			System.out.println("SPAWN");
 			worldObj.spawnEntityInWorld(saddle);
 			saddlesRef.get(i).setEntity(saddle);
+			
 		}
 		
 		return super.onInitialSpawn(difficulty, livingdata);
@@ -248,9 +250,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 				double dx = Math.sin(angle) * 3;
 				double dz = Math.cos(angle) * 3;
 				
-				saddle.setPosition(centerX + dx, centerY, centerZ + dz);
-				
-				System.out.println("Update saddle " + i);
+				// saddle.setPosition(centerX + dx, centerY, centerZ + dz);
+				saddle.setPosition(posX, posY + 5, posZ);
 				
 			}
 			
