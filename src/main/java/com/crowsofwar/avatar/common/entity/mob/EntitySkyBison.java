@@ -20,6 +20,8 @@ import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -60,13 +62,29 @@ import net.minecraft.world.World;
  */
 public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
+	/**
+	 * Max number of saddles that can be attached to this bison
+	 */
+	public static final int MAX_SADDLES = 4;
+	
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_BENDER);
+	
+	private static final DataParameter<BenderInfo>[] SYNC_SADDLES;
 	
 	private static final DataParameter<Boolean> SYNC_SITTING = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
 	
+	static {
+		SYNC_SADDLES = new DataParameter[MAX_SADDLES];
+		for (int i = 0; i < SYNC_SADDLES.length; i++) {
+			SYNC_SADDLES[i] = EntityDataManager.createKey(EntitySkyBison.class,
+					AvatarDataSerializers.SERIALIZER_BENDER);
+		}
+	}
+	
 	private final OwnerAttribute ownerAttr;
+	private final List<OwnerAttribute> saddlesAttr;
 	private Vector originalPos;
 	
 	/**
@@ -76,6 +94,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super(world);
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		saddlesAttr = new ArrayList<>();
+		for (int i = 0; i < MAX_SADDLES; i++) {
+			saddlesAttr.add(new OwnerAttribute(this, SYNC_SADDLES[i]));
+		}
+		setSize(width, height);
 	}
 	
 	@Override
