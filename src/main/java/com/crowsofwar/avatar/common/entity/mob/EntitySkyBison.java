@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static java.lang.Math.toRadians;
 import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
@@ -165,6 +166,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 	}
 	
+	// ================================================================================
+	// GETTERS AND SETTERS
+	// ================================================================================
+	
 	public Vector getOriginalPos() {
 		return originalPos;
 	}
@@ -208,6 +213,35 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	public void setSaddle(int index, @Nullable EntityBisonSaddle saddle) {
 		saddlesRef.get(index).setEntity(saddle);
+	}
+	
+	// ================================================================================
+	// ENTITY LOGIC
+	// ================================================================================
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		
+		double centerX = posX;
+		double centerY = posY + height / 2;
+		double centerZ = posZ;
+		
+		for (int i = 0; i < MAX_SADDLES; i++) {
+			
+			EntityBisonSaddle saddle = saddlesRef.get(i).getEntity();
+			if (saddle != null) {
+				
+				double angle = toRadians(this.rotationYaw) + (Math.PI * 2) * (i / MAX_SADDLES);
+				double dx = Math.sin(angle) * 3;
+				double dz = Math.cos(angle) * 3;
+				
+				saddle.setPosition(centerX + dx, centerY, centerZ + dz);
+				
+			}
+			
+		}
+		
 	}
 	
 	@Override

@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import javax.annotation.Nullable;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.CachedEntity;
@@ -72,6 +74,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 		allowNullSaving = true;
 	}
 	
+	@Nullable
 	public T getEntity() {
 		// Cache may have an incorrect id; other side could have changed
 		// dataManager id, but not the cached entity id.
@@ -79,7 +82,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 		return cache.getEntity(using.worldObj);
 	}
 	
-	public void setEntity(T entity) {
+	public void setEntity(@Nullable T entity) {
 		cache.setEntity(entity);
 		using.getDataManager().set(sync, cache.getEntityId());
 	}
