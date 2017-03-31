@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
@@ -77,7 +79,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super(world);
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		setSize(width, height);
+		setSize(3, 2);
 	}
 	
 	@Override
@@ -216,12 +218,23 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	@Override
 	public void updatePassenger(Entity passenger) {
-		if (isPassenger(passenger)) {
+		
+		int index = getPassengers().indexOf(passenger);
+		
+		if (index > -1) {
 			
-			passenger.setPosition(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(),
-					this.posZ);
+			double angle = index * Math.PI;
+			
+			passenger.setPosition(posX + sin(angle), posY + getMountedYOffset() + passenger.getYOffset(),
+					posZ + cos(angle));
 			
 		}
+		
+	}
+	
+	@Override
+	protected boolean canFitPassenger(Entity passenger) {
+		return getPassengers().size() < 2;
 	}
 	
 	// ================================================================================
