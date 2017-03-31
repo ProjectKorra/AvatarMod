@@ -37,6 +37,7 @@ import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.MoverType;
@@ -277,13 +278,28 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			return true;
 		}
 		
+		if (stack.getItem() == Items.POTATO) {
+			player.startRiding(this);
+			return true;
+		}
+		
 		if (stack == field_190927_a && hand == EnumHand.MAIN_HAND) {
 			setSitting(!isSitting());
-			System.out.println("Set sitting " + isSitting());
+			return true;
 		}
 		
 		return super.processInteract(player, hand);
 		
+	}
+	
+	@Override
+	public void updatePassenger(Entity passenger) {
+		if (isPassenger(passenger)) {
+			
+			passenger.setPosition(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(),
+					this.posZ);
+			
+		}
 	}
 	
 	// ================================================================================
