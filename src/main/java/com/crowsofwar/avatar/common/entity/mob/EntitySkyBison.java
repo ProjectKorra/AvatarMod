@@ -16,13 +16,10 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static java.lang.Math.toRadians;
 import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -31,7 +28,6 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
-import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
@@ -65,28 +61,13 @@ import net.minecraft.world.World;
  */
 public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
-	/**
-	 * Max number of saddles that can be attached to this bison
-	 */
-	public static final int MAX_SADDLES = 4;
-	
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_BENDER);
-	
-	private static final DataParameter<Integer>[] SYNC_SADDLES;
 	
 	private static final DataParameter<Boolean> SYNC_SITTING = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
 	
-	static {
-		SYNC_SADDLES = new DataParameter[MAX_SADDLES];
-		for (int i = 0; i < SYNC_SADDLES.length; i++) {
-			SYNC_SADDLES[i] = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.VARINT);
-		}
-	}
-	
 	private final OwnerAttribute ownerAttr;
-	private final List<SyncableEntityReference<EntityBisonSaddle>> saddlesRef;
 	private Vector originalPos;
 	
 	/**
@@ -96,10 +77,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super(world);
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		saddlesRef = new ArrayList<>();
-		for (int i = 0; i < MAX_SADDLES; i++) {
-			saddlesRef.add(new SyncableEntityReference(this, SYNC_SADDLES[i]));
-		}
 		setSize(width, height);
 	}
 	
@@ -107,9 +84,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_SITTING, false);
-		for (int i = 0; i < MAX_SADDLES; i++) {
-			dataManager.register(SYNC_SADDLES[i], -1);
-		}
 	}
 	
 	@Override
@@ -140,17 +114,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			@Nullable IEntityLivingData livingdata) {
 		
 		originalPos = Vector.getEntityPos(this);
-		
-		for (int i = 0; i < MAX_SADDLES; i++) {
-			EntityBisonSaddle saddle = new EntityBisonSaddle(worldObj);
-			saddle.setBison(this);
-			saddle.setPosition(posX, posY, posZ);
-			worldObj.spawnEntityInWorld(saddle);
-			saddlesRef.get(i).setEntity(saddle);
-			System.out.println("Spawn wsaddle " + i);
-			
-		}
-		
 		return super.onInitialSpawn(difficulty, livingdata);
 		
 	}
@@ -161,11 +124,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		originalPos = Vector.readFromNbt(nbt);
 		ownerAttr.load(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
-		
-		for (SyncableEntityReference<EntityBisonSaddle> ref : saddlesRef) {
-			ref.readFromNBT(nbt);
-		}
-		
 	}
 	
 	@Override
@@ -174,11 +132,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		originalPos.writeToNbt(nbt);
 		ownerAttr.save(nbt);
 		nbt.setBoolean("Sitting", isSitting());
-		
-		for (SyncableEntityReference<EntityBisonSaddle> ref : saddlesRef) {
-			ref.writeToNBT(nbt);
-		}
-		
 	}
 	
 	// ================================================================================
@@ -220,16 +173,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.set(SYNC_SITTING, sitting);
 	}
 	
-	@Nullable
-	public EntityBisonSaddle getSaddle(int index) {
-		SyncableEntityReference<EntityBisonSaddle> attr = saddlesRef.get(index);
-		return attr.getEntity();
-	}
-	
-	public void setSaddle(int index, @Nullable EntityBisonSaddle saddle) {
-		saddlesRef.get(index).setEntity(saddle);
-	}
-	
 	// ================================================================================
 	// ENTITY LOGIC
 	// ================================================================================
@@ -237,27 +180,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
-		double centerX = posX;
-		double centerY = posY + height / 2;
-		double centerZ = posZ;
-		
-		for (int i = 0; i < MAX_SADDLES; i++) {
-			
-			EntityBisonSaddle saddle = saddlesRef.get(i).getEntity();
-			if (saddle != null) {
-				
-				double angle = toRadians(this.rotationYaw) + (Math.PI * 2) * (1.0 * i / MAX_SADDLES);
-				double dx = Math.sin(angle) * 3;
-				double dz = Math.cos(angle) * 3;
-				
-				saddle.setPosition(centerX + dx, centerY, centerZ + dz);
-				// System.out.println(1.0 * i / MAX_SADDLES);
-				
-			}
-			
-		}
-		
 	}
 	
 	@Override

@@ -53,7 +53,6 @@ import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
-import com.crowsofwar.avatar.common.entity.mob.EntityBisonSaddle;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -173,7 +172,6 @@ public class AvatarMod {
 		registerEntity(EntityAirBubble.class, "AirBubble");
 		registerEntity(EntityHumanBender.class, "HumanBender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
-		registerEntity(EntityBisonSaddle.class, "BisonSaddle");
 		proxy.init();
 	}
 	
