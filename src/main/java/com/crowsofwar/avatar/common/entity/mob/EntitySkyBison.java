@@ -164,7 +164,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	public boolean hasOwner() {
-		System.out.println(ownerAttr.getOwnerInfo().getId());
 		return getOwnerId() != null;
 	}
 	
@@ -199,6 +198,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		condition.onUpdate();
 		if (condition.getFoodPoints() == 0) {
 			setSitting(true);
+		} else if (!hasOwner()) {
+			setSitting(false);
 		}
 	}
 	

@@ -46,7 +46,10 @@ public class AnimalCondition {
 		float distance = animal.distanceWalkedModified;
 		float diff = distance - lastDistance;
 		addHunger(diff);
-		System.out.println("food points currently : " + getFoodPoints());
+		
+		if (animal.ticksExisted % 60 == 0 && animal.worldObj.isRemote) {
+			System.out.println("food points currently : " + getFoodPoints());
+		}
 		
 		lastDistance = distance;
 	}
