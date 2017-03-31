@@ -47,9 +47,10 @@ public class SkyBisonMoveHelper extends EntityMoveHelper {
 				double distance = MathHelper.sqrt_double(x * x + y * y + z * z);
 				
 				if (entity.isSitting() || isNotColliding(this.posX, this.posY, this.posZ, distance)) {
-					this.entity.motionX += x / distance * 0.1;
-					this.entity.motionY += y / distance * 0.1;
-					this.entity.motionZ += z / distance * 0.1;
+					double mult = entity.getFlySpeedMultiplier();
+					this.entity.motionX += x / distance * 0.1 * mult;
+					this.entity.motionY += y / distance * 0.1 * mult;
+					this.entity.motionZ += z / distance * 0.1 * mult;
 				} else {
 					this.action = EntityMoveHelper.Action.WAIT;
 				}

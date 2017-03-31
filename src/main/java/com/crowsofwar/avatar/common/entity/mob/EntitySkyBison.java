@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
+import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
@@ -44,6 +45,7 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -69,8 +71,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<Boolean> SYNC_SITTING = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
 	
+	private static final DataParameter<Float> SYNC_FOOD = EntityDataManager.createKey(EntitySkyBison.class,
+			DataSerializers.FLOAT);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
+	private final AnimalCondition condition;
 	
 	/**
 	 * @param world
@@ -79,6 +85,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super(world);
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		condition = new AnimalCondition(this, 30, SYNC_FOOD);
 		setSize(3, 2);
 	}
 	
@@ -86,6 +93,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_SITTING, false);
+		dataManager.register(SYNC_FOOD, 20f);
 	}
 	
 	@Override
@@ -126,6 +134,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		originalPos = Vector.readFromNbt(nbt);
 		ownerAttr.load(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
+		condition.readFromNbt(nbt);
 	}
 	
 	@Override
@@ -134,6 +143,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		originalPos.writeToNbt(nbt);
 		ownerAttr.save(nbt);
 		nbt.setBoolean("Sitting", isSitting());
+		condition.writeToNbt(nbt);
 	}
 	
 	// ================================================================================
@@ -175,6 +185,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.set(SYNC_SITTING, sitting);
 	}
 	
+	public double getFlySpeedMultiplier() {
+		return condition.getSpeedMultiplier();
+	}
+	
 	// ================================================================================
 	// ENTITY LOGIC
 	// ================================================================================
@@ -182,6 +196,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		condition.onUpdate();
+		if (condition.getFoodPoints() == 0) {
+			setSitting(true);
+		}
 	}
 	
 	@Override
@@ -195,20 +213,28 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			return true;
 		}
 		
-		if (stack.getItem() == Items.CARROT && hasOwner()) {
+		if (stack.getItem() == Items.REDSTONE && hasOwner()) {
 			playTameEffect(false);
 			System.out.println("Untame");
 			setOwnerId(null);
 			return true;
 		}
 		
-		if (stack.getItem() == Items.POTATO) {
+		if (stack == field_190927_a && hand == EnumHand.MAIN_HAND && !player.isSneaking()) {
 			player.startRiding(this);
 			return true;
 		}
 		
-		if (stack == field_190927_a && hand == EnumHand.MAIN_HAND) {
+		if (stack == field_190927_a && hand == EnumHand.MAIN_HAND && player.isSneaking()
+				&& getOwner() == player) {
 			setSitting(!isSitting());
+			return true;
+		}
+		
+		if (stack.getItem() instanceof ItemFood && !worldObj.isRemote) {
+			System.out.println("Consume some food!");
+			ItemFood food = (ItemFood) stack.getItem();
+			condition.addFood(food.getHealAmount(stack));
 			return true;
 		}
 		
