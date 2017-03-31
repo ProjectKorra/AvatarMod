@@ -280,10 +280,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		return getControllingPassenger() != null;
 	}
 	
-	// Note: forward parameter is ignored, since it doesn't take into account
-	// the driver's rotationPitch
 	@Override
 	public void moveEntityWithHeading(float strafe, float forward) {
+		
 		if (this.isBeingRidden() && this.canBeSteered()) {
 			EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 			
@@ -306,8 +305,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 						.getAttributeValue();
 				setAIMoveSpeed(moveAttribute * condition.getSpeedMultiplier());
 				
-				moveEntityWithHeadingFlying(strafe, forward);
-				motionY += look.y() * 0.02;
+				moveEntityWithHeadingFlying(strafe, forward * driver.moveForward);
+				motionY += look.y() * 0.02 * driver.moveForward;
 				
 			} else if (driver instanceof EntityPlayer) {
 				this.motionX = 0.0D;
@@ -330,6 +329,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			this.jumpMovementFactor = 0.02F;
 			moveEntityWithHeadingFlying(strafe, forward);
 		}
+		
 	}
 	
 	// ================================================================================
