@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
 
@@ -197,9 +196,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super.onUpdate();
 		condition.onUpdate();
 		if (condition.getFoodPoints() == 0) {
-			setSitting(true);
+			// setSitting(true);
 		} else if (!hasOwner()) {
-			setSitting(false);
+			// setSitting(false);
 		}
 	}
 	
@@ -221,21 +220,20 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			return true;
 		}
 		
-		if (stack == field_190927_a && hand == EnumHand.MAIN_HAND && !player.isSneaking()) {
+		if (stack.getItem() instanceof ItemFood) {
+			System.out.println("Consume some food!");
+			ItemFood food = (ItemFood) stack.getItem();
+			condition.addFood(food.getHealAmount(stack));
+			return true;
+		}
+		
+		if (!player.isSneaking()) {
 			player.startRiding(this);
 			return true;
 		}
 		
-		if (stack == field_190927_a && hand == EnumHand.MAIN_HAND && player.isSneaking()
-				&& getOwner() == player) {
+		if (player.isSneaking() && getOwner() == player) {
 			setSitting(!isSitting());
-			return true;
-		}
-		
-		if (stack.getItem() instanceof ItemFood && !worldObj.isRemote) {
-			System.out.println("Consume some food!");
-			ItemFood food = (ItemFood) stack.getItem();
-			condition.addFood(food.getHealAmount(stack));
 			return true;
 		}
 		
@@ -262,6 +260,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	protected boolean canFitPassenger(Entity passenger) {
 		return getPassengers().size() < 2;
+	}
+	
+	@Override
+	public Entity getControllingPassenger() {
+		if (getPassengers().contains(getOwner())) {
+			return getOwner();
+		} else {
+			return null;
+		}
 	}
 	
 	// ================================================================================
