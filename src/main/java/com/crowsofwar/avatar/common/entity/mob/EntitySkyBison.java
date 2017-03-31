@@ -245,11 +245,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public void updatePassenger(Entity passenger) {
 		
-		int index = getPassengers().indexOf(passenger);
+		double index = getPassengers().indexOf(passenger);
 		
 		if (index > -1) {
 			
-			double angle = -toRadians(rotationYaw) + (index + 0.5) * Math.PI;
+			if (passenger == getControllingPassenger()) {
+				index = -0.5;
+			}
+			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
 			
 			passenger.setPosition(posX + sin(angle) * 1.5,
 					posY + getMountedYOffset() + passenger.getYOffset(), posZ + cos(angle) * 1.5);
@@ -260,7 +263,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	@Override
 	protected boolean canFitPassenger(Entity passenger) {
-		return getPassengers().size() < 2;
+		return getPassengers().size() < 3;
 	}
 	
 	@Override
