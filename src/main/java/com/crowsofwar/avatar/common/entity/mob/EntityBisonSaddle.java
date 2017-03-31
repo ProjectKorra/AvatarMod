@@ -71,6 +71,11 @@ public class EntityBisonSaddle extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		
+		motionX = 0;
+		motionY = 0;
+		motionZ = 0;
+		
 		if (worldObj.isRemote) {
 			worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 0, 0, 0);
 		}
@@ -94,5 +99,8 @@ public class EntityBisonSaddle extends AvatarEntity {
 	public void setBison(@Nullable EntitySkyBison bison) {
 		bisonAttr.setOwner(bison);
 	}
+	
+	@Override
+	protected void updateHidden() {}
 	
 }

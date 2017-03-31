@@ -146,6 +146,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			saddle.setPosition(posX, posY, posZ);
 			worldObj.spawnEntityInWorld(saddle);
 			saddlesRef.get(i).setEntity(saddle);
+			System.out.println("Spawn wsaddle " + i);
 			
 		}
 		
@@ -245,11 +246,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			EntityBisonSaddle saddle = saddlesRef.get(i).getEntity();
 			if (saddle != null) {
 				
-				double angle = toRadians(this.rotationYaw) + (Math.PI * 2) * (i / MAX_SADDLES);
+				double angle = toRadians(this.rotationYaw) + (Math.PI * 2) * (1.0 * i / MAX_SADDLES);
 				double dx = Math.sin(angle) * 3;
 				double dz = Math.cos(angle) * 3;
 				
 				saddle.setPosition(centerX + dx, centerY, centerZ + dz);
+				// System.out.println(1.0 * i / MAX_SADDLES);
 				
 			}
 			
