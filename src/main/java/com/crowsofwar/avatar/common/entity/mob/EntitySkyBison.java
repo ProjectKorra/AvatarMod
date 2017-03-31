@@ -195,10 +195,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		if (getControllingPassenger() != null) {
-			// rotationYaw = getControllingPassenger().rotationYaw % 360;
-		}
-		
 		condition.onUpdate();
 		if (condition.getFoodPoints() == 0) {
 			// setSitting(true);
@@ -281,18 +277,23 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		return getControllingPassenger() != null;
 	}
 	
+	// Note: forward parameter is ignored, since it doesn't take into account
+	// the driver's rotationPitch
 	@Override
 	public void moveEntityWithHeading(float strafe, float forward) {
 		if (this.isBeingRidden() && this.canBeSteered()) {
-			EntityLivingBase entitylivingbase = (EntityLivingBase) this.getControllingPassenger();
-			this.rotationYaw = entitylivingbase.rotationYaw;
+			EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
+			
+			Vector look = Vector.getLookRectangular(driver);
+			forward = (float) look.copy().setY(0).magnitude();
+			
+			this.rotationYaw = driver.rotationYaw;
 			this.prevRotationYaw = this.rotationYaw;
-			this.rotationPitch = entitylivingbase.rotationPitch * 0.5F;
+			this.rotationPitch = driver.rotationPitch * 0.5F;
 			this.setRotation(this.rotationYaw, this.rotationPitch);
 			this.renderYawOffset = this.rotationYaw;
 			this.rotationYawHead = this.renderYawOffset;
-			strafe = entitylivingbase.moveStrafing * 0.5F;
-			forward = entitylivingbase.moveForward;
+			strafe = driver.moveStrafing * 0.5F;
 			
 			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
 			
@@ -303,8 +304,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 				setAIMoveSpeed(moveAttribute * condition.getSpeedMultiplier());
 				
 				moveEntityWithHeadingFlying(strafe, forward);
+				motionY += look.y() * 0.02;
 				
-			} else if (entitylivingbase instanceof EntityPlayer) {
+			} else if (driver instanceof EntityPlayer) {
 				this.motionX = 0.0D;
 				this.motionY = 0.0D;
 				this.motionZ = 0.0D;
