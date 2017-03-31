@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
 
 /**
  * 
@@ -26,30 +27,36 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class AnimalCondition {
 	
+	private final DataParameter<Float> syncFood;
 	private final EntityCreature animal;
+	private final float maxFoodPoints;
 	
 	private float lastDistance;
 	
-	private float maxFoodPoints;
-	private float foodPoints;
-	
-	public AnimalCondition(EntityCreature animal, float maxFoodPoints) {
+	public AnimalCondition(EntityCreature animal, float maxFoodPoints, DataParameter<Float> syncFood) {
 		this.animal = animal;
+		this.syncFood = syncFood;
+		this.maxFoodPoints = maxFoodPoints;
+		
 		lastDistance = animal.distanceWalkedModified;
-		foodPoints = maxFoodPoints;
+		
 	}
 	
 	public void onUpdate() {
 		float distance = animal.distanceWalkedModified;
 		float diff = distance - lastDistance;
 		addHunger(diff);
-		System.out.println("food points currently : " + foodPoints);
+		System.out.println("food points currently : " + getFoodPoints());
 		
 		lastDistance = distance;
 	}
 	
-	public float getSpeedMultiplier() {
-		
+	public float getFoodPoints() {
+		return animal.getDataManager().get(syncFood);
+	}
+	
+	public void setFoodPoints(float points) {
+		animal.getDataManager().set(syncFood, points);
 	}
 	
 	/**
@@ -66,6 +73,7 @@ public class AnimalCondition {
 	 * Adds food points to the animal (adding to foodPoints).
 	 */
 	public void addFood(float food) {
+		float foodPoints = getFoodPoints();
 		foodPoints += food;
 		if (foodPoints < 0) {
 			foodPoints = 0;
@@ -73,14 +81,19 @@ public class AnimalCondition {
 		if (foodPoints > maxFoodPoints) {
 			foodPoints = maxFoodPoints;
 		}
+		setFoodPoints(foodPoints);
+	}
+	
+	public float getSpeedMultiplier() {
+		return 0.6f + 0.4f * getFoodPoints() / maxFoodPoints;
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
-		
+		nbt.setFloat("FoodPoints", getFoodPoints());
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
-		
+		setFoodPoints(nbt.getFloat("FoodPoints"));
 	}
 	
 }
