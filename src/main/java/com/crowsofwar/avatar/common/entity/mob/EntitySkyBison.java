@@ -258,8 +258,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 					posY + getMountedYOffset() + passenger.getYOffset(), posZ + cos(angle) * 1.5);
 			
 			if (passenger != getControllingPassenger()) {
-				passenger.rotationYaw = this.rotationYaw;
-				passenger.rotationPitch = this.rotationPitch;
+				if (motionX != 0 || motionY != 0 || motionZ != 0) {
+					passenger.rotationYaw = this.rotationYaw;
+					passenger.rotationPitch = this.rotationPitch;
+				}
 			}
 			
 		}
