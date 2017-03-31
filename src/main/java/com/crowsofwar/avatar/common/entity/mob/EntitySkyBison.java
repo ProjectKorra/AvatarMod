@@ -16,8 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
 
@@ -254,7 +253,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		if (index > -1) {
 			
-			double angle = -Math.toRadians(rotationYaw) + index * Math.PI;
+			double angle = -toRadians(rotationYaw) + (index + 0.5) * Math.PI;
 			
 			passenger.setPosition(posX + sin(angle) * 1.5,
 					posY + getMountedYOffset() + passenger.getYOffset(), posZ + cos(angle) * 1.5);
