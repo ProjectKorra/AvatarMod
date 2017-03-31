@@ -257,6 +257,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			passenger.setPosition(posX + sin(angle) * 1.5,
 					posY + getMountedYOffset() + passenger.getYOffset(), posZ + cos(angle) * 1.5);
 			
+			if (passenger != getControllingPassenger()) {
+				passenger.rotationYaw = this.rotationYaw;
+				passenger.rotationPitch = this.rotationPitch;
+			}
+			
 		}
 		
 	}
@@ -284,10 +289,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public void moveEntityWithHeading(float strafe, float forward) {
 		
 		if (this.isBeingRidden() && this.canBeSteered()) {
+			
 			EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 			
 			Vector look = Vector.getLookRectangular(driver);
 			forward = (float) look.copy().setY(0).magnitude();
+			
+			float speedMult = condition.getSpeedMultiplier() * driver.moveForward * 2;
 			
 			this.rotationYaw = driver.rotationYaw;
 			this.prevRotationYaw = this.rotationYaw;
@@ -305,8 +313,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 						.getAttributeValue();
 				setAIMoveSpeed(moveAttribute * condition.getSpeedMultiplier());
 				
-				moveEntityWithHeadingFlying(strafe, forward * driver.moveForward);
-				motionY += look.y() * 0.02 * driver.moveForward;
+				moveEntityWithHeadingFlying(strafe, forward * speedMult);
+				motionY += look.y() * 0.02 * speedMult;
 				
 			} else if (driver instanceof EntityPlayer) {
 				this.motionX = 0.0D;
