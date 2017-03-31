@@ -36,6 +36,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.MoverType;
@@ -194,6 +195,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		
+		if (getControllingPassenger() != null) {
+			// rotationYaw = getControllingPassenger().rotationYaw % 360;
+		}
+		
 		condition.onUpdate();
 		if (condition.getFoodPoints() == 0) {
 			// setSitting(true);
@@ -248,10 +254,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		if (index > -1) {
 			
-			double angle = index * Math.PI;
+			double angle = -Math.toRadians(rotationYaw) + index * Math.PI;
 			
-			passenger.setPosition(posX + sin(angle), posY + getMountedYOffset() + passenger.getYOffset(),
-					posZ + cos(angle));
+			passenger.setPosition(posX + sin(angle) * 1.5,
+					posY + getMountedYOffset() + passenger.getYOffset(), posZ + cos(angle) * 1.5);
 			
 		}
 		
@@ -271,6 +277,57 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		}
 	}
 	
+	@Override
+	public boolean canBeSteered() {
+		return getControllingPassenger() != null;
+	}
+	
+	@Override
+	public void moveEntityWithHeading(float strafe, float forward) {
+		if (this.isBeingRidden() && this.canBeSteered()) {
+			EntityLivingBase entitylivingbase = (EntityLivingBase) this.getControllingPassenger();
+			this.rotationYaw = entitylivingbase.rotationYaw;
+			this.prevRotationYaw = this.rotationYaw;
+			this.rotationPitch = entitylivingbase.rotationPitch * 0.5F;
+			this.setRotation(this.rotationYaw, this.rotationPitch);
+			this.renderYawOffset = this.rotationYaw;
+			this.rotationYawHead = this.renderYawOffset;
+			strafe = entitylivingbase.moveStrafing * 0.5F;
+			forward = entitylivingbase.moveForward;
+			
+			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
+			
+			if (this.canPassengerSteer()) {
+				
+				float moveAttribute = (float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
+						.getAttributeValue();
+				setAIMoveSpeed(moveAttribute * condition.getSpeedMultiplier());
+				
+				moveEntityWithHeadingFlying(strafe, forward);
+				
+			} else if (entitylivingbase instanceof EntityPlayer) {
+				this.motionX = 0.0D;
+				this.motionY = 0.0D;
+				this.motionZ = 0.0D;
+			}
+			
+			this.prevLimbSwingAmount = this.limbSwingAmount;
+			double moveX = this.posX - this.prevPosX;
+			double moveZ = this.posZ - this.prevPosZ;
+			float moveSinceLastTick = MathHelper.sqrt_double(moveX * moveX + moveZ * moveZ) * 4.0F;
+			
+			if (moveSinceLastTick > 1.0F) {
+				moveSinceLastTick = 1.0F;
+			}
+			
+			this.limbSwingAmount += (moveSinceLastTick - this.limbSwingAmount) * 0.4F;
+			this.limbSwing += this.limbSwingAmount;
+		} else {
+			this.jumpMovementFactor = 0.02F;
+			moveEntityWithHeadingFlying(strafe, forward);
+		}
+	}
+	
 	// ================================================================================
 	// COPIED FROM ENTITYFLYING
 	// ================================================================================
@@ -281,8 +338,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {}
 	
-	@Override
-	public void moveEntityWithHeading(float strafe, float forward) {
+	private void moveEntityWithHeadingFlying(float strafe, float forward) {
 		if (this.isInWater()) {
 			this.moveRelative(strafe, forward, 0.02F);
 			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
