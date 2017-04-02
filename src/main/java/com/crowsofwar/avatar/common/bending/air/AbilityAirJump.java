@@ -17,11 +17,15 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.bending.StatusControl.AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
  * 
@@ -42,9 +46,17 @@ public class AbilityAirJump extends AirAbility {
 		
 		BendingData data = ctx.getData();
 		
-		if (!data.hasStatusControl(StatusControl.AIR_JUMP) && ctx.consumeChi(STATS_CONFIG.chiAirJump)) {
+		if (!data.hasStatusControl(AIR_JUMP) && ctx.consumeChi(STATS_CONFIG.chiAirJump)) {
 			
-			data.addStatusControl(StatusControl.AIR_JUMP);
+			data.addStatusControl(AIR_JUMP);
+			if (data.hasTickHandler(TickHandler.AIR_PARTICLE_SPAWNER)) {
+				StatusControl sc = AIR_JUMP;
+				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
+				if (AIR_JUMP.execute(
+						new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+					data.removeStatusControl(AIR_JUMP);
+				}
+			}
 			
 		}
 	}
