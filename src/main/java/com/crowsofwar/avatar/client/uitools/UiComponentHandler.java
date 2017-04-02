@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
@@ -79,6 +80,7 @@ public class UiComponentHandler {
 			
 			GuiUtils.drawHoveringText(tooltip, (int) mouseX, (int) mouseY, width, height, -1,
 					getMinecraft().fontRendererObj);
+			GlStateManager.disableLighting();
 			
 		}
 		
