@@ -105,7 +105,7 @@ public class EntityFlames extends AvatarEntity {
 			velocity().set(velocity().reflect(new Vector(sideHit)).times(0.5));
 			
 			// Try to light firest
-			if (lightsFires && sideHit != EnumFacing.DOWN) {
+			if (lightsFires && sideHit != EnumFacing.DOWN && !worldObj.isRemote) {
 				
 				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(),
 						-sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());

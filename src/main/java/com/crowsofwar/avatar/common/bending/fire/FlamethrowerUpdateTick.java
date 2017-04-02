@@ -65,7 +65,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			flamesPerSecond = 8;
 		}
 		
-		if (entity.ticksExisted % 20 < flamesPerSecond) {
+		if (!entity.worldObj.isRemote && Math.random() < flamesPerSecond / 20.0) {
 			
 			Chi chi = data.chi();
 			float required = STATS_CONFIG.chiFlamethrowerSecond / 20f;
@@ -112,8 +112,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				flames.setLightsFires(lightsFires);
 				world.spawnEntityInWorld(flames);
 				
-				if (entity.ticksExisted % 3 == 0) world.playSound(null, entity.getPosition(),
-						SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.2f, 0.8f);
+				if (entity.ticksExisted % 2 == 0) {
+					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
+							SoundCategory.PLAYERS, 0.2f, 0.8f);
+				}
 				
 			} else {
 				return true;
