@@ -63,7 +63,7 @@ public class UiComponentHandler {
 			Measurement coords = component.coordinates();
 			if (mx2 >= coords.xInPixels() && mx2 <= coords.xInPixels() + component.width()) {
 				if (my2 >= coords.yInPixels() && my2 <= coords.yInPixels() + component.height()) {
-					List<String> result = component.getTooltip(mouseX, mouseY);
+					List<String> result = component.getTooltip(mx2, my2);
 					if (result != null) {
 						tooltip = result;
 					}
@@ -77,8 +77,8 @@ public class UiComponentHandler {
 			int width = screenWidth() / scaleFactor();
 			int height = screenHeight() / scaleFactor();
 			
-			GuiUtils.drawHoveringText(Arrays.asList("Hello", "Line 2", "aas"), (int) mouseX, (int) mouseY,
-					width, height, -1, getMinecraft().fontRendererObj);
+			GuiUtils.drawHoveringText(tooltip, (int) mouseX, (int) mouseY, width, height, -1,
+					getMinecraft().fontRendererObj);
 			
 		}
 		

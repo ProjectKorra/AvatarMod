@@ -49,7 +49,7 @@ public class ComponentAbilityTree extends UiComponent {
 	
 	@Override
 	protected float componentWidth() {
-		return 64 + 30 + 24;
+		return 64 + 30 + 24 - 1;
 	}
 	
 	@Override
@@ -155,9 +155,26 @@ public class ComponentAbilityTree extends UiComponent {
 	
 	@Override
 	public List<String> getTooltip(float mouseX, float mouseY) {
+		
+		float maxX = coordinates().xInPixels() + width();
+		float minX = maxX - 18 * scaleFactor();
+		
+		float minY1 = coordinates().yInPixels();
+		float maxY1 = minY1 + 18 * scaleFactor();
+		float minY2 = coordinates().yInPixels() + height() - 18 * scaleFactor();
+		float maxY2 = minY2 + 18 * scaleFactor();
+		
 		List<String> lines = new ArrayList<>();
 		lines.add("Hello!");
 		lines.add("Description");
+		
+		if (mouseX >= minX && mouseX <= maxX && mouseY >= minY1 && mouseY <= maxY1) {
+			lines.add("level1");
+		}
+		if (mouseX >= minX && mouseX <= maxX && mouseY >= minY2 && mouseY <= maxY2) {
+			lines.add("level2");
+		}
+		
 		return lines;
 	}
 	
