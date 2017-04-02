@@ -174,4 +174,9 @@ public class EntityWall extends AvatarEntity {
 		setHidden(false);
 	}
 	
+	@Override
+	public boolean tryDestroy() {
+		return false;
+	}
+	
 }

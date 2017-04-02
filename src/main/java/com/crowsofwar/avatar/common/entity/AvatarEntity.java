@@ -257,6 +257,16 @@ public abstract class AvatarEntity extends Entity {
 	public void onCollideWithSolid() {}
 	
 	/**
+	 * Called when another entity destroys this AvatarEntity. If it is
+	 * considered to be destroyable, this is where things should be "cleaned up"
+	 * (eg remove status control). Returns true if it was destroyed. Some
+	 * entities are too strong to destroy, such as an air bubble.
+	 */
+	public boolean tryDestroy() {
+		return true;
+	}
+	
+	/**
 	 * Break the block at the given position, playing sound/particles, and
 	 * dropping item
 	 */

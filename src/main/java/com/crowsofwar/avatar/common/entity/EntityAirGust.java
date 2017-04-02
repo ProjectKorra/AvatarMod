@@ -142,6 +142,12 @@ public class EntityAirGust extends EntityArc {
 				
 				setDead();
 				
+				if (entity instanceof AvatarEntity) {
+					if (((AvatarEntity) entity).tryDestroy()) {
+						entity.setDead();
+					}
+				}
+				
 			}
 		}
 		

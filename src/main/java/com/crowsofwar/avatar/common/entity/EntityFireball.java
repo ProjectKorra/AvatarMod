@@ -170,4 +170,10 @@ public class EntityFireball extends AvatarEntity {
 		}
 	}
 	
+	@Override
+	public boolean tryDestroy() {
+		removeStatCtrl();
+		return true;
+	}
+	
 }
