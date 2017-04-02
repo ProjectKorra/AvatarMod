@@ -68,6 +68,11 @@ public class AbilityAirGust extends AirAbility {
 	}
 	
 	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return ctx.getLevel() >= 1 ? 30 : 60;
+	}
+	
+	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirGust(this, entity, bender);
 	}

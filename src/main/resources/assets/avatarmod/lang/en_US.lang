@@ -79,6 +79,11 @@ avatar.ability.water_skate=Water Skate
 
 avatar.ability.air_gust=Air Gust
 avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
+avatar.ability.air_gust.lvl1=Blast enemies away
+avatar.ability.air_gust.lvl2=Half the cooldown
+avatar.ability.air_gust.lvl3=Stronger push
+avatar.ability.air_gust.lvl4_1=Extinguish ;; Destroys weaker projectiles
+avatar.ability.air_gust.lvl4_2=Vacuum ;; Sucks enemies TOWARDS you
 
 avatar.ability.air_jump=Air Jump
 avatar.ability.air_jump.desc=Manipulate the air around you to boost off the ground. Perfect for catching up to an unsuspecting enemy.
