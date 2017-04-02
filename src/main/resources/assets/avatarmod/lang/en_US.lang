@@ -103,6 +103,11 @@ avatar.ability.airblade.lvl4_2=Armor piercer ;; Cuts through armor and stone
 
 avatar.ability.air_bubble=Air Bubble
 avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.
+avatar.ability.air_bubble.lvl1=Small range and knockback
+avatar.ability.air_bubble.lvl2=Medium-sized air bubble
+avatar.ability.air_bubble.lvl3=More knockback
+avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
+avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by sneak
 
 avatar.ability.undefined=???
 
