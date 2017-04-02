@@ -52,7 +52,7 @@ public class AirParticleSpawner extends TickHandler {
 		
 		if (target.isInWater() || target.onGround || bender.isFlying()) {
 			
-			if (target.onGround) {
+			if (target.onGround && bender.getData().willSmashGround()) {
 				
 				double range = 3;
 				

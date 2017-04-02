@@ -77,6 +77,12 @@ public class StatCtrlAirJump extends StatusControl {
 			Vector velocity = rotations.toRectangular();
 			velocity.setY(Math.pow(velocity.y(), .1));
 			velocity.mul(1 + xp / 250.0);
+			if (!entity.onGround) {
+				velocity.mul(0.6);
+				entity.motionX = 0;
+				entity.motionY = 0;
+				entity.motionZ = 0;
+			}
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			
@@ -104,9 +110,11 @@ public class StatCtrlAirJump extends StatusControl {
 			entity.worldObj.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
 			
+			return true;
+			
 		}
 		
-		return entity.onGround;
+		return false;
 		
 	}
 	
