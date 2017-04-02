@@ -76,6 +76,11 @@ avatar.ability.air_jump=Air Jump
 avatar.ability.air_jump.desc=Manipulate the air around you to boost off the ground. Perfect for catching up to an unsuspecting enemy.
 avatar.ability.airblade=Airblade
 avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh. Can be deadly in quick succession.
+avatar.ability.pickup_block.lvl1=Base ability
+avatar.ability.pickup_block.lvl2=Higher speeds and damage
+avatar.ability.pickup_block.lvl3=Can now cut blocks
+avatar.ability.pickup_block.lvl4_1=Chainblade; bounces through multiple enemies
+avatar.ability.pickup_block.lvl4_2=Armor piercer; cut through armor and stone
 avatar.ability.air_bubble=Air Bubble
 avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.
 

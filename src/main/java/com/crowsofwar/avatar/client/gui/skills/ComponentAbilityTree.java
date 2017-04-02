@@ -30,6 +30,8 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
+import net.minecraft.client.resources.I18n;
+
 /**
  * 
  * 
@@ -109,10 +111,14 @@ public class ComponentAbilityTree extends UiComponent {
 		drawTexturedModalRect(reachedLevel.length * 33 - 16, diagonalBar2Y, 80, 208, 16, 16);
 		
 		if (data.getLevel() >= 2) {
+			
 			float xp = data.getLevel() == 3 ? 100 : data.getXp();
 			
-			drawTexturedModalRect(reachedLevel.length * 33 - 16, -8, 96, 224, (int) (xp / 100 * 16), 16);
-			drawTexturedModalRect(reachedLevel.length * 33 - 16, 8, 96, 208, (int) (xp / 100 * 16), 16);
+			drawTexturedModalRect(reachedLevel.length * 33 - 16, diagonalBar1Y, 96, 224,
+					(int) (xp / 100 * 16), 16);
+			drawTexturedModalRect(reachedLevel.length * 33 - 16, diagonalBar2Y, 96, 208,
+					(int) (xp / 100 * 16), 16);
+			
 		}
 		
 		// Draw level IVs
@@ -173,20 +179,26 @@ public class ComponentAbilityTree extends UiComponent {
 		float l42MinY = coordinates().yInPixels() + height() - 18 * scaleFactor();
 		float l42MaxY = l42MinY + 18 * scaleFactor();
 		
+		String level = null;
+		
 		if (mouseX >= l1MinX && mouseX <= l1MaxX && mouseY >= l123MinY && mouseY <= l123MaxY) {
-			return Arrays.asList("Level I");
+			level = "lvl1";
 		}
 		if (mouseX >= l2MinX && mouseX <= l2MaxX && mouseY >= l123MinY && mouseY <= l123MaxY) {
-			return Arrays.asList("Level II");
+			level = "lvl2";
 		}
 		if (mouseX >= l3MinX && mouseX <= l3MaxX && mouseY >= l123MinY && mouseY <= l123MaxY) {
-			return Arrays.asList("Level III");
+			level = "lvl3";
 		}
 		if (mouseX >= l4MinX && mouseX <= l4MaxX && mouseY >= l41MinY && mouseY <= l41MaxY) {
-			return Arrays.asList("Level IV #1");
+			level = "lvl4_1";
 		}
 		if (mouseX >= l4MinX && mouseX <= l4MaxX && mouseY >= l42MinY && mouseY <= l42MaxY) {
-			return Arrays.asList("Level IV #2");
+			level = "lvl4_2";
+		}
+		
+		if (level != null) {
+			return Arrays.asList(I18n.format("avatar.ability." + ability.getName() + "." + level));
 		}
 		
 		return null;
