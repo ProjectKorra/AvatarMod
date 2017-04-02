@@ -72,6 +72,7 @@ public class AbilityAirBubble extends AirAbility {
 			bubble.setPosition(bender.posX, bender.posY, bender.posZ);
 			bubble.setHealth(15 + xp / 10f);
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
+			bubble.setSize(2.5f);
 			world.spawnEntityInWorld(bubble);
 			
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);

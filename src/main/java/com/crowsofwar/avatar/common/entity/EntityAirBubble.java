@@ -66,6 +66,8 @@ public class EntityAirBubble extends AvatarEntity {
 			DataSerializers.FLOAT);
 	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
+			DataSerializers.FLOAT);
 	
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
@@ -85,6 +87,7 @@ public class EntityAirBubble extends AvatarEntity {
 		dataManager.register(SYNC_DISSIPATE, 0);
 		dataManager.register(SYNC_HEALTH, 20f);
 		dataManager.register(SYNC_HOVERING, false);
+		dataManager.register(SYNC_SIZE, 2.5f);
 	}
 	
 	@Override
@@ -102,6 +105,14 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	public void setAllowHovering(boolean floating) {
 		dataManager.set(SYNC_HOVERING, floating);
+	}
+	
+	public float getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+	
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
 	}
 	
 	@Override
@@ -167,22 +178,27 @@ public class EntityAirBubble extends AvatarEntity {
 			}
 			
 		}
+		
+		float size = getSize();
+		
 		if (isDissipatingLarge()) {
 			setDissipateTime(getDissipateTime() + 1);
 			float mult = 1 + getDissipateTime() / 10f;
-			setSize(2.5f * mult, 2.5f * mult);
+			setSize(size * mult, size * mult);
 			if (getDissipateTime() >= 10) {
 				setDead();
 			}
-		}
-		if (isDissipatingSmall()) {
+		} else if (isDissipatingSmall()) {
 			setDissipateTime(getDissipateTime() - 1);
 			float mult = 1 + getDissipateTime() / 40f;
-			setSize(2.5f * mult, 2.5f * mult);
+			setSize(size * mult, size * mult);
 			if (getDissipateTime() <= -10) {
 				setDead();
 			}
+		} else {
+			setSize(size, size);
 		}
+		
 	}
 	
 	@Override
@@ -200,8 +216,6 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	public void applyEntityCollision(Entity entity) {
 		if (isHidden()) return;
-		if (entity == getOwner()) return;
-		if (entity instanceof AvatarEntity || entity instanceof EntityArrow) return;
 		
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;
@@ -224,6 +238,11 @@ public class EntityAirBubble extends AvatarEntity {
 		}
 		entity.isAirBorne = true;
 		AvatarUtils.afterVelocityAdded(entity);
+	}
+	
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return entity != getOwner() && !(entity instanceof AvatarEntity) && !(entity instanceof EntityArrow);
 	}
 	
 	@Override
