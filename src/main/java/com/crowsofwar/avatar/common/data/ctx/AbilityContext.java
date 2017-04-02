@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.data.ctx;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -44,8 +45,23 @@ public class AbilityContext extends BendingContext {
 		this.ability = ability;
 	}
 	
+	public AbilityData getAbilityData() {
+		return getData().getAbilityData(ability);
+	}
+	
+	public int getLevel() {
+		return getAbilityData().getLevel();
+	}
+	
 	public AbilityTreePath getPath() {
-		return getData().getAbilityData(ability).getPath();
+		return getAbilityData().getPath();
+	}
+	
+	/**
+	 * Returns true if ability is on level 4 and has selected that path.
+	 */
+	public boolean isMasterLevel(AbilityTreePath path) {
+		return getLevel() == 3 && getPath() == path;
 	}
 	
 }
