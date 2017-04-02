@@ -151,12 +151,11 @@ public class ComponentAbilityTree extends UiComponent {
 	}
 	
 	@Override
-	public void hover(float mouseX, float mouseY) {
+	public List<String> getTooltip(float mouseX, float mouseY) {
 		List<String> lines = new ArrayList<>();
 		lines.add("Hello!");
 		lines.add("Description");
-		drawHoveringText(lines, mouseX - 10, mouseY);
-		
+		return lines;
 	}
 	
 }

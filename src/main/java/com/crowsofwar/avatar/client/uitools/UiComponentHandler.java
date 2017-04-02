@@ -16,13 +16,16 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static net.minecraft.client.Minecraft.getMinecraft;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
+
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
  * Handles calls to all UI components, so they don't need to be worried about
@@ -48,6 +51,9 @@ public class UiComponentHandler {
 	}
 	
 	public void draw(float partialTicks, float mouseX, float mouseY) {
+		
+		List<String> tooltip = null;
+		
 		for (UiComponent component : components) {
 			component.draw(partialTicks);
 			
@@ -57,10 +63,25 @@ public class UiComponentHandler {
 			Measurement coords = component.coordinates();
 			if (mx2 >= coords.xInPixels() && mx2 <= coords.xInPixels() + component.width()) {
 				if (my2 >= coords.yInPixels() && my2 <= coords.yInPixels() + component.height()) {
-					component.hover(mouseX, mouseY);
+					List<String> result = component.getTooltip(mouseX, mouseY);
+					if (result != null) {
+						tooltip = result;
+					}
 				}
 			}
+			
 		}
+		
+		if (tooltip != null) {
+			
+			int width = screenWidth() / scaleFactor();
+			int height = screenHeight() / scaleFactor();
+			
+			GuiUtils.drawHoveringText(Arrays.asList("Hello", "Line 2", "aas"), (int) mouseX, (int) mouseY,
+					width, height, -1, getMinecraft().fontRendererObj);
+			
+		}
+		
 	}
 	
 	public void click(float x, float y, int button) {
