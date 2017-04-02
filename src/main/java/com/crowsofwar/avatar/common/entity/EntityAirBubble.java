@@ -32,6 +32,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -39,7 +40,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -146,12 +146,15 @@ public class EntityAirBubble extends AvatarEntity {
 						// block
 						BlockPos pos;
 						for (pos = ownerEnt.getPosition(); !worldObj.isSideSolid(pos, UP)
-								&& worldObj.getBlockState(pos).getBlock() != Blocks.WATER; pos = pos.down())
+								&& !(worldObj.getBlockState(pos).getBlock() instanceof BlockLiquid); pos = pos
+										.down())
+							
 							;
 						
 						double distFromGround = ownerEnt.posY - (pos.getY() + 1);
 						if (distFromGround >= 0.5 && distFromGround <= 2) {
-							ownerEnt.motionY *= 0.9;
+							ownerEnt.motionY += 0.02;
+							
 							if (ownerEnt.motionY < 0) {
 								ownerEnt.motionY = 0;
 							}
