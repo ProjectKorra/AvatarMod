@@ -208,8 +208,7 @@ public abstract class AvatarEntity extends Entity {
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				ent -> EntitySelectors.<Entity>getTeamCollisionPredicate(this).apply(ent)
-						&& canCollideWith(ent));
+				EntitySelectors.<Entity>getTeamCollisionPredicate(this));
 		
 		if (!list.isEmpty()) {
 			int i = this.worldObj.getGameRules().getInt("maxEntityCramming");
@@ -230,8 +229,10 @@ public abstract class AvatarEntity extends Entity {
 			
 			for (int l = 0; l < list.size(); ++l) {
 				Entity entity = list.get(l);
-				entity.applyEntityCollision(this);
-				onCollideWithEntity(entity);
+				if (canCollideWith(entity)) {
+					entity.applyEntityCollision(this);
+					onCollideWithEntity(entity);
+				}
 			}
 		}
 	}

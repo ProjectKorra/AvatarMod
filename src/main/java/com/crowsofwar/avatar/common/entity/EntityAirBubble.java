@@ -215,7 +215,10 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	@Override
 	public void applyEntityCollision(Entity entity) {
+		
 		if (isHidden()) return;
+		
+		if (!canCollideWith(entity)) return;
 		
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;
