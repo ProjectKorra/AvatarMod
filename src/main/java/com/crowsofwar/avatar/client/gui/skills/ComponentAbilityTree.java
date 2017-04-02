@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
@@ -156,26 +156,40 @@ public class ComponentAbilityTree extends UiComponent {
 	@Override
 	public List<String> getTooltip(float mouseX, float mouseY) {
 		
-		float maxX = coordinates().xInPixels() + width();
-		float minX = maxX - 18 * scaleFactor();
+		float l123MinY = coordinates().yInPixels() + 12 * scaleFactor();
+		float l123MaxY = l123MinY + 18 * scaleFactor();
 		
-		float minY1 = coordinates().yInPixels();
-		float maxY1 = minY1 + 18 * scaleFactor();
-		float minY2 = coordinates().yInPixels() + height() - 18 * scaleFactor();
-		float maxY2 = minY2 + 18 * scaleFactor();
+		float l1MinX = coordinates().xInPixels();
+		float l1MaxX = l1MinX + 18 * scaleFactor();
+		float l2MinX = coordinates().xInPixels() + 33 * scaleFactor();
+		float l2MaxX = l2MinX + 18 * scaleFactor();
+		float l3MinX = coordinates().xInPixels() + 66 * scaleFactor();
+		float l3MaxX = l3MinX + 18 * scaleFactor();
 		
-		List<String> lines = new ArrayList<>();
-		lines.add("Hello!");
-		lines.add("Description");
+		float l4MaxX = coordinates().xInPixels() + width();
+		float l4MinX = l4MaxX - 18 * scaleFactor();
+		float l41MinY = coordinates().yInPixels();
+		float l41MaxY = l41MinY + 18 * scaleFactor();
+		float l42MinY = coordinates().yInPixels() + height() - 18 * scaleFactor();
+		float l42MaxY = l42MinY + 18 * scaleFactor();
 		
-		if (mouseX >= minX && mouseX <= maxX && mouseY >= minY1 && mouseY <= maxY1) {
-			lines.add("level1");
+		if (mouseX >= l1MinX && mouseX <= l1MaxX && mouseY >= l123MinY && mouseY <= l123MaxY) {
+			return Arrays.asList("Level I");
 		}
-		if (mouseX >= minX && mouseX <= maxX && mouseY >= minY2 && mouseY <= maxY2) {
-			lines.add("level2");
+		if (mouseX >= l2MinX && mouseX <= l2MaxX && mouseY >= l123MinY && mouseY <= l123MaxY) {
+			return Arrays.asList("Level II");
+		}
+		if (mouseX >= l3MinX && mouseX <= l3MaxX && mouseY >= l123MinY && mouseY <= l123MaxY) {
+			return Arrays.asList("Level III");
+		}
+		if (mouseX >= l4MinX && mouseX <= l4MaxX && mouseY >= l41MinY && mouseY <= l41MaxY) {
+			return Arrays.asList("Level IV #1");
+		}
+		if (mouseX >= l4MinX && mouseX <= l4MaxX && mouseY >= l42MinY && mouseY <= l42MaxY) {
+			return Arrays.asList("Level IV #2");
 		}
 		
-		return lines;
+		return null;
 	}
 	
 }
