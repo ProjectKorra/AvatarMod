@@ -115,9 +115,12 @@ avatar.ui.level0=Level I
 avatar.ui.level1=Level II
 avatar.ui.level2=Level III
 avatar.ui.level3=-MAX-
+avatar.ui.path_first=First Path
+avatar.ui.path_second=Second Path
 
-avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
 avatar.radial.undefined=Coming soon!
+avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
+avatar.radial.max=Level IV, [translate=avatar.ui.path_${xp}]
 
 avatar.key.none1=No key
 avatar.key.none2=Click to edit

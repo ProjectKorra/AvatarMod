@@ -143,10 +143,20 @@ public class RadialMenu extends Gui {
 			
 			AbilityData abilityData = data.getAbilityData(ability);
 			
-			String second = I18n.format(ability == null ? "avatar.radial.undefined" : "avatar.radial.xp");
+			String secondKey = "avatar.radial.undefined";
+			String secondArg = "";
+			if (ability != null) {
+				secondKey = "avatar.radial.xp";
+				secondArg = abilityData.getLevel() + "";
+				if (abilityData.getLevel() == 3) {
+					secondKey = "avatar.radial.max";
+					secondArg = abilityData.getPath().name().toLowerCase();
+				}
+			}
+			String second = I18n.format(secondKey);
 			
-			second = ChatSender.instance.processText(second, MSG_RADIAL_XP, (int) abilityData.getLevel(),
-					(int) abilityData.getXp());
+			second = ChatSender.instance.processText(second, MSG_RADIAL_XP, abilityData.getLevel(),
+					secondArg);
 			
 			drawCenteredString(mc.fontRendererObj, second, x,
 					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),
