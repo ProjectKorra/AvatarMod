@@ -52,12 +52,20 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		
-		if (entity.ticksExisted % 3 < 2) {
-			
-			AbilityData abilityData = data.getAbilityData(ABILITY_FLAMETHROWER);
-			AbilityTreePath path = abilityData.getPath();
-			float totalXp = abilityData.getTotalXp();
-			int level = abilityData.getLevel();
+		AbilityData abilityData = data.getAbilityData(ABILITY_FLAMETHROWER);
+		AbilityTreePath path = abilityData.getPath();
+		float totalXp = abilityData.getTotalXp();
+		int level = abilityData.getLevel();
+		
+		int flamesPerSecond = level == 0 ? 6 : 10;
+		if (level == 3 && path == AbilityTreePath.FIRST) {
+			flamesPerSecond = 15;
+		}
+		if (level == 3 && path == AbilityTreePath.SECOND) {
+			flamesPerSecond = 8;
+		}
+		
+		if (entity.ticksExisted % 20 < flamesPerSecond) {
 			
 			Chi chi = data.chi();
 			float required = STATS_CONFIG.chiFlamethrowerSecond / 20f;
