@@ -72,16 +72,22 @@ avatar.ability.water_skate=Water Skate
 
 avatar.ability.air_gust=Air Gust
 avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
+
 avatar.ability.air_jump=Air Jump
 avatar.ability.air_jump.desc=Manipulate the air around you to boost off the ground. Perfect for catching up to an unsuspecting enemy.
+avatar.ability.air_jump.lvl1=Jump through the air
+avatar.ability.air_jump.lvl2=Slightly improved jumping power
+avatar.ability.air_jump.lvl3=Even better jumping
+avatar.ability.air_jump.lvl4_1=Double-jump ;; Costs double chi
+avatar.ability.air_jump.lvl4_2=Ground pound ;; Attack nearby enemies on land
 
 avatar.ability.airblade=Airblade
 avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh. Can be deadly in quick succession.
 avatar.ability.airblade.lvl1=Base ability
 avatar.ability.airblade.lvl2=Higher speeds and damage
 avatar.ability.airblade.lvl3=Can now cut blocks
-avatar.ability.airblade.lvl4_1=Chainblade; bounces through multiple enemies
-avatar.ability.airblade.lvl4_2=Armor piercer; cut through armor and stone
+avatar.ability.airblade.lvl4_1=Chainblade ;; Bounces through multiple enemies
+avatar.ability.airblade.lvl4_2=Armor piercer ;; Cuts through armor and stone
 
 avatar.ability.air_bubble=Air Bubble
 avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.

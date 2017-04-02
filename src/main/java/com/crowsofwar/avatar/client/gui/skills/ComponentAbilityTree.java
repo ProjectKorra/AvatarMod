@@ -198,7 +198,8 @@ public class ComponentAbilityTree extends UiComponent {
 		}
 		
 		if (level != null) {
-			return Arrays.asList(I18n.format("avatar.ability." + ability.getName() + "." + level));
+			return Arrays
+					.asList(I18n.format("avatar.ability." + ability.getName() + "." + level).split(" ;; "));
 		}
 		
 		return null;
