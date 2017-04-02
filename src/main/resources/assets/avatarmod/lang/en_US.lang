@@ -63,6 +63,13 @@ avatar.ability.mine_blocks=Mine Blocks
 avatar.ability.light_fire=Light Fire
 avatar.ability.fire_arc=Fire Arc
 avatar.ability.flamethrower=Flamethrower
+
+avatar.ability.flamethrower.lvl1=Attack within a short range
+avatar.ability.flamethrower.lvl2=Longer range, more precise
+avatar.ability.flamethrower.lvl3=Longer range, more precise
+avatar.ability.flamethrower.lvl4_1=Flamestream ;; Extremely long-ranged, concentrated flames
+avatar.ability.flamethrower.lvl4_2=The world will burn!! ;; Unfocused flames that create fires everywhere
+
 avatar.ability.fireball=Fireball
 
 avatar.ability.water_arc=Water Arc
