@@ -329,6 +329,16 @@ public abstract class AbstractBendingData implements BendingData {
 		miscData.setSmashGround(smash);
 	}
 	
+	@Override
+	public int getPetSummonCooldown() {
+		return miscData.getPetSummonCooldown();
+	}
+	
+	@Override
+	public void setPetSummonCooldown(int cooldown) {
+		miscData.setPetSummonCooldown(cooldown);
+	}
+	
 	/**
 	 * Save this BendingData
 	 */

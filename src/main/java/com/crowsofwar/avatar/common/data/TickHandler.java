@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
 import com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.common.bending.water.WaterSkateHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 
 import io.netty.buffer.ByteBuf;
 
@@ -36,6 +37,7 @@ public abstract class TickHandler {
 	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
 	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
 	public static TickHandler WATER_SKATE = new WaterSkateHandler();
+	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();
 	
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;

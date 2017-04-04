@@ -175,6 +175,10 @@ public interface BendingData {
 	
 	void setSmashGround(boolean smash);
 	
+	int getPetSummonCooldown();
+	
+	void setPetSummonCooldown(int cooldown);
+	
 	/**
 	 * Save this BendingData
 	 */

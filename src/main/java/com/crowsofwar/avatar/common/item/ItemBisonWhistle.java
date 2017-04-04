@@ -17,8 +17,9 @@
 package com.crowsofwar.avatar.common.item;
 
 import java.util.List;
-import java.util.Random;
 
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,37 +48,15 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		ItemStack stack = player.getHeldItem(hand);
 		
-		// Search for bison to teleport
+		// Make sure there's a bison to teleport first
 		List<EntitySkyBison> entities = world.getEntities(EntitySkyBison.class,
 				bison -> bison.getOwner() == player);
 		
 		if (!entities.isEmpty()) {
 			
-			EntitySkyBison bison = entities.get(0);
+			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			data.addTickHandler(TickHandler.BISON_SUMMONER);
 			
-			System.out.println("Found a bison");
-			
-			Random random = new Random();
-			
-			// Find suitable location near player
-			for (int i = 0; i < 5; i++) {
-				
-				double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
-				double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
-				double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
-				
-				if (bison.attemptTeleport(x, y, z)) {
-					System.out.println("Successfully teleported to player");
-					;
-					break;
-				} else {
-					System.out.println("Try again");
-				}
-				
-			}
-			
-		} else {
-			System.out.println("Found no bison");
 		}
 		
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
