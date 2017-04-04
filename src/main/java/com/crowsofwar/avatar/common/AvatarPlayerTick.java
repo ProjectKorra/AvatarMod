@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 public class AvatarPlayerTick {
@@ -56,14 +57,16 @@ public class AvatarPlayerTick {
 				
 			}
 			
-			List<TickHandler> tickHandlers = data.getAllTickHandlers();
-			if (tickHandlers != null) {
-				BendingContext ctx = new BendingContext(data, new Raytrace.Result());
-				for (TickHandler handler : tickHandlers) {
-					if (handler.tick(ctx)) {
-						// Can use this since the list is a COPY of the
-						// underlying list
-						data.removeTickHandler(handler);
+			if (e.phase == Phase.START) {
+				List<TickHandler> tickHandlers = data.getAllTickHandlers();
+				if (tickHandlers != null) {
+					BendingContext ctx = new BendingContext(data, new Raytrace.Result());
+					for (TickHandler handler : tickHandlers) {
+						if (handler.tick(ctx)) {
+							// Can use this since the list is a COPY of the
+							// underlying list
+							data.removeTickHandler(handler);
+						}
 					}
 				}
 			}

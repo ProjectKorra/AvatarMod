@@ -49,6 +49,10 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		ItemStack stack = player.getHeldItem(hand);
 		
+		if (world.isRemote) {
+			return new ActionResult<>(EnumActionResult.PASS, stack);
+		}
+		
 		// Make sure there's a bison to teleport first
 		List<EntitySkyBison> entities = world.getEntities(EntitySkyBison.class,
 				bison -> bison.getOwner() == player);
@@ -58,13 +62,13 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 			EntitySkyBison bison = entities.get(0);
 			double dist = player.getDistanceToEntity(bison);
 			
-			int ticks = (int) (dist / 5);
+			double seconds = dist / 20;
 			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-			data.setPetSummonCooldown(ticks);
+			data.setPetSummonCooldown((int) (seconds * 20));
 			data.addTickHandler(TickHandler.BISON_SUMMONER);
 			
-			AvatarChatMessages.MSG_SKY_BISON_SUMMON.send(player, ticks / 20);
+			AvatarChatMessages.MSG_SKY_BISON_SUMMON.send(player, (int) seconds);
 			
 		}
 		
