@@ -221,19 +221,19 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		condition.onUpdate();
 		if (condition.getFoodPoints() == 0) {
-			// setSitting(true);
+			setSitting(true);
 		} else if (!hasOwner()) {
-			// setSitting(false);
+			setSitting(false);
 		}
 		
-		if (ticksExisted % 100 == 0) {
-			System.out.println("I'm still here!");
-		}
-		if (!isForceLoadingChunks()) {
+		if (!isForceLoadingChunks() && hasOwner()) {
 			beginForceLoadingChunks();
 		}
 		if (isForceLoadingChunks()) {
 			ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPosition()));
+			if (!hasOwner() || getHealth() <= 0) {
+				stopForceLoadingChunks();
+			}
 		}
 		
 	}
@@ -320,6 +320,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public boolean canBeSteered() {
 		return getControllingPassenger() != null;
+	}
+	
+	@Override
+	protected boolean canDespawn() {
+		return false;
 	}
 	
 	@Override

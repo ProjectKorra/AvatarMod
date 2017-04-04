@@ -72,6 +72,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -152,6 +153,10 @@ public class AvatarMod {
 		EarthbendingEvents.register();
 		
 		PacketHandlerServer.register();
+		
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
+			System.out.println("Loaded tickets back! " + tickets);
+		});
 		
 	}
 	
