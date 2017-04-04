@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.item;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
@@ -54,8 +55,16 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		if (!entities.isEmpty()) {
 			
+			EntitySkyBison bison = entities.get(0);
+			double dist = player.getDistanceToEntity(bison);
+			
+			int ticks = (int) (dist / 5);
+			
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			data.setPetSummonCooldown(ticks);
 			data.addTickHandler(TickHandler.BISON_SUMMONER);
+			
+			AvatarChatMessages.MSG_SKY_BISON_SUMMON.send(player, ticks / 20);
 			
 		}
 		

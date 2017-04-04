@@ -67,6 +67,8 @@ public class AvatarChatMessages {
 	
 	public static final ChatMessage MSG_DONT_HAVE_BENDING = newChatMessage(CFG, "avatar.donthavebending", "bending", "username");
 	
+	public static final ChatMessage MSG_SKY_BISON_SUMMON = newChatMessage(CFG, "avatar.bisonSummon", "time");
+	
 	/**
 	 * Call the static initializers
 	 */
