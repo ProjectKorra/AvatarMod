@@ -59,12 +59,12 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 			
 			Random random = new Random();
 			
-			// Find suitable location near player
+			// Find suitable location near player ForgeChunkManager
 			for (int i = 0; i < 5; i++) {
 				
-				double x = player.posX + (random.nextDouble() * 2 - 1) * 20;
-				double y = player.posX + (random.nextDouble() * 2 - 1) * 20;
-				double z = player.posX + (random.nextDouble() * 2 - 1) * 20;
+				double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
+				double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
+				double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
 				
 				if (bison.attemptTeleport(x, y, z)) {
 					System.out.println("Successfully teleported to player");
@@ -76,6 +76,8 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 				
 			}
 			
+		} else {
+			System.out.println("Found no bison");
 		}
 		
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
