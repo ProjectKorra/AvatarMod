@@ -59,7 +59,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 			
 			Random random = new Random();
 			
-			// Find suitable location near player ForgeChunkManager
+			// Find suitable location near player
 			for (int i = 0; i < 5; i++) {
 				
 				double x = player.posX + (random.nextDouble() * 2 - 1) * 15;

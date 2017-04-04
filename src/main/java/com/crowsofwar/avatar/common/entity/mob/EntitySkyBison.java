@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
@@ -53,9 +54,12 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Type;
 
 /**
  * EntityGhast EntityTameable
@@ -76,6 +80,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
+	
+	private ForgeChunkManager.Ticket ticket;
 	
 	/**
 	 * @param world
@@ -187,6 +193,24 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		return condition.getSpeedMultiplier();
 	}
 	
+	public boolean isForceLoadingChunks() {
+		return ticket != null;
+	}
+	
+	public void beginForceLoadingChunks() {
+		if (!isForceLoadingChunks()) {
+			ticket = ForgeChunkManager.requestTicket(AvatarMod.instance, worldObj, Type.ENTITY);
+			ticket.bindEntity(this);
+			ticket.getModData().setUniqueId("BisonId", getUniqueID());
+		}
+	}
+	
+	public void stopForceLoadingChunks() {
+		if (isForceLoadingChunks()) {
+			ForgeChunkManager.releaseTicket(ticket);
+		}
+	}
+	
 	// ================================================================================
 	// ENTITY LOGIC
 	// ================================================================================
@@ -201,6 +225,17 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		} else if (!hasOwner()) {
 			// setSitting(false);
 		}
+		
+		if (ticksExisted % 100 == 0) {
+			System.out.println("I'm still here!");
+		}
+		if (!isForceLoadingChunks()) {
+			beginForceLoadingChunks();
+		}
+		if (isForceLoadingChunks()) {
+			ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPosition()));
+		}
+		
 	}
 	
 	@Override
