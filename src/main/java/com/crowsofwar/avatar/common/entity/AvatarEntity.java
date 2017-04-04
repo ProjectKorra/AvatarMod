@@ -25,17 +25,22 @@ import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -203,8 +208,7 @@ public abstract class AvatarEntity extends Entity {
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				ent -> EntitySelectors.<Entity>getTeamCollisionPredicate(this).apply(ent)
-						&& canCollideWith(ent));
+				EntitySelectors.<Entity>getTeamCollisionPredicate(this));
 		
 		if (!list.isEmpty()) {
 			int i = this.worldObj.getGameRules().getInt("maxEntityCramming");
@@ -225,8 +229,10 @@ public abstract class AvatarEntity extends Entity {
 			
 			for (int l = 0; l < list.size(); ++l) {
 				Entity entity = list.get(l);
-				entity.applyEntityCollision(this);
-				onCollideWithEntity(entity);
+				if (canCollideWith(entity)) {
+					entity.applyEntityCollision(this);
+					onCollideWithEntity(entity);
+				}
 			}
 		}
 	}
@@ -250,6 +256,58 @@ public abstract class AvatarEntity extends Entity {
 	 * Called when the entity collides with blocks or a wall
 	 */
 	public void onCollideWithSolid() {}
+	
+	/**
+	 * Called when another entity destroys this AvatarEntity. If it is
+	 * considered to be destroyable, this is where things should be "cleaned up"
+	 * (eg remove status control). Returns true if it was destroyed. Some
+	 * entities are too strong to destroy, such as an air bubble.
+	 */
+	public boolean tryDestroy() {
+		return true;
+	}
+	
+	/**
+	 * Break the block at the given position, playing sound/particles, and
+	 * dropping item
+	 */
+	protected void breakBlock(BlockPos position) {
+		
+		IBlockState blockState = worldObj.getBlockState(position);
+		
+		Block destroyed = blockState.getBlock();
+		SoundEvent sound;
+		if (destroyed == Blocks.FIRE) {
+			sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
+		} else {
+			sound = destroyed.getSoundType().getBreakSound();
+		}
+		worldObj.playSound(null, getPosition(), sound, SoundCategory.BLOCKS, 1, 1);
+		
+		// Spawn particles
+		
+		for (int i = 0; i < 7; i++) {
+			worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
+					3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
+					3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
+		}
+		worldObj.setBlockToAir(getPosition());
+		
+		// Create drops
+		
+		if (!worldObj.isRemote) {
+			List<ItemStack> drops = blockState.getBlock().getDrops(worldObj, position, blockState, 0);
+			for (ItemStack stack : drops) {
+				EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
+				item.setDefaultPickupDelay();
+				item.motionX *= 2;
+				item.motionY *= 1.2;
+				item.motionZ *= 2;
+				worldObj.spawnEntityInWorld(item);
+			}
+		}
+		
+	}
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {

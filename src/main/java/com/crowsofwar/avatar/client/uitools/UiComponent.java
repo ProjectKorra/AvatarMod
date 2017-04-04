@@ -20,6 +20,8 @@ import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -109,6 +111,14 @@ public abstract class UiComponent extends Gui {
 	}
 	
 	public void keyPressed(int keyCode) {}
+	
+	/**
+	 * Called when the mouse hovers over the component. Returns the tooltip
+	 * lines to draw. If there is no tooltip, returns null.
+	 */
+	public List<String> getTooltip(float mouseX, float mouseY) {
+		return null;
+	}
 	
 	// Delegates to transform
 	

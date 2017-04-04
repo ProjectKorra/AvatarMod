@@ -17,16 +17,18 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
@@ -51,17 +53,20 @@ public class StatCtrlAirJump extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
+	public boolean execute(BendingContext ctx) {
 		
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
 		
-		if (entity.onGround) {
+		AbilityData abilityData = data.getAbilityData(ABILITY_AIR_JUMP);
+		boolean allowDoubleJump = abilityData.getLevel() == 3
+				&& abilityData.getPath() == AbilityTreePath.FIRST;
+		
+		if (entity.onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
 			
 			float xp = 0;
-			BendingData data = bender.getData();
 			if (data != null) {
-				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_JUMP);
 				xp = abilityData.getTotalXp();
 				abilityData.addXp(SKILLS_CONFIG.airJump);
 			}
@@ -72,6 +77,12 @@ public class StatCtrlAirJump extends StatusControl {
 			Vector velocity = rotations.toRectangular();
 			velocity.setY(Math.pow(velocity.y(), .1));
 			velocity.mul(1 + xp / 250.0);
+			if (!entity.onGround) {
+				velocity.mul(0.6);
+				entity.motionX = 0;
+				entity.motionY = 0;
+				entity.motionZ = 0;
+			}
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			
@@ -79,8 +90,7 @@ public class StatCtrlAirJump extends StatusControl {
 			spawner.spawnParticles(entity.worldObj, ParticleType.AIR, 2, 6, new Vector(entity),
 					new Vector(1, 0, 1));
 			
-			// Find approximate maximum distance. In actuality, a bit less,
-			// due
+			// Find approximate maximum distance. In actuality, a bit less, due
 			// to max velocity and drag
 			// Using kinematic equation, gravity for players is 32 m/s
 			float fallAbsorption;
@@ -93,13 +103,18 @@ public class StatCtrlAirJump extends StatusControl {
 			data.setFallAbsorption(fallAbsorption);
 			
 			data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
+			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
+				data.setSmashGround(true);
+			}
 			
 			entity.worldObj.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
 			
+			return true;
+			
 		}
 		
-		return entity.onGround;
+		return false;
 		
 	}
 	

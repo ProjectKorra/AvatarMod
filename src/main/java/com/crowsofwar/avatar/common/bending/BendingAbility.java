@@ -109,6 +109,13 @@ public abstract class BendingAbility {
 	public abstract void execute(AbilityContext ctx);
 	
 	/**
+	 * Get cooldown after the ability is activated.
+	 */
+	public int getCooldown(AbilityContext ctx) {
+		return 15;
+	}
+	
+	/**
 	 * Get the Id of this ability.
 	 */
 	public final int getId() {

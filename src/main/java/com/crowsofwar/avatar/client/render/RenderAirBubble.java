@@ -79,6 +79,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 			sizeMult = .75f + ticks / 40f;
 			alpha = ticks / 10f;
 		}
+		sizeMult *= entity.getSize() / 2.5f;
 		
 		GlStateManager.color(1, 1, 1, .5f * alpha);
 		{

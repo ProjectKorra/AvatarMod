@@ -17,8 +17,12 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
+
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -141,13 +145,6 @@ public class EntityWaterArc extends EntityArc {
 			}
 		}
 		
-		// if (worldObj.getBlockState(getPosition()).getBlock() == Blocks.FIRE)
-		// {
-		// worldObj.setBlockToAir(getPosition());
-		// worldObj.playSound(posX, posY, posZ,
-		// SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 1,
-		// 1, false);
-		// }
 	}
 	
 	public static EntityWaterArc findFromId(World world, int id) {
@@ -184,6 +181,15 @@ public class EntityWaterArc extends EntityArc {
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
 		return 9;
+	}
+	
+	@Override
+	public boolean tryDestroy() {
+		if (getOwner() != null) {
+			BendingData data = Bender.create(getOwner()).getData();
+			data.removeStatusControl(THROW_WATER);
+		}
+		return true;
 	}
 	
 	public static class WaterControlPoint extends ControlPoint {

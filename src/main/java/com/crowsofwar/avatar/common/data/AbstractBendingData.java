@@ -319,6 +319,16 @@ public abstract class AbstractBendingData implements BendingData {
 		miscData.setWallJumping(wallJumping);
 	}
 	
+	@Override
+	public boolean willSmashGround() {
+		return miscData.willSmashGround();
+	}
+	
+	@Override
+	public void setSmashGround(boolean smash) {
+		miscData.setSmashGround(smash);
+	}
+	
 	/**
 	 * Save this BendingData
 	 */

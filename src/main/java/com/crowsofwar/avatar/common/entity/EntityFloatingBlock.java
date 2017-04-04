@@ -368,4 +368,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 		// entity.applyEntityCollision(entity);
 	}
 	
+	@Override
+	public boolean tryDestroy() {
+		return false;
+	}
+	
 }

@@ -171,6 +171,10 @@ public interface BendingData {
 	
 	void setWallJumping(boolean wallJumping);
 	
+	boolean willSmashGround();
+	
+	void setSmashGround(boolean smash);
+	
 	/**
 	 * Save this BendingData
 	 */

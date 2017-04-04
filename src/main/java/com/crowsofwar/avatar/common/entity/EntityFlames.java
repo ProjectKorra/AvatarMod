@@ -35,6 +35,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -57,6 +58,8 @@ public class EntityFlames extends AvatarEntity {
 	 * The owner, null client side
 	 */
 	private EntityLivingBase owner;
+	
+	private boolean lightsFires;
 	
 	/**
 	 * @param worldIn
@@ -100,6 +103,22 @@ public class EntityFlames extends AvatarEntity {
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
 			velocity().set(velocity().reflect(new Vector(sideHit)).times(0.5));
+			
+			// Try to light firest
+			if (lightsFires && sideHit != EnumFacing.DOWN && !worldObj.isRemote) {
+				
+				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(),
+						-sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());
+				
+				if (sideHit == EnumFacing.UP || worldObj.getBlockState(bouncingOff).getBlock()
+						.isFlammable(worldObj, bouncingOff, sideHit)) {
+					
+					worldObj.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
+					
+				}
+				
+			}
+			
 		}
 		
 		if (!worldObj.isRemote) {
@@ -152,6 +171,14 @@ public class EntityFlames extends AvatarEntity {
 	@Override
 	protected void updateHidden() {
 		setHidden(false);
+	}
+	
+	public boolean doesLightFires() {
+		return lightsFires;
+	}
+	
+	public void setLightsFires(boolean lightsFires) {
+		this.lightsFires = lightsFires;
 	}
 	
 }

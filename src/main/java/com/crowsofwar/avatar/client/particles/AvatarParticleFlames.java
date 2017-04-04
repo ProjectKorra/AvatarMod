@@ -47,7 +47,7 @@ public class AvatarParticleFlames extends AvatarParticle {
 		this.particleBlue = 1.0F;
 		this.setParticleTextureIndex(4);
 		this.setSize(0.02F, 0.02F);
-		this.particleScale *= this.rand.nextFloat() * 0.6F + 0.2F;
+		this.particleScale *= this.rand.nextFloat() * 0.6F + 0.2F + 0.3f;
 		this.motionX = velX * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
 		this.motionY = velY * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
 		this.motionZ = velZ * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;

@@ -82,7 +82,7 @@ public abstract class BendingAi extends EntityAIBase {
 	protected void execAbility() {
 		if (bender.getData().getAbilityCooldown() == 0) {
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
-			AbilityContext ctx = new AbilityContext(bender.getData(), entity, bender, raytrace);
+			AbilityContext ctx = new AbilityContext(bender.getData(), entity, bender, raytrace, ability);
 			ability.execute(ctx);
 		}
 	}
@@ -94,7 +94,7 @@ public abstract class BendingAi extends EntityAIBase {
 		BendingData data = bender.getData();
 		if (data.hasStatusControl(sc)) {
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
-			if (sc.execute(new AbilityContext(data, entity, bender, raytrace))) {
+			if (sc.execute(new AbilityContext(data, entity, bender, raytrace, ability))) {
 				data.removeStatusControl(sc);
 			}
 		}

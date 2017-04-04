@@ -33,7 +33,7 @@ import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateStart;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowBubble;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 /**
@@ -93,7 +93,7 @@ public abstract class StatusControl {
 	
 	/**
 	 * Require that a raytrace be cast client-side, which is sent to the server.
-	 * It is then accessible in {@link #execute(AbilityContext)}.
+	 * It is then accessible in {@link #execute(BendingContext)}.
 	 * 
 	 * @param range
 	 *            Range to raytrace. -1 for player reach
@@ -112,7 +112,7 @@ public abstract class StatusControl {
 	 *            Information for status control
 	 * @return Whether to remove it
 	 */
-	public abstract boolean execute(AbilityContext ctx);
+	public abstract boolean execute(BendingContext ctx);
 	
 	public int id() {
 		return id;

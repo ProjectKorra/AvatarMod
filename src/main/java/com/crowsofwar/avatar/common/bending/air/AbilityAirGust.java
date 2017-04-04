@@ -18,6 +18,8 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -59,8 +61,15 @@ public class AbilityAirGust extends AirAbility {
 		gust.velocity().set(look.times(25));
 		gust.setPosition(pos.x(), pos.y(), pos.z());
 		gust.setOwner(bender);
+		gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
+		gust.setAirGrab(ctx.isMasterLevel(SECOND));
 		
 		world.spawnEntityInWorld(gust);
+	}
+	
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return ctx.getLevel() >= 1 ? 30 : 60;
 	}
 	
 	@Override

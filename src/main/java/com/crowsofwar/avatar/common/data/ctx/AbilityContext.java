@@ -14,215 +14,54 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-
 package com.crowsofwar.avatar.common.data.ctx;
 
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
-import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Information when an ability is executed. Only is used server-side.
+ * 
  * 
  * @author CrowsOfWar
  */
-public class AbilityContext {
+public class AbilityContext extends BendingContext {
 	
-	private final BendingData data;
-	private final Bender bender;
+	private final BendingAbility ability;
 	
-	private final VectorI clientLookBlock;
-	private VectorI serverLookBlock;
-	private final EnumFacing lookSide;
-	private final Vector lookPos;
-	
-	/**
-	 * Create context for ability execution.
-	 * 
-	 * @param data
-	 *            Player data instance.
-	 * @param raytrace
-	 *            Result of the raytrace, from client
-	 */
-	public AbilityContext(AvatarPlayerData data, Raytrace.Result raytrace) {
-		this.data = data;
-		this.bender = new PlayerBender(data.getPlayerEntity());
-		this.clientLookBlock = raytrace.getPos();
-		this.lookSide = raytrace.getSide();
-		this.lookPos = raytrace.getPosPrecise();
+	public AbilityContext(AvatarPlayerData data, Result raytrace, BendingAbility ability) {
+		super(data, raytrace);
+		this.ability = ability;
 	}
 	
-	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender,
-			Raytrace.Result raytrace) {
-		
-		this.data = data;
-		this.bender = bender;
-		this.clientLookBlock = raytrace.getPos();
-		this.lookSide = raytrace.getSide();
-		this.lookPos = raytrace.getPosPrecise();
-		
+	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace,
+			BendingAbility ability) {
+		super(data, entity, bender, raytrace);
+		this.ability = ability;
 	}
 	
-	public BendingData getData() {
-		return data;
+	public AbilityData getAbilityData() {
+		return getData().getAbilityData(ability);
 	}
 	
-	public Bender getBender() {
-		return bender;
+	public int getLevel() {
+		return getAbilityData().getLevel();
 	}
 	
-	public EntityLivingBase getBenderEntity() {
-		return bender.getEntity();
-	}
-	
-	public World getWorld() {
-		return bender == null ? null : bender.getWorld();
-	}
-	
-	public VectorI getClientLookBlock() {
-		return clientLookBlock;
+	public AbilityTreePath getPath() {
+		return getAbilityData().getPath();
 	}
 	
 	/**
-	 * Get the side of the block the player is looking at
-	 * 
-	 * @return
+	 * Returns true if ability is on level 4 and has selected that path.
 	 */
-	public EnumFacing getLookSide() {
-		return lookSide;
-	}
-	
-	/**
-	 * Returns whether the player is looking at a block right now without
-	 * verifying if the client is correct.
-	 */
-	public boolean isLookingAtBlock() {
-		return lookSide != null && clientLookBlock != null;
-	}
-	
-	/**
-	 * Get the lookPos, unverified
-	 * 
-	 * @return
-	 */
-	public Vector getLookPos() {
-		return lookPos;
-	}
-	
-	/**
-	 * Returns whether the player is looking at a block right now. Checks for
-	 * hacking on the server. If on client side, then no checks are made.
-	 * 
-	 * @see #verifyClientLookBlock(double, double)
-	 */
-	public boolean isLookingAtBlock(double raycastDist, double maxDeviation) {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return isLookingAtBlock();
-		return lookSide != null && verifyClientLookBlock(raycastDist, maxDeviation) != null;
-	}
-	
-	/**
-	 * Ensure that the client's targeted block is within range of the server's
-	 * targeted block. (To avoid hacking) On client side, simply returns the
-	 * client's targeted block.
-	 * 
-	 * @param raycastDist
-	 *            How far away can the block be?
-	 * @param maxDeviation
-	 *            How far away can server and client's target positions be?
-	 * 
-	 * @see Raytrace#getTargetBlock(EntityPlayer, double)
-	 */
-	public VectorI verifyClientLookBlock(double raycastDist, double maxDeviation) {
-		if (clientLookBlock == null) return null;
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookBlock;
-		Result res = Raytrace.getTargetBlock(bender.getEntity(), raycastDist);
-		if (!res.hitSomething()) return null;
-		this.serverLookBlock = res.getPos();
-		double dist = serverLookBlock.dist(clientLookBlock);
-		if (dist <= maxDeviation) {
-			return clientLookBlock;
-		} else {
-			AvatarLog.warnHacking("unknown player",
-					"Client sent too far location " + "to look at block. (" + dist + ")");
-			Thread.dumpStack();
-			return serverLookBlock;
-		}
-	}
-	
-	/**
-	 * Tries to use the given amount of available chi. Returns true if there was
-	 * enough chi to remove and it removed it.
-	 */
-	public boolean consumeChi(float amount) {
-		
-		// TODO Account for entity Chi?
-		if (!bender.isPlayer()) return true;
-		if (bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative) {
-			return true;
-		}
-		
-		Chi chi = data.chi();
-		float available = chi.getAvailableChi();
-		if (available >= amount) {
-			chi.changeTotalChi(-amount);
-			chi.changeAvailableChi(-amount);
-			return true;
-		}
-		
-		if (bender.isPlayer()) {
-			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.nochi"),
-					(EntityPlayerMP) bender.getEntity());
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Consumes the given amount of water either from direct water source, or
-	 * from a water pouch.
-	 * <p>
-	 * First looks to see if looking at water block - any values >= 3 will also
-	 * consume the water block. Then, tries to see if there is a water pouch
-	 * with sufficient amount of water.
-	 */
-	public boolean consumeWater(int amount) {
-		
-		World world = bender.getWorld();
-		
-		VectorI targetPos = getClientLookBlock();
-		if (targetPos != null) {
-			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
-			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
-				
-				if (amount >= 3) {
-					world.setBlockToAir(targetPos.toBlockPos());
-				}
-				return true;
-				
-			}
-		}
-		
-		return bender.consumeWaterLevel(amount);
-		
+	public boolean isMasterLevel(AbilityTreePath path) {
+		return getLevel() == 3 && getPath() == path;
 	}
 	
 }

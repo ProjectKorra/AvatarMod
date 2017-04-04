@@ -294,4 +294,9 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		return super.canCollideWith(entity) && !(entity instanceof EntityWall);
 	}
 	
+	@Override
+	public boolean tryDestroy() {
+		return false;
+	}
+	
 }

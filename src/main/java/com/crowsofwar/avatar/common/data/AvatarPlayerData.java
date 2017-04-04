@@ -165,6 +165,16 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 	}
 	
+	public void saveAll() {
+		
+		for (DataCategory category : DataCategory.values()) {
+			networker.markChanged((Networker.Property<Object>) category.property(), category.get(this));
+		}
+		networker.sendUpdated();
+		saveChanges();
+		
+	}
+	
 	public Networker getNetworker() {
 		return networker;
 	}
@@ -365,6 +375,16 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	@Override
 	public void setWallJumping(boolean wallJumping) {
 		bendingData.setWallJumping(wallJumping);
+	}
+	
+	@Override
+	public boolean willSmashGround() {
+		return bendingData.willSmashGround();
+	}
+	
+	@Override
+	public void setSmashGround(boolean smash) {
+		bendingData.setSmashGround(smash);
 	}
 	
 }

@@ -22,7 +22,7 @@ import java.util.Map;
 import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
 import com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.common.bending.water.WaterSkateHandler;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 import io.netty.buffer.ByteBuf;
 
@@ -52,7 +52,7 @@ public abstract class TickHandler {
 	/**
 	 * Ticks and returns whether to remove (false to stay)
 	 */
-	public abstract boolean tick(AbilityContext ctx);
+	public abstract boolean tick(BendingContext ctx);
 	
 	public int id() {
 		return id;

@@ -17,6 +17,8 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAi;
@@ -66,10 +68,16 @@ public class AbilityAirBubble extends AirAbility {
 			
 			float xp = data.getAbilityData(this).getTotalXp();
 			
+			float size = 1.5f;
+			if (ctx.getLevel() > 0) size = 2.5f;
+			if (ctx.isMasterLevel(FIRST)) size = 4f;
+			
 			EntityAirBubble bubble = new EntityAirBubble(world);
 			bubble.setOwner(bender);
 			bubble.setPosition(bender.posX, bender.posY, bender.posZ);
 			bubble.setHealth(15 + xp / 10f);
+			bubble.setSize(size);
+			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
 			world.spawnEntityInWorld(bubble);
 			
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);

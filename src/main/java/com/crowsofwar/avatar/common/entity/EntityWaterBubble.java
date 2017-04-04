@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_BUBBLE;
+
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -151,6 +153,15 @@ public class EntityWaterBubble extends AvatarEntity {
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1 && !isHidden();
+	}
+	
+	@Override
+	public boolean tryDestroy() {
+		setBehavior(new WaterBubbleBehavior.Drop());
+		if (getOwner() != null) {
+			Bender.create(getOwner()).getData().removeStatusControl(THROW_BUBBLE);
+		}
+		return false;
 	}
 	
 }

@@ -129,8 +129,7 @@ public class AbilityData {
 	
 	/**
 	 * Sets the XP level to the given amount, clamping from 0-100. If more than
-	 * 100, goes to next level. Will also save the AvatarPlayerData. Does not
-	 * sync new XP.
+	 * 100, goes to next level. Will also save the AvatarPlayerData.
 	 */
 	public void setXp(float xp) {
 		if (xp == this.xp) return;
