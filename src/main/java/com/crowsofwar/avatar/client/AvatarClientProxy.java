@@ -37,6 +37,7 @@ import com.crowsofwar.avatar.client.render.RenderFlames;
 import com.crowsofwar.avatar.client.render.RenderFloatingBlock;
 import com.crowsofwar.avatar.client.render.RenderHumanBender;
 import com.crowsofwar.avatar.client.render.RenderRavine;
+import com.crowsofwar.avatar.client.render.RenderSkyBison;
 import com.crowsofwar.avatar.client.render.RenderWallSegment;
 import com.crowsofwar.avatar.client.render.RenderWaterArc;
 import com.crowsofwar.avatar.client.render.RenderWaterBubble;
@@ -58,6 +59,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
@@ -120,6 +122,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityAirblade.class, RenderAirblade::new);
 		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
 		registerEntityRenderingHandler(EntityHumanBender.class, RenderHumanBender::new);
+		registerEntityRenderingHandler(EntitySkyBison.class, RenderSkyBison::new);
 		
 		AvatarItemRenderRegister.register();
 		
