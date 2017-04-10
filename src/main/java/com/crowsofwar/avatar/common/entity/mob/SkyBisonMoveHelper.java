@@ -51,6 +51,10 @@ public class SkyBisonMoveHelper extends EntityMoveHelper {
 					this.entity.motionX += x / distance * 0.1 * mult;
 					this.entity.motionY += y / distance * 0.1 * mult;
 					this.entity.motionZ += z / distance * 0.1 * mult;
+					
+					float f9 = (float) (MathHelper.atan2(z, x) * (180D / Math.PI)) - 90.0F;
+					this.entity.rotationYaw = this.limitAngle(this.entity.rotationYaw, f9, 90.0F);
+					
 				} else {
 					this.action = EntityMoveHelper.Action.WAIT;
 				}

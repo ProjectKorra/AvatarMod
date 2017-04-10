@@ -43,6 +43,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemFood;
@@ -208,6 +209,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public void stopForceLoadingChunks() {
 		if (isForceLoadingChunks()) {
 			ForgeChunkManager.releaseTicket(ticket);
+			ticket = null;
 		}
 	}
 	
@@ -335,6 +337,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public void moveEntityWithHeading(float strafe, float forward) {
 		
 		if (this.isBeingRidden() && this.canBeSteered()) {
+			
+			moveHelper.action = Action.WAIT;
 			
 			EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 			
