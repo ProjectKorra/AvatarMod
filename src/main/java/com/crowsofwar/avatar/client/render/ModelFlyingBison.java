@@ -107,8 +107,11 @@ public class ModelFlyingBison extends ModelBase {
 		
 		EntitySkyBison bison = (EntitySkyBison) entity;
 		
-		head.rotateAngleX = headPitch;
-		head.rotateAngleY = netHeadYaw;
+		// Not sure why this number is needed, found in ModelQuadruped
+		// Without it, head "flickers" around even when entity's rotation is the
+		// same
+		head.rotateAngleX = headPitch * 0.017453292F;
+		head.rotateAngleY = netHeadYaw * 0.017453292F;
 		
 	}
 	
