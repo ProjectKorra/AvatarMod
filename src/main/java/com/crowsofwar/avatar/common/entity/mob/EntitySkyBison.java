@@ -284,13 +284,17 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		if (index > -1) {
 			
-			if (passenger == getControllingPassenger()) {
-				index = -0.5;
-			}
+			double offset = 1.5;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
+			double yOffset = passenger.getYOffset() + 2;
 			
-			passenger.setPosition(posX + sin(angle) * 1.5,
-					posY + getMountedYOffset() + passenger.getYOffset(), posZ + cos(angle) * 1.5);
+			if (passenger == getControllingPassenger()) {
+				angle = -toRadians(rotationYaw);
+				offset = 1;
+				yOffset -= Math.sin(toRadians(rotationPitch));
+			}
+			
+			passenger.setPosition(posX + sin(angle) * offset, posY + yOffset, posZ + cos(angle) * offset);
 			
 			if (passenger != getControllingPassenger()) {
 				if (motionX != 0 || motionY != 0 || motionZ != 0) {

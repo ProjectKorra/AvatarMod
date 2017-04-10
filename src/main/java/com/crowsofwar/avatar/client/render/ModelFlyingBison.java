@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.client.render;
 
+import static net.minecraft.client.renderer.GlStateManager.*;
+
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.client.model.ModelBase;
@@ -134,8 +136,17 @@ public class ModelFlyingBison extends ModelBase {
 		
 	}
 	
+	/**
+	 * glStateManager calls and 'float scale' lines by CrowsOfWar, all else by
+	 * Captn_Dubz
+	 */
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		
+		pushMatrix();
+		float scale = 1.5f;
+		scale(scale, scale, scale);
+		
 		this.leg2.render(f5);
 		this.leg4.render(f5);
 		this.body.render(f5);
@@ -145,6 +156,9 @@ public class ModelFlyingBison extends ModelBase {
 		this.leg6.render(f5);
 		this.leg3.render(f5);
 		this.head.render(f5);
+		
+		popMatrix();
+		
 	}
 	
 	/**
