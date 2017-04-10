@@ -40,10 +40,7 @@ public class ModelFlyingBison extends ModelBase {
 		this.leg2 = new ModelRenderer(this, 0, 0);
 		this.leg2.setRotationPoint(8.0F, 6.0F, 2.0F);
 		this.leg2.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
-		this.lowTail = new ModelRenderer(this, 52, 60);
-		this.lowTail.setRotationPoint(1.0F, 3.0F, 22.0F);
-		this.lowTail.addBox(-9.5F, -1.5F, 0.0F, 19, 3, 14, 0.0F);
-		this.setRotateAngle(lowTail, -0.41887902047863906F, 0.0F, 0.0F);
+		
 		this.leg4 = new ModelRenderer(this, 0, 0);
 		this.leg4.setRotationPoint(-6.0F, 6.0F, -7.0F);
 		this.leg4.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
@@ -53,10 +50,19 @@ public class ModelFlyingBison extends ModelBase {
 		this.hair = new ModelRenderer(this, 0, 74);
 		this.hair.setRotationPoint(0.0F, 0.0F, 0.0F);
 		this.hair.addBox(-6.0F, -6.1F, -11.5F, 12, 5, 11, 0.0F);
+		
 		this.upTail = new ModelRenderer(this, 0, 57);
 		this.upTail.setRotationPoint(1.0F, -4.4F, 12.0F);
 		this.upTail.addBox(-9.5F, -2.0F, 0.0F, 19, 3, 14, 0.0F);
-		this.setRotateAngle(upTail, -0.6632251157578453F, 0.0F, 0.0F);
+		this.setRotateAngle(upTail, 0, 0.0F, 0.0F);
+		
+		this.lowTail = new ModelRenderer(this, 52, 60);
+		this.lowTail.setRotationPoint(1.0F, -0.5F, 14.0F);
+		this.lowTail.addBox(-9.5F, -1.5F, 0F, 19, 3, 14, 0.0F);
+		this.setRotateAngle(lowTail, 0, 0.0F, 0.0F);
+		
+		this.upTail.addChild(lowTail);
+		
 		this.leg1 = new ModelRenderer(this, 0, 0);
 		this.leg1.setRotationPoint(8.0F, 6.0F, -7.0F);
 		this.leg1.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
@@ -123,14 +129,14 @@ public class ModelFlyingBison extends ModelBase {
 		leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
 		leg5.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
 		
-		// upTail.rotateAngleX = 30 * degToRad;
+		upTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * 0.5f * limbSwingAmount;
+		lowTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * -0.25f * limbSwingAmount;
 		
 	}
 	
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		this.leg2.render(f5);
-		this.lowTail.render(f5);
 		this.leg4.render(f5);
 		this.body.render(f5);
 		this.upTail.render(f5);
