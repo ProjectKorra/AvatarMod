@@ -120,7 +120,8 @@ public class ModelFlyingBison extends ModelBase {
 		EntitySkyBison bison = (EntitySkyBison) entity;
 		float degToRad = pi / 180;
 		
-		head.rotateAngleX = headPitch * degToRad;
+		head.rotateAngleX = headPitch * degToRad
+				+ MathHelper.cos(limbSwing * 0.6662f / 3) * 0.1f * limbSwingAmount;
 		head.rotateAngleY = netHeadYaw * degToRad;
 		
 		leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
