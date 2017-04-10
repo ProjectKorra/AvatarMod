@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * FlyingBison - Captn_Dubz Created using Tabula 5.1.0
@@ -99,19 +100,30 @@ public class ModelFlyingBison extends ModelBase {
 	}
 	
 	/**
+	 * Please note, head rotations are in degrees
+	 * 
 	 * @author CrowsOfWar
 	 */
 	@Override
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
 			float headPitch, float scaleFactor, Entity entity) {
 		
+		float pi = (float) Math.PI;
 		EntitySkyBison bison = (EntitySkyBison) entity;
+		float degToRad = pi / 180;
 		
-		// Not sure why this number is needed, found in ModelQuadruped
-		// Without it, head "flickers" around even when entity's rotation is the
-		// same
-		head.rotateAngleX = headPitch * 0.017453292F;
-		head.rotateAngleY = netHeadYaw * 0.017453292F;
+		head.rotateAngleX = headPitch * degToRad;
+		head.rotateAngleY = netHeadYaw * degToRad;
+		
+		leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		leg6.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		
+		leg1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
+		leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
+		leg5.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
+		
+		// upTail.rotateAngleX = 30 * degToRad;
 		
 	}
 	
