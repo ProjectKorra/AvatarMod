@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
@@ -34,6 +36,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -265,7 +268,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			return true;
 		}
 		
-		if (!player.isSneaking()) {
+		if (!player.isSneaking() && !worldObj.isRemote) {
 			player.startRiding(this);
 			return true;
 		}
@@ -286,14 +289,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		if (index > -1) {
 			
-			double offset = 1.5;
+			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
-			double yOffset = passenger.getYOffset() + 2;
+			double yOffset = passenger.getYOffset() + 1.75;
 			
 			if (passenger == getControllingPassenger()) {
 				angle = -toRadians(rotationYaw);
 				offset = 1;
-				yOffset -= Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + 2 - Math.sin(toRadians(rotationPitch));
 			}
 			
 			passenger.setPosition(posX + sin(angle) * offset, posY + yOffset, posZ + cos(angle) * offset);
@@ -336,13 +339,21 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public void moveEntityWithHeading(float strafe, float forward) {
 		
+		// onGround apparently doesn't work client-side
+		IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.2).toBlockPos());
+		boolean touchingGround = walkingOn.getMaterial() != Material.AIR;
+		
 		if (this.isBeingRidden() && this.canBeSteered()) {
 			
 			moveHelper.action = Action.WAIT;
 			
 			EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 			
-			Vector look = Vector.getLookRectangular(driver);
+			float pitch = abs(driver.rotationPitch) < 20 ? 0 : driver.rotationPitch;
+			if (touchingGround && abs(pitch) < 45) {
+				pitch = 0;
+			}
+			Vector look = toRectangular(toRadians(driver.rotationYaw), toRadians(pitch));
 			forward = (float) look.copy().setY(0).magnitude();
 			
 			float speedMult = condition.getSpeedMultiplier() * driver.moveForward * 2;
