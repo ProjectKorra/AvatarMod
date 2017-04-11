@@ -95,6 +95,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private ForgeChunkManager.Ticket ticket;
 	
 	private boolean wasTouchingGround;
+	private int tameness;
 	
 	/**
 	 * @param world
@@ -142,6 +143,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			@Nullable IEntityLivingData livingdata) {
 		
 		originalPos = Vector.getEntityPos(this);
+		tameness = (rand.nextInt(50) + 50) * worldObj.getDifficulty().getDifficultyId();
 		return super.onInitialSpawn(difficulty, livingdata);
 		
 	}
@@ -153,6 +155,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.load(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
+		setTameness(nbt.getInteger("Tameness"));
 	}
 	
 	@Override
@@ -162,6 +165,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.save(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
+		nbt.setInteger("Tameness", getTameness());
 	}
 	
 	// ================================================================================
@@ -204,6 +208,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	public double getFlySpeedMultiplier() {
 		return condition.getSpeedMultiplier();
+	}
+	
+	public int getTameness() {
+		return tameness;
+	}
+	
+	public void setTameness(int tameness) {
+		this.tameness = tameness;
 	}
 	
 	// ================================================================================
