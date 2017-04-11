@@ -57,7 +57,10 @@ public class ConfigMobs {
 	}
 	
 	@Load
-	public int bisonBaseTameness = 5;
+	public int bisonMinDomestication = 500, bisonMaxDomestication = 800;
+	
+	@Load
+	public int bisonRiderTameness = 800, bisonOwnableTameness = 900;
 	
 	@Load
 	private Map<String, Integer> bisonFoods = DEFAULT_FOODS;

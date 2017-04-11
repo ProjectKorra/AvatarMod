@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.data;
 
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
+
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -32,13 +34,16 @@ public class AnimalCondition {
 	private final float maxFoodPoints;
 	
 	private float lastDistance;
+	private int domestication;
 	
-	public AnimalCondition(EntityCreature animal, float maxFoodPoints, DataParameter<Float> syncFood) {
+	public AnimalCondition(EntityCreature animal, float maxFoodPoints, DataParameter<Float> syncFood,
+			int domestication) {
 		this.animal = animal;
 		this.syncFood = syncFood;
 		this.maxFoodPoints = maxFoodPoints;
 		
-		lastDistance = animal.distanceWalkedModified;
+		this.lastDistance = animal.distanceWalkedModified;
+		this.domestication = domestication;
 		
 	}
 	
@@ -53,6 +58,47 @@ public class AnimalCondition {
 		
 		lastDistance = distance;
 	}
+	
+	// ================================================================================
+	// DOMESTICATION
+	// ================================================================================
+	
+	public int getDomestication() {
+		return domestication;
+		
+	}
+	
+	public void setDomestication(int domestication) {
+		if (domestication < 0) domestication = 0;
+		if (domestication > 1000) domestication = 1000;
+		this.domestication = domestication;
+	}
+	
+	public boolean canHaveOwner() {
+		return domestication >= MOBS_CONFIG.bisonOwnableTameness;
+	}
+	
+	public int getMaxRiders() {
+		if (canHaveOwner()) {
+			
+			double pctToTame = 1.0 * (domestication - MOBS_CONFIG.bisonOwnableTameness)
+					/ (1000 - MOBS_CONFIG.bisonOwnableTameness);
+			return 1 + (int) (pctToTame * 4);
+			
+		} else if (domestication >= MOBS_CONFIG.bisonRiderTameness) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+	
+	public boolean isFullyDomesticated() {
+		return domestication == 0;
+	}
+	
+	// ================================================================================
+	// FOOD POINTS
+	// ================================================================================
 	
 	public float getFoodPoints() {
 		return animal.getDataManager().get(syncFood);

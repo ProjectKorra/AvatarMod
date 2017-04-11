@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
@@ -102,9 +103,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	 */
 	public EntitySkyBison(World world) {
 		super(world);
+		
+		int domestication = MOBS_CONFIG.bisonMinDomestication
+				+ rand.nextInt(MOBS_CONFIG.bisonMaxDomestication - MOBS_CONFIG.bisonMinDomestication);
+		
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		condition = new AnimalCondition(this, 30, SYNC_FOOD);
+		condition = new AnimalCondition(this, 30, SYNC_FOOD, domestication);
 		setSize(3, 2);
 	}
 	
@@ -142,8 +147,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
 			@Nullable IEntityLivingData livingdata) {
 		
+		int min = MOBS_CONFIG.bisonMinDomestication;
+		int max = MOBS_CONFIG.bisonMaxDomestication;
+		
 		originalPos = Vector.getEntityPos(this);
-		tameness = (rand.nextInt(50) + 50) * worldObj.getDifficulty().getDifficultyId();
+		tameness = (rand.nextInt(max - min) + min) * worldObj.getDifficulty().getDifficultyId();
 		return super.onInitialSpawn(difficulty, livingdata);
 		
 	}
@@ -155,7 +163,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.load(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
-		setTameness(nbt.getInteger("Tameness"));
 	}
 	
 	@Override
@@ -165,7 +172,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.save(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
-		nbt.setInteger("Tameness", getTameness());
 	}
 	
 	// ================================================================================
@@ -210,12 +216,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		return condition.getSpeedMultiplier();
 	}
 	
-	public int getTameness() {
-		return tameness;
-	}
-	
-	public void setTameness(int tameness) {
-		this.tameness = tameness;
+	public AnimalCondition getCondition() {
+		return condition;
 	}
 	
 	// ================================================================================
@@ -360,6 +362,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		
+		if (!worldObj.isRemote && !condition.canHaveOwner() && hasOwner()) {
+			
+		}
 		
 		condition.onUpdate();
 		if (condition.getFoodPoints() == 0) {
