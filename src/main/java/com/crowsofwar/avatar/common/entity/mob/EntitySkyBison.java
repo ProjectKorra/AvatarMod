@@ -161,7 +161,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	// ================================================================================
-	// GETTERS AND SETTERS
+	// DATA ACCESS / DATAMANAGER
 	// ================================================================================
 	
 	public Vector getOriginalPos() {
@@ -202,6 +202,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		return condition.getSpeedMultiplier();
 	}
 	
+	// ================================================================================
+	// CHUNK LOADING
+	// ================================================================================
+	
 	public boolean isForceLoadingChunks() {
 		return ticket != null;
 	}
@@ -222,70 +226,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	// ================================================================================
-	// ENTITY LOGIC
+	// PASSENGER LOGIC
 	// ================================================================================
-	
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		
-		condition.onUpdate();
-		if (condition.getFoodPoints() == 0) {
-			setSitting(true);
-		} else if (!hasOwner()) {
-			setSitting(false);
-		}
-		
-		if (!isForceLoadingChunks() && hasOwner()) {
-			beginForceLoadingChunks();
-		}
-		if (isForceLoadingChunks()) {
-			ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPosition()));
-			if (!hasOwner() || getHealth() <= 0) {
-				stopForceLoadingChunks();
-			}
-		}
-		
-	}
-	
-	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		ItemStack stack = player.getHeldItem(hand);
-		
-		if (stack.getItem() == Items.APPLE && !hasOwner()) {
-			System.out.println("Tame");
-			playTameEffect(true);
-			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
-			return true;
-		}
-		
-		if (stack.getItem() == Items.REDSTONE && hasOwner()) {
-			playTameEffect(false);
-			System.out.println("Untame");
-			setOwnerId(null);
-			return true;
-		}
-		
-		if (stack.getItem() instanceof ItemFood) {
-			System.out.println("Consume some food!");
-			ItemFood food = (ItemFood) stack.getItem();
-			condition.addFood(food.getHealAmount(stack));
-			return true;
-		}
-		
-		if (!player.isSneaking() && !worldObj.isRemote) {
-			player.startRiding(this);
-			return true;
-		}
-		
-		if (player.isSneaking() && getOwner() == player) {
-			setSitting(!isSitting());
-			return true;
-		}
-		
-		return super.processInteract(player, hand);
-		
-	}
 	
 	@Override
 	public void updatePassenger(Entity passenger) {
@@ -299,7 +241,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			double yOffset = passenger.getYOffset() + 1.75;
 			
 			if (passenger == getControllingPassenger()) {
-				angle = -toRadians(rotationYaw);
+				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
 				yOffset = passenger.getYOffset() + 2 - Math.sin(toRadians(rotationPitch));
 			}
@@ -341,6 +283,83 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		return false;
 	}
 	
+	// ================================================================================
+	// PLAYER INTERACTION HOOKS
+	// ================================================================================
+	
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		ItemStack stack = player.getHeldItem(hand);
+		
+		if (stack.getItem() == Items.APPLE && !hasOwner()) {
+			System.out.println("Tame");
+			playTameEffect(true);
+			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
+			return true;
+		}
+		
+		if (stack.getItem() == Items.REDSTONE && hasOwner()) {
+			playTameEffect(false);
+			System.out.println("Untame");
+			setOwnerId(null);
+			return true;
+		}
+		
+		if (stack.getItem() instanceof ItemFood) {
+			System.out.println("Consume some food!");
+			ItemFood food = (ItemFood) stack.getItem();
+			condition.addFood(food.getHealAmount(stack));
+			return true;
+		}
+		
+		if (!player.isSneaking() && !worldObj.isRemote) {
+			player.startRiding(this);
+			return true;
+		}
+		
+		if (player.isSneaking() && getOwner() == player) {
+			setSitting(!isSitting());
+			return true;
+		}
+		
+		return super.processInteract(player, hand);
+		
+	}
+	
+	private void onLiftoff() {
+		Raytrace.Result result = new Raytrace.Result();
+		ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
+		StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
+		getData().removeStatusControl(StatusControl.AIR_JUMP);
+	}
+	
+	// ================================================================================
+	// GENERAL UPDATE LOGIC
+	// ================================================================================
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		
+		condition.onUpdate();
+		if (condition.getFoodPoints() == 0) {
+			setSitting(true);
+		} else if (!hasOwner()) {
+			setSitting(false);
+		}
+		
+		if (!isForceLoadingChunks() && hasOwner()) {
+			beginForceLoadingChunks();
+		}
+		if (isForceLoadingChunks()) {
+			ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPosition()));
+			if (!hasOwner() || getHealth() <= 0) {
+				stopForceLoadingChunks();
+			}
+		}
+		
+	}
+	
 	@Override
 	public void moveEntityWithHeading(float strafe, float forward) {
 		
@@ -362,20 +381,17 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			forward = (float) look.copy().setY(0).magnitude();
 			
 			if (touchingGround && pitch <= -45 && forward > 0) {
-				System.out.println("Liftoff!");
-				Raytrace.Result result = new Raytrace.Result();
-				ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
-				StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
+				onLiftoff();
 			}
 			
 			float speedMult = condition.getSpeedMultiplier() * driver.moveForward * 2;
 			
-			this.rotationYaw = driver.rotationYaw;
+			this.rotationYawHead = driver.rotationYaw;
+			this.rotationYaw = this.rotationYaw * 0.8f + driver.rotationYaw * 0.2f;
 			this.prevRotationYaw = this.rotationYaw;
 			this.rotationPitch = driver.rotationPitch * 0.5F;
 			this.setRotation(this.rotationYaw, this.rotationPitch);
 			this.renderYawOffset = this.rotationYaw;
-			this.rotationYawHead = this.renderYawOffset;
 			strafe = driver.moveStrafing * 0.5F;
 			
 			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
