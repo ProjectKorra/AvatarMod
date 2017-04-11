@@ -20,8 +20,10 @@ import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JU
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
+import static net.minecraft.init.Blocks.STONE;
 import static net.minecraft.util.EnumParticleTypes.HEART;
 import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
+import static net.minecraft.util.SoundCategory.NEUTRAL;
 
 import java.util.UUID;
 
@@ -91,6 +93,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private final AnimalCondition condition;
 	
 	private ForgeChunkManager.Ticket ticket;
+	
+	private boolean wasTouchingGround;
 	
 	/**
 	 * @param world
@@ -333,6 +337,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		getData().removeStatusControl(StatusControl.AIR_JUMP);
 	}
 	
+	private void onLand() {
+		worldObj.playSound(null, getPosition(), STONE.getSoundType().getBreakSound(), NEUTRAL, 1, 1);
+	}
+	
 	// ================================================================================
 	// GENERAL UPDATE LOGIC
 	// ================================================================================
@@ -358,6 +366,22 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			}
 		}
 		
+		if (!worldObj.isRemote) {
+			
+			IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
+			boolean touchingGround = walkingOn.getMaterial() != Material.AIR;
+			
+			if (!touchingGround && wasTouchingGround) {
+				onLiftoff();
+			}
+			if (touchingGround && !wasTouchingGround) {
+				onLand();
+			}
+			
+			wasTouchingGround = touchingGround;
+			
+		}
+		
 	}
 	
 	@Override
@@ -381,13 +405,16 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			forward = (float) look.copy().setY(0).magnitude();
 			
 			if (touchingGround && pitch <= -45 && forward > 0) {
-				onLiftoff();
+				// onLiftoff();
 			}
 			
 			float speedMult = condition.getSpeedMultiplier() * driver.moveForward * 2;
 			
+			float current = (this.rotationYaw + 360) % 360;
+			float target = (driver.rotationYaw + 360) % 360;
+			
 			this.rotationYawHead = driver.rotationYaw;
-			this.rotationYaw = this.rotationYaw * 0.8f + driver.rotationYaw * 0.2f;
+			this.rotationYaw = (current * 0.8f + target * 0.2f) % 360;
 			this.prevRotationYaw = this.rotationYaw;
 			this.rotationPitch = driver.rotationPitch * 0.5F;
 			this.setRotation(this.rotationYaw, this.rotationPitch);
