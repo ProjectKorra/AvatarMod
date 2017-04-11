@@ -64,7 +64,7 @@ public class ConfigMobs {
 	
 	@Load
 	private Map<String, Integer> bisonFoods = DEFAULT_FOODS;
-	public Map<Item, Integer> bisonFoodList;
+	private Map<Item, Integer> bisonFoodList;
 	
 	public static void load() {
 		ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
@@ -82,6 +82,10 @@ public class ConfigMobs {
 				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid bison food; item " + name + " not found");
 			}
 		}
+	}
+	
+	public int getDomesticationValue(Item item) {
+		return bisonFoodList.containsKey(item) ? bisonFoodList.get(item) : 0;
 	}
 	
 }

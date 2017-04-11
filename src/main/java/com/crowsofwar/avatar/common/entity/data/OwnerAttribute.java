@@ -127,7 +127,7 @@ public class OwnerAttribute {
 	 */
 	public void setOwner(EntityLivingBase owner) {
 		this.ownerCached = owner;
-		setOwnerInfo(new BenderInfo(owner));
+		setOwnerInfo(owner == null ? new NoBenderInfo() : new BenderInfo(owner));
 		
 		if (owner != null) {
 			setOwnerCallback.accept(owner);

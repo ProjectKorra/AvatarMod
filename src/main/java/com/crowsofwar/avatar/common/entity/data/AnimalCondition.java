@@ -74,6 +74,10 @@ public class AnimalCondition {
 		this.domestication = domestication;
 	}
 	
+	public void addDomestication(int domestication) {
+		setDomestication(this.domestication + domestication);
+	}
+	
 	public boolean canHaveOwner() {
 		return domestication >= MOBS_CONFIG.bisonOwnableTameness;
 	}

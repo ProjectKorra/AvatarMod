@@ -22,8 +22,7 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
 import static net.minecraft.init.Blocks.STONE;
-import static net.minecraft.util.EnumParticleTypes.HEART;
-import static net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL;
+import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.SoundCategory.NEUTRAL;
 
 import java.util.UUID;
@@ -57,6 +56,7 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -96,7 +96,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private ForgeChunkManager.Ticket ticket;
 	
 	private boolean wasTouchingGround;
-	private int tameness;
 	
 	/**
 	 * @param world
@@ -147,11 +146,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
 			@Nullable IEntityLivingData livingdata) {
 		
-		int min = MOBS_CONFIG.bisonMinDomestication;
-		int max = MOBS_CONFIG.bisonMaxDomestication;
-		
 		originalPos = Vector.getEntityPos(this);
-		tameness = (rand.nextInt(max - min) + min) * worldObj.getDifficulty().getDifficultyId();
 		return super.onInitialSpawn(difficulty, livingdata);
 		
 	}
@@ -309,6 +304,32 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		
+		if (!condition.isFullyDomesticated()) {
+			if (stack != field_190927_a) {
+				
+				Item item = stack.getItem();
+				int domesticationValue = MOBS_CONFIG.getDomesticationValue(item);
+				
+				if (domesticationValue > 0) {
+					
+					condition.addDomestication(domesticationValue);
+					System.out.println("Now domestication is " + condition.getDomestication());
+					
+					if (condition.canHaveOwner() && item == Items.APPLE) {
+						System.out.println("Im tame now lel");
+						playTameEffect(true);
+						setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
+					} else {
+						playTameEffect(false);
+					}
+					
+					return true;
+					
+				}
+				
+			}
+		}
+		
 		if (stack.getItem() == Items.APPLE && !hasOwner()) {
 			System.out.println("Tame");
 			playTameEffect(true);
@@ -364,7 +385,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		super.onUpdate();
 		
 		if (!worldObj.isRemote && !condition.canHaveOwner() && hasOwner()) {
-			
+			setOwner(null);
 		}
 		
 		condition.onUpdate();
@@ -545,7 +566,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	// ================================================================================
 	
 	protected void playTameEffect(boolean success) {
-		EnumParticleTypes particle = success ? HEART : SMOKE_NORMAL;
+		
+		EnumParticleTypes particle;
+		if (success) {
+			particle = EnumParticleTypes.HEART;
+		} else {
+			particle = condition.canHaveOwner() ? EnumParticleTypes.CLOUD : EnumParticleTypes.SMOKE_NORMAL;
+		}
 		
 		for (int i = 0; i < 7; i++) {
 			double mx = this.rand.nextGaussian() * 0.02D;
