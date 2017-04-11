@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
@@ -28,11 +29,15 @@ import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -340,7 +345,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public void moveEntityWithHeading(float strafe, float forward) {
 		
 		// onGround apparently doesn't work client-side
-		IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.2).toBlockPos());
+		IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
 		boolean touchingGround = walkingOn.getMaterial() != Material.AIR;
 		
 		if (this.isBeingRidden() && this.canBeSteered()) {
@@ -355,6 +360,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			}
 			Vector look = toRectangular(toRadians(driver.rotationYaw), toRadians(pitch));
 			forward = (float) look.copy().setY(0).magnitude();
+			
+			if (touchingGround && pitch <= -45 && forward > 0) {
+				System.out.println("Liftoff!");
+				Raytrace.Result result = new Raytrace.Result();
+				ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
+				StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
+			}
 			
 			float speedMult = condition.getSpeedMultiplier() * driver.moveForward * 2;
 			
