@@ -59,7 +59,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	
 	@Override
 	public String getModelName(int meta) {
-		return "water_pouch_" + meta;
+		return "water_pouch";
 	}
 	
 	@Override
