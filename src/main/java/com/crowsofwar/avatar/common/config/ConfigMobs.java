@@ -63,10 +63,11 @@ public class ConfigMobs {
 	public int bisonRiderTameness = 800, bisonOwnableTameness = 900;
 	
 	@Load
-	private Map<String, Integer> bisonFoods = DEFAULT_FOODS;
+	private Map<String, Integer> bisonFoods;
 	private Map<Item, Integer> bisonFoodList;
 	
 	public static void load() {
+		MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
 		ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
 		MOBS_CONFIG.loadLists();
 	}

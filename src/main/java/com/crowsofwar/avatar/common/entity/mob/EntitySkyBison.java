@@ -329,14 +329,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 					condition.addFood(food.getHealAmount(stack));
 				}
 				
-				return domesticationValue > 0 || item instanceof ItemFood;
+				if (domesticationValue > 0 || item instanceof ItemFood) return true;
 				
 			}
 		}
 		
 		if (stack.getItem() == Items.REDSTONE && hasOwner()) {
 			playTameEffect(false);
-			System.out.println("Untame");
 			setOwnerId(null);
 			return true;
 		}
@@ -347,6 +346,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			int health = (int) (100.0 * getHealth() / getMaxHealth());
 			
 			MSG_SKY_BISON_STATS.send(player, food, health, condition.getDomestication());
+			System.out.println("Send diagnostic check");
 			
 		}
 		

@@ -330,7 +330,7 @@ public class ConfigLoader {
 		
 		try {
 			
-			Map<String, Object> sorted = new TreeMap<String, Object>(usedValues);
+			Map<String, Object> sorted = new TreeMap<>(usedValues);
 			return yaml.dump(sorted);
 			
 		} catch (YAMLException e) {
