@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SKY_BISON_STATS;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -338,6 +339,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			System.out.println("Untame");
 			setOwnerId(null);
 			return true;
+		}
+		
+		if (!worldObj.isRemote && player.isSneaking() && stack.getItem() == Items.ARROW) {
+			
+			int food = (int) (100.0 * condition.getFoodPoints() / 30);
+			int health = (int) (100.0 * getHealth() / getMaxHealth());
+			
+			MSG_SKY_BISON_STATS.send(player, food, health, condition.getDomestication());
+			
 		}
 		
 		if (!player.isSneaking() && !worldObj.isRemote) {

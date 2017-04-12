@@ -54,6 +54,7 @@ avatar.donthavebending=[error]You haven't learned ${bending} yet. To get it, typ
 avatar.nochi=Not enough chi!
 avatar.airBubbleElytra=Cannot use air bubble with elytra
 avatar.bisonSummon=Your bison was called and will be here in approximately ${time} seconds!
+avatar.bisonStats=Bison is at {food}%% food, {health}%% health, and {domestication} domestication.
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
