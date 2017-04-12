@@ -373,6 +373,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 	}
 	
+	@Override
+	public boolean canBeLeashedTo(EntityPlayer player) {
+		return condition.getDomestication() >= MOBS_CONFIG.bisonLeashTameness && super.canBeLeashedTo(player);
+	}
+	
 	private void onLiftoff() {
 		Raytrace.Result result = new Raytrace.Result();
 		ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
