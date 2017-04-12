@@ -104,7 +104,7 @@ public class AnimalCondition {
 	}
 	
 	public boolean isFullyDomesticated() {
-		return domestication == 0;
+		return domestication == 1000;
 	}
 	
 	// ================================================================================
