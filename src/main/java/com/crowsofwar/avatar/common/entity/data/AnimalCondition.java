@@ -31,16 +31,17 @@ public class AnimalCondition {
 	
 	private final DataParameter<Float> syncFood;
 	private final EntityCreature animal;
-	private final float maxFoodPoints;
+	private final float maxFoodPoints, foodRegenPoints;
 	
 	private float lastDistance;
 	private int domestication;
 	
-	public AnimalCondition(EntityCreature animal, float maxFoodPoints, DataParameter<Float> syncFood,
-			int domestication) {
+	public AnimalCondition(EntityCreature animal, float maxFoodPoints, float foodRegenPoints,
+			DataParameter<Float> syncFood, int domestication) {
 		this.animal = animal;
 		this.syncFood = syncFood;
 		this.maxFoodPoints = maxFoodPoints;
+		this.foodRegenPoints = foodRegenPoints;
 		
 		this.lastDistance = animal.distanceWalkedModified;
 		this.domestication = domestication;
@@ -57,6 +58,16 @@ public class AnimalCondition {
 		}
 		
 		lastDistance = distance;
+		
+		if (!animal.worldObj.isRemote) {
+			boolean enoughFood = getFoodPoints() >= foodRegenPoints;
+			boolean correctTime = animal.ticksExisted % 40 == 0;
+			if (enoughFood && correctTime) {
+				animal.heal(1);
+				addHunger(1);
+			}
+		}
+		
 	}
 	
 	// ================================================================================

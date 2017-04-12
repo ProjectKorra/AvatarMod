@@ -108,7 +108,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		condition = new AnimalCondition(this, 30, SYNC_FOOD, domestication);
+		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, domestication);
 		setSize(3, 2);
 	}
 	
@@ -311,7 +311,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 				int domesticationValue = MOBS_CONFIG.getDomesticationValue(item);
 				
 				if (domesticationValue > 0) {
-					
 					condition.addDomestication(domesticationValue);
 					System.out.println("Now domestication is " + condition.getDomestication());
 					
@@ -322,32 +321,22 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 					} else {
 						playTameEffect(false);
 					}
-					
-					return true;
-					
 				}
 				
+				if (item instanceof ItemFood) {
+					ItemFood food = (ItemFood) stack.getItem();
+					condition.addFood(food.getHealAmount(stack));
+				}
+				
+				return domesticationValue > 0 || item instanceof ItemFood;
+				
 			}
-		}
-		
-		if (stack.getItem() == Items.APPLE && !hasOwner()) {
-			System.out.println("Tame");
-			playTameEffect(true);
-			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
-			return true;
 		}
 		
 		if (stack.getItem() == Items.REDSTONE && hasOwner()) {
 			playTameEffect(false);
 			System.out.println("Untame");
 			setOwnerId(null);
-			return true;
-		}
-		
-		if (stack.getItem() instanceof ItemFood) {
-			System.out.println("Consume some food!");
-			ItemFood food = (ItemFood) stack.getItem();
-			condition.addFood(food.getHealAmount(stack));
 			return true;
 		}
 		
