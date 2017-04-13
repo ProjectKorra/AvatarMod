@@ -30,21 +30,21 @@ import net.minecraft.network.datasync.DataParameter;
 public class AnimalCondition {
 	
 	private final DataParameter<Float> syncFood;
+	private final DataParameter<Integer> syncDomestication;
 	private final EntityCreature animal;
 	private final float maxFoodPoints, foodRegenPoints;
 	
 	private float lastDistance;
-	private int domestication;
 	
 	public AnimalCondition(EntityCreature animal, float maxFoodPoints, float foodRegenPoints,
-			DataParameter<Float> syncFood, int domestication) {
+			DataParameter<Float> syncFood, DataParameter<Integer> syncDomestication) {
 		this.animal = animal;
+		this.syncDomestication = syncDomestication;
 		this.syncFood = syncFood;
 		this.maxFoodPoints = maxFoodPoints;
 		this.foodRegenPoints = foodRegenPoints;
 		
 		this.lastDistance = animal.distanceWalkedModified;
-		this.domestication = domestication;
 		
 	}
 	
@@ -71,32 +71,31 @@ public class AnimalCondition {
 	// ================================================================================
 	
 	public int getDomestication() {
-		return domestication;
-		
+		return animal.getDataManager().get(syncDomestication);
 	}
 	
 	public void setDomestication(int domestication) {
 		if (domestication < 0) domestication = 0;
 		if (domestication > 1000) domestication = 1000;
-		this.domestication = domestication;
+		animal.getDataManager().set(syncDomestication, domestication);
 	}
 	
 	public void addDomestication(int domestication) {
-		setDomestication(this.domestication + domestication);
+		setDomestication(getDomestication() + domestication);
 	}
 	
 	public boolean canHaveOwner() {
-		return domestication >= MOBS_CONFIG.bisonOwnableTameness;
+		return getDomestication() >= MOBS_CONFIG.bisonOwnableTameness;
 	}
 	
 	public int getMaxRiders() {
 		if (canHaveOwner()) {
 			
-			double pctToTame = 1.0 * (domestication - MOBS_CONFIG.bisonOwnableTameness)
+			double pctToTame = 1.0 * (getDomestication() - MOBS_CONFIG.bisonOwnableTameness)
 					/ (1000 - MOBS_CONFIG.bisonOwnableTameness);
 			return 1 + (int) (pctToTame * 4);
 			
-		} else if (domestication >= MOBS_CONFIG.bisonRiderTameness) {
+		} else if (getDomestication() >= MOBS_CONFIG.bisonRiderTameness) {
 			return 1;
 		} else {
 			return 0;
@@ -104,7 +103,7 @@ public class AnimalCondition {
 	}
 	
 	public boolean isFullyDomesticated() {
-		return domestication == 1000;
+		return getDomestication() == 1000;
 	}
 	
 	// ================================================================================

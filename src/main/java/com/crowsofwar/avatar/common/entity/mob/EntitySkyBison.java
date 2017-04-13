@@ -90,6 +90,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<Float> SYNC_FOOD = EntityDataManager.createKey(EntitySkyBison.class,
 			DataSerializers.FLOAT);
 	
+	private static final DataParameter<Integer> SYNC_DOMESTICATION = EntityDataManager
+			.createKey(EntitySkyBison.class, DataSerializers.VARINT);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
@@ -104,20 +107,23 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public EntitySkyBison(World world) {
 		super(world);
 		
-		int domestication = MOBS_CONFIG.bisonMinDomestication
-				+ rand.nextInt(MOBS_CONFIG.bisonMaxDomestication - MOBS_CONFIG.bisonMinDomestication);
-		
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, domestication);
+		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION);
 		setSize(3, 2);
+		
 	}
 	
 	@Override
 	protected void entityInit() {
 		super.entityInit();
+		
+		int domestication = MOBS_CONFIG.bisonMinDomestication
+				+ rand.nextInt(MOBS_CONFIG.bisonMaxDomestication - MOBS_CONFIG.bisonMinDomestication);
+		
 		dataManager.register(SYNC_SITTING, false);
 		dataManager.register(SYNC_FOOD, 20f);
+		dataManager.register(SYNC_DOMESTICATION, domestication);
 	}
 	
 	@Override
