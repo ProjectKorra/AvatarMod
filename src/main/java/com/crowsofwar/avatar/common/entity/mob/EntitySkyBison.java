@@ -316,11 +316,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 					condition.addDomestication(domesticationValue);
 					System.out.println("Now domestication is " + condition.getDomestication());
 					
-					if (condition.canHaveOwner() && item == Items.APPLE) {
-						System.out.println("Im tame now lel");
-						playTameEffect(true);
-						setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
-					} else {
+					if (!condition.canHaveOwner() || item != Items.APPLE) {
 						playTameEffect(false);
 					}
 				}
@@ -341,6 +337,16 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			}
 		}
 		
+		if (condition.canHaveOwner() && stack.getItem() == Items.APPLE && !hasOwner()) {
+			System.out.println("Im tame now lel");
+			playTameEffect(true);
+			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
+			if (!player.capabilities.isCreativeMode) {
+				stack.func_190918_g(1);
+			}
+			return true;
+		}
+		
 		if (stack.getItem() == Items.REDSTONE) {
 			condition.setDomestication(0);
 			playTameEffect(false);
@@ -354,7 +360,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			int health = (int) (100.0 * getHealth() / getMaxHealth());
 			
 			MSG_SKY_BISON_STATS.send(player, food, health, condition.getDomestication());
-			System.out.println("Send diagnostic check");
 			
 			return true;
 			
@@ -365,8 +370,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			return true;
 		}
 		
+		System.out.println(getOwner() + ", " + player);
 		if (player.isSneaking() && getOwner() == player) {
 			setSitting(!isSitting());
+			System.out.println("Sit " + isSitting());
 			return true;
 		}
 		

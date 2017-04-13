@@ -22,6 +22,7 @@ import static net.minecraft.item.ItemStack.field_190927_a;
 import java.util.List;
 
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -48,7 +49,6 @@ public class EntityAiBisonTempt extends EntityAIBase {
 		
 		List<EntityPlayer> players = bison.worldObj.getEntities(EntityPlayer.class, player -> {
 			
-			System.out.println("Player " + player);
 			if (bison.getDistanceSqToEntity(player) > maxDistSq) return false;
 			
 			for (EnumHand hand : EnumHand.values()) {
@@ -89,6 +89,7 @@ public class EntityAiBisonTempt extends EntityAIBase {
 			return true;
 		} else {
 			following = null;
+			bison.getMoveHelper().action = Action.WAIT;
 			return false;
 		}
 	}
