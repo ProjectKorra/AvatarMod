@@ -89,4 +89,8 @@ public class ConfigMobs {
 		return bisonFoodList.containsKey(item) ? bisonFoodList.get(item) : 0;
 	}
 	
+	public boolean isBisonFood(Item item) {
+		return bisonFoodList.containsKey(item);
+	}
+	
 }

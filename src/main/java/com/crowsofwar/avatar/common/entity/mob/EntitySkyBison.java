@@ -138,7 +138,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		this.tasks.addTask(4, new EntityAiBisonSit(this));
 		this.tasks.addTask(5, new EntityAiBisonFollowOwner(this));
-		this.tasks.addTask(6, new EntityAiBisonWander(this));
+		this.tasks.addTask(6, new EntityAiBisonTempt(this, 10));
+		this.tasks.addTask(7, new EntityAiBisonWander(this));
 		
 	}
 	
