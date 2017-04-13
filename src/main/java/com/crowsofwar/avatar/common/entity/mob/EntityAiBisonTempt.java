@@ -48,18 +48,8 @@ public class EntityAiBisonTempt extends EntityAIBase {
 	public boolean shouldExecute() {
 		
 		List<EntityPlayer> players = bison.worldObj.getEntities(EntityPlayer.class, player -> {
-			
 			if (bison.getDistanceSqToEntity(player) > maxDistSq) return false;
-			
-			for (EnumHand hand : EnumHand.values()) {
-				ItemStack stack = player.getHeldItem(hand);
-				if (stack != field_190927_a) {
-					if (MOBS_CONFIG.isBisonFood(stack.getItem())) {
-						return true;
-					}
-				}
-			}
-			return false;
+			return isHoldingFood(player);
 		});
 		
 		players.sort((p1, p2) -> {
@@ -84,14 +74,30 @@ public class EntityAiBisonTempt extends EntityAIBase {
 	
 	@Override
 	public boolean continueExecuting() {
-		if (bison.getDistanceSqToEntity(following) <= maxDistSq) {
+		
+		if (!following.isDead && bison.getDistanceSqToEntity(following) <= maxDistSq
+				&& isHoldingFood(following)) {
+			
 			bison.getMoveHelper().setMoveTo(following.posX, following.posY, following.posZ, 1);
 			return true;
+			
 		} else {
 			following = null;
 			bison.getMoveHelper().action = Action.WAIT;
 			return false;
 		}
+	}
+	
+	private boolean isHoldingFood(EntityPlayer player) {
+		for (EnumHand hand : EnumHand.values()) {
+			ItemStack stack = player.getHeldItem(hand);
+			if (stack != field_190927_a) {
+				if (MOBS_CONFIG.isBisonFood(stack.getItem())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 }
