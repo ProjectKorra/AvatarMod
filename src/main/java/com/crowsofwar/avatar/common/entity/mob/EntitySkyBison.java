@@ -313,6 +313,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		
+		boolean willBeOwned = condition.canHaveOwner() && stack.getItem() == Items.APPLE && !hasOwner();
+		
 		if (!condition.isFullyDomesticated()) {
 			if (stack != field_190927_a) {
 				
@@ -338,13 +340,16 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 					if (!player.capabilities.isCreativeMode) {
 						stack.func_190918_g(1);
 					}
-					return true;
+					// Don't stop now if we are about to be owned
+					if (!willBeOwned) {
+						return true;
+					}
 				}
 				
 			}
 		}
 		
-		if (condition.canHaveOwner() && stack.getItem() == Items.APPLE && !hasOwner()) {
+		if (willBeOwned) {
 			System.out.println("Im tame now lel");
 			playTameEffect(true);
 			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
