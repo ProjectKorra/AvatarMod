@@ -149,10 +149,12 @@ public class AnimalCondition {
 	
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("FoodPoints", getFoodPoints());
+		nbt.setInteger("Domestication", getDomestication());
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
 		setFoodPoints(nbt.getFloat("FoodPoints"));
+		setDomestication(nbt.getInteger("Domestication"));
 	}
 	
 }
