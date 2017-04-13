@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SKY_BISON_STATS;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
+import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
@@ -476,11 +477,21 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			
 			float speedMult = condition.getSpeedMultiplier() * driver.moveForward * 2;
 			
-			float current = (this.rotationYaw + 360) % 360;
-			float target = (driver.rotationYaw + 360) % 360;
+			float current = normalizeAngle(this.rotationYaw);
+			float target = normalizeAngle(driver.rotationYaw);
+			
+			float delta = target - current;
+			float turnRight = abs(normalizeAngle(target - current));
+			float turnLeft = abs(normalizeAngle(current - target));
+			
+			if (turnRight < turnLeft) {
+				rotationYaw += turnRight * 0.3;
+			} else {
+				rotationYaw -= turnLeft * 0.3;
+			}
+			rotationYaw = normalizeAngle(rotationYaw);
 			
 			this.rotationYawHead = driver.rotationYaw;
-			this.rotationYaw = (current * 0.8f + target * 0.2f) % 360;
 			this.prevRotationYaw = this.rotationYaw;
 			this.rotationPitch = driver.rotationPitch * 0.5F;
 			this.setRotation(this.rotationYaw, this.rotationPitch);

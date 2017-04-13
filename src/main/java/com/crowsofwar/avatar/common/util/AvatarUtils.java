@@ -48,6 +48,17 @@ public class AvatarUtils {
 	}
 	
 	/**
+	 * Ensures that the angle is in the range of 0-360.
+	 */
+	public static float normalizeAngle(float angle) {
+		while (angle < 0) {
+			angle += 360;
+		}
+		angle %= 360;
+		return angle;
+	}
+	
+	/**
 	 * Clears the list(or collection), and adds items from the NBT list. Does
 	 * not permit null values.
 	 * 
