@@ -76,9 +76,13 @@ public class EntityHumanBender extends EntityBender {
 		this.targetTasks.addTask(2,
 				new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
 		
-		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
-		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
+		// this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this,
+		// this));
+		// this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this,
+		// this));
+		// this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this,
+		// this));
+		this.tasks.addTask(3, BendingAbility.ABILITY_FIRE_ARC.getAi(this, this));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 		
 		// this.tasks.addTask(5, new EntityAiKeepDistance(this, 3, 2));

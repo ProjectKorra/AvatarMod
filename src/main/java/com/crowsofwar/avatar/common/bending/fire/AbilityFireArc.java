@@ -19,13 +19,16 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
@@ -73,6 +76,11 @@ public class AbilityFireArc extends FireAbility {
 			
 		}
 		
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiFireArc(this, entity, bender);
 	}
 	
 }
