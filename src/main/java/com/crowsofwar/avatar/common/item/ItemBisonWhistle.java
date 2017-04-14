@@ -68,7 +68,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 			// Make sure there's a bison to teleport first
 			UUID boundTo = getBoundTo(stack);
 			List<EntitySkyBison> entities = world.getEntities(EntitySkyBison.class,
-					bison -> bison.getUniqueID() == boundTo);
+					bison -> bison.getUniqueID().equals(boundTo));
 			
 			if (!entities.isEmpty()) {
 				

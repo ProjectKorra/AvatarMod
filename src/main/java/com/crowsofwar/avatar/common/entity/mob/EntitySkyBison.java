@@ -372,7 +372,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		if (!worldObj.isRemote && stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
 			ItemBisonWhistle.setBoundTo(stack, getUniqueID());
 			ItemBisonWhistle.setBisonName(stack, getName());
-			System.out.println("BT " + ItemBisonWhistle.getBoundTo(stack) + "/" + getUniqueID());
 			MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
 			return true;
 		}
@@ -386,6 +385,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			
 			return true;
 			
+		}
+		
+		if (stack.getItem() == Items.NAME_TAG) {
+			setAlwaysRenderNameTag(true);
+			return false;
 		}
 		
 		if (!player.isSneaking() && !worldObj.isRemote) {
