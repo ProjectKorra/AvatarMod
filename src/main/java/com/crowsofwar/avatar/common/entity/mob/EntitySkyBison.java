@@ -56,6 +56,7 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIEatGrass;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
@@ -149,7 +150,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		this.tasks.addTask(4, new EntityAiBisonSit(this));
 		this.tasks.addTask(5, new EntityAiBisonFollowOwner(this));
 		this.tasks.addTask(6, new EntityAiBisonTempt(this, 10));
-		this.tasks.addTask(7, new EntityAiBisonWander(this));
+		this.tasks.addTask(7, new EntityAIEatGrass(this));
+		this.tasks.addTask(8, new EntityAiBisonWander(this));
 		
 	}
 	
@@ -225,6 +227,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	public AnimalCondition getCondition() {
 		return condition;
+	}
+	
+	public boolean wantsGrass() {
+		return condition.getFoodPoints() < 15;
 	}
 	
 	// ================================================================================
@@ -420,6 +426,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	private void onLand() {
 		worldObj.playSound(null, getPosition(), STONE.getSoundType().getBreakSound(), NEUTRAL, 1, 1);
+	}
+	
+	@Override
+	public void eatGrassBonus() {
+		condition.addFood(MOBS_CONFIG.bisonGrassFoodBonus);
 	}
 	
 	// ================================================================================
