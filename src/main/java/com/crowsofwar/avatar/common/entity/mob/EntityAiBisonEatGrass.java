@@ -24,6 +24,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -35,6 +36,7 @@ import net.minecraft.world.World;
 public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	private final EntitySkyBison bison;
+	private int eatGrassCountdown;
 	
 	public EntityAiBisonEatGrass(EntitySkyBison bison) {
 		this.bison = bison;
@@ -42,7 +44,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		System.out.println("ShouldExecute " + bison.wantsGrass());
 		return bison.wantsGrass();
 	}
 	
@@ -50,6 +51,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	public void startExecuting() {
 		
 		System.out.println("Time to eat!!");
+		eatGrassCountdown = 30;
 		
 		World world = bison.worldObj;
 		
@@ -82,12 +84,15 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public boolean continueExecuting() {
+		World world = bison.worldObj;
 		EntityMoveHelper mh = bison.getMoveHelper();
-		// if (bison.getDistanceSq(mh.getX(), mh.getY(), mh.getZ()) < 3 * 3) {
-		if (bison.onGround) {
+		
+		BlockPos downPos = bison.getPosition().down();
+		boolean reachedGround = world.isSideSolid(downPos, EnumFacing.UP);
+		if (reachedGround) {
 			System.out.println("Reached the ground");
 			
-			bison.eatGrassBonus();
+			tryEatGrass();
 			
 		}
 		return bison.wantsGrass();
@@ -129,6 +134,45 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		
 		return true;
 		
+	}
+	
+	private void tryEatGrass() {
+		eatGrassCountdown--;
+		if (eatGrassCountdown <= 0) {
+			eatGrassCountdown = 30;
+			
+			BlockPos downPos = bison.getPosition().down();
+			World world = bison.worldObj;
+			
+			boolean mobGriefing = world.getGameRules().getBoolean("mobGriefing");
+			
+			BlockPos ediblePos = null;
+			
+			Block block = world.getBlockState(downPos).getBlock();
+			if (block == Blocks.GRASS) {
+				ediblePos = downPos;
+			} else {
+				block = world.getBlockState(downPos.up()).getBlock();
+				if (block == Blocks.TALLGRASS || block == Blocks.YELLOW_FLOWER
+						|| block == Blocks.RED_FLOWER) {
+					
+					ediblePos = downPos.up();
+					
+				}
+			}
+			
+			if (ediblePos != null) {
+				
+				if (mobGriefing) {
+					world.playEvent(2001, ediblePos, Block.getIdFromBlock(Blocks.GRASS));
+					world.setBlockState(ediblePos, Blocks.DIRT.getDefaultState(), 2);
+				}
+				
+				bison.eatGrassBonus();
+				
+			}
+			
+		}
 	}
 	
 }
