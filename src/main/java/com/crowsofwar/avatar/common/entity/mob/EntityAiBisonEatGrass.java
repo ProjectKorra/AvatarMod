@@ -109,11 +109,11 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		BlockPos downPos = bison.getPosition().down();
 		boolean reachedGround = isSolidBlock(downPos);
 		if (reachedGround) {
-			System.out.println("Reached the ground");
 			
 			if (!isEatingGrass()) {
 				eatGrassCountdown = 30;
 				eatGrassTime = 0;
+				System.out.println("Reached the ground");
 			}
 			tryEatGrass();
 			
@@ -196,8 +196,11 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 			if (ediblePos != null) {
 				
 				if (mobGriefing) {
+					System.out.println("Set to dirt");
 					world.playEvent(2001, ediblePos, Block.getIdFromBlock(Blocks.GRASS));
-					world.setBlockState(ediblePos, Blocks.DIRT.getDefaultState(), 2);
+					if (block == Blocks.GRASS) {
+						world.setBlockState(ediblePos, Blocks.DIRT.getDefaultState(), 2);
+					}
 				}
 				
 				bison.eatGrassBonus();
