@@ -22,7 +22,6 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * 
@@ -79,15 +78,6 @@ public class EntityAiBisonWander extends EntityAIBase {
 		double x = original.x() + (random.nextFloat() * 2 - 1) * 32;
 		double y = original.y() + (random.nextFloat() * 2 - 1) * 32;
 		double z = original.z() + (random.nextFloat() * 2 - 1) * 32;
-		
-		// Set y to closest block below bison if it is hungry
-		if (entity.wantsGrass()) {
-			int i = (int) entity.posY;
-			while (entity.worldObj.isAirBlock(new BlockPos(x, i, z))) {
-				y--;
-			}
-			y = i;
-		}
 		
 		this.entity.getMoveHelper().setMoveTo(x, y, z, 1.0D);
 	}

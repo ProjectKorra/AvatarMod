@@ -56,7 +56,6 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIEatGrass;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
@@ -150,7 +149,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		this.tasks.addTask(4, new EntityAiBisonSit(this));
 		this.tasks.addTask(5, new EntityAiBisonFollowOwner(this));
 		this.tasks.addTask(6, new EntityAiBisonTempt(this, 10));
-		this.tasks.addTask(7, new EntityAIEatGrass(this));
+		this.tasks.addTask(7, new EntityAiBisonEatGrass(this));
 		this.tasks.addTask(8, new EntityAiBisonWander(this));
 		
 	}
