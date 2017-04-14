@@ -371,6 +371,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		if (stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
 			ItemBisonWhistle.setBoundTo(stack, getUniqueID());
+			ItemBisonWhistle.setBisonName(stack, getName());
 			MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
 			return true;
 		}
