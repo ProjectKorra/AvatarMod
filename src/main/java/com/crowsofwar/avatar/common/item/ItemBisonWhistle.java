@@ -16,7 +16,8 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BISON_WHISTLE_NOSUMMON;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BISON_WHISTLE_SUMMON;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 
 import java.util.List;
@@ -28,7 +29,6 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,19 +51,8 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		setUnlocalizedName("bison_whistle");
 	}
 	
-	@Override
-	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target,
-			EnumHand hand) {
-		
-		if (target instanceof EntitySkyBison && player.isSneaking()) {
-			setBoundTo(stack, target.getUniqueID());
-			MSG_BISON_WHISTLE_ASSIGN.send(player, target.getName());
-			return true;
-		}
-		
-		return false;
-		
-	}
+	// Logic for assigning bison whistle is in the bison class
+	// itemInteractionForEntity didn't work while sneaking
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
@@ -96,10 +85,10 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 				
 			} else {
 				
-				MSG_BISON_WHISTLE_NOSUMMON.send(player);
-				
 			}
 			
+		} else {
+			MSG_BISON_WHISTLE_NOSUMMON.send(player);
 		}
 		
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
@@ -117,7 +106,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	}
 	
 	@Nullable
-	private static UUID getBoundTo(ItemStack stack) {
+	public static UUID getBoundTo(ItemStack stack) {
 		NBTTagCompound nbt = stackCompound(stack);
 		return nbt.hasKey("SkyBison") ? nbt.getUniqueId("SkyBison") : null;
 	}

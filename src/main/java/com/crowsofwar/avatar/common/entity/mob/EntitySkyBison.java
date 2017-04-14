@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BISON_WHISTLE_ASSIGN;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SKY_BISON_STATS;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
@@ -40,6 +41,8 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
@@ -363,6 +366,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			condition.setDomestication(0);
 			playTameEffect(false);
 			setOwnerId(null);
+			return true;
+		}
+		
+		if (stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
+			ItemBisonWhistle.setBoundTo(stack, getUniqueID());
+			MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
 			return true;
 		}
 		
