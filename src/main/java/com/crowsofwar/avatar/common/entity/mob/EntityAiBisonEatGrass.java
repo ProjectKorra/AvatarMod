@@ -16,8 +16,14 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static net.minecraft.util.math.MathHelper.floor_double;
+
+import com.crowsofwar.gorecore.util.Vector;
+
+import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -36,6 +42,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
+		System.out.println("ShouldExecute " + bison.wantsGrass());
 		return bison.wantsGrass();
 	}
 	
@@ -46,31 +53,82 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		
 		World world = bison.worldObj;
 		
-		double maxDist = 2;
+		int tries = 0;
+		Vector landing;
+		boolean isValidPosition;
+		do {
+			
+			landing = findLandingPoint().add(0, 1, 0);
+			tries++;
+			
+			Block block = world.getBlockState(landing.toBlockPos().down()).getBlock();
+			isValidPosition = (block == Blocks.GRASS || block == Blocks.TALLGRASS) && canFit(landing);
+			
+			System.out.println("Landing pos " + landing + " --> on " + block + "; fits " + canFit(landing));
+			
+		} while (!isValidPosition && tries < 5);
 		
-		double x = bison.posX + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
-		double z = bison.posX + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
-		
-		int y = (int) bison.posY;
-		while (world.isAirBlock(new BlockPos(x, y, z))) {
-			y--;
+		if (isValidPosition) {
+			
+			landing.add(0, 1, 0);
+			bison.getMoveHelper().setMoveTo(landing.x(), landing.y(), landing.z(), 1);
+			System.out.println("Moving to " + landing);
+			
+		} else {
+			System.out.println("can't find landing zone");
 		}
-		
-		bison.getMoveHelper().setMoveTo(x, y + 1, z, 1);
-		System.out.println("Moving to " + x + ", " + (y + 1) + ", " + z);
 		
 	}
 	
 	@Override
 	public boolean continueExecuting() {
 		EntityMoveHelper mh = bison.getMoveHelper();
-		if (bison.getDistanceSq(mh.getX(), mh.getY(), mh.getZ()) < 3 * 3) {
+		// if (bison.getDistanceSq(mh.getX(), mh.getY(), mh.getZ()) < 3 * 3) {
+		if (bison.onGround) {
 			System.out.println("Reached the ground");
 			
 			bison.eatGrassBonus();
 			
 		}
 		return bison.wantsGrass();
+	}
+	
+	private Vector findLandingPoint() {
+		
+		double maxDist = 2;
+		
+		double x = bison.posX + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
+		double z = bison.posZ + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
+		
+		int y = (int) bison.posY;
+		while (bison.worldObj.isAirBlock(new BlockPos(x, y, z))) {
+			y--;
+		}
+		return new Vector(x, y, z);
+		
+	}
+	
+	private boolean canFit(Vector pos) {
+		
+		double minX = pos.x() - bison.width / 2;
+		double maxX = pos.x() + bison.width / 2;
+		double minY = pos.y();
+		double maxY = pos.y() + bison.height;
+		double minZ = pos.z() - bison.width / 2;
+		double maxZ = pos.z() + bison.width / 2;
+		
+		for (int x = floor_double(minX); x <= maxX; x++) {
+			for (int y = floor_double(minY); y <= maxY; y++) {
+				for (int z = floor_double(minZ); z <= maxZ; z++) {
+					if (!bison.worldObj.isAirBlock(new BlockPos(x, y, z))) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
+		
 	}
 	
 }
