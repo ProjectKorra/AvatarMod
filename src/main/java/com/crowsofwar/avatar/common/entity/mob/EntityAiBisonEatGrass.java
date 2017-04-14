@@ -35,10 +35,31 @@ import net.minecraft.world.World;
 public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	private final EntitySkyBison bison;
+	
+	/**
+	 * Keeps track of eating grass state. -1 = not eating grass. Starts at 30
+	 * and decrements until 0, at which point grass is eaten and cycle repeats.
+	 */
 	private int eatGrassCountdown;
+	
+	/**
+	 * When not eating grass, is -1. Then increments every tick that the bison
+	 * has been eating grass.
+	 */
+	private int eatGrassTime;
 	
 	public EntityAiBisonEatGrass(EntitySkyBison bison) {
 		this.bison = bison;
+		eatGrassCountdown = -1;
+		eatGrassTime = -1;
+	}
+	
+	public boolean isEatingGrass() {
+		return eatGrassCountdown > -1;
+	}
+	
+	public int getEatGrassTime() {
+		return eatGrassTime;
 	}
 	
 	@Override
@@ -50,7 +71,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	public void startExecuting() {
 		
 		System.out.println("Time to eat!!");
-		eatGrassCountdown = 30;
 		
 		World world = bison.worldObj;
 		
@@ -91,9 +111,19 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		if (reachedGround) {
 			System.out.println("Reached the ground");
 			
+			if (!isEatingGrass()) {
+				eatGrassCountdown = 30;
+				eatGrassTime = 0;
+			}
 			tryEatGrass();
 			
 		}
+		
+		if (!bison.wantsGrass()) {
+			eatGrassCountdown = -1;
+			eatGrassTime = -1;
+		}
+		
 		return bison.wantsGrass();
 	}
 	
@@ -136,9 +166,12 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	}
 	
 	private void tryEatGrass() {
+		eatGrassTime++;
 		eatGrassCountdown--;
 		if (eatGrassCountdown <= 0) {
 			eatGrassCountdown = 30;
+			
+			System.out.println("Try some grass");
 			
 			BlockPos downPos = bison.getPosition().down();
 			World world = bison.worldObj;
@@ -168,6 +201,8 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 				}
 				
 				bison.eatGrassBonus();
+				
+				System.out.println("Ate at " + ediblePos);
 				
 			}
 			

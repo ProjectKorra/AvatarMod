@@ -100,6 +100,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
+	private EntityAiBisonEatGrass aiEatGrass;
 	
 	private ForgeChunkManager.Ticket ticket;
 	
@@ -149,8 +150,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		this.tasks.addTask(4, new EntityAiBisonSit(this));
 		this.tasks.addTask(5, new EntityAiBisonFollowOwner(this));
 		this.tasks.addTask(6, new EntityAiBisonTempt(this, 10));
-		this.tasks.addTask(7, new EntityAiBisonEatGrass(this));
+		this.tasks.addTask(7, aiEatGrass = new EntityAiBisonEatGrass(this));
 		this.tasks.addTask(8, new EntityAiBisonWander(this));
+		System.out.println("Set aiEatGrass to " + aiEatGrass);
 		
 	}
 	
@@ -230,6 +232,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	public boolean wantsGrass() {
 		return condition.getFoodPoints() < 15;
+	}
+	
+	public boolean isEatingGrass() {
+		return aiEatGrass.isEatingGrass();
+	}
+	
+	public int getEatGrassTime() {
+		return aiEatGrass.getEatGrassTime();
 	}
 	
 	// ================================================================================
