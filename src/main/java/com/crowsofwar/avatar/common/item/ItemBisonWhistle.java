@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
@@ -52,11 +52,13 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	}
 	
 	@Override
-	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target,
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target,
 			EnumHand hand) {
 		
-		if (target instanceof EntitySkyBison) {
+		if (target instanceof EntitySkyBison && player.isSneaking()) {
 			setBoundTo(stack, target.getUniqueID());
+			MSG_BISON_WHISTLE_ASSIGN.send(player, target.getName());
+			return true;
 		}
 		
 		return false;
@@ -90,7 +92,11 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 				data.setPetSummonCooldown((int) (seconds * 20));
 				data.addTickHandler(TickHandler.BISON_SUMMONER);
 				
-				AvatarChatMessages.MSG_SKY_BISON_SUMMON.send(player, (int) seconds);
+				MSG_BISON_WHISTLE_SUMMON.send(player, (int) seconds);
+				
+			} else {
+				
+				MSG_BISON_WHISTLE_NOSUMMON.send(player);
 				
 			}
 			
