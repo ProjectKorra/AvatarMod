@@ -72,7 +72,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		if (isValidPosition) {
 			
 			landing.add(0, 1, 0);
-			bison.getMoveHelper().setMoveTo(landing.x(), landing.y(), landing.z(), 1);
+			bison.getMoveHelper().setMoveTo(landing.x(), landing.y() - 1, landing.z(), 1);
 			System.out.println("Moving to " + landing);
 			
 		} else {
@@ -124,7 +124,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		for (int x = floor_double(minX); x <= maxX; x++) {
 			for (int y = floor_double(minY); y <= maxY; y++) {
 				for (int z = floor_double(minZ); z <= maxZ; z++) {
-					if (!bison.worldObj.isAirBlock(new BlockPos(x, y, z))) {
+					if (isSolidBlock(new BlockPos(x, y, z))) {
 						return false;
 					}
 				}
