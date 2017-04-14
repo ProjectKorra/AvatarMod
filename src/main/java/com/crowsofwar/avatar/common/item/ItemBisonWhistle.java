@@ -119,7 +119,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	@Nullable
 	public static UUID getBoundTo(ItemStack stack) {
 		NBTTagCompound nbt = stackCompound(stack);
-		return nbt.hasKey("SkyBison") ? nbt.getUniqueId("SkyBison") : null;
+		return nbt.hasKey("SkyBisonMost") ? nbt.getUniqueId("SkyBison") : null;
 	}
 	
 	public static void setBoundTo(ItemStack stack, @Nullable UUID id) {

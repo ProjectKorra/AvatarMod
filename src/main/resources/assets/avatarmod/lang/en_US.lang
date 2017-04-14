@@ -59,7 +59,7 @@ avatar.bisonWhistle.summon=Your bison was called and will be here in approximate
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
 avatar.bisonWhistle.notAssigned=[error]This bison whistle has not been bound to a bison; sneak-click a bison with this to bind it.[/error]
 avatar.bisonWhistle.notFound=[error]${bison} no longer lives in the physical world.[/error]
-avatar.bisonWhistle.tooltipBound=Bound to ${bison}
+avatar.bisonWhistle.tooltipBound=Bound to %s
 avatar.bisonWhistle.tooltipUnbound=Not bound
 
 avatar.ability.pickup_block=Pick Up Block
