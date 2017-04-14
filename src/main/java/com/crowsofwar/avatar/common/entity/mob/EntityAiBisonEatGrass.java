@@ -24,7 +24,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -88,7 +87,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		EntityMoveHelper mh = bison.getMoveHelper();
 		
 		BlockPos downPos = bison.getPosition().down();
-		boolean reachedGround = world.isSideSolid(downPos, EnumFacing.UP);
+		boolean reachedGround = isSolidBlock(downPos);
 		if (reachedGround) {
 			System.out.println("Reached the ground");
 			
@@ -106,7 +105,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		double z = bison.posZ + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
 		
 		int y = (int) bison.posY;
-		while (bison.worldObj.isAirBlock(new BlockPos(x, y, z))) {
+		while (!isSolidBlock(new BlockPos(x, y, z))) {
 			y--;
 		}
 		return new Vector(x, y, z);
@@ -173,6 +172,11 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 			}
 			
 		}
+	}
+	
+	private boolean isSolidBlock(BlockPos pos) {
+		World world = bison.worldObj;
+		return world.isBlockNormalCube(pos, false);
 	}
 	
 }
