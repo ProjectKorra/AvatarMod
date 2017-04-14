@@ -46,6 +46,7 @@ public class EntityAiBisonWander extends EntityAIBase {
 		if (entity.isSitting()) return false;
 		if (entity.getControllingPassenger() != null) return false;
 		if (entity.wantsGrass()) return false;
+		if (entity.getOwner() != null) return false;
 		
 		EntityMoveHelper moveHelper = entity.getMoveHelper();
 		

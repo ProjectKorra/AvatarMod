@@ -103,6 +103,10 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public boolean continueExecuting() {
+		
+		boolean keepExecuting = bison.wantsGrass();
+		System.out.println("keepExecuting " + eatGrassTime);
+		
 		World world = bison.worldObj;
 		EntityMoveHelper mh = bison.getMoveHelper();
 		
@@ -111,20 +115,27 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		if (reachedGround) {
 			
 			if (!isEatingGrass()) {
+				// Just reached ground
+				System.out.println("Reached ground");
 				eatGrassCountdown = 30;
 				eatGrassTime = 0;
-				System.out.println("Reached the ground");
+				bison.getMoveHelper().setMoveTo(bison.posX, bison.posY, bison.posZ, 1);
 			}
 			tryEatGrass();
 			
+			if (eatGrassTime > 80) {
+				keepExecuting = false;
+			}
+			
 		}
 		
-		if (!bison.wantsGrass()) {
+		if (!keepExecuting) {
 			eatGrassCountdown = -1;
 			eatGrassTime = -1;
 		}
 		
-		return bison.wantsGrass();
+		return keepExecuting;
+		
 	}
 	
 	private Vector findLandingPoint() {
