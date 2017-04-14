@@ -97,9 +97,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<Integer> SYNC_DOMESTICATION = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.VARINT);
 	
+	private static final DataParameter<Integer> SYNC_EAT_GRASS = EntityDataManager
+			.createKey(EntitySkyBison.class, DataSerializers.VARINT);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
+	/**
+	 * Note: Is null clientside.
+	 */
 	private EntityAiBisonEatGrass aiEatGrass;
 	
 	private ForgeChunkManager.Ticket ticket;
@@ -129,6 +135,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.register(SYNC_SITTING, false);
 		dataManager.register(SYNC_FOOD, 20f);
 		dataManager.register(SYNC_DOMESTICATION, domestication);
+		dataManager.register(SYNC_EAT_GRASS, -1);
+		
 	}
 	
 	@Override
@@ -235,11 +243,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	public boolean isEatingGrass() {
-		return aiEatGrass.isEatingGrass();
+		return getEatGrassTime() > -1;
 	}
 	
 	public int getEatGrassTime() {
-		return aiEatGrass.getEatGrassTime();
+		return dataManager.get(SYNC_EAT_GRASS);
+	}
+	
+	public void setEatGrassTime(int time) {
+		dataManager.set(SYNC_EAT_GRASS, time);
 	}
 	
 	// ================================================================================
@@ -452,6 +464,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		if (!worldObj.isRemote && !condition.canHaveOwner() && hasOwner()) {
 			setOwner(null);
+		}
+		if (!worldObj.isRemote) {
+			setEatGrassTime(aiEatGrass.getEatGrassTime());
 		}
 		
 		condition.onUpdate();
