@@ -50,6 +50,10 @@ public class AnimalCondition {
 	
 	public void onUpdate() {
 		float distance = animal.distanceWalkedModified;
+		// Rarely, an error can occur where distance is NaN (divide by 0)
+		if (Float.isNaN(distance)) {
+			distance = lastDistance;
+		}
 		float diff = distance - lastDistance;
 		addHunger(diff * 0.1f);
 		
