@@ -42,6 +42,7 @@ public class EntityAiBisonTempt extends EntityAIBase {
 		this.bison = bison;
 		this.maxDistSq = maxDist * maxDist;
 		this.following = null;
+		setMutexBits(1);
 	}
 	
 	@Override

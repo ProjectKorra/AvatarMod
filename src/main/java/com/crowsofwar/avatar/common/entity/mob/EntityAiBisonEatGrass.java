@@ -16,10 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static net.minecraft.util.math.MathHelper.floor_double;
-
-import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
@@ -28,7 +24,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * 
+ * Bison eats grass when on ground. Designed to work with BisonLand AI so
+ * BisonLand causes bison to land when hungry, then this makes the bison eat
+ * grass. Since it is an action(non-movement) task the mutex bits are 0.
  * 
  * @author CrowsOfWar
  */
@@ -52,6 +50,8 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		this.bison = bison;
 		eatGrassCountdown = -1;
 		eatGrassTime = -1;
+		
+		setMutexBits(0);
 	}
 	
 	public boolean isEatingGrass() {
@@ -64,69 +64,36 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		return bison.wantsGrass();
+		return bison.wantsGrass() && isOnGround();
 	}
 	
 	@Override
 	public void startExecuting() {
 		
 		System.out.println("Time to eat!!");
-		
-		World world = bison.worldObj;
-		
-		int tries = 0;
-		Vector landing;
-		boolean isValidPosition;
-		do {
-			
-			landing = findLandingPoint().add(0, 1, 0);
-			tries++;
-			
-			Block block = world.getBlockState(landing.toBlockPos().down()).getBlock();
-			isValidPosition = (block == Blocks.GRASS || block == Blocks.TALLGRASS) && canFit(landing);
-			
-			System.out.println("Landing pos " + landing + " --> on " + block + "; fits " + canFit(landing));
-			
-		} while (!isValidPosition && tries < 5);
-		
-		if (isValidPosition) {
-			
-			landing.add(0, 1, 0);
-			bison.getMoveHelper().setMoveTo(landing.x(), landing.y() - 1, landing.z(), 1);
-			System.out.println("Moving to " + landing);
-			
-		} else {
-			System.out.println("can't find landing zone");
-		}
+		continueExecuting();
 		
 	}
 	
 	@Override
 	public boolean continueExecuting() {
 		
-		boolean keepExecuting = bison.wantsGrass();
+		boolean keepExecuting = bison.wantsGrass() && isOnGround();
 		System.out.println("keepExecuting " + eatGrassTime);
 		
 		World world = bison.worldObj;
 		EntityMoveHelper mh = bison.getMoveHelper();
 		
-		BlockPos downPos = bison.getPosition().down();
-		boolean reachedGround = isSolidBlock(downPos);
-		if (reachedGround) {
-			
-			if (!isEatingGrass()) {
-				// Just reached ground
-				System.out.println("Reached ground");
-				eatGrassCountdown = 30;
-				eatGrassTime = 0;
-				bison.getMoveHelper().setMoveTo(bison.posX, bison.posY, bison.posZ, 1);
-			}
-			tryEatGrass();
-			
-			if (eatGrassTime > 80) {
-				keepExecuting = false;
-			}
-			
+		if (!isEatingGrass()) {
+			// Just reached ground
+			eatGrassCountdown = 30;
+			eatGrassTime = 0;
+			bison.getMoveHelper().setMoveTo(bison.posX, bison.posY, bison.posZ, 1);
+		}
+		tryEatGrass();
+		
+		if (eatGrassTime > 80) {
+			keepExecuting = false;
 		}
 		
 		if (!keepExecuting) {
@@ -135,44 +102,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		}
 		
 		return keepExecuting;
-		
-	}
-	
-	private Vector findLandingPoint() {
-		
-		double maxDist = 2;
-		
-		double x = bison.posX + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
-		double z = bison.posZ + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
-		
-		int y = (int) bison.posY;
-		while (!isSolidBlock(new BlockPos(x, y, z))) {
-			y--;
-		}
-		return new Vector(x, y, z);
-		
-	}
-	
-	private boolean canFit(Vector pos) {
-		
-		double minX = pos.x() - bison.width / 2;
-		double maxX = pos.x() + bison.width / 2;
-		double minY = pos.y();
-		double maxY = pos.y() + bison.height;
-		double minZ = pos.z() - bison.width / 2;
-		double maxZ = pos.z() + bison.width / 2;
-		
-		for (int x = floor_double(minX); x <= maxX; x++) {
-			for (int y = floor_double(minY); y <= maxY; y++) {
-				for (int z = floor_double(minZ); z <= maxZ; z++) {
-					if (isSolidBlock(new BlockPos(x, y, z))) {
-						return false;
-					}
-				}
-			}
-		}
-		
-		return true;
 		
 	}
 	
@@ -226,6 +155,11 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	private boolean isSolidBlock(BlockPos pos) {
 		World world = bison.worldObj;
 		return world.isBlockNormalCube(pos, false);
+	}
+	
+	private boolean isOnGround() {
+		BlockPos downPos = bison.getPosition().down();
+		return isSolidBlock(downPos);
 	}
 	
 }
