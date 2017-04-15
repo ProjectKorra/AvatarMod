@@ -16,8 +16,10 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.abs;
 import static java.lang.Math.toDegrees;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -38,6 +40,8 @@ public class AiFireArc extends BendingAi {
 	
 	private int timeExecuting;
 	
+	private float velocityYaw, velocityPitch;
+	
 	/**
 	 * @param ability
 	 * @param entity
@@ -46,16 +50,13 @@ public class AiFireArc extends BendingAi {
 	protected AiFireArc(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
+		setMutexBits(1);
 	}
 	
 	@Override
 	protected void startExec() {
-		BendingData data = bender.getData();
-		data.chi().setMaxChi(10);
-		data.chi().setTotalChi(10);
-		data.chi().setAvailableChi(10);
-		execAbility();
-		data.setAbilityCooldown(100);
+		velocityYaw = 0;
+		velocityPitch = 0;
 	}
 	
 	@Override
@@ -63,11 +64,39 @@ public class AiFireArc extends BendingAi {
 		
 		if (entity.getAttackTarget() == null) return false;
 		
-		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
-		entity.rotationYaw = (float) toDegrees(rotations.y());
-		entity.rotationPitch = (float) toDegrees(rotations.x());
+		Vector target = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
+		float targetYaw = (float) toDegrees(target.y());
+		float targetPitch = (float) toDegrees(target.x());
 		
-		if (timeExecuting >= 40) {
+		float currentYaw = normalizeAngle(entity.rotationYaw);
+		float currentPitch = normalizeAngle(entity.rotationPitch);
+		
+		float yawLeft = abs(normalizeAngle(currentYaw - targetYaw));
+		float yawRight = abs(normalizeAngle(targetYaw - currentYaw));
+		if (yawRight < yawLeft) {
+			velocityYaw += yawRight / 10;
+		} else {
+			velocityYaw -= yawLeft / 10;
+		}
+		
+		entity.rotationYaw += velocityYaw;
+		entity.rotationPitch += velocityPitch;
+		
+		if (timeExecuting < 20) {
+			entity.rotationYaw = targetYaw;
+			entity.rotationPitch = targetPitch;
+		}
+		
+		if (timeExecuting == 20) {
+			BendingData data = bender.getData();
+			data.chi().setMaxChi(10);
+			data.chi().setTotalChi(10);
+			data.chi().setAvailableChi(10);
+			execAbility();
+			data.setAbilityCooldown(80);
+		}
+		
+		if (timeExecuting >= 80) {
 			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_FIRE);
 			timeExecuting = 0;
