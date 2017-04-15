@@ -47,6 +47,8 @@ public class AiFlamethrower extends BendingAi {
 	@Override
 	public boolean continueExecuting() {
 		
+		if (entity.getAttackTarget() == null) return false;
+		
 		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
@@ -77,7 +79,7 @@ public class AiFlamethrower extends BendingAi {
 	@Override
 	public boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSqToEntity(target) < 2 * 2;
+		return target != null && entity.getDistanceSqToEntity(target) < 4 * 4;
 	}
 	
 	@Override

@@ -17,9 +17,13 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+
+import net.minecraft.entity.EntityLiving;
 
 /**
  * 
@@ -39,6 +43,11 @@ public class AbilityFlamethrower extends FireAbility {
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.START_FLAMETHROW);
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiFlamethrower(this, entity, bender);
 	}
 	
 }
