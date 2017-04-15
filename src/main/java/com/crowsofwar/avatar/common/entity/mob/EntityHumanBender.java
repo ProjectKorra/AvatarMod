@@ -25,7 +25,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -82,8 +81,10 @@ public class EntityHumanBender extends EntityBender {
 		// this));
 		// this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this,
 		// this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_FIRE_ARC.getAi(this, this));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
+		this.tasks.addTask(3, BendingAbility.ABILITY_FLAMETHROWER.getAi(this, this));
+		// this.tasks.addTask(3, BendingAbility.ABILITY_FIRE_ARC.getAi(this,
+		// this));
+		// this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 		
 		// this.tasks.addTask(5, new EntityAiKeepDistance(this, 3, 2));
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
