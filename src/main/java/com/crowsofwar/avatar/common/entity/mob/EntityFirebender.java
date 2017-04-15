@@ -1,0 +1,54 @@
+/* 
+  This file is part of AvatarMod.
+    
+  AvatarMod is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  AvatarMod is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
+*/
+package com.crowsofwar.avatar.common.entity.mob;
+
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
+
+/**
+ * 
+ * 
+ * @author CrowsOfWar
+ */
+public class EntityFirebender extends EntityHumanBender {
+	
+	public static final ResourceLocation LOOT_TABLE = LootTableList
+			.register(new ResourceLocation("avatarmod", "human_bender"));
+	
+	/**
+	 * @param world
+	 */
+	public EntityFirebender(World world) {
+		super(world);
+	}
+	
+	@Override
+	protected void addBendingTasks() {
+		this.tasks.addTask(1, BendingAbility.ABILITY_FLAMETHROWER.getAi(this, this));
+		this.tasks.addTask(3, BendingAbility.ABILITY_FIREBALL.getAi(this, this));
+		this.tasks.addTask(2, BendingAbility.ABILITY_FIRE_ARC.getAi(this, this));
+	}
+	
+	@Override
+	protected ResourceLocation getLootTable() {
+		return LOOT_TABLE;
+	}
+	
+}

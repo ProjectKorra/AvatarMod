@@ -18,8 +18,6 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import javax.annotation.Nullable;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,17 +39,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTableList;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class EntityHumanBender extends EntityBender {
-	
-	public static final ResourceLocation LOOT_TABLE = LootTableList
-			.register(new ResourceLocation("avatarmod", "human_bender"));
+public abstract class EntityHumanBender extends EntityBender {
 	
 	/**
 	 * @param world
@@ -81,12 +75,8 @@ public class EntityHumanBender extends EntityBender {
 		// this));
 		// this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this,
 		// this));
-		this.tasks.addTask(1, BendingAbility.ABILITY_FLAMETHROWER.getAi(this, this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_FIREBALL.getAi(this, this));
-		this.tasks.addTask(2, BendingAbility.ABILITY_FIRE_ARC.getAi(this, this));
 		// this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 		
-		// this.tasks.addTask(5, new EntityAiKeepDistance(this, 3, 2));
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
@@ -94,6 +84,8 @@ public class EntityHumanBender extends EntityBender {
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
 		
 	}
+	
+	protected abstract void addBendingTasks();
 	
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
@@ -162,8 +154,6 @@ public class EntityHumanBender extends EntityBender {
 	}
 	
 	@Override
-	protected ResourceLocation getLootTable() {
-		return LOOT_TABLE;
-	}
+	protected abstract ResourceLocation getLootTable();
 	
 }
