@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -27,23 +28,24 @@ import net.minecraft.world.storage.loot.LootTableList;
  * 
  * @author CrowsOfWar
  */
-public class EntityFirebender extends EntityHumanBender {
+public class EntityAirbender extends EntityHumanBender {
 	
 	public static final ResourceLocation LOOT_TABLE = LootTableList
-			.register(new ResourceLocation("avatarmod", "firebender"));
+			.register(new ResourceLocation("avatarmod", "airbender"));
 	
 	/**
 	 * @param world
 	 */
-	public EntityFirebender(World world) {
+	public EntityAirbender(World world) {
 		super(world);
 	}
 	
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, BendingAbility.ABILITY_FLAMETHROWER.getAi(this, this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_FIREBALL.getAi(this, this));
-		this.tasks.addTask(2, BendingAbility.ABILITY_FIRE_ARC.getAi(this, this));
+		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
+		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
+		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 	
 	@Override
