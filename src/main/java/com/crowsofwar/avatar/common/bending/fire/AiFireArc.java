@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -109,7 +110,9 @@ public class AiFireArc extends BendingAi {
 	
 	@Override
 	public boolean shouldExecute() {
-		return entity.getAttackTarget() != null && bender.getData().getAbilityCooldown() == 0;
+		EntityLivingBase target = entity.getAttackTarget();
+		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
+				&& bender.getData().getAbilityCooldown() == 0;
 	}
 	
 	@Override

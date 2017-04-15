@@ -20,14 +20,15 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
-import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -46,6 +47,7 @@ public class AiFireball extends BendingAi {
 	protected AiFireball(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
+		setMutexBits(1);
 	}
 	
 	@Override
@@ -80,7 +82,9 @@ public class AiFireball extends BendingAi {
 	
 	@Override
 	public boolean shouldExecute() {
-		return entity.getAttackTarget() != null && bender.getData().getAbilityCooldown() == 0;
+		EntityLivingBase target = entity.getAttackTarget();
+		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
+				&& bender.getData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 	
 	@Override

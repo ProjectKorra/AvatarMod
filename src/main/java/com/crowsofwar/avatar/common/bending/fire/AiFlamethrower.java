@@ -42,6 +42,7 @@ public class AiFlamethrower extends BendingAi {
 	
 	protected AiFlamethrower(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
+		setMutexBits(1);
 	}
 	
 	@Override
