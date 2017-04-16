@@ -19,16 +19,15 @@ package com.crowsofwar.avatar.client.gui.skills;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getCardTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
-import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-
-import net.minecraft.client.resources.I18n;
 
 /**
  * 
@@ -38,33 +37,30 @@ import net.minecraft.client.resources.I18n;
 public class AbilityTab {
 	
 	private final BendingAbility ability;
+	private final int index;
 	private Frame frame;
-	private UiComponent icon, text;
+	private UiComponent icon;
 	
-	public AbilityTab(BendingAbility ability) {
+	public AbilityTab(BendingAbility ability, int index) {
 		
 		fromPixels(0, 0);
 		fromPercent(0, 0);
 		
 		this.ability = ability;
+		this.index = index;
 		
-		float width = 25f, height = 100 * 2 / 3f;
+		float width = 256 / 256 * 0.4f * 100, height = 256f / 256 * 0.4f * 100;
 		
 		frame = new Frame();
-		frame.setDimensions(fromPercent(width, 100));
-		// frame.setPosition(fromPercent((100 - width) / 2, (100 - height) /
-		// 2));
-		
-		text = new ComponentText(I18n.format("avatar.ability." + ability.getName()));
-		text.setFrame(frame);
-		text.setPosition(StartingPosition.MIDDLE_TOP);
+		frame.setDimensions(fromPixels(192, 256));
+		updateFramePos(0);
 		
 		icon = new ComponentImage(getCardTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frame);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		// icon.setOffset(fromPixels(frame, 0, -text.height() - icon.height() *
 		// 50 / 256));
-		// icon.setScale(0.5f);
+		icon.setScale(0.5f);
 		
 	}
 	
@@ -72,9 +68,8 @@ public class AbilityTab {
 		
 		updateFramePos(scroll);
 		
-		frame.draw(partialTicks);
 		icon.draw(partialTicks);
-		// text.draw(partialTicks);
+		// frame.draw(partialTicks);
 		
 	}
 	
@@ -90,18 +85,29 @@ public class AbilityTab {
 	}
 	
 	public boolean isMouseHover(float mouseX, float mouseY, float scroll) {
+		
 		updateFramePos(scroll);
 		Measurement min = frame.getCoordsMin();
 		Measurement max = frame.getCoordsMax();
 		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
 				&& mouseY < max.yInPixels();
+		
 	}
 	
 	private void updateFramePos(float scroll) {
-		float width = 25f, height = 100 * 2 / 3f;
-		Measurement base = fromPercent((100 - width) / 2, (100 - height) / 2);
-		// frame.setPosition(base.plus(fromPixels(scroll, 0)));
-		frame.setPosition(fromPixels(scroll, 0));
+		
+		Measurement base = getCenteredPos(192, 256);
+		Measurement offset = fromPixels(scroll + index * width() * 1.2f, 0);
+		frame.setPosition(base.plus(offset));
+		
+	}
+	
+	/**
+	 * Returns a measurement of the frame centered on the screen, with given
+	 * frame dimensions. Should be in pixels
+	 */
+	private Measurement getCenteredPos(float width, float height) {
+		return fromPixels((screenWidth() - width) / 2, (screenHeight() - height) / 2);
 	}
 	
 }

@@ -73,8 +73,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		ScreenInfo.refreshDimensions();
 		
-		tabs = new AbilityTab[] { new AbilityTab(ABILITY_AIR_BUBBLE), new AbilityTab(ABILITY_AIR_GUST),
-				new AbilityTab(ABILITY_AIR_JUMP), new AbilityTab(ABILITY_AIRBLADE) };
+		tabs = new AbilityTab[] { new AbilityTab(ABILITY_AIR_BUBBLE, 0), new AbilityTab(ABILITY_AIR_GUST, 1),
+				new AbilityTab(ABILITY_AIR_JUMP, 2), new AbilityTab(ABILITY_AIRBLADE, 3) };
 		
 		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(),
 				skillsContainer.getInvIndex() + 26);
@@ -123,7 +123,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 				}
 			} else {
 				for (int i = 0; i < tabs.length; i++) {
-					if (tabs[i].isMouseHover(mouseX, mouseY, scroll + 1.2f * i * tabs[i].width())) {
+					if (tabs[i].isMouseHover(mouseX, mouseY, scroll)) {
 						openWindow(tabs[i]);
 						break;
 					}
@@ -143,7 +143,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
 		for (int i = 0; i < tabs.length; i++) {
-			tabs[i].draw(partialTicks, scroll + 1.2f * i * tabs[i].width());
+			tabs[i].draw(partialTicks, scroll);
 		}
 		
 		if (isWindowOpen()) {
