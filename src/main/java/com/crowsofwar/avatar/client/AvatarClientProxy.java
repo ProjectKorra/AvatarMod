@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.gui.AvatarGuiHandler.GUI_ID_SKILLS;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
 import com.crowsofwar.avatar.AvatarInfo;
@@ -62,6 +61,7 @@ import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
@@ -158,7 +158,10 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
-		if (id == GUI_ID_SKILLS) return new SkillsGui(BendingType.AIRBENDING);
+		if (id == AvatarGuiHandler.GUI_ID_SKILLS_EARTH) return new SkillsGui(BendingType.EARTHBENDING);
+		if (id == AvatarGuiHandler.GUI_ID_SKILLS_FIRE) return new SkillsGui(BendingType.FIREBENDING);
+		if (id == AvatarGuiHandler.GUI_ID_SKILLS_WATER) return new SkillsGui(BendingType.WATERBENDING);
+		if (id == AvatarGuiHandler.GUI_ID_SKILLS_AIR) return new SkillsGui(BendingType.AIRBENDING);
 		
 		return null;
 	}

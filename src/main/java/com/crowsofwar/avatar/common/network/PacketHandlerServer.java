@@ -35,7 +35,6 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
@@ -272,7 +271,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-		player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_SKILLS, player.worldObj, 0, 0, 0);
+		player.openGui(AvatarMod.instance, packet.getElement(), player.worldObj, 0, 0, 0);
 		
 		return null;
 	}

@@ -160,7 +160,7 @@ public class ClientInput implements IControlsHandler {
 			openBendingMenu(controller);
 		}
 		if (isControlPressed(AvatarControl.KEY_SKILLS))
-			AvatarMod.network.sendToServer(new PacketSSkillsMenu());
+			AvatarMod.network.sendToServer(new PacketSSkillsMenu(BendingType.AIRBENDING));
 		
 	}
 	

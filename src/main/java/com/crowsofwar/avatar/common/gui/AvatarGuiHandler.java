@@ -26,12 +26,18 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 
 public class AvatarGuiHandler implements IGuiHandler {
 	
-	public static final int GUI_ID_SKILLS = 1;
+	public static final int GUI_ID_SKILLS_EARTH = 1;
+	public static final int GUI_ID_SKILLS_FIRE = 2;
+	public static final int GUI_ID_SKILLS_WATER = 3;
+	public static final int GUI_ID_SKILLS_AIR = 4;
 	
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
-		if (id == GUI_ID_SKILLS) return new ContainerSkillsGui(player, BendingType.AIRBENDING);
+		if (id >= GUI_ID_SKILLS_EARTH && id <= GUI_ID_SKILLS_AIR) {
+			int element = id - GUI_ID_SKILLS_EARTH + 1;
+			return new ContainerSkillsGui(player, BendingType.values()[id]);
+		}
 		
 		return null;
 	}

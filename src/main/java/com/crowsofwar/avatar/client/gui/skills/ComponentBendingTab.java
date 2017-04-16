@@ -16,9 +16,11 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 
 /**
  * 
@@ -37,6 +39,7 @@ public class ComponentBendingTab extends ComponentImage {
 	@Override
 	protected void click(int button) {
 		System.out.println("Clicked " + type);
+		AvatarMod.network.sendToServer(new PacketSSkillsMenu(type));
 	}
 	
 }
