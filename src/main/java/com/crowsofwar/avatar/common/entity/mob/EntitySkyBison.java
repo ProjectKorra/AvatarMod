@@ -99,6 +99,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<Integer> SYNC_EAT_GRASS = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.VARINT);
 	
+	private static final DataParameter<Integer> SYNC_AGE = EntityDataManager.createKey(EntitySkyBison.class,
+			DataSerializers.VARINT);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
@@ -120,7 +123,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION);
+		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
 		setSize(3, 2);
 		
 	}
@@ -136,6 +139,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.register(SYNC_FOOD, 20f);
 		dataManager.register(SYNC_DOMESTICATION, domestication);
 		dataManager.register(SYNC_EAT_GRASS, -1);
+		dataManager.register(SYNC_AGE, 0);
 		
 	}
 	
