@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.client.gui.skills;
 
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
@@ -30,8 +31,10 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.Frame;
+import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
+import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -53,13 +56,15 @@ import net.minecraft.item.ItemStack;
  */
 public class SkillsGui extends GuiContainer implements AvatarGui {
 	
-	private AbilityTab[] tabs;
+	private AbilityCard[] cards;
+	private ComponentBendingTab[] tabs;
 	private int scroll;
 	
 	private WindowAbility window;
 	private Frame frame;
 	
 	private ComponentInventorySlots inventory, hotbar;
+	private UiComponentHandler handler;
 	
 	public SkillsGui() {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, BendingType.AIRBENDING));
@@ -73,8 +78,19 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		ScreenInfo.refreshDimensions();
 		
-		tabs = new AbilityTab[] { new AbilityTab(ABILITY_AIR_BUBBLE, 0), new AbilityTab(ABILITY_AIR_GUST, 1),
-				new AbilityTab(ABILITY_AIR_JUMP, 2), new AbilityTab(ABILITY_AIRBLADE, 3) };
+		cards = new AbilityCard[] { new AbilityCard(ABILITY_AIR_BUBBLE, 0),
+				new AbilityCard(ABILITY_AIR_GUST, 1), new AbilityCard(ABILITY_AIR_JUMP, 2),
+				new AbilityCard(ABILITY_AIRBLADE, 3) };
+		
+		handler = new UiComponentHandler();
+		BendingType[] types = BendingType.values();
+		tabs = new ComponentBendingTab[types.length];
+		for (int i = 1; i < types.length; i++) {
+			tabs[i] = new ComponentBendingTab(types[i], true);
+			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
+			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2), 0));
+			handler.add(tabs[i]);
+		}
 		
 		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(),
 				skillsContainer.getInvIndex() + 26);
@@ -122,9 +138,9 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 					closeWindow();
 				}
 			} else {
-				for (int i = 0; i < tabs.length; i++) {
-					if (tabs[i].isMouseHover(mouseX, mouseY, scroll)) {
-						openWindow(tabs[i]);
+				for (int i = 0; i < cards.length; i++) {
+					if (cards[i].isMouseHover(mouseX, mouseY, scroll)) {
+						openWindow(cards[i]);
 						break;
 					}
 				}
@@ -142,8 +158,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
-		for (int i = 0; i < tabs.length; i++) {
-			tabs[i].draw(partialTicks, scroll);
+		for (int i = 0; i < cards.length; i++) {
+			cards[i].draw(partialTicks, scroll);
 		}
 		
 		if (isWindowOpen()) {
@@ -152,11 +168,15 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		inventory.draw(partialTicks);
 		hotbar.draw(partialTicks);
+		handler.draw(partialTicks, mouseX, mouseY);
 		
 	}
 	
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		
+		handler.type(keyCode);
+		
 		if (isWindowOpen()) {
 			KeyBinding invKb = mc.gameSettings.keyBindInventory;
 			
@@ -184,6 +204,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+		handler.click(mouseX, mouseY, mouseButton);
 		if (window != null) {
 			window.mouseClicked(mouseX, mouseY, mouseButton);
 		}
@@ -193,8 +214,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		return window != null;
 	}
 	
-	private void openWindow(AbilityTab tab) {
-		window = new WindowAbility(tab.getAbility(), this);
+	private void openWindow(AbilityCard card) {
+		window = new WindowAbility(card.getAbility(), this);
 		inventory.setVisible(true);
 		hotbar.setVisible(true);
 	}

@@ -34,14 +34,14 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
  * 
  * @author CrowsOfWar
  */
-public class AbilityTab {
+public class AbilityCard {
 	
 	private final BendingAbility ability;
 	private final int index;
 	private Frame frame;
 	private UiComponent icon;
 	
-	public AbilityTab(BendingAbility ability, int index) {
+	public AbilityCard(BendingAbility ability, int index) {
 		
 		fromPixels(0, 0);
 		fromPercent(0, 0);
