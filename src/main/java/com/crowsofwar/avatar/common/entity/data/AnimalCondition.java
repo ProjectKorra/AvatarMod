@@ -31,21 +31,34 @@ public class AnimalCondition {
 	
 	private final DataParameter<Float> syncFood;
 	private final DataParameter<Integer> syncDomestication;
+	private final DataParameter<Integer> syncAge;
 	private final EntityCreature animal;
 	private final float maxFoodPoints, foodRegenPoints;
 	
 	private float lastDistance;
 	
 	public AnimalCondition(EntityCreature animal, float maxFoodPoints, float foodRegenPoints,
-			DataParameter<Float> syncFood, DataParameter<Integer> syncDomestication) {
+			DataParameter<Float> syncFood, DataParameter<Integer> syncDomestication,
+			DataParameter<Integer> syncAge) {
 		this.animal = animal;
 		this.syncDomestication = syncDomestication;
 		this.syncFood = syncFood;
+		this.syncAge = syncAge;
 		this.maxFoodPoints = maxFoodPoints;
 		this.foodRegenPoints = foodRegenPoints;
 		
 		this.lastDistance = animal.distanceWalkedModified;
 		
+	}
+	
+	public void writeToNbt(NBTTagCompound nbt) {
+		nbt.setFloat("FoodPoints", getFoodPoints());
+		nbt.setInteger("Domestication", getDomestication());
+	}
+	
+	public void readFromNbt(NBTTagCompound nbt) {
+		setFoodPoints(nbt.getFloat("FoodPoints"));
+		setDomestication(nbt.getInteger("Domestication"));
 	}
 	
 	public void onUpdate() {
@@ -151,14 +164,40 @@ public class AnimalCondition {
 		return 0.6f + 0.4f * getFoodPoints() / maxFoodPoints;
 	}
 	
-	public void writeToNbt(NBTTagCompound nbt) {
-		nbt.setFloat("FoodPoints", getFoodPoints());
-		nbt.setInteger("Domestication", getDomestication());
+	// ================================================================================
+	// AGE
+	// ================================================================================
+	
+	/**
+	 * Gets the age in ticks
+	 */
+	public int getAge() {
+		return animal.getDataManager().get(syncAge);
 	}
 	
-	public void readFromNbt(NBTTagCompound nbt) {
-		setFoodPoints(nbt.getFloat("FoodPoints"));
-		setDomestication(nbt.getInteger("Domestication"));
+	public void setAge(int age) {
+		if (age < 0) age = 0;
+		animal.getDataManager().set(syncAge, age);
+	}
+	
+	public void addAge(int age) {
+		setAge(getAge() + age);
+	}
+	
+	public float getAgeDays() {
+		return getAgeDays() / 24000f;
+	}
+	
+	public void setAgeDays(float days) {
+		setAge((int) (days * 24000));
+	}
+	
+	public float getSizeMultiplier() {
+		return isAdult() ? 1 : 0.3f + getAgeDays() / 3 * 0.7f;
+	}
+	
+	public boolean isAdult() {
+		return getAgeDays() >= 3;
 	}
 	
 }
