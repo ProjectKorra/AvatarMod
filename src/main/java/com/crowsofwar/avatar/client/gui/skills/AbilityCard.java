@@ -20,7 +20,6 @@ import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getCardTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.Frame;
@@ -96,18 +95,10 @@ public class AbilityCard {
 	
 	private void updateFramePos(float scroll) {
 		
-		Measurement base = getCenteredPos(192, 256);
+		Measurement base = fromPixels(50, (screenHeight() - 256) / 2);
 		Measurement offset = fromPixels(scroll + index * width() * 1.2f, 0);
 		frame.setPosition(base.plus(offset));
 		
-	}
-	
-	/**
-	 * Returns a measurement of the frame centered on the screen, with given
-	 * frame dimensions. Should be in pixels
-	 */
-	private Measurement getCenteredPos(float width, float height) {
-		return fromPixels((screenWidth() - width) / 2, (screenHeight() - height) / 2);
 	}
 	
 }

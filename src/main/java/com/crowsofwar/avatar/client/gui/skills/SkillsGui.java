@@ -163,6 +163,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
+		handler.draw(partialTicks, mouseX, mouseY);
+		
 		for (int i = 0; i < cards.length; i++) {
 			cards[i].draw(partialTicks, scroll);
 		}
@@ -173,14 +175,15 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		inventory.draw(partialTicks);
 		hotbar.draw(partialTicks);
-		handler.draw(partialTicks, mouseX, mouseY);
 		
 	}
 	
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		
-		handler.type(keyCode);
+		if (!isWindowOpen()) {
+			handler.type(keyCode);
+		}
 		
 		if (isWindowOpen()) {
 			KeyBinding invKb = mc.gameSettings.keyBindInventory;
@@ -209,9 +212,10 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		handler.click(mouseX, mouseY, mouseButton);
 		if (window != null) {
 			window.mouseClicked(mouseX, mouseY, mouseButton);
+		} else {
+			handler.click(mouseX, mouseY, mouseButton);
 		}
 	}
 	
