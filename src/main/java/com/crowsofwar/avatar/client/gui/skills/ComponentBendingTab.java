@@ -31,8 +31,9 @@ public class ComponentBendingTab extends ComponentImage {
 	
 	private final BendingType type;
 	
-	public ComponentBendingTab(BendingType type, boolean isFullTab) {
-		super(AvatarUiTextures.skillsGui, 236, type.ordinal() * 20, 20, isFullTab ? 20 : 17);
+	public ComponentBendingTab(BendingType type, boolean isFullTab, boolean isSelected) {
+		super(AvatarUiTextures.skillsGui, !isFullTab && isSelected ? 216 : 236, type.ordinal() * 20, 20,
+				isFullTab || isSelected ? 20 : 17);
 		this.type = type;
 	}
 	
