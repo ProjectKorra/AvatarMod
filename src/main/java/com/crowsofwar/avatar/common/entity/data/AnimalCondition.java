@@ -81,6 +81,7 @@ public class AnimalCondition {
 				animal.heal(1);
 				addHunger(1);
 			}
+			addAge(1);
 		}
 		
 	}
@@ -187,7 +188,7 @@ public class AnimalCondition {
 	}
 	
 	public float getAgeDays() {
-		return getAgeDays() / 24000f;
+		return getAge() / 24000f;
 	}
 	
 	public void setAgeDays(float days) {
