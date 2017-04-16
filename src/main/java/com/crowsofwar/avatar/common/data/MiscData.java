@@ -33,6 +33,7 @@ public class MiscData {
 	private int abilityCooldown;
 	private boolean wallJumping;
 	private boolean smashGround;
+	private int petSummonCooldown;
 	
 	public MiscData(Runnable save) {
 		this.save = save;
@@ -44,6 +45,7 @@ public class MiscData {
 		buf.writeInt(abilityCooldown);
 		buf.writeBoolean(wallJumping);
 		buf.writeBoolean(smashGround);
+		buf.writeInt(petSummonCooldown);
 	}
 	
 	public void fromBytes(ByteBuf buf) {
@@ -52,6 +54,7 @@ public class MiscData {
 		abilityCooldown = buf.readInt();
 		wallJumping = buf.readBoolean();
 		smashGround = buf.readBoolean();
+		petSummonCooldown = buf.readInt();
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
@@ -60,6 +63,7 @@ public class MiscData {
 		abilityCooldown = nbt.getInteger("AbilityCooldown");
 		wallJumping = nbt.getBoolean("WallJumping");
 		smashGround = nbt.getBoolean("SmashGround");
+		petSummonCooldown = nbt.getInteger("PetSummonCooldown");
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -68,6 +72,7 @@ public class MiscData {
 		nbt.setInteger("AbilityCooldown", abilityCooldown);
 		nbt.setBoolean("WallJumping", wallJumping);
 		nbt.setBoolean("SmashGround", smashGround);
+		nbt.setInteger("PetSummonCooldown", petSummonCooldown);
 	}
 	
 	public float getFallAbsorption() {
@@ -117,6 +122,14 @@ public class MiscData {
 	
 	public void setSmashGround(boolean smashGround) {
 		this.smashGround = smashGround;
+	}
+	
+	public int getPetSummonCooldown() {
+		return petSummonCooldown;
+	}
+	
+	public void setPetSummonCooldown(int petSummonCooldown) {
+		this.petSummonCooldown = petSummonCooldown;
 	}
 	
 }

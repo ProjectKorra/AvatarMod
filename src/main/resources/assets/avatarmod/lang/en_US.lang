@@ -53,6 +53,14 @@ avatar.cmd.pp.set.range=[error]Progression points must be more than 0.[/error]
 avatar.donthavebending=[error]You haven't learned ${bending} yet. To get it, type in: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
 avatar.nochi=Not enough chi!
 avatar.airBubbleElytra=Cannot use air bubble with elytra
+avatar.bisonStats=Bison is at ${food}%% food, ${health}%% health, and ${domestication} domestication.
+
+avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
+avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
+avatar.bisonWhistle.notAssigned=[error]This bison whistle has not been bound to a bison; sneak-click a bison with this to bind it.[/error]
+avatar.bisonWhistle.notFound=[error]${bison} no longer lives in the physical world.[/error]
+avatar.bisonWhistle.tooltipBound=Bound to %s
+avatar.bisonWhistle.tooltipUnbound=Not bound
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
@@ -139,6 +147,7 @@ death.attack.avatar_fireball=%2$s blasted %1$s with a fireball
 death.attack.avatar_airblade=%1$s was sliced by %2$s
 
 entity.HumanBender.name=Human Bender
+entity.SkyBison.name=Flying Bison
 
 itemGroup.avatar.items=Avatar Items
 
@@ -148,6 +157,7 @@ item.avatarmod:scroll.fire.name=Firebending Scroll
 item.avatarmod:scroll.earth.name=Earthbending Scroll
 item.avatarmod:scroll.water.name=Waterbending Scroll
 item.avatarmod:water_pouch.name=Water Skin
+item.avatarmod:bison_whistle.name=Bison Whistle
 
 avatar.tooltip.scroll=%d points
 avatar.tooltip.water_pouch=%d/3 Water

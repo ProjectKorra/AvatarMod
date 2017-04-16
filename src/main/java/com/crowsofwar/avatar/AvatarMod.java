@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.ConfigChi;
 import com.crowsofwar.avatar.common.config.ConfigClient;
+import com.crowsofwar.avatar.common.config.ConfigMobs;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -73,6 +74,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -114,6 +116,7 @@ public class AvatarMod {
 		ConfigSkills.load();
 		ConfigClient.load();
 		ConfigChi.load();
+		ConfigMobs.load();
 		
 		BendingManager.init();
 		AvatarItems.init();
@@ -153,6 +156,10 @@ public class AvatarMod {
 		EarthbendingEvents.register();
 		
 		PacketHandlerServer.register();
+		
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
+			System.out.println("Loaded tickets back! " + tickets);
+		});
 		
 	}
 	

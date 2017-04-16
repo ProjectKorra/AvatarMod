@@ -1,0 +1,179 @@
+package com.crowsofwar.avatar.client.render;
+
+import static net.minecraft.client.renderer.GlStateManager.*;
+
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
+
+/**
+ * FlyingBison - Captn_Dubz Created using Tabula 5.1.0
+ * 
+ * (Note: Fields originally were pascal case but modified to camel case by
+ * CrowsOfWar)
+ * 
+ * @author Captn_Dubz (unless otherwise specified)
+ */
+public class ModelFlyingBison extends ModelBase {
+	
+	public ModelRenderer body;
+	public ModelRenderer leg1;
+	public ModelRenderer leg2;
+	public ModelRenderer leg3;
+	public ModelRenderer leg4;
+	public ModelRenderer leg5;
+	public ModelRenderer leg6;
+	public ModelRenderer head;
+	public ModelRenderer upTail;
+	public ModelRenderer lowTail;
+	public ModelRenderer hair;
+	public ModelRenderer ear1;
+	public ModelRenderer ear2;
+	public ModelRenderer nose;
+	public ModelRenderer horn1;
+	public ModelRenderer horn2;
+	
+	public ModelFlyingBison() {
+		this.textureWidth = 128;
+		this.textureHeight = 128;
+		this.leg2 = new ModelRenderer(this, 0, 0);
+		this.leg2.setRotationPoint(8.0F, 6.0F, 2.0F);
+		this.leg2.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
+		
+		this.leg4 = new ModelRenderer(this, 0, 0);
+		this.leg4.setRotationPoint(-6.0F, 6.0F, -7.0F);
+		this.leg4.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
+		this.body = new ModelRenderer(this, 0, 0);
+		this.body.setRotationPoint(1.0F, 0.0F, 3.0F);
+		this.body.addBox(-10.0F, -6.0F, -13.0F, 20, 12, 24, 0.0F);
+		this.hair = new ModelRenderer(this, 0, 74);
+		this.hair.setRotationPoint(0.0F, 0.0F, 0.0F);
+		this.hair.addBox(-6.0F, -6.1F, -11.5F, 12, 5, 11, 0.0F);
+		
+		this.upTail = new ModelRenderer(this, 0, 57);
+		this.upTail.setRotationPoint(1.0F, -4.4F, 12.0F);
+		this.upTail.addBox(-9.5F, -2.0F, 0.0F, 19, 3, 14, 0.0F);
+		this.setRotateAngle(upTail, 0, 0.0F, 0.0F);
+		
+		this.lowTail = new ModelRenderer(this, 52, 60);
+		this.lowTail.setRotationPoint(1.0F, -0.5F, 14.0F);
+		this.lowTail.addBox(-9.5F, -1.5F, 0F, 19, 3, 14, 0.0F);
+		this.setRotateAngle(lowTail, 0, 0.0F, 0.0F);
+		
+		this.upTail.addChild(lowTail);
+		
+		this.leg1 = new ModelRenderer(this, 0, 0);
+		this.leg1.setRotationPoint(8.0F, 6.0F, -7.0F);
+		this.leg1.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
+		this.leg5 = new ModelRenderer(this, 0, 0);
+		this.leg5.setRotationPoint(-6.0F, 6.0F, 2.0F);
+		this.leg5.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
+		this.ear1 = new ModelRenderer(this, 82, 0);
+		this.ear1.setRotationPoint(0.0F, 0.0F, -4.0F);
+		this.ear1.addBox(4.0F, 1.0F, -2.0F, 2, 4, 2, 0.0F);
+		this.setRotateAngle(ear1, 0.0F, 0.0F, -0.3839724354387525F);
+		this.horn1 = new ModelRenderer(this, 114, 3);
+		this.horn1.setRotationPoint(0.0F, 0.0F, 0.0F);
+		this.horn1.addBox(5.5F, -9.0F, -9.0F, 2, 9, 2, 0.0F);
+		this.setRotateAngle(horn1, -0.20943951023931953F, 0.0F, 0.03490658503988659F);
+		this.leg6 = new ModelRenderer(this, 0, 0);
+		this.leg6.setRotationPoint(-6.0F, 6.0F, 11.0F);
+		this.leg6.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
+		this.nose = new ModelRenderer(this, 114, 0);
+		this.nose.setRotationPoint(0.0F, 0.0F, 0.0F);
+		this.nose.addBox(-2.0F, 1.5F, -11.5F, 4, 2, 1, 0.0F);
+		this.leg3 = new ModelRenderer(this, 0, 0);
+		this.leg3.setRotationPoint(8.0F, 6.0F, 11.0F);
+		this.leg3.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
+		this.ear2 = new ModelRenderer(this, 106, 0);
+		this.ear2.setRotationPoint(0.0F, 0.0F, -4.0F);
+		this.ear2.addBox(-6.0F, 1.0F, -2.0F, 2, 4, 2, 0.0F);
+		this.setRotateAngle(ear2, 0.0F, 0.0F, 0.3839724354387525F);
+		this.horn2 = new ModelRenderer(this, 112, 14);
+		this.horn2.setRotationPoint(0.0F, 0.0F, 0.0F);
+		this.horn2.addBox(-7.5F, -9.0F, -9.0F, 2, 9, 2, 0.0F);
+		this.setRotateAngle(horn2, -0.20943951023931953F, 0.0F, -0.03490658503988659F);
+		this.head = new ModelRenderer(this, 48, 36);
+		this.head.setRotationPoint(1.0F, -2.0F, -8.0F);
+		this.head.addBox(-5.5F, -6.0F, -11.0F, 11, 11, 10, 0.0F);
+		this.head.addChild(this.hair);
+		this.head.addChild(this.ear1);
+		this.head.addChild(this.horn1);
+		this.head.addChild(this.nose);
+		this.head.addChild(this.ear2);
+		this.head.addChild(this.horn2);
+	}
+	
+	/**
+	 * Please note, head rotations are in degrees
+	 * 
+	 * @author CrowsOfWar
+	 */
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
+			float headPitch, float scaleFactor, Entity entity) {
+		
+		float pi = (float) Math.PI;
+		EntitySkyBison bison = (EntitySkyBison) entity;
+		float degToRad = pi / 180;
+		
+		head.rotateAngleX = headPitch * degToRad
+				+ MathHelper.cos(limbSwing * 0.6662f / 3) * 0.1f * limbSwingAmount;
+		head.rotateAngleY = netHeadYaw * degToRad;
+		
+		leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		leg6.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		
+		leg1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
+		leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
+		leg5.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
+		
+		upTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * 0.5f * limbSwingAmount;
+		lowTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * -0.25f * limbSwingAmount;
+		
+		if (bison.isEatingGrass()) {
+			head.rotateAngleX = (MathHelper.cos(bison.getEatGrassTime() / 2f) * 15 + 65) * degToRad;
+			// head.rotateAngleY = 0;
+		}
+		
+	}
+	
+	/**
+	 * glStateManager calls and 'float scale' lines by CrowsOfWar, all else by
+	 * Captn_Dubz
+	 */
+	@Override
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		
+		pushMatrix();
+		float scale = 1.5f;
+		scale(scale, scale, scale);
+		
+		this.leg2.render(f5);
+		this.leg4.render(f5);
+		this.body.render(f5);
+		this.upTail.render(f5);
+		this.leg1.render(f5);
+		this.leg5.render(f5);
+		this.leg6.render(f5);
+		this.leg3.render(f5);
+		this.head.render(f5);
+		
+		popMatrix();
+		
+	}
+	
+	/**
+	 * This is a helper function from Tabula to set the rotation of model parts
+	 */
+	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+		modelRenderer.rotateAngleX = x;
+		modelRenderer.rotateAngleY = y;
+		modelRenderer.rotateAngleZ = z;
+	}
+	
+}

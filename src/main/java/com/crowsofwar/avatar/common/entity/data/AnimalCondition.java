@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.data;
 
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
+
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -28,31 +30,89 @@ import net.minecraft.network.datasync.DataParameter;
 public class AnimalCondition {
 	
 	private final DataParameter<Float> syncFood;
+	private final DataParameter<Integer> syncDomestication;
 	private final EntityCreature animal;
-	private final float maxFoodPoints;
+	private final float maxFoodPoints, foodRegenPoints;
 	
 	private float lastDistance;
 	
-	public AnimalCondition(EntityCreature animal, float maxFoodPoints, DataParameter<Float> syncFood) {
+	public AnimalCondition(EntityCreature animal, float maxFoodPoints, float foodRegenPoints,
+			DataParameter<Float> syncFood, DataParameter<Integer> syncDomestication) {
 		this.animal = animal;
+		this.syncDomestication = syncDomestication;
 		this.syncFood = syncFood;
 		this.maxFoodPoints = maxFoodPoints;
+		this.foodRegenPoints = foodRegenPoints;
 		
-		lastDistance = animal.distanceWalkedModified;
+		this.lastDistance = animal.distanceWalkedModified;
 		
 	}
 	
 	public void onUpdate() {
 		float distance = animal.distanceWalkedModified;
+		// Rarely, an error can occur where distance is NaN (divide by 0)
+		if (Float.isNaN(distance)) {
+			distance = lastDistance;
+		}
 		float diff = distance - lastDistance;
 		addHunger(diff * 0.1f);
 		
-		if (animal.ticksExisted % 60 == 0 && animal.worldObj.isRemote) {
-			System.out.println("food points currently : " + getFoodPoints());
+		lastDistance = distance;
+		
+		if (!animal.worldObj.isRemote) {
+			boolean enoughFood = getFoodPoints() >= foodRegenPoints;
+			boolean correctTime = animal.ticksExisted % 40 == 0;
+			if (enoughFood && correctTime) {
+				animal.heal(1);
+				addHunger(1);
+			}
 		}
 		
-		lastDistance = distance;
 	}
+	
+	// ================================================================================
+	// DOMESTICATION
+	// ================================================================================
+	
+	public int getDomestication() {
+		return animal.getDataManager().get(syncDomestication);
+	}
+	
+	public void setDomestication(int domestication) {
+		if (domestication < 0) domestication = 0;
+		if (domestication > 1000) domestication = 1000;
+		animal.getDataManager().set(syncDomestication, domestication);
+	}
+	
+	public void addDomestication(int domestication) {
+		setDomestication(getDomestication() + domestication);
+	}
+	
+	public boolean canHaveOwner() {
+		return getDomestication() >= MOBS_CONFIG.bisonOwnableTameness;
+	}
+	
+	public int getMaxRiders() {
+		if (canHaveOwner()) {
+			
+			double pctToTame = 1.0 * (getDomestication() - MOBS_CONFIG.bisonOwnableTameness)
+					/ (1000 - MOBS_CONFIG.bisonOwnableTameness);
+			return 1 + (int) (pctToTame * 4);
+			
+		} else if (getDomestication() >= MOBS_CONFIG.bisonRiderTameness) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+	
+	public boolean isFullyDomesticated() {
+		return getDomestication() == 1000;
+	}
+	
+	// ================================================================================
+	// FOOD POINTS
+	// ================================================================================
 	
 	public float getFoodPoints() {
 		return animal.getDataManager().get(syncFood);
@@ -93,10 +153,12 @@ public class AnimalCondition {
 	
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("FoodPoints", getFoodPoints());
+		nbt.setInteger("Domestication", getDomestication());
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
 		setFoodPoints(nbt.getFloat("FoodPoints"));
+		setDomestication(nbt.getInteger("Domestication"));
 	}
 	
 }

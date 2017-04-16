@@ -32,12 +32,11 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
@@ -84,7 +83,7 @@ public class StatCtrlAirJump extends StatusControl {
 				entity.motionZ = 0;
 			}
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
-			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+			AvatarUtils.afterVelocityAdded(entity);
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(entity.worldObj, ParticleType.AIR, 2, 6, new Vector(entity),

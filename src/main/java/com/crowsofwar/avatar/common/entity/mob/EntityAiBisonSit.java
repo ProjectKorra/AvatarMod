@@ -36,6 +36,7 @@ public class EntityAiBisonSit extends EntityAIBase {
 	
 	public EntityAiBisonSit(EntitySkyBison bison) {
 		this.bison = bison;
+		setMutexBits(1);
 	}
 	
 	@Override

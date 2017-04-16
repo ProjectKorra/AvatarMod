@@ -45,6 +45,8 @@ public class EntityAiBisonWander extends EntityAIBase {
 		
 		if (entity.isSitting()) return false;
 		if (entity.getControllingPassenger() != null) return false;
+		if (entity.wantsGrass()) return false;
+		if (entity.getOwner() != null) return false;
 		
 		EntityMoveHelper moveHelper = entity.getMoveHelper();
 		
@@ -78,6 +80,7 @@ public class EntityAiBisonWander extends EntityAIBase {
 		double x = original.x() + (random.nextFloat() * 2 - 1) * 32;
 		double y = original.y() + (random.nextFloat() * 2 - 1) * 32;
 		double z = original.z() + (random.nextFloat() * 2 - 1) * 32;
+		
 		this.entity.getMoveHelper().setMoveTo(x, y, z, 1.0D);
 	}
 	

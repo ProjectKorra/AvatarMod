@@ -387,4 +387,14 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		bendingData.setSmashGround(smash);
 	}
 	
+	@Override
+	public int getPetSummonCooldown() {
+		return bendingData.getPetSummonCooldown();
+	}
+	
+	@Override
+	public void setPetSummonCooldown(int cooldown) {
+		bendingData.setPetSummonCooldown(cooldown);
+	}
+	
 }
