@@ -19,11 +19,11 @@ package com.crowsofwar.avatar.client.gui.skills;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
-import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -36,6 +36,8 @@ import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
@@ -66,8 +68,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private ComponentInventorySlots inventory, hotbar;
 	private UiComponentHandler handler;
 	
-	public SkillsGui() {
-		super(new ContainerSkillsGui(getMinecraft().thePlayer, BendingType.AIRBENDING));
+	public SkillsGui(BendingType type) {
+		super(new ContainerSkillsGui(getMinecraft().thePlayer, type));
 		
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		
@@ -78,9 +80,12 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		ScreenInfo.refreshDimensions();
 		
-		cards = new AbilityCard[] { new AbilityCard(ABILITY_AIR_BUBBLE, 0),
-				new AbilityCard(ABILITY_AIR_GUST, 1), new AbilityCard(ABILITY_AIR_JUMP, 2),
-				new AbilityCard(ABILITY_AIRBLADE, 3) };
+		BendingController controller = BendingManager.getBending(type);
+		List<BendingAbility> abilities = controller.getAllAbilities();
+		cards = new AbilityCard[abilities.size()];
+		for (int i = 0; i < abilities.size(); i++) {
+			cards[i] = new AbilityCard(abilities.get(i), i);
+		}
 		
 		handler = new UiComponentHandler();
 		BendingType[] types = BendingType.values();

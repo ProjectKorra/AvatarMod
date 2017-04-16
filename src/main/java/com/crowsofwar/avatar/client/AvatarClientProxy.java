@@ -44,6 +44,7 @@ import com.crowsofwar.avatar.client.render.RenderWaterBubble;
 import com.crowsofwar.avatar.client.render.RenderWave;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
@@ -157,7 +158,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
-		if (id == GUI_ID_SKILLS) return new SkillsGui();
+		if (id == GUI_ID_SKILLS) return new SkillsGui(BendingType.AIRBENDING);
 		
 		return null;
 	}
