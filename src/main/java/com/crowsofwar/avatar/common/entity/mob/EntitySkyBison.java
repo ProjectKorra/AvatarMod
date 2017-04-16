@@ -16,8 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BISON_WHISTLE_ASSIGN;
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SKY_BISON_STATS;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
@@ -409,9 +408,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		}
 		
 		if (!worldObj.isRemote && stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
-			ItemBisonWhistle.setBoundTo(stack, getUniqueID());
-			ItemBisonWhistle.setBisonName(stack, getName());
-			MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
+			if (player == getOwner()) {
+				ItemBisonWhistle.setBoundTo(stack, getUniqueID());
+				ItemBisonWhistle.setBisonName(stack, getName());
+				MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
+			} else {
+				MSG_BISON_WHISTLE_NOTOWNED.send(player);
+			}
+			
 			return true;
 		}
 		
