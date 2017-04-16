@@ -30,7 +30,7 @@ public class ComponentBendingTab extends ComponentImage {
 	private final BendingType type;
 	
 	public ComponentBendingTab(BendingType type, boolean isFullTab) {
-		super(AvatarUiTextures.skillsGui, 236, type.ordinal() * 20, 20, isFullTab ? 20 : 18);
+		super(AvatarUiTextures.skillsGui, 236, type.ordinal() * 20, 20, isFullTab ? 20 : 17);
 		this.type = type;
 	}
 	
