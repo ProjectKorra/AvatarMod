@@ -109,6 +109,11 @@ public class AnimalCondition {
 	}
 	
 	public int getMaxRiders() {
+		
+		if (!isAdult()) {
+			return 0;
+		}
+		
 		if (canHaveOwner()) {
 			
 			double pctToTame = 1.0 * (getDomestication() - MOBS_CONFIG.bisonOwnableTameness)
