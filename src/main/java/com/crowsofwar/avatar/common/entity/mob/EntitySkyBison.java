@@ -107,6 +107,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	 * Note: Is null clientside.
 	 */
 	private EntityAiBisonEatGrass aiEatGrass;
+	private int riderTicks;
 	
 	private ForgeChunkManager.Ticket ticket;
 	
@@ -181,6 +182,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.load(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
+		riderTicks = nbt.getInteger("RiderTicks");
 	}
 	
 	@Override
@@ -190,6 +192,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.save(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
+		nbt.setInteger("RiderTicks", riderTicks);
 	}
 	
 	// ================================================================================
@@ -254,6 +257,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.set(SYNC_EAT_GRASS, time);
 	}
 	
+	public int getRiderTicks() {
+		return riderTicks;
+	}
+	
+	public void setRiderTicks(int riderTicks) {
+		this.riderTicks = riderTicks;
+	}
+	
 	// ================================================================================
 	// CHUNK LOADING
 	// ================================================================================
@@ -285,6 +296,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public void updatePassenger(Entity passenger) {
 		
 		double index = getPassengers().indexOf(passenger);
+		riderTicks++;
 		
 		if (index > -1) {
 			
@@ -500,6 +512,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			
 			wasTouchingGround = touchingGround;
 			
+		}
+		
+		if (getPassengers().isEmpty()) {
+			riderTicks = 0;
+		}
+		if (!condition.canHaveOwner() && riderTicks > 0 && riderTicks % 60 == 0) {
+			condition.addDomestication(MOBS_CONFIG.bisonRideOneSecondTameness * 3);
+			playTameEffect(false);
 		}
 		
 	}

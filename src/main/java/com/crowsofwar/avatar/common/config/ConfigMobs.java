@@ -63,7 +63,7 @@ public class ConfigMobs {
 	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000;
 	
 	@Load
-	public int bisonGrassFoodBonus = 5;
+	public int bisonGrassFoodBonus = 5, bisonRideOneSecondTameness = 3;
 	
 	@Load
 	private Map<String, Integer> bisonFoods;
