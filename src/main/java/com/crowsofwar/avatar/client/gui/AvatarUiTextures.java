@@ -52,19 +52,26 @@ public class AvatarUiTextures {
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
 	
 	private static final Map<BendingAbility, ResourceLocation> abilityTextures = new HashMap<>();
+	private static final Map<BendingAbility, ResourceLocation> abilityCards = new HashMap<>();
 	
 	public static ResourceLocation getAbilityTexture(BendingAbility ability) {
-		
 		if (!abilityTextures.containsKey(ability)) {
-			
 			ResourceLocation location = new ResourceLocation("avatarmod",
 					"textures/radial/icon_" + ability.getName() + ".png");
 			abilityTextures.put(ability, location);
 			return location;
-			
 		}
 		return abilityTextures.get(ability);
-		
+	}
+	
+	public static ResourceLocation getCardTexture(BendingAbility ability) {
+		if (!abilityCards.containsKey(ability)) {
+			ResourceLocation location = new ResourceLocation("avatarmod",
+					"textures/gui/skillmenu/" + ability.getName() + ".png");
+			abilityCards.put(ability, location);
+			return location;
+		}
+		return abilityCards.get(ability);
 	}
 	
 }

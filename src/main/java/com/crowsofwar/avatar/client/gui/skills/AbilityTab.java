@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTexture;
+import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getCardTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 
@@ -51,17 +51,20 @@ public class AbilityTab {
 		float width = 25f, height = 100 * 2 / 3f;
 		
 		frame = new Frame();
-		frame.setDimensions(fromPercent(width, height));
-		frame.setPosition(fromPercent((100 - width) / 2, (100 - height) / 2));
+		frame.setDimensions(fromPercent(width, 100));
+		// frame.setPosition(fromPercent((100 - width) / 2, (100 - height) /
+		// 2));
 		
 		text = new ComponentText(I18n.format("avatar.ability." + ability.getName()));
 		text.setFrame(frame);
 		text.setPosition(StartingPosition.MIDDLE_TOP);
 		
-		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
+		icon = new ComponentImage(getCardTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frame);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
-		icon.setOffset(fromPixels(frame, 0, -text.height() - icon.height() * 50 / 256));
+		// icon.setOffset(fromPixels(frame, 0, -text.height() - icon.height() *
+		// 50 / 256));
+		// icon.setScale(0.5f);
 		
 	}
 	
@@ -71,7 +74,7 @@ public class AbilityTab {
 		
 		frame.draw(partialTicks);
 		icon.draw(partialTicks);
-		text.draw(partialTicks);
+		// text.draw(partialTicks);
 		
 	}
 	
@@ -97,7 +100,8 @@ public class AbilityTab {
 	private void updateFramePos(float scroll) {
 		float width = 25f, height = 100 * 2 / 3f;
 		Measurement base = fromPercent((100 - width) / 2, (100 - height) / 2);
-		frame.setPosition(base.plus(fromPixels(scroll, 0)));
+		// frame.setPosition(base.plus(fromPixels(scroll, 0)));
+		frame.setPosition(fromPixels(scroll, 0));
 	}
 	
 }
