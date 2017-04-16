@@ -153,7 +153,9 @@ public class ModelFlyingBison extends ModelBase {
 		
 		pushMatrix();
 		float scale = 1.5f * size;
+		// translate(0, 0.6 * scale, 0);
 		scale(scale, scale, scale);
+		// translate(0, -0.5, 0);
 		
 		this.leg2.render(f5);
 		this.leg4.render(f5);

@@ -124,7 +124,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
-		setSize(3, 2);
+		setSize(2.5f, 2);
 		
 	}
 	
@@ -488,6 +488,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		if (!worldObj.isRemote) {
 			setEatGrassTime(aiEatGrass.getEatGrassTime());
 		}
+		
+		float sizeMult = condition.getSizeMultiplier();
+		setSize(2.5f * sizeMult, 2 * sizeMult);
 		
 		condition.onUpdate();
 		if (condition.getFoodPoints() == 0) {

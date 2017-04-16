@@ -81,7 +81,8 @@ public class AnimalCondition {
 				animal.heal(1);
 				addHunger(1);
 			}
-			addAge(1);
+			// addAge(500);
+			setAge((int) (Math.cos(animal.ticksExisted / 20f) * 48000 + 48000));
 		}
 		
 	}
@@ -201,7 +202,7 @@ public class AnimalCondition {
 	}
 	
 	public float getSizeMultiplier() {
-		return isAdult() ? 1 : 0.3f + getAgeDays() / 3 * 0.7f;
+		return isAdult() ? 1 : 0.1f + getAgeDays() / 3 * 0.9f;
 	}
 	
 	public boolean isAdult() {
