@@ -51,7 +51,7 @@ import net.minecraft.item.ItemStack;
  * 
  * @author CrowsOfWar
  */
-public class GuiSkillsNew extends GuiContainer implements AvatarGui {
+public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	private AbilityTab[] tabs;
 	private int scroll;
@@ -61,7 +61,7 @@ public class GuiSkillsNew extends GuiContainer implements AvatarGui {
 	
 	private ComponentInventorySlots inventory, hotbar;
 	
-	public GuiSkillsNew() {
+	public SkillsGui() {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, BendingType.AIRBENDING));
 		
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;

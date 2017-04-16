@@ -48,7 +48,7 @@ import net.minecraft.util.text.TextFormatting;
 public class WindowAbility {
 	
 	private final BendingAbility ability;
-	private final GuiSkillsNew gui;
+	private final SkillsGui gui;
 	private final UiComponentHandler handler;
 	
 	private Frame frame;
@@ -57,7 +57,7 @@ public class WindowAbility {
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
-	public WindowAbility(BendingAbility ability, GuiSkillsNew gui) {
+	public WindowAbility(BendingAbility ability, SkillsGui gui) {
 		this.ability = ability;
 		this.gui = gui;
 		this.handler = new UiComponentHandler();
