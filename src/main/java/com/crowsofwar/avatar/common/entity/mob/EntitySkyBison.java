@@ -360,7 +360,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		boolean willBeOwned = condition.canHaveOwner() && stack.getItem() == Items.APPLE && !hasOwner();
 		
-		if (!condition.isFullyDomesticated()) {
+		if (!condition.isFullyDomesticated() || true) {
 			if (stack != field_190927_a) {
 				
 				Item item = stack.getItem();
@@ -381,6 +381,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 				}
 				
 				if (domesticationValue > 0 || item instanceof ItemFood) {
+					condition.addAge(100);
 					// Consume food item
 					if (!player.capabilities.isCreativeMode) {
 						stack.func_190918_g(1);
