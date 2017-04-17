@@ -18,8 +18,10 @@ package com.crowsofwar.avatar.common.entity.ai;
 
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.math.AxisAlignedBB;
 
 /**
  * 
@@ -32,6 +34,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	
 	public EntityAiBisonBreeding(EntitySkyBison bison) {
 		this.bison = bison;
+		setMutexBits(1);
 	}
 	
 	@Override
@@ -44,16 +47,33 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	public void startExecuting() {
 		System.out.println("in love");
 		bison.setInLove(true);
+		
 	}
 	
 	@Override
 	public boolean continueExecuting() {
+		
+		double range = 10;
+		
+		Vector pos = Vector.getEntityPos(bison);
+		Vector min = pos.minus(range / 2, range / 2, range / 2);
+		Vector max = pos.plus(range / 2, range / 2, range / 2);
+		
+		AxisAlignedBB aabb = new AxisAlignedBB(min.toMinecraft(), max.toMinecraft());
+		
+		EntitySkyBison nearest = bison.worldObj.findNearestEntityWithinAABB(EntitySkyBison.class, aabb,
+				bison);
+		if (nearest != null) {
+			bison.getNavigator().tryMoveToEntityLiving(nearest, 1);
+		}
+		
 		AnimalCondition cond = bison.getCondition();
 		
 		if (!shouldExecute()) {
 			bison.setInLove(false);
 		}
 		return shouldExecute();
+		
 	}
 	
 }

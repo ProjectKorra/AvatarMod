@@ -508,6 +508,17 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		if (!worldObj.isRemote) {
 			setEatGrassTime(aiEatGrass.getEatGrassTime());
 		}
+		if (worldObj.isRemote && isInLove() && ticksExisted % 10 == 0) {
+			double d0 = this.rand.nextGaussian() * 0.02D;
+			double d1 = this.rand.nextGaussian() * 0.02D;
+			double d2 = this.rand.nextGaussian() * 0.02D;
+			
+			this.worldObj.spawnParticle(EnumParticleTypes.HEART,
+					this.posX + this.rand.nextFloat() * this.width * 2 - this.width,
+					this.posY + 0.5D + this.rand.nextFloat() * this.height,
+					this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2, new int[0]);
+			
+		}
 		
 		float sizeMult = condition.getSizeMultiplier();
 		setSize(2.5f * sizeMult, 2 * sizeMult);
