@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
+import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.ai.EntityAIBase;
@@ -35,8 +36,24 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		// TODO Auto-generated method stub
-		return false;
+		AnimalCondition cond = bison.getCondition();
+		return !cond.isSterile() && cond.getBreedTimer() == 0;
+	}
+	
+	@Override
+	public void startExecuting() {
+		System.out.println("in love");
+		bison.setInLove(true);
+	}
+	
+	@Override
+	public boolean continueExecuting() {
+		AnimalCondition cond = bison.getCondition();
+		
+		if (!shouldExecute()) {
+			bison.setInLove(false);
+		}
+		return shouldExecute();
 	}
 	
 }

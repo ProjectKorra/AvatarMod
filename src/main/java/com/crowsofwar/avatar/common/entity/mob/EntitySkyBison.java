@@ -107,6 +107,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<Integer> SYNC_AGE = EntityDataManager.createKey(EntitySkyBison.class,
 			DataSerializers.VARINT);
 	
+	private static final DataParameter<Boolean> SYNC_IN_LOVE = EntityDataManager
+			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
@@ -145,6 +148,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.register(SYNC_DOMESTICATION, domestication);
 		dataManager.register(SYNC_EAT_GRASS, -1);
 		dataManager.register(SYNC_AGE, 0);
+		dataManager.register(SYNC_IN_LOVE, false);
 		
 	}
 	
@@ -191,6 +195,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
 		riderTicks = nbt.getInteger("RiderTicks");
+		setInLove(nbt.getBoolean("InLove"));
 	}
 	
 	@Override
@@ -201,6 +206,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
 		nbt.setInteger("RiderTicks", riderTicks);
+		nbt.setBoolean("InLove", isInLove());
 	}
 	
 	// ================================================================================
@@ -271,6 +277,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	public void setRiderTicks(int riderTicks) {
 		this.riderTicks = riderTicks;
+	}
+	
+	public boolean isInLove() {
+		return dataManager.get(SYNC_IN_LOVE);
+	}
+	
+	public void setInLove(boolean inLove) {
+		dataManager.set(SYNC_IN_LOVE, inLove);
 	}
 	
 	// ================================================================================

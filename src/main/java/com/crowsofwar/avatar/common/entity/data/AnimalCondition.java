@@ -90,6 +90,9 @@ public class AnimalCondition {
 				addHunger(1);
 			}
 			addAge(1);
+			if (!isSterile()) {
+				addBreedTimer(-1);
+			}
 		}
 		
 	}
@@ -235,6 +238,10 @@ public class AnimalCondition {
 			if (breedTimer < 0) breedTimer = 0;
 			this.breedTimer = breedTimer;
 		}
+	}
+	
+	public void addBreedTimer(int amount) {
+		setBreedTimer(getBreedTimer() + amount);
 	}
 	
 	public boolean isSterile() {
