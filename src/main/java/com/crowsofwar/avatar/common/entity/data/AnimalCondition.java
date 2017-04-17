@@ -81,8 +81,7 @@ public class AnimalCondition {
 				animal.heal(1);
 				addHunger(1);
 			}
-			// addAge(500);
-			setAge((int) (Math.cos(animal.ticksExisted / 20f) * 48000 + 48000));
+			addAge(1);
 		}
 		
 	}
