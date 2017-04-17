@@ -53,7 +53,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	@Override
 	public boolean continueExecuting() {
 		
-		double range = 10;
+		double range = 100;
 		
 		Vector pos = Vector.getEntityPos(bison);
 		Vector min = pos.minus(range / 2, range / 2, range / 2);
@@ -64,7 +64,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		EntitySkyBison nearest = bison.worldObj.findNearestEntityWithinAABB(EntitySkyBison.class, aabb,
 				bison);
 		if (nearest != null) {
-			bison.getNavigator().tryMoveToEntityLiving(nearest, 1);
+			bison.getMoveHelper().setMoveTo(nearest.posX, nearest.posY, nearest.posZ, 1);
 		}
 		
 		AnimalCondition cond = bison.getCondition();
