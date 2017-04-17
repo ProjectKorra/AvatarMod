@@ -1,11 +1,16 @@
 package com.crowsofwar.avatar.client.render;
 
-import static net.minecraft.client.renderer.GlStateManager.*;
+import static net.minecraft.client.renderer.GlStateManager.popMatrix;
+import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+
+import java.util.Arrays;
+import java.util.List;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
@@ -105,6 +110,14 @@ public class ModelFlyingBison extends ModelBase {
 		this.head.addChild(this.nose);
 		this.head.addChild(this.ear2);
 		this.head.addChild(this.horn2);
+		
+		// CrowsOfWar: Adjust bottom-of-feet pos to be at 0, which prevents
+		// weird issues while scaling
+		List<ModelRenderer> allBoxes = Arrays.asList(body, leg1, leg2, leg3, leg4, leg5, leg6, head, upTail);
+		for (ModelRenderer box : allBoxes) {
+			box.rotationPointY -= 18;
+		}
+		
 	}
 	
 	/**
@@ -137,7 +150,6 @@ public class ModelFlyingBison extends ModelBase {
 		
 		if (bison.isEatingGrass()) {
 			head.rotateAngleX = (MathHelper.cos(bison.getEatGrassTime() / 2f) * 15 + 65) * degToRad;
-			// head.rotateAngleY = 0;
 		}
 		
 	}
@@ -153,9 +165,8 @@ public class ModelFlyingBison extends ModelBase {
 		
 		pushMatrix();
 		float scale = 1.5f * size;
-		// translate(0, 0.6 * scale, 0);
-		scale(scale, scale, scale);
-		// translate(0, -0.5, 0);
+		GlStateManager.translate(0, 1.5, 0);
+		GlStateManager.scale(scale, scale, scale);
 		
 		this.leg2.render(f5);
 		this.leg4.render(f5);
