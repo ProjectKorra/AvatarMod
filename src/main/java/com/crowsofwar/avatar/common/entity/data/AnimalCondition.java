@@ -36,6 +36,8 @@ public class AnimalCondition {
 	private final float maxFoodPoints, foodRegenPoints;
 	
 	private float lastDistance;
+	private int breedTimer;
+	private boolean sterile;
 	
 	public AnimalCondition(EntityCreature animal, float maxFoodPoints, float foodRegenPoints,
 			DataParameter<Float> syncFood, DataParameter<Integer> syncDomestication,
@@ -48,6 +50,8 @@ public class AnimalCondition {
 		this.foodRegenPoints = foodRegenPoints;
 		
 		this.lastDistance = animal.distanceWalkedModified;
+		this.breedTimer = -1;
+		this.sterile = true;
 		
 	}
 	
@@ -55,12 +59,16 @@ public class AnimalCondition {
 		nbt.setFloat("FoodPoints", getFoodPoints());
 		nbt.setInteger("Domestication", getDomestication());
 		nbt.setInteger("Age", getAge());
+		nbt.setInteger("BreedTimer", getBreedTimer());
+		nbt.setBoolean("Sterile", isSterile());
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
 		setFoodPoints(nbt.getFloat("FoodPoints"));
 		setDomestication(nbt.getInteger("Domestication"));
 		setAge(nbt.getInteger("Age"));
+		setBreedTimer(nbt.getInteger("BreedTimer"));
+		setSterile(nbt.getBoolean("Sterile"));
 	}
 	
 	public void onUpdate() {
@@ -206,6 +214,35 @@ public class AnimalCondition {
 	
 	public boolean isAdult() {
 		return getAgeDays() >= 3;
+	}
+	
+	// ================================================================================
+	// BREEDING
+	// ================================================================================
+	
+	/**
+	 * Get the breed timer. If {@link #isSterile() is sterile}, returns -1.
+	 */
+	public int getBreedTimer() {
+		return sterile ? -1 : breedTimer;
+	}
+	
+	/**
+	 * Set the breedTimer. Ignored if {@link #isSterile() is sterile}.
+	 */
+	public void setBreedTimer(int breedTimer) {
+		if (!isSterile()) {
+			if (breedTimer < 0) breedTimer = 0;
+			this.breedTimer = breedTimer;
+		}
+	}
+	
+	public boolean isSterile() {
+		return sterile;
+	}
+	
+	public void setSterile(boolean sterile) {
+		this.sterile = sterile;
 	}
 	
 }
