@@ -14,10 +14,11 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.entity.mob;
+package com.crowsofwar.avatar.common.entity.ai;
 
 import static net.minecraft.util.math.MathHelper.floor_double;
 
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
