@@ -72,7 +72,8 @@ public class EntityAiBisonTempt extends EntityAIBase {
 	
 	@Override
 	public void startExecuting() {
-		bison.getMoveHelper().setMoveTo(following.posX, following.posY, following.posZ, 1);
+		bison.getMoveHelper().setMoveTo(following.posX,
+				following.posY + following.eyeHeight - bison.getEyeHeight(), following.posZ, 1);
 	}
 	
 	@Override
@@ -81,7 +82,8 @@ public class EntityAiBisonTempt extends EntityAIBase {
 		if (!following.isDead && bison.getDistanceSqToEntity(following) <= maxDistSq
 				&& isHoldingFood(following)) {
 			
-			bison.getMoveHelper().setMoveTo(following.posX, following.posY, following.posZ, 1);
+			bison.getMoveHelper().setMoveTo(following.posX,
+					following.posY + following.eyeHeight - bison.getEyeHeight(), following.posZ, 1);
 			return true;
 			
 		} else {
