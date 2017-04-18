@@ -174,10 +174,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
 		this.tasks.addTask(4, new EntityAiBisonBreeding(this));
-		this.tasks.addTask(5, aiEatGrass = new EntityAiBisonEatGrass(this));
-		this.tasks.addTask(5, new EntityAiBisonLand(this));
-		this.tasks.addTask(6, new EntityAiBisonFollowOwner(this));
-		this.tasks.addTask(7, new EntityAiBisonTempt(this, 10));
+		this.tasks.addTask(5, new EntityAiBisonTempt(this, 10));
+		this.tasks.addTask(6, aiEatGrass = new EntityAiBisonEatGrass(this));
+		this.tasks.addTask(6, new EntityAiBisonLand(this));
+		this.tasks.addTask(7, new EntityAiBisonFollowOwner(this));
 		this.tasks.addTask(8, new EntityAiBisonWander(this));
 		System.out.println("Set aiEatGrass to " + aiEatGrass);
 		
