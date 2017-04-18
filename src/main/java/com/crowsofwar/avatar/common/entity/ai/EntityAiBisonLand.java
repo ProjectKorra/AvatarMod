@@ -92,7 +92,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 		}
 		
 		// Don't wander off until we have food!
-		return !bison.isFull();
+		return !bison.isFull() && bison.isEatingGrass();
 	}
 	
 	private Vector findLandingPoint() {
