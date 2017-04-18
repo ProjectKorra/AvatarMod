@@ -501,10 +501,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	private void onLiftoff() {
-		Raytrace.Result result = new Raytrace.Result();
-		ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
-		StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
-		getData().removeStatusControl(StatusControl.AIR_JUMP);
+		if (!isEatingGrass()) {
+			Raytrace.Result result = new Raytrace.Result();
+			ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
+			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
+			getData().removeStatusControl(StatusControl.AIR_JUMP);
+		}
 	}
 	
 	private void onLand() {
