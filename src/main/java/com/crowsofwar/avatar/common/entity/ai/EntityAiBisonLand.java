@@ -23,6 +23,8 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -83,6 +85,12 @@ public class EntityAiBisonLand extends EntityAIBase {
 	
 	@Override
 	public boolean continueExecuting() {
+		// Once got close to grass, close enough
+		EntityMoveHelper mh = bison.getMoveHelper();
+		if (bison.getDistanceSq(mh.getX(), mh.getY(), mh.getZ()) <= 5) {
+			bison.getMoveHelper().action = Action.WAIT;
+		}
+		
 		// Don't wander off until we have food!
 		return bison.wantsGrass();
 	}
