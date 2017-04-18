@@ -138,9 +138,11 @@ public class EntityAiBisonLand extends EntityAIBase {
 	 */
 	private boolean canGetTo(Vector target) {
 		Vector current = Vector.getEntityPos(bison);
+		Vector direction = target.minus(current).normalize();
 		double range = current.dist(target);
-		Raytrace.Result raytrace = Raytrace.raytrace(bison.worldObj, current, target, range, false);
+		Raytrace.Result raytrace = Raytrace.raytrace(bison.worldObj, current, direction, range + 1, false);
 		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos();
+		System.out.println("LZ " + blockPos + " vs " + target.toBlockPos());
 		return blockPos == null || blockPos.equals(target.toBlockPos());
 	}
 	
