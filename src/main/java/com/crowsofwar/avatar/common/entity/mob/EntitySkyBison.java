@@ -277,6 +277,18 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		return condition;
 	}
 	
+	/**
+	 * Returns whether the bison will stop eating grass
+	 */
+	public boolean isFull() {
+		return condition.getFoodPoints() > 25;
+	}
+	
+	/**
+	 * Returns whether the bison will bother to eat grass. However, this isn't
+	 * the same as {@link #isFull() not full}; returns the bison is really
+	 * hungry
+	 */
 	public boolean wantsGrass() {
 		return condition.getFoodPoints() < 15;
 	}

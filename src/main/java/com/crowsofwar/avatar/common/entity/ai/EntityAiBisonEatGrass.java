@@ -73,7 +73,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	@Override
 	public boolean continueExecuting() {
 		
-		boolean keepExecuting = bison.wantsGrass() && isOnGround();
+		boolean keepExecuting = !bison.isFull() && isOnGround();
 		// System.out.println("y= " + bison.posY);
 		
 		World world = bison.worldObj;
