@@ -16,12 +16,19 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
+
+import java.util.Random;
+
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -53,6 +60,8 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	@Override
 	public boolean continueExecuting() {
 		
+		boolean keepGoing = shouldExecute();
+		
 		double range = 100;
 		
 		Vector pos = Vector.getEntityPos(bison);
@@ -65,15 +74,66 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 				bison);
 		if (nearest != null) {
 			bison.getMoveHelper().setMoveTo(nearest.posX, nearest.posY, nearest.posZ, 1);
+			if (bison.getDistanceSqToEntity(nearest) <= 0.25) {
+				spawnBaby(nearest);
+				keepGoing = false;
+			}
 		}
 		
-		AnimalCondition cond = bison.getCondition();
-		
-		if (!shouldExecute()) {
+		if (!keepGoing) {
 			bison.setInLove(false);
 		}
-		return shouldExecute();
+		return keepGoing;
 		
+	}
+	
+	private void spawnBaby(EntitySkyBison mate) {
+		
+		World world = bison.worldObj;
+		AnimalCondition cond = bison.getCondition();
+		EntitySkyBison child = new EntitySkyBison(world);
+		
+		if (child != null) {
+			
+			// Spawn the baby
+			bison.getCondition().setBreedTimer(generateBreedTimer());
+			mate.getCondition().setBreedTimer(generateBreedTimer());
+			child.getCondition().setAge(0);
+			child.setLocationAndAngles(bison.posX, bison.posY, bison.posZ, 0, 0);
+			world.spawnEntityInWorld(child);
+			
+			// Spawn heart particles
+			Random random = bison.getRNG();
+			for (int i = 0; i < 7; ++i) {
+				
+				double mx = random.nextGaussian() * 0.02D;
+				double my = random.nextGaussian() * 0.02D;
+				double mz = random.nextGaussian() * 0.02D;
+				
+				double dx = random.nextDouble() * bison.width * 2 - bison.width;
+				double dy = 0.5 + random.nextDouble() * bison.height;
+				double dz = random.nextDouble() * bison.width * 2 - bison.width;
+				
+				world.spawnParticle(EnumParticleTypes.HEART, bison.posX + dx, bison.posY + dy,
+						bison.posZ + dz, mx, my, mz);
+				
+			}
+			
+			// Spawn XP orbs
+			if (world.getGameRules().getBoolean("doMobLoot")) {
+				world.spawnEntityInWorld(
+						new EntityXPOrb(world, bison.posX, bison.posY, bison.posZ, random.nextInt(7) + 1));
+			}
+			
+		}
+	}
+	
+	private int generateBreedTimer() {
+		Random random = bison.getRNG();
+		float min = MOBS_CONFIG.bisonBreedMinMinutes;
+		float max = MOBS_CONFIG.bisonBreedMaxMinutes;
+		float minutes = min + random.nextFloat() * (max - min);
+		return (int) (minutes * 1200);
 	}
 	
 }
