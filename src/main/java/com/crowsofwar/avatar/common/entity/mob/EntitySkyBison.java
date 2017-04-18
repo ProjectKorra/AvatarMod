@@ -180,6 +180,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 	}
 	
+	// Note: Not called when using /summon with NBT tags (w/o nbt will call
+	// this)
 	@Override
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
@@ -224,6 +226,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	// ================================================================================
 	
 	public Vector getOriginalPos() {
+		
+		// might not be init in rare cases, for example when /summon'd with nbt
+		// arg
+		if (originalPos.equals(Vector.ZERO)) {
+			originalPos = Vector.getEntityPos(this);
+		}
+		
 		return originalPos;
 	}
 	
