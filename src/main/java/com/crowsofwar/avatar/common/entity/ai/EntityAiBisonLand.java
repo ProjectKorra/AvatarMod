@@ -50,7 +50,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		
-		System.out.println("Time to eat!!");
+		System.out.println("Trying to land");
 		
 		World world = bison.worldObj;
 		

@@ -74,7 +74,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	public boolean continueExecuting() {
 		
 		boolean keepExecuting = bison.wantsGrass() && isOnGround();
-		System.out.println("Keep eating grass... " + eatGrassTime);
 		// System.out.println("y= " + bison.posY);
 		
 		World world = bison.worldObj;
@@ -83,14 +82,16 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		if (!isEatingGrass()) {
 			// Just reached ground
 			eatGrassTime = 0;
-			bison.getMoveHelper().setMoveTo(bison.posX, bison.posY, bison.posZ, 1);
+			// bison.getMoveHelper().setMoveTo(bison.posX, bison.posY,
+			// bison.posZ, 1);
 		}
 		tryEatGrass();
+		bison.moveEntityWithHeading(0, 5);
+		addRotations(0, 4);
 		
 		if (eatGrassTime > 80) {
 			keepExecuting = false;
 		}
-		
 		if (!keepExecuting) {
 			eatGrassTime = -1;
 		}
@@ -139,6 +140,9 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 				
 				System.out.println("Ate at " + ediblePos);
 				
+			} else {
+				// Can't find food here
+				addRotations(100, 160);
 			}
 			
 		}
@@ -152,6 +156,16 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	private boolean isOnGround() {
 		BlockPos downPos = bison.getPosition().down();
 		return isSolidBlock(downPos);
+	}
+	
+	/**
+	 * Rotate yaw by a random rotation. The supplied parameter determines the
+	 * maximum rotation.
+	 */
+	private void addRotations(float min, float max) {
+		int sign = bison.getRNG().nextBoolean() ? 1 : -1;
+		bison.rotationYaw += sign * (min + bison.getRNG().nextFloat() * (max - min));
+		bison.rotationYaw %= 360;
 	}
 	
 }
