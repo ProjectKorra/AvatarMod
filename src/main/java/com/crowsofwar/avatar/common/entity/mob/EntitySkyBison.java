@@ -370,7 +370,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			
 			if (passenger != getControllingPassenger()) {
 				if (motionX != 0 || motionY != 0 || motionZ != 0) {
-					passenger.rotationYaw = this.rotationYaw;
+					passenger.rotationYaw = this.rotationYawHead;
 					passenger.rotationPitch = this.rotationPitch;
 				}
 			}
