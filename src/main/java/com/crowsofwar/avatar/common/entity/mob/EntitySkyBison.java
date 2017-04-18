@@ -108,7 +108,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<Integer> SYNC_AGE = EntityDataManager.createKey(EntitySkyBison.class,
 			DataSerializers.VARINT);
 	
-	private static final DataParameter<Boolean> SYNC_IN_LOVE = EntityDataManager
+	private static final DataParameter<Boolean> SYNC_LOVE_PARTICLES = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
 	
 	private final OwnerAttribute ownerAttr;
@@ -149,7 +149,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.register(SYNC_DOMESTICATION, domestication);
 		dataManager.register(SYNC_EAT_GRASS, -1);
 		dataManager.register(SYNC_AGE, 0);
-		dataManager.register(SYNC_IN_LOVE, false);
+		dataManager.register(SYNC_LOVE_PARTICLES, false);
 		
 	}
 	
@@ -197,7 +197,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
 		riderTicks = nbt.getInteger("RiderTicks");
-		setInLove(nbt.getBoolean("InLove"));
+		setLoveParticles(nbt.getBoolean("InLove"));
 	}
 	
 	@Override
@@ -208,7 +208,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
 		nbt.setInteger("RiderTicks", riderTicks);
-		nbt.setBoolean("InLove", isInLove());
+		nbt.setBoolean("InLove", isLoveParticles());
 	}
 	
 	// ================================================================================
@@ -281,12 +281,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		this.riderTicks = riderTicks;
 	}
 	
-	public boolean isInLove() {
-		return dataManager.get(SYNC_IN_LOVE);
+	public boolean isLoveParticles() {
+		return dataManager.get(SYNC_LOVE_PARTICLES);
 	}
 	
-	public void setInLove(boolean inLove) {
-		dataManager.set(SYNC_IN_LOVE, inLove);
+	public void setLoveParticles(boolean inLove) {
+		dataManager.set(SYNC_LOVE_PARTICLES, inLove);
 	}
 	
 	// ================================================================================
@@ -510,7 +510,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		if (!worldObj.isRemote) {
 			setEatGrassTime(aiEatGrass.getEatGrassTime());
 		}
-		if (worldObj.isRemote && isInLove() && ticksExisted % 10 == 0) {
+		if (worldObj.isRemote && isLoveParticles() && ticksExisted % 10 == 0) {
 			double d0 = this.rand.nextGaussian() * 0.02D;
 			double d1 = this.rand.nextGaussian() * 0.02D;
 			double d2 = this.rand.nextGaussian() * 0.02D;

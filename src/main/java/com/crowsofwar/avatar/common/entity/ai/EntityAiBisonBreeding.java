@@ -53,14 +53,16 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		System.out.println("in love");
-		bison.setInLove(true);
-		
+		bison.setLoveParticles(true);
 	}
 	
 	@Override
 	public boolean continueExecuting() {
 		
-		boolean keepGoing = shouldExecute();
+		if (!shouldExecute()) {
+			bison.setLoveParticles(false);
+			return false;
+		}
 		
 		double range = 100;
 		
@@ -76,15 +78,20 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 			bison.getMoveHelper().setMoveTo(nearest.posX, nearest.posY, nearest.posZ, 1);
 			// 7 obtained through real-world testing
 			if (bison.getDistanceSqToEntity(nearest) <= 7) {
+				
 				spawnBaby(nearest);
-				keepGoing = false;
+				
+				bison.getCondition().setBreedTimer(generateBreedTimer());
+				nearest.getCondition().setBreedTimer(generateBreedTimer());
+				bison.setLoveParticles(false);
+				nearest.setLoveParticles(false);
+				
+				return true;
+				
 			}
 		}
 		
-		if (!keepGoing) {
-			bison.setInLove(false);
-		}
-		return keepGoing;
+		return true;
 		
 	}
 	
@@ -97,8 +104,6 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		if (child != null) {
 			
 			// Spawn the baby
-			bison.getCondition().setBreedTimer(generateBreedTimer());
-			mate.getCondition().setBreedTimer(generateBreedTimer());
 			child.getCondition().setAge(0);
 			child.setLocationAndAngles(bison.posX, bison.posY, bison.posZ, 0, 0);
 			child.onInitialSpawn(world.getDifficultyForLocation(bison.getPosition()), null);
