@@ -90,7 +90,7 @@ public class AnimalCondition {
 				addHunger(1);
 			}
 			addAge(1);
-			if (!isSterile()) {
+			if (!isSterile() && isAdult()) {
 				addBreedTimer(-1);
 			}
 		}

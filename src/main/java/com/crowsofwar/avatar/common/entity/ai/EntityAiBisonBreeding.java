@@ -47,7 +47,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		AnimalCondition cond = bison.getCondition();
-		return !cond.isSterile() && cond.getBreedTimer() == 0;
+		return !cond.isSterile() && cond.getBreedTimer() == 0 && cond.isAdult();
 	}
 	
 	@Override
