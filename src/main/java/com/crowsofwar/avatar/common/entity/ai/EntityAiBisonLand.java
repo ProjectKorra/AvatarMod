@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.ai;
 import static net.minecraft.util.math.MathHelper.floor_double;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
@@ -65,9 +66,8 @@ public class EntityAiBisonLand extends EntityAIBase {
 			tries++;
 			
 			Block block = world.getBlockState(landing.toBlockPos().down()).getBlock();
-			isValidPosition = (block == Blocks.GRASS || block == Blocks.TALLGRASS) && canFit(landing);
-			
-			System.out.println("Landing pos " + landing + " --> on " + block + "; fits " + canFit(landing));
+			isValidPosition = (block == Blocks.GRASS || block == Blocks.TALLGRASS) && canFit(landing)
+					&& canGetTo(landing);
 			
 		} while (!isValidPosition && tries < 5);
 		
@@ -131,6 +131,17 @@ public class EntityAiBisonLand extends EntityAIBase {
 		
 		return true;
 		
+	}
+	
+	/**
+	 * Figure out whether the bison can get to that position by raytracing
+	 */
+	private boolean canGetTo(Vector target) {
+		Vector current = Vector.getEntityPos(bison);
+		double range = current.dist(target);
+		Raytrace.Result raytrace = Raytrace.raytrace(bison.worldObj, current, target, range, false);
+		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos();
+		return blockPos == null || blockPos.equals(target.toBlockPos());
 	}
 	
 	private boolean isSolidBlock(BlockPos pos) {
