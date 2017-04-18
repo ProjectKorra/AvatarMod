@@ -37,12 +37,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	private final EntitySkyBison bison;
 	
 	/**
-	 * Keeps track of eating grass state. -1 = not eating grass. Starts at 30
-	 * and decrements until 0, at which point grass is eaten and cycle repeats.
-	 */
-	private int eatGrassCountdown;
-	
-	/**
 	 * When not eating grass, is -1. Then increments every tick that the bison
 	 * has been eating grass.
 	 */
@@ -50,14 +44,13 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	public EntityAiBisonEatGrass(EntitySkyBison bison) {
 		this.bison = bison;
-		eatGrassCountdown = -1;
 		eatGrassTime = -1;
 		
 		setMutexBits(0);
 	}
 	
 	public boolean isEatingGrass() {
-		return eatGrassCountdown > -1;
+		return eatGrassTime > -1;
 	}
 	
 	public int getEatGrassTime() {
@@ -81,14 +74,14 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	public boolean continueExecuting() {
 		
 		boolean keepExecuting = bison.wantsGrass() && isOnGround();
-		System.out.println("keepExecuting " + eatGrassTime);
+		System.out.println("Keep eating grass... " + eatGrassTime);
+		// System.out.println("y= " + bison.posY);
 		
 		World world = bison.worldObj;
 		EntityMoveHelper mh = bison.getMoveHelper();
 		
 		if (!isEatingGrass()) {
 			// Just reached ground
-			eatGrassCountdown = 30;
 			eatGrassTime = 0;
 			bison.getMoveHelper().setMoveTo(bison.posX, bison.posY, bison.posZ, 1);
 		}
@@ -99,7 +92,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		}
 		
 		if (!keepExecuting) {
-			eatGrassCountdown = -1;
 			eatGrassTime = -1;
 		}
 		
@@ -109,11 +101,9 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	private void tryEatGrass() {
 		eatGrassTime++;
-		eatGrassCountdown--;
-		if (eatGrassCountdown <= 0) {
-			eatGrassCountdown = 30;
+		if (eatGrassTime % 30 == 29) {
 			
-			System.out.println("Try some grass");
+			System.out.println("Nom");
 			
 			BlockPos downPos = bison.getPosition().down();
 			World world = bison.worldObj;
