@@ -74,7 +74,8 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 				bison);
 		if (nearest != null) {
 			bison.getMoveHelper().setMoveTo(nearest.posX, nearest.posY, nearest.posZ, 1);
-			if (bison.getDistanceSqToEntity(nearest) <= 0.25) {
+			// 7 obtained through real-world testing
+			if (bison.getDistanceSqToEntity(nearest) <= 7) {
 				spawnBaby(nearest);
 				keepGoing = false;
 			}
@@ -100,6 +101,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 			mate.getCondition().setBreedTimer(generateBreedTimer());
 			child.getCondition().setAge(0);
 			child.setLocationAndAngles(bison.posX, bison.posY, bison.posZ, 0, 0);
+			child.onInitialSpawn(world.getDifficultyForLocation(bison.getPosition()), null);
 			world.spawnEntityInWorld(child);
 			
 			// Spawn heart particles
