@@ -45,6 +45,7 @@ import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonSit;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonTempt;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonWander;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
+import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
@@ -182,10 +183,17 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
-			@Nullable IEntityLivingData livingdata) {
+			@Nullable IEntityLivingData livingData) {
+		
+		boolean sterile = false;
+		if (livingData instanceof BisonSpawnData) {
+			sterile = ((BisonSpawnData) livingData).isSterile();
+		}
+		condition.setSterile(sterile);
+		condition.setBreedTimer((int) (MOBS_CONFIG.bisonBreedMaxMinutes * 1200));
 		
 		originalPos = Vector.getEntityPos(this);
-		return super.onInitialSpawn(difficulty, livingdata);
+		return super.onInitialSpawn(difficulty, livingData);
 		
 	}
 	

@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
+import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -106,7 +107,8 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 			// Spawn the baby
 			child.getCondition().setAge(0);
 			child.setLocationAndAngles(bison.posX, bison.posY, bison.posZ, 0, 0);
-			child.onInitialSpawn(world.getDifficultyForLocation(bison.getPosition()), null);
+			child.onInitialSpawn(world.getDifficultyForLocation(bison.getPosition()),
+					new BisonSpawnData(true));
 			world.spawnEntityInWorld(child);
 			
 			// Spawn heart particles
