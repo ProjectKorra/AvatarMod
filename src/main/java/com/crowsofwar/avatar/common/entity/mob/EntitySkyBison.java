@@ -298,7 +298,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	 * hungry
 	 */
 	public boolean wantsGrass() {
-		return condition.getFoodPoints() < 15;
+		return condition.getFoodPoints() < 15 && getAttackTarget() == null;
 	}
 	
 	public boolean isEatingGrass() {
