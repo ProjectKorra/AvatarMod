@@ -167,8 +167,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
 		
-		// this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this,
-		// this));
+		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
 		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
 		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
 		
@@ -222,6 +221,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		condition.writeToNbt(nbt);
 		nbt.setInteger("RiderTicks", riderTicks);
 		nbt.setBoolean("InLove", isLoveParticles());
+	}
+	
+	@Override
+	public boolean isFlying() {
+		return true;
 	}
 	
 	// ================================================================================
