@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 
 import net.minecraft.client.model.ModelBiped;
@@ -31,16 +30,19 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderHumanBender extends RenderLivingBase<EntityHumanBender> {
 	
+	private final ResourceLocation texture;
+	
 	/**
 	 * @param renderManager
 	 */
-	public RenderHumanBender(RenderManager renderManager) {
+	public RenderHumanBender(RenderManager renderManager, ResourceLocation texture) {
 		super(renderManager, new ModelBiped(), 0.5f);
+		this.texture = texture;
 	}
 	
 	@Override
 	protected ResourceLocation getEntityTexture(EntityHumanBender entity) {
-		return AvatarUiTextures.WHITE;
+		return texture;
 	}
 	
 }

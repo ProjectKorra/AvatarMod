@@ -58,7 +58,8 @@ import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.EntityWave;
-import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
+import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
@@ -73,6 +74,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -121,8 +123,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityFireball.class, RenderFireball::new);
 		registerEntityRenderingHandler(EntityAirblade.class, RenderAirblade::new);
 		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
-		registerEntityRenderingHandler(EntityHumanBender.class, RenderHumanBender::new);
 		registerEntityRenderingHandler(EntitySkyBison.class, RenderSkyBison::new);
+		
+		registerEntityRenderingHandler(EntityAirbender.class, rm -> new RenderHumanBender(rm,
+				new ResourceLocation("avatarmod", "textures/entity/airbender.png")));
+		registerEntityRenderingHandler(EntityFirebender.class, rm -> new RenderHumanBender(rm,
+				new ResourceLocation("avatarmod", "textures/entity/firebender.png")));
 		
 		AvatarItemRenderRegister.register();
 		
