@@ -25,7 +25,6 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
@@ -66,8 +65,10 @@ public abstract class EntityHumanBender extends EntityBender {
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		
-		this.targetTasks.addTask(2,
-				new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
+		// this.targetTasks.addTask(2,
+		// new EntityAINearestAttackableTarget(this, EntityPlayer.class, true,
+		// false));
+		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, EntityHumanBender.class));
 		
 		addBendingTasks();
 		
