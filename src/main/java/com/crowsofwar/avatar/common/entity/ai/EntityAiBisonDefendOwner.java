@@ -8,7 +8,7 @@ import net.minecraft.entity.ai.EntityAITarget;
 public class EntityAiBisonDefendOwner extends EntityAITarget {
 	
 	private final EntitySkyBison bison;
-	EntityLivingBase theTarget;
+	private EntityLivingBase ownersTarget;
 	private int timestamp;
 	
 	public EntityAiBisonDefendOwner(EntitySkyBison bison) {
@@ -28,10 +28,10 @@ public class EntityAiBisonDefendOwner extends EntityAITarget {
 		if (owner == null) {
 			return false;
 		} else {
-			System.out.println("SE " + owner.getLastAttacker());
-			this.theTarget = owner.getLastAttacker();
-			int i = owner.getLastAttackerTime();
-			return i != this.timestamp && isSuitableTarget(this.theTarget, false);
+			// getAITarget() returns last entity that attacked the player
+			this.ownersTarget = owner.getAITarget();
+			int i = owner.getRevengeTimer();
+			return i != this.timestamp && this.isSuitableTarget(this.ownersTarget, false);
 		}
 		
 	}
@@ -41,11 +41,11 @@ public class EntityAiBisonDefendOwner extends EntityAITarget {
 	 */
 	@Override
 	public void startExecuting() {
-		this.taskOwner.setAttackTarget(this.theTarget);
+		this.taskOwner.setAttackTarget(this.ownersTarget);
 		EntityLivingBase entitylivingbase = this.bison.getOwner();
 		
 		if (entitylivingbase != null) {
-			this.timestamp = entitylivingbase.getLastAttackerTime();
+			this.timestamp = entitylivingbase.getRevengeTimer();
 		}
 		
 		super.startExecuting();
