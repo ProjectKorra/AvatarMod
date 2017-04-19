@@ -36,7 +36,7 @@ public class RenderHumanBender extends RenderLivingBase<EntityHumanBender> {
 	 * @param renderManager
 	 */
 	public RenderHumanBender(RenderManager renderManager, ResourceLocation texture) {
-		super(renderManager, new ModelBiped(), 0.5f);
+		super(renderManager, new ModelBiped(0, 0, 64, 64), 0.5f);
 		this.texture = texture;
 	}
 	
