@@ -141,7 +141,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 		Vector direction = target.minus(current).normalize();
 		double range = current.dist(target);
 		Raytrace.Result raytrace = Raytrace.raytrace(bison.worldObj, current, direction, range + 1, false);
-		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos();
+		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos().up();
 		System.out.println("LZ " + blockPos + " vs " + target.toBlockPos());
 		return blockPos == null || blockPos.equals(target.toBlockPos());
 	}
