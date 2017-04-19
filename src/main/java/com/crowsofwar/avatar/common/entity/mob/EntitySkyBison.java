@@ -39,6 +39,7 @@ import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonBreeding;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonDefendOwner;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonEatGrass;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonFollowOwner;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonLand;
@@ -166,6 +167,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		
 		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
 		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
