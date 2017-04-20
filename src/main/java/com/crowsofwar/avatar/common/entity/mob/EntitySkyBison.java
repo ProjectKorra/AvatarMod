@@ -200,6 +200,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		condition.setSterile(sterile);
 		condition.setBreedTimer((int) (MOBS_CONFIG.bisonBreedMaxMinutes * 1200));
 		
+		IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
+		wasTouchingGround = walkingOn.getMaterial() != Material.AIR;
+		
+		condition.setAge(rand.nextInt(48000) + 40000);
+		
 		originalPos = Vector.getEntityPos(this);
 		return super.onInitialSpawn(difficulty, livingData);
 		
