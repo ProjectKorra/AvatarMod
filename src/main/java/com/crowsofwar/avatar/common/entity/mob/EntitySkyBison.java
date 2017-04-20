@@ -50,7 +50,7 @@ import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonWander;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
-import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
+import com.crowsofwar.avatar.common.gui.InventoryBisonChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
@@ -128,7 +128,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private int riderTicks;
 	
 	private ForgeChunkManager.Ticket ticket;
-	private ContainerBisonChest chest;
+	private InventoryBisonChest chest;
 	
 	private boolean wasTouchingGround;
 	
@@ -555,8 +555,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	private void initChest() {
 		
-		ContainerBisonChest old = chest;
-		chest = new ContainerBisonChest();
+		InventoryBisonChest old = chest;
+		chest = new InventoryBisonChest();
 		if (hasCustomName()) {
 			chest.setCustomName(getName());
 		}

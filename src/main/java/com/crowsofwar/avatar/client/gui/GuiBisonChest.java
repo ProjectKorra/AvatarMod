@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.client.gui;
 import static net.minecraft.client.Minecraft.getMinecraft;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-import com.crowsofwar.avatar.common.gui.ContainerBisonInventory;
+import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -28,7 +28,7 @@ public class GuiBisonChest extends GuiContainer {
 	private float mousePosY;
 	
 	public GuiBisonChest(IInventory playerInv, IInventory bisonInventory, EntitySkyBison bison) {
-		super(new ContainerBisonInventory(playerInv, bisonInventory, bison, getMinecraft().thePlayer));
+		super(new ContainerBisonChest(playerInv, bisonInventory, bison, getMinecraft().thePlayer));
 		this.playerInventory = playerInv;
 		this.bisonInventory = bisonInventory;
 		this.bison = bison;
