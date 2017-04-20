@@ -50,6 +50,7 @@ import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonWander;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
@@ -70,6 +71,8 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -88,11 +91,11 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 
 /**
- * EntityGhast EntityTameable
+ * EntityGhast EntityTameable EntityHorse
  * 
  * @author CrowsOfWar
  */
-public class EntitySkyBison extends EntityBender implements IEntityOwnable {
+public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInventoryChangedListener {
 	
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_BENDER);
@@ -125,6 +128,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private int riderTicks;
 	
 	private ForgeChunkManager.Ticket ticket;
+	private ContainerBisonChest chest;
 	
 	private boolean wasTouchingGround;
 	
@@ -138,6 +142,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
 		setSize(2.5f, 2);
+		
+		initChest();
 		
 	}
 	
@@ -541,6 +547,48 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	@Override
 	public void eatGrassBonus() {
 		condition.addFood(MOBS_CONFIG.bisonGrassFoodBonus);
+	}
+	
+	// ================================================================================
+	// CHEST / INVENTORY
+	// ================================================================================
+	
+	private void initChest() {
+		ContainerBisonChest old = chest;
+		chest = new ContainerBisonChest();
+		if (hasCustomName()) {
+			chest.setCustomName(getName());
+		}
+		
+		if (old != null) {
+			old.removeInventoryChangeListener(this);
+			
+			// Transfer old stacks into new inventory
+			int slots = Math.min(old.getSizeInventory(), chest.getSizeInventory());
+			for (int i = 0; i < slots; ++i) {
+				ItemStack stack = old.getStackInSlot(i);
+				if (!stack.func_190926_b()) {
+					chest.setInventorySlotContents(i, stack.copy());
+				}
+			}
+			
+		}
+		
+		chest.addInventoryChangeListener(this);
+		updateEquipment();
+		
+	}
+	
+	@Override
+	public void onInventoryChanged(IInventory invBasic) {
+		System.out.println("InventoryChanged");
+	}
+	
+	/**
+	 * Updates equipment based on inventory contents
+	 */
+	private void updateEquipment() {
+		
 	}
 	
 	// ================================================================================
