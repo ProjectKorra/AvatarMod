@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -38,10 +39,11 @@ public class AvatarEntityItem extends EntityItem {
 	}
 	
 	@Override
-	protected void dealFireDamage(int amount) {
-		if (!resistFire) {
-			super.dealFireDamage(amount);
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if (!resistFire || !source.isFireDamage()) {
+			return super.attackEntityFrom(source, amount);
 		}
+		return false;
 	}
 	
 }

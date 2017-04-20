@@ -77,6 +77,10 @@ public class ItemScroll extends Item implements AvatarItem {
 	public Entity createEntity(World world, Entity old, ItemStack stack) {
 		AvatarEntityItem custom = new AvatarEntityItem(world, old.posX, old.posY, old.posZ, stack);
 		custom.setResistFire(true);
+		custom.motionX = old.motionX;
+		custom.motionY = old.motionY;
+		custom.motionZ = old.motionZ;
+		custom.setDefaultPickupDelay();
 		return custom;
 	}
 	
