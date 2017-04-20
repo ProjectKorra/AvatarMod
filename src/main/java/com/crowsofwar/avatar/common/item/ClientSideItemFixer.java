@@ -19,13 +19,18 @@ package com.crowsofwar.avatar.common.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crowsofwar.gorecore.GoreCore;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 /**
  * Items can request to use a custom EntityItem instead of the vanilla one.
@@ -49,29 +54,48 @@ public class ClientSideItemFixer {
 		customItems.add(item);
 	}
 	
-	@SubscribeEvent
-	public void onItemSpawn(EntityJoinWorldEvent e) {
-		if (e.getWorld().isRemote && e.getEntity() instanceof EntityItem) {
-			
-			EntityItem oldEntity = (EntityItem) e.getEntity();
-			ItemStack stack = oldEntity.getEntityItem();
-			Item item = stack.getItem();
-			
-			if (item != null && customItems.contains(item)) {
-				if (item.hasCustomEntity(stack)) {
-					System.out.println("Replace it");
-					
-					Entity newEntity = item.createEntity(e.getWorld(), oldEntity, stack);
-					if (newEntity != null) {
-						oldEntity.setDead();
-						e.setCanceled(true);
-						e.getWorld().spawnEntityInWorld(newEntity);
-					}
-					
+	private void inspectItem(EntityItem oldEntity) {
+		
+		World world = oldEntity.worldObj;
+		ItemStack stack = oldEntity.getEntityItem();
+		Item item = stack.getItem();
+		
+		System.out.println(customItems + ", " + item);
+		// Thread.dumpStack();
+		
+		if (item != null && customItems.contains(item)) {
+			if (item.hasCustomEntity(stack) && oldEntity.getClass() == EntityItem.class) {
+				System.out.println("Replace it");
+				
+				Entity newEntity = item.createEntity(world, oldEntity, stack);
+				if (newEntity != null) {
+					// oldEntity.setDead();
+					world.spawnEntityInWorld(newEntity);
 				}
+				
+			}
+		}
+		
+	}
+	
+	@SubscribeEvent
+	public void onTick(ClientTickEvent e) {
+		
+		// Workaround to get world
+		EntityPlayer player = GoreCore.proxy.getClientSidePlayer();
+		
+		if (e.phase == Phase.START && player != null) {
+			World world = player.worldObj;
+			
+			List<EntityItem> entityItems = world.getEntities(EntityItem.class,
+					candidate -> candidate.ticksExisted == 0);
+			for (EntityItem entityItem : entityItems) {
+				System.out.println("Inspecting " + entityItem);
+				inspectItem(entityItem);
 			}
 			
 		}
+		
 	}
 	
 	public static void register() {
