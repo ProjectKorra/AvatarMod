@@ -22,6 +22,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -38,7 +39,6 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -129,10 +129,20 @@ public class EntityFlames extends AvatarEntity {
 					entity -> entity != owner && !(entity instanceof EntityFlames));
 			
 			for (Entity entity : collided) {
-				if (abilityData.getTotalXp() >= 50) {
-					entity.attackEntityFrom(DamageSource.inFire, 2 + (abilityData.getTotalXp() - 50) / 25);
-				}
+				
 				entity.setFire((int) (3 * 1 + abilityData.getTotalXp() / 100f));
+				
+				// Add extra damage
+				// Adding 0 since even though this doesn't affect health, will
+				// cause mobs to aggro
+				
+				float additionalDamage = 0;
+				if (abilityData.getTotalXp() >= 50) {
+					additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
+				}
+				entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
+						additionalDamage);
+				
 			}
 			
 			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
