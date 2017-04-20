@@ -52,6 +52,7 @@ import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonWander;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.InventoryBisonChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
@@ -72,6 +73,7 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
@@ -536,6 +538,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (stack.getItem() == Items.NAME_TAG) {
 			setAlwaysRenderNameTag(true);
 			return false;
+		}
+		
+		if (getOwner() == player && stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
+			// Send id as the x-coordinate; used by guiHandler to determine
+			// which bison is being opened
+			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, worldObj, getId(), 0, 0);
+			return true;
 		}
 		
 		if (!player.isSneaking() && !worldObj.isRemote) {
