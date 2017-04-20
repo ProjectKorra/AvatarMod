@@ -152,6 +152,20 @@ public class ModelFlyingBison extends ModelBase {
 			head.rotateAngleX = (MathHelper.cos(bison.getEatGrassTime() / 2f) * 15 + 65) * degToRad;
 		}
 		
+		if (bison.isSitting()) {
+			
+			float lower = 3;
+			
+			body.rotationPointY = lower + 0 - 18;
+			head.rotationPointY = lower - 2 - 18;
+			upTail.rotationPointY = lower - 4.4f - 18;
+			
+		} else {
+			body.rotationPointY = 0 - 18;
+			head.rotationPointY = -2 - 18;
+			upTail.rotationPointY = -4.4f - 18;
+		}
+		
 	}
 	
 	/**
