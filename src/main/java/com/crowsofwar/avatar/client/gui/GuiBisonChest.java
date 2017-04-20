@@ -8,8 +8,6 @@ import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.passive.AbstractChestHorse;
-import net.minecraft.entity.passive.EntityLlama;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -51,29 +49,9 @@ public class GuiBisonChest extends GuiContainer {
 		int j = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 		
-		if (this.horseEntity instanceof AbstractChestHorse) {
-			AbstractChestHorse abstractchesthorse = (AbstractChestHorse) this.horseEntity;
-			
-			if (abstractchesthorse.func_190695_dh()) {
-				this.drawTexturedModalRect(i + 79, j + 17, 0, this.ySize,
-						abstractchesthorse.func_190696_dl() * 18, 54);
-			}
-		}
-		
-		if (this.horseEntity.func_190685_dA()) {
-			this.drawTexturedModalRect(i + 7, j + 35 - 18, 18, this.ySize + 54, 18, 18);
-		}
-		
-		if (this.horseEntity.func_190677_dK()) {
-			if (this.horseEntity instanceof EntityLlama) {
-				this.drawTexturedModalRect(i + 7, j + 35, 36, this.ySize + 54, 18, 18);
-			} else {
-				this.drawTexturedModalRect(i + 7, j + 35, 0, this.ySize + 54, 18, 18);
-			}
-		}
-		
 		GuiInventory.drawEntityOnScreen(i + 51, j + 60, 17, i + 51 - this.mousePosx,
-				j + 75 - 50 - this.mousePosY, this.horseEntity);
+				j + 75 - 50 - this.mousePosY, bison);
+		
 	}
 	
 	/**
