@@ -17,13 +17,16 @@
 
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.gui.AvatarGuiHandler.GUI_ID_BISON_CHEST;
 import static com.crowsofwar.avatar.common.gui.AvatarGuiHandler.GUI_ID_SKILLS;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.client.gui.GuiBisonChest;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GuiSkillsNew;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
@@ -158,6 +161,19 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
 		if (id == GUI_ID_SKILLS) return new GuiSkillsNew();
+		if (id == GUI_ID_BISON_CHEST) {
+			// x-coordinate represents ID of sky bison
+			int bisonId = x;
+			EntitySkyBison bison = EntitySkyBison.findBison(world, bisonId);
+			if (bison != null) {
+				
+				return new GuiBisonChest(player.inventory, bison.getInventory(), bison);
+				
+			} else {
+				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName()
+						+ " tried to open skybison inventory, was not found. BisonId: " + bisonId);
+			}
+		}
 		
 		return null;
 	}

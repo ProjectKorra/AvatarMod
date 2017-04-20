@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.gui;
 import static net.minecraft.client.Minecraft.getMinecraft;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -14,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiBisonChest extends GuiContainer {
+public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	
 	private static final ResourceLocation HORSE_GUI_TEXTURES = new ResourceLocation(
 			"textures/gui/container/horse.png");

@@ -27,6 +27,7 @@ import static net.minecraft.init.Blocks.STONE;
 import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.SoundCategory.NEUTRAL;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -34,6 +35,7 @@ import javax.annotation.Nullable;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -118,6 +120,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private static final DataParameter<Boolean> SYNC_LOVE_PARTICLES = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
 	
+	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntitySkyBison.class,
+			DataSerializers.VARINT);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
@@ -160,6 +165,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		dataManager.register(SYNC_EAT_GRASS, -1);
 		dataManager.register(SYNC_AGE, 0);
 		dataManager.register(SYNC_LOVE_PARTICLES, false);
+		dataManager.register(SYNC_ID,
+				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
 		
 	}
 	
@@ -225,6 +232,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		condition.readFromNbt(nbt);
 		riderTicks = nbt.getInteger("RiderTicks");
 		setLoveParticles(nbt.getBoolean("InLove"));
+		setId(nbt.getInteger("BisonId"));
 	}
 	
 	@Override
@@ -236,6 +244,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		condition.writeToNbt(nbt);
 		nbt.setInteger("RiderTicks", riderTicks);
 		nbt.setBoolean("InLove", isLoveParticles());
+		nbt.setInteger("BisonId", getId());
 	}
 	
 	@Override
@@ -338,6 +347,23 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	public void setLoveParticles(boolean inLove) {
 		dataManager.set(SYNC_LOVE_PARTICLES, inLove);
+	}
+	
+	public int getId() {
+		return dataManager.get(SYNC_ID);
+	}
+	
+	public void setId(int id) {
+		dataManager.set(SYNC_ID, id);
+	}
+	
+	/**
+	 * Returns the sky bison in that world with the specified id, or null if no
+	 * sky bison with that id.
+	 */
+	public static EntitySkyBison findBison(World world, int id) {
+		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class, bison -> bison.getId() == id);
+		return list.isEmpty() ? null : list.get(0);
 	}
 	
 	// ================================================================================
@@ -590,6 +616,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 */
 	private void updateEquipment() {
 		
+	}
+	
+	public InventoryBisonChest getInventory() {
+		return chest;
 	}
 	
 	// ================================================================================

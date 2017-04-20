@@ -17,8 +17,11 @@
 
 package com.crowsofwar.avatar.common.gui;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -33,6 +36,19 @@ public class AvatarGuiHandler implements IGuiHandler {
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
 		if (id == GUI_ID_SKILLS) return new ContainerSkillsGui(player, BendingType.AIRBENDING);
+		if (id == GUI_ID_BISON_CHEST) {
+			// x-coordinate represents ID of sky bison
+			int bisonId = x;
+			EntitySkyBison bison = EntitySkyBison.findBison(world, bisonId);
+			if (bison != null) {
+				
+				return new ContainerBisonChest(player.inventory, bison.getInventory(), bison, player);
+				
+			} else {
+				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName()
+						+ " tried to open skybison inventory, was not found. BisonId: " + bisonId);
+			}
+		}
 		
 		return null;
 	}
