@@ -137,6 +137,23 @@ public class ModelFlyingBison extends ModelBase {
 				+ MathHelper.cos(limbSwing * 0.6662f / 3) * 0.1f * limbSwingAmount;
 		head.rotateAngleY = netHeadYaw * degToRad;
 		
+		if (bison.isSitting()) {
+			
+			float lower = 3;
+			
+			body.rotationPointY = lower + 0 - 18;
+			head.rotationPointY = lower - 2 - 18;
+			upTail.rotationPointY = lower - 4.4f - 18;
+			
+			limbSwing = 2.87f;
+			limbSwingAmount = 0.3f;
+			
+		} else {
+			body.rotationPointY = 0 - 18;
+			head.rotationPointY = -2 - 18;
+			upTail.rotationPointY = -4.4f - 18;
+		}
+		
 		leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		leg6.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
@@ -150,20 +167,6 @@ public class ModelFlyingBison extends ModelBase {
 		
 		if (bison.isEatingGrass()) {
 			head.rotateAngleX = (MathHelper.cos(bison.getEatGrassTime() / 2f) * 15 + 65) * degToRad;
-		}
-		
-		if (bison.isSitting()) {
-			
-			float lower = 3;
-			
-			body.rotationPointY = lower + 0 - 18;
-			head.rotationPointY = lower - 2 - 18;
-			upTail.rotationPointY = lower - 4.4f - 18;
-			
-		} else {
-			body.rotationPointY = 0 - 18;
-			head.rotationPointY = -2 - 18;
-			upTail.rotationPointY = -4.4f - 18;
 		}
 		
 	}
