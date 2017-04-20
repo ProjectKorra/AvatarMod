@@ -84,7 +84,9 @@ public class StatCtrlAirJump extends StatusControl {
 				entity.motionZ = 0;
 			}
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
-			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+			if (entity instanceof EntityPlayerMP) {
+				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+			}
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(entity.worldObj, ParticleType.AIR, 2, 6, new Vector(entity),
