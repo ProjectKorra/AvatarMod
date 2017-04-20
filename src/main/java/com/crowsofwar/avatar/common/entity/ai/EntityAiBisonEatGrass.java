@@ -59,7 +59,8 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		return bison.wantsGrass() && isOnGround();
+		Block standingOn = bison.worldObj.getBlockState(bison.getPosition().down()).getBlock();
+		return bison.wantsGrass() && isOnGround() && (!bison.isSitting() || standingOn == Blocks.GRASS);
 	}
 	
 	@Override
@@ -86,7 +87,9 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 			// bison.posZ, 1);
 		}
 		tryEatGrass();
-		bison.moveEntityWithHeading(0, 5);
+		if (!bison.isSitting()) {
+			bison.moveEntityWithHeading(0, 5);
+		}
 		addRotations(0, 4);
 		
 		if (eatGrassTime > 80) {
@@ -143,6 +146,11 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 			} else {
 				// Can't find food here
 				addRotations(100, 160);
+			}
+			
+			if (bison.isSitting()) {
+				// Stop eating grass
+				eatGrassTime = 81;
 			}
 			
 		}

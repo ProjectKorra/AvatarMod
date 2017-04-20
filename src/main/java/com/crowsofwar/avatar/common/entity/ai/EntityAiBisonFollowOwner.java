@@ -44,6 +44,8 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		
+		if (bison.isSitting()) return false;
+		
 		EntityPlayer owner = bison.getOwner();
 		if (owner != null) {
 			
