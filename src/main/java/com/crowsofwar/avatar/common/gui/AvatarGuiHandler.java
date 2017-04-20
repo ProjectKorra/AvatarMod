@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 public class AvatarGuiHandler implements IGuiHandler {
 	
 	public static final int GUI_ID_SKILLS = 1;
+	public static final int GUI_ID_BISON_CHEST = 2;
 	
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {

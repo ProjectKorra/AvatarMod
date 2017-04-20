@@ -554,6 +554,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	// ================================================================================
 	
 	private void initChest() {
+		
 		ContainerBisonChest old = chest;
 		chest = new ContainerBisonChest();
 		if (hasCustomName()) {
