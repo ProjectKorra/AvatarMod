@@ -30,7 +30,6 @@ import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -85,7 +84,6 @@ public abstract class EntityHumanBender extends EntityBender {
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
 		super.setEquipmentBasedOnDifficulty(difficulty);
-		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
 	}
 	
 	@Override

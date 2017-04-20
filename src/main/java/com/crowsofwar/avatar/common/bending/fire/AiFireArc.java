@@ -51,7 +51,7 @@ public class AiFireArc extends BendingAi {
 	protected AiFireArc(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
-		setMutexBits(1);
+		setMutexBits(2);
 	}
 	
 	@Override

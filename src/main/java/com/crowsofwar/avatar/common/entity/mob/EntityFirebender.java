@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -37,6 +38,11 @@ public class EntityFirebender extends EntityHumanBender {
 	 */
 	public EntityFirebender(World world) {
 		super(world);
+		
+		AbilityData flamethrowerData = new AbilityData(getData(), BendingAbility.ABILITY_FLAMETHROWER);
+		flamethrowerData.setLevel(2);
+		getData().setAbilityData(BendingAbility.ABILITY_FLAMETHROWER, flamethrowerData);
+		
 	}
 	
 	@Override
