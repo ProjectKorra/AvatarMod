@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.crowsofwar.gorecore.GoreCore;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.AvatarFireImmuneHack;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -60,18 +60,19 @@ public class ClientSideItemFixer {
 		ItemStack stack = oldEntity.getEntityItem();
 		Item item = stack.getItem();
 		
-		System.out.println(customItems + ", " + item);
-		// Thread.dumpStack();
-		
 		if (item != null && customItems.contains(item)) {
 			if (item.hasCustomEntity(stack) && oldEntity.getClass() == EntityItem.class) {
-				System.out.println("Replace it");
+				// System.out.println("Replace it");
 				
-				Entity newEntity = item.createEntity(world, oldEntity, stack);
-				if (newEntity != null) {
-					// oldEntity.setDead();
-					world.spawnEntityInWorld(newEntity);
-				}
+				AvatarFireImmuneHack.setImmuneToFire(oldEntity, true);
+				System.out.println("Set immune to fire: " + oldEntity.isImmuneToFire());
+				
+				// Entity newEntity = item.createEntity(world, oldEntity,
+				// stack);
+				// if (newEntity != null) {
+				// oldEntity.setDead();
+				// world.spawnEntityInWorld(newEntity);
+				// }
 				
 			}
 		}
