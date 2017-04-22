@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -55,6 +56,11 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
+	}
+	
+	@Override
+	protected ScrollType getScrollType() {
+		return ScrollType.FIRE;
 	}
 	
 }

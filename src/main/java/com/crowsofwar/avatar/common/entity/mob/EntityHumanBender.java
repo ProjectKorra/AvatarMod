@@ -18,6 +18,10 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import javax.annotation.Nullable;
 
+import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.gorecore.util.Vector;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,11 +32,13 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -85,6 +91,8 @@ public abstract class EntityHumanBender extends EntityBender {
 	
 	protected abstract void addBendingTasks();
 	
+	protected abstract ScrollType getScrollType();
+	
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
 		super.setEquipmentBasedOnDifficulty(difficulty);
@@ -126,7 +134,6 @@ public abstract class EntityHumanBender extends EntityBender {
 		return false;
 	}
 	
-	// Copied from EntityMob
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
 		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
@@ -180,5 +187,27 @@ public abstract class EntityHumanBender extends EntityBender {
 	
 	@Override
 	protected abstract ResourceLocation getLootTable();
+	
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		
+		ItemStack stack = player.getHeldItem(hand);
+		if (stack.getItem() == Items.DIAMOND) {
+			
+			Vector velocity = Vector.getLookRectangular(this).times(0.3);
+			
+			ItemStack scrollStack = new ItemStack(AvatarItems.itemScroll, 1, getScrollType().id());
+			EntityItem entityItem = entityDropItem(stack, getEyeHeight());
+			entityItem.motionX = velocity.x();
+			entityItem.motionY = velocity.y();
+			entityItem.motionZ = velocity.z();
+			
+			return true;
+			
+		}
+		
+		return false;
+		
+	}
 	
 }
