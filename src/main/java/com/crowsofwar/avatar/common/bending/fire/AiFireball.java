@@ -81,7 +81,7 @@ public class AiFireball extends BendingAi {
 	}
 	
 	@Override
-	public boolean shouldExecute() {
+	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
 				&& bender.getData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();

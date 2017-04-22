@@ -51,7 +51,7 @@ public class AiAirBubble extends BendingAi {
 	}
 	
 	@Override
-	public boolean shouldExecute() {
+	protected boolean shouldExec() {
 		
 		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 100 || true;
 		boolean already = AvatarEntity.lookupEntity(entity.worldObj, EntityAirBubble.class,

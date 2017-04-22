@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
 /**
@@ -73,6 +74,15 @@ public abstract class BendingAi extends EntityAIBase {
 	public void updateTask() {
 		timeExecuting++;
 	}
+	
+	@Override
+	public final boolean shouldExecute() {
+		EntityLivingBase target = entity.getAttackTarget();
+		boolean targetInRange = target == null || entity.getDistanceSqToEntity(target) < 12 * 12;
+		return bender.getData().getAbilityCooldown() == 0 && targetInRange && shouldExec();
+	}
+	
+	protected abstract boolean shouldExec();
 	
 	protected abstract void startExec();
 	
