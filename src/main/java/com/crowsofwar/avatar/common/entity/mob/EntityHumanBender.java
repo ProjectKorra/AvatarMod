@@ -18,10 +18,8 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import javax.annotation.Nullable;
 
-import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemScroll;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -33,7 +31,6 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemAxe;
@@ -54,6 +51,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public abstract class EntityHumanBender extends EntityBender {
+	
+	private EntityAiGiveScroll aiGiveScroll;
 	
 	/**
 	 * @param world
@@ -82,6 +81,7 @@ public abstract class EntityHumanBender extends EntityBender {
 		
 		addBendingTasks();
 		
+		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
@@ -195,16 +195,12 @@ public abstract class EntityHumanBender extends EntityBender {
 		ItemStack stack = player.getHeldItem(hand);
 		if (stack.getItem() == Items.DIAMOND && !worldObj.isRemote) {
 			
-			Vector velocity = Vector.getLookRectangular(this).times(0.3);
-			ItemStack scrollStack = new ItemStack(AvatarItems.itemScroll, 1, getScrollType().id());
-			ItemScroll.setPoints(scrollStack, 1);
-			
-			EntityItem entityItem = new EntityItem(worldObj, posX, posY + getEyeHeight(), posZ, scrollStack);
-			entityItem.setDefaultPickupDelay();
-			entityItem.motionX = velocity.x();
-			entityItem.motionY = velocity.y();
-			entityItem.motionZ = velocity.z();
-			worldObj.spawnEntityInWorld(entityItem);
+			if (aiGiveScroll.giveScrollTo(player)) {
+				// Take diamond
+				if (!player.capabilities.isCreativeMode) {
+					stack.func_190918_g(1);
+				}
+			}
 			
 			return true;
 			
