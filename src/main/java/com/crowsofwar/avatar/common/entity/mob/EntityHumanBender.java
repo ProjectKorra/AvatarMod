@@ -95,7 +95,7 @@ public abstract class EntityHumanBender extends EntityBender {
 			@Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setEquipmentBasedOnDifficulty(difficulty);
-		
+		setHomePosAndDistance(getPosition(), 20);
 		return livingdata;
 	}
 	
