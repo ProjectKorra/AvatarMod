@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -192,15 +193,18 @@ public abstract class EntityHumanBender extends EntityBender {
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack.getItem() == Items.DIAMOND) {
+		if (stack.getItem() == Items.DIAMOND && !worldObj.isRemote) {
 			
 			Vector velocity = Vector.getLookRectangular(this).times(0.3);
-			
 			ItemStack scrollStack = new ItemStack(AvatarItems.itemScroll, 1, getScrollType().id());
-			EntityItem entityItem = entityDropItem(stack, getEyeHeight());
+			ItemScroll.setPoints(scrollStack, 1);
+			
+			EntityItem entityItem = new EntityItem(worldObj, posX, posY + getEyeHeight(), posZ, scrollStack);
+			entityItem.setDefaultPickupDelay();
 			entityItem.motionX = velocity.x();
 			entityItem.motionY = velocity.y();
 			entityItem.motionZ = velocity.z();
+			worldObj.spawnEntityInWorld(entityItem);
 			
 			return true;
 			
