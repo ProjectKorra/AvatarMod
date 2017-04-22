@@ -121,6 +121,11 @@ public abstract class EntityHumanBender extends EntityBender {
 		
 	}
 	
+	@Override
+	protected boolean canDespawn() {
+		return false;
+	}
+	
 	// Copied from EntityMob
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
