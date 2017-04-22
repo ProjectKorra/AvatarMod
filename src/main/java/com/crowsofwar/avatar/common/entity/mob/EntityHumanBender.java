@@ -95,6 +95,7 @@ public abstract class EntityHumanBender extends EntityBender {
 			@Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setEquipmentBasedOnDifficulty(difficulty);
+		
 		return livingdata;
 	}
 	
@@ -112,7 +113,11 @@ public abstract class EntityHumanBender extends EntityBender {
 				.getEntitiesWithinAABB(EntityHumanBender.class, aabb, candidate -> candidate != this)
 				.isEmpty();
 		
-		return nearbyVillage && !nearbyBender;
+		System.out.println("Nearby village: " + villages.getNearestVillage(getPosition(), 50));
+		System.out
+				.println("nearby benders: " + worldObj.getEntitiesWithinAABB(EntityHumanBender.class, aabb));
+		
+		return super.getCanSpawnHere() && nearbyVillage && !nearbyBender;
 		
 	}
 	
