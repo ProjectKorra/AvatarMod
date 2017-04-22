@@ -34,7 +34,10 @@ import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.village.VillageCollection;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
@@ -93,6 +96,24 @@ public abstract class EntityHumanBender extends EntityBender {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setEquipmentBasedOnDifficulty(difficulty);
 		return livingdata;
+	}
+	
+	@Override
+	public boolean getCanSpawnHere() {
+		
+		VillageCollection villages = worldObj.villageCollectionObj;
+		boolean nearbyVillage = villages.getNearestVillage(getPosition(), 50) != null;
+		
+		BlockPos min = getPosition().add(-25, -25, -25);
+		BlockPos max = getPosition().add(25, 25, 25);
+		AxisAlignedBB aabb = new AxisAlignedBB(min, max);
+		
+		boolean nearbyBender = !worldObj
+				.getEntitiesWithinAABB(EntityHumanBender.class, aabb, candidate -> candidate != this)
+				.isEmpty();
+		
+		return nearbyVillage && !nearbyBender;
+		
 	}
 	
 	// Copied from EntityMob

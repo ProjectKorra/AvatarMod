@@ -19,6 +19,8 @@ package com.crowsofwar.avatar;
 
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
@@ -73,7 +75,9 @@ import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -87,6 +91,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
@@ -181,6 +186,14 @@ public class AvatarMod {
 		registerEntity(EntityFirebender.class, "Firebender", 0xffffff, 0xffffff);
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
+		
+		List<Biome> allBiomesList = ForgeRegistries.BIOMES.getValues();
+		Biome[] allBiomes = new Biome[allBiomesList.size()];
+		allBiomes = allBiomesList.toArray(allBiomes);
+		
+		EntityRegistry.addSpawn(EntityFirebender.class, 1000, 1, 3, EnumCreatureType.CREATURE, allBiomes);
+		EntityRegistry.addSpawn(EntityAirbender.class, 1000, 1, 3, EnumCreatureType.CREATURE, allBiomes);
+		
 		proxy.init();
 	}
 	
