@@ -27,6 +27,9 @@ import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLiving;
@@ -118,6 +121,20 @@ public class AiFireArc extends BendingAi {
 	@Override
 	public void updateTask() {
 		timeExecuting++;
+	}
+	
+	@Override
+	public void resetTask() {
+		
+		EntityFireArc fire = AvatarEntity.lookupEntity(entity.worldObj, EntityFireArc.class, //
+				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
+						&& arc.getOwner() == entity);
+		
+		if (fire != null) {
+			fire.setDead();
+			bender.getData().removeStatusControl(StatusControl.THROW_FIRE);
+		}
+		
 	}
 	
 }
