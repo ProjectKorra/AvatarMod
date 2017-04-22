@@ -45,6 +45,7 @@ public class EntityAiGiveScroll extends EntityAIBase {
 	public EntityAiGiveScroll(EntityLiving entity, ScrollType scrollType) {
 		this.entity = entity;
 		this.scrollType = scrollType;
+		setMutexBits(1);
 	}
 	
 	/**
@@ -73,8 +74,11 @@ public class EntityAiGiveScroll extends EntityAIBase {
 	@Override
 	public boolean continueExecuting() {
 		
+		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
+				entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
+		
 		ticksExecuting++;
-		if (ticksExecuting >= 20) {
+		if (ticksExecuting >= 50) {
 			
 			World world = entity.worldObj;
 			
