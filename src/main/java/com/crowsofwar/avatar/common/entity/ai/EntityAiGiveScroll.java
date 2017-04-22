@@ -51,9 +51,9 @@ public class EntityAiGiveScroll extends EntityAIBase {
 	 * Starts giving scroll to the target and returns true. However, if this is
 	 * already executing, rejects and returns false.
 	 */
-	public boolean giveScrollTo(EntityLivingBase target) {
+	public boolean giveScrollTo(EntityLivingBase player) {
 		if (target == null || !target.isEntityAlive()) {
-			this.target = target;
+			this.target = player;
 			return true;
 		}
 		return false;
@@ -78,7 +78,7 @@ public class EntityAiGiveScroll extends EntityAIBase {
 			
 			World world = entity.worldObj;
 			
-			Vector velocity = getEntityPos(target).minus(getEntityPos(entity));
+			Vector velocity = getEntityPos(target).minus(getEntityPos(entity)).normalize().times(0.3);
 			ItemStack scrollStack = new ItemStack(AvatarItems.itemScroll, 1, scrollType.id());
 			ItemScroll.setPoints(scrollStack, 1);
 			
