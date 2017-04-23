@@ -633,6 +633,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		return chest;
 	}
 	
+	public boolean canPlayerViewInventory(EntityPlayer player) {
+		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness;
+	}
+	
 	// ================================================================================
 	// GENERAL UPDATE LOGIC
 	// ================================================================================

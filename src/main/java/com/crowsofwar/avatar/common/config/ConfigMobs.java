@@ -60,7 +60,8 @@ public class ConfigMobs {
 	public int bisonMinDomestication = 500, bisonMaxDomestication = 800;
 	
 	@Load
-	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000;
+	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000,
+			bisonChestTameness = 1000;
 	
 	@Load
 	public int bisonGrassFoodBonus = 5, bisonRideOneSecondTameness = 3;
