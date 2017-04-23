@@ -26,7 +26,7 @@ import net.minecraft.inventory.InventoryBasic;
 public class InventoryBisonChest extends InventoryBasic {
 	
 	public InventoryBisonChest() {
-		super("Flying Bison", false, 18);
+		super("Flying Bison", false, 27);
 	}
 	
 }

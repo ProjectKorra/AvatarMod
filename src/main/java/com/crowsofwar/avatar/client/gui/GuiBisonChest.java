@@ -17,14 +17,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	
-	private static final ResourceLocation HORSE_GUI_TEXTURES = new ResourceLocation(
-			"textures/gui/container/horse.png");
+	private static final ResourceLocation INVENTORY_TEXTURE = new ResourceLocation("avatarmod",
+			"textures/gui/bison_inventory.png");
 	
 	private final IInventory playerInventory;
 	private final IInventory bisonInventory;
 	private final EntitySkyBison bison;
-	private float mousePosx;
-	private float mousePosY;
+	private float lastMouseX;
+	private float lastMouseY;
 	
 	public GuiBisonChest(IInventory playerInv, IInventory bisonInventory, EntitySkyBison bison) {
 		super(new ContainerBisonChest(playerInv, bisonInventory, bison, getMinecraft().thePlayer));
@@ -45,13 +45,14 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.getTextureManager().bindTexture(HORSE_GUI_TEXTURES);
-		int i = (this.width - this.xSize) / 2;
-		int j = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 		
-		GuiInventory.drawEntityOnScreen(i + 51, j + 60, 17, i + 51 - this.mousePosx,
-				j + 75 - 50 - this.mousePosY, bison);
+		mc.getTextureManager().bindTexture(INVENTORY_TEXTURE);
+		int x = (this.width - this.xSize) / 2;
+		int y = (this.height - this.ySize) / 2;
+		drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
+		
+		GuiInventory.drawEntityOnScreen(x + 51, y + 60, 17, x + 51 - lastMouseX, y + 75 - 50 - lastMouseY,
+				bison);
 		
 	}
 	
@@ -60,8 +61,8 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.mousePosx = mouseX;
-		this.mousePosY = mouseY;
+		this.lastMouseX = mouseX;
+		this.lastMouseY = mouseY;
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

@@ -14,8 +14,8 @@ public class ContainerBisonChest extends Container {
 	private final IInventory bisonInventory;
 	private final EntitySkyBison bison;
 	
-	public ContainerBisonChest(IInventory playerInventory, IInventory bisonInventory,
-			EntitySkyBison bison, EntityPlayer player) {
+	public ContainerBisonChest(IInventory playerInventory, IInventory bisonInventory, EntitySkyBison bison,
+			EntityPlayer player) {
 		
 		this.bisonInventory = bisonInventory;
 		this.bison = bison;
@@ -42,15 +42,24 @@ public class ContainerBisonChest extends Container {
 			}
 		});
 		
-		// General chest
-		for (int r = 0; r < 2; r++) {
-			for (int c = 0; c < 9; c++) {
+		// Bison inventory
+		for (int r = 0; r < 3; ++r) {
+			for (int c = 0; c < 9; ++c) {
 				int index = 2 + r * 9 + c;
-				int x = (c % 9) * 18;
-				int y = r * 18;
+				int x = 79 + (c % 9) * 18;
+				int y = 17 + r * 18;
 				addSlotToContainer(new Slot(bisonInventory, index, x, y));
 			}
 		}
+		
+		// for (int r = 0; r < 2; r++) {
+		// for (int c = 0; c < 9; c++) {
+		// int index = 2 + r * 9 + c;
+		// int x = (c % 9) * 18;
+		// int y = r * 18;
+		// addSlotToContainer(new Slot(bisonInventory, index, x, y));
+		// }
+		// }
 		
 		// Player inventory slots
 		for (int i1 = 0; i1 < 3; ++i1) {
