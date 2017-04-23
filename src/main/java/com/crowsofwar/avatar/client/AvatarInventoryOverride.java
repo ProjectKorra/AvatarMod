@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,16 +41,23 @@ public class AvatarInventoryOverride {
 	public void onInventoryOpen(KeyInputEvent e) {
 		
 		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayer player = mc.thePlayer;
+		KeyBinding keybind = mc.gameSettings.keyBindInventory;
 		
-		if (mc.gameSettings.keyBindInventory.isPressed()) {
-			System.out.println("Override inventory?");
-			EntityPlayer player = mc.thePlayer;
+		// don't use isPressed() as that marks it as "not pressed" if it was
+		if (keybind.isKeyDown()) {
+			
 			if (player.getRidingEntity() instanceof EntitySkyBison) {
 				EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
 				if (bison.canPlayerViewInventory(player)) {
+					
 					AvatarMod.network.sendToServer(new PacketSBisonInventory());
+					// mark key as not pressed to avoid vanilla behavior
+					keybind.isPressed();
+					
 				}
 			}
+			
 		}
 	}
 	
