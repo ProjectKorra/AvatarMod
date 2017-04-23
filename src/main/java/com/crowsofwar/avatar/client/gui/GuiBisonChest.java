@@ -32,6 +32,8 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 		this.bisonInventory = bisonInventory;
 		this.bison = bison;
 		this.allowUserInput = false;
+		this.xSize = 248;
+		this.ySize = 166;
 	}
 	
 	@Override

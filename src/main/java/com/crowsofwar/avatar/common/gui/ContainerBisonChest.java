@@ -46,31 +46,24 @@ public class ContainerBisonChest extends Container {
 		for (int r = 0; r < 3; ++r) {
 			for (int c = 0; c < 9; ++c) {
 				int index = 2 + r * 9 + c;
-				int x = 79 + (c % 9) * 18;
-				int y = 17 + r * 18;
+				int x = 80 + (c % 9) * 18;
+				int y = 18 + r * 18;
 				addSlotToContainer(new Slot(bisonInventory, index, x, y));
 			}
 		}
 		
-		// for (int r = 0; r < 2; r++) {
-		// for (int c = 0; c < 9; c++) {
-		// int index = 2 + r * 9 + c;
-		// int x = (c % 9) * 18;
-		// int y = r * 18;
-		// addSlotToContainer(new Slot(bisonInventory, index, x, y));
-		// }
-		// }
-		
 		// Player inventory slots
-		for (int i1 = 0; i1 < 3; ++i1) {
-			for (int k1 = 0; k1 < 9; ++k1) {
-				this.addSlotToContainer(
-						new Slot(playerInventory, k1 + i1 * 9 + 9, 8 + k1 * 18, 102 + i1 * 18 + -18));
+		for (int r = 0; r < 3; r++) {
+			for (int c = 0; c < 9; c++) {
+				int index = c + r * 9 + 9;
+				int x = 44 + c * 18;
+				int y = 84 + r * 18;
+				this.addSlotToContainer(new Slot(playerInventory, index, x, y));
 			}
 		}
 		
-		for (int j1 = 0; j1 < 9; ++j1) {
-			this.addSlotToContainer(new Slot(playerInventory, j1, 8 + j1 * 18, 142));
+		for (int i = 0; i < 9; i++) {
+			this.addSlotToContainer(new Slot(playerInventory, i, 44 + i * 18, 142));
 		}
 		
 	}
