@@ -58,13 +58,13 @@ import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.gui.AvatarInventoryOverride;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -127,7 +127,6 @@ public class AvatarMod {
 		AvatarParticles.register();
 		AirbendingEvents.register();
 		FallAbsorptionHandler.register();
-		AvatarInventoryOverride.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
@@ -142,6 +141,7 @@ public class AvatarMod {
 		registerPacket(PacketSSkillsMenu.class, Side.SERVER);
 		registerPacket(PacketSUseScroll.class, Side.SERVER);
 		registerPacket(PacketCErrorMessage.class, Side.CLIENT);
+		registerPacket(PacketSBisonInventory.class, Side.SERVER);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
