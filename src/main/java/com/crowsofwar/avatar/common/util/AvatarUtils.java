@@ -29,6 +29,8 @@ import com.crowsofwar.avatar.AvatarLog;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
@@ -197,6 +199,54 @@ public class AvatarUtils {
 		}
 		
 		nbt.setTag(mapName, listTag);
+		
+	}
+	
+	/**
+	 * Reads the inventory contents. A list called <code>listName</code> is used
+	 * under that NBT tag.
+	 */
+	public static void readInventory(IInventory inventory, NBTTagCompound nbt, String listName) {
+		NBTTagList list = nbt.getTagList(listName, 10);
+		for (int i = 0; i < list.tagCount(); i++) {
+			
+			NBTTagCompound slotNbt = list.getCompoundTagAt(i);
+			int slot = slotNbt.getInteger("Slot");
+			
+			if (slotNbt.getBoolean("Empty")) {
+				inventory.setInventorySlotContents(slot, ItemStack.field_190927_a);
+			} else {
+				NBTTagCompound slotTag = nbt.getCompoundTag("Slot" + i);
+				inventory.setInventorySlotContents(slot, new ItemStack(slotTag));
+			}
+			
+		}
+	}
+	
+	/**
+	 * Writes the inventory contents to the list tag called
+	 * <code>listName</code>.
+	 */
+	public static void writeInventory(IInventory inventory, NBTTagCompound nbt, String listName) {
+		
+		NBTTagList list = new NBTTagList();
+		for (int i = 0; i < inventory.getSizeInventory(); i++) {
+			
+			ItemStack stack = inventory.getStackInSlot(i);
+			
+			NBTTagCompound slotNbt = new NBTTagCompound();
+			slotNbt.setBoolean("Empty", stack == ItemStack.field_190927_a);
+			slotNbt.setInteger("Slot", i);
+			
+			if (stack != ItemStack.field_190927_a) {
+				stack.writeToNBT(slotNbt);
+			}
+			
+			list.appendTag(slotNbt);
+			
+		}
+		
+		nbt.setTag(listName, list);
 		
 	}
 	

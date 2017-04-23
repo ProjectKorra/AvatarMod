@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
+import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
@@ -235,6 +235,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		riderTicks = nbt.getInteger("RiderTicks");
 		setLoveParticles(nbt.getBoolean("InLove"));
 		setId(nbt.getInteger("BisonId"));
+		readInventory(chest, nbt, "Inventory");
 	}
 	
 	@Override
@@ -247,6 +248,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		nbt.setInteger("RiderTicks", riderTicks);
 		nbt.setBoolean("InLove", isLoveParticles());
 		nbt.setInteger("BisonId", getId());
+		writeInventory(chest, nbt, "Inventory");
 	}
 	
 	@Override
@@ -617,7 +619,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	@Override
 	public void onInventoryChanged(IInventory invBasic) {
-		System.out.println("InventoryChanged");
+		updateEquipment();
 	}
 	
 	/**
