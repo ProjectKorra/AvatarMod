@@ -216,8 +216,7 @@ public class AvatarUtils {
 			if (slotNbt.getBoolean("Empty")) {
 				inventory.setInventorySlotContents(slot, ItemStack.field_190927_a);
 			} else {
-				NBTTagCompound slotTag = nbt.getCompoundTag("Slot" + i);
-				inventory.setInventorySlotContents(slot, new ItemStack(slotTag));
+				inventory.setInventorySlotContents(slot, new ItemStack(slotNbt));
 			}
 			
 		}
@@ -235,10 +234,10 @@ public class AvatarUtils {
 			ItemStack stack = inventory.getStackInSlot(i);
 			
 			NBTTagCompound slotNbt = new NBTTagCompound();
-			slotNbt.setBoolean("Empty", stack == ItemStack.field_190927_a);
+			slotNbt.setBoolean("Empty", stack.func_190926_b());
 			slotNbt.setInteger("Slot", i);
 			
-			if (stack != ItemStack.field_190927_a) {
+			if (!stack.func_190926_b()) {
 				stack.writeToNBT(slotNbt);
 			}
 			
