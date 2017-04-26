@@ -50,7 +50,10 @@ public class AiWave extends BendingAi {
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
 			
+			System.out.println("Wave should execute?");
+			
 			if (isAtEdgeOfWater()) {
+				System.out.println("On the edge");
 				return true;
 			}
 			
@@ -68,6 +71,8 @@ public class AiWave extends BendingAi {
 	@Override
 	public boolean continueExecuting() {
 		
+		System.out.println("Continue");
+		
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
 			entity.getLookHelper().setLookPosition(target.posX, target.posY, target.posZ, 10, 10);
@@ -78,6 +83,8 @@ public class AiWave extends BendingAi {
 				entity.rotationYaw = (float) toDegrees(rotations.y());
 				entity.rotationPitch = (float) toDegrees(rotations.x());
 				
+				System.out.println("Spawn wave");
+				
 				execAbility();
 				return false;
 				
@@ -86,6 +93,8 @@ public class AiWave extends BendingAi {
 			return true;
 			
 		}
+		
+		System.out.println("Stop " + target.isInWater());
 		return false;
 		
 	}
@@ -93,7 +102,7 @@ public class AiWave extends BendingAi {
 	private boolean isAtEdgeOfWater() {
 		
 		World world = entity.worldObj;
-		Vector look = Vector.getLookRectangular(entity).setY(0);
+		Vector look = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget())).setY(0);
 		
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).add(0, -1, 0),
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
