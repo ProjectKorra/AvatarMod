@@ -14,15 +14,15 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -33,19 +33,68 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
-public class AbilityCreateWave extends WaterAbility {
+/**
+ * 
+ * 
+ * @author CrowsOfWar
+ */
+public class AiWave extends BendingAi {
 	
-	public AbilityCreateWave() {
-		super("wave");
+	protected AiWave(BendingAbility ability, EntityLiving entity, Bender bender) {
+		super(ability, entity, bender);
 	}
 	
 	@Override
-	public void execute(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-		World world = ctx.getWorld();
+	protected boolean shouldExec() {
 		
-		Vector look = Vector.getLookRectangular(entity);
-		look.setY(0);
+		EntityLivingBase target = entity.getAttackTarget();
+		if (target != null && target.isInWater()) {
+			
+			if (isAtEdgeOfWater()) {
+				return true;
+			}
+			
+		}
+		
+		return false;
+		
+	}
+	
+	@Override
+	protected void startExec() {
+		continueExecuting();
+	}
+	
+	@Override
+	public boolean continueExecuting() {
+		
+		EntityLivingBase target = entity.getAttackTarget();
+		if (target != null && target.isInWater()) {
+			entity.getLookHelper().setLookPosition(target.posX, target.posY, target.posZ, 10, 10);
+			
+			if (timeExecuting >= 40) {
+				
+				Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
+				entity.rotationYaw = (float) toDegrees(rotations.y());
+				entity.rotationPitch = (float) toDegrees(rotations.x());
+				
+				execAbility();
+				return false;
+				
+			}
+			
+			return true;
+			
+		}
+		return false;
+		
+	}
+	
+	private boolean isAtEdgeOfWater() {
+		
+		World world = entity.worldObj;
+		Vector look = Vector.getLookRectangular(entity).setY(0);
+		
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).add(0, -1, 0),
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
@@ -56,34 +105,13 @@ public class AbilityCreateWave extends WaterAbility {
 			
 			for (int i = 0; i < 3; i++) {
 				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
-					
-					if (ctx.consumeChi(STATS_CONFIG.chiWave)) {
-						
-						EntityWave wave = new EntityWave(world);
-						wave.setOwner(entity);
-						wave.velocity().set(look.times(10));
-						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
-						wave.setDamageMultiplier(1 + ctx.getData().getAbilityData(this).getTotalXp() / 100f);
-						
-						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
-						
-						world.spawnEntityInWorld(wave);
-						
-					}
-					
-					break;
-					
+					return true;
 				}
-				pos.add(0, 1, 0);
 			}
 			
 		}
+		return false;
 		
-	}
-	
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiWave(this, entity, bender);
 	}
 	
 }
