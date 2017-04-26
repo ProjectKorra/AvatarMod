@@ -92,17 +92,25 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		ItemStack stack = player.getHeldItem(hand);
 		if (isBound(stack)) {
+			System.out.println("Draw back");
 			
 			player.setActiveHand(hand);
 			return new ActionResult<>(SUCCESS, stack);
 			
 		} else {
 			
-			MSG_BISON_WHISTLE_NOSUMMON.send(player);
+			if (!world.isRemote) {
+				MSG_BISON_WHISTLE_NOSUMMON.send(player);
+			}
 			return new ActionResult<>(PASS, stack);
 			
 		}
 		
+	}
+	
+	@Override
+	public int getMaxItemUseDuration(ItemStack stack) {
+		return 72000;
 	}
 	
 	@Override
