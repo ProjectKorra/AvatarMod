@@ -74,7 +74,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -125,10 +124,10 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
 		registerEntityRenderingHandler(EntitySkyBison.class, RenderSkyBison::new);
 		
-		registerEntityRenderingHandler(EntityAirbender.class, rm -> new RenderHumanBender(rm,
-				new ResourceLocation("avatarmod", "textures/entity/airbender.png")));
-		registerEntityRenderingHandler(EntityFirebender.class, rm -> new RenderHumanBender(rm,
-				new ResourceLocation("avatarmod", "textures/entity/firebender.png")));
+		registerEntityRenderingHandler(EntityAirbender.class,
+				rm -> new RenderHumanBender(rm, "airbender", 7));
+		registerEntityRenderingHandler(EntityFirebender.class,
+				rm -> new RenderHumanBender(rm, "firebender", 1));
 		
 		AvatarItemRenderRegister.register();
 		

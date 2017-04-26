@@ -30,7 +30,7 @@ import net.minecraft.util.ResourceLocation;
 public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/flyingbison.png");
+			"textures/mob/flyingbison.png");
 	
 	/**
 	 * @param rendermanager

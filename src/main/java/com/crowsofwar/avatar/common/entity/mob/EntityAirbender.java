@@ -59,4 +59,9 @@ public class EntityAirbender extends EntityHumanBender {
 		return ScrollType.AIR;
 	}
 	
+	@Override
+	protected int getNumSkins() {
+		return 7;
+	}
+	
 }

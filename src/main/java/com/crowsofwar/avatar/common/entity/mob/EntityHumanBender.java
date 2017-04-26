@@ -35,6 +35,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -52,6 +56,9 @@ import net.minecraft.world.World;
  */
 public abstract class EntityHumanBender extends EntityBender {
 	
+	private static final DataParameter<Integer> SYNC_SKIN = EntityDataManager
+			.createKey(EntityHumanBender.class, DataSerializers.VARINT);
+	
 	private EntityAiGiveScroll aiGiveScroll;
 	
 	/**
@@ -59,6 +66,12 @@ public abstract class EntityHumanBender extends EntityBender {
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
+	}
+	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_SKIN, (int) (rand.nextDouble() * getNumSkins()));
 	}
 	
 	@Override
@@ -90,9 +103,31 @@ public abstract class EntityHumanBender extends EntityBender {
 		
 	}
 	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		setSkin(nbt.getInteger("Skin"));
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setInteger("Skin", getSkin());
+	}
+	
 	protected abstract void addBendingTasks();
 	
 	protected abstract ScrollType getScrollType();
+	
+	protected abstract int getNumSkins();
+	
+	public int getSkin() {
+		return dataManager.get(SYNC_SKIN);
+	}
+	
+	public void setSkin(int skin) {
+		dataManager.set(SYNC_SKIN, skin);
+	}
 	
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {

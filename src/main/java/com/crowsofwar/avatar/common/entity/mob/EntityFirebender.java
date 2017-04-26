@@ -63,4 +63,9 @@ public class EntityFirebender extends EntityHumanBender {
 		return ScrollType.FIRE;
 	}
 	
+	@Override
+	protected int getNumSkins() {
+		return 1;
+	}
+	
 }
