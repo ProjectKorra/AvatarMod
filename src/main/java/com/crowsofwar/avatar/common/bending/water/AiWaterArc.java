@@ -16,10 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.abs;
 import static java.lang.Math.toDegrees;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -44,8 +42,6 @@ public class AiWaterArc extends BendingAi {
 	
 	private int timeExecuting;
 	
-	private float velocityYaw, velocityPitch;
-	
 	/**
 	 * @param ability
 	 * @param entity
@@ -54,42 +50,24 @@ public class AiWaterArc extends BendingAi {
 	protected AiWaterArc(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
-		setMutexBits(2);
+		setMutexBits(3);
 	}
 	
 	@Override
-	protected void startExec() {
-		velocityYaw = 0;
-		velocityPitch = 0;
-	}
+	protected void startExec() {}
 	
 	@Override
 	public boolean continueExecuting() {
 		
-		if (entity.getAttackTarget() == null) return false;
+		EntityLivingBase target = entity.getAttackTarget();
+		if (target == null) return false;
 		
-		Vector target = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
-		float targetYaw = (float) toDegrees(target.y());
-		float targetPitch = (float) toDegrees(target.x());
+		Vector targetRotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
+		entity.rotationYaw = (float) toDegrees(targetRotations.y());
+		entity.rotationPitch = (float) toDegrees(targetRotations.x());
 		
-		float currentYaw = normalizeAngle(entity.rotationYaw);
-		float currentPitch = normalizeAngle(entity.rotationPitch);
-		
-		float yawLeft = abs(normalizeAngle(currentYaw - targetYaw));
-		float yawRight = abs(normalizeAngle(targetYaw - currentYaw));
-		if (yawRight < yawLeft) {
-			velocityYaw += yawRight / 10;
-		} else {
-			velocityYaw -= yawLeft / 10;
-		}
-		
-		entity.rotationYaw += velocityYaw;
-		entity.rotationPitch += velocityPitch;
-		
-		if (timeExecuting < 20) {
-			entity.rotationYaw = targetYaw;
-			entity.rotationPitch = targetPitch;
-		}
+		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
+				10, 10);
 		
 		if (timeExecuting == 20) {
 			BendingData data = bender.getData();
