@@ -147,7 +147,8 @@ death.attack.avatar_fireball=%2$s blasted %1$s with a fireball
 death.attack.avatar_airblade=%1$s was sliced by %2$s
 death.attack.avatar_flamethrower=%1$s just got ROASTED by %2$s!!
 
-entity.HumanBender.name=Human Bender
+entity.Airbender.name=Airbender
+entity.Firebender.name=Firebender
 entity.SkyBison.name=Flying Bison
 
 itemGroup.avatar.items=Avatar Items
