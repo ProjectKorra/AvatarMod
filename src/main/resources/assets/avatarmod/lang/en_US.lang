@@ -149,6 +149,7 @@ death.attack.avatar_flamethrower=%1$s just got ROASTED by %2$s!!
 
 entity.Airbender.name=Airbender
 entity.Firebender.name=Firebender
+entity.Waterbender.name=Waterbender
 entity.SkyBison.name=Flying Bison
 
 itemGroup.avatar.items=Avatar Items

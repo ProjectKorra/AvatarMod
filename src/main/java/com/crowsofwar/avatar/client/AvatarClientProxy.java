@@ -61,6 +61,7 @@ import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
@@ -128,6 +129,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 				rm -> new RenderHumanBender(rm, "airbender", 7));
 		registerEntityRenderingHandler(EntityFirebender.class,
 				rm -> new RenderHumanBender(rm, "firebender", 1));
+		registerEntityRenderingHandler(EntityWaterbender.class,
+				rm -> new RenderHumanBender(rm, "airbender", 1));
 		
 		AvatarItemRenderRegister.register();
 		
