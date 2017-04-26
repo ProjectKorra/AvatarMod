@@ -65,8 +65,6 @@ public class EntityAiBisonSit extends EntityAIBase {
 		Vector targetPos = bisonPos.copy().setY(y - 1).plus(randomized);
 		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1);
 		
-		System.out.println("Move to " + targetPos);
-		
 	}
 	
 }

@@ -82,8 +82,6 @@ public class EntityAiBisonWander extends EntityAIBase {
 		double y = original.y() + (random.nextFloat() * 2 - 1) * 32;
 		double z = original.z() + (random.nextFloat() * 2 - 1) * 32;
 		
-		System.out.println("Wandering " + entity.getOriginalPos());
-		
 		this.entity.getMoveHelper().setMoveTo(x, y, z, 1.0D);
 	}
 	

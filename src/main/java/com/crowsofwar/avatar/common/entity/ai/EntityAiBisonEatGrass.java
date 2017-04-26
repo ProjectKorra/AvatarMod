@@ -65,10 +65,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public void startExecuting() {
-		
-		System.out.println("Time to eat!!");
 		continueExecuting();
-		
 	}
 	
 	@Override
@@ -107,8 +104,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		eatGrassTime++;
 		if (eatGrassTime % 30 == 29) {
 			
-			System.out.println("Nom");
-			
 			BlockPos downPos = bison.getPosition().down();
 			World world = bison.worldObj;
 			
@@ -132,7 +127,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 			if (ediblePos != null) {
 				
 				if (mobGriefing) {
-					System.out.println("Set to dirt");
 					world.playEvent(2001, ediblePos, Block.getIdFromBlock(Blocks.GRASS));
 					if (block == Blocks.GRASS) {
 						world.setBlockState(ediblePos, Blocks.DIRT.getDefaultState(), 2);
@@ -140,8 +134,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 				}
 				
 				bison.eatGrassBonus();
-				
-				System.out.println("Ate at " + ediblePos);
 				
 			} else {
 				// Can't find food here

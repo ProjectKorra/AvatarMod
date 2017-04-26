@@ -53,8 +53,6 @@ public class EntityAiBisonLand extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		
-		System.out.println("Trying to land");
-		
 		World world = bison.worldObj;
 		
 		int tries = 0;
@@ -75,10 +73,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 			
 			landing.add(0, 1, 0);
 			bison.getMoveHelper().setMoveTo(landing.x(), landing.y() - 1, landing.z(), 1);
-			System.out.println("Moving to " + landing);
 			
-		} else {
-			System.out.println("can't find landing zone");
 		}
 		
 	}
@@ -142,7 +137,6 @@ public class EntityAiBisonLand extends EntityAIBase {
 		double range = current.dist(target);
 		Raytrace.Result raytrace = Raytrace.raytrace(bison.worldObj, current, direction, range + 1, false);
 		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos().up();
-		System.out.println("LZ " + blockPos + " vs " + target.toBlockPos());
 		return blockPos == null || blockPos.equals(target.toBlockPos());
 	}
 	
