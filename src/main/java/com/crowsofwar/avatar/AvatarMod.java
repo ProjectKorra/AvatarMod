@@ -35,6 +35,7 @@ import com.crowsofwar.avatar.common.config.ConfigMobs;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
@@ -183,6 +184,7 @@ public class AvatarMod {
 		registerEntity(EntityFirebender.class, "Firebender", 0xffffff, 0xffffff);
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
+		registerEntity(AvatarEntityItem.class, "Item");
 		proxy.init();
 	}
 	

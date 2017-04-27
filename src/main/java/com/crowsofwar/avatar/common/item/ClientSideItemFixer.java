@@ -27,7 +27,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -100,7 +99,7 @@ public class ClientSideItemFixer {
 	}
 	
 	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new ClientSideItemFixer());
+		// MinecraftForge.EVENT_BUS.register(new ClientSideItemFixer());
 	}
 	
 }

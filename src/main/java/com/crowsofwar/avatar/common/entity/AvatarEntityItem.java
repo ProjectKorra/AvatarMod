@@ -30,6 +30,10 @@ public class AvatarEntityItem extends EntityItem {
 	
 	private boolean resistFire;
 	
+	public AvatarEntityItem(World world) {
+		super(world);
+	}
+	
 	public AvatarEntityItem(World worldIn, double x, double y, double z, ItemStack stack) {
 		super(worldIn, x, y, z, stack);
 	}
@@ -40,6 +44,7 @@ public class AvatarEntityItem extends EntityItem {
 	
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
+		System.out.println("AttackEntityFrom");
 		if (!resistFire || !source.isFireDamage()) {
 			return super.attackEntityFrom(source, amount);
 		}
