@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.avatar.common.item.ClientSideItemFixer.addCustomItem;
-
 import com.crowsofwar.avatar.AvatarInfo;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -50,8 +48,6 @@ public class AvatarItems {
 		registerItem(itemScroll = new ItemScroll());
 		registerItem(itemWaterPouch = new ItemWaterPouch());
 		registerItem(itemBisonWhistle = new ItemBisonWhistle());
-		
-		addCustomItem(itemScroll);
 		
 		stackScroll = new ItemStack(itemScroll);
 		NBTTagCompound nbt = new NBTTagCompound();

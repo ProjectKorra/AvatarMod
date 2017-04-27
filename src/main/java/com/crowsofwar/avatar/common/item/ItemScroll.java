@@ -81,7 +81,6 @@ public class ItemScroll extends Item implements AvatarItem {
 		custom.motionY = old.motionY;
 		custom.motionZ = old.motionZ;
 		custom.setDefaultPickupDelay();
-		System.out.println("Made custom");
 		return custom;
 	}
 	

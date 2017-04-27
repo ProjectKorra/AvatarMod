@@ -18,6 +18,9 @@ package com.crowsofwar.avatar.common.entity;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -28,7 +31,8 @@ import net.minecraft.world.World;
  */
 public class AvatarEntityItem extends EntityItem {
 	
-	private boolean resistFire;
+	private static final DataParameter<Boolean> SYNC_RESIST_FIRE = EntityDataManager
+			.createKey(AvatarEntityItem.class, DataSerializers.BOOLEAN);
 	
 	public AvatarEntityItem(World world) {
 		super(world);
@@ -38,17 +42,20 @@ public class AvatarEntityItem extends EntityItem {
 		super(worldIn, x, y, z, stack);
 	}
 	
+	public boolean resistsFire() {
+		return dataManager.get(SYNC_RESIST_FIRE);
+	}
+	
 	public void setResistFire(boolean resistFire) {
-		this.resistFire = resistFire;
+		dataManager.set(SYNC_RESIST_FIRE, resistFire);
 	}
 	
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		System.out.println("AttackEntityFrom");
-		if (!resistFire || !source.isFireDamage()) {
-			return super.attackEntityFrom(source, amount);
+		if (resistsFire() && source.isFireDamage()) {
+			return false;
 		}
-		return false;
+		return super.attackEntityFrom(source, amount);
 	}
 	
 }
