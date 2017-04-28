@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.common.gui;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -26,7 +26,7 @@ public class ContainerBisonChest extends Container {
 		this.addSlotToContainer(new Slot(bisonInventory, 0, 8, 18) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return stack.getItem() == Items.SADDLE && !this.getHasStack();
+				return stack.getItem() == AvatarItems.itemBisonSaddle;
 			}
 		});
 		// Armor slot

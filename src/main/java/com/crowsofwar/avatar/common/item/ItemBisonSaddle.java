@@ -50,8 +50,8 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		int metadata = stack.getMetadata() >= 3 ? 0 : stack.getMetadata();
-		return super.getUnlocalizedName(stack) + ". " + metadata;
+		int metadata = stack.getMetadata() > 3 ? 0 : stack.getMetadata();
+		return super.getUnlocalizedName(stack) + "." + metadata;
 	}
 	
 	@Override
