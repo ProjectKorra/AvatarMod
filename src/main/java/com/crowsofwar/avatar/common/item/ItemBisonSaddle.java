@@ -45,13 +45,16 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	
 	@Override
 	public String getModelName(int meta) {
-		return "bison_saddle_" + meta;
+		SaddleTier tier = SaddleTier.fromId(meta);
+		String tierName = tier == null ? "null" : tier.name().toLowerCase();
+		return "bison_saddle_" + tierName;
 	}
 	
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		int metadata = stack.getMetadata() > 3 ? 0 : stack.getMetadata();
-		return super.getUnlocalizedName(stack) + "." + metadata;
+		SaddleTier tier = SaddleTier.fromId(stack.getMetadata());
+		String tierName = tier == null ? "null" : tier.name().toLowerCase();
+		return super.getUnlocalizedName(stack) + "." + tierName;
 	}
 	
 	@Override
@@ -60,6 +63,37 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 		
 		for (int i = 0; i <= 3; i++) {
 			subItems.add(new ItemStack(item, 1, i));
+		}
+		
+	}
+	
+	public enum SaddleTier {
+		
+		CRUDE(4),
+		BASIC(10),
+		AVERAGE(16),
+		QUALITY(20);
+		
+		private final float armorPoints;
+		
+		private SaddleTier(float armorPoints) {
+			this.armorPoints = armorPoints;
+		}
+		
+		public float getArmorPoints() {
+			return armorPoints;
+		}
+		
+		public int id() {
+			return ordinal();
+		}
+		
+		public static SaddleTier fromId(int id) {
+			return isValidId(id) ? values()[id] : null;
+		}
+		
+		public static boolean isValidId(int id) {
+			return id >= 0 && id < values().length;
 		}
 		
 	}

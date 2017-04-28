@@ -23,6 +23,7 @@ import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
+import static net.minecraft.entity.SharedMonsterAttributes.ARMOR;
 import static net.minecraft.init.Blocks.STONE;
 import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.SoundCategory.NEUTRAL;
@@ -55,6 +56,7 @@ import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.InventoryBisonChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -626,7 +628,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 * Updates equipment based on inventory contents
 	 */
 	private void updateEquipment() {
-		
+		SaddleTier saddle = getSaddle();
+		System.out.println("Equip " + saddle + " saddle");
+		if (saddle != null) {
+			getEntityAttribute(ARMOR).setBaseValue(saddle.getArmorPoints());
+		}
 	}
 	
 	public InventoryBisonChest getInventory() {
@@ -635,6 +641,19 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	public boolean canPlayerViewInventory(EntityPlayer player) {
 		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness;
+	}
+	
+	/**
+	 * Gets the tier of the current saddle equipped, or null if there is no
+	 * saddle.
+	 */
+	public SaddleTier getSaddle() {
+		ItemStack stack = chest.getStackInSlot(0);
+		if (stack.getItem() == AvatarItems.itemBisonSaddle) {
+			return SaddleTier.fromId(stack.getMetadata());
+		} else {
+			return null;
+		}
 	}
 	
 	// ================================================================================

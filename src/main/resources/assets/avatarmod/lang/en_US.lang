@@ -159,10 +159,10 @@ item.avatarmod:scroll.earth.name=Earthbending Scroll
 item.avatarmod:scroll.water.name=Waterbending Scroll
 item.avatarmod:water_pouch.name=Water Skin
 item.avatarmod:bison_whistle.name=Bison Whistle
-item.avatarmod:bison_saddle.0.name=Crude Bison Saddle
-item.avatarmod:bison_saddle.1.name=Simple Bison Saddle
-item.avatarmod:bison_saddle.2.name=Average Bison Saddle
-item.avatarmod:bison_saddle.3.name=Quality Bison Saddle
+item.avatarmod:bison_saddle.crude.name=Crude Bison Saddle
+item.avatarmod:bison_saddle.simple.name=Simple Bison Saddle
+item.avatarmod:bison_saddle.average.name=Average Bison Saddle
+item.avatarmod:bison_saddle.quality.name=Quality Bison Saddle
 
 avatar.tooltip.scroll=%d points
 avatar.tooltip.water_pouch=%d/3 Water
