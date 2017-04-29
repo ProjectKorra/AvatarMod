@@ -123,6 +123,7 @@ public class AvatarDataSerializers {
 		DataSerializers.registerSerializer(SERIALIZER_BLOCK);
 		DataSerializers.registerSerializer(SERIALIZER_VECTOR);
 		DataSerializers.registerSerializer(SERIALIZER_BENDER);
+		DataSerializers.registerSerializer(SERIALIZER_SADDLE);
 	}
 	
 	private static abstract class AvatarSerializer<T> implements DataSerializer<T> {

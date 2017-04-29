@@ -242,7 +242,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		setLoveParticles(nbt.getBoolean("InLove"));
 		setId(nbt.getInteger("BisonId"));
 		readInventory(chest, nbt, "Inventory");
-		updateEquipment();
+		updateEquipment(true);
 	}
 	
 	@Override
@@ -611,8 +611,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	private void initChest() {
 		
+		int chestSlots = getSaddle() == null ? 0 : getSaddle().getChestSlots();
+		
 		InventoryBisonChest old = chest;
-		chest = new InventoryBisonChest(getSaddle().getChestSlots());
+		chest = new InventoryBisonChest(chestSlots);
 		if (hasCustomName()) {
 			chest.setCustomName(getName());
 		}
@@ -632,19 +634,19 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		
 		chest.addInventoryChangeListener(this);
-		updateEquipment();
+		updateEquipment(false);
 		
 	}
 	
 	@Override
 	public void onInventoryChanged(IInventory invBasic) {
-		updateEquipment();
+		updateEquipment(true);
 	}
 	
 	/**
 	 * Updates equipment based on inventory contents
 	 */
-	private void updateEquipment() {
+	private void updateEquipment(boolean updateChestSlots) {
 		
 		// Update saddle
 		ItemStack stack = chest.getStackInSlot(0);
@@ -661,7 +663,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		getEntityAttribute(ARMOR).setBaseValue(armorPoints);
 		
 		// Update chest slots
-		initChest();
+		if (updateChestSlots) {
+			initChest();
+		}
 		
 	}
 	
