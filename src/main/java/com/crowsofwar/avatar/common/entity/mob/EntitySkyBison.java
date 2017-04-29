@@ -473,7 +473,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	protected boolean canFitPassenger(Entity passenger) {
 		int passengers = getPassengers().size();
-		int saddleSize = getSaddle() == null ? 1 : getSaddle().getMaxPassengers();
+		int saddleSize = getSaddle() == null ? 0 : getSaddle().getMaxPassengers();
 		return passengers < condition.getMaxRiders() && passengers < saddleSize;
 	}
 	
