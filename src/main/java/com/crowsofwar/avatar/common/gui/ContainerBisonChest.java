@@ -43,12 +43,20 @@ public class ContainerBisonChest extends Container {
 		});
 		
 		// Bison inventory
-		for (int r = 0; r < 3; ++r) {
-			for (int c = 0; c < 9; ++c) {
+		int slotsAdded = 0;
+		outer: for (int r = 0; r < 3; r++) {
+			for (int c = 0; c < 9; c++) {
+				
+				if (slotsAdded >= bison.getChestSlots()) {
+					break outer;
+				}
+				slotsAdded++;
+				
 				int index = 2 + r * 9 + c;
 				int x = 80 + (c % 9) * 18;
 				int y = 18 + r * 18;
 				addSlotToContainer(new Slot(bisonInventory, index, x, y));
+				
 			}
 		}
 		
