@@ -1,13 +1,13 @@
 package com.crowsofwar.avatar.client.gui;
 
 import static net.minecraft.client.Minecraft.getMinecraft;
+import static net.minecraft.client.gui.inventory.GuiInventory.drawEntityOnScreen;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
@@ -47,13 +47,19 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		
-		mc.getTextureManager().bindTexture(INVENTORY_TEXTURE);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
-		drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 		
-		GuiInventory.drawEntityOnScreen(x + 51, y + 60, 17, x + 51 - lastMouseX, y + 75 - 50 - lastMouseY,
-				bison);
+		drawEntityOnScreen(x + 51, y + 60, 17, x + 51 - lastMouseX, y + 75 - 50 - lastMouseY, bison);
+		
+		mc.getTextureManager().bindTexture(INVENTORY_TEXTURE);
+		
+		// Draw background of inventory
+		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		
+		// Draw bison slots, depending on inventory size
+		int rows = (int) Math.ceil(bison.getChestSlots() / 9.0);
+		drawTexturedModalRect(x + 79, y + 17, 0, 166, 162, rows * 18);
 		
 	}
 	
