@@ -69,10 +69,10 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	
 	public enum SaddleTier {
 		
-		CRUDE(4, 1),
-		BASIC(10, 2),
-		AVERAGE(16, 4),
-		QUALITY(20, 6);
+		CRUDE(2, 1),
+		BASIC(4, 2),
+		AVERAGE(6, 4),
+		QUALITY(10, 6);
 		
 		private final float armorPoints;
 		private final int maxPassengers;
