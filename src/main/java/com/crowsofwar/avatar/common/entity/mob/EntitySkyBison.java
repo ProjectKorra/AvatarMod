@@ -179,6 +179,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		dataManager.register(SYNC_ID,
 				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
 		dataManager.register(SYNC_SADDLE, null);
+		dataManager.register(SYNC_ARMOR, null);
 		
 	}
 	
