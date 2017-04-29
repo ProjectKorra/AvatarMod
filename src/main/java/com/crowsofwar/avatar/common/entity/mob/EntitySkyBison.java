@@ -693,10 +693,18 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 	
 	public int getChestSlots() {
-		if (condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness) {
-			float age = condition.getAgeDays() - condition.getAdultAge();
-			float slotsEquation = (27f / 4) * age;
-			return (int) Math.min(slotsEquation, 27);
+		if (condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness && condition.isAdult()) {
+			
+			int age = (int) (condition.getAgeDays() - condition.getAdultAge());
+			
+			if (age >= 5) {
+				return 27;
+			} else if (age >= 3) {
+				return 18;
+			} else {
+				return 9;
+			}
+			
 		} else {
 			return 0;
 		}
