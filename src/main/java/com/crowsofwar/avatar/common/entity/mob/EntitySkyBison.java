@@ -242,21 +242,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		setLoveParticles(nbt.getBoolean("InLove"));
 		setId(nbt.getInteger("BisonId"));
 		
-		// Simply calling readInventory right now is BAD since it's
-		// possible there is a mismatch between inventory size now and the saved
-		// inventory size.
-		
-		// this is especially true when loading a world; saddle is still null so
-		// inventory size would be 0. Then, all items in inventory would be
-		// ignored since they aren't part of the inventory.
-		
-		// To solve, cache the saddle and set it right now, so the inventory
-		// size is correctly setup so we can call readInventory.
-		
-		int saddleId = nbt.getInteger("Saddle");
-		setSaddle(SaddleTier.isValidId(saddleId) ? SaddleTier.fromId(saddleId) : null);
+		// Update chest size based on just read data
 		initChest();
-		
 		readInventory(chest, nbt, "Inventory");
 		updateEquipment(true);
 		
@@ -274,7 +261,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		nbt.setInteger("BisonId", getId());
 		
 		writeInventory(chest, nbt, "Inventory");
-		nbt.setInteger("Saddle", getSaddle() == null ? -1 : getSaddle().id());
 		
 	}
 	
@@ -629,6 +615,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	// CHEST / INVENTORY
 	// ================================================================================
 	
+	/**
+	 * Updates chest size based on current chest slots
+	 */
 	private void initChest() {
 		
 		System.out.println("Slots " + getChestSlots());
@@ -676,11 +665,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private void updateEquipment(boolean updateChestSlots) {
 		
 		// Update saddle
-		ItemStack stack = chest.getStackInSlot(0);
-		if (stack.getItem() == AvatarItems.itemBisonSaddle) {
-			setSaddle(SaddleTier.fromId(stack.getMetadata()));
-		} else {
-			setSaddle(null);
+		if (!worldObj.isRemote) {
+			ItemStack stack = chest.getStackInSlot(0);
+			if (stack.getItem() == AvatarItems.itemBisonSaddle) {
+				setSaddle(SaddleTier.fromId(stack.getMetadata()));
+			} else {
+				setSaddle(null);
+			}
+			System.out.println("Found saddle itemStack: " + stack);
 		}
 		
 		getEntityAttribute(ARMOR).setBaseValue(getArmorPoints());
@@ -701,7 +693,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 	
 	public int getChestSlots() {
-		return getSaddle() == null ? 0 : getSaddle().getChestSlots();
+		if (condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness) {
+			float age = condition.getAgeDays() - condition.getAdultAge();
+			float slotsEquation = (27f / 4) * age;
+			return (int) Math.min(slotsEquation, 27);
+		} else {
+			return 0;
+		}
 	}
 	
 	public float getArmorPoints() {

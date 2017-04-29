@@ -25,13 +25,6 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	private float lastMouseX;
 	private float lastMouseY;
 	
-	/**
-	 * The original number of slots in the inventory, used to detect when the
-	 * slots are changed. When this happens, re-open the inventory since it's
-	 * difficult to change the number of slots in the gui.
-	 */
-	private int originalSlots;
-	
 	public GuiBisonChest(IInventory playerInv, EntitySkyBison bison) {
 		super(new ContainerBisonChest(playerInv, bison.getInventory(), bison, getMinecraft().thePlayer));
 		this.playerInventory = playerInv;
@@ -39,7 +32,6 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 		this.allowUserInput = false;
 		this.xSize = 248;
 		this.ySize = 166;
-		this.originalSlots = bison.getInventory().getSizeInventory();
 	}
 	
 	@Override
@@ -62,11 +54,6 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 		
 		GuiInventory.drawEntityOnScreen(x + 51, y + 60, 17, x + 51 - lastMouseX, y + 75 - 50 - lastMouseY,
 				bison);
-		
-		if (bison.getInventory().getSizeInventory() != originalSlots) {
-			System.out.println("There exists a mismatch!");
-			mc.thePlayer.closeScreen();
-		}
 		
 	}
 	
