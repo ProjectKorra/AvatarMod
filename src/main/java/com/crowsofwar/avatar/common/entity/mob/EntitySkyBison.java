@@ -691,7 +691,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	@Override
 	public void onInventoryChanged(IInventory invBasic) {
-		updateEquipment(true);
+		updateEquipment(false);
 	}
 	
 	/**
