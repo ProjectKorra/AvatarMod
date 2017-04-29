@@ -241,8 +241,25 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		riderTicks = nbt.getInteger("RiderTicks");
 		setLoveParticles(nbt.getBoolean("InLove"));
 		setId(nbt.getInteger("BisonId"));
+		
+		// Simply calling readInventory right now is BAD since it's
+		// possible there is a mismatch between inventory size now and the saved
+		// inventory size.
+		
+		// this is especially true when loading a world; saddle is still null so
+		// inventory size would be 0. Then, all items in inventory would be
+		// ignored since they aren't part of the inventory.
+		
+		// To solve, cache the saddle and set it right now, so the inventory
+		// size is correctly setup so we can call readInventory.
+		
+		int saddleId = nbt.getInteger("Saddle");
+		setSaddle(SaddleTier.isValidId(saddleId) ? SaddleTier.fromId(saddleId) : null);
+		initChest();
+		
 		readInventory(chest, nbt, "Inventory");
 		updateEquipment(true);
+		
 	}
 	
 	@Override
@@ -255,7 +272,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		nbt.setInteger("RiderTicks", riderTicks);
 		nbt.setBoolean("InLove", isLoveParticles());
 		nbt.setInteger("BisonId", getId());
+		
 		writeInventory(chest, nbt, "Inventory");
+		nbt.setInteger("Saddle", getSaddle() == null ? -1 : getSaddle().id());
+		
 	}
 	
 	@Override
@@ -635,6 +655,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 		chest.addInventoryChangeListener(this);
 		updateEquipment(false);
+		
+	}
+	
+	/**
+	 * Hack used by readEntityFromNbt to read th
+	 */
+	private void setFullInventorySize() {
 		
 	}
 	
