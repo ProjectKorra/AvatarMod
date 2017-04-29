@@ -163,6 +163,10 @@ item.avatarmod:bison_saddle.crude.name=Crude Bison Saddle
 item.avatarmod:bison_saddle.basic.name=Basic Bison Saddle
 item.avatarmod:bison_saddle.average.name=Average Bison Saddle
 item.avatarmod:bison_saddle.quality.name=Quality Bison Saddle
+item.avatarmod:bison_armor.woven.name=Woven Bison Armor
+item.avatarmod:bison_armor.chain.name=Chainmail Bison Armor
+item.avatarmod:bison_armor.wrought.name=Wrought Bison Armor
+item.avatarmod:bison_armor.legendary.name=Legendary Bison Armor
 
 avatar.tooltip.scroll=%d points
 avatar.tooltip.water_pouch=%d/3 Water
