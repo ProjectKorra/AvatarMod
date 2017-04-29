@@ -559,8 +559,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 		if (stack.getItem() == AvatarItems.itemBisonSaddle && SaddleTier.isValidId(stack.getMetadata())) {
 			if (!worldObj.isRemote) {
-				SaddleTier saddle = SaddleTier.fromId(stack.getMetadata());
 				chest.setInventorySlotContents(0, stack);
+				updateEquipment(false);
+			}
+			return true;
+		}
+		if (stack.getItem() == AvatarItems.itemBisonArmor && ArmorTier.isValidId(stack.getMetadata())) {
+			if (!worldObj.isRemote) {
+				chest.setInventorySlotContents(1, stack);
 				updateEquipment(false);
 			}
 			return true;
@@ -693,13 +699,23 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 		// Update saddle
 		if (!worldObj.isRemote) {
-			ItemStack stack = chest.getStackInSlot(0);
-			if (stack.getItem() == AvatarItems.itemBisonSaddle) {
-				setSaddle(SaddleTier.fromId(stack.getMetadata()));
+			
+			ItemStack saddleStack = chest.getStackInSlot(0);
+			int saddleId = saddleStack.getMetadata();
+			if (saddleStack.getItem() == AvatarItems.itemBisonSaddle && SaddleTier.isValidId(saddleId)) {
+				setSaddle(SaddleTier.fromId(saddleId));
 			} else {
 				setSaddle(null);
 			}
-			System.out.println("Found saddle itemStack: " + stack);
+			
+			ItemStack armorStack = chest.getStackInSlot(1);
+			int armorId = armorStack.getMetadata();
+			if (armorStack.getItem() == AvatarItems.itemBisonArmor && ArmorTier.isValidId(armorId)) {
+				setArmor(ArmorTier.fromId(armorId));
+			} else {
+				setArmor(null);
+			}
+			
 		}
 		
 		getEntityAttribute(ARMOR).setBaseValue(getArmorPoints());
@@ -738,7 +754,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 	
 	public float getArmorPoints() {
-		return getSaddle() == null ? 0 : getSaddle().getArmorPoints();
+		float saddle = getSaddle() == null ? 0 : getSaddle().getArmorPoints();
+		float armor = getArmor() == null ? 0 : getArmor().getArmorPoints();
+		return saddle + armor;
 	}
 	
 	// ================================================================================
