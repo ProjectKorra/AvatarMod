@@ -88,8 +88,17 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 			return ordinal();
 		}
 		
+		/**
+		 * Finds the tier with the given id
+		 * 
+		 * @throws IllegalArgumentException
+		 *             when id is {@link #isValidId(int) invalid}
+		 */
 		public static SaddleTier fromId(int id) {
-			return isValidId(id) ? values()[id] : null;
+			if (!isValidId(id)) {
+				throw new IllegalArgumentException("No SaddleTier for id " + id);
+			}
+			return values()[id];
 		}
 		
 		public static boolean isValidId(int id) {

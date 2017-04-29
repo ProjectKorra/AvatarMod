@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.util;
 import java.io.IOException;
 
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
@@ -98,6 +99,24 @@ public class AvatarDataSerializers {
 			return new DataParameter<>(id, this);
 		}
 		
+	};
+	public static final DataSerializer<SaddleTier> SERIALIZER_SADDLE = new AvatarSerializer<SaddleTier>() {
+		
+		@Override
+		public void write(PacketBuffer buf, SaddleTier value) {
+			buf.writeInt(value == null ? -1 : value.id());
+		}
+		
+		@Override
+		public SaddleTier read(PacketBuffer buf) throws IOException {
+			int id = buf.readInt();
+			return id == -1 ? null : SaddleTier.fromId(id);
+		}
+		
+		@Override
+		public DataParameter<SaddleTier> createKey(int id) {
+			return new DataParameter<>(id, this);
+		}
 	};
 	
 	public static void register() {

@@ -127,6 +127,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntitySkyBison.class,
 			DataSerializers.VARINT);
 	
+	private static final DataParameter<SaddleTier> SYNC_SADDLE = EntityDataManager
+			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_SADDLE);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
@@ -171,6 +174,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		dataManager.register(SYNC_LOVE_PARTICLES, false);
 		dataManager.register(SYNC_ID,
 				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+		dataManager.register(SYNC_SADDLE, null);
 		
 	}
 	
@@ -238,6 +242,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		setLoveParticles(nbt.getBoolean("InLove"));
 		setId(nbt.getInteger("BisonId"));
 		readInventory(chest, nbt, "Inventory");
+		updateEquipment();
 	}
 	
 	@Override
@@ -353,6 +358,18 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	public void setLoveParticles(boolean inLove) {
 		dataManager.set(SYNC_LOVE_PARTICLES, inLove);
+	}
+	
+	/**
+	 * Gets the tier of the current saddle equipped, or null if there is no
+	 * saddle.
+	 */
+	public SaddleTier getSaddle() {
+		return dataManager.get(SYNC_SADDLE);
+	}
+	
+	public void setSaddle(SaddleTier saddle) {
+		dataManager.set(SYNC_SADDLE, saddle);
 	}
 	
 	public int getId() {
@@ -628,11 +645,21 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 * Updates equipment based on inventory contents
 	 */
 	private void updateEquipment() {
-		SaddleTier saddle = getSaddle();
-		System.out.println("Equip " + saddle + " saddle");
-		if (saddle != null) {
-			getEntityAttribute(ARMOR).setBaseValue(saddle.getArmorPoints());
+		
+		// Update saddle
+		ItemStack stack = chest.getStackInSlot(0);
+		if (stack.getItem() == AvatarItems.itemBisonSaddle) {
+			setSaddle(SaddleTier.fromId(stack.getMetadata()));
+		} else {
+			setSaddle(null);
 		}
+		
+		// Update saddle armor
+		SaddleTier saddle = getSaddle();
+		float armorPoints = saddle == null ? 0 : saddle.getArmorPoints();
+		System.out.println("Equip " + saddle + " saddle");
+		getEntityAttribute(ARMOR).setBaseValue(armorPoints);
+		
 	}
 	
 	public InventoryBisonChest getInventory() {
@@ -641,19 +668,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	public boolean canPlayerViewInventory(EntityPlayer player) {
 		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness;
-	}
-	
-	/**
-	 * Gets the tier of the current saddle equipped, or null if there is no
-	 * saddle.
-	 */
-	public SaddleTier getSaddle() {
-		ItemStack stack = chest.getStackInSlot(0);
-		if (stack.getItem() == AvatarItems.itemBisonSaddle) {
-			return SaddleTier.fromId(stack.getMetadata());
-		} else {
-			return null;
-		}
 	}
 	
 	// ================================================================================
