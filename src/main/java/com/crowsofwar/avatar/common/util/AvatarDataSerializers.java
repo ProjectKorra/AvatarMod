@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.util;
 import java.io.IOException;
 
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
 import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -118,12 +119,31 @@ public class AvatarDataSerializers {
 			return new DataParameter<>(id, this);
 		}
 	};
+	public static final DataSerializer<ArmorTier> SERIALIZER_ARMOR = new AvatarSerializer<ArmorTier>() {
+		
+		@Override
+		public void write(PacketBuffer buf, ArmorTier value) {
+			buf.writeInt(value == null ? -1 : value.id());
+		}
+		
+		@Override
+		public ArmorTier read(PacketBuffer buf) throws IOException {
+			int id = buf.readInt();
+			return id == -1 ? null : ArmorTier.fromId(id);
+		}
+		
+		@Override
+		public DataParameter<ArmorTier> createKey(int id) {
+			return new DataParameter<>(id, this);
+		}
+	};
 	
 	public static void register() {
 		DataSerializers.registerSerializer(SERIALIZER_BLOCK);
 		DataSerializers.registerSerializer(SERIALIZER_VECTOR);
 		DataSerializers.registerSerializer(SERIALIZER_BENDER);
 		DataSerializers.registerSerializer(SERIALIZER_SADDLE);
+		DataSerializers.registerSerializer(SERIALIZER_ARMOR);
 	}
 	
 	private static abstract class AvatarSerializer<T> implements DataSerializer<T> {

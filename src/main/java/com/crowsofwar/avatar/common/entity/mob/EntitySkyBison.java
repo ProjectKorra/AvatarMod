@@ -56,6 +56,7 @@ import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.InventoryBisonChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
 import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
@@ -129,6 +130,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	private static final DataParameter<SaddleTier> SYNC_SADDLE = EntityDataManager
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_SADDLE);
+	
+	private static final DataParameter<ArmorTier> SYNC_ARMOR = EntityDataManager
+			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_ARMOR);
 	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
@@ -376,6 +380,18 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	public void setSaddle(SaddleTier saddle) {
 		dataManager.set(SYNC_SADDLE, saddle);
+	}
+	
+	/**
+	 * Gets the tier of the current armor equipped, or null if there is no
+	 * armor.
+	 */
+	public ArmorTier getArmor() {
+		return dataManager.get(SYNC_ARMOR);
+	}
+	
+	public void setArmor(ArmorTier armor) {
+		dataManager.set(SYNC_ARMOR, armor);
 	}
 	
 	public int getId() {

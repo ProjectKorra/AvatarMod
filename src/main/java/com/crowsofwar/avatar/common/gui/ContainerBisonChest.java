@@ -33,12 +33,7 @@ public class ContainerBisonChest extends Container {
 		this.addSlotToContainer(new Slot(bisonInventory, 1, 8, 36) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return false;
-			}
-			
-			@Override
-			public int getSlotStackLimit() {
-				return 1;
+				return stack.getItem() == AvatarItems.itemBisonArmor;
 			}
 		});
 		
