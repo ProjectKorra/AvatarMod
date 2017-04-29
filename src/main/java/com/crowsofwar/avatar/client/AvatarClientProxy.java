@@ -168,7 +168,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			EntitySkyBison bison = EntitySkyBison.findBison(world, bisonId);
 			if (bison != null) {
 				
-				return new GuiBisonChest(player.inventory, bison.getInventory(), bison);
+				return new GuiBisonChest(player.inventory, bison);
 				
 			} else {
 				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName()
