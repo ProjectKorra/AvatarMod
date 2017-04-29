@@ -250,7 +250,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		// Update chest size based on just read data
 		initChest();
 		readInventory(chest, nbt, "Inventory");
-		updateEquipment(true);
 		
 	}
 	
@@ -562,14 +561,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (stack.getItem() == AvatarItems.itemBisonSaddle && SaddleTier.isValidId(stack.getMetadata())) {
 			if (!worldObj.isRemote) {
 				chest.setInventorySlotContents(0, stack);
-				updateEquipment(false);
+				updateEquipment();
 			}
 			return true;
 		}
 		if (stack.getItem() == AvatarItems.itemBisonArmor && ArmorTier.isValidId(stack.getMetadata())) {
 			if (!worldObj.isRemote) {
 				chest.setInventorySlotContents(1, stack);
-				updateEquipment(false);
+				updateEquipment();
 			}
 			return true;
 		}
@@ -678,7 +677,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		
 		chest.addInventoryChangeListener(this);
-		updateEquipment(false);
+		updateEquipment();
 		
 	}
 	
@@ -691,13 +690,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	@Override
 	public void onInventoryChanged(IInventory invBasic) {
-		updateEquipment(false);
+		updateEquipment();
 	}
 	
 	/**
 	 * Updates equipment based on inventory contents
 	 */
-	private void updateEquipment(boolean updateChestSlots) {
+	private void updateEquipment() {
 		
 		// Update saddle
 		if (!worldObj.isRemote) {
@@ -721,11 +720,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		
 		getEntityAttribute(ARMOR).setBaseValue(getArmorPoints());
-		
-		// Update chest slots
-		if (updateChestSlots) {
-			initChest();
-		}
 		
 	}
 	
@@ -768,6 +762,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		
+		// Client-side chest sometimes doesn't have enough slots, since when the
+		// # of slots changes, it doesn't necessarily re-init chest
+		if (worldObj.isRemote && chest.getSizeInventory() - 2 != getChestSlots()) {
+			initChest();
+		}
 		
 		if (!worldObj.isRemote && !condition.canHaveOwner() && hasOwner()) {
 			setOwner(null);
