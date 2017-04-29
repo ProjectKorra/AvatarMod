@@ -162,7 +162,8 @@ public class ModelFlyingBison extends ModelBase {
 		leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
 		leg5.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
 		
-		upTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * 0.5f * limbSwingAmount;
+		upTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * 0.2f * limbSwingAmount
+				- 20 * degToRad;
 		lowTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * -0.25f * limbSwingAmount;
 		
 		if (bison.isEatingGrass()) {
