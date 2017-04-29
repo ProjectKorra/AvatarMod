@@ -50,7 +50,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	
 	public ItemBisonWhistle() {
 		setCreativeTab(AvatarItems.tabItems);
-		setMaxDamage(1);
+		setMaxStackSize(1);
 		setUnlocalizedName("bison_whistle");
 	}
 	

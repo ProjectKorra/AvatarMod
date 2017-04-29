@@ -74,6 +74,10 @@ public class AvatarItemRenderRegister {
 	 */
 	private static void register(AvatarItem item, int... metadata) {
 		
+		if (metadata.length == 0) {
+			metadata = new int[1];
+		}
+		
 		for (int meta : metadata) {
 			ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + item.getModelName(meta),
 					"inventory");
