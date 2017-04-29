@@ -160,7 +160,7 @@ item.avatarmod:scroll.water.name=Waterbending Scroll
 item.avatarmod:water_pouch.name=Water Skin
 item.avatarmod:bison_whistle.name=Bison Whistle
 item.avatarmod:bison_saddle.crude.name=Crude Bison Saddle
-item.avatarmod:bison_saddle.simple.name=Simple Bison Saddle
+item.avatarmod:bison_saddle.basic.name=Basic Bison Saddle
 item.avatarmod:bison_saddle.average.name=Average Bison Saddle
 item.avatarmod:bison_saddle.quality.name=Quality Bison Saddle
 
