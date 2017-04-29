@@ -611,10 +611,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	private void initChest() {
 		
-		int chestSlots = getSaddle() == null ? 0 : getSaddle().getChestSlots();
+		System.out.println("Slots " + getChestSlots());
 		
 		InventoryBisonChest old = chest;
-		chest = new InventoryBisonChest(chestSlots);
+		chest = new InventoryBisonChest(getChestSlots());
 		if (hasCustomName()) {
 			chest.setCustomName(getName());
 		}
@@ -656,11 +656,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			setSaddle(null);
 		}
 		
-		// Update saddle armor
-		SaddleTier saddle = getSaddle();
-		float armorPoints = saddle == null ? 0 : saddle.getArmorPoints();
-		System.out.println("Equip " + saddle + " saddle");
-		getEntityAttribute(ARMOR).setBaseValue(armorPoints);
+		getEntityAttribute(ARMOR).setBaseValue(getArmorPoints());
 		
 		// Update chest slots
 		if (updateChestSlots) {
@@ -675,6 +671,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	public boolean canPlayerViewInventory(EntityPlayer player) {
 		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness;
+	}
+	
+	public int getChestSlots() {
+		return getSaddle() == null ? 0 : getSaddle().getChestSlots();
+	}
+	
+	public float getArmorPoints() {
+		return getSaddle() == null ? 0 : getSaddle().getArmorPoints();
 	}
 	
 	// ================================================================================
