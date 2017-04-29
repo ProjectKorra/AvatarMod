@@ -612,7 +612,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private void initChest() {
 		
 		InventoryBisonChest old = chest;
-		chest = new InventoryBisonChest();
+		chest = new InventoryBisonChest(getSaddle().getChestSlots());
 		if (hasCustomName()) {
 			chest.setCustomName(getName());
 		}
@@ -659,6 +659,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		float armorPoints = saddle == null ? 0 : saddle.getArmorPoints();
 		System.out.println("Equip " + saddle + " saddle");
 		getEntityAttribute(ARMOR).setBaseValue(armorPoints);
+		
+		// Update chest slots
+		initChest();
 		
 	}
 	

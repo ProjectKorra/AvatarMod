@@ -25,8 +25,15 @@ import net.minecraft.inventory.InventoryBasic;
  */
 public class InventoryBisonChest extends InventoryBasic {
 	
-	public InventoryBisonChest() {
-		super("Flying Bison", false, 29);
+	/**
+	 * Creates a flying bison inventory.
+	 * 
+	 * @param chestSlots
+	 *            The amount of slots to be used in the chest (not including
+	 *            armor/saddle slots)
+	 */
+	public InventoryBisonChest(int chestSlots) {
+		super("Flying Bison", false, chestSlots + 2);
 	}
 	
 }

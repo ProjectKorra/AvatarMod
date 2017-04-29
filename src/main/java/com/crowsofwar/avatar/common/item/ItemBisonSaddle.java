@@ -69,19 +69,25 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	
 	public enum SaddleTier {
 		
-		CRUDE(4),
-		BASIC(10),
-		AVERAGE(16),
-		QUALITY(20);
+		CRUDE(4, 4),
+		BASIC(10, 9),
+		AVERAGE(16, 18),
+		QUALITY(20, 27);
 		
 		private final float armorPoints;
+		private final int chestSlots;
 		
-		private SaddleTier(float armorPoints) {
+		private SaddleTier(float armorPoints, int chestSlots) {
 			this.armorPoints = armorPoints;
+			this.chestSlots = chestSlots;
 		}
 		
 		public float getArmorPoints() {
 			return armorPoints;
+		}
+		
+		public int getChestSlots() {
+			return chestSlots;
 		}
 		
 		public int id() {
