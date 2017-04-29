@@ -69,19 +69,25 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 	
 	public enum ArmorTier {
 		
-		WOVEN(8),
-		CHAIN(16),
-		WROUGHT(20),
-		LEGENDARY(26);
+		WOVEN(8, 0.8f),
+		CHAIN(16, 0.7f),
+		WROUGHT(20, 0.6f),
+		LEGENDARY(26, 0.75f);
 		
 		private final float armorPoints;
+		private final float speedMultiplier;
 		
-		private ArmorTier(float armorPoints) {
+		private ArmorTier(float armorPoints, float speedMultiplier) {
 			this.armorPoints = armorPoints;
+			this.speedMultiplier = speedMultiplier;
 		}
 		
 		public float getArmorPoints() {
 			return armorPoints;
+		}
+		
+		public float getSpeedMultiplier() {
+			return speedMultiplier;
 		}
 		
 		public int id() {

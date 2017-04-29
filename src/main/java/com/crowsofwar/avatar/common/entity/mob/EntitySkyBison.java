@@ -318,8 +318,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		dataManager.set(SYNC_SITTING, sitting);
 	}
 	
-	public double getFlySpeedMultiplier() {
-		return condition.getSpeedMultiplier();
+	public float getSpeedMultiplier() {
+		float armorSpeed = getArmor() == null ? 1 : getArmor().getSpeedMultiplier();
+		return condition.getSpeedMultiplier() * armorSpeed;
 	}
 	
 	public AnimalCondition getCondition() {
@@ -859,7 +860,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				// onLiftoff();
 			}
 			
-			float speedMult = condition.getSpeedMultiplier() * driver.moveForward * 2;
+			float speedMult = getSpeedMultiplier() * driver.moveForward * 2;
 			
 			float current = normalizeAngle(this.rotationYaw);
 			float target = normalizeAngle(driver.rotationYaw);
