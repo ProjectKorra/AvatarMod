@@ -110,7 +110,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
-		return 72000;
+		return 60;
 	}
 	
 	@Override
