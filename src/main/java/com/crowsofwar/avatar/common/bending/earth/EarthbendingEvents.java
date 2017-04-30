@@ -23,8 +23,11 @@ import java.util.Iterator;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.AvatarWorldData.ScheduledDestroyBlock;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -57,17 +60,40 @@ public class EarthbendingEvents {
 	public void worldUpdate(WorldTickEvent e) {
 		World world = e.world;
 		if (!world.isRemote && e.phase == TickEvent.Phase.START && world.provider.getDimension() == 0) {
+			
 			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 			Iterator<ScheduledDestroyBlock> iterator = wd.getScheduledDestroyBlocks().iterator();
 			while (iterator.hasNext()) {
+				
 				ScheduledDestroyBlock sdb = iterator.next();
 				sdb.decrementTicks();
 				if (sdb.getTicks() <= 0) {
+					
 					world.destroyBlock(sdb.getPos(), sdb.isDrop());
 					iterator.remove();
+					
 				}
+				
 			}
+			
 		}
+	}
+	
+	private void destroyBlock(World world, BlockPos pos, boolean dropBlock, int fortune) {
+		
+		IBlockState iblockstate = world.getBlockState(pos);
+		Block block = iblockstate.getBlock();
+		
+		if (!block.isAir(iblockstate, world, pos)) {
+			world.playEvent(2001, pos, Block.getStateId(iblockstate));
+			
+			if (dropBlock) {
+				block.dropBlockAsItem(world, pos, iblockstate, fortune);
+			}
+			
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+		}
+		
 	}
 	
 	public static void register() {

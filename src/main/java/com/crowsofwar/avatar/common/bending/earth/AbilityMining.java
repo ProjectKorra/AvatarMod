@@ -18,12 +18,16 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 import static java.lang.Math.abs;
 import static java.lang.Math.floor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -53,33 +57,18 @@ public class AbilityMining extends EarthAbility {
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			
-			int chanceMin, chanceMax;
-			float xp = ctx.getData().getAbilityData(this).getTotalXp();
-			if (xp == 100) {
-				chanceMin = 5;
-				chanceMax = 6;
-			} else if (xp >= 75) {
-				chanceMin = 4;
-				chanceMax = 6;
-			} else if (xp >= 50) {
-				chanceMin = 3;
-				chanceMax = 5;
-			} else if (xp >= 25) {
-				chanceMin = 2;
-				chanceMax = 4;
-			} else {
-				chanceMin = 2;
-				chanceMax = 3;
-			}
-			int dist = chanceMin + (int) Math.round(Math.random() * (chanceMax - chanceMin));
+			AbilityData abilityData = ctx.getAbilityData();
+			float xp = abilityData.getTotalXp();
+			
 			ctx.getData().getAbilityData(this).addXp(SKILLS_CONFIG.miningUse);
 			
-		//@formatter:off
-		// 0 = S 0x +z    1 = SW -x +z
-		// 2 = W -x 0z    3 = NW -x -z
-		// 4 = N 0x -z    5 = NE +x -z
-		// 6 = E +x 0z    7 = SE +x +z
-		//@formatter:on
+			//@formatter:off
+			// 0 = S 0x +z    1 = SW -x +z
+			// 2 = W -x 0z    3 = NW -x -z
+			// 4 = N 0x -z    5 = NE +x -z
+			// 6 = E +x 0z    7 = SE +x +z
+			//@formatter:on
+			
 			int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
 			int x = 0, z = 0;
 			if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
@@ -87,11 +76,9 @@ public class AbilityMining extends EarthAbility {
 			if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
 			if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
 			
-			// Pitch: 0 = forward, 1 = 45 deg up, 2 = 90 deg up
-			// -1 = 45 deg down, -2 = 90 deg down
-			// Use abs and post-mul to fix weirdness with negatives... not
-			// totally
-			// investigated
+			// Pitch: 0=forward, +1=90deg up, etc
+			// Use abs and post-mul to fix weirdness with negatives
+			
 			int pitch = (int) floor((abs(entity.rotationPitch) * 8 / 360) + 0.5) & 7;
 			pitch *= -abs(entity.rotationPitch) / entity.rotationPitch;
 			
@@ -121,6 +108,9 @@ public class AbilityMining extends EarthAbility {
 			
 			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 			
+			int dist = getDistance(abilityData.getLevel(), abilityData.getPath());
+			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
+			
 			for (VectorI ray : rays) {
 				for (int i = 1; i <= dist; i++) {
 					BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
@@ -130,7 +120,8 @@ public class AbilityMining extends EarthAbility {
 					if (bendable) {
 						
 						boolean drop = !ctx.getBender().isCreativeMode();
-						wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3, drop));
+						wd.getScheduledDestroyBlocks()
+								.add(wd.new ScheduledDestroyBlock(pos, i * 3, drop, fortune));
 						
 					} else if (block != Blocks.AIR) {
 						break;
@@ -140,6 +131,51 @@ public class AbilityMining extends EarthAbility {
 			
 		}
 		
+	}
+	
+	/**
+	 * Calculates a random distance to mine blocks based on the current level.
+	 */
+	private int getDistance(int level, AbilityTreePath path) {
+		
+		int min, max;
+		if (level == 3 && path == FIRST) {
+			
+			min = 5;
+			max = 6;
+			
+		} else if (level == 3) {
+			
+			min = 4;
+			max = 6;
+			
+		} else if (level == 2) {
+			
+			min = 3;
+			max = 5;
+			
+		} else if (level == 1) {
+			
+			min = 2;
+			max = 4;
+			
+		} else {
+			
+			min = 2;
+			max = 3;
+			
+		}
+		
+		return (int) (min + Math.random() * (max - min));
+		
+	}
+	
+	private int getFortune(int level, AbilityTreePath path) {
+		if (level == 3) {
+			return path == SECOND ? 3 : 1;
+		} else {
+			return 0;
+		}
 	}
 	
 }

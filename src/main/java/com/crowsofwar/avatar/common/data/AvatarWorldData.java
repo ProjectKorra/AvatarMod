@@ -62,7 +62,8 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 			
 			BlockPos pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"),
 					compound.getInteger("z"));
-			return new ScheduledDestroyBlock(pos, compound.getInteger("Ticks"), compound.getBoolean("Drop"));
+			return new ScheduledDestroyBlock(pos, compound.getInteger("Ticks"), compound.getBoolean("Drop"),
+					compound.getInteger("Fortune"));
 			
 		}, nbt, "DestroyBlocks");
 	}
@@ -77,6 +78,7 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 			compound.setInteger("z", sdb.pos.getZ());
 			compound.setInteger("Ticks", sdb.ticks);
 			compound.setBoolean("Drop", sdb.drop);
+			compound.setInteger("Fortune", sdb.fortune);
 		}, nbt, "DestroyBlocks");
 		return nbt;
 	}
@@ -93,11 +95,13 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 		
 		private final BlockPos pos;
 		private final boolean drop;
+		private final int fortune;
 		private int ticks;
 		
-		public ScheduledDestroyBlock(BlockPos pos, int ticks, boolean drop) {
+		public ScheduledDestroyBlock(BlockPos pos, int ticks, boolean drop, int fortune) {
 			this.pos = pos;
 			this.ticks = ticks;
+			this.fortune = fortune;
 			this.drop = drop;
 		}
 		
@@ -116,6 +120,10 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 		
 		public boolean isDrop() {
 			return drop;
+		}
+		
+		public int getFortune() {
+			return fortune;
 		}
 		
 	}
