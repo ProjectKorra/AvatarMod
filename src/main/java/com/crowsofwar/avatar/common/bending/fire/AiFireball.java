@@ -25,6 +25,9 @@ import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLiving;
@@ -47,7 +50,7 @@ public class AiFireball extends BendingAi {
 	protected AiFireball(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
-		setMutexBits(1);
+		setMutexBits(2);
 	}
 	
 	@Override
@@ -81,7 +84,7 @@ public class AiFireball extends BendingAi {
 	}
 	
 	@Override
-	public boolean shouldExecute() {
+	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
 				&& bender.getData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
@@ -90,6 +93,20 @@ public class AiFireball extends BendingAi {
 	@Override
 	public void updateTask() {
 		timeExecuting++;
+	}
+	
+	@Override
+	public void resetTask() {
+		
+		EntityFireball fireball = AvatarEntity.lookupEntity(entity.worldObj, EntityFireball.class, //
+				fire -> fire.getBehavior() instanceof FireballBehavior.PlayerControlled
+						&& fire.getOwner() == entity);
+		
+		if (fireball != null) {
+			fireball.setDead();
+			bender.getData().removeStatusControl(StatusControl.THROW_FIREBALL);
+		}
+		
 	}
 	
 }

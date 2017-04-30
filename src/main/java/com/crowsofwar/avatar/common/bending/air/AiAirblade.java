@@ -66,7 +66,7 @@ public class AiAirblade extends BendingAi {
 	}
 	
 	@Override
-	public boolean shouldExecute() {
+	protected boolean shouldExec() {
 		
 		EntityLivingBase target = entity.getAttackTarget();
 		

@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 
 import net.minecraft.client.model.ModelBiped;
@@ -31,16 +30,27 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderHumanBender extends RenderLivingBase<EntityHumanBender> {
 	
+	private final ResourceLocation[] locations;
+	
 	/**
 	 * @param renderManager
+	 * @param texture
+	 *            Name of the texture file to be used, without the ending
+	 *            "_#.png". E.g. "airbender"
 	 */
-	public RenderHumanBender(RenderManager renderManager) {
-		super(renderManager, new ModelBiped(), 0.5f);
+	public RenderHumanBender(RenderManager renderManager, String texture, int textures) {
+		super(renderManager, new ModelBiped(0, 0, 64, 64), 0.5f);
+		
+		locations = new ResourceLocation[textures];
+		for (int i = 0; i < textures; i++) {
+			locations[i] = new ResourceLocation("avatarmod", "textures/mob/" + texture + "_" + i + ".png");
+		}
+		
 	}
 	
 	@Override
 	protected ResourceLocation getEntityTexture(EntityHumanBender entity) {
-		return AvatarUiTextures.WHITE;
+		return locations[entity.getSkin()];
 	}
 	
 }

@@ -14,12 +14,10 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.bending.fire;
+package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.abs;
 import static java.lang.Math.toDegrees;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -28,8 +26,8 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
-import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
+import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLiving;
@@ -40,56 +38,36 @@ import net.minecraft.entity.EntityLivingBase;
  * 
  * @author CrowsOfWar
  */
-public class AiFireArc extends BendingAi {
+public class AiWaterArc extends BendingAi {
 	
 	private int timeExecuting;
-	
-	private float velocityYaw, velocityPitch;
 	
 	/**
 	 * @param ability
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiFireArc(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiWaterArc(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
-		setMutexBits(2);
+		setMutexBits(3);
 	}
 	
 	@Override
-	protected void startExec() {
-		velocityYaw = 0;
-		velocityPitch = 0;
-	}
+	protected void startExec() {}
 	
 	@Override
 	public boolean continueExecuting() {
 		
-		if (entity.getAttackTarget() == null) return false;
+		EntityLivingBase target = entity.getAttackTarget();
+		if (target == null) return false;
 		
-		Vector target = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
-		float targetYaw = (float) toDegrees(target.y());
-		float targetPitch = (float) toDegrees(target.x());
+		Vector targetRotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
+		entity.rotationYaw = (float) toDegrees(targetRotations.y());
+		entity.rotationPitch = (float) toDegrees(targetRotations.x());
 		
-		float currentYaw = normalizeAngle(entity.rotationYaw);
-		float currentPitch = normalizeAngle(entity.rotationPitch);
-		
-		float yawLeft = abs(normalizeAngle(currentYaw - targetYaw));
-		float yawRight = abs(normalizeAngle(targetYaw - currentYaw));
-		if (yawRight < yawLeft) {
-			velocityYaw += yawRight / 10;
-		} else {
-			velocityYaw -= yawLeft / 10;
-		}
-		
-		entity.rotationYaw += velocityYaw;
-		entity.rotationPitch += velocityPitch;
-		
-		if (timeExecuting < 20) {
-			entity.rotationYaw = targetYaw;
-			entity.rotationPitch = targetPitch;
-		}
+		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
+				10, 10);
 		
 		if (timeExecuting == 20) {
 			BendingData data = bender.getData();
@@ -102,7 +80,7 @@ public class AiFireArc extends BendingAi {
 		
 		if (timeExecuting >= 80) {
 			BendingData data = bender.getData();
-			execStatusControl(StatusControl.THROW_FIRE);
+			execStatusControl(StatusControl.THROW_WATER);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -126,13 +104,13 @@ public class AiFireArc extends BendingAi {
 	@Override
 	public void resetTask() {
 		
-		EntityFireArc fire = AvatarEntity.lookupEntity(entity.worldObj, EntityFireArc.class, //
-				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
+		EntityWaterArc water = AvatarEntity.lookupEntity(entity.worldObj, EntityWaterArc.class, //
+				arc -> arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled
 						&& arc.getOwner() == entity);
 		
-		if (fire != null) {
-			fire.setDead();
-			bender.getData().removeStatusControl(StatusControl.THROW_FIRE);
+		if (water != null) {
+			water.setDead();
+			bender.getData().removeStatusControl(StatusControl.THROW_WATER);
 		}
 		
 	}

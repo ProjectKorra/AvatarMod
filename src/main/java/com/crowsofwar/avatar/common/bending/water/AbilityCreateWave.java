@@ -19,13 +19,16 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -76,6 +79,11 @@ public class AbilityCreateWave extends WaterAbility {
 			
 		}
 		
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiWave(this, entity, bender);
 	}
 	
 }

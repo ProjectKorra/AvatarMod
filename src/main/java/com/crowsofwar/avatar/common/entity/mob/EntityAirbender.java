@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.util.ResourceLocation;
@@ -51,6 +52,16 @@ public class EntityAirbender extends EntityHumanBender {
 	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
+	}
+	
+	@Override
+	protected ScrollType getScrollType() {
+		return ScrollType.AIR;
+	}
+	
+	@Override
+	protected int getNumSkins() {
+		return 7;
 	}
 	
 }

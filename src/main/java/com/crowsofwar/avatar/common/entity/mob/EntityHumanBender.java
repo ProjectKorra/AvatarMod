@@ -18,6 +18,9 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import javax.annotation.Nullable;
 
+import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,18 +28,24 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.village.VillageCollection;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
@@ -47,6 +56,11 @@ import net.minecraft.world.World;
  */
 public abstract class EntityHumanBender extends EntityBender {
 	
+	private static final DataParameter<Integer> SYNC_SKIN = EntityDataManager
+			.createKey(EntityHumanBender.class, DataSerializers.VARINT);
+	
+	private EntityAiGiveScroll aiGiveScroll;
+	
 	/**
 	 * @param world
 	 */
@@ -55,10 +69,17 @@ public abstract class EntityHumanBender extends EntityBender {
 	}
 	
 	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_SKIN, (int) (rand.nextDouble() * getNumSkins()));
+	}
+	
+	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25);
+		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35);
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3);
 	}
 	
@@ -66,25 +87,51 @@ public abstract class EntityHumanBender extends EntityBender {
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		
-		this.targetTasks.addTask(2,
-				new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
+		// this.targetTasks.addTask(2,
+		// new EntityAINearestAttackableTarget(this, EntityPlayer.class, true,
+		// false));
+		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, EntityHumanBender.class));
 		
 		addBendingTasks();
 		
+		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
 		
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		setSkin(nbt.getInteger("Skin"));
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setInteger("Skin", getSkin());
 	}
 	
 	protected abstract void addBendingTasks();
 	
+	protected abstract ScrollType getScrollType();
+	
+	protected abstract int getNumSkins();
+	
+	public int getSkin() {
+		return dataManager.get(SYNC_SKIN);
+	}
+	
+	public void setSkin(int skin) {
+		dataManager.set(SYNC_SKIN, skin);
+	}
+	
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
 		super.setEquipmentBasedOnDifficulty(difficulty);
-		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
 	}
 	
 	@Override
@@ -92,10 +139,37 @@ public abstract class EntityHumanBender extends EntityBender {
 			@Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setEquipmentBasedOnDifficulty(difficulty);
+		setHomePosAndDistance(getPosition(), 20);
 		return livingdata;
 	}
 	
-	// Copied from EntityMob
+	@Override
+	public boolean getCanSpawnHere() {
+		
+		VillageCollection villages = worldObj.villageCollectionObj;
+		boolean nearbyVillage = villages.getNearestVillage(getPosition(), 50) != null;
+		
+		BlockPos min = getPosition().add(-25, -25, -25);
+		BlockPos max = getPosition().add(25, 25, 25);
+		AxisAlignedBB aabb = new AxisAlignedBB(min, max);
+		
+		boolean nearbyBender = !worldObj
+				.getEntitiesWithinAABB(EntityHumanBender.class, aabb, candidate -> candidate != this)
+				.isEmpty();
+		
+		System.out.println("Nearby village: " + villages.getNearestVillage(getPosition(), 50));
+		System.out
+				.println("nearby benders: " + worldObj.getEntitiesWithinAABB(EntityHumanBender.class, aabb));
+		
+		return super.getCanSpawnHere() && nearbyVillage && !nearbyBender;
+		
+	}
+	
+	@Override
+	protected boolean canDespawn() {
+		return false;
+	}
+	
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
 		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
@@ -149,5 +223,26 @@ public abstract class EntityHumanBender extends EntityBender {
 	
 	@Override
 	protected abstract ResourceLocation getLootTable();
+	
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		
+		ItemStack stack = player.getHeldItem(hand);
+		if (stack.getItem() == Items.DIAMOND && !worldObj.isRemote) {
+			
+			if (aiGiveScroll.giveScrollTo(player)) {
+				// Take diamond
+				if (!player.capabilities.isCreativeMode) {
+					stack.func_190918_g(1);
+				}
+			}
+			
+			return true;
+			
+		}
+		
+		return false;
+		
+	}
 	
 }

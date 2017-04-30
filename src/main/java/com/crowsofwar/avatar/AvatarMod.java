@@ -19,6 +19,8 @@ package com.crowsofwar.avatar;
 
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
@@ -35,6 +37,7 @@ import com.crowsofwar.avatar.common.config.ConfigMobs;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
@@ -57,6 +60,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
@@ -73,7 +77,9 @@ import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -87,6 +93,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
@@ -180,7 +187,17 @@ public class AvatarMod {
 		registerEntity(EntityAirBubble.class, "AirBubble");
 		registerEntity(EntityFirebender.class, "Firebender", 0xffffff, 0xffffff);
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
+		registerEntity(EntityWaterbender.class, "Waterbender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
+		registerEntity(AvatarEntityItem.class, "Item");
+		
+		List<Biome> allBiomesList = ForgeRegistries.BIOMES.getValues();
+		Biome[] allBiomes = new Biome[allBiomesList.size()];
+		allBiomes = allBiomesList.toArray(allBiomes);
+		
+		EntityRegistry.addSpawn(EntityFirebender.class, 1000, 1, 1, EnumCreatureType.CREATURE, allBiomes);
+		EntityRegistry.addSpawn(EntityAirbender.class, 1000, 1, 1, EnumCreatureType.CREATURE, allBiomes);
+		
 		proxy.init();
 	}
 	

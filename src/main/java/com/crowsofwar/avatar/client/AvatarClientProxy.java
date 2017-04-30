@@ -58,8 +58,10 @@ import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.EntityWave;
-import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
+import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
@@ -122,8 +124,14 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityFireball.class, RenderFireball::new);
 		registerEntityRenderingHandler(EntityAirblade.class, RenderAirblade::new);
 		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
-		registerEntityRenderingHandler(EntityHumanBender.class, RenderHumanBender::new);
 		registerEntityRenderingHandler(EntitySkyBison.class, RenderSkyBison::new);
+		
+		registerEntityRenderingHandler(EntityAirbender.class,
+				rm -> new RenderHumanBender(rm, "airbender", 7));
+		registerEntityRenderingHandler(EntityFirebender.class,
+				rm -> new RenderHumanBender(rm, "firebender", 1));
+		registerEntityRenderingHandler(EntityWaterbender.class,
+				rm -> new RenderHumanBender(rm, "airbender", 1));
 		
 		AvatarItemRenderRegister.register();
 		

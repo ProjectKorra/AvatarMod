@@ -16,10 +16,11 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WAVE;
+
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -29,28 +30,30 @@ import net.minecraft.world.storage.loot.LootTableList;
  * 
  * @author CrowsOfWar
  */
-public class EntityFirebender extends EntityHumanBender {
+public class EntityWaterbender extends EntityHumanBender {
 	
 	public static final ResourceLocation LOOT_TABLE = LootTableList
-			.register(new ResourceLocation("avatarmod", "firebender"));
+			.register(new ResourceLocation("avatarmod", "waterbender"));
 	
-	/**
-	 * @param world
-	 */
-	public EntityFirebender(World world) {
+	public EntityWaterbender(World world) {
 		super(world);
-		
-		AbilityData flamethrowerData = new AbilityData(getData(), BendingAbility.ABILITY_FLAMETHROWER);
-		flamethrowerData.setLevel(2);
-		getData().setAbilityData(BendingAbility.ABILITY_FLAMETHROWER, flamethrowerData);
-		
 	}
 	
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, BendingAbility.ABILITY_FLAMETHROWER.getAi(this, this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_FIREBALL.getAi(this, this));
-		this.tasks.addTask(2, BendingAbility.ABILITY_FIRE_ARC.getAi(this, this));
+		this.tasks.addTask(1, ABILITY_WAVE.getAi(this, this));
+		// this.tasks.addTask(2, ABILITY_WATER_ARC.getAi(this, this));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
+	}
+	
+	@Override
+	protected ScrollType getScrollType() {
+		return ScrollType.WATER;
+	}
+	
+	@Override
+	protected int getNumSkins() {
+		return 1;
 	}
 	
 	@Override
@@ -59,13 +62,8 @@ public class EntityFirebender extends EntityHumanBender {
 	}
 	
 	@Override
-	protected ScrollType getScrollType() {
-		return ScrollType.FIRE;
-	}
-	
-	@Override
-	protected int getNumSkins() {
-		return 1;
+	public boolean consumeWaterLevel(int amount) {
+		return true;
 	}
 	
 }

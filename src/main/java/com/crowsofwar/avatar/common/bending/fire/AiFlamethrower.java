@@ -42,7 +42,7 @@ public class AiFlamethrower extends BendingAi {
 	
 	protected AiFlamethrower(BendingAbility ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
-		setMutexBits(1);
+		setMutexBits(2);
 	}
 	
 	@Override
@@ -78,7 +78,7 @@ public class AiFlamethrower extends BendingAi {
 	}
 	
 	@Override
-	public boolean shouldExecute() {
+	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) < 4 * 4;
 	}

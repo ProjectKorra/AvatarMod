@@ -35,7 +35,7 @@ public class DefaultAbilityAi extends BendingAi {
 	protected void startExec() {}
 	
 	@Override
-	public boolean shouldExecute() {
+	protected boolean shouldExec() {
 		return false;
 	}
 	
