@@ -14,7 +14,9 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.entity.mob;
+package com.crowsofwar.avatar.common.entity.ai;
+
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -35,12 +37,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	private final EntitySkyBison bison;
 	
 	/**
-	 * Keeps track of eating grass state. -1 = not eating grass. Starts at 30
-	 * and decrements until 0, at which point grass is eaten and cycle repeats.
-	 */
-	private int eatGrassCountdown;
-	
-	/**
 	 * When not eating grass, is -1. Then increments every tick that the bison
 	 * has been eating grass.
 	 */
@@ -48,14 +44,13 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	public EntityAiBisonEatGrass(EntitySkyBison bison) {
 		this.bison = bison;
-		eatGrassCountdown = -1;
 		eatGrassTime = -1;
 		
 		setMutexBits(0);
 	}
 	
 	public boolean isEatingGrass() {
-		return eatGrassCountdown > -1;
+		return eatGrassTime > -1;
 	}
 	
 	public int getEatGrassTime() {
@@ -64,40 +59,40 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		return bison.wantsGrass() && isOnGround();
+		Block standingOn = bison.worldObj.getBlockState(bison.getPosition().down()).getBlock();
+		return bison.wantsGrass() && isOnGround() && (!bison.isSitting() || standingOn == Blocks.GRASS);
 	}
 	
 	@Override
 	public void startExecuting() {
-		
-		System.out.println("Time to eat!!");
 		continueExecuting();
-		
 	}
 	
 	@Override
 	public boolean continueExecuting() {
 		
-		boolean keepExecuting = bison.wantsGrass() && isOnGround();
-		System.out.println("keepExecuting " + eatGrassTime);
+		boolean keepExecuting = !bison.isFull() && isOnGround();
+		// System.out.println("y= " + bison.posY);
 		
 		World world = bison.worldObj;
 		EntityMoveHelper mh = bison.getMoveHelper();
 		
 		if (!isEatingGrass()) {
 			// Just reached ground
-			eatGrassCountdown = 30;
 			eatGrassTime = 0;
-			bison.getMoveHelper().setMoveTo(bison.posX, bison.posY, bison.posZ, 1);
+			// bison.getMoveHelper().setMoveTo(bison.posX, bison.posY,
+			// bison.posZ, 1);
 		}
 		tryEatGrass();
+		if (!bison.isSitting()) {
+			bison.moveEntityWithHeading(0, 5);
+		}
+		addRotations(0, 4);
 		
 		if (eatGrassTime > 80) {
 			keepExecuting = false;
 		}
-		
 		if (!keepExecuting) {
-			eatGrassCountdown = -1;
 			eatGrassTime = -1;
 		}
 		
@@ -107,11 +102,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	private void tryEatGrass() {
 		eatGrassTime++;
-		eatGrassCountdown--;
-		if (eatGrassCountdown <= 0) {
-			eatGrassCountdown = 30;
-			
-			System.out.println("Try some grass");
+		if (eatGrassTime % 30 == 29) {
 			
 			BlockPos downPos = bison.getPosition().down();
 			World world = bison.worldObj;
@@ -136,7 +127,6 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 			if (ediblePos != null) {
 				
 				if (mobGriefing) {
-					System.out.println("Set to dirt");
 					world.playEvent(2001, ediblePos, Block.getIdFromBlock(Blocks.GRASS));
 					if (block == Blocks.GRASS) {
 						world.setBlockState(ediblePos, Blocks.DIRT.getDefaultState(), 2);
@@ -145,8 +135,14 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 				
 				bison.eatGrassBonus();
 				
-				System.out.println("Ate at " + ediblePos);
-				
+			} else {
+				// Can't find food here
+				addRotations(100, 160);
+			}
+			
+			if (bison.isSitting()) {
+				// Stop eating grass
+				eatGrassTime = 81;
 			}
 			
 		}
@@ -160,6 +156,16 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	private boolean isOnGround() {
 		BlockPos downPos = bison.getPosition().down();
 		return isSolidBlock(downPos);
+	}
+	
+	/**
+	 * Rotate yaw by a random rotation. The supplied parameter determines the
+	 * maximum rotation.
+	 */
+	private void addRotations(float min, float max) {
+		int sign = bison.getRNG().nextBoolean() ? 1 : -1;
+		bison.rotationYaw += sign * (min + bison.getRNG().nextFloat() * (max - min));
+		bison.rotationYaw %= 360;
 	}
 	
 }

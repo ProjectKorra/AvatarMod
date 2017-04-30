@@ -31,21 +31,44 @@ public class AnimalCondition {
 	
 	private final DataParameter<Float> syncFood;
 	private final DataParameter<Integer> syncDomestication;
+	private final DataParameter<Integer> syncAge;
 	private final EntityCreature animal;
 	private final float maxFoodPoints, foodRegenPoints;
 	
 	private float lastDistance;
+	private int breedTimer;
+	private boolean sterile;
 	
 	public AnimalCondition(EntityCreature animal, float maxFoodPoints, float foodRegenPoints,
-			DataParameter<Float> syncFood, DataParameter<Integer> syncDomestication) {
+			DataParameter<Float> syncFood, DataParameter<Integer> syncDomestication,
+			DataParameter<Integer> syncAge) {
 		this.animal = animal;
 		this.syncDomestication = syncDomestication;
 		this.syncFood = syncFood;
+		this.syncAge = syncAge;
 		this.maxFoodPoints = maxFoodPoints;
 		this.foodRegenPoints = foodRegenPoints;
 		
 		this.lastDistance = animal.distanceWalkedModified;
+		this.breedTimer = -1;
+		this.sterile = true;
 		
+	}
+	
+	public void writeToNbt(NBTTagCompound nbt) {
+		nbt.setFloat("FoodPoints", getFoodPoints());
+		nbt.setInteger("Domestication", getDomestication());
+		nbt.setInteger("Age", getAge());
+		nbt.setInteger("BreedTimer", getBreedTimer());
+		nbt.setBoolean("Sterile", isSterile());
+	}
+	
+	public void readFromNbt(NBTTagCompound nbt) {
+		setFoodPoints(nbt.getFloat("FoodPoints"));
+		setDomestication(nbt.getInteger("Domestication"));
+		setAge(nbt.getInteger("Age"));
+		setBreedTimer(nbt.getInteger("BreedTimer"));
+		setSterile(nbt.getBoolean("Sterile"));
 	}
 	
 	public void onUpdate() {
@@ -65,6 +88,10 @@ public class AnimalCondition {
 			if (enoughFood && correctTime) {
 				animal.heal(1);
 				addHunger(1);
+			}
+			addAge(1);
+			if (!isSterile() && isAdult()) {
+				addBreedTimer(-1);
 			}
 		}
 		
@@ -93,6 +120,11 @@ public class AnimalCondition {
 	}
 	
 	public int getMaxRiders() {
+		
+		if (!isAdult()) {
+			return 0;
+		}
+		
 		if (canHaveOwner()) {
 			
 			double pctToTame = 1.0 * (getDomestication() - MOBS_CONFIG.bisonOwnableTameness)
@@ -151,14 +183,80 @@ public class AnimalCondition {
 		return 0.6f + 0.4f * getFoodPoints() / maxFoodPoints;
 	}
 	
-	public void writeToNbt(NBTTagCompound nbt) {
-		nbt.setFloat("FoodPoints", getFoodPoints());
-		nbt.setInteger("Domestication", getDomestication());
+	// ================================================================================
+	// AGE
+	// ================================================================================
+	
+	/**
+	 * Gets the age in ticks
+	 */
+	public int getAge() {
+		return animal.getDataManager().get(syncAge);
 	}
 	
-	public void readFromNbt(NBTTagCompound nbt) {
-		setFoodPoints(nbt.getFloat("FoodPoints"));
-		setDomestication(nbt.getInteger("Domestication"));
+	public void setAge(int age) {
+		if (age < 0) age = 0;
+		animal.getDataManager().set(syncAge, age);
+	}
+	
+	public void addAge(int age) {
+		setAge(getAge() + age);
+	}
+	
+	public float getAgeDays() {
+		return getAge() / 24000f;
+	}
+	
+	public void setAgeDays(float days) {
+		setAge((int) (days * 24000));
+	}
+	
+	public float getSizeMultiplier() {
+		return isAdult() ? 1 : 0.1f + getAgeDays() / getAdultAge() * 0.9f;
+	}
+	
+	public boolean isAdult() {
+		return getAgeDays() >= getAdultAge();
+	}
+	
+	/**
+	 * Returns the number of days it takes to become an adult.
+	 */
+	public int getAdultAge() {
+		return 3;
+	}
+	
+	// ================================================================================
+	// BREEDING
+	// ================================================================================
+	
+	/**
+	 * Get the breed timer. If {@link #isSterile() is sterile}, returns -1.
+	 */
+	public int getBreedTimer() {
+		return sterile ? -1 : breedTimer;
+	}
+	
+	/**
+	 * Set the breedTimer. Ignored if {@link #isSterile() is sterile}.
+	 */
+	public void setBreedTimer(int breedTimer) {
+		if (!isSterile()) {
+			if (breedTimer < 0) breedTimer = 0;
+			this.breedTimer = breedTimer;
+		}
+	}
+	
+	public void addBreedTimer(int amount) {
+		setBreedTimer(getBreedTimer() + amount);
+	}
+	
+	public boolean isSterile() {
+		return sterile;
+	}
+	
+	public void setSterile(boolean sterile) {
+		this.sterile = sterile;
 	}
 	
 }

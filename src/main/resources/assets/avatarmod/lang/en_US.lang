@@ -59,6 +59,7 @@ avatar.bisonWhistle.summon=Your bison was called and will be here in approximate
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
 avatar.bisonWhistle.notAssigned=[error]This bison whistle has not been bound to a bison; sneak-click a bison with this to bind it.[/error]
 avatar.bisonWhistle.notFound=[error]${bison} no longer lives in the physical world.[/error]
+avatar.bisonWhistle.notOwned=[error]You do not own this flying bison.[/error]
 avatar.bisonWhistle.tooltipBound=Bound to %s
 avatar.bisonWhistle.tooltipUnbound=Not bound
 
@@ -161,6 +162,14 @@ item.avatarmod:scroll.earth.name=Earthbending Scroll
 item.avatarmod:scroll.water.name=Waterbending Scroll
 item.avatarmod:water_pouch.name=Water Skin
 item.avatarmod:bison_whistle.name=Bison Whistle
+item.avatarmod:bison_saddle.crude.name=Crude Bison Saddle
+item.avatarmod:bison_saddle.basic.name=Basic Bison Saddle
+item.avatarmod:bison_saddle.average.name=Average Bison Saddle
+item.avatarmod:bison_saddle.quality.name=Quality Bison Saddle
+item.avatarmod:bison_armor.woven.name=Woven Bison Armor
+item.avatarmod:bison_armor.chain.name=Chainmail Bison Armor
+item.avatarmod:bison_armor.wrought.name=Wrought Bison Armor
+item.avatarmod:bison_armor.legendary.name=Legendary Bison Armor
 
 avatar.tooltip.scroll=%d points
 avatar.tooltip.water_pouch=%d/3 Water

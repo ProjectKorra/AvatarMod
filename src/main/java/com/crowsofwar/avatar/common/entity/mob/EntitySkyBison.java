@@ -16,18 +16,19 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_BISON_WHISTLE_ASSIGN;
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SKY_BISON_STATS;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
+import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
+import static net.minecraft.entity.SharedMonsterAttributes.ARMOR;
 import static net.minecraft.init.Blocks.STONE;
 import static net.minecraft.item.ItemStack.field_190927_a;
 import static net.minecraft.util.SoundCategory.NEUTRAL;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -35,13 +36,28 @@ import javax.annotation.Nullable;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonBreeding;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonDefendOwner;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonEatGrass;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonFollowOwner;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonHelpOwnerTarget;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonLand;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonSit;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonTempt;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonWander;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
+import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.gui.InventoryBisonChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
+import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -60,7 +76,10 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -79,11 +98,11 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 
 /**
- * EntityGhast EntityTameable
+ * EntityGhast EntityTameable EntityHorse
  * 
  * @author CrowsOfWar
  */
-public class EntitySkyBison extends EntityBender implements IEntityOwnable {
+public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInventoryChangedListener {
 	
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_BENDER);
@@ -100,6 +119,21 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	private static final DataParameter<Integer> SYNC_EAT_GRASS = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.VARINT);
 	
+	private static final DataParameter<Integer> SYNC_AGE = EntityDataManager.createKey(EntitySkyBison.class,
+			DataSerializers.VARINT);
+	
+	private static final DataParameter<Boolean> SYNC_LOVE_PARTICLES = EntityDataManager
+			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
+	
+	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntitySkyBison.class,
+			DataSerializers.VARINT);
+	
+	private static final DataParameter<SaddleTier> SYNC_SADDLE = EntityDataManager
+			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_SADDLE);
+	
+	private static final DataParameter<ArmorTier> SYNC_ARMOR = EntityDataManager
+			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_ARMOR);
+	
 	private final OwnerAttribute ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
@@ -107,8 +141,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	 * Note: Is null clientside.
 	 */
 	private EntityAiBisonEatGrass aiEatGrass;
+	private int riderTicks;
 	
 	private ForgeChunkManager.Ticket ticket;
+	private InventoryBisonChest chest;
 	
 	private boolean wasTouchingGround;
 	
@@ -120,8 +156,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION);
-		setSize(3, 2);
+		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
+		setSize(2.5f, 2);
+		
+		initChest();
 		
 	}
 	
@@ -136,6 +174,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.register(SYNC_FOOD, 20f);
 		dataManager.register(SYNC_DOMESTICATION, domestication);
 		dataManager.register(SYNC_EAT_GRASS, -1);
+		dataManager.register(SYNC_AGE, 0);
+		dataManager.register(SYNC_LOVE_PARTICLES, false);
+		dataManager.register(SYNC_ID,
+				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+		dataManager.register(SYNC_SADDLE, null);
+		dataManager.register(SYNC_ARMOR, null);
 		
 	}
 	
@@ -150,27 +194,45 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
+		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 		
 		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
 		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
 		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
 		
-		this.tasks.addTask(4, new EntityAiBisonSit(this));
-		this.tasks.addTask(5, aiEatGrass = new EntityAiBisonEatGrass(this));
-		this.tasks.addTask(6, new EntityAiBisonFollowOwner(this));
-		this.tasks.addTask(7, new EntityAiBisonTempt(this, 10));
+		this.tasks.addTask(3, new EntityAiBisonSit(this));
+		this.tasks.addTask(4, new EntityAiBisonBreeding(this));
+		this.tasks.addTask(5, new EntityAiBisonTempt(this, 10));
+		this.tasks.addTask(6, aiEatGrass = new EntityAiBisonEatGrass(this));
+		this.tasks.addTask(6, new EntityAiBisonLand(this));
+		this.tasks.addTask(7, new EntityAiBisonFollowOwner(this));
 		this.tasks.addTask(8, new EntityAiBisonWander(this));
 		System.out.println("Set aiEatGrass to " + aiEatGrass);
 		
 	}
 	
+	// Note: Not called when using /summon with NBT tags (w/o nbt will call
+	// this)
 	@Override
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
-			@Nullable IEntityLivingData livingdata) {
+			@Nullable IEntityLivingData livingData) {
+		
+		boolean sterile = false;
+		if (livingData instanceof BisonSpawnData) {
+			sterile = ((BisonSpawnData) livingData).isSterile();
+		}
+		condition.setSterile(sterile);
+		condition.setBreedTimer((int) (MOBS_CONFIG.bisonBreedMaxMinutes * 1200));
+		
+		IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
+		wasTouchingGround = walkingOn.getMaterial() != Material.AIR;
+		
+		condition.setAge(rand.nextInt(48000) + 40000);
 		
 		originalPos = Vector.getEntityPos(this);
-		return super.onInitialSpawn(difficulty, livingdata);
+		return super.onInitialSpawn(difficulty, livingData);
 		
 	}
 	
@@ -181,6 +243,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.load(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
+		riderTicks = nbt.getInteger("RiderTicks");
+		setLoveParticles(nbt.getBoolean("InLove"));
+		setId(nbt.getInteger("BisonId"));
+		
+		// Update chest size based on just read data
+		initChest();
+		readInventory(chest, nbt, "Inventory");
+		
 	}
 	
 	@Override
@@ -190,6 +260,17 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		ownerAttr.save(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
+		nbt.setInteger("RiderTicks", riderTicks);
+		nbt.setBoolean("InLove", isLoveParticles());
+		nbt.setInteger("BisonId", getId());
+		
+		writeInventory(chest, nbt, "Inventory");
+		
+	}
+	
+	@Override
+	public boolean isFlying() {
+		return true;
 	}
 	
 	// ================================================================================
@@ -197,6 +278,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	// ================================================================================
 	
 	public Vector getOriginalPos() {
+		
+		// might not be init in rare cases, for example when /summon'd with nbt
+		// arg
+		if (originalPos.equals(Vector.ZERO)) {
+			originalPos = Vector.getEntityPos(this);
+		}
+		
 		return originalPos;
 	}
 	
@@ -230,16 +318,29 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		dataManager.set(SYNC_SITTING, sitting);
 	}
 	
-	public double getFlySpeedMultiplier() {
-		return condition.getSpeedMultiplier();
+	public float getSpeedMultiplier() {
+		float armorSpeed = getArmor() == null ? 1 : getArmor().getSpeedMultiplier();
+		return condition.getSpeedMultiplier() * armorSpeed;
 	}
 	
 	public AnimalCondition getCondition() {
 		return condition;
 	}
 	
+	/**
+	 * Returns whether the bison will stop eating grass
+	 */
+	public boolean isFull() {
+		return condition.getFoodPoints() > 25;
+	}
+	
+	/**
+	 * Returns whether the bison will bother to eat grass. However, this isn't
+	 * the same as {@link #isFull() not full}; returns the bison is really
+	 * hungry
+	 */
 	public boolean wantsGrass() {
-		return condition.getFoodPoints() < 15;
+		return condition.getFoodPoints() < 15 && getAttackTarget() == null;
 	}
 	
 	public boolean isEatingGrass() {
@@ -252,6 +353,63 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	public void setEatGrassTime(int time) {
 		dataManager.set(SYNC_EAT_GRASS, time);
+	}
+	
+	public int getRiderTicks() {
+		return riderTicks;
+	}
+	
+	public void setRiderTicks(int riderTicks) {
+		this.riderTicks = riderTicks;
+	}
+	
+	public boolean isLoveParticles() {
+		return dataManager.get(SYNC_LOVE_PARTICLES);
+	}
+	
+	public void setLoveParticles(boolean inLove) {
+		dataManager.set(SYNC_LOVE_PARTICLES, inLove);
+	}
+	
+	/**
+	 * Gets the tier of the current saddle equipped, or null if there is no
+	 * saddle.
+	 */
+	public SaddleTier getSaddle() {
+		return dataManager.get(SYNC_SADDLE);
+	}
+	
+	public void setSaddle(SaddleTier saddle) {
+		dataManager.set(SYNC_SADDLE, saddle);
+	}
+	
+	/**
+	 * Gets the tier of the current armor equipped, or null if there is no
+	 * armor.
+	 */
+	public ArmorTier getArmor() {
+		return dataManager.get(SYNC_ARMOR);
+	}
+	
+	public void setArmor(ArmorTier armor) {
+		dataManager.set(SYNC_ARMOR, armor);
+	}
+	
+	public int getId() {
+		return dataManager.get(SYNC_ID);
+	}
+	
+	public void setId(int id) {
+		dataManager.set(SYNC_ID, id);
+	}
+	
+	/**
+	 * Returns the sky bison in that world with the specified id, or null if no
+	 * sky bison with that id.
+	 */
+	public static EntitySkyBison findBison(World world, int id) {
+		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class, bison -> bison.getId() == id);
+		return list.isEmpty() ? null : list.get(0);
 	}
 	
 	// ================================================================================
@@ -285,6 +443,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public void updatePassenger(Entity passenger) {
 		
 		double index = getPassengers().indexOf(passenger);
+		riderTicks++;
 		
 		if (index > -1) {
 			
@@ -302,7 +461,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			
 			if (passenger != getControllingPassenger()) {
 				if (motionX != 0 || motionY != 0 || motionZ != 0) {
-					passenger.rotationYaw = this.rotationYaw;
+					passenger.rotationYaw = this.rotationYawHead;
 					passenger.rotationPitch = this.rotationPitch;
 				}
 			}
@@ -313,7 +472,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	
 	@Override
 	protected boolean canFitPassenger(Entity passenger) {
-		return getPassengers().size() < 3;
+		int passengers = getPassengers().size();
+		int saddleSize = getSaddle() == null ? 0 : getSaddle().getMaxPassengers();
+		return passengers < condition.getMaxRiders() && passengers < saddleSize;
 	}
 	
 	@Override
@@ -345,7 +506,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		
 		boolean willBeOwned = condition.canHaveOwner() && stack.getItem() == Items.APPLE && !hasOwner();
 		
-		if (!condition.isFullyDomesticated()) {
+		if (!condition.isFullyDomesticated() || true) {
 			if (stack != field_190927_a) {
 				
 				Item item = stack.getItem();
@@ -366,6 +527,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 				}
 				
 				if (domesticationValue > 0 || item instanceof ItemFood) {
+					condition.addAge(100);
 					// Consume food item
 					if (!player.capabilities.isCreativeMode) {
 						stack.func_190918_g(1);
@@ -396,10 +558,30 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			return true;
 		}
 		
+		if (stack.getItem() == AvatarItems.itemBisonSaddle && SaddleTier.isValidId(stack.getMetadata())) {
+			if (!worldObj.isRemote) {
+				chest.setInventorySlotContents(0, stack);
+				updateEquipment();
+			}
+			return true;
+		}
+		if (stack.getItem() == AvatarItems.itemBisonArmor && ArmorTier.isValidId(stack.getMetadata())) {
+			if (!worldObj.isRemote) {
+				chest.setInventorySlotContents(1, stack);
+				updateEquipment();
+			}
+			return true;
+		}
+		
 		if (!worldObj.isRemote && stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
-			ItemBisonWhistle.setBoundTo(stack, getUniqueID());
-			ItemBisonWhistle.setBisonName(stack, getName());
-			MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
+			if (player == getOwner()) {
+				ItemBisonWhistle.setBoundTo(stack, getUniqueID());
+				ItemBisonWhistle.setBisonName(stack, getName());
+				MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
+			} else {
+				MSG_BISON_WHISTLE_NOTOWNED.send(player);
+			}
+			
 			return true;
 		}
 		
@@ -417,6 +599,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 		if (stack.getItem() == Items.NAME_TAG) {
 			setAlwaysRenderNameTag(true);
 			return false;
+		}
+		
+		if (getOwner() == player && stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
+			// Send id as the x-coordinate; used by guiHandler to determine
+			// which bison is being opened
+			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, worldObj, getId(), 0, 0);
+			return true;
 		}
 		
 		if (!player.isSneaking() && !worldObj.isRemote) {
@@ -439,10 +628,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	private void onLiftoff() {
-		Raytrace.Result result = new Raytrace.Result();
-		ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
-		StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
-		getData().removeStatusControl(StatusControl.AIR_JUMP);
+		if (!isEatingGrass()) {
+			Raytrace.Result result = new Raytrace.Result();
+			ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
+			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
+			getData().removeStatusControl(StatusControl.AIR_JUMP);
+		}
 	}
 	
 	private void onLand() {
@@ -455,6 +646,116 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	}
 	
 	// ================================================================================
+	// CHEST / INVENTORY
+	// ================================================================================
+	
+	/**
+	 * Updates chest size based on current chest slots
+	 */
+	private void initChest() {
+		
+		System.out.println("Slots " + getChestSlots());
+		
+		InventoryBisonChest old = chest;
+		chest = new InventoryBisonChest(getChestSlots());
+		if (hasCustomName()) {
+			chest.setCustomName(getName());
+		}
+		
+		if (old != null) {
+			old.removeInventoryChangeListener(this);
+			
+			// Transfer old stacks into new inventory
+			int slots = Math.min(old.getSizeInventory(), chest.getSizeInventory());
+			for (int i = 0; i < slots; ++i) {
+				ItemStack stack = old.getStackInSlot(i);
+				if (!stack.func_190926_b()) {
+					chest.setInventorySlotContents(i, stack.copy());
+				}
+			}
+			
+		}
+		
+		chest.addInventoryChangeListener(this);
+		updateEquipment();
+		
+	}
+	
+	/**
+	 * Hack used by readEntityFromNbt to read th
+	 */
+	private void setFullInventorySize() {
+		
+	}
+	
+	@Override
+	public void onInventoryChanged(IInventory invBasic) {
+		updateEquipment();
+	}
+	
+	/**
+	 * Updates equipment based on inventory contents
+	 */
+	private void updateEquipment() {
+		
+		// Update saddle
+		if (!worldObj.isRemote) {
+			
+			ItemStack saddleStack = chest.getStackInSlot(0);
+			int saddleId = saddleStack.getMetadata();
+			if (saddleStack.getItem() == AvatarItems.itemBisonSaddle && SaddleTier.isValidId(saddleId)) {
+				setSaddle(SaddleTier.fromId(saddleId));
+			} else {
+				setSaddle(null);
+			}
+			
+			ItemStack armorStack = chest.getStackInSlot(1);
+			int armorId = armorStack.getMetadata();
+			if (armorStack.getItem() == AvatarItems.itemBisonArmor && ArmorTier.isValidId(armorId)) {
+				setArmor(ArmorTier.fromId(armorId));
+			} else {
+				setArmor(null);
+			}
+			
+		}
+		
+		getEntityAttribute(ARMOR).setBaseValue(getArmorPoints());
+		
+	}
+	
+	public InventoryBisonChest getInventory() {
+		return chest;
+	}
+	
+	public boolean canPlayerViewInventory(EntityPlayer player) {
+		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness;
+	}
+	
+	public int getChestSlots() {
+		if (condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness && condition.isAdult()) {
+			
+			int age = (int) (condition.getAgeDays() - condition.getAdultAge());
+			
+			if (age >= 5) {
+				return 27;
+			} else if (age >= 3) {
+				return 18;
+			} else {
+				return 9;
+			}
+			
+		} else {
+			return 0;
+		}
+	}
+	
+	public float getArmorPoints() {
+		float saddle = getSaddle() == null ? 0 : getSaddle().getArmorPoints();
+		float armor = getArmor() == null ? 0 : getArmor().getArmorPoints();
+		return saddle + armor;
+	}
+	
+	// ================================================================================
 	// GENERAL UPDATE LOGIC
 	// ================================================================================
 	
@@ -462,12 +763,32 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 	public void onUpdate() {
 		super.onUpdate();
 		
+		// Client-side chest sometimes doesn't have enough slots, since when the
+		// # of slots changes, it doesn't necessarily re-init chest
+		if (worldObj.isRemote && chest.getSizeInventory() - 2 != getChestSlots()) {
+			initChest();
+		}
+		
 		if (!worldObj.isRemote && !condition.canHaveOwner() && hasOwner()) {
 			setOwner(null);
 		}
 		if (!worldObj.isRemote) {
 			setEatGrassTime(aiEatGrass.getEatGrassTime());
 		}
+		if (worldObj.isRemote && isLoveParticles() && ticksExisted % 10 == 0) {
+			double d0 = this.rand.nextGaussian() * 0.02D;
+			double d1 = this.rand.nextGaussian() * 0.02D;
+			double d2 = this.rand.nextGaussian() * 0.02D;
+			
+			this.worldObj.spawnParticle(EnumParticleTypes.HEART,
+					this.posX + this.rand.nextFloat() * this.width * 2 - this.width,
+					this.posY + 0.5D + this.rand.nextFloat() * this.height,
+					this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2, new int[0]);
+			
+		}
+		
+		float sizeMult = condition.getSizeMultiplier();
+		setSize(2.5f * sizeMult, 2 * sizeMult);
 		
 		condition.onUpdate();
 		if (condition.getFoodPoints() == 0) {
@@ -502,10 +823,22 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 			
 		}
 		
+		if (getPassengers().isEmpty()) {
+			riderTicks = 0;
+		}
+		if (!condition.canHaveOwner() && riderTicks > 0 && riderTicks % 60 == 0) {
+			condition.addDomestication(MOBS_CONFIG.bisonRideOneSecondTameness * 3);
+			playTameEffect(false);
+		}
+		
 	}
 	
 	@Override
 	public void moveEntityWithHeading(float strafe, float forward) {
+		
+		if (isEatingGrass()) {
+			motionY -= 0.08;
+		}
 		
 		// onGround apparently doesn't work client-side
 		IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
@@ -528,7 +861,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable {
 				// onLiftoff();
 			}
 			
-			float speedMult = condition.getSpeedMultiplier() * driver.moveForward * 2;
+			float speedMult = getSpeedMultiplier() * driver.moveForward * 2;
 			
 			float current = normalizeAngle(this.rotationYaw);
 			float target = normalizeAngle(driver.rotationYaw);

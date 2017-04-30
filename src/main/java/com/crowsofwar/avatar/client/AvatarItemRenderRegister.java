@@ -63,6 +63,7 @@ public class AvatarItemRenderRegister {
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemWaterPouch, i);
 		}
+		register(AvatarItems.itemBisonWhistle);
 		
 	}
 	
@@ -72,6 +73,10 @@ public class AvatarItemRenderRegister {
 	 * will not be registered.
 	 */
 	private static void register(AvatarItem item, int... metadata) {
+		
+		if (metadata.length == 0) {
+			metadata = new int[1];
+		}
 		
 		for (int meta : metadata) {
 			ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + item.getModelName(meta),

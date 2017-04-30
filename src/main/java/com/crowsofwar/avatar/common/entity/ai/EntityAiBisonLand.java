@@ -14,14 +14,18 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.entity.mob;
+package com.crowsofwar.avatar.common.entity.ai;
 
 import static net.minecraft.util.math.MathHelper.floor_double;
 
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -49,8 +53,6 @@ public class EntityAiBisonLand extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		
-		System.out.println("Time to eat!!");
-		
 		World world = bison.worldObj;
 		
 		int tries = 0;
@@ -62,9 +64,8 @@ public class EntityAiBisonLand extends EntityAIBase {
 			tries++;
 			
 			Block block = world.getBlockState(landing.toBlockPos().down()).getBlock();
-			isValidPosition = (block == Blocks.GRASS || block == Blocks.TALLGRASS) && canFit(landing);
-			
-			System.out.println("Landing pos " + landing + " --> on " + block + "; fits " + canFit(landing));
+			isValidPosition = (block == Blocks.GRASS || block == Blocks.TALLGRASS) && canFit(landing)
+					&& canGetTo(landing);
 			
 		} while (!isValidPosition && tries < 5);
 		
@@ -72,18 +73,21 @@ public class EntityAiBisonLand extends EntityAIBase {
 			
 			landing.add(0, 1, 0);
 			bison.getMoveHelper().setMoveTo(landing.x(), landing.y() - 1, landing.z(), 1);
-			System.out.println("Moving to " + landing);
 			
-		} else {
-			System.out.println("can't find landing zone");
 		}
 		
 	}
 	
 	@Override
 	public boolean continueExecuting() {
+		// Once got close to grass, close enough
+		EntityMoveHelper mh = bison.getMoveHelper();
+		if (bison.getDistanceSq(mh.getX(), mh.getY(), mh.getZ()) <= 5) {
+			bison.getMoveHelper().action = Action.WAIT;
+		}
+		
 		// Don't wander off until we have food!
-		return bison.wantsGrass();
+		return !bison.isFull() && bison.isEatingGrass();
 	}
 	
 	private Vector findLandingPoint() {
@@ -122,6 +126,18 @@ public class EntityAiBisonLand extends EntityAIBase {
 		
 		return true;
 		
+	}
+	
+	/**
+	 * Figure out whether the bison can get to that position by raytracing
+	 */
+	private boolean canGetTo(Vector target) {
+		Vector current = Vector.getEntityPos(bison);
+		Vector direction = target.minus(current).normalize();
+		double range = current.dist(target);
+		Raytrace.Result raytrace = Raytrace.raytrace(bison.worldObj, current, direction, range + 1, false);
+		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos().up();
+		return blockPos == null || blockPos.equals(target.toBlockPos());
 	}
 	
 	private boolean isSolidBlock(BlockPos pos) {

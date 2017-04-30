@@ -71,6 +71,7 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_BISON_WHISTLE_ASSIGN = newChatMessage(CFG, "avatar.bisonWhistle.assign", "bison");
 	public static final ChatMessage MSG_BISON_WHISTLE_NOSUMMON = newChatMessage(CFG, "avatar.bisonWhistle.notAssigned");
 	public static final ChatMessage MSG_BISON_WHISTLE_NOT_FOUND = newChatMessage(CFG, "avatar.bisonWhistle.notFound", "bison");
+	public static final ChatMessage MSG_BISON_WHISTLE_NOTOWNED = newChatMessage(CFG, "avatar.bisonWhistle.notOwned");
 	public static final ChatMessage MSG_SKY_BISON_STATS = newChatMessage(CFG, "avatar.bisonStats", "food", "health", "domestication");
 	
 	/**

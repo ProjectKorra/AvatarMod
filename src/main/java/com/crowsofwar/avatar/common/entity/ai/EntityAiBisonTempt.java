@@ -14,12 +14,14 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.entity.mob;
+package com.crowsofwar.avatar.common.entity.ai;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static net.minecraft.item.ItemStack.field_190927_a;
 
 import java.util.List;
+
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
@@ -48,6 +50,8 @@ public class EntityAiBisonTempt extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		
+		if (bison.getCondition().getFoodPoints() >= 25) return false;
+		
 		List<EntityPlayer> players = bison.worldObj.getEntities(EntityPlayer.class, player -> {
 			if (bison.getDistanceSqToEntity(player) > maxDistSq) return false;
 			return isHoldingFood(player);
@@ -70,7 +74,8 @@ public class EntityAiBisonTempt extends EntityAIBase {
 	
 	@Override
 	public void startExecuting() {
-		bison.getMoveHelper().setMoveTo(following.posX, following.posY, following.posZ, 1);
+		bison.getMoveHelper().setMoveTo(following.posX,
+				following.posY + following.eyeHeight - bison.getEyeHeight(), following.posZ, 1);
 	}
 	
 	@Override
@@ -79,7 +84,8 @@ public class EntityAiBisonTempt extends EntityAIBase {
 		if (!following.isDead && bison.getDistanceSqToEntity(following) <= maxDistSq
 				&& isHoldingFood(following)) {
 			
-			bison.getMoveHelper().setMoveTo(following.posX, following.posY, following.posZ, 1);
+			bison.getMoveHelper().setMoveTo(following.posX,
+					following.posY + following.eyeHeight - bison.getEyeHeight(), following.posZ, 1);
 			return true;
 			
 		} else {

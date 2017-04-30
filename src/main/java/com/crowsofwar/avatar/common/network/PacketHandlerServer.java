@@ -35,9 +35,12 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -122,6 +125,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSSkillsMenu) return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
 		
 		if (packet instanceof PacketSUseScroll) return handleUseScroll((PacketSUseScroll) packet, ctx);
+		
+		if (packet instanceof PacketSBisonInventory)
+			return handleInventory((PacketSBisonInventory) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -325,6 +331,20 @@ public class PacketHandlerServer implements IPacketHandler {
 				
 			}
 			
+		}
+		
+		return null;
+	}
+	
+	private IMessage handleInventory(PacketSBisonInventory packet, MessageContext ctx) {
+		EntityPlayer player = ctx.getServerHandler().playerEntity;
+		
+		if (player.getRidingEntity() instanceof EntitySkyBison) {
+			EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
+			if (bison.canPlayerViewInventory(player)) {
+				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, player.worldObj,
+						bison.getId(), 0, 0);
+			}
 		}
 		
 		return null;

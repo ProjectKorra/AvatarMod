@@ -14,10 +14,11 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.entity.mob;
+package com.crowsofwar.avatar.common.entity.ai;
 
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
@@ -63,8 +64,6 @@ public class EntityAiBisonSit extends EntityAIBase {
 		
 		Vector targetPos = bisonPos.copy().setY(y - 1).plus(randomized);
 		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1);
-		
-		System.out.println("Move to " + targetPos);
 		
 	}
 	

@@ -68,6 +68,7 @@ import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -78,6 +79,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.init.Biomes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -145,6 +147,7 @@ public class AvatarMod {
 		registerPacket(PacketSSkillsMenu.class, Side.SERVER);
 		registerPacket(PacketSUseScroll.class, Side.SERVER);
 		registerPacket(PacketCErrorMessage.class, Side.CLIENT);
+		registerPacket(PacketSBisonInventory.class, Side.SERVER);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
@@ -190,6 +193,9 @@ public class AvatarMod {
 		registerEntity(EntityWaterbender.class, "Waterbender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
 		registerEntity(AvatarEntityItem.class, "Item");
+		
+		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE,
+				Biomes.EXTREME_HILLS, Biomes.MUTATED_SAVANNA);
 		
 		List<Biome> allBiomesList = ForgeRegistries.BIOMES.getValues();
 		Biome[] allBiomes = new Biome[allBiomesList.size()];

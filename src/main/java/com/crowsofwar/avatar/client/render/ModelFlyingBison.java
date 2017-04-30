@@ -1,11 +1,16 @@
 package com.crowsofwar.avatar.client.render;
 
-import static net.minecraft.client.renderer.GlStateManager.*;
+import static net.minecraft.client.renderer.GlStateManager.popMatrix;
+import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+
+import java.util.Arrays;
+import java.util.List;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
@@ -105,6 +110,14 @@ public class ModelFlyingBison extends ModelBase {
 		this.head.addChild(this.nose);
 		this.head.addChild(this.ear2);
 		this.head.addChild(this.horn2);
+		
+		// CrowsOfWar: Adjust bottom-of-feet pos to be at 0, which prevents
+		// weird issues while scaling
+		List<ModelRenderer> allBoxes = Arrays.asList(body, leg1, leg2, leg3, leg4, leg5, leg6, head, upTail);
+		for (ModelRenderer box : allBoxes) {
+			box.rotationPointY -= 18;
+		}
+		
 	}
 	
 	/**
@@ -124,6 +137,23 @@ public class ModelFlyingBison extends ModelBase {
 				+ MathHelper.cos(limbSwing * 0.6662f / 3) * 0.1f * limbSwingAmount;
 		head.rotateAngleY = netHeadYaw * degToRad;
 		
+		if (bison.isSitting()) {
+			
+			float lower = 3;
+			
+			body.rotationPointY = lower + 0 - 18;
+			head.rotationPointY = lower - 2 - 18;
+			upTail.rotationPointY = lower - 4.4f - 18;
+			
+			limbSwing = 2.87f;
+			limbSwingAmount = 0.3f;
+			
+		} else {
+			body.rotationPointY = 0 - 18;
+			head.rotationPointY = -2 - 18;
+			upTail.rotationPointY = -4.4f - 18;
+		}
+		
 		leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		leg6.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
@@ -132,12 +162,12 @@ public class ModelFlyingBison extends ModelBase {
 		leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
 		leg5.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
 		
-		upTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * 0.5f * limbSwingAmount;
+		upTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * 0.2f * limbSwingAmount
+				- 20 * degToRad;
 		lowTail.rotateAngleX = (MathHelper.cos(limbSwing * 0.3331f) - 2f) * -0.25f * limbSwingAmount;
 		
 		if (bison.isEatingGrass()) {
 			head.rotateAngleX = (MathHelper.cos(bison.getEatGrassTime() / 2f) * 15 + 65) * degToRad;
-			// head.rotateAngleY = 0;
 		}
 		
 	}
@@ -149,9 +179,12 @@ public class ModelFlyingBison extends ModelBase {
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		
+		float size = ((EntitySkyBison) entity).getCondition().getSizeMultiplier();
+		
 		pushMatrix();
-		float scale = 1.5f;
-		scale(scale, scale, scale);
+		float scale = 1.5f * size;
+		GlStateManager.translate(0, 1.5, 0);
+		GlStateManager.scale(scale, scale, scale);
 		
 		this.leg2.render(f5);
 		this.leg4.render(f5);

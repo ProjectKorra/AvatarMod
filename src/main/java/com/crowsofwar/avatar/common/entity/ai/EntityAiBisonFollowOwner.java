@@ -14,10 +14,11 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.entity.mob;
+package com.crowsofwar.avatar.common.entity.ai;
 
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
@@ -43,10 +44,15 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		
+		if (bison.isSitting()) return false;
+		
 		EntityPlayer owner = bison.getOwner();
 		if (owner != null) {
+			
+			double maxDist = bison.getAttackTarget() == null ? 6 : 20;
+			
 			double distSq = bison.getDistanceSqToEntity(owner);
-			return distSq >= 6 * 6 && !bison.isSitting();
+			return distSq >= maxDist * maxDist && !bison.isSitting();
 		}
 		
 		return false;

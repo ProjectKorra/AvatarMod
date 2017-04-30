@@ -41,6 +41,8 @@ public class AvatarItems {
 	public static ItemScroll itemScroll;
 	public static ItemWaterPouch itemWaterPouch;
 	public static ItemBisonWhistle itemBisonWhistle;
+	public static ItemBisonSaddle itemBisonSaddle;
+	public static ItemBisonArmor itemBisonArmor;
 	
 	private static ItemStack stackScroll;
 	
@@ -48,6 +50,8 @@ public class AvatarItems {
 		registerItem(itemScroll = new ItemScroll());
 		registerItem(itemWaterPouch = new ItemWaterPouch());
 		registerItem(itemBisonWhistle = new ItemBisonWhistle());
+		registerItem(itemBisonSaddle = new ItemBisonSaddle());
+		registerItem(itemBisonArmor = new ItemBisonArmor());
 		
 		stackScroll = new ItemStack(itemScroll);
 		NBTTagCompound nbt = new NBTTagCompound();

@@ -78,8 +78,6 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 		
 		for (int meta = 0; meta <= 3; meta++) {
 			subItems.add(new ItemStack(item, 1, meta));
-			subItems.add(new ItemStack(item, 1, meta));
-			subItems.add(new ItemStack(item, 1, meta));
 		}
 		
 	}
