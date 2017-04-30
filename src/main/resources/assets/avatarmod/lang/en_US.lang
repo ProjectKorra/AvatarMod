@@ -67,7 +67,14 @@ avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
 avatar.ability.ravine=Ravine
 avatar.ability.earth_wall=Wall
+
 avatar.ability.mine_blocks=Mine Blocks
+avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels
+avatar.ability.mine_blocks.lvl1=Mine a few blocks
+avatar.ability.mine_blocks.lvl2=Mine out even more blocks
+avatar.ability.mine_blocks.lvl3=Fortune level I when mining
+avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
+avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
 
 avatar.ability.light_fire=Light Fire
 avatar.ability.fire_arc=Fire Arc
