@@ -148,26 +148,33 @@ public class AbilityMining extends EarthAbility {
 			// mine nearby ores as well
 			// flood-fill search
 			if (abilityData.getPath() == SECOND) {
+				int i = 0;
 				while (!orePos.isEmpty()) {
 					
 					BlockPos pos = orePos.poll();
-					System.out.println("Ore @ " + pos);
+					System.out.println("Inspecting " + pos);
 					
 					for (int j = 0; j < 6; j++) {
 						EnumFacing facing = EnumFacing.values()[j];
 						BlockPos inspectingPos = pos.offset(facing);
-						Block block = world.getBlockState(pos).getBlock();
+						Block inspectingBlock = world.getBlockState(pos).getBlock();
 						
-						if (block instanceof BlockOre || block instanceof BlockRedstoneOre) {
-							System.out.println("Found another ore!");
-							breakBlock(inspectingPos, block, ctx, 20, fortune);
+						if (inspectingBlock instanceof BlockOre
+								|| inspectingBlock instanceof BlockRedstoneOre) {
+							
+							System.out.println(" -> Found another ore at " + inspectingPos);
+							System.out.println("    it is: " + inspectingBlock);
+							
+							breakBlock(inspectingPos, inspectingBlock, ctx, i * 5 + 20, fortune);
 							
 							boolean alreadyInspected = orePos.contains(inspectingPos)
 									|| inspectedOrePos.contains(inspectingPos);
-							if (alreadyInspected) {
+							if (!alreadyInspected) {
 								
 								orePos.add(inspectingPos);
 								inspectedOrePos.add(inspectingPos);
+								
+								System.out.println("    Marking for further investigation");
 								
 							}
 							
