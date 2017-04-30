@@ -24,7 +24,11 @@ import static java.lang.Math.abs;
 import static java.lang.Math.floor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -33,8 +37,11 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockOre;
+import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -106,26 +113,68 @@ public class AbilityMining extends EarthAbility {
 				rays.add(new VectorI(entity.getPosition().up(pitch < 0 ? 0 : 1)));
 			}
 			
-			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-			
 			int dist = getDistance(abilityData.getLevel(), abilityData.getPath());
 			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
 			
+			// For keeping track of already inspected/to-be-inspected positions
+			// of ore blocks
+			// orePos: Position that needs to be inspected
+			// inspectedOrePos: Position that was already inspected (since the
+			// queue items will be deleted)
+			Queue<BlockPos> orePos = new LinkedList<>();
+			Set<BlockPos> inspectedOrePos = new HashSet<>();
+			
 			for (VectorI ray : rays) {
+				
 				for (int i = 1; i <= dist; i++) {
+					
 					BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
 					Block block = world.getBlockState(pos).getBlock();
 					
-					boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
-					if (bendable) {
-						
-						boolean drop = !ctx.getBender().isCreativeMode();
-						wd.getScheduledDestroyBlocks()
-								.add(wd.new ScheduledDestroyBlock(pos, i * 3, drop, fortune));
-						
-					} else if (block != Blocks.AIR) {
+					if (block instanceof BlockOre || block instanceof BlockRedstoneOre) {
+						orePos.add(pos);
+						inspectedOrePos.add(pos);
+					}
+					
+					// Stop at non-bendable blocks
+					if (!breakBlock(pos, block, ctx, i, fortune) && block != Blocks.AIR) {
 						break;
 					}
+					
+				}
+				
+			}
+			
+			// mine nearby ores as well
+			// flood-fill search
+			if (abilityData.getPath() == SECOND) {
+				while (!orePos.isEmpty()) {
+					
+					BlockPos pos = orePos.poll();
+					System.out.println("Ore @ " + pos);
+					
+					for (int j = 0; j < 6; j++) {
+						EnumFacing facing = EnumFacing.values()[j];
+						BlockPos inspectingPos = pos.offset(facing);
+						Block block = world.getBlockState(pos).getBlock();
+						
+						if (block instanceof BlockOre || block instanceof BlockRedstoneOre) {
+							System.out.println("Found another ore!");
+							breakBlock(inspectingPos, block, ctx, 20, fortune);
+							
+							boolean alreadyInspected = orePos.contains(inspectingPos)
+									|| inspectedOrePos.contains(inspectingPos);
+							if (alreadyInspected) {
+								
+								orePos.add(inspectingPos);
+								inspectedOrePos.add(inspectingPos);
+								
+							}
+							
+						}
+						
+					}
+					
 				}
 			}
 			
@@ -172,10 +221,35 @@ public class AbilityMining extends EarthAbility {
 	
 	private int getFortune(int level, AbilityTreePath path) {
 		if (level == 3) {
-			return path == SECOND ? 3 : 1;
+			return path == SECOND ? 3 : 2;
+		} else if (level == 2) {
+			return 1;
 		} else {
 			return 0;
 		}
+	}
+	
+	/**
+	 * Breaks the block at the specified position, but doesn't break
+	 * non-bendable blocks. Returns false if not able to break (since the block
+	 * isn't bendable).
+	 */
+	private boolean breakBlock(BlockPos pos, Block block, AbilityContext ctx, int i, int fortune) {
+		
+		AvatarWorldData wd = AvatarWorldData.getDataFromWorld(ctx.getWorld());
+		
+		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+		if (bendable) {
+			
+			boolean drop = !ctx.getBender().isCreativeMode();
+			wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3, drop, fortune));
+			
+			return true;
+			
+		} else {
+			return false;
+		}
+		
 	}
 	
 }
