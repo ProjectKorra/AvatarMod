@@ -22,15 +22,18 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -63,6 +66,22 @@ public class ItemScroll extends Item implements AvatarItem {
 		if (pts == 2) return EnumRarity.RARE;
 		if (pts == 1) return EnumRarity.UNCOMMON;
 		return EnumRarity.COMMON;
+	}
+	
+	@Override
+	public boolean hasCustomEntity(ItemStack stack) {
+		return getScrollType(stack) == ScrollType.FIRE;
+	}
+	
+	@Override
+	public Entity createEntity(World world, Entity old, ItemStack stack) {
+		AvatarEntityItem custom = new AvatarEntityItem(world, old.posX, old.posY, old.posZ, stack);
+		custom.setResistFire(true);
+		custom.motionX = old.motionX;
+		custom.motionY = old.motionY;
+		custom.motionZ = old.motionZ;
+		custom.setDefaultPickupDelay();
+		return custom;
 	}
 	
 	@Override
@@ -112,6 +131,16 @@ public class ItemScroll extends Item implements AvatarItem {
 	public static ItemStack setPoints(ItemStack stack, int points) {
 		stackCompound(stack).setInteger("Points", points);
 		return stack;
+	}
+	
+	public static ScrollType getScrollType(ItemStack stack) {
+		int meta = stack.getMetadata();
+		if (meta < 0 || meta >= ScrollType.values().length) return ScrollType.ALL;
+		return ScrollType.fromId(meta);
+	}
+	
+	public static void setScrollType(ItemStack stack, ScrollType type) {
+		stack.setItemDamage(type.id());
 	}
 	
 	public enum ScrollType {

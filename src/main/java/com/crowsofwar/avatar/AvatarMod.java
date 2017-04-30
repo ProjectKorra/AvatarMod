@@ -37,6 +37,7 @@ import com.crowsofwar.avatar.common.config.ConfigMobs;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
@@ -188,6 +189,7 @@ public class AvatarMod {
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
 		registerEntity(EntityWaterbender.class, "Waterbender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
+		registerEntity(AvatarEntityItem.class, "Item");
 		
 		List<Biome> allBiomesList = ForgeRegistries.BIOMES.getValues();
 		Biome[] allBiomes = new Biome[allBiomesList.size()];
