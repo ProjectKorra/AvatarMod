@@ -95,7 +95,6 @@ public class AvatarUiRenderer extends Gui {
 		if (currentBendingMenu != null) {
 			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {
 				currentBendingMenu = null;
-				if (!(mc.currentScreen instanceof SkillsGui)) mc.setIngameFocus();
 			} else {
 				currentBendingMenu.drawScreen(mouseX, mouseY, resolution);
 				mc.setIngameNotInFocus();

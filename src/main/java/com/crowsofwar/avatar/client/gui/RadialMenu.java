@@ -22,7 +22,6 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -212,16 +211,6 @@ public class RadialMenu extends Gui {
 			drawCenteredString(mc.fontRendererObj, I18n.format("avatar.ui.openSkillsMenu"), centerX,
 					centerY + mc.fontRendererObj.FONT_HEIGHT / 4, 0xffffff);
 			
-		}
-		
-		if (Mouse.isButtonDown(0)) {
-			int centeredX = mouseX - resolution.getScaledWidth() / 2;
-			int centeredY = mouseY - resolution.getScaledHeight() / 2;
-			if (currentMouseover == null
-					&& Math.sqrt(centeredX * centeredX + centeredY * centeredY) / menuScale < 100) {
-				mc.displayGuiScreen(new SkillsGui(controller));
-				return true;
-			}
 		}
 		
 		if (closeGui) {
