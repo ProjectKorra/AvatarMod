@@ -43,7 +43,7 @@ public class AvatarCrafting {
 			'e', LEAD
 		});
 		addRecipe(new ItemStack(itemBisonSaddle, 1, 1), new Object[] {
-			"lle",
+			"dle",
 			"lsl",
 			"dsd",
 			'l', LEATHER,
