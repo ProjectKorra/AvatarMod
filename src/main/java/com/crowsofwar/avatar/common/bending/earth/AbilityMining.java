@@ -22,6 +22,7 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRS
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 import static java.lang.Math.abs;
 import static java.lang.Math.floor;
+import static net.minecraft.init.Blocks.AIR;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -146,7 +147,7 @@ public class AbilityMining extends EarthAbility {
 			}
 			
 			if (abilityData.getPath() == SECOND) {
-				mineNextOre(world, oresToBeMined, alreadyMinedOres, ctx);
+				mineNextOre(world, oresToBeMined, alreadyMinedOres, ctx, 0);
 			}
 			
 		}
@@ -211,7 +212,7 @@ public class AbilityMining extends EarthAbility {
 		Block block = world.getBlockState(pos).getBlock();
 		AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 		
-		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block) && block != AIR;
 		if (bendable) {
 			
 			boolean drop = !ctx.getBender().isCreativeMode();
@@ -236,11 +237,13 @@ public class AbilityMining extends EarthAbility {
 	 * @param ctx
 	 */
 	private void mineNextOre(World world, Queue<BlockPos> queue, Set<BlockPos> alreadyInspected,
-			AbilityContext ctx) {
+			AbilityContext ctx, int i) {
 		
-		int i = alreadyInspected.size();
 		BlockPos pos = queue.poll();
-		breakBlock(pos, ctx, i * 3 + 20, 3);
+		
+		if (breakBlock(pos, ctx, i * 3 + 20, 3)) {
+			i++;
+		}
 		
 		// Search nearby blocks, and flag ores for mining
 		
@@ -260,8 +263,8 @@ public class AbilityMining extends EarthAbility {
 		}
 		
 		// Inspect the next ore
-		if (!queue.isEmpty() && i < 10) {
-			mineNextOre(world, queue, alreadyInspected, ctx);
+		if (!queue.isEmpty() && i < 15) {
+			mineNextOre(world, queue, alreadyInspected, ctx, i);
 		}
 		
 	}
