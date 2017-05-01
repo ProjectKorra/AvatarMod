@@ -60,7 +60,9 @@ public class AbilityMining extends EarthAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		if (ctx.consumeChi(STATS_CONFIG.chiMining)) {
+		float chi = ctx.isMasterLevel(FIRST) ? STATS_CONFIG.chiMiningMaster : STATS_CONFIG.chiMining;
+		
+		if (ctx.consumeChi(chi)) {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
@@ -70,6 +72,7 @@ public class AbilityMining extends EarthAbility {
 			
 			abilityData.addXp(SKILLS_CONFIG.miningUse);
 			
+			System.out.println("XP " + abilityData.getXp());
 			//@formatter:off
 			// 0 = S 0x +z    1 = SW -x +z
 			// 2 = W -x 0z    3 = NW -x -z
@@ -139,7 +142,8 @@ public class AbilityMining extends EarthAbility {
 					}
 					
 					// Stop at non-bendable blocks
-					if (!breakBlock(pos, ctx, i * 3, fortune) && block != Blocks.AIR) {
+					int timeMultiplier = ctx.isMasterLevel(FIRST) ? 1 : 3;
+					if (!breakBlock(pos, ctx, i * timeMultiplier, fortune) && block != Blocks.AIR) {
 						break;
 					}
 					
@@ -164,7 +168,7 @@ public class AbilityMining extends EarthAbility {
 		if (level == 3 && path == FIRST) {
 			
 			min = 5;
-			max = 6;
+			max = 7;
 			
 		} else if (level == 3) {
 			
