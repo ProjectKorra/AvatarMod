@@ -35,21 +35,21 @@ public class AvatarCrafting {
 		
 		addRecipe(new ItemStack(itemBisonSaddle, 1, 0), new Object[] {
 			"gle",
-			"lsl",
-			" s ",
+			"lll",
+			"s s",
 			'l', LEATHER,
-			'g', GOLD_NUGGET,
+			'g', GOLD_INGOT,
 			's', STRING,
 			'e', LEAD
 		});
 		addRecipe(new ItemStack(itemBisonSaddle, 1, 1), new Object[] {
-			"dle",
-			"lsl",
-			"dsd",
+			"lll",
+			"sas",
+			"d d",
 			'l', LEATHER,
 			'd', DIAMOND,
 			's', STRING,
-			'e', LEAD
+			'a', new ItemStack(itemBisonSaddle, 1, 0)
 		});
 		
 		// @formatter:on
