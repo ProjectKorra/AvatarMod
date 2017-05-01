@@ -62,6 +62,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.item.AvatarCrafting;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
@@ -205,6 +206,8 @@ public class AvatarMod {
 		EntityRegistry.addSpawn(EntityAirbender.class, 1000, 1, 1, EnumCreatureType.CREATURE, allBiomes);
 		
 		proxy.init();
+		AvatarCrafting.register();
+		
 	}
 	
 	@EventHandler
