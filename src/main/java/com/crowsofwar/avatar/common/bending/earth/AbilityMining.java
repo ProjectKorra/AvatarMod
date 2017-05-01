@@ -121,8 +121,8 @@ public class AbilityMining extends EarthAbility {
 			// orePos: Position that needs to be inspected
 			// inspectedOrePos: Position that was already inspected (since the
 			// queue items will be deleted)
-			Queue<BlockPos> orePos = new LinkedList<>();
-			Set<BlockPos> inspectedOrePos = new HashSet<>();
+			Queue<BlockPos> oresToBeMined = new LinkedList<>();
+			Set<BlockPos> alreadyMinedOres = new HashSet<>();
 			
 			for (VectorI ray : rays) {
 				
@@ -131,13 +131,13 @@ public class AbilityMining extends EarthAbility {
 					BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
 					Block block = world.getBlockState(pos).getBlock();
 					
-					if (block instanceof BlockOre || block instanceof BlockRedstoneOre) {
-						orePos.add(pos);
-						inspectedOrePos.add(pos);
+					if (isBreakableOre(world, pos)) {
+						oresToBeMined.add(pos);
+						alreadyMinedOres.add(pos);
 					}
 					
 					// Stop at non-bendable blocks
-					if (!breakBlock(pos, block, ctx, i, fortune) && block != Blocks.AIR) {
+					if (!breakBlock(pos, ctx, i * 3, fortune) && block != Blocks.AIR) {
 						break;
 					}
 					
@@ -145,36 +145,8 @@ public class AbilityMining extends EarthAbility {
 				
 			}
 			
-			// mine nearby ores as well
-			// flood-fill search
 			if (abilityData.getPath() == SECOND) {
-				int i = 0;
-				while (!orePos.isEmpty()) {
-					
-					BlockPos pos = orePos.poll();
-					
-					for (int j = 0; j < 6; j++) {
-						EnumFacing facing = EnumFacing.values()[j];
-						BlockPos inspectingPos = pos.offset(facing);
-						Block inspectingBlock = world.getBlockState(inspectingPos).getBlock();
-						
-						if (inspectingBlock instanceof BlockOre
-								|| inspectingBlock instanceof BlockRedstoneOre) {
-							
-							breakBlock(inspectingPos, inspectingBlock, ctx, i * 5 + 20, fortune);
-							
-							if (!inspectedOrePos.contains(inspectingPos)) {
-								
-								orePos.add(inspectingPos);
-								inspectedOrePos.add(inspectingPos);
-								
-							}
-							
-						}
-						
-					}
-					
-				}
+				mineNextOre(world, oresToBeMined, alreadyMinedOres, ctx);
 			}
 			
 		}
@@ -233,15 +205,17 @@ public class AbilityMining extends EarthAbility {
 	 * non-bendable blocks. Returns false if not able to break (since the block
 	 * isn't bendable).
 	 */
-	private boolean breakBlock(BlockPos pos, Block block, AbilityContext ctx, int i, int fortune) {
+	private boolean breakBlock(BlockPos pos, AbilityContext ctx, int delay, int fortune) {
 		
-		AvatarWorldData wd = AvatarWorldData.getDataFromWorld(ctx.getWorld());
+		World world = ctx.getWorld();
+		Block block = world.getBlockState(pos).getBlock();
+		AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 		
 		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
 		if (bendable) {
 			
 			boolean drop = !ctx.getBender().isCreativeMode();
-			wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, i * 3, drop, fortune));
+			wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, delay, drop, fortune));
 			
 			return true;
 			
@@ -249,6 +223,52 @@ public class AbilityMining extends EarthAbility {
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * Represents a step in the flood-fill algorithm to destroy ore veins. Looks
+	 * on the next flagged ore block and mines it, then inspects nearby blocks
+	 * and flags any ores for mining.
+	 * 
+	 * @param world
+	 * @param queue
+	 * @param alreadyInspected
+	 * @param ctx
+	 */
+	private void mineNextOre(World world, Queue<BlockPos> queue, Set<BlockPos> alreadyInspected,
+			AbilityContext ctx) {
+		
+		int i = alreadyInspected.size();
+		BlockPos pos = queue.poll();
+		breakBlock(pos, ctx, i * 3 + 20, 3);
+		
+		// Search nearby blocks, and flag ores for mining
+		
+		for (int j = 0; j < 6; j++) {
+			
+			EnumFacing facing = EnumFacing.values()[j];
+			BlockPos inspectingPos = pos.offset(facing);
+			Block inspectingBlock = world.getBlockState(inspectingPos).getBlock();
+			
+			if (isBreakableOre(world, inspectingPos) && !alreadyInspected.contains(inspectingPos)) {
+				
+				queue.add(inspectingPos);
+				alreadyInspected.add(inspectingPos);
+				
+			}
+			
+		}
+		
+		// Inspect the next ore
+		if (!queue.isEmpty() && i < 10) {
+			mineNextOre(world, queue, alreadyInspected, ctx);
+		}
+		
+	}
+	
+	private boolean isBreakableOre(World world, BlockPos pos) {
+		Block block = world.getBlockState(pos).getBlock();
+		return block instanceof BlockOre || block instanceof BlockRedstoneOre;
 	}
 	
 }
