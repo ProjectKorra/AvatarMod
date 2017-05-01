@@ -68,7 +68,7 @@ public class AbilityMining extends EarthAbility {
 			AbilityData abilityData = ctx.getAbilityData();
 			float xp = abilityData.getTotalXp();
 			
-			ctx.getData().getAbilityData(this).addXp(SKILLS_CONFIG.miningUse);
+			abilityData.addXp(SKILLS_CONFIG.miningUse);
 			
 			//@formatter:off
 			// 0 = S 0x +z    1 = SW -x +z
@@ -135,6 +135,7 @@ public class AbilityMining extends EarthAbility {
 					if (isBreakableOre(world, pos)) {
 						oresToBeMined.add(pos);
 						alreadyMinedOres.add(pos);
+						abilityData.addXp(SKILLS_CONFIG.miningBreakOre);
 					}
 					
 					// Stop at non-bendable blocks
