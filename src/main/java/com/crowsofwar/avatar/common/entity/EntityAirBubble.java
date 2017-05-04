@@ -99,6 +99,11 @@ public class EntityAirBubble extends AvatarEntity {
 		ownerAttr.setOwner(owner);
 	}
 	
+	@Override
+	public EntityLivingBase getController() {
+		return !isDissipating() ? getOwner() : null;
+	}
+	
 	public boolean doesAllowHovering() {
 		return dataManager.get(SYNC_HOVERING);
 	}

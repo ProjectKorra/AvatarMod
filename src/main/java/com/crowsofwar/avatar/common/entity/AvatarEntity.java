@@ -94,6 +94,19 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	/**
+	 * Get whoever is currently controlling the movement of this entity, or null
+	 * if nobody is controlling it.
+	 * <p>
+	 * While most AvatarEntities have an {@link #getOwner() owner} during their
+	 * whole existence, controlling this entity is only when the bender can
+	 * control the movement of the entity. When it is, for example, thrown, the
+	 * entity won't be considered "controlled" anymore so this will return null.
+	 */
+	public EntityLivingBase getController() {
+		return null;
+	}
+	
+	/**
 	 * Get the velocity of this entity in m/s. Changes to this vector will be
 	 * reflected in the entity's actual velocity.
 	 */
@@ -167,6 +180,15 @@ public abstract class AvatarEntity extends Entity {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Finds a list of all AvatarEntities who are controlled by this entity and
+	 * are of the given type.
+	 */
+	public static <T extends AvatarEntity> List<T> lookupControlledEntities(World world, Class<T> cls,
+			EntityLivingBase controller) {
+		return world.getEntities(cls, ent -> ent.getController() == controller);
 	}
 	
 	@Override

@@ -112,6 +112,11 @@ public class EntityFireball extends AvatarEntity {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
+	}
+	
 	public float getDamage() {
 		return damage;
 	}

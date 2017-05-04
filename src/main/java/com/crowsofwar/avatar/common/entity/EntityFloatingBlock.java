@@ -341,6 +341,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
+	}
+	
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
 	}
