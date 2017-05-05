@@ -321,12 +321,12 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public boolean canRenderOnFire() {
-		return !putsOutFires && !flammable && super.canRenderOnFire();
+		return !putsOutFires && flammable && super.canRenderOnFire();
 	}
 	
 	@Override
 	public void setFire(int seconds) {
-		if (!putsOutFires && !flammable) super.setFire(seconds);
+		if (!putsOutFires && flammable) super.setFire(seconds);
 	}
 	
 	@Override
