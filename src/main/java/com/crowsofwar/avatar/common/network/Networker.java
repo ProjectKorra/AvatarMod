@@ -21,9 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-
-import com.crowsofwar.avatar.AvatarMod;
+import java.util.function.Consumer;
 
 /**
  * Used by player data to keep track of which data changed and needs to be sent
@@ -39,17 +37,17 @@ public class Networker {
 	final Set<Property> allKeys;
 	private final boolean server;
 	private final Class<? extends PacketModularData> packet;
-	private final Function<Networker, ? extends PacketModularData> packetCreator;
+	private final Consumer<Networker> packetSender;
 	
 	public <P extends PacketModularData> Networker(boolean server, Class<P> dataPacket,
-			Function<Networker, P> packetCreator) {
+			Consumer<Networker> packetSender) {
 		transmitters = new HashMap<>();
 		currentData = new HashMap<>();
 		changed = new HashSet<>();
 		allKeys = new HashSet<>();
 		this.server = server;
 		this.packet = dataPacket;
-		this.packetCreator = packetCreator;
+		this.packetSender = packetSender;
 	}
 	
 	/**
@@ -87,8 +85,7 @@ public class Networker {
 	public void sendUpdated() {
 		if (server) {
 			
-			PacketModularData packet = packetCreator.apply(this);
-			AvatarMod.network.sendToAll(packet);
+			packetSender.accept(this);
 			changed.clear();
 			
 		}

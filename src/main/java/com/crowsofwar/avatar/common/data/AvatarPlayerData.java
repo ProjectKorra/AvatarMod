@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -42,8 +43,11 @@ import com.crowsofwar.gorecore.data.PlayerDataFetcherServer;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherSided;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class AvatarPlayerData extends PlayerData implements BendingData {
 	
@@ -56,8 +60,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		super(dataSaver, playerID, player);
 		
 		boolean isClient = player instanceof AbstractClientPlayer;
-		networker = new Networker(!isClient, PacketCPlayerData.class,
-				net -> new PacketCPlayerData(net, playerID));
+		networker = new Networker(!isClient, PacketCPlayerData.class, net -> sendPacket());
 		
 		bendingData = new AbstractBendingData() {
 			
@@ -177,6 +180,24 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	
 	public Networker getNetworker() {
 		return networker;
+	}
+	
+	private void sendPacket() {
+		
+		PacketCPlayerData packet = new PacketCPlayerData(networker, playerID);
+		EntityPlayer player = this.getPlayerEntity();
+		if (player != null && !player.worldObj.isRemote) {
+			
+			EntityTracker tracker = ((WorldServer) player.worldObj).getEntityTracker();
+			
+			System.out.println("Players tracking " + player + " ->");
+			System.out.println("  >> " + tracker.getTrackingPlayers(player));
+			
+			AvatarMod.network.sendToAllAround(packet,
+					new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 999));
+			
+		}
+		
 	}
 	
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
