@@ -17,11 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WALL;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
@@ -285,7 +288,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				entity.setDead();
 				if (getOwner() != null) {
 					BendingData data = ownerAttribute.getOwnerBender().getData();
-					data.getAbilityData(BendingAbility.ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
+					data.getAbilityData(ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
 				}
 			}
 			
@@ -297,8 +300,17 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	protected boolean canCollideWith(Entity entity) {
 		
 		boolean notWall = !(entity instanceof EntityWall) && !(entity instanceof EntityWallSegment);
-		boolean friendlyProjectile = entity instanceof AvatarEntity
-				&& ((AvatarEntity) entity).getOwner() == this.getOwner();
+		
+		boolean friendlyProjectile = false;
+		if (getOwner() != null) {
+			AbilityData data = Bender.create(getOwner()).getData().getAbilityData(ABILITY_WALL);
+			if (data.isMaxLevel() && data.getPath() == AbilityTreePath.FIRST) {
+				
+				friendlyProjectile = entity instanceof AvatarEntity
+						&& ((AvatarEntity) entity).getOwner() == this.getOwner();
+				
+			}
+		}
 		
 		return super.canCollideWith(entity) && notWall && !friendlyProjectile;
 		
