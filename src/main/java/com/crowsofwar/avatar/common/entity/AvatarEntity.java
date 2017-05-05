@@ -183,12 +183,12 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	/**
-	 * Finds a list of all AvatarEntities who are controlled by this entity and
-	 * are of the given type.
+	 * Find the entity controlled by the given player.
 	 */
-	public static <T extends AvatarEntity> List<T> lookupControlledEntities(World world, Class<T> cls,
+	public static <T extends AvatarEntity> T lookupControlledEntity(World world, Class<T> cls,
 			EntityLivingBase controller) {
-		return world.getEntities(cls, ent -> ent.getController() == controller);
+		List<T> list = world.getEntities(cls, ent -> ent.getController() == controller);
+		return list.isEmpty() ? null : list.get(0);
 	}
 	
 	@Override
@@ -230,7 +230,7 @@ public abstract class AvatarEntity extends Entity {
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				EntitySelectors.<Entity>getTeamCollisionPredicate(this));
+				EntitySelectors.<Entity> getTeamCollisionPredicate(this));
 		
 		if (!list.isEmpty()) {
 			int i = this.worldObj.getGameRules().getInt("maxEntityCramming");
