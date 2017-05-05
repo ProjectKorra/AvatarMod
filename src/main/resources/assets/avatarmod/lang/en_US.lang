@@ -67,6 +67,11 @@ avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
 avatar.ability.ravine=Ravine
 avatar.ability.earth_wall=Wall
+avatar.ability.earth_wall.lvl1=Summon a small wall
+avatar.ability.earth_wall.lvl2=Create a larger wall
+avatar.ability.earth_wall.lvl3=Create a larger wall
+avatar.ability.earth_wall.lvl4_1=Shoot projectiles through the wall
+avatar.ability.earth_wall.lvl4_2=Wall stays up for longer, but uses up chi
 
 avatar.ability.mine_blocks=Mine Blocks
 avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels
