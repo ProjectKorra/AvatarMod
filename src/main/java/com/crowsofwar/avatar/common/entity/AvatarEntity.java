@@ -259,8 +259,24 @@ public abstract class AvatarEntity extends Entity {
 		}
 	}
 	
+	/**
+	 * Dictates whether this entity will be aware of the collision. However, the
+	 * other entity will still execute the collision logic.
+	 * <p>
+	 * This affects the {@link #onCollideWithEntity(Entity)} hook. Also prevents
+	 * {@link #applyEntityCollision(Entity) vanilla logic} from occurring which
+	 * pushes the entities away.
+	 */
 	protected boolean canCollideWith(Entity entity) {
-		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
+		return !isHidden() && entity instanceof AvatarEntity;
+	}
+	
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		if (canCollideWith(entity)) {
+			super.applyEntityCollision(entity);
+			onCollideWithEntity(entity);
+		}
 	}
 	
 	protected void updateHidden() {

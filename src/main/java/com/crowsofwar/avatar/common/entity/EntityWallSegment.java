@@ -198,7 +198,41 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 	
 	@Override
-	public void applyEntityCollision(Entity entity) {
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		wallReference.readFromNBT(nestedCompound(nbt, "Parent"));
+		ownerAttribute.load(nbt);
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		wallReference.writeToNBT(nestedCompound(nbt, "Parent"));
+		ownerAttribute.save(nbt);
+	}
+	
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
+	}
+	
+	@Override
+	public void writeSpawnData(ByteBuf buf) {
+		buf.writeFloat(height);
+		buf.writeInt(offset);
+	}
+	
+	@Override
+	public void readSpawnData(ByteBuf buf) {
+		setSize(width, buf.readFloat());
+		offset = buf.readInt();
+	}
+	
+	@Override
+	public void addVelocity(double x, double y, double z) {}
+	
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
 		
 		if (isHidden()) return;
 		
@@ -242,56 +276,28 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				velocity.setX(amt);
 		}
 		
-	}
-	
-	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		wallReference.readFromNBT(nestedCompound(nbt, "Parent"));
-		ownerAttribute.load(nbt);
-	}
-	
-	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		wallReference.writeToNBT(nestedCompound(nbt, "Parent"));
-		ownerAttribute.save(nbt);
-	}
-	
-	@Override
-	public boolean isInRangeToRenderDist(double distance) {
-		return true;
-	}
-	
-	@Override
-	public void writeSpawnData(ByteBuf buf) {
-		buf.writeFloat(height);
-		buf.writeInt(offset);
-	}
-	
-	@Override
-	public void readSpawnData(ByteBuf buf) {
-		setSize(width, buf.readFloat());
-		offset = buf.readInt();
-	}
-	
-	@Override
-	public void addVelocity(double x, double y, double z) {}
-	
-	@Override
-	protected void onCollideWithEntity(Entity entity) {
-		// Only called for avatar entities due to canCollideWith
-		((AvatarEntity) entity).onCollideWithSolid();
-		entity.setDead();
-		if (getOwner() != null) {
-			BendingData data = ownerAttribute.getOwnerBender().getData();
-			data.getAbilityData(BendingAbility.ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
+		if (entity instanceof AvatarEntity) {
+			
+			((AvatarEntity) entity).onCollideWithSolid();
+			entity.setDead();
+			if (getOwner() != null) {
+				BendingData data = ownerAttribute.getOwnerBender().getData();
+				data.getAbilityData(BendingAbility.ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
+			}
+			
 		}
+		
 	}
 	
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && !(entity instanceof EntityWall);
+		
+		boolean notWall = !(entity instanceof EntityWall) && !(entity instanceof EntityWallSegment);
+		boolean friendlyProjectile = entity instanceof AvatarEntity
+				&& ((AvatarEntity) entity).getOwner() == this.getOwner();
+		
+		return super.canCollideWith(entity) && notWall && !friendlyProjectile;
+		
 	}
 	
 	@Override

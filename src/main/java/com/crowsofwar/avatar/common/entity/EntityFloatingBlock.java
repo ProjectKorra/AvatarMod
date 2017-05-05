@@ -368,9 +368,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	@Override
-	public void applyEntityCollision(Entity entity) {
-		// super.applyEntityCollision(entity);
-		// entity.applyEntityCollision(entity);
+	protected boolean canCollideWith(Entity entity) {
+		return false;
 	}
 	
 	@Override
