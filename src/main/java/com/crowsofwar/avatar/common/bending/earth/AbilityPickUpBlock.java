@@ -38,7 +38,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -81,9 +80,10 @@ public class AbilityPickUpBlock extends EarthAbility {
 				
 				pickupBlock(ctx, target.toBlockPos());
 				
-				EnumFacing direction = entity.getHorizontalFacing();
-				pickupBlock(ctx, target.toBlockPos().offset(direction));
-				pickupBlock(ctx, target.toBlockPos().offset(direction.getOpposite()));
+				// EnumFacing direction = entity.getHorizontalFacing();
+				// pickupBlock(ctx, target.toBlockPos().offset(direction));
+				// pickupBlock(ctx,
+				// target.toBlockPos().offset(direction.getOpposite()));
 				
 			}
 		}
