@@ -49,7 +49,7 @@ public class ConfigStats {
 	public List<String> bendableBlocksNames;
 	
 	@Load
-	public double wallWaitTime = 10, wallMomentum = 10;
+	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
 	
 	@Load
 	public int wallJumpDelay = 10;
@@ -61,7 +61,7 @@ public class ConfigStats {
 	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 6f, chiRavine = 3f,
 			chiWall = 5f, chiPickUpBlock = 2.5f, chiMining = 4f, chiMiningMaster = 1f, chiFireArc = 2f,
 			chiFireball = 4f, chiFlamethrowerSecond = 2f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
-			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f;
+			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.5f;
 	
 	@Load
 	public boolean allowAirBubbleElytra = false;

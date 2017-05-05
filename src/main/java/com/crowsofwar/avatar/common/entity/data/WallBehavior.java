@@ -17,8 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WALL;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -119,7 +124,22 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		public Behavior onUpdate(EntityWallSegment entity) {
 			entity.velocity().set(0, 0, 0);
 			ticks++;
-			return ticks < (STATS_CONFIG.wallWaitTime * 20) ? this : new Drop();
+			
+			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
+			
+			BendingData data = Bender.getData(entity.getOwner());
+			AbilityData abilityData = data.getAbilityData(ABILITY_WALL);
+			if (abilityData.isMaxLevel() && abilityData.getPath() == AbilityTreePath.SECOND) {
+				
+				drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
+				
+				if (!entity.worldObj.isRemote && !data.chi().consumeChi(STATS_CONFIG.chiWallOneSecond / 20)) {
+					drop = true;
+				}
+				
+			}
+			
+			return drop ? new Drop() : this;
 		}
 		
 		@Override

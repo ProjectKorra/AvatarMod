@@ -89,6 +89,11 @@ public interface Bender {
 		}
 	}
 	
+	public static BendingData getData(EntityLivingBase entity) {
+		Bender bender = create(entity);
+		return bender == null ? null : bender.getData();
+	}
+	
 	public static boolean isBenderSupported(EntityLivingBase entity) {
 		return entity == null || entity instanceof EntityPlayer || entity instanceof Bender;
 	}
