@@ -208,6 +208,10 @@ public class BendingContext {
 		
 		World world = bender.getWorld();
 		
+		if (world.isRainingAt(bender.getEntity().getPosition())) {
+			return true;
+		}
+		
 		VectorI targetPos = getClientLookBlock();
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
