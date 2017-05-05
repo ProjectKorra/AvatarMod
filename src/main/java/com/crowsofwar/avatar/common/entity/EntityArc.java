@@ -249,7 +249,7 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1 && !isHidden();
+		return pass == 1;
 	}
 	
 	/**
