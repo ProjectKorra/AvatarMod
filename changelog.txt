@@ -20,3 +20,4 @@ AV2 Changelog :: version a4.0
 > Fix flamethrower not aggroing mobs
 > Fix some entities can be set on fire(like airblade)
 > Fix grass path not bendable
+> Fix water arc breaking when hit a block while under player control
