@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -56,6 +57,9 @@ public class StatCtrlThrowWater extends StatusControl {
 		double velocity = 6;
 		if (lvl >= 2) {
 			velocity = 10;
+		}
+		if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+			velocity = 8;
 		}
 		
 		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,
