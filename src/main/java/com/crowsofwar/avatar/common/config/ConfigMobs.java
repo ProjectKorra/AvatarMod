@@ -21,9 +21,12 @@ import java.util.Map;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 
 /**
@@ -36,6 +39,8 @@ public class ConfigMobs {
 	public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
 	
 	private static final Map<String, Integer> DEFAULT_FOODS = new HashMap<>();
+	private static final Map<String, Double> DEFAULT_SCROLL_DROP = new HashMap<>();
+	private static final Map<String, String> DEFAULT_SCROLL_TYPE = new HashMap<>();
 	static {
 		// Wheat
 		DEFAULT_FOODS.put("minecraft:bread", 5);
@@ -54,6 +59,44 @@ public class ConfigMobs {
 		DEFAULT_FOODS.put("minecraft:beetroot", 8);
 		DEFAULT_FOODS.put("minecraft:cake", 45);
 		DEFAULT_FOODS.put("minecraft:sugar", 2);
+		
+		DEFAULT_SCROLL_DROP.put("polar_bear", 10.0);
+		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
+		DEFAULT_SCROLL_DROP.put("squid", 3.0);
+		DEFAULT_SCROLL_TYPE.put("squid", "water");
+		DEFAULT_SCROLL_DROP.put("guardian", 15.0);
+		DEFAULT_SCROLL_TYPE.put("guardian", "water");
+		DEFAULT_SCROLL_DROP.put("elder_guardian", 25.0);
+		DEFAULT_SCROLL_TYPE.put("elder_guardian", "water");
+		
+		DEFAULT_SCROLL_DROP.put("zombie_pigman", 5.0);
+		DEFAULT_SCROLL_TYPE.put("zombie_pigman", "fire");
+		DEFAULT_SCROLL_DROP.put("magma_cube", 15.0);
+		DEFAULT_SCROLL_TYPE.put("magma_cube", "fire");
+		DEFAULT_SCROLL_DROP.put("wither_skeleton", 20.0);
+		DEFAULT_SCROLL_TYPE.put("wither_skeleton", "fire");
+		DEFAULT_SCROLL_DROP.put("ghast", 30.0);
+		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
+		DEFAULT_SCROLL_DROP.put("blaze", 10.0);
+		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
+		
+		DEFAULT_SCROLL_DROP.put("bat", 15.0);
+		DEFAULT_SCROLL_TYPE.put("bat", "earth");
+		DEFAULT_SCROLL_DROP.put("mooshroom", 10.0);
+		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
+		DEFAULT_SCROLL_DROP.put("cave_spider", 10.0);
+		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
+		DEFAULT_SCROLL_DROP.put("silverfish", 10.0);
+		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
+		
+		DEFAULT_SCROLL_DROP.put("creeper", 3.0);
+		DEFAULT_SCROLL_DROP.put("skeleton", 3.0);
+		DEFAULT_SCROLL_DROP.put("zombie", 3.0);
+		DEFAULT_SCROLL_DROP.put("spider", 3.0);
+		DEFAULT_SCROLL_DROP.put("witch", 10.0);
+		DEFAULT_SCROLL_DROP.put("husk", 5.0);
+		DEFAULT_SCROLL_DROP.put("stray", 5.0);
+		
 	}
 	
 	@Load
@@ -73,8 +116,15 @@ public class ConfigMobs {
 	private Map<String, Integer> bisonFoods;
 	private Map<Item, Integer> bisonFoodList;
 	
+	@Load
+	private Map<String, Double> scrollDropChance;
+	@Load
+	private Map<String, String> scrollType;
+	
 	public static void load() {
 		MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
+		MOBS_CONFIG.scrollDropChance = DEFAULT_SCROLL_DROP;
+		MOBS_CONFIG.scrollType = DEFAULT_SCROLL_TYPE;
 		ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
 		MOBS_CONFIG.loadLists();
 	}
@@ -98,6 +148,41 @@ public class ConfigMobs {
 	
 	public boolean isBisonFood(Item item) {
 		return bisonFoodList.containsKey(item);
+	}
+	
+	/**
+	 * Get the default scroll drop chance for that entity in percentage (0-100)
+	 */
+	public double getScrollDropChance(Entity entity) {
+		String key = EntityList.getEntityString(entity).toLowerCase();
+		return scrollDropChance.get(key) != null ? scrollDropChance.get(key) : 0;
+	}
+	
+	/**
+	 * Gets the scroll type for that entity to drop. By default, is
+	 * ScrollType.ALL.
+	 */
+	public ScrollType getScrollType(Entity entity) {
+		
+		String key = EntityList.getEntityString(entity).toLowerCase();
+		String typeName = scrollType.get(key);
+		
+		if (typeName != null) {
+			
+			ScrollType type = ScrollType.ALL;
+			for (ScrollType t : ScrollType.values()) {
+				if (t.name().toLowerCase().equals(typeName.toLowerCase())) {
+					type = t;
+					break;
+				}
+			}
+			
+			return type;
+			
+		}
+		
+		return ScrollType.ALL;
+		
 	}
 	
 }
