@@ -21,7 +21,10 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -121,8 +124,14 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				if (!entity.worldObj.isRemote) {
 					BendingData data = Bender.create(entity.getOwner()).getData();
 					if (data != null) {
-						data.getAbilityData(BendingAbility.ABILITY_WATER_ARC)
-								.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
+						AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_ARC);
+						abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
+						
+						if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
+							entity.setBehavior(new PlayerControlled());
+							data.addStatusControl(StatusControl.THROW_WATER);
+						}
+						
 					}
 				}
 				

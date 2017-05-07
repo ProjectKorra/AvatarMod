@@ -106,6 +106,13 @@ public class AbilityData {
 	}
 	
 	/**
+	 * Checks whether is at level IV and has chosen the given path.
+	 */
+	public boolean isMasterPath(AbilityTreePath path) {
+		return isMaxLevel() && this.path == path;
+	}
+	
+	/**
 	 * Ensures ability path is correct - on level 4, if still on MAIN path, will
 	 * switch to FIRST automatically
 	 */
