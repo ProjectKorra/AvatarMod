@@ -42,6 +42,12 @@ public class AvatarEntityItem extends EntityItem {
 		super(worldIn, x, y, z, stack);
 	}
 	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_RESIST_FIRE, false);
+	}
+	
 	public boolean resistsFire() {
 		return dataManager.get(SYNC_RESIST_FIRE);
 	}
