@@ -14,6 +14,7 @@ AV2 Changelog :: version a4.0
 * Generally triple xp gains to account for levels
 * Airblade and airgust, by default, have less push
 * Airblade can chop flowers, etc. at level II
+* Vanilla mobs have rare chances of dropping scrolls
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs
