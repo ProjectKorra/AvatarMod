@@ -16,12 +16,18 @@
 */
 package com.crowsofwar.avatar.common;
 
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
+
+import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -34,17 +40,30 @@ public class AvatarScrollDrops {
 	private AvatarScrollDrops() {}
 	
 	@SubscribeEvent
-	public void onMobDeath(LivingDeathEvent e) {
+	public void onMobDeath(LivingDropsEvent e) {
 		
 		EntityLivingBase entity = e.getEntityLiving();
 		DamageSource source = e.getSource();
 		
-		if (source instanceof EntityDamageSource) {
-			if (source.getEntity() instanceof EntityPlayer) {
+		if (e.isRecentlyHit()) {
+			
+			double chance = MOBS_CONFIG.getScrollDropChance(entity);
+			ScrollType type = MOBS_CONFIG.getScrollType(entity);
+			
+			double random = Math.random() * 100;
+			if (random < chance) {
 				
-				EntityPlayer player = (EntityPlayer) source.getEntity();
+				ItemStack stack = new ItemStack(AvatarItems.itemScroll);
+				ItemScroll.setScrollType(stack, type);
+				ItemScroll.setPoints(stack, 1);
+				
+				EntityItem entityItem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ,
+						stack);
+				entityItem.setDefaultPickupDelay();
+				e.getDrops().add(entityItem);
 				
 			}
+			
 		}
 		
 	}
