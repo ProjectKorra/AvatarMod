@@ -19,8 +19,10 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -48,6 +50,13 @@ public class StatCtrlThrowWater extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
+		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_ARC);
+		
+		int lvl = abilityData.getLevel();
+		double velocity = 6;
+		if (lvl >= 2) {
+			velocity = 10;
+		}
 		
 		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,
 				entity.posX + 5, entity.posY + 5, entity.posZ + 5);
@@ -60,7 +69,7 @@ public class StatCtrlThrowWater extends StatusControl {
 			
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
-			force.mul(10);
+			force.mul(velocity);
 			arc.velocity().add(force);
 			arc.setBehavior(new WaterArcBehavior.Thrown());
 			

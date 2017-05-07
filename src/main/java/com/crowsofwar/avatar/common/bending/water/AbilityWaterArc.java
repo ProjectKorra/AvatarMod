@@ -59,7 +59,7 @@ public class AbilityWaterArc extends WaterAbility {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		
-		Vector targetPos = getClosestWaterBlock(entity);
+		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
 		
 		if (targetPos != null || ctx.consumeWater(1)) {
 			
@@ -99,12 +99,17 @@ public class AbilityWaterArc extends WaterAbility {
 		}
 	}
 	
-	private Vector getClosestWaterBlock(EntityLivingBase entity) {
+	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
 		World world = entity.worldObj;
 		
 		Vector eye = Vector.getEyePos(entity);
 		
-		double range = STATS_CONFIG.waterArcSearchRadius;
+		double rangeMult = 0.6;
+		if (level >= 1) {
+			rangeMult = 1;
+		}
+		
+		double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
 		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
 			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
 				
