@@ -21,14 +21,17 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.floor;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
@@ -66,6 +69,8 @@ public class AbilityLightFire extends FireAbility {
 			setAt.offset(side);
 			BlockPos blockPos = setAt.toBlockPos();
 			
+			double chance = 20 * ctx.getLevel() + 40;
+			
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 				
 				int yaw = (int) floor((ctx.getBenderEntity().rotationYaw * 8 / 360) + 0.5) & 7;
@@ -75,25 +80,25 @@ public class AbilityLightFire extends FireAbility {
 				if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
 				if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
 				
-				if (spawnFire(world, blockPos, ctx, true)) {
+				if (spawnFire(world, blockPos, ctx, true, chance)) {
 					for (int i = 1; i < 5; i++) {
-						spawnFire(world, blockPos.add(x * i, 0, z * i), ctx, false);
+						spawnFire(world, blockPos.add(x * i, 0, z * i), ctx, false, 100);
 					}
 					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 				}
 				
 			} else if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 				
-				if (spawnFire(world, blockPos, ctx, true)) {
-					spawnFire(world, blockPos.add(1, 0, 0), ctx, false);
-					spawnFire(world, blockPos.add(-1, 0, 0), ctx, false);
-					spawnFire(world, blockPos.add(0, 0, 1), ctx, false);
-					spawnFire(world, blockPos.add(0, 0, -1), ctx, false);
+				if (spawnFire(world, blockPos, ctx, true, chance)) {
+					spawnFire(world, blockPos.add(1, 0, 0), ctx, false, 100);
+					spawnFire(world, blockPos.add(-1, 0, 0), ctx, false, 100);
+					spawnFire(world, blockPos.add(0, 0, 1), ctx, false, 100);
+					spawnFire(world, blockPos.add(0, 0, -1), ctx, false, 100);
 					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 				}
 				
 			} else {
-				if (spawnFire(world, blockPos, ctx, true)) {
+				if (spawnFire(world, blockPos, ctx, true, chance)) {
 					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 				}
 			}
@@ -101,7 +106,8 @@ public class AbilityLightFire extends FireAbility {
 		}
 	}
 	
-	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi) {
+	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
+			double chance) {
 		
 		if (world.isRainingAt(blockPos)) {
 			
@@ -114,16 +120,29 @@ public class AbilityLightFire extends FireAbility {
 		} else {
 			if (world.getBlockState(blockPos).getBlock() == Blocks.AIR
 					&& Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
+				
 				if (!useChi || ctx.consumeChi(STATS_CONFIG.chiLightFire)) {
 					
-					world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
-					world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-							SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS,
-							0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
+					double random = Math.random() * 100;
 					
-					return true;
+					if (random < chance) {
+						
+						world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
+						world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+								SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS,
+								0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
+						
+						return true;
+						
+					} else if (ctx.getBender().isPlayer()) {
+						
+						AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.ability.light_fire.fail"),
+								(EntityPlayerMP) ctx.getBenderEntity());
+						
+					}
 					
 				}
+				
 			}
 		}
 		

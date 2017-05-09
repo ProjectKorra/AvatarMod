@@ -82,6 +82,14 @@ avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
 avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
 
 avatar.ability.light_fire=Light Fire
+avatar.ability.light_fire.desc=A small, utility type ability to light fires. It's less practical in combat than some other abilities.
+avatar.ability.light_fire.fail=You weren't able to light the fire. Maybe you should try again...
+avatar.ability.light_fire.lvl1=Try to create a small fire
+avatar.ability.light_fire.lvl2=Greater chance of creating fire
+avatar.ability.light_fire.lvl3=Greater chance of creating fire
+avatar.ability.light_fire.lvl4_1=Flame wall ;; Create a line of fire in the direction you're looking
+avatar.ability.light_fire.lvl4_2=Wide range ;; Light nearby blocks on fire as well
+
 avatar.ability.fire_arc=Fire Arc
 avatar.ability.flamethrower=Flamethrower
 
