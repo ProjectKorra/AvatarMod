@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.floor;
 
@@ -78,6 +79,7 @@ public class AbilityLightFire extends FireAbility {
 					for (int i = 1; i < 5; i++) {
 						spawnFire(world, blockPos.add(x * i, 0, z * i), ctx, false);
 					}
+					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 				}
 				
 			} else if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
@@ -87,10 +89,13 @@ public class AbilityLightFire extends FireAbility {
 					spawnFire(world, blockPos.add(-1, 0, 0), ctx, false);
 					spawnFire(world, blockPos.add(0, 0, 1), ctx, false);
 					spawnFire(world, blockPos.add(0, 0, -1), ctx, false);
+					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 				}
 				
 			} else {
-				spawnFire(world, blockPos, ctx, true);
+				if (spawnFire(world, blockPos, ctx, true)) {
+					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
+				}
 			}
 			
 		}

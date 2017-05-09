@@ -36,7 +36,7 @@ public class ConfigSkills {
 			airGustHit = .75f, ravineHit = .3f, waveHit = 1.2f, waterHit = 2f, fireHit = 2f,
 			flamethrowerHit = 0.15f, fireballHit = 4.5f, airbladeHit = 1.2f, miningUse = 10f,
 			miningBreakOre = 5f, waterSkateOneSecond = 1.2f, wallRaised = 1.5f, wallBlockedAttack = .45f,
-			airbubbleProtect = 1.5f;
+			airbubbleProtect = 1.5f, litFire = 20;
 	
 	public static void load() {
 		ConfigLoader.load(SKILLS_CONFIG, "avatar/skills.yml");
