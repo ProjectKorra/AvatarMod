@@ -147,6 +147,20 @@ public class Chi {
 		return max - availableMark;
 	}
 	
+	/**
+	 * Tries to consume the amount of available chi; returns whether there was
+	 * enough.
+	 */
+	public boolean consumeChi(float amount) {
+		float available = getAvailableChi();
+		if (available >= amount) {
+			changeTotalChi(-amount);
+			changeAvailableChi(-amount);
+			return true;
+		}
+		return false;
+	}
+	
 	private void save() {
 		checkConsistency();
 		data.save(DataCategory.CHI);

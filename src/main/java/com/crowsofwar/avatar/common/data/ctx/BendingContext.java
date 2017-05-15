@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
@@ -180,11 +179,7 @@ public class BendingContext {
 			return true;
 		}
 		
-		Chi chi = data.chi();
-		float available = chi.getAvailableChi();
-		if (available >= amount) {
-			chi.changeTotalChi(-amount);
-			chi.changeAvailableChi(-amount);
+		if (data.chi().consumeChi(amount)) {
 			return true;
 		}
 		

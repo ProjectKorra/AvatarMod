@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -182,6 +183,11 @@ public class EntityWaterArc extends EntityArc {
 	
 	public void setBehavior(WaterArcBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof WaterArcBehavior.PlayerControlled ? getOwner() : null;
 	}
 	
 	@Override

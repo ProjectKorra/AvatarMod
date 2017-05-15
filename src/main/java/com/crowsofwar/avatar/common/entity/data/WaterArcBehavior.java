@@ -21,7 +21,10 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -106,7 +109,13 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
-			entity.velocity().add(0, -9.81 / 60, 0);
+			
+			BendingData data = Bender.create(entity.getOwner()).getData();
+			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_ARC);
+			
+			if (!abilityData.isMasterPath(AbilityTreePath.SECOND) || entity.ticksExisted >= 40) {
+				entity.velocity().add(0, -9.81 / 60, 0);
+			}
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().expandXyz(0.9),
@@ -119,11 +128,14 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						6 * entity.getDamageMult());
 				
 				if (!entity.worldObj.isRemote) {
-					BendingData data = Bender.create(entity.getOwner()).getData();
-					if (data != null) {
-						data.getAbilityData(BendingAbility.ABILITY_WATER_ARC)
-								.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
+					
+					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
+					
+					if (abilityData.isMasterPath(AbilityTreePath.FIRST) && collided.getHealth() > 0) {
+						entity.setBehavior(new PlayerControlled());
+						data.addStatusControl(StatusControl.THROW_WATER);
 					}
+					
 				}
 				
 			}

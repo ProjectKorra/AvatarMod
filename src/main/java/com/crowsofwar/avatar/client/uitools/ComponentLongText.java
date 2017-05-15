@@ -79,7 +79,16 @@ public class ComponentLongText extends UiComponent {
 				// The line is too long, push it onto lines and reset
 				lines.add(currentLine);
 				currentLine = "";
-				i--;
+				
+				// If a word is too long by itself, ignore it
+				// (don't keep trying to put it on a new line, when it wouldn't
+				// fit by itself anyways)
+				if (fr.getStringWidth(word) <= width.xInPixels() / scaleFactor()) {
+					i--;
+				} else {
+					lines.set(lines.size() - 1, wouldBe);
+				}
+				
 			} else {
 				// The line isn't long yet, so keep adding more words
 				currentLine = wouldBe;

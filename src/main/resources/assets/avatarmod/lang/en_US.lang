@@ -67,9 +67,29 @@ avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
 avatar.ability.ravine=Ravine
 avatar.ability.earth_wall=Wall
+avatar.ability.earth_wall.lvl1=Summon a small wall
+avatar.ability.earth_wall.lvl2=Create a larger wall
+avatar.ability.earth_wall.lvl3=Create a larger wall
+avatar.ability.earth_wall.lvl4_1=Shoot projectiles through the wall
+avatar.ability.earth_wall.lvl4_2=Wall stays up for longer, but uses up chi
+
 avatar.ability.mine_blocks=Mine Blocks
+avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels
+avatar.ability.mine_blocks.lvl1=Mine a few blocks
+avatar.ability.mine_blocks.lvl2=Mine out even more blocks
+avatar.ability.mine_blocks.lvl3=Fortune level I when mining
+avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
+avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
 
 avatar.ability.light_fire=Light Fire
+avatar.ability.light_fire.desc=A small, utility type ability to light fires. It's less practical in combat than some other abilities.
+avatar.ability.light_fire.fail=You weren't able to light the fire. Maybe you should try again...
+avatar.ability.light_fire.lvl1=Try to create a small fire
+avatar.ability.light_fire.lvl2=Greater chance of creating fire
+avatar.ability.light_fire.lvl3=Greater chance of creating fire
+avatar.ability.light_fire.lvl4_1=Flame wall ;; Create a line of fire in the direction you're looking
+avatar.ability.light_fire.lvl4_2=Wide range ;; Light nearby blocks on fire as well
+
 avatar.ability.fire_arc=Fire Arc
 avatar.ability.flamethrower=Flamethrower
 
@@ -82,6 +102,13 @@ avatar.ability.flamethrower.lvl4_2=The world will burn!! ;; Unfocused flames tha
 avatar.ability.fireball=Fireball
 
 avatar.ability.water_arc=Water Arc
+avatar.ability.water_arc.desc=One of waterbending's most common attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby.
+avatar.ability.water_arc.lvl1=Basic water arc
+avatar.ability.water_arc.lvl2=Farther pick-up range
+avatar.ability.water_arc.lvl3=Much faster
+avatar.ability.water_arc.lvl4_1=Boomerang ;; Comes back to you if you hit a target
+avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thrown, slower
+
 avatar.ability.wave=Wave
 avatar.ability.water_bubble=Water Bubble
 avatar.ability.water_skate=Water Skate

@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.AvatarMod.proxy;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.crowsofwar.avatar.AvatarMod;
@@ -143,19 +144,22 @@ public class RadialMenu extends Gui {
 			AbilityData abilityData = data.getAbilityData(ability);
 			
 			String secondKey = "avatar.radial.undefined";
-			String secondArg = "";
+			String[] secondArgs = { "", "" };
 			if (ability != null) {
 				secondKey = "avatar.radial.xp";
-				secondArg = abilityData.getLevel() + "";
+				secondArgs[0] = abilityData.getLevel() + "";
+				secondArgs[1] = (int) (abilityData.getXp()) + "";
+				
 				if (abilityData.getLevel() == 3) {
 					secondKey = "avatar.radial.max";
-					secondArg = abilityData.getPath().name().toLowerCase();
+					secondArgs[0] = abilityData.getPath().name().toLowerCase();
 				}
+				
 			}
 			String second = I18n.format(secondKey);
 			
-			second = ChatSender.instance.processText(second, MSG_RADIAL_XP, abilityData.getLevel(),
-					secondArg);
+			second = ChatSender.instance.processText(second, MSG_RADIAL_XP,
+					(Object[]) ArrayUtils.addAll(secondArgs, abilityData.getLevel() + ""));
 			
 			drawCenteredString(mc.fontRendererObj, second, x,
 					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),

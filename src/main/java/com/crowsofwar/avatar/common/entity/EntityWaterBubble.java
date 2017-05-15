@@ -151,6 +151,11 @@ public class EntityWaterBubble extends AvatarEntity {
 	}
 	
 	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof WaterBubbleBehavior.PlayerControlled ? getOwner() : null;
+	}
+	
+	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
 	}

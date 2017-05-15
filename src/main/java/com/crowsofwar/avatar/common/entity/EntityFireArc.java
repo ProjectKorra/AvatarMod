@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -121,6 +122,11 @@ public class EntityFireArc extends EntityArc {
 	
 	public void setBehavior(FireArcBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof FireArcBehavior.PlayerControlled ? getOwner() : null;
 	}
 	
 	public float getDamageMult() {

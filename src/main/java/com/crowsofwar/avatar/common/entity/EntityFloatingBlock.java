@@ -341,6 +341,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
+	}
+	
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
 	}
@@ -363,9 +368,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	@Override
-	public void applyEntityCollision(Entity entity) {
-		// super.applyEntityCollision(entity);
-		// entity.applyEntityCollision(entity);
+	protected boolean canCollideWith(Entity entity) {
+		return false;
 	}
 	
 	@Override

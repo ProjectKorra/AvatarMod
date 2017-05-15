@@ -15,6 +15,7 @@ AV2 Changelog :: version a4.0
 * Airblade and airgust, by default, have less push
 * Airblade can chop flowers, etc. at level II
 * Waterbenders have infinite water arcs when it rains on them
+* Greatly increased XP gains for Mine Blocks ability
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs

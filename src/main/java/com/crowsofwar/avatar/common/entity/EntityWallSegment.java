@@ -17,11 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WALL;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
@@ -198,7 +201,41 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 	
 	@Override
-	public void applyEntityCollision(Entity entity) {
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		wallReference.readFromNBT(nestedCompound(nbt, "Parent"));
+		ownerAttribute.load(nbt);
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		wallReference.writeToNBT(nestedCompound(nbt, "Parent"));
+		ownerAttribute.save(nbt);
+	}
+	
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
+	}
+	
+	@Override
+	public void writeSpawnData(ByteBuf buf) {
+		buf.writeFloat(height);
+		buf.writeInt(offset);
+	}
+	
+	@Override
+	public void readSpawnData(ByteBuf buf) {
+		setSize(width, buf.readFloat());
+		offset = buf.readInt();
+	}
+	
+	@Override
+	public void addVelocity(double x, double y, double z) {}
+	
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
 		
 		// Note... only called server-side
 		double amt = 0.4;
@@ -240,56 +277,41 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				velocity.setX(amt);
 		}
 		
-	}
-	
-	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		wallReference.readFromNBT(nestedCompound(nbt, "Parent"));
-		ownerAttribute.load(nbt);
-	}
-	
-	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		wallReference.writeToNBT(nestedCompound(nbt, "Parent"));
-		ownerAttribute.save(nbt);
-	}
-	
-	@Override
-	public boolean isInRangeToRenderDist(double distance) {
-		return true;
-	}
-	
-	@Override
-	public void writeSpawnData(ByteBuf buf) {
-		buf.writeFloat(height);
-		buf.writeInt(offset);
-	}
-	
-	@Override
-	public void readSpawnData(ByteBuf buf) {
-		setSize(width, buf.readFloat());
-		offset = buf.readInt();
-	}
-	
-	@Override
-	public void addVelocity(double x, double y, double z) {}
-	
-	@Override
-	protected void onCollideWithEntity(Entity entity) {
-		// Only called for avatar entities due to canCollideWith
-		((AvatarEntity) entity).onCollideWithSolid();
-		entity.setDead();
-		if (getOwner() != null) {
-			BendingData data = ownerAttribute.getOwnerBender().getData();
-			data.getAbilityData(BendingAbility.ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
+		if (entity instanceof AvatarEntity) {
+			
+			AvatarEntity avEnt = (AvatarEntity) entity;
+			avEnt.onCollideWithSolid();
+			
+			if (avEnt.tryDestroy()) {
+				entity.setDead();
+				if (getOwner() != null) {
+					BendingData data = ownerAttribute.getOwnerBender().getData();
+					data.getAbilityData(ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
+				}
+			}
+			
 		}
+		
 	}
 	
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && !(entity instanceof EntityWall);
+		
+		boolean notWall = !(entity instanceof EntityWall) && !(entity instanceof EntityWallSegment);
+		
+		boolean friendlyProjectile = false;
+		if (getOwner() != null) {
+			AbilityData data = Bender.create(getOwner()).getData().getAbilityData(ABILITY_WALL);
+			if (data.isMaxLevel() && data.getPath() == AbilityTreePath.FIRST) {
+				
+				friendlyProjectile = entity instanceof AvatarEntity
+						&& ((AvatarEntity) entity).getOwner() == this.getOwner();
+				
+			}
+		}
+		
+		return super.canCollideWith(entity) && notWall && !friendlyProjectile;
+		
 	}
 	
 	@Override

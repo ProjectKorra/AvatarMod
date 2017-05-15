@@ -91,6 +91,19 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	/**
+	 * Get whoever is currently controlling the movement of this entity, or null
+	 * if nobody is controlling it.
+	 * <p>
+	 * While most AvatarEntities have an {@link #getOwner() owner} during their
+	 * whole existence, controlling this entity is only when the bender can
+	 * control the movement of the entity. When it is, for example, thrown, the
+	 * entity won't be considered "controlled" anymore so this will return null.
+	 */
+	public EntityLivingBase getController() {
+		return null;
+	}
+	
+	/**
 	 * Get the velocity of this entity in m/s. Changes to this vector will be
 	 * reflected in the entity's actual velocity.
 	 */
@@ -158,6 +171,15 @@ public abstract class AvatarEntity extends Entity {
 		return null;
 	}
 	
+	/**
+	 * Find the entity controlled by the given player.
+	 */
+	public static <T extends AvatarEntity> T lookupControlledEntity(World world, Class<T> cls,
+			EntityLivingBase controller) {
+		List<T> list = world.getEntities(cls, ent -> ent.getController() == controller);
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
 	@Override
 	public boolean canBeCollidedWith() {
 		return true;
@@ -192,7 +214,7 @@ public abstract class AvatarEntity extends Entity {
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				EntitySelectors.<Entity>getTeamCollisionPredicate(this));
+				EntitySelectors.<Entity> getTeamCollisionPredicate(this));
 		
 		if (!list.isEmpty()) {
 			int i = this.worldObj.getGameRules().getInt("maxEntityCramming");
@@ -221,8 +243,24 @@ public abstract class AvatarEntity extends Entity {
 		}
 	}
 	
+	/**
+	 * Dictates whether this entity will be aware of the collision. However, the
+	 * other entity will still execute the collision logic.
+	 * <p>
+	 * This affects the {@link #onCollideWithEntity(Entity)} hook. Also prevents
+	 * {@link #applyEntityCollision(Entity) vanilla logic} from occurring which
+	 * pushes the entities away.
+	 */
 	protected boolean canCollideWith(Entity entity) {
-		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
+		return !isHidden() && entity instanceof AvatarEntity;
+	}
+	
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		if (canCollideWith(entity)) {
+			super.applyEntityCollision(entity);
+			onCollideWithEntity(entity);
+		}
 	}
 	
 	/**
