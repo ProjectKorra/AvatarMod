@@ -16,6 +16,7 @@ AV2 Changelog :: version a4.0
 * Airblade can chop flowers, etc. at level II
 * Waterbenders have infinite water arcs when it rains on them
 * Greatly increased XP gains for Mine Blocks ability
+* Vanilla mobs have rare chances of dropping scrolls
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs

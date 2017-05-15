@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
+import com.crowsofwar.avatar.common.AvatarScrollDrops;
 import com.crowsofwar.avatar.common.FallAbsorptionHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -62,6 +63,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.item.AvatarCrafting;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
@@ -133,6 +135,7 @@ public class AvatarMod {
 		AvatarParticles.register();
 		AirbendingEvents.register();
 		FallAbsorptionHandler.register();
+		AvatarScrollDrops.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
@@ -205,6 +208,8 @@ public class AvatarMod {
 		EntityRegistry.addSpawn(EntityAirbender.class, 1000, 1, 1, EnumCreatureType.CREATURE, allBiomes);
 		
 		proxy.init();
+		AvatarCrafting.register();
+		
 	}
 	
 	@EventHandler
