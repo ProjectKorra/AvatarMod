@@ -14,6 +14,10 @@ AV2 Changelog :: version a4.0
 * Generally triple xp gains to account for levels
 * Airblade and airgust, by default, have less push
 * Airblade can chop flowers, etc. at level II
+* Waterbenders have infinite water arcs when it rains on them
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs
+> Fix some entities can be set on fire(like airblade)
+> Fix grass path not bendable
+> Fix water arc breaking when hit a block while under player control

@@ -68,8 +68,10 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	protected void onCollideWithBlock() {
-		
+	public void onCollideWithSolid() {
+		if (tryDestroy()) {
+			setDead();
+		}
 	}
 	
 	@Override

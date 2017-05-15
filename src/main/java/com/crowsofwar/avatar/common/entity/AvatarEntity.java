@@ -52,8 +52,6 @@ import net.minecraft.world.World;
  */
 public abstract class AvatarEntity extends Entity {
 	
-	public static final DataParameter<Boolean> SYNC_HIDDEN = EntityDataManager.createKey(AvatarEntity.class,
-			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
 			DataSerializers.VARINT);
 	
@@ -82,7 +80,6 @@ public abstract class AvatarEntity extends Entity {
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
 				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
-		dataManager.register(SYNC_HIDDEN, false);
 	}
 	
 	/**
@@ -115,14 +112,6 @@ public abstract class AvatarEntity extends Entity {
 	
 	private void setAvId(int id) {
 		dataManager.set(SYNC_ID, id);
-	}
-	
-	public boolean isHidden() {
-		return dataManager.get(SYNC_HIDDEN);
-	}
-	
-	public void setHidden(boolean hidden) {
-		dataManager.set(SYNC_HIDDEN, hidden);
 	}
 	
 	@Override
@@ -171,7 +160,7 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public boolean canBeCollidedWith() {
-		return !isHidden();
+		return true;
 	}
 	
 	@Override
@@ -181,11 +170,6 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public void onUpdate() {
-		
-		updateHidden();
-		if (isHidden()) {
-			return;
-		}
 		
 		super.onUpdate();
 		collideWithNearbyEntities();
@@ -239,10 +223,6 @@ public abstract class AvatarEntity extends Entity {
 	
 	protected boolean canCollideWith(Entity entity) {
 		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
-	}
-	
-	protected void updateHidden() {
-		setHidden(getOwner() == null);
 	}
 	
 	/**
@@ -311,7 +291,7 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {
-		return isHidden() ? null : getEntityBoundingBox();
+		return getEntityBoundingBox();
 	}
 	
 	@Override
@@ -321,17 +301,17 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public boolean canRenderOnFire() {
-		return !putsOutFires && !flammable && super.canRenderOnFire();
+		return !putsOutFires && flammable && super.canRenderOnFire();
 	}
 	
 	@Override
 	public void setFire(int seconds) {
-		if (!putsOutFires && !flammable) super.setFire(seconds);
+		if (!putsOutFires && flammable) super.setFire(seconds);
 	}
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return super.shouldRenderInPass(pass) && !isHidden();
+		return super.shouldRenderInPass(pass);
 	}
 	
 	// disable stepping sounds

@@ -170,11 +170,6 @@ public class EntityWall extends AvatarEntity {
 	}
 	
 	@Override
-	protected void updateHidden() {
-		setHidden(false);
-	}
-	
-	@Override
 	public boolean tryDestroy() {
 		return false;
 	}

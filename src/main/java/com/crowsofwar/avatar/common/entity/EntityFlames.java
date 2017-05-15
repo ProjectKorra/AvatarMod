@@ -178,11 +178,6 @@ public class EntityFlames extends AvatarEntity {
 	@Override
 	protected void playStepSound(BlockPos pos, Block blockIn) {}
 	
-	@Override
-	protected void updateHidden() {
-		setHidden(false);
-	}
-	
 	public boolean doesLightFires() {
 		return lightsFires;
 	}

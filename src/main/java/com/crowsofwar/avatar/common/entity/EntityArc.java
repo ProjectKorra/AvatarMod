@@ -110,8 +110,7 @@ public abstract class EntityArc extends AvatarEntity {
 			cp.onUpdate();
 		
 		if (isCollided) {
-			setDead();
-			onCollideWithBlock();
+			onCollideWithSolid();
 		}
 		
 		for (int i = 1; i < points.length; i++) {
@@ -150,8 +149,6 @@ public abstract class EntityArc extends AvatarEntity {
 		}
 		
 	}
-	
-	protected abstract void onCollideWithBlock();
 	
 	protected abstract Vector getGravityVector();
 	
@@ -249,7 +246,7 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1 && !isHidden();
+		return pass == 1;
 	}
 	
 	/**

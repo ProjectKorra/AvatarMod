@@ -71,7 +71,13 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected void onCollideWithBlock() {
+	public void onCollideWithSolid() {
+		
+		if (!worldObj.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
+			if (tryDestroy()) {
+				setDead();
+			}
+		}
 		
 		if (worldObj.isRemote) {
 			Random random = new Random();

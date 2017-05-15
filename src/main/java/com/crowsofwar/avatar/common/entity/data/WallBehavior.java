@@ -75,6 +75,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 			
+			if (entity.getWall() == null) {
+				return this;
+			}
+			
 			// not 0 since client missed 0th tick
 			if (ticks == 1) {
 				

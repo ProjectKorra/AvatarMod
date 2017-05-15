@@ -93,12 +93,15 @@ public class EntityFireArc extends EntityArc {
 	}
 	
 	@Override
-	protected void onCollideWithBlock() {
+	public void onCollideWithSolid() {
 		if (!worldObj.isRemote) {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
 			worldObj.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
+			if (tryDestroy()) {
+				setDead();
+			}
 		}
 	}
 	
