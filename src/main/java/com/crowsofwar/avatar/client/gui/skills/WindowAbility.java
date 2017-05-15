@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTexture;
+import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getPlainCardTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
@@ -82,7 +82,7 @@ public class WindowAbility {
 		title.setScale(1.4f);
 		handler.add(title);
 		
-		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
+		icon = new ComponentImage(getPlainCardTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frameLeft);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(0, title.height()).plus(fromPercent(0, -35)));
