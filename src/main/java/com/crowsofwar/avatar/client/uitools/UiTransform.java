@@ -89,4 +89,16 @@ public interface UiTransform {
 	 */
 	void setFrame(Frame frame);
 	
+	/**
+	 * Gets the Z-position of the UiComponent. In the case of two elements
+	 * overlapping, it is used to determine which element would display "on top"
+	 * of the other.
+	 */
+	float zLevel();
+	
+	/**
+	 * Sets the z-position of the UiComponent
+	 */
+	void setZLevel(float zLevel);
+	
 }

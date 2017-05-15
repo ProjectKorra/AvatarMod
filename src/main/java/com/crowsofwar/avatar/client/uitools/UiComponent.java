@@ -81,6 +81,7 @@ public abstract class UiComponent extends Gui {
 			float y = coordinates().yInPixels() / scaleFactor();
 			GlStateManager.translate((int) x, (int) y, 0);
 			GlStateManager.scale(scale(), scale(), 1f); // unfortunately needed due to shadowing
+			GlStateManager.translate(0, 0, zLevel());
 			componentDraw(partialTicks);
 			
 		popMatrix();
@@ -156,6 +157,14 @@ public abstract class UiComponent extends Gui {
 	
 	public void setScale(float scale) {
 		transform.setScale(scale);
+	}
+	
+	public float zLevel() {
+		return transform.zLevel();
+	}
+	
+	public void setZLevel(float zLevel) {
+		transform.setZLevel(zLevel);
 	}
 	
 	public Frame getFrame() {
