@@ -91,7 +91,7 @@ public class WindowAbility {
 		description = new ComponentLongText(I18n.format("avatar.ability." + ability.getName() + ".desc"),
 				fromPercent(frameLeft, 100, 0));
 		description.setFrame(frameLeft);
-		description.setPosition(StartingPosition.custom(0.5f, 0.5f, 0.5f, -1f));
+		description.setPosition(StartingPosition.custom(0, 0.2f, 0, 0));
 		handler.add(description);
 		
 		level = new ComponentAbilityIcon(ability);
