@@ -80,45 +80,51 @@ public class WindowAbility {
 		title.setFrame(frameLeft);
 		title.setPosition(StartingPosition.MIDDLE_TOP);
 		title.setScale(1.4f);
+		title.setZLevel(4);
 		handler.add(title);
 		
 		icon = new ComponentImage(getPlainCardTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frameLeft);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(0, title.height()).plus(fromPercent(0, -35)));
+		icon.setZLevel(3);
 		handler.add(icon);
 		
 		description = new ComponentLongText(I18n.format("avatar.ability." + ability.getName() + ".desc"),
 				fromPercent(frameLeft, 100, 0));
 		description.setFrame(frameLeft);
 		description.setPosition(StartingPosition.custom(0, 0.2f, 0, 0));
+		description.setZLevel(4);
 		handler.add(description);
 		
-		level = new ComponentAbilityIcon(ability);
-		level.setFrame(frameRight);
-		level.setPosition(StartingPosition.TOP_RIGHT);
-		handler.add(level);
+		// level = new ComponentAbilityIcon(ability);
+		// level.setFrame(frameRight);
+		// level.setPosition(StartingPosition.TOP_RIGHT);
+		// handler.add(level);
 		
 		invBg = new ComponentImage(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
 		invBg.setPosition(StartingPosition.BOTTOM_RIGHT);
 		// Not setting frame since should be absolutely positioned
 		// Don't add invBg since it shouldn't be rendered
+		// invBg is used to figure out where inventory is
 		
 		slot1 = new ComponentInventorySlots(gui.inventorySlots, 0);
 		slot1.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
+		slot1.setZLevel(5);
+		handler.add(slot1);
+		
 		slot2 = new ComponentInventorySlots(gui.inventorySlots, 1);
 		slot2.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
 		slot2.setOffset(Measurement.fromPixels(frameRight, slot1.width() + 10, 0));
-		// Add slots later so on top of treeView
+		slot2.setZLevel(5);
+		handler.add(slot2);
 		
 		treeView = new ComponentAbilityTree(ability, slot1, slot2);
 		treeView.setFrame(frameRight);
 		treeView.setPosition(StartingPosition.TOP_LEFT);
 		treeView.setOffset(Measurement.fromPercent(frameRight, 0, 20));
+		treeView.setZLevel(4);
 		handler.add(treeView);
-		
-		handler.add(slot1);
-		handler.add(slot2);
 		
 		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
 				() -> gui.useScroll(ability));
@@ -126,12 +132,14 @@ public class WindowAbility {
 		button.setPosition(StartingPosition.TOP_LEFT);
 		// button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
 		button.setOffset(treeView.offset().plus(fromPixels(frameRight, treeView.width() + 100, 0)));
+		button.setZLevel(4);
 		handler.add(button);
 		
 		keybind = new ComponentAbilityKeybind(ability);
 		keybind.setFrame(frameRight);
 		keybind.setPosition(StartingPosition.custom(0.5f, 0.5f, 1, 0.5f));
 		keybind.setOffset(Measurement.fromPercent(frameRight, -4, 0));
+		keybind.setZLevel(4);
 		handler.add(keybind);
 		
 	}
