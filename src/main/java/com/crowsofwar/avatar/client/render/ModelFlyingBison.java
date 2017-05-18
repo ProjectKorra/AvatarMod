@@ -203,6 +203,11 @@ public class ModelFlyingBison extends ModelBase {
 		if (bison.getSaddle() != null) {
 			pushMatrix();
 			translate(0, -1.55, 0.2);
+			
+			if (bison.isSitting()) {
+				translate(0, 0.20, 0);
+			}
+			
 			scale(0.5, 0.5, 0.5);
 			this.saddle.render(entity, f, f1, f2, f3, f4, f5);
 			popMatrix();
