@@ -60,6 +60,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
+import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -195,6 +196,7 @@ public class AvatarMod {
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
 		registerEntity(EntityWaterbender.class, "Waterbender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
+		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
 		registerEntity(AvatarEntityItem.class, "Item");
 		
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE,
