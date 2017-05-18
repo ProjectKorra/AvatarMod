@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.client.render;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -65,12 +68,25 @@ public class ModelBisonSaddle extends ModelBase {
 		this.saddleBase.addChild(this.cargo);
 		this.saddleBase.addChild(this.wallTop);
 		this.saddleBase.addChild(this.wall4);
+		
+		// CrowsOfWar: Slightly adjust position of saddle to make it more
+		// on-center on the bison
+		List<ModelRenderer> allBoxes = Arrays.asList(saddleBase, wall1, wall2, wall3, wall4, cargo, wallTop,
+				wallSide1, wallSide2);
+		for (ModelRenderer box : allBoxes) {
+			box.rotationPointX += 2;
+			if (box != saddleBase) {
+				box.rotationPointX -= 2;
+			}
+		}
+		
 	}
 	
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		this.saddleBase.render(f5);
+		
 	}
 	
 	/**

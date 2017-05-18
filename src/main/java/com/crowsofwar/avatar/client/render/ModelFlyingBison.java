@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import static net.minecraft.client.renderer.GlStateManager.popMatrix;
-import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -187,7 +186,7 @@ public class ModelFlyingBison extends ModelBase {
 		
 		pushMatrix();
 		float scale = 1.5f * size;
-		GlStateManager.translate(0, 1.5, 0);
+		translate(0, 1.5, 0);
 		GlStateManager.scale(scale, scale, scale);
 		
 		this.leg2.render(f5);
@@ -199,7 +198,12 @@ public class ModelFlyingBison extends ModelBase {
 		this.leg6.render(f5);
 		this.leg3.render(f5);
 		this.head.render(f5);
+		
+		pushMatrix();
+		translate(0, -1.55, 0.2);
+		scale(0.5, 0.5, 0.5);
 		this.saddle.render(entity, f, f1, f2, f3, f4, f5);
+		popMatrix();
 		
 		popMatrix();
 		
