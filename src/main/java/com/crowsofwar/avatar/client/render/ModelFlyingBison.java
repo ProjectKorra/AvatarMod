@@ -24,6 +24,8 @@ import net.minecraft.util.math.MathHelper;
  */
 public class ModelFlyingBison extends ModelBase {
 	
+	public ModelBisonSaddle saddle;
+	
 	public ModelRenderer body;
 	public ModelRenderer leg1;
 	public ModelRenderer leg2;
@@ -118,6 +120,8 @@ public class ModelFlyingBison extends ModelBase {
 			box.rotationPointY -= 18;
 		}
 		
+		this.saddle = new ModelBisonSaddle();
+		
 	}
 	
 	/**
@@ -195,6 +199,7 @@ public class ModelFlyingBison extends ModelBase {
 		this.leg6.render(f5);
 		this.leg3.render(f5);
 		this.head.render(f5);
+		this.saddle.render(entity, f, f1, f2, f3, f4, f5);
 		
 		popMatrix();
 		
