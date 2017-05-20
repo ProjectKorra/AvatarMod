@@ -63,11 +63,11 @@ public class AbilityCard {
 		
 	}
 	
-	public void draw(float partialTicks, float scroll) {
+	public void draw(float partialTicks, float scroll, float mouseX, float mouseY) {
 		
 		updateFramePos(scroll);
 		
-		icon.draw(partialTicks);
+		icon.draw(partialTicks, mouseX, mouseY);
 		// frame.draw(partialTicks);
 		
 	}

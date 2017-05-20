@@ -194,8 +194,9 @@ public class WindowAbility {
 	public void onClose() {
 		slot1.setVisible(false);
 		slot2.setVisible(false);
-		slot1.draw(0);
-		slot2.draw(0);
+		// Make slots update their position & disappear
+		slot1.draw(0, 0, 0);
+		slot2.draw(0, 0, 0);
 	}
 	
 }

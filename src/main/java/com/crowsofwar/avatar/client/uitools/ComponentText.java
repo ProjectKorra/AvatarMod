@@ -52,7 +52,7 @@ public class ComponentText extends UiComponent {
 	}
 	
 	@Override
-	protected void componentDraw(float partialTicks) {
+	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		drawString(fontRender, text, 0, 0, 0xffffff);
 	}
 	

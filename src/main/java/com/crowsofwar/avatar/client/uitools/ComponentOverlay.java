@@ -41,7 +41,7 @@ public class ComponentOverlay extends UiComponent {
 	}
 	
 	@Override
-	protected void componentDraw(float partialTicks) {
+	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		
 		mc.renderEngine.bindTexture(AvatarUiTextures.WHITE);
 		GlStateManager.enableBlend();

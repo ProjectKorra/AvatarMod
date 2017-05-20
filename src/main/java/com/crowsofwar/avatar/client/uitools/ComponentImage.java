@@ -50,7 +50,7 @@ public class ComponentImage extends UiComponent {
 	}
 	
 	@Override
-	protected void componentDraw(float partialTicks) {
+	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		enableBlend();
 		mc.renderEngine.bindTexture(texture);
 		drawTexturedModalRect(0, 0, u, v, texWidth, texHeight);

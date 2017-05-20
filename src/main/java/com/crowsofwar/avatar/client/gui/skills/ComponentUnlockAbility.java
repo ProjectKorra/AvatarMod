@@ -42,7 +42,7 @@ public class ComponentUnlockAbility extends ComponentImage {
 	}
 	
 	@Override
-	protected void componentDraw(float partialTicks) {
+	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		
 	}
 	

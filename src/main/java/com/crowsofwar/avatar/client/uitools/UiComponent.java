@@ -69,7 +69,7 @@ public abstract class UiComponent extends Gui {
 		return componentHeight() * scale() * scaleFactor();
 	}
 	
-	public void draw(float partialTicks) {
+	public void draw(float partialTicks, float mouseX, float mouseY) {
 		
 		transform.update(partialTicks);
 		color(1, 1, 1, 1);
@@ -82,7 +82,7 @@ public abstract class UiComponent extends Gui {
 			GlStateManager.translate((int) x, (int) y, 0);
 			GlStateManager.scale(scale(), scale(), 1f); // unfortunately needed due to shadowing
 			GlStateManager.translate(0, 0, zLevel());
-			componentDraw(partialTicks);
+			componentDraw(partialTicks, isMouseHover(mouseX, mouseY));
 			
 		popMatrix();
 		//@formatter:on
@@ -92,18 +92,13 @@ public abstract class UiComponent extends Gui {
 	/**
 	 * Actually draw the component. It is already translated and scaled to the
 	 * correct position.
+	 * @param mouseHover TODO
 	 */
-	protected abstract void componentDraw(float partialTicks);
+	protected abstract void componentDraw(float partialTicks, boolean mouseHover);
 	
 	public final void mouseClicked(float mouseX, float mouseY, int button) {
-		Measurement min = coordinates().times(1f / scaleFactor());
-		Measurement max = min.plus(fromPixels(width() / scaleFactor(), height() / scaleFactor()));
-		
-		if (mouseX >= min.xInPixels() && mouseX <= max.xInPixels() && mouseY >= min.yInPixels()
-				&& mouseY <= max.yInPixels()) {
-			
+		if (isMouseHover(mouseX, mouseY)) {
 			click(button);
-			
 		}
 	}
 	
@@ -119,6 +114,16 @@ public abstract class UiComponent extends Gui {
 	 */
 	public List<String> getTooltip(float mouseX, float mouseY) {
 		return null;
+	}
+	
+	public boolean isMouseHover(float mouseX, float mouseY) {
+		
+		Measurement min = coordinates().times(1f / scaleFactor());
+		Measurement max = min.plus(fromPixels(width() / scaleFactor(), height() / scaleFactor()));
+		
+		return mouseX >= min.xInPixels() && mouseX <= max.xInPixels() && mouseY >= min.yInPixels()
+				&& mouseY <= max.yInPixels();
+		
 	}
 	
 	// Delegates to transform

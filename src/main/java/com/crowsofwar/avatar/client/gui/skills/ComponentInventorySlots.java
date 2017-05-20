@@ -100,7 +100,7 @@ public class ComponentInventorySlots extends UiComponent {
 	}
 	
 	@Override
-	protected void componentDraw(float partialTicks) {
+	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		// Check visibility
 		for (int i = minIndex; i <= maxIndex; i++) {
 			Slot slot = container.getSlot(i);

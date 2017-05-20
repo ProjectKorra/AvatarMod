@@ -68,7 +68,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	}
 	
 	@Override
-	protected void componentDraw(float partialTicks) {
+	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		
 		FontRenderer fr = mc.fontRendererObj;
 		fr.drawString(text1, 0, 0, color);

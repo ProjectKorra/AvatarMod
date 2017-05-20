@@ -56,7 +56,7 @@ public class UiComponentHandler {
 		List<String> tooltip = null;
 		
 		for (UiComponent component : components) {
-			component.draw(partialTicks);
+			component.draw(partialTicks, mouseX, mouseY);
 			
 			float mx2 = Mouse.getX();
 			float my2 = screenHeight() - Mouse.getY();
