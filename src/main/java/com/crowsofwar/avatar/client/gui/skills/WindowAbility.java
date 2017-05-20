@@ -35,6 +35,8 @@ import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -167,6 +169,14 @@ public class WindowAbility {
 		int height = screenHeight() / scaleFactor();
 		int mouseX = Mouse.getX() * width / mc.displayWidth;
 		int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
+		
+		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer).getAbilityData(ability);
+		
+		unlockTitle.setVisible(data.isLocked());
+		unlockText.setVisible(data.isLocked());
+		unlockButton.setVisible(data.isLocked());
+		
+		treeView.setVisible(!data.isLocked());
 		
 		handler.draw(partialTicks, mouseX, mouseY);
 		
