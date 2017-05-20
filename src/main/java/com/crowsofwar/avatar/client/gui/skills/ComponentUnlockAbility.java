@@ -16,34 +16,49 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.ComponentImage;
+import static net.minecraft.client.renderer.GlStateManager.disableBlend;
+import static net.minecraft.client.renderer.GlStateManager.enableBlend;
 
-import net.minecraft.util.ResourceLocation;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.UiComponent;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class ComponentUnlockAbility extends ComponentImage {
+public class ComponentUnlockAbility extends UiComponent {
 	
-	/**
-	 * @param texture
-	 * @param u
-	 * @param v
-	 * @param textureWidth
-	 * @param textureHeight
-	 */
-	public ComponentUnlockAbility(ResourceLocation texture, int u, int v, int textureWidth,
-			int textureHeight) {
-		super(AvatarUiTextures.skillsGui, u, v, textureWidth, textureHeight);
-		// TODO Auto-generated constructor stub
+	private final BendingAbility ability;
+	
+	public ComponentUnlockAbility(BendingAbility ability) {
+		this.ability = ability;
+	}
+	
+	@Override
+	protected float componentWidth() {
+		return 20;
+	}
+	
+	@Override
+	protected float componentHeight() {
+		return 20;
 	}
 	
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
-		
+		enableBlend();
+		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
+		drawTexturedModalRect(0, 0, mouseHover ? 236 : 216, 100, 20, 20);
+		disableBlend();
+	}
+	
+	@Override
+	protected void click(int button) {
+		AvatarMod.network.sendToServer(new PacketSUseScroll(ability));
 	}
 	
 }
