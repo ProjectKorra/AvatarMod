@@ -37,10 +37,12 @@ public abstract class UiComponent extends Gui {
 	
 	protected final Minecraft mc;
 	private UiTransform transform;
+	private boolean visible;
 	
 	public UiComponent() {
 		this.mc = Minecraft.getMinecraft();
 		this.transform = new UiTransformBasic(this);
+		this.visible = true;
 	}
 	
 	public UiTransform transform() {
@@ -69,10 +71,20 @@ public abstract class UiComponent extends Gui {
 		return componentHeight() * scale() * scaleFactor();
 	}
 	
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
 	public void draw(float partialTicks, float mouseX, float mouseY) {
 		
 		transform.update(partialTicks);
 		color(1, 1, 1, 1);
+		
+		if (!visible) return;
 		
 		//@formatter:off
 		pushMatrix();
@@ -92,7 +104,9 @@ public abstract class UiComponent extends Gui {
 	/**
 	 * Actually draw the component. It is already translated and scaled to the
 	 * correct position.
-	 * @param mouseHover TODO
+	 * 
+	 * @param mouseHover
+	 *            TODO
 	 */
 	protected abstract void componentDraw(float partialTicks, boolean mouseHover);
 	
@@ -122,7 +136,7 @@ public abstract class UiComponent extends Gui {
 		Measurement max = min.plus(fromPixels(width() / scaleFactor(), height() / scaleFactor()));
 		
 		return mouseX >= min.xInPixels() && mouseX <= max.xInPixels() && mouseY >= min.yInPixels()
-				&& mouseY <= max.yInPixels();
+				&& mouseY <= max.yInPixels() && visible;
 		
 	}
 	

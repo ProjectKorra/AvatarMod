@@ -44,8 +44,6 @@ public class ComponentInventorySlots extends UiComponent {
 	
 	private Measurement padding;
 	
-	private boolean visible;
-	
 	/**
 	 * Creates only one inventory slot at the given index.
 	 */
@@ -71,8 +69,6 @@ public class ComponentInventorySlots extends UiComponent {
 		this.texture = null;
 		this.u = -1;
 		this.v = -1;
-		
-		this.visible = true;
 		
 		this.padding = Measurement.fromPixels(0, 0);
 		
@@ -130,14 +126,6 @@ public class ComponentInventorySlots extends UiComponent {
 			drawTexturedModalRect(0, 0, u, v, width, height);
 		}
 		
-	}
-	
-	public boolean isVisible() {
-		return visible;
-	}
-	
-	public void setVisible(boolean visible) {
-		this.visible = visible;
 	}
 	
 	public Measurement getPadding() {
