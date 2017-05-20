@@ -175,6 +175,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			
 		}
 		
+		inventory.setVisible(isWindowOpen());
 		inventory.draw(partialTicks, mouseX, mouseY);
 		hotbar.draw(partialTicks, mouseX, mouseY);
 		
