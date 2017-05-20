@@ -30,6 +30,7 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
@@ -43,13 +44,17 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
+import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * 
@@ -57,6 +62,9 @@ import net.minecraft.item.ItemStack;
  * @author CrowsOfWar
  */
 public class SkillsGui extends GuiContainer implements AvatarGui {
+	
+	private static final ChatMessage MSG_TITLE = ChatMessage.newChatMessage("avatar.ui.skillsMenu",
+			"bending");
 	
 	private AbilityCard[] cards;
 	private ComponentBendingTab[] tabs;
@@ -66,6 +74,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private Frame frame;
 	
 	private ComponentInventorySlots inventory, hotbar;
+	private ComponentText title;
 	private UiComponentHandler handler;
 	
 	public SkillsGui(BendingType type) {
@@ -108,6 +117,12 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 				skillsContainer.getHotbarIndex() + 8);
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
+		
+		title = new ComponentText(TextFormatting.BOLD + ChatSender.instance
+				.processText(I18n.format("avatar.ui.skillsMenu"), MSG_TITLE, type.name().toLowerCase()));
+		title.setPosition(StartingPosition.TOP_CENTER);
+		title.setOffset(Measurement.fromPixels(0, 10));
+		handler.add(title);
 		
 	}
 	

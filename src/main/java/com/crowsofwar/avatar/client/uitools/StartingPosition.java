@@ -25,6 +25,7 @@ public class StartingPosition {
 	
 	public static StartingPosition TOP_LEFT = new StartingPosition(0, 0, 0, 0);
 	public static StartingPosition TOP_RIGHT = new StartingPosition(1, 0, 1, 0),
+			TOP_CENTER = new StartingPosition(.5f, 0, .5f, 0),
 			MIDDLE_TOP = new StartingPosition(.5f, 0, .5f, 0),
 			MIDDLE_CENTER = new StartingPosition(.5f, .5f, .5f, .5f),
 			MIDDLE_BOTTOM = new StartingPosition(.5f, 1, .5f, 1),
