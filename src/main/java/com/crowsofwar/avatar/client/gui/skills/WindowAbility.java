@@ -57,6 +57,8 @@ public class WindowAbility {
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
+	private UiComponent unlockTitle, unlockIcon;
+	
 	public WindowAbility(BendingAbility ability, SkillsGui gui) {
 		this.ability = ability;
 		this.gui = gui;
