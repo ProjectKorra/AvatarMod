@@ -57,7 +57,7 @@ public class WindowAbility {
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
-	private UiComponent unlockTitle, unlockIcon;
+	private UiComponent unlockTitle, unlockText, unlockButton;
 	
 	public WindowAbility(BendingAbility ability, SkillsGui gui) {
 		this.ability = ability;
@@ -144,6 +144,17 @@ public class WindowAbility {
 		keybind.setZLevel(4);
 		handler.add(keybind);
 		
+		unlockTitle = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.ui.unlock"));
+		unlockTitle.setFrame(frameRight);
+		handler.add(unlockTitle);
+		
+		unlockText = new ComponentText(I18n.format("avatar.ui.unlockDesc"));
+		unlockText.setFrame(frameRight);
+		handler.add(unlockText);
+		
+		unlockButton = new ComponentUnlockAbility(ability);
+		unlockButton.setFrame(frameRight);
+		handler.add(unlockButton);
 	}
 	
 	public void draw(float partialTicks) {

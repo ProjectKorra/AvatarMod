@@ -153,6 +153,8 @@ avatar.ui.level2=Level III
 avatar.ui.level3=-MAX-
 avatar.ui.path_first=First Path
 avatar.ui.path_second=Second Path
+avatar.ui.unlock=Ability Locked
+avatar.ui.unlockDesc=Spend a [translate=${bending}] or universal scroll to unlock
 
 avatar.radial.undefined=Coming soon!
 avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
