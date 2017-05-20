@@ -20,6 +20,7 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIFollowParent;
@@ -34,6 +35,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -85,6 +87,26 @@ public class EntityOtterPenguin extends EntityAnimal {
 	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
+	}
+	
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		if (!super.processInteract(player, hand)) {
+			player.startRiding(this);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public Entity getControllingPassenger() {
+		return getPassengers().isEmpty() ? null : getPassengers().get(0);
+	}
+	
+	@Override
+	public boolean canBeSteered() {
+		return getControllingPassenger() != null;
 	}
 	
 }
