@@ -72,7 +72,7 @@ public class AbilityData {
 	 * 0 and MAX_LEVEL. Marks dirty, but does not sync.
 	 */
 	public void setLevel(int level) {
-		if (level < 0) level = 0;
+		if (level < -1) level = -1;
 		if (level > MAX_LEVEL) level = MAX_LEVEL;
 		this.level = level;
 		checkPath();
