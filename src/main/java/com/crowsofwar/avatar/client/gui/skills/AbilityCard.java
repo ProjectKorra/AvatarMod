@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getCardTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
@@ -51,15 +52,16 @@ public class AbilityCard {
 		float width = 256 / 256 * 0.4f * 100, height = 256f / 256 * 0.4f * 100;
 		
 		frame = new Frame();
-		frame.setDimensions(fromPixels(192, 256));
-		updateFramePos(0);
+		frame.setDimensions(fromPixels(192, 256).times(scaleFactor() / 2));
 		
-		icon = new ComponentImage(getCardTexture(ability), 0, 0, 256, 256);
+		icon = new ComponentImage(getCardTexture(ability), 32, 0, 192, 256);
 		icon.setFrame(frame);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		// icon.setOffset(fromPixels(frame, 0, -text.height() - icon.height() *
 		// 50 / 256));
 		icon.setScale(0.5f);
+		
+		updateFramePos(0);
 		
 	}
 	
@@ -95,8 +97,8 @@ public class AbilityCard {
 	
 	private void updateFramePos(float scroll) {
 		
-		Measurement base = fromPixels(50, (screenHeight() - 256) / 2);
-		Measurement offset = fromPixels(scroll + index * width() * 1.2f, 0);
+		Measurement base = fromPixels(50, (screenHeight() - icon.height()) / 2);
+		Measurement offset = fromPixels(scroll + index * icon.width() * 1.2f, 0);
 		frame.setPosition(base.plus(offset));
 		
 	}
