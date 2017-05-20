@@ -165,12 +165,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		handler.draw(partialTicks, mouseX, mouseY);
 		
-		for (int i = 0; i < cards.length; i++) {
-			cards[i].draw(partialTicks, scroll, mouseX, mouseY);
-		}
-		
 		if (isWindowOpen()) {
 			window.draw(partialTicks);
+		} else {
+			
+			for (int i = 0; i < cards.length; i++) {
+				cards[i].draw(partialTicks, scroll, mouseX, mouseY);
+			}
+			
 		}
 		
 		inventory.draw(partialTicks, mouseX, mouseY);
