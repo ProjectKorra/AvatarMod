@@ -247,7 +247,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setVisible(true);
 	}
 	
-	private void closeWindow() {
+	public void closeWindow() {
 		window.onClose();
 		window = null;
 		inventory.setVisible(false);

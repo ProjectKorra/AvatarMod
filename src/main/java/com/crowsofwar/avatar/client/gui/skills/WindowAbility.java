@@ -59,7 +59,7 @@ public class WindowAbility {
 	private final UiComponentHandler handler;
 	
 	private Frame frame;
-	private UiComponent icon, title, overlay, level, invBg, treeView, description;
+	private UiComponent icon, title, overlay, level, invBg, treeView, description, backButton;
 	private ComponentInventorySlots slot1, slot2;
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
@@ -169,6 +169,12 @@ public class WindowAbility {
 		unlockButton = new ComponentUnlockAbility(ability);
 		unlockButton.setFrame(frameRight);
 		handler.add(unlockButton);
+		
+		backButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 0, 240, 16, 16,
+				() -> gui.closeWindow());
+		backButton.setZLevel(999);
+		handler.add(backButton);
+		
 	}
 	
 	public void draw(float partialTicks) {
