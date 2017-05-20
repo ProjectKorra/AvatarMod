@@ -22,6 +22,7 @@ import com.google.common.collect.Sets;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -37,6 +38,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
@@ -91,7 +93,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 	
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		if (!super.processInteract(player, hand)) {
+		if (!super.processInteract(player, hand) && !worldObj.isRemote) {
 			player.startRiding(this);
 			return true;
 		}
@@ -106,7 +108,59 @@ public class EntityOtterPenguin extends EntityAnimal {
 	
 	@Override
 	public boolean canBeSteered() {
-		return getControllingPassenger() != null;
+		return getControllingPassenger() instanceof EntityLivingBase;
+	}
+	
+	@Override
+	public boolean canPassengerSteer() {
+		return super.canPassengerSteer();
+	}
+	
+	@Override
+	public void moveEntityWithHeading(float strafe, float forward) {
+		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
+		
+		if (this.isBeingRidden() && this.canBeSteered()) {
+			this.rotationYaw = driver.rotationYaw;
+			this.prevRotationYaw = this.rotationYaw;
+			this.rotationPitch = driver.rotationPitch * 0.5F;
+			this.setRotation(this.rotationYaw, this.rotationPitch);
+			this.renderYawOffset = this.rotationYaw;
+			this.rotationYawHead = this.rotationYaw;
+			this.stepHeight = 1.0F;
+			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
+			
+			if (this.canPassengerSteer()) {
+				
+				forward = driver.moveForward;
+				strafe = driver.moveStrafing;
+				
+				setAIMoveSpeed((float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
+						.getAttributeValue());
+				super.moveEntityWithHeading(strafe, forward);
+				
+			} else {
+				this.motionX = 0.0D;
+				this.motionY = 0.0D;
+				this.motionZ = 0.0D;
+			}
+			
+			this.prevLimbSwingAmount = this.limbSwingAmount;
+			double d1 = this.posX - this.prevPosX;
+			double d0 = this.posZ - this.prevPosZ;
+			float f1 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+			
+			if (f1 > 1.0F) {
+				f1 = 1.0F;
+			}
+			
+			this.limbSwingAmount += (f1 - this.limbSwingAmount) * 0.4F;
+			this.limbSwing += this.limbSwingAmount;
+		} else {
+			this.stepHeight = 0.5F;
+			this.jumpMovementFactor = 0.02F;
+			super.moveEntityWithHeading(strafe, forward);
+		}
 	}
 	
 }
