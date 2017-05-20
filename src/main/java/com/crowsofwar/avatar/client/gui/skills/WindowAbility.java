@@ -37,6 +37,8 @@ import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -48,6 +50,9 @@ import net.minecraft.util.text.TextFormatting;
  * @author CrowsOfWar
  */
 public class WindowAbility {
+	
+	private static final ChatMessage MSG_UNLOCK_TEXT = ChatMessage.newChatMessage("avatar.ui.unlockDesc",
+			"bending");
 	
 	private final BendingAbility ability;
 	private final SkillsGui gui;
@@ -152,7 +157,10 @@ public class WindowAbility {
 		unlockTitle.setZLevel(4);
 		handler.add(unlockTitle);
 		
-		unlockText = new ComponentLongText(I18n.format("avatar.ui.unlockDesc"), frameRight.getDimensions());
+		String bendingName = ability.getBendingType().name().toLowerCase();
+		String text = ChatSender.instance.processText(I18n.format("avatar.ui.unlockDesc"), MSG_UNLOCK_TEXT,
+				bendingName);
+		unlockText = new ComponentLongText(text, frameRight.getDimensions());
 		unlockText.setFrame(frameRight);
 		unlockText.setZLevel(4);
 		unlockText.setOffset(fromPixels(frameRight, 0, unlockTitle.height() + 10));
@@ -192,8 +200,6 @@ public class WindowAbility {
 					unlockTitle.height() + unlockText.height() + 20));
 		} else {
 			slot1.setFrame(Frame.SCREEN);
-			slot1.setOffset(fromPixels(0, 0));
-			slot2.setVisible(true);
 			button.setOffset(
 					treeView.offset().plus(fromPixels(button.getFrame(), treeView.width() + 100, 0)));
 		}
