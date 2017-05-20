@@ -153,16 +153,10 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			
 			int mouseX = Mouse.getX(), mouseY = screenHeight() - Mouse.getY();
 			
-			if (isWindowOpen()) {
-				if (!window.isMouseHover(mouseX, mouseY) && !window.isInventoryMouseHover(mouseX, mouseY)) {
-					closeWindow();
-				}
-			} else {
-				for (int i = 0; i < cards.length; i++) {
-					if (cards[i].isMouseHover(mouseX, mouseY, scroll)) {
-						openWindow(cards[i]);
-						break;
-					}
+			for (int i = 0; i < cards.length; i++) {
+				if (cards[i].isMouseHover(mouseX, mouseY, scroll)) {
+					openWindow(cards[i]);
+					break;
 				}
 			}
 			
