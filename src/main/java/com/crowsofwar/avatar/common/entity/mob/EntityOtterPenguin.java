@@ -34,7 +34,9 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 
 /**
  * 
@@ -42,6 +44,9 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class EntityOtterPenguin extends EntityAnimal {
+	
+	public static final ResourceLocation LOOT_TABLE = LootTableList
+			.register(new ResourceLocation("avatarmod", "otterpenguin"));
 	
 	/**
 	 * @param world
@@ -75,6 +80,11 @@ public class EntityOtterPenguin extends EntityAnimal {
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable) {
 		return new EntityOtterPenguin(worldObj);
+	}
+	
+	@Override
+	protected ResourceLocation getLootTable() {
+		return LOOT_TABLE;
 	}
 	
 }
