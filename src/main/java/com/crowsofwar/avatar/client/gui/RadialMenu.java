@@ -153,7 +153,8 @@ public class RadialMenu extends Gui {
 				}
 				if (abilityData.isLocked()) {
 					secondKey = "avatar.radial.locked2";
-					secondArgs[0] = mc.gameSettings.keyBindChat.getDisplayName();
+					secondArgs[0] = AvatarMod.proxy.getKeyHandler().getDisplayName(AvatarControl.KEY_SKILLS)
+							+ "";
 					nameKey = "avatar.radial.locked1";
 				}
 				

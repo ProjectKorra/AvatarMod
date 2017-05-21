@@ -36,6 +36,12 @@ public interface IControlsHandler {
 	int getKeyCode(AvatarControl control);
 	
 	/**
+	 * Get the display of that control based on its current binding (adjusts if
+	 * the keybinding changes). Null if there is no description available.
+	 */
+	String getDisplayName(AvatarControl control);
+	
+	/**
 	 * Get all controls pressed.
 	 */
 	List<AvatarControl> getAllPressed();

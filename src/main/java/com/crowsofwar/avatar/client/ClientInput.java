@@ -153,6 +153,16 @@ public class ClientInput implements IControlsHandler {
 		return kb == null ? -1 : kb.getKeyCode();
 	}
 	
+	@Override
+	public String getDisplayName(AvatarControl control) {
+		if (control.isKeybinding()) {
+			KeyBinding kb = keybindings.get(control.getName());
+			return kb == null ? null : kb.getDisplayName();
+		} else {
+			return null;
+		}
+	}
+	
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
 		

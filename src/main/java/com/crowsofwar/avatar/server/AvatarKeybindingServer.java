@@ -36,6 +36,11 @@ public class AvatarKeybindingServer implements IControlsHandler {
 	}
 	
 	@Override
+	public String getDisplayName(AvatarControl control) {
+		return null;
+	}
+	
+	@Override
 	public List<AvatarControl> getAllPressed() {
 		return new ArrayList<AvatarControl>();
 	}
