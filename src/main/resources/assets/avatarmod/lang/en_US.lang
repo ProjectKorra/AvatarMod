@@ -160,6 +160,8 @@ avatar.ui.skillsMenu=[translate=avatar.${bending}] Ability Experience
 avatar.radial.undefined=Coming soon!
 avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
 avatar.radial.max=Level IV, [translate=avatar.ui.path_${xp}]
+avatar.radial.locked1=Ability Locked
+avatar.radial.locked2=Press ${level} to unlock
 
 avatar.key.none1=No key
 avatar.key.none2=Click to edit
