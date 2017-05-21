@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
@@ -276,8 +277,16 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
+		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-		player.openGui(AvatarMod.instance, packet.getElement(), player.worldObj, 0, 0, 0);
+		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		int el = packet.getElement();
+		
+		if (el >= 1 && el <= 4) {
+			if (data.hasBending(BendingType.find(el))) {
+				player.openGui(AvatarMod.instance, el, player.worldObj, 0, 0, 0);
+			}
+		}
 		
 		return null;
 	}
