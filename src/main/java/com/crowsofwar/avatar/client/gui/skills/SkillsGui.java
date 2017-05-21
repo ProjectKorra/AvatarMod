@@ -41,6 +41,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
@@ -81,6 +82,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, type));
 		
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
+		BendingData data = AvatarPlayerData.fetcher().fetch(getMinecraft().thePlayer);
 		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
@@ -97,9 +99,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		}
 		
 		handler = new UiComponentHandler();
-		BendingType[] types = BendingType.values();
+		
+		BendingType[] types = data.getAllBending().stream()//
+				.map(c -> c.getType())//
+				.sorted((c1, c2) -> c1.name().compareTo(c2.name()))//
+				.toArray(BendingType[]::new);
+		
 		tabs = new ComponentBendingTab[types.length];
-		for (int i = 1; i < types.length; i++) {
+		for (int i = 0; i < types.length; i++) {
 			tabs[i] = new ComponentBendingTab(types[i], false, types[i] == type);
 			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
 			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2), 0));
