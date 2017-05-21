@@ -149,7 +149,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		super.handleMouseInput();
 		scroll += Mouse.getDWheel() / 3;
 		
-		if (Mouse.isButtonDown(0)) {
+		if (Mouse.isButtonDown(0) && !isWindowOpen()) {
 			
 			int mouseX = Mouse.getX(), mouseY = screenHeight() - Mouse.getY();
 			
