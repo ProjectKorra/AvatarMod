@@ -168,6 +168,8 @@ public class WindowAbility {
 		
 		unlockButton = new ComponentUnlockAbility(ability);
 		unlockButton.setFrame(frameRight);
+		unlockButton.setOffset(fromPixels(unlockTitle.getFrame(), slot1.width() + 20,
+				unlockTitle.height() + unlockText.height() + 20));
 		handler.add(unlockButton);
 		
 		backButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 0, 240, 16, 16,
@@ -195,6 +197,7 @@ public class WindowAbility {
 		unlockButton.setVisible(data.isLocked());
 		
 		treeView.setVisible(!data.isLocked());
+		button.setVisible(!data.isLocked());
 		
 		if (data.isLocked()) {
 			slot1.setVisible(true);
@@ -202,12 +205,8 @@ public class WindowAbility {
 			slot1.setOffset(
 					fromPixels(unlockTitle.getFrame(), 0, unlockTitle.height() + unlockText.height() + 20));
 			slot2.setVisible(false);
-			button.setOffset(fromPixels(unlockTitle.getFrame(), slot1.width() + 20,
-					unlockTitle.height() + unlockText.height() + 20));
 		} else {
 			slot1.setFrame(Frame.SCREEN);
-			button.setOffset(
-					treeView.offset().plus(fromPixels(button.getFrame(), treeView.width() + 100, 0)));
 		}
 		
 		handler.draw(partialTicks, mouseX, mouseY);
