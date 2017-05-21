@@ -80,7 +80,8 @@ public class AbilityData {
 	}
 	
 	/**
-	 * Increments the level by 1 and syncs the level.
+	 * Increments the level by 1 and syncs the level. If the ability is locked,
+	 * unlocks the ability. Does not allow going past the maximum level.
 	 */
 	public void addLevel() {
 		setLevel(level + 1);
