@@ -64,6 +64,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarCrafting;
+import com.crowsofwar.avatar.common.item.AvatarDungeonLoot;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
@@ -131,6 +132,7 @@ public class AvatarMod {
 		
 		BendingManager.init();
 		AvatarItems.init();
+		AvatarDungeonLoot.register();
 		
 		AvatarParticles.register();
 		AirbendingEvents.register();
