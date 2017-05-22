@@ -20,6 +20,7 @@ import static net.minecraft.world.storage.loot.LootTableList.ENTITIES_BAT;
 import static net.minecraft.world.storage.loot.LootTableList.ENTITIES_CHICKEN;
 
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryItem;
@@ -27,6 +28,8 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
+import net.minecraft.world.storage.loot.functions.SetCount;
+import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -47,11 +50,7 @@ public class AvatarDungeonLoot {
 	@SubscribeEvent
 	public void onLootLoad(LootTableLoadEvent e) {
 		if (isLootTable(e, ENTITIES_BAT, ENTITIES_CHICKEN)) {
-			LootPool pool = new LootPool(new LootEntry[0], new LootCondition[0], new RandomValueRange(1, 1),
-					new RandomValueRange(1, 1), "custom_loot_pools");
-			pool.addEntry(new LootEntryItem(Items.BLAZE_ROD, 99999, 100, new LootFunction[0],
-					new LootCondition[0], "custom_blaze_rod"));
-			e.getTable().addPool(pool);
+			
 		}
 	}
 	
@@ -62,6 +61,41 @@ public class AvatarDungeonLoot {
 			}
 		}
 		return false;
+	}
+	
+	private void addLoot(LootTableLoadEvent e, LootItem... items) {
+		LootPool pool = new LootPool(new LootEntry[0], new LootCondition[0], new RandomValueRange(1, 1),
+				new RandomValueRange(1, 1), "custom_avatar_loot_pools");
+		
+		for (int i = 0; i < items.length; i++) {
+			LootItem item = items[i];
+			
+			LootCondition[] conditions = new LootCondition[0];
+			LootFunction stackSize = new SetCount(conditions,
+					new RandomValueRange(item.minStack, item.maxStack));
+			LootFunction metadata = new SetMetadata(conditions, new RandomValueRange(item.metadata));
+			
+			pool.addEntry(new LootEntryItem(Items.BLAZE_ROD, 99999, 100,
+					new LootFunction[] { stackSize, metadata }, conditions, "custom_" + i));
+			
+		}
+		
+		e.getTable().addPool(pool);
+	}
+	
+	private static class LootItem {
+		
+		private final Item item;
+		private final int minStack, maxStack;
+		private final int metadata;
+		
+		public LootItem(Item item, int minStack, int maxStack, int metadata) {
+			this.item = item;
+			this.minStack = minStack;
+			this.maxStack = maxStack;
+			this.metadata = metadata;
+		}
+		
 	}
 	
 }
