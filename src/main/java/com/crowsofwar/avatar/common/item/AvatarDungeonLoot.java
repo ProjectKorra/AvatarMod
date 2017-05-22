@@ -21,8 +21,10 @@ import static net.minecraft.world.storage.loot.LootTableList.ENTITIES_CHICKEN;
 
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraftforge.common.MinecraftForge;
@@ -45,9 +47,11 @@ public class AvatarDungeonLoot {
 	@SubscribeEvent
 	public void onLootLoad(LootTableLoadEvent e) {
 		if (isLootTable(e, ENTITIES_BAT, ENTITIES_CHICKEN)) {
-			LootPool main = e.getTable().getPool("main");
-			main.addEntry(new LootEntryItem(Items.BLAZE_ROD, 99999, 100, new LootFunction[0],
+			LootPool pool = new LootPool(new LootEntry[0], new LootCondition[0], new RandomValueRange(1, 1),
+					new RandomValueRange(1, 1), "custom_loot_pools");
+			pool.addEntry(new LootEntryItem(Items.BLAZE_ROD, 99999, 100, new LootFunction[0],
 					new LootCondition[0], "custom_blaze_rod"));
+			e.getTable().addPool(pool);
 		}
 	}
 	
