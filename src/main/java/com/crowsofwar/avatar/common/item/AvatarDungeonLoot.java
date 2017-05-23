@@ -51,6 +51,8 @@ public class AvatarDungeonLoot {
 	public void onLootLoad(LootTableLoadEvent e) {
 		if (isLootTable(e, ENTITIES_BAT, ENTITIES_CHICKEN)) {
 			
+			addLoot(e, new LootItem(Items.BLAZE_ROD));
+			
 		}
 	}
 	
@@ -89,11 +91,19 @@ public class AvatarDungeonLoot {
 		private final int minStack, maxStack;
 		private final int metadata;
 		
-		public LootItem(Item item, int minStack, int maxStack, int metadata) {
+		public LootItem(Item item) {
+			this(item, 0);
+		}
+		
+		public LootItem(Item item, int metadata) {
+			this(item, metadata, 1, 1);
+		}
+		
+		public LootItem(Item item, int metadata, int minStack, int maxStack) {
 			this.item = item;
+			this.metadata = metadata;
 			this.minStack = minStack;
 			this.maxStack = maxStack;
-			this.metadata = metadata;
 		}
 		
 	}
