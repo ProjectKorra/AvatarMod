@@ -17,7 +17,6 @@
 package com.crowsofwar.avatar.common.item;
 
 import static net.minecraft.world.storage.loot.LootTableList.ENTITIES_BAT;
-import static net.minecraft.world.storage.loot.LootTableList.ENTITIES_CHICKEN;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -51,12 +50,12 @@ public class AvatarDungeonLoot {
 	
 	@SubscribeEvent
 	public void onLootLoad(LootTableLoadEvent e) {
-		if (isLootTable(e, ENTITIES_BAT, ENTITIES_CHICKEN)) {
+		if (isLootTable(e, ENTITIES_BAT)) {
 			
 			addLoot(e, 0, new LootItem(Items.BLAZE_ROD, 3));
 			
 		}
-		if (isLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT)) {
+		if (isLootTable(e, LootTableList.ENTITIES_CHICKEN)) {
 			addLoot(e, 20, //
 					new LootItem(Items.NETHER_STAR, 20, 0, 1, 5), //
 					new LootItem(Items.BIRCH_BOAT, 20, 0, 10, 15));
@@ -87,7 +86,7 @@ public class AvatarDungeonLoot {
 					new RandomValueRange(item.minStack, item.maxStack));
 			LootFunction metadata = new SetMetadata(conditions, new RandomValueRange(item.metadata));
 			
-			pool.addEntry(new LootEntryItem(Items.BLAZE_ROD, 99999, 1,
+			pool.addEntry(new LootEntryItem(item.item, item.weight, 1,
 					new LootFunction[] { stackSize, metadata }, conditions, "custom_" + i));
 			
 		}
