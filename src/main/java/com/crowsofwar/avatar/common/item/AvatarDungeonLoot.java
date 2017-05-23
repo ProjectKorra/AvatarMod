@@ -57,6 +57,9 @@ public class AvatarDungeonLoot {
 			
 		}
 		if (isLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT)) {
+			addLoot(e, 20, //
+					new LootItem(Items.NETHER_STAR, 20, 0, 1, 5), //
+					new LootItem(Items.BIRCH_BOAT, 20, 0, 10, 15));
 		}
 		
 	}
