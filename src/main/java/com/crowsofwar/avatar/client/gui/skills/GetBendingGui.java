@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
@@ -73,11 +75,13 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		componentScrollSlots.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		componentScrollSlots.setOffset(Measurement.fromPixels(slotsFrame, 0, componentTitle.height()));
 		componentScrollSlots.useTexture(AvatarUiTextures.getBending, 0, 0, 70, 34);
+		componentScrollSlots.setPadding(Measurement.fromPixels(7, 9));
 		handler.add(componentScrollSlots);
 		
 		componentHotbar = new ComponentInventorySlots(container, 9, 1, container.getHotbarIndex(),
 				container.getHotbarIndex() + 8);
 		componentHotbar.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		componentHotbar.setOffset(Measurement.fromPixels(0, -7 * scaleFactor()));
 		handler.add(componentHotbar);
 		
 		componentInventory = new ComponentInventorySlots(container, 9, 3, container.getInvIndex(),
