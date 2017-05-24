@@ -132,11 +132,8 @@ public class RadialMenu extends Gui {
 	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
 		
 		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
-		String name = I18n.format(nameKey);
-		
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
-		drawCenteredString(mc.fontRendererObj, name, x, y, 0xffffff);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		if (data != null) {
@@ -154,6 +151,12 @@ public class RadialMenu extends Gui {
 					secondKey = "avatar.radial.max";
 					secondArgs[0] = abilityData.getPath().name().toLowerCase();
 				}
+				if (abilityData.isLocked()) {
+					secondKey = "avatar.radial.locked2";
+					secondArgs[0] = AvatarMod.proxy.getKeyHandler().getDisplayName(AvatarControl.KEY_SKILLS)
+							+ "";
+					nameKey = "avatar.radial.locked1";
+				}
 				
 			}
 			String second = I18n.format(secondKey);
@@ -166,6 +169,8 @@ public class RadialMenu extends Gui {
 					0xffffff);
 			
 		}
+		
+		drawCenteredString(mc.fontRendererObj, I18n.format(nameKey), x, y, 0xffffff);
 		
 	}
 	

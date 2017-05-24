@@ -44,8 +44,6 @@ public class ComponentInventorySlots extends UiComponent {
 	
 	private Measurement padding;
 	
-	private boolean visible;
-	
 	/**
 	 * Creates only one inventory slot at the given index.
 	 */
@@ -71,8 +69,6 @@ public class ComponentInventorySlots extends UiComponent {
 		this.texture = null;
 		this.u = -1;
 		this.v = -1;
-		
-		this.visible = true;
 		
 		this.padding = Measurement.fromPixels(0, 0);
 		
@@ -100,31 +96,25 @@ public class ComponentInventorySlots extends UiComponent {
 	}
 	
 	@Override
-	protected void componentDraw(float partialTicks) {
+	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		// Check visibility
 		for (int i = minIndex; i <= maxIndex; i++) {
 			Slot slot = container.getSlot(i);
-			if (isVisible()) {
-				int x = (int) coordinates().xInPixels() + (int) padding.xInPixels() * scaleFactor();
-				int y = (int) coordinates().yInPixels() + (int) padding.yInPixels() * scaleFactor();
-				
-				int j = i - minIndex;
-				
-				slot.xDisplayPosition = 18 * scaleFactor() * (j % cols) + x;
-				slot.yDisplayPosition = 18 * scaleFactor() * (j / cols) + y;
-				slot.xDisplayPosition /= scaleFactor();
-				slot.yDisplayPosition /= scaleFactor();
-				slot.xDisplayPosition++;
-				slot.yDisplayPosition++;
-				
-			} else {
-				slot.xDisplayPosition = -18;
-				slot.yDisplayPosition = -18;
-			}
+			int x = (int) coordinates().xInPixels() + (int) padding.xInPixels() * scaleFactor();
+			int y = (int) coordinates().yInPixels() + (int) padding.yInPixels() * scaleFactor();
+			
+			int j = i - minIndex;
+			
+			slot.xDisplayPosition = 18 * scaleFactor() * (j % cols) + x;
+			slot.yDisplayPosition = 18 * scaleFactor() * (j / cols) + y;
+			slot.xDisplayPosition /= scaleFactor();
+			slot.yDisplayPosition /= scaleFactor();
+			slot.xDisplayPosition++;
+			slot.yDisplayPosition++;
 		}
 		
-		// Draw texture?
-		if (isVisible() && texture != null) {
+		// Draw texture
+		if (texture != null) {
 			mc.renderEngine.bindTexture(texture);
 			color(1, 1, 1, 1);
 			drawTexturedModalRect(0, 0, u, v, width, height);
@@ -132,12 +122,16 @@ public class ComponentInventorySlots extends UiComponent {
 		
 	}
 	
-	public boolean isVisible() {
-		return visible;
-	}
-	
+	@Override
 	public void setVisible(boolean visible) {
-		this.visible = visible;
+		super.setVisible(visible);
+		if (!isVisible()) {
+			for (int i = minIndex; i <= maxIndex; i++) {
+				Slot slot = container.getSlot(i);
+				slot.xDisplayPosition = -18;
+				slot.yDisplayPosition = -18;
+			}
+		}
 	}
 	
 	public Measurement getPadding() {

@@ -43,6 +43,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
@@ -153,14 +154,29 @@ public class ClientInput implements IControlsHandler {
 		return kb == null ? -1 : kb.getKeyCode();
 	}
 	
+	@Override
+	public String getDisplayName(AvatarControl control) {
+		if (control.isKeybinding()) {
+			KeyBinding kb = keybindings.get(control.getName());
+			return kb == null ? null : kb.getDisplayName();
+		} else {
+			return null;
+		}
+	}
+	
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
 		
 		for (BendingController controller : keyboardBending) {
 			openBendingMenu(controller);
 		}
-		if (isControlPressed(AvatarControl.KEY_SKILLS))
-			AvatarMod.network.sendToServer(new PacketSSkillsMenu(BendingType.AIRBENDING));
+		if (isControlPressed(AvatarControl.KEY_SKILLS)) {
+			BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+			List<BendingController> controllers = data.getAllBending();
+			if (!controllers.isEmpty()) {
+				AvatarMod.network.sendToServer(new PacketSSkillsMenu(controllers.get(0).getType()));
+			}
+		}
 		
 	}
 	

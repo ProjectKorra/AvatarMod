@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
@@ -40,6 +41,7 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
@@ -139,19 +141,23 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
-		EntityPlayer player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data != null) {
 			
 			BendingAbility ability = packet.getAbility();
 			if (data.hasBending(ability.getBendingType())) {
-				if (data.getAbilityCooldown() == 0) {
-					AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
-					ability.execute(abilityCtx);
-					data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+				if (!data.getAbilityData(ability).isLocked()) {
+					if (data.getAbilityCooldown() == 0) {
+						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
+						ability.execute(abilityCtx);
+						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+					} else {
+						unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
+								player, data, ability, packet.getRaytrace()));
+					}
 				} else {
-					unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
-							player, data, ability, packet.getRaytrace()));
+					AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), player);
 				}
 			}
 			
@@ -276,8 +282,16 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
+		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-		player.openGui(AvatarMod.instance, packet.getElement(), player.worldObj, 0, 0, 0);
+		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		int el = packet.getElement();
+		
+		if (el >= 1 && el <= 4) {
+			if (data.hasBending(BendingType.find(el))) {
+				player.openGui(AvatarMod.instance, el, player.worldObj, 0, 0, 0);
+			}
+		}
 		
 		return null;
 	}
@@ -288,7 +302,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		AbilityData abilityData = data.getAbilityData(packet.getAbility());
 		
-		if (!abilityData.isMaxLevel() && abilityData.getXp() == 100) {
+		if (!abilityData.isMaxLevel() && (abilityData.getXp() == 100 || abilityData.isLocked())) {
 			
 			Container container = player.openContainer;
 			if (container instanceof ContainerSkillsGui) {

@@ -14,47 +14,51 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.client.uitools;
+package com.crowsofwar.avatar.client.gui.skills;
 
 import static net.minecraft.client.renderer.GlStateManager.disableBlend;
 import static net.minecraft.client.renderer.GlStateManager.enableBlend;
 
-import net.minecraft.util.ResourceLocation;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.UiComponent;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class ComponentImage extends UiComponent {
+public class ComponentUnlockAbility extends UiComponent {
 	
-	private final ResourceLocation texture;
-	private final int u, v, texWidth, texHeight;
+	private final BendingAbility ability;
 	
-	public ComponentImage(ResourceLocation texture, int u, int v, int textureWidth, int textureHeight) {
-		this.texture = texture;
-		this.u = u;
-		this.v = v;
-		this.texWidth = textureWidth;
-		this.texHeight = textureHeight;
+	public ComponentUnlockAbility(BendingAbility ability) {
+		this.ability = ability;
 	}
 	
 	@Override
 	protected float componentWidth() {
-		return texWidth;
+		return 20;
 	}
 	
 	@Override
 	protected float componentHeight() {
-		return texHeight;
+		return 20;
 	}
 	
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		enableBlend();
-		mc.renderEngine.bindTexture(texture);
-		drawTexturedModalRect(0, 0, u, v, texWidth, texHeight);
+		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
+		drawTexturedModalRect(0, 0, mouseHover ? 236 : 216, 100, 20, 20);
 		disableBlend();
+	}
+	
+	@Override
+	protected void click(int button) {
+		AvatarMod.network.sendToServer(new PacketSUseScroll(ability));
 	}
 	
 }

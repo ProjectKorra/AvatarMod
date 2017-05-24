@@ -30,6 +30,7 @@ import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
@@ -40,16 +41,21 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
+import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * 
@@ -57,6 +63,9 @@ import net.minecraft.item.ItemStack;
  * @author CrowsOfWar
  */
 public class SkillsGui extends GuiContainer implements AvatarGui {
+	
+	private static final ChatMessage MSG_TITLE = ChatMessage.newChatMessage("avatar.ui.skillsMenu",
+			"bending");
 	
 	private AbilityCard[] cards;
 	private ComponentBendingTab[] tabs;
@@ -66,12 +75,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private Frame frame;
 	
 	private ComponentInventorySlots inventory, hotbar;
+	private ComponentText title;
 	private UiComponentHandler handler;
 	
 	public SkillsGui(BendingType type) {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, type));
 		
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
+		BendingData data = AvatarPlayerData.fetcher().fetch(getMinecraft().thePlayer);
 		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
@@ -88,9 +99,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		}
 		
 		handler = new UiComponentHandler();
-		BendingType[] types = BendingType.values();
+		
+		BendingType[] types = data.getAllBending().stream()//
+				.map(c -> c.getType())//
+				.sorted((c1, c2) -> c1.name().compareTo(c2.name()))//
+				.toArray(BendingType[]::new);
+		
 		tabs = new ComponentBendingTab[types.length];
-		for (int i = 1; i < types.length; i++) {
+		for (int i = 0; i < types.length; i++) {
 			tabs[i] = new ComponentBendingTab(types[i], false, types[i] == type);
 			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
 			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2), 0));
@@ -108,6 +124,12 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 				skillsContainer.getHotbarIndex() + 8);
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
+		
+		title = new ComponentText(TextFormatting.BOLD + ChatSender.instance
+				.processText(I18n.format("avatar.ui.skillsMenu"), MSG_TITLE, type.name().toLowerCase()));
+		title.setPosition(StartingPosition.TOP_CENTER);
+		title.setOffset(Measurement.fromPixels(0, 10));
+		handler.add(title);
 		
 	}
 	
@@ -134,20 +156,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		super.handleMouseInput();
 		scroll += Mouse.getDWheel() / 3;
 		
-		if (Mouse.isButtonDown(0)) {
+		if (Mouse.isButtonDown(0) && !isWindowOpen()) {
 			
 			int mouseX = Mouse.getX(), mouseY = screenHeight() - Mouse.getY();
 			
-			if (isWindowOpen()) {
-				if (!window.isMouseHover(mouseX, mouseY) && !window.isInventoryMouseHover(mouseX, mouseY)) {
-					closeWindow();
-				}
-			} else {
-				for (int i = 0; i < cards.length; i++) {
-					if (cards[i].isMouseHover(mouseX, mouseY, scroll)) {
-						openWindow(cards[i]);
-						break;
-					}
+			for (int i = 0; i < cards.length; i++) {
+				if (cards[i].isMouseHover(mouseX, mouseY, scroll)) {
+					openWindow(cards[i]);
+					break;
 				}
 			}
 			
@@ -165,16 +181,19 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		handler.draw(partialTicks, mouseX, mouseY);
 		
-		for (int i = 0; i < cards.length; i++) {
-			cards[i].draw(partialTicks, scroll);
-		}
-		
 		if (isWindowOpen()) {
 			window.draw(partialTicks);
+		} else {
+			
+			for (int i = 0; i < cards.length; i++) {
+				cards[i].draw(partialTicks, scroll, mouseX, mouseY);
+			}
+			
 		}
 		
-		inventory.draw(partialTicks);
-		hotbar.draw(partialTicks);
+		inventory.setVisible(isWindowOpen());
+		inventory.draw(partialTicks, mouseX, mouseY);
+		hotbar.draw(partialTicks, mouseX, mouseY);
 		
 	}
 	
@@ -229,7 +248,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setVisible(true);
 	}
 	
-	private void closeWindow() {
+	public void closeWindow() {
 		window.onClose();
 		window = null;
 		inventory.setVisible(false);

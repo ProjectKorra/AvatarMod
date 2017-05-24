@@ -100,4 +100,12 @@ public class UiTransformTransition implements UiTransform {
 	@Override
 	public void setFrame(Frame frame) {}
 	
+	@Override
+	public float zLevel() {
+		return ending.zLevel() * percentDone() + initial.zLevel() * invPercentDone();
+	}
+	
+	@Override
+	public void setZLevel(float zLevel) {}
+	
 }

@@ -28,6 +28,7 @@ public class UiTransformBasic implements UiTransform {
 	private Measurement offset;
 	private float offsetScale, componentScale;
 	private Frame frame;
+	private float zLevel;
 	
 	public UiTransformBasic(UiComponent component) {
 		if (component == null) throw new IllegalArgumentException("Cannot have null component");
@@ -38,6 +39,8 @@ public class UiTransformBasic implements UiTransform {
 		offsetScale = 1;
 		componentScale = 1;
 		frame = Frame.SCREEN;
+		zLevel = 0;
+		
 	}
 	
 	@Override
@@ -105,6 +108,16 @@ public class UiTransformBasic implements UiTransform {
 	@Override
 	public void setFrame(Frame frame) {
 		this.frame = frame;
+	}
+	
+	@Override
+	public float zLevel() {
+		return zLevel;
+	}
+	
+	@Override
+	public void setZLevel(float zLevel) {
+		this.zLevel = zLevel;
 	}
 	
 }

@@ -56,17 +56,19 @@ public class UiComponentHandler {
 		List<String> tooltip = null;
 		
 		for (UiComponent component : components) {
-			component.draw(partialTicks);
+			component.draw(partialTicks, mouseX, mouseY);
 			
-			float mx2 = Mouse.getX();
-			float my2 = screenHeight() - Mouse.getY();
-			
-			Measurement coords = component.coordinates();
-			if (mx2 >= coords.xInPixels() && mx2 <= coords.xInPixels() + component.width()) {
-				if (my2 >= coords.yInPixels() && my2 <= coords.yInPixels() + component.height()) {
-					List<String> result = component.getTooltip(mx2, my2);
-					if (result != null) {
-						tooltip = result;
+			if (component.isVisible()) {
+				float mx2 = Mouse.getX();
+				float my2 = screenHeight() - Mouse.getY();
+				
+				Measurement coords = component.coordinates();
+				if (mx2 >= coords.xInPixels() && mx2 <= coords.xInPixels() + component.width()) {
+					if (my2 >= coords.yInPixels() && my2 <= coords.yInPixels() + component.height()) {
+						List<String> result = component.getTooltip(mx2, my2);
+						if (result != null) {
+							tooltip = result;
+						}
 					}
 				}
 			}

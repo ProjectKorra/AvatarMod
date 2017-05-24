@@ -55,6 +55,7 @@ avatar.nochi=Not enough chi!
 avatar.airBubbleElytra=Cannot use air bubble with elytra
 avatar.bisonStats=Bison is at ${food}%% food, ${health}%% health, and ${domestication} domestication.
 avatar.outOfScrolls=This bender's pack is empty. They probably wouldn't have any scrolls to give you.
+avatar.abilityLocked=You need to unlock that ability before you can use it!
 
 avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
@@ -154,10 +155,15 @@ avatar.ui.level2=Level III
 avatar.ui.level3=-MAX-
 avatar.ui.path_first=First Path
 avatar.ui.path_second=Second Path
+avatar.ui.unlock=Ability Locked
+avatar.ui.unlockDesc=Spend a [translate=avatar.${bending}] or Universal scroll to unlock
+avatar.ui.skillsMenu=[translate=avatar.${bending}] Ability Experience
 
 avatar.radial.undefined=Coming soon!
 avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
 avatar.radial.max=Level IV, [translate=avatar.ui.path_${xp}]
+avatar.radial.locked1=Ability Locked
+avatar.radial.locked2=Press ${level} to unlock
 
 avatar.key.none1=No key
 avatar.key.none2=Click to edit

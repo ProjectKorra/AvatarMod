@@ -53,25 +53,28 @@ public class AvatarUiTextures {
 	
 	private static final Map<BendingAbility, ResourceLocation> abilityTextures = new HashMap<>();
 	private static final Map<BendingAbility, ResourceLocation> abilityCards = new HashMap<>();
+	private static final Map<BendingAbility, ResourceLocation> abilityCardsPlain = new HashMap<>();
 	
-	public static ResourceLocation getAbilityTexture(BendingAbility ability) {
-		if (!abilityTextures.containsKey(ability)) {
-			ResourceLocation location = new ResourceLocation("avatarmod",
-					"textures/radial/icon_" + ability.getName() + ".png");
-			abilityTextures.put(ability, location);
+	private static <T> ResourceLocation getCachedImage(Map<T, ResourceLocation> map, T obj, String loc) {
+		if (!map.containsKey(obj)) {
+			ResourceLocation location = new ResourceLocation("avatarmod", loc);
+			map.put(obj, location);
 			return location;
 		}
-		return abilityTextures.get(ability);
+		return map.get(obj);
+	}
+	
+	public static ResourceLocation getAbilityTexture(BendingAbility ability) {
+		return getCachedImage(abilityTextures, ability, "textures/radial/icon_" + ability.getName() + ".png");
 	}
 	
 	public static ResourceLocation getCardTexture(BendingAbility ability) {
-		if (!abilityCards.containsKey(ability)) {
-			ResourceLocation location = new ResourceLocation("avatarmod",
-					"textures/gui/skillmenu/" + ability.getName() + ".png");
-			abilityCards.put(ability, location);
-			return location;
-		}
-		return abilityCards.get(ability);
+		return getCachedImage(abilityCards, ability, "textures/gui/skillmenu/" + ability.getName() + ".png");
+	}
+	
+	public static ResourceLocation getPlainCardTexture(BendingAbility ability) {
+		return getCachedImage(abilityCardsPlain, ability,
+				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");
 	}
 	
 }

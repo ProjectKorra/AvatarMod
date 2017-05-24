@@ -56,7 +56,7 @@ public class ComponentLongText extends UiComponent {
 	}
 	
 	@Override
-	protected void componentDraw(float partialTicks) {
+	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		for (int i = 0; i < lines.size(); i++) {
 			drawString(mc.fontRendererObj, lines.get(i), 0, i * mc.fontRendererObj.FONT_HEIGHT, 0xffffff);
 		}

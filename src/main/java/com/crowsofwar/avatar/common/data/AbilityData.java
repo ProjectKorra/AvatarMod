@@ -38,7 +38,7 @@ public class AbilityData {
 	private final BendingAbility ability;
 	private float xp;
 	/**
-	 * The current level.
+	 * The current level. -1 for locked
 	 * <p>
 	 * Note that it starts at 0, so 0 = Level I, 1 = Level II, etc.
 	 */
@@ -49,7 +49,7 @@ public class AbilityData {
 		this.data = data;
 		this.ability = ability;
 		this.xp = 0;
-		this.level = 0;
+		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
 	}
 	
@@ -58,7 +58,8 @@ public class AbilityData {
 	}
 	
 	/**
-	 * Get the current level of this ability.
+	 * Get the current level of this ability. A value of -1 indicates this
+	 * ability is {@link #isLocked() locked}.
 	 * <p>
 	 * Starts at 0, so 0 is level I, 1 is level II, etc.
 	 */
@@ -71,7 +72,7 @@ public class AbilityData {
 	 * 0 and MAX_LEVEL. Marks dirty, but does not sync.
 	 */
 	public void setLevel(int level) {
-		if (level < 0) level = 0;
+		if (level < -1) level = -1;
 		if (level > MAX_LEVEL) level = MAX_LEVEL;
 		this.level = level;
 		checkPath();
@@ -79,7 +80,8 @@ public class AbilityData {
 	}
 	
 	/**
-	 * Increments the level by 1 and syncs the level.
+	 * Increments the level by 1 and syncs the level. If the ability is locked,
+	 * unlocks the ability. Does not allow going past the maximum level.
 	 */
 	public void addLevel() {
 		setLevel(level + 1);
@@ -185,6 +187,22 @@ public class AbilityData {
 			return .6f - .1f * (x - 2) * (x - 2);
 		}
 		return 0;
+	}
+	
+	/**
+	 * Returns whether this ability is locked and the player cannot use it.
+	 */
+	public boolean isLocked() {
+		return level == -1;
+	}
+	
+	/**
+	 * If this ability is {@link #isLocked() locked}, unlocks the ability.
+	 */
+	public void unlockAbility() {
+		if (isLocked()) {
+			level = 0;
+		}
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
