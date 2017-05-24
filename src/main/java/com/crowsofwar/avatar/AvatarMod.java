@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar;
 
+import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
 import java.util.List;
@@ -60,6 +61,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
+import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -82,7 +84,6 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.init.Biomes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -197,10 +198,13 @@ public class AvatarMod {
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
 		registerEntity(EntityWaterbender.class, "Waterbender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
+		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
 		registerEntity(AvatarEntityItem.class, "Item");
 		
-		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE,
-				Biomes.EXTREME_HILLS, Biomes.MUTATED_SAVANNA);
+		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
+				EXTREME_HILLS, MUTATED_SAVANNA);
+		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 4, 10, EnumCreatureType.CREATURE, //
+				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
 		
 		List<Biome> allBiomesList = ForgeRegistries.BIOMES.getValues();
 		Biome[] allBiomes = new Biome[allBiomesList.size()];
