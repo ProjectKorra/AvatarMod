@@ -16,16 +16,14 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static net.minecraft.world.storage.loot.LootTableList.ENTITIES_BAT;
+import static net.minecraft.world.storage.loot.LootTableList.*;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryEmpty;
 import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
@@ -50,15 +48,52 @@ public class AvatarDungeonLoot {
 	
 	@SubscribeEvent
 	public void onLootLoad(LootTableLoadEvent e) {
-		if (isLootTable(e, ENTITIES_BAT)) {
-			
-			addLoot(e, 0, new LootItem(Items.BLAZE_ROD, 3));
-			
+		
+		if (isLootTable(e, CHESTS_NETHER_BRIDGE, CHESTS_END_CITY_TREASURE, CHESTS_STRONGHOLD_CORRIDOR)) {
+			addLoot(e, 50, //
+					new LootItem(AvatarItems.itemBisonWhistle, 20),
+					new LootItem(AvatarItems.itemBisonSaddle, 20, 1),
+					new LootItem(AvatarItems.itemBisonSaddle, 10, 0),
+					new LootItem(AvatarItems.itemBisonSaddle, 10, 2),
+					new LootItem(AvatarItems.itemBisonSaddle, 5, 3),
+					new LootItem(AvatarItems.itemWaterPouch, 30));
+			addLoot(e, 120, //
+					new LootItem(AvatarItems.itemScroll, 20, 0), //
+					new LootItem(AvatarItems.itemScroll, 5, 1), //
+					new LootItem(AvatarItems.itemScroll, 5, 2), //
+					new LootItem(AvatarItems.itemScroll, 5, 3), //
+					new LootItem(AvatarItems.itemScroll, 5, 4));
 		}
-		if (isLootTable(e, LootTableList.ENTITIES_CHICKEN)) {
+		
+		if (isLootTable(e, CHESTS_STRONGHOLD_LIBRARY, CHESTS_ABANDONED_MINESHAFT, CHESTS_SIMPLE_DUNGEON)) {
+			addLoot(e, 50, //
+					new LootItem(AvatarItems.itemBisonArmor, 20, 1),
+					new LootItem(AvatarItems.itemBisonArmor, 10, 0),
+					new LootItem(AvatarItems.itemBisonArmor, 10, 1),
+					new LootItem(AvatarItems.itemBisonArmor, 5, 1),
+					new LootItem(AvatarItems.itemWaterPouch, 30));
+			addLoot(e, 100, //
+					new LootItem(AvatarItems.itemScroll, 20, 0), //
+					new LootItem(AvatarItems.itemScroll, 5, 1), //
+					new LootItem(AvatarItems.itemScroll, 5, 2), //
+					new LootItem(AvatarItems.itemScroll, 5, 3), //
+					new LootItem(AvatarItems.itemScroll, 5, 4));
+		}
+		
+		if (isLootTable(e, CHESTS_VILLAGE_BLACKSMITH, CHESTS_IGLOO_CHEST, CHESTS_DESERT_PYRAMID,
+				CHESTS_JUNGLE_TEMPLE)) {
 			addLoot(e, 20, //
-					new LootItem(Items.NETHER_STAR, 20, 0, 1, 5), //
-					new LootItem(Items.BIRCH_BOAT, 20, 0, 10, 15));
+					new LootItem(AvatarItems.itemScroll, 20, 0), //
+					new LootItem(AvatarItems.itemScroll, 5, 1), //
+					new LootItem(AvatarItems.itemScroll, 5, 2), //
+					new LootItem(AvatarItems.itemScroll, 5, 3), //
+					new LootItem(AvatarItems.itemScroll, 5, 4));
+		}
+		
+		if (isLootTable(e, CHESTS_SPAWN_BONUS_CHEST)) {
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1, 0));
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1, 0));
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1, 0));
 		}
 		
 	}
