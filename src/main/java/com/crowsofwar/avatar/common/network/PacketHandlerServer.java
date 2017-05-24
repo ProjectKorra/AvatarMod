@@ -43,6 +43,7 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
+import com.crowsofwar.avatar.common.network.packets.PacketSGetBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -130,6 +131,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (packet instanceof PacketSBisonInventory)
 			return handleInventory((PacketSBisonInventory) packet, ctx);
+		
+		if (packet instanceof PacketSGetBending) return handleGetBending((PacketSGetBending) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -362,6 +365,19 @@ public class PacketHandlerServer implements IPacketHandler {
 		}
 		
 		return null;
+	}
+	
+	private IMessage handleGetBending(PacketSGetBending packet, MessageContext ctx) {
+		
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		
+		if (data.getAllBending().isEmpty()) {
+			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.worldObj, 0, 0, 0);
+		}
+		
+		return null;
+		
 	}
 	
 	private static class ProcessAbilityRequest {
