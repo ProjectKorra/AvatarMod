@@ -165,6 +165,9 @@ avatar.radial.max=Level IV, [translate=avatar.ui.path_${xp}]
 avatar.radial.locked1=Ability Locked
 avatar.radial.locked2=Press ${level} to unlock
 
+avatar.getBending.title=Unlock Bending
+avatar.getBending.incompatible=You can only use scrolls of the same type (or universal type)
+
 avatar.key.none1=No key
 avatar.key.none2=Click to edit
 avatar.key.set1=%1$s
