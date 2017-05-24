@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.gui;
 
 import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
+import static net.minecraft.item.ItemStack.field_190927_a;
 
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
@@ -67,6 +68,31 @@ public class ContainerGetBending extends Container {
 			}
 		}
 		
+	}
+	
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+		
+		Slot slot = inventorySlots.get(index);
+		
+		if (slot != null && slot.getHasStack()) {
+			ItemStack stack = slot.getStack();
+			
+			if (index >= 0 && index <= 2) {
+				if (!mergeItemStack(stack, 1, 37, true)) {
+					return field_190927_a;
+				}
+			} else {
+				if (!mergeItemStack(stack, 0, 3, true)) {
+					return field_190927_a;
+				}
+			}
+			
+			return stack;
+			
+		}
+		
+		return field_190927_a;
 	}
 	
 	@Override
