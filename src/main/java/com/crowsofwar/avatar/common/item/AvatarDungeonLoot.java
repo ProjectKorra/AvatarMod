@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.world.storage.loot.LootTableList.*;
 
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryEmpty;
@@ -30,6 +31,7 @@ import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraft.world.storage.loot.functions.SetMetadata;
+import net.minecraft.world.storage.loot.functions.SetNBT;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -57,48 +59,48 @@ public class AvatarDungeonLoot {
 		if (isLootTable(e, CHESTS_NETHER_BRIDGE, CHESTS_END_CITY_TREASURE, CHESTS_STRONGHOLD_CORRIDOR)) {
 			addLoot(e, 50, //
 					new LootItem(AvatarItems.itemBisonWhistle, 20),
-					new LootItem(AvatarItems.itemBisonSaddle, 20, 1),
-					new LootItem(AvatarItems.itemBisonSaddle, 10, 0),
-					new LootItem(AvatarItems.itemBisonSaddle, 10, 2),
-					new LootItem(AvatarItems.itemBisonSaddle, 5, 3),
+					new LootItem(AvatarItems.itemBisonSaddle, 20).withMetadata(1),
+					new LootItem(AvatarItems.itemBisonSaddle, 10).withMetadata(0),
+					new LootItem(AvatarItems.itemBisonSaddle, 10).withMetadata(2),
+					new LootItem(AvatarItems.itemBisonSaddle, 5).withMetadata(3),
 					new LootItem(AvatarItems.itemWaterPouch, 30));
 			addLoot(e, 120, //
-					new LootItem(AvatarItems.itemScroll, 20, 0), //
-					new LootItem(AvatarItems.itemScroll, 5, 1), //
-					new LootItem(AvatarItems.itemScroll, 5, 2), //
-					new LootItem(AvatarItems.itemScroll, 5, 3), //
-					new LootItem(AvatarItems.itemScroll, 5, 4));
+					new LootItem(AvatarItems.itemScroll, 20), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(1), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
 		}
 		
 		if (isLootTable(e, CHESTS_STRONGHOLD_LIBRARY, CHESTS_ABANDONED_MINESHAFT, CHESTS_SIMPLE_DUNGEON)) {
 			addLoot(e, 50, //
-					new LootItem(AvatarItems.itemBisonArmor, 20, 1),
-					new LootItem(AvatarItems.itemBisonArmor, 10, 0),
-					new LootItem(AvatarItems.itemBisonArmor, 10, 1),
-					new LootItem(AvatarItems.itemBisonArmor, 5, 1),
+					new LootItem(AvatarItems.itemBisonArmor, 20).withMetadata(1),
+					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(0),
+					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(2),
+					new LootItem(AvatarItems.itemBisonArmor, 5).withMetadata(3),
 					new LootItem(AvatarItems.itemWaterPouch, 30));
 			addLoot(e, 100, //
-					new LootItem(AvatarItems.itemScroll, 20, 0), //
-					new LootItem(AvatarItems.itemScroll, 5, 1), //
-					new LootItem(AvatarItems.itemScroll, 5, 2), //
-					new LootItem(AvatarItems.itemScroll, 5, 3), //
-					new LootItem(AvatarItems.itemScroll, 5, 4));
+					new LootItem(AvatarItems.itemScroll, 20), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(1), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
 		}
 		
 		if (isLootTable(e, CHESTS_VILLAGE_BLACKSMITH, CHESTS_IGLOO_CHEST, CHESTS_DESERT_PYRAMID,
 				CHESTS_JUNGLE_TEMPLE)) {
 			addLoot(e, 20, //
-					new LootItem(AvatarItems.itemScroll, 20, 0), //
-					new LootItem(AvatarItems.itemScroll, 5, 1), //
-					new LootItem(AvatarItems.itemScroll, 5, 2), //
-					new LootItem(AvatarItems.itemScroll, 5, 3), //
-					new LootItem(AvatarItems.itemScroll, 5, 4));
+					new LootItem(AvatarItems.itemScroll, 20), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(1), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
 		}
 		
 		if (isLootTable(e, CHESTS_SPAWN_BONUS_CHEST)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1, 0));
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1, 0));
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1, 0));
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1));
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1));
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1));
 		}
 		
 	}
@@ -133,9 +135,10 @@ public class AvatarDungeonLoot {
 			LootFunction stackSize = new SetCount(conditions,
 					new RandomValueRange(item.minStack, item.maxStack));
 			LootFunction metadata = new SetMetadata(conditions, new RandomValueRange(item.metadata));
+			LootFunction nbt = new SetNBT(conditions, item.nbt);
 			
 			pool.addEntry(new LootEntryItem(item.item, item.weight, 1,
-					new LootFunction[] { stackSize, metadata }, conditions, "custom_" + i));
+					new LootFunction[] { stackSize, metadata, nbt }, conditions, "custom_" + i));
 			
 		}
 		
@@ -146,23 +149,33 @@ public class AvatarDungeonLoot {
 		
 		private final Item item;
 		private final int weight;
-		private final int minStack, maxStack;
-		private final int metadata;
+		private int minStack, maxStack;
+		private int metadata;
+		private NBTTagCompound nbt;
 		
 		public LootItem(Item item, int weight) {
-			this(item, weight, 0);
-		}
-		
-		public LootItem(Item item, int weight, int metadata) {
-			this(item, weight, metadata, 1, 1);
-		}
-		
-		public LootItem(Item item, int weight, int metadata, int minStack, int maxStack) {
 			this.item = item;
 			this.weight = weight;
+			this.metadata = 0;
+			this.minStack = 1;
+			this.maxStack = 1;
+			this.nbt = new NBTTagCompound();
+		}
+		
+		private LootItem withMetadata(int metadata) {
 			this.metadata = metadata;
-			this.minStack = minStack;
-			this.maxStack = maxStack;
+			return this;
+		}
+		
+		private LootItem withStackSize(int min, int max) {
+			this.minStack = min;
+			this.maxStack = max;
+			return this;
+		}
+		
+		private LootItem withNbt(NBTTagCompound nbt) {
+			this.nbt = nbt;
+			return this;
 		}
 		
 	}
