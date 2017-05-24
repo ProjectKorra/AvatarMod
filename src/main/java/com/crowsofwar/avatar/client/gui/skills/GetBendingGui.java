@@ -32,6 +32,7 @@ import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
@@ -46,7 +47,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	private final ContainerGetBending container;
 	
 	private final UiComponentHandler handler;
-	private final UiComponent componentTitle;
+	private final UiComponent componentTitle, componentIncompatibleMsg;
 	private final ComponentInventorySlots componentScrollSlots;
 	private final ComponentInventorySlots componentInventory, componentHotbar;
 	
@@ -62,7 +63,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		
 		Frame slotsFrame = new Frame();
 		slotsFrame.setPosition(Measurement.fromPercent((100 - 30) / 2, 10));
-		slotsFrame.setDimensions(Measurement.fromPercent(30, 20));
+		slotsFrame.setDimensions(Measurement.fromPercent(30, 30));
 		
 		componentTitle = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.getBending.title"));
 		componentTitle.setFrame(slotsFrame);
@@ -73,7 +74,8 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		componentScrollSlots = new ComponentInventorySlots(container, 3, 1, 0, 2);
 		componentScrollSlots.setFrame(slotsFrame);
 		componentScrollSlots.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		componentScrollSlots.setOffset(Measurement.fromPixels(slotsFrame, 0, componentTitle.height()));
+		// componentScrollSlots.setOffset(Measurement.fromPixels(slotsFrame, 0,
+		// componentTitle.height()));
 		componentScrollSlots.useTexture(AvatarUiTextures.getBending, 0, 0, 70, 34);
 		componentScrollSlots.setPadding(Measurement.fromPixels(7, 9));
 		handler.add(componentScrollSlots);
@@ -90,6 +92,25 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		componentInventory.useTexture(AvatarUiTextures.getBending, 0, 34, 176, 90);
 		componentInventory.setPadding(Measurement.fromPixels(7, 7));
 		handler.add(componentInventory);
+		
+		componentIncompatibleMsg = new ComponentText(
+				TextFormatting.RED + I18n.format("avatar.getBending.incompatible")) {
+			@Override
+			protected void componentDraw(float partialTicks, boolean mouseHover) {
+				int ticks = container.getIncompatibleMsgTicks();
+				if (ticks > -1) {
+					float alpha = 1f - ticks / 40f;
+					GlStateManager.color(1, 1, 1, alpha);
+					super.componentDraw(partialTicks, mouseHover);
+					GlStateManager.color(1, 1, 1, 1);
+				}
+			}
+		};
+		componentIncompatibleMsg.setFrame(slotsFrame);
+		componentIncompatibleMsg.setZLevel(999);
+		componentIncompatibleMsg.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		componentIncompatibleMsg.setOffset(Measurement.fromPixels(slotsFrame, 0, 20));
+		handler.add(componentIncompatibleMsg);
 		
 	}
 	
