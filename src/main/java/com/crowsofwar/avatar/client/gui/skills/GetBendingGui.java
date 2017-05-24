@@ -97,12 +97,13 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 				TextFormatting.RED + I18n.format("avatar.getBending.incompatible")) {
 			@Override
 			protected void componentDraw(float partialTicks, boolean mouseHover) {
-				int ticks = container.getIncompatibleMsgTicks();
+				float ticks = container.getIncompatibleMsgTicks();
 				if (ticks > -1) {
 					float alpha = 1f - ticks / 40f;
 					GlStateManager.color(1, 1, 1, alpha);
 					super.componentDraw(partialTicks, mouseHover);
 					GlStateManager.color(1, 1, 1, 1);
+					container.decrementIncompatibleMsgTicks(partialTicks);
 				}
 			}
 		};

@@ -38,7 +38,7 @@ public class ContainerGetBending extends Container {
 	private final GetBendingInventory inventory;
 	
 	private int invIndex, hotbarIndex;
-	private int incompatibleMsgTicks;
+	private float incompatibleMsgTicks;
 	
 	public ContainerGetBending(EntityPlayer player) {
 		
@@ -118,8 +118,12 @@ public class ContainerGetBending extends Container {
 	 * Returns the ticks left to display incompatible scrolls message, or -1 if
 	 * no display
 	 */
-	public int getIncompatibleMsgTicks() {
+	public float getIncompatibleMsgTicks() {
 		return incompatibleMsgTicks;
+	}
+	
+	public void decrementIncompatibleMsgTicks(float amount) {
+		incompatibleMsgTicks -= amount;
 	}
 	
 	private class ScrollSlot extends Slot {
@@ -139,7 +143,7 @@ public class ContainerGetBending extends Container {
 					if (!stack2.func_190926_b()) {
 						ScrollType type2 = getScrollType(stack2);
 						if (!type1.isCompatibleWith(type2)) {
-							incompatibleMsgTicks = 40;
+							incompatibleMsgTicks = 160;
 							return false;
 						}
 					}
