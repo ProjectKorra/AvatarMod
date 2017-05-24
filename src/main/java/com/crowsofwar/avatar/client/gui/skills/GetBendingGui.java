@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.ComponentLongText;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
@@ -47,7 +48,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	private final ContainerGetBending container;
 	
 	private final UiComponentHandler handler;
-	private final UiComponent componentTitle, componentIncompatibleMsg;
+	private final UiComponent componentTitle, componentIncompatibleMsg, componentInstructions;
 	private final ComponentInventorySlots componentScrollSlots;
 	private final ComponentInventorySlots componentInventory, componentHotbar;
 	
@@ -63,7 +64,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		
 		Frame slotsFrame = new Frame();
 		slotsFrame.setPosition(Measurement.fromPercent((100 - 30) / 2, 10));
-		slotsFrame.setDimensions(Measurement.fromPercent(30, 30));
+		slotsFrame.setDimensions(Measurement.fromPercent(30, 35));
 		
 		componentTitle = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.getBending.title"));
 		componentTitle.setFrame(slotsFrame);
@@ -115,6 +116,13 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		componentIncompatibleMsg.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		componentIncompatibleMsg.setOffset(Measurement.fromPixels(slotsFrame, 0, 20));
 		handler.add(componentIncompatibleMsg);
+		
+		componentInstructions = new ComponentLongText(I18n.format("avatar.getBending.guide"),
+				Measurement.fromPercent(50, 0));
+		componentInstructions.setFrame(slotsFrame);
+		componentInstructions.setPosition(StartingPosition.TOP_CENTER);
+		componentInstructions.setOffset(Measurement.fromPixels(slotsFrame, 0, componentTitle.height() + 20));
+		handler.add(componentInstructions);
 		
 	}
 	

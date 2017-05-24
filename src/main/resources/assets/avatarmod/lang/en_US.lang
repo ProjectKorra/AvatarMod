@@ -166,7 +166,8 @@ avatar.radial.locked1=Ability Locked
 avatar.radial.locked2=Press ${level} to unlock
 
 avatar.getBending.title=Unlock Bending
-avatar.getBending.incompatible=You can only use scrolls of the same type (or universal type)
+avatar.getBending.incompatible=You can only use scrolls of the same or universal type
+avatar.getBending.guide=Insert 3 scrolls of the same or universal type to unlock Bending
 
 avatar.key.none1=No key
 avatar.key.none2=Click to edit
