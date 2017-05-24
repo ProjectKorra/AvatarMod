@@ -69,7 +69,6 @@ import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
@@ -193,7 +192,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			}
 		}
 		if (id == AvatarGuiHandler.GUI_ID_GET_BENDING) {
-			return new GetBendingGui(new ContainerGetBending(player));
+			return new GetBendingGui(player);
 		}
 		
 		return null;

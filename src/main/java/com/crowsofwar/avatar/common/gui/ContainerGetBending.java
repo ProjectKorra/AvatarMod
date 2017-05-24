@@ -72,6 +72,10 @@ public class ContainerGetBending extends Container {
 		return true;
 	}
 	
+	public int getSize() {
+		return inventory.getSizeInventory();
+	}
+	
 	private class ScrollSlot extends Slot {
 		
 		public ScrollSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {

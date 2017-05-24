@@ -16,10 +16,15 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import com.crowsofwar.avatar.client.uitools.Frame;
+import com.crowsofwar.avatar.client.uitools.Measurement;
+import com.crowsofwar.avatar.client.uitools.UiComponent;
+import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
+import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * 
@@ -28,11 +33,33 @@ import net.minecraft.inventory.Container;
  */
 public class GetBendingGui extends GuiContainer implements AvatarGui {
 	
-	/**
-	 * @param inventorySlotsIn
-	 */
-	public GetBendingGui(Container inventorySlotsIn) {
-		super(inventorySlotsIn);
+	private final ContainerGetBending container;
+	
+	private final UiComponentHandler handler;
+	private final UiComponent[] componentScrollSlots;
+	private final UiComponent componentInventory;
+	
+	public GetBendingGui(EntityPlayer player) {
+		super(new ContainerGetBending(player));
+		this.container = (ContainerGetBending) inventorySlots;
+		
+		handler = new UiComponentHandler();
+		
+		Frame slotsFrame = new Frame();
+		slotsFrame.setPosition(Measurement.fromPercent((100 - 30) / 2, 10));
+		slotsFrame.setDimensions(Measurement.fromPercent(30, 80));
+		
+		componentScrollSlots = new UiComponent[container.getSize()];
+		for (int i = 0; i < componentScrollSlots.length; i++) {
+			
+			ComponentInventorySlots comp = new ComponentInventorySlots(container, i);
+			comp.setFrame(frame);
+			
+			componentScrollSlots[i] = comp;
+			handler.add(comp);
+			
+		}
+		
 	}
 	
 	@Override
