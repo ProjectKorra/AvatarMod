@@ -162,6 +162,10 @@ public abstract class UiComponent extends Gui {
 		transform.setOffset(offset);
 	}
 	
+	public void addOffset(Measurement offset) {
+		transform.addOffset(offset);
+	}
+	
 	public float offsetScale() {
 		return transform.offsetScale();
 	}

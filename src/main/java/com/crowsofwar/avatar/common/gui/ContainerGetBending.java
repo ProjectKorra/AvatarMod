@@ -36,6 +36,8 @@ public class ContainerGetBending extends Container {
 	
 	private final GetBendingInventory inventory;
 	
+	private int invIndex, hotbarIndex;
+	
 	public ContainerGetBending(EntityPlayer player) {
 		
 		inventory = new GetBendingInventory();
@@ -74,6 +76,14 @@ public class ContainerGetBending extends Container {
 	
 	public int getSize() {
 		return inventory.getSizeInventory();
+	}
+	
+	public int getInvIndex() {
+		return invIndex;
+	}
+	
+	public int getHotbarIndex() {
+		return hotbarIndex;
 	}
 	
 	private class ScrollSlot extends Slot {

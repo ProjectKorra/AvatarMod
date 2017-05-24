@@ -16,15 +16,20 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
+import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
+import com.crowsofwar.avatar.client.uitools.ScreenInfo;
+import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * 
@@ -36,8 +41,9 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	private final ContainerGetBending container;
 	
 	private final UiComponentHandler handler;
+	private final UiComponent componentTitle;
 	private final UiComponent[] componentScrollSlots;
-	private final UiComponent componentInventory;
+	private final UiComponent componentInventory, componentHotbar;
 	
 	public GetBendingGui(EntityPlayer player) {
 		super(new ContainerGetBending(player));
@@ -49,22 +55,48 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		slotsFrame.setPosition(Measurement.fromPercent((100 - 30) / 2, 10));
 		slotsFrame.setDimensions(Measurement.fromPercent(30, 80));
 		
+		componentTitle = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.getBending.title"));
+		componentTitle.setFrame(slotsFrame);
+		componentTitle.setPosition(StartingPosition.TOP_CENTER);
+		componentTitle.setScale(1.5f);
+		handler.add(componentTitle);
+		
 		componentScrollSlots = new UiComponent[container.getSize()];
 		for (int i = 0; i < componentScrollSlots.length; i++) {
 			
 			ComponentInventorySlots comp = new ComponentInventorySlots(container, i);
-			comp.setFrame(frame);
+			comp.setFrame(slotsFrame);
+			comp.setPosition(StartingPosition.TOP_CENTER);
+			comp.setOffset(Measurement.fromPixels(slotsFrame, 0, componentTitle.height() + 10));
+			comp.addOffset(Measurement.fromPixels(slotsFrame, 20 * i, 0));
 			
 			componentScrollSlots[i] = comp;
 			handler.add(comp);
 			
 		}
 		
+		componentHotbar = new ComponentInventorySlots(container, 9, 1, container.getHotbarIndex(),
+				container.getHotbarIndex() + 8);
+		componentHotbar.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		handler.add(componentHotbar);
+		
+		componentInventory = new ComponentInventorySlots(container, 9, 3, container.getInvIndex(),
+				container.getInvIndex() + 26);
+		componentInventory.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		componentInventory.addOffset(Measurement.fromPixels(0, -componentHotbar.height() - 10));
+		handler.add(componentInventory);
+		
+	}
+	
+	@Override
+	public void initGui() {
+		super.initGui();
+		ScreenInfo.refreshDimensions();
 	}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		
+		handler.draw(partialTicks, mouseX, mouseY);
 	}
 	
 }
