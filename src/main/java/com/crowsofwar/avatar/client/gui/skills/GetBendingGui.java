@@ -26,6 +26,8 @@ import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,6 +50,10 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	public GetBendingGui(EntityPlayer player) {
 		super(new ContainerGetBending(player));
 		this.container = (ContainerGetBending) inventorySlots;
+		
+		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+		xSize = res.getScaledWidth();
+		ySize = res.getScaledHeight();
 		
 		handler = new UiComponentHandler();
 		
