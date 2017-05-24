@@ -156,6 +156,10 @@ public class ItemScroll extends Item implements AvatarItem {
 			this.test = test;
 		}
 		
+		public boolean isCompatibleWith(ScrollType other) {
+			return other == this || other == ALL;
+		}
+		
 		public String displayName() {
 			return name().toLowerCase();
 		}

@@ -193,7 +193,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			}
 		}
 		if (id == AvatarGuiHandler.GUI_ID_GET_BENDING) {
-			return new GetBendingGui(new ContainerGetBending());
+			return new GetBendingGui(new ContainerGetBending(player));
 		}
 		
 		return null;

@@ -57,7 +57,7 @@ public class AvatarGuiHandler implements IGuiHandler {
 			}
 		}
 		if (id == GUI_ID_GET_BENDING) {
-			return new ContainerGetBending();
+			return new ContainerGetBending(player);
 		}
 		
 		return null;
