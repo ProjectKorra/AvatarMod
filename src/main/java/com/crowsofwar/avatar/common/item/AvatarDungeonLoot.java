@@ -113,8 +113,16 @@ public class AvatarDungeonLoot {
 	}
 	
 	private void addLoot(LootTableLoadEvent e, int emptyWeight, LootItem... items) {
+		
+		String lootPoolName = "custom_avatar_loot_pools";
+		int j = 2;
+		while (e.getTable().getPool(lootPoolName) != null) {
+			lootPoolName = "custom_avatar_loot_pools_" + j;
+			j++;
+		}
+		
 		LootPool pool = new LootPool(new LootEntry[0], new LootCondition[0], new RandomValueRange(1, 1),
-				new RandomValueRange(1, 1), "custom_avatar_loot_pools");
+				new RandomValueRange(1, 1), lootPoolName);
 		
 		pool.addEntry(new LootEntryEmpty(emptyWeight, 1, new LootCondition[0], "empty"));
 		
