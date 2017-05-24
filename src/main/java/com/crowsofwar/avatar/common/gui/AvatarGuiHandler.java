@@ -34,6 +34,7 @@ public class AvatarGuiHandler implements IGuiHandler {
 	public static final int GUI_ID_SKILLS_WATER = 3;
 	public static final int GUI_ID_SKILLS_AIR = 4;
 	public static final int GUI_ID_BISON_CHEST = 5;
+	public static final int GUI_ID_GET_BENDING = 6;
 	
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -54,6 +55,9 @@ public class AvatarGuiHandler implements IGuiHandler {
 				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName()
 						+ " tried to open skybison inventory, was not found. BisonId: " + bisonId);
 			}
+		}
+		if (id == GUI_ID_GET_BENDING) {
+			return new ContainerGetBending();
 		}
 		
 		return null;
