@@ -16,8 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
@@ -46,8 +45,8 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	
 	private final UiComponentHandler handler;
 	private final UiComponent componentTitle;
-	private final UiComponent[] componentScrollSlots;
-	private final UiComponent componentInventory, componentHotbar;
+	private final ComponentInventorySlots componentScrollSlots;
+	private final ComponentInventorySlots componentInventory, componentHotbar;
 	
 	public GetBendingGui(EntityPlayer player) {
 		super(new ContainerGetBending(player));
@@ -69,19 +68,12 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		componentTitle.setScale(1.5f);
 		handler.add(componentTitle);
 		
-		componentScrollSlots = new UiComponent[container.getSize()];
-		for (int i = 0; i < componentScrollSlots.length; i++) {
-			
-			ComponentInventorySlots comp = new ComponentInventorySlots(container, i);
-			comp.setFrame(slotsFrame);
-			comp.setPosition(StartingPosition.MIDDLE_BOTTOM);
-			comp.setOffset(Measurement.fromPixels(slotsFrame, 0, componentTitle.height()));
-			comp.addOffset(Measurement.fromPixels(slotsFrame, 18 * (i - 1) * scaleFactor(), 0));
-			
-			componentScrollSlots[i] = comp;
-			handler.add(comp);
-			
-		}
+		componentScrollSlots = new ComponentInventorySlots(container, 3, 1, 0, 2);
+		componentScrollSlots.setFrame(slotsFrame);
+		componentScrollSlots.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		componentScrollSlots.setOffset(Measurement.fromPixels(slotsFrame, 0, componentTitle.height()));
+		componentScrollSlots.useTexture(AvatarUiTextures.getBending, 0, 0, 70, 34);
+		handler.add(componentScrollSlots);
 		
 		componentHotbar = new ComponentInventorySlots(container, 9, 1, container.getHotbarIndex(),
 				container.getHotbarIndex() + 8);
@@ -91,7 +83,8 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		componentInventory = new ComponentInventorySlots(container, 9, 3, container.getInvIndex(),
 				container.getInvIndex() + 26);
 		componentInventory.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		componentInventory.addOffset(Measurement.fromPixels(0, -componentHotbar.height() - 10));
+		componentInventory.useTexture(AvatarUiTextures.getBending, 0, 34, 176, 90);
+		componentInventory.setPadding(Measurement.fromPixels(7, 7));
 		handler.add(componentInventory);
 		
 	}

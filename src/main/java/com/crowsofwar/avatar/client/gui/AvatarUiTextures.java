@@ -38,6 +38,8 @@ public class AvatarUiTextures {
 			"textures/gui/blurred_icons.png");
 	public static final ResourceLocation skillsGui = new ResourceLocation("avatarmod",
 			"textures/gui/skillmenu.png");
+	public static final ResourceLocation getBending = new ResourceLocation("avatarmod",
+			"textures/gui/getbending.png");
 	
 	static final ResourceLocation bgWater = new ResourceLocation("avatarmod",
 			"textures/gui/bg_water_screen.png");
