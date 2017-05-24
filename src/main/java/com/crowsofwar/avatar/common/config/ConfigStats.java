@@ -69,6 +69,9 @@ public class ConfigStats {
 	@Load
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
 	
+	@Load
+	public boolean addDungeonLoot = true;
+	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {

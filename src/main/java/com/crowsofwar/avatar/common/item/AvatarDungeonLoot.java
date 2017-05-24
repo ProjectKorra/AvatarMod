@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.world.storage.loot.LootTableList.*;
 
 import net.minecraft.item.Item;
@@ -48,6 +49,10 @@ public class AvatarDungeonLoot {
 	
 	@SubscribeEvent
 	public void onLootLoad(LootTableLoadEvent e) {
+		
+		if (!STATS_CONFIG.addDungeonLoot) {
+			return;
+		}
 		
 		if (isLootTable(e, CHESTS_NETHER_BRIDGE, CHESTS_END_CITY_TREASURE, CHESTS_STRONGHOLD_CORRIDOR)) {
 			addLoot(e, 50, //
