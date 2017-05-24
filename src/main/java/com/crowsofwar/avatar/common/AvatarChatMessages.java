@@ -74,6 +74,8 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_BISON_WHISTLE_NOTOWNED = newChatMessage(CFG, "avatar.bisonWhistle.notOwned");
 	public static final ChatMessage MSG_SKY_BISON_STATS = newChatMessage(CFG, "avatar.bisonStats", "food", "health", "domestication");
 	
+	public static final ChatMessage MSG_HUMANBENDER_NO_SCROLLS = newChatMessage(CFG, "avatar.outOfScrolls");
+	
 	/**
 	 * Call the static initializers
 	 */

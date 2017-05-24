@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_HUMANBENDER_NO_SCROLLS;
+
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
@@ -60,12 +62,14 @@ public abstract class EntityHumanBender extends EntityBender {
 			.createKey(EntityHumanBender.class, DataSerializers.VARINT);
 	
 	private EntityAiGiveScroll aiGiveScroll;
+	private int scrollsLeft;
 	
 	/**
 	 * @param world
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
+		scrollsLeft = rand.nextInt(3) + 3;
 	}
 	
 	@Override
@@ -107,12 +111,14 @@ public abstract class EntityHumanBender extends EntityBender {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setSkin(nbt.getInteger("Skin"));
+		scrollsLeft = nbt.getInteger("Scrolls");
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("Skin", getSkin());
+		nbt.setInteger("Scrolls", scrollsLeft);
 	}
 	
 	protected abstract void addBendingTasks();
@@ -230,11 +236,16 @@ public abstract class EntityHumanBender extends EntityBender {
 		ItemStack stack = player.getHeldItem(hand);
 		if (stack.getItem() == Items.DIAMOND && !worldObj.isRemote) {
 			
-			if (aiGiveScroll.giveScrollTo(player)) {
-				// Take diamond
-				if (!player.capabilities.isCreativeMode) {
-					stack.func_190918_g(1);
+			if (scrollsLeft > 0) {
+				if (aiGiveScroll.giveScrollTo(player)) {
+					// Take diamond
+					scrollsLeft--;
+					if (!player.capabilities.isCreativeMode) {
+						stack.func_190918_g(1);
+					}
 				}
+			} else {
+				MSG_HUMANBENDER_NO_SCROLLS.send(player);
 			}
 			
 			return true;
