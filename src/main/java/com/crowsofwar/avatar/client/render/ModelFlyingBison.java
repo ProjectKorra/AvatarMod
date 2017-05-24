@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import static net.minecraft.client.renderer.GlStateManager.popMatrix;
-import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +22,8 @@ import net.minecraft.util.math.MathHelper;
  * @author Captn_Dubz (unless otherwise specified)
  */
 public class ModelFlyingBison extends ModelBase {
+	
+	public ModelBisonSaddle saddle;
 	
 	public ModelRenderer body;
 	public ModelRenderer leg1;
@@ -118,6 +119,8 @@ public class ModelFlyingBison extends ModelBase {
 			box.rotationPointY -= 18;
 		}
 		
+		this.saddle = new ModelBisonSaddle();
+		
 	}
 	
 	/**
@@ -179,11 +182,12 @@ public class ModelFlyingBison extends ModelBase {
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		
-		float size = ((EntitySkyBison) entity).getCondition().getSizeMultiplier();
+		EntitySkyBison bison = (EntitySkyBison) entity;
+		float size = bison.getCondition().getSizeMultiplier();
 		
 		pushMatrix();
 		float scale = 1.5f * size;
-		GlStateManager.translate(0, 1.5, 0);
+		translate(0, 1.5, 0);
 		GlStateManager.scale(scale, scale, scale);
 		
 		this.leg2.render(f5);
@@ -195,6 +199,19 @@ public class ModelFlyingBison extends ModelBase {
 		this.leg6.render(f5);
 		this.leg3.render(f5);
 		this.head.render(f5);
+		
+		if (bison.getSaddle() != null) {
+			pushMatrix();
+			translate(0, -1.55, 0.2);
+			
+			if (bison.isSitting()) {
+				translate(0, 0.20, 0);
+			}
+			
+			scale(0.5, 0.5, 0.5);
+			this.saddle.render(entity, f, f1, f2, f3, f4, f5);
+			popMatrix();
+		}
 		
 		popMatrix();
 		
