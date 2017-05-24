@@ -163,9 +163,11 @@ public abstract class EntityHumanBender extends EntityBender {
 				.getEntitiesWithinAABB(EntityHumanBender.class, aabb, candidate -> candidate != this)
 				.isEmpty();
 		
-		System.out.println("Nearby village: " + villages.getNearestVillage(getPosition(), 50));
-		System.out
-				.println("nearby benders: " + worldObj.getEntitiesWithinAABB(EntityHumanBender.class, aabb));
+		// System.out.println("Nearby village: " +
+		// villages.getNearestVillage(getPosition(), 50));
+		// System.out
+		// .println("nearby benders: " +
+		// worldObj.getEntitiesWithinAABB(EntityHumanBender.class, aabb));
 		
 		return super.getCanSpawnHere() && nearbyVillage && !nearbyBender;
 		
