@@ -99,11 +99,14 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 			protected void componentDraw(float partialTicks, boolean mouseHover) {
 				float ticks = container.getIncompatibleMsgTicks();
 				if (ticks > -1) {
-					float alpha = 1f - ticks / 40f;
-					GlStateManager.color(1, 1, 1, alpha);
-					super.componentDraw(partialTicks, mouseHover);
-					GlStateManager.color(1, 1, 1, 1);
+					GlStateManager.enableBlend();
+					float alphaFloat = ticks > 40 ? 1 : ticks / 40f;
+					int alpha = (int) (alphaFloat * 255);
+					if (alpha > 4) {
+						drawString(mc.fontRendererObj, getText(), 0, 0, 0xffffff | (alpha << 24));
+					}
 					container.decrementIncompatibleMsgTicks(partialTicks);
+					GlStateManager.disableBlend();
 				}
 			}
 		};

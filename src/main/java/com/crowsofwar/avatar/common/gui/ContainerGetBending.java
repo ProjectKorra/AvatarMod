@@ -143,7 +143,7 @@ public class ContainerGetBending extends Container {
 					if (!stack2.func_190926_b()) {
 						ScrollType type2 = getScrollType(stack2);
 						if (!type1.isCompatibleWith(type2)) {
-							incompatibleMsgTicks = 160;
+							incompatibleMsgTicks = 100;
 							return false;
 						}
 					}
