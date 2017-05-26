@@ -48,9 +48,9 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	private final ContainerGetBending container;
 	
 	private final UiComponentHandler handler;
-	private final UiComponent componentTitle, componentIncompatibleMsg, componentInstructions;
-	private final ComponentInventorySlots componentScrollSlots;
-	private final ComponentInventorySlots componentInventory, componentHotbar;
+	private final UiComponent title, incompatibleMsg, instructions;
+	private final ComponentInventorySlots scrollSlots;
+	private final ComponentInventorySlots inventoryComp, hotbarComp;
 	
 	public GetBendingGui(EntityPlayer player) {
 		super(new ContainerGetBending(player));
@@ -66,35 +66,35 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		slotsFrame.setPosition(Measurement.fromPercent((100 - 30) / 2, 10));
 		slotsFrame.setDimensions(Measurement.fromPercent(30, 35));
 		
-		componentTitle = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.getBending.title"));
-		componentTitle.setFrame(slotsFrame);
-		componentTitle.setPosition(StartingPosition.TOP_CENTER);
-		componentTitle.setScale(1.5f);
-		handler.add(componentTitle);
+		title = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.getBending.title"));
+		title.setFrame(slotsFrame);
+		title.setPosition(StartingPosition.TOP_CENTER);
+		title.setScale(1.5f);
+		handler.add(title);
 		
-		componentScrollSlots = new ComponentInventorySlots(container, 3, 1, 0, 2);
-		componentScrollSlots.setFrame(slotsFrame);
-		componentScrollSlots.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		scrollSlots = new ComponentInventorySlots(container, 3, 1, 0, 2);
+		scrollSlots.setFrame(slotsFrame);
+		scrollSlots.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		// componentScrollSlots.setOffset(Measurement.fromPixels(slotsFrame, 0,
 		// componentTitle.height()));
-		componentScrollSlots.useTexture(AvatarUiTextures.getBending, 0, 0, 70, 34);
-		componentScrollSlots.setPadding(Measurement.fromPixels(7, 9));
-		handler.add(componentScrollSlots);
+		scrollSlots.useTexture(AvatarUiTextures.getBending, 0, 0, 70, 34);
+		scrollSlots.setPadding(Measurement.fromPixels(7, 9));
+		handler.add(scrollSlots);
 		
-		componentHotbar = new ComponentInventorySlots(container, 9, 1, container.getHotbarIndex(),
+		hotbarComp = new ComponentInventorySlots(container, 9, 1, container.getHotbarIndex(),
 				container.getHotbarIndex() + 8);
-		componentHotbar.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		componentHotbar.setOffset(Measurement.fromPixels(0, -7 * scaleFactor()));
-		handler.add(componentHotbar);
+		hotbarComp.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		hotbarComp.setOffset(Measurement.fromPixels(0, -7 * scaleFactor()));
+		handler.add(hotbarComp);
 		
-		componentInventory = new ComponentInventorySlots(container, 9, 3, container.getInvIndex(),
+		inventoryComp = new ComponentInventorySlots(container, 9, 3, container.getInvIndex(),
 				container.getInvIndex() + 26);
-		componentInventory.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		componentInventory.useTexture(AvatarUiTextures.getBending, 0, 34, 176, 90);
-		componentInventory.setPadding(Measurement.fromPixels(7, 7));
-		handler.add(componentInventory);
+		inventoryComp.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		inventoryComp.useTexture(AvatarUiTextures.getBending, 0, 34, 176, 90);
+		inventoryComp.setPadding(Measurement.fromPixels(7, 7));
+		handler.add(inventoryComp);
 		
-		componentIncompatibleMsg = new ComponentText(
+		incompatibleMsg = new ComponentText(
 				TextFormatting.RED + I18n.format("avatar.getBending.incompatible")) {
 			@Override
 			protected void componentDraw(float partialTicks, boolean mouseHover) {
@@ -111,18 +111,18 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 				}
 			}
 		};
-		componentIncompatibleMsg.setFrame(slotsFrame);
-		componentIncompatibleMsg.setZLevel(999);
-		componentIncompatibleMsg.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		componentIncompatibleMsg.setOffset(Measurement.fromPixels(slotsFrame, 0, 20));
-		handler.add(componentIncompatibleMsg);
+		incompatibleMsg.setFrame(slotsFrame);
+		incompatibleMsg.setZLevel(999);
+		incompatibleMsg.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		incompatibleMsg.setOffset(Measurement.fromPixels(slotsFrame, 0, 20));
+		handler.add(incompatibleMsg);
 		
-		componentInstructions = new ComponentLongText(I18n.format("avatar.getBending.guide"),
+		instructions = new ComponentLongText(I18n.format("avatar.getBending.guide"),
 				Measurement.fromPercent(50, 0));
-		componentInstructions.setFrame(slotsFrame);
-		componentInstructions.setPosition(StartingPosition.TOP_CENTER);
-		componentInstructions.setOffset(Measurement.fromPixels(slotsFrame, 0, componentTitle.height() + 20));
-		handler.add(componentInstructions);
+		instructions.setFrame(slotsFrame);
+		instructions.setPosition(StartingPosition.TOP_CENTER);
+		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
+		handler.add(instructions);
 		
 	}
 	
