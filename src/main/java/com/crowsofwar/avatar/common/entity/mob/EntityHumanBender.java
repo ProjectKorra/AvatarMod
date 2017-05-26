@@ -69,7 +69,7 @@ public abstract class EntityHumanBender extends EntityBender {
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
-		scrollsLeft = rand.nextInt(3) + 3;
+		scrollsLeft = rand.nextInt(3) + 1;
 	}
 	
 	@Override
