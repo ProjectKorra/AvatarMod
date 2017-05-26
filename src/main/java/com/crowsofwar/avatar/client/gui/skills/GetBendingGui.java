@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
 import com.crowsofwar.avatar.client.uitools.ComponentLongText;
 import com.crowsofwar.avatar.client.uitools.ComponentText;
 import com.crowsofwar.avatar.client.uitools.Frame;
@@ -27,6 +28,7 @@ import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 
@@ -51,6 +53,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	private final UiComponent title, incompatibleMsg, instructions;
 	private final ComponentInventorySlots scrollSlots;
 	private final ComponentInventorySlots inventoryComp, hotbarComp;
+	private final UiComponent[] bendingButtons;
 	
 	public GetBendingGui(EntityPlayer player) {
 		super(new ContainerGetBending(player));
@@ -65,6 +68,11 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		Frame slotsFrame = new Frame();
 		slotsFrame.setPosition(Measurement.fromPercent((100 - 30) / 2, 10));
 		slotsFrame.setDimensions(Measurement.fromPercent(30, 35));
+		
+		Frame buttonsFrame = new Frame();
+		buttonsFrame
+				.setPosition(Measurement.fromPercent((100 - 40) / 2, slotsFrame.getCoordsMin().yInPercent()));
+		buttonsFrame.setDimensions(Measurement.fromPercent(40, 35));
 		
 		title = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.getBending.title"));
 		title.setFrame(slotsFrame);
@@ -123,6 +131,19 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		instructions.setPosition(StartingPosition.TOP_CENTER);
 		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
 		handler.add(instructions);
+		
+		BendingType[] types = BendingType.values();
+		bendingButtons = new UiComponent[types.length - 1];
+		for (int i = 0; i < bendingButtons.length; i++) {
+			BendingType type = BendingType.find(i - 1);
+			UiComponent comp = new ComponentCustomButton(AvatarUiTextures.getBending, i * 60, 124, 60, 60,
+					() -> {
+						System.out.println("Click " + type);
+					});
+			comp.setFrame(buttonsFrame);
+			bendingButtons[i] = comp;
+			handler.add(comp);
+		}
 		
 	}
 	
