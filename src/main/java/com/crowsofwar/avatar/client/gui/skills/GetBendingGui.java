@@ -137,10 +137,13 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		for (int i = 0; i < bendingButtons.length; i++) {
 			
 			BendingType type = BendingType.find(i + 1);
-			UiComponent comp = new ComponentCustomButton(AvatarUiTextures.getBending, i * 60, 124, 60, 60,
-					() -> {
-						System.out.println("Click " + type);
-					});
+			
+			int u = (i % 2) * 120;
+			int v = 124 + 60 * (i / 2);
+			
+			UiComponent comp = new ComponentCustomButton(AvatarUiTextures.getBending, u, v, 60, 60, () -> {
+				System.out.println("Click " + type);
+			});
 			
 			comp.setFrame(buttonsFrame);
 			comp.setOffset(Measurement.fromPixels(buttonsFrame, comp.width() * i, 0));
