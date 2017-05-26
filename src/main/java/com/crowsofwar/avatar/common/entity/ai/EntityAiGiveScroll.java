@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity.ai;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -84,7 +83,6 @@ public class EntityAiGiveScroll extends EntityAIBase {
 			
 			Vector velocity = getEntityPos(target).minus(getEntityPos(entity)).normalize().times(0.3);
 			ItemStack scrollStack = new ItemStack(AvatarItems.itemScroll, 1, scrollType.id());
-			ItemScroll.setPoints(scrollStack, 1);
 			
 			EntityItem entityItem = new EntityItem(world, entity.posX, entity.posY + entity.getEyeHeight(),
 					entity.posZ, scrollStack);

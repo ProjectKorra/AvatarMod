@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -42,7 +40,7 @@ public class GuiButtonScrolls extends GuiButton {
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		
-		this.enabled = checkEnabled();
+		this.enabled = scrollSlot.getHasStack();
 		
 		if (this.visible) {
 			
@@ -83,10 +81,6 @@ public class GuiButtonScrolls extends GuiButton {
 			
 		}
 		
-	}
-	
-	private boolean checkEnabled() {
-		return scrollSlot.getHasStack() && stackCompound(scrollSlot.getStack()).getInteger("Points") > 0;
 	}
 	
 }

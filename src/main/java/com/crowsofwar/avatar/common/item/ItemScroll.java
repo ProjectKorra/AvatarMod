@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
-
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -31,7 +29,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -60,12 +57,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
-		NBTTagCompound nbt = stackCompound(stack);
-		int pts = nbt.getInteger("Points");
-		if (pts >= 3) return EnumRarity.EPIC;
-		if (pts == 2) return EnumRarity.RARE;
-		if (pts == 1) return EnumRarity.UNCOMMON;
-		return EnumRarity.COMMON;
+		return EnumRarity.RARE;
 	}
 	
 	@Override

@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -54,9 +53,6 @@ public class AvatarItems {
 		registerItem(itemBisonArmor = new ItemBisonArmor());
 		
 		stackScroll = new ItemStack(itemScroll);
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("Points", 2);
-		stackScroll.setTagCompound(nbt);
 		
 	}
 	
