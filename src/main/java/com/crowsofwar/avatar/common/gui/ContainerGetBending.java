@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.common.gui;
 import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
 import static net.minecraft.item.ItemStack.field_190927_a;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll;
@@ -132,7 +135,7 @@ public class ContainerGetBending extends Container {
 	 * Returns the BendingTypes that can be unlocked by the scrolls which are
 	 * currently in the slots.
 	 */
-	public BendingType[] getEligibleTypes() {
+	public List<BendingType> getEligibleTypes() {
 		
 		BendingType foundType = null;
 		
@@ -141,7 +144,7 @@ public class ContainerGetBending extends Container {
 			
 			// No possible unlocks if there aren't 3 scrolls
 			if (!slot.getHasStack()) {
-				return new BendingType[0];
+				return Arrays.asList();
 			}
 			
 			// If the scroll isn't universal, then we found the scroll type used
@@ -158,10 +161,10 @@ public class ContainerGetBending extends Container {
 		if (foundType == null) {
 			// Didn't find scroll of a specific type
 			// all universal scrolls
-			return BendingType.allExceptError();
+			return Arrays.asList(BendingType.allExceptError());
 		} else {
 			// Found scroll of specific type
-			return new BendingType[] { foundType };
+			return Arrays.asList(foundType);
 		}
 		
 	}

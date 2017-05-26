@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
 import com.crowsofwar.avatar.client.uitools.ComponentLongText;
@@ -50,6 +52,8 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	private final ContainerGetBending container;
 	
 	private final UiComponentHandler handler;
+	private final Frame slotsFrame, buttonsFrame;
+	
 	private final UiComponent title, incompatibleMsg, instructions;
 	private final ComponentInventorySlots scrollSlots;
 	private final ComponentInventorySlots inventoryComp, hotbarComp;
@@ -65,11 +69,11 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		
 		handler = new UiComponentHandler();
 		
-		Frame slotsFrame = new Frame();
+		slotsFrame = new Frame();
 		slotsFrame.setPosition(Measurement.fromPercent((100 - 30) / 2, 10));
 		slotsFrame.setDimensions(Measurement.fromPercent(30, 35));
 		
-		Frame buttonsFrame = new Frame();
+		buttonsFrame = new Frame();
 		buttonsFrame.setDimensions(Measurement.fromPercent(40, 35));
 		
 		title = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.getBending.title"));
@@ -130,7 +134,6 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
 		handler.add(instructions);
 		
-		int totalWidth = 0;
 		BendingType[] types = BendingType.values();
 		bendingButtons = new UiComponent[types.length - 1];
 		for (int i = 0; i < bendingButtons.length; i++) {
@@ -150,18 +153,8 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 			
 			bendingButtons[i] = comp;
 			handler.add(comp);
-			totalWidth += comp.width();
 			
 		}
-		
-		// Center buttonsFrame by setting its width to the width of all buttons
-		// ... then setting its position by centering it based on new width
-		
-		float yPx = buttonsFrame.getDimensions().yInPixels();
-		buttonsFrame.setDimensions(Measurement.fromPixels(totalWidth, yPx));
-		buttonsFrame
-				.setPosition(Measurement.fromPercent((100 - buttonsFrame.getDimensions().xInPercent()) / 2,
-						slotsFrame.getCoordsMax().yInPercent()));
 		
 	}
 	
@@ -173,7 +166,37 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		
+		List<BendingType> allowedTypes = container.getEligibleTypes();
+		
+		for (int i = 0; i < bendingButtons.length; i++) {
+			BendingType type = BendingType.find(i + 1);
+			UiComponent btn = bendingButtons[i];
+			btn.setVisible(allowedTypes.contains(type));
+		}
+		
+		adjustButtonsPosition();
+		
 		handler.draw(partialTicks, mouseX, mouseY);
+		
+	}
+	
+	private void adjustButtonsPosition() {
+		
+		// Center buttonsFrame by setting its width to the width of all buttons
+		// ... then setting its position by centering it based on new width
+		
+		float totalWidth = 0;
+		for (UiComponent btn : bendingButtons) {
+			totalWidth += btn.width();
+		}
+		
+		float yPx = buttonsFrame.getDimensions().yInPixels();
+		buttonsFrame.setDimensions(Measurement.fromPixels(totalWidth, yPx));
+		buttonsFrame
+				.setPosition(Measurement.fromPercent((100 - buttonsFrame.getDimensions().xInPercent()) / 2,
+						slotsFrame.getCoordsMax().yInPercent()));
+		
 	}
 	
 }
