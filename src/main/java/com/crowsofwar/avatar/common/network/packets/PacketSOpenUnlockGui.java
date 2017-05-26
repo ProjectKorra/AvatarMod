@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * 
  * @author CrowsOfWar
  */
-public class PacketSGetBending extends AvatarPacket<PacketSGetBending> {
+public class PacketSOpenUnlockGui extends AvatarPacket<PacketSOpenUnlockGui> {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {}
@@ -40,7 +40,7 @@ public class PacketSGetBending extends AvatarPacket<PacketSGetBending> {
 	}
 	
 	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSGetBending> getPacketHandler() {
+	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSOpenUnlockGui> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
 	

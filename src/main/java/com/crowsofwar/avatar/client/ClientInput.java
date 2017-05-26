@@ -44,7 +44,7 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.network.packets.PacketSGetBending;
+import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
@@ -175,7 +175,7 @@ public class ClientInput implements IControlsHandler {
 			BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 			List<BendingController> controllers = data.getAllBending();
 			if (controllers.isEmpty()) {
-				AvatarMod.network.sendToServer(new PacketSGetBending());
+				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
 			} else {
 				AvatarMod.network.sendToServer(new PacketSSkillsMenu(controllers.get(0).getType()));
 			}
