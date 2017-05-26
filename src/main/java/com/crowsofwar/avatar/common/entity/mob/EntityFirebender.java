@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -44,6 +45,12 @@ public class EntityFirebender extends EntityHumanBender {
 		flamethrowerData.setLevel(2);
 		getData().setAbilityData(BendingAbility.ABILITY_FLAMETHROWER, flamethrowerData);
 		
+	}
+	
+	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50);
 	}
 	
 	@Override

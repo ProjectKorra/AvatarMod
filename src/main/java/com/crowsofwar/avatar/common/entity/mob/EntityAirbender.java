@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -39,6 +40,12 @@ public class EntityAirbender extends EntityHumanBender {
 	 */
 	public EntityAirbender(World world) {
 		super(world);
+	}
+	
+	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35);
 	}
 	
 	@Override
