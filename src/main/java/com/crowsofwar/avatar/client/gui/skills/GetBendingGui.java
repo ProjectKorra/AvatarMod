@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
 import com.crowsofwar.avatar.client.uitools.ComponentLongText;
@@ -33,6 +34,7 @@ import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
+import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -145,6 +147,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 			
 			UiComponent comp = new ComponentCustomButton(AvatarUiTextures.getBending, u, v, 60, 60, () -> {
 				System.out.println("Click " + type);
+				AvatarMod.network.sendToServer(new PacketSUnlockBending(type));
 			});
 			
 			comp.setFrame(buttonsFrame);
