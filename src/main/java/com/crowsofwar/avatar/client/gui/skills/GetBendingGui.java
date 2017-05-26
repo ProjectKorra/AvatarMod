@@ -169,10 +169,15 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		
 		List<BendingType> allowedTypes = container.getEligibleTypes();
 		
+		int visibleBtns = 0;
 		for (int i = 0; i < bendingButtons.length; i++) {
 			BendingType type = BendingType.find(i + 1);
 			UiComponent btn = bendingButtons[i];
 			btn.setVisible(allowedTypes.contains(type));
+			btn.setOffset(Measurement.fromPixels(buttonsFrame, btn.width() * visibleBtns, 0));
+			if (btn.isVisible()) {
+				visibleBtns++;
+			}
 		}
 		
 		adjustButtonsPosition();
@@ -188,7 +193,9 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		
 		float totalWidth = 0;
 		for (UiComponent btn : bendingButtons) {
-			totalWidth += btn.width();
+			if (btn.isVisible()) {
+				totalWidth += btn.width();
+			}
 		}
 		
 		float yPx = buttonsFrame.getDimensions().yInPixels();
