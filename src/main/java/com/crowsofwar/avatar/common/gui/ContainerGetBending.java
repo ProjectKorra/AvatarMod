@@ -103,6 +103,21 @@ public class ContainerGetBending extends Container {
 	}
 	
 	@Override
+	public void onContainerClosed(EntityPlayer player) {
+		super.onContainerClosed(player);
+		
+		if (!player.worldObj.isRemote) {
+			for (int i = 0; i < getSize(); i++) {
+				ItemStack stack = getSlot(i).getStack();
+				if (!stack.func_190926_b()) {
+					player.dropItem(stack, false);
+				}
+			}
+		}
+		
+	}
+	
+	@Override
 	public boolean canInteractWith(EntityPlayer player) {
 		return true;
 	}
