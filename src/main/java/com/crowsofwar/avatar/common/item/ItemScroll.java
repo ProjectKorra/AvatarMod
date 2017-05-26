@@ -124,15 +124,6 @@ public class ItemScroll extends Item implements AvatarItem {
 		return getPoints(stack) > 0;
 	}
 	
-	public static int getPoints(ItemStack stack) {
-		return stackCompound(stack).getInteger("Points");
-	}
-	
-	public static ItemStack setPoints(ItemStack stack, int points) {
-		stackCompound(stack).setInteger("Points", points);
-		return stack;
-	}
-	
 	public static ScrollType getScrollType(ItemStack stack) {
 		int meta = stack.getMetadata();
 		if (meta < 0 || meta >= ScrollType.values().length) return ScrollType.ALL;
