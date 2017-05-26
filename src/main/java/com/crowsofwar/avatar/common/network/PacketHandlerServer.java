@@ -38,6 +38,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
@@ -133,7 +134,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSBisonInventory)
 			return handleInventory((PacketSBisonInventory) packet, ctx);
 		
-		if (packet instanceof PacketSOpenUnlockGui) return handleGetBending((PacketSOpenUnlockGui) packet, ctx);
+		if (packet instanceof PacketSOpenUnlockGui)
+			return handleGetBending((PacketSOpenUnlockGui) packet, ctx);
 		
 		if (packet instanceof PacketSUnlockBending)
 			return handleUnlockBending((PacketSUnlockBending) packet, ctx);
@@ -386,7 +388,28 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleUnlockBending(PacketSUnlockBending packet, MessageContext ctx) {
 		
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		Container container = player.openContainer;
+		
+		if (container instanceof ContainerGetBending) {
+			List<BendingType> eligible = ((ContainerGetBending) container).getEligibleTypes();
+			System.out.println(eligible);
+			
+			BendingType desired = packet.getUnlockType();
+			if (eligible.contains(desired)) {
+				
+				System.out.println("unlock!");
+				if (data.getAllBending().isEmpty()) {
+					data.addBending(desired);
+				}
+				
+			}
+			
+		}
+		
 		return null;
+		
 	}
 	
 	private static class ProcessAbilityRequest {

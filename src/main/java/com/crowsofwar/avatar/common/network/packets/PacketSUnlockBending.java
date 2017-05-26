@@ -57,4 +57,8 @@ public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
 		return PacketRedirector::redirectMessage;
 	}
 	
+	public BendingType getUnlockType() {
+		return type;
+	}
+	
 }
