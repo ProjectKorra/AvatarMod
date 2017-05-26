@@ -19,7 +19,12 @@ package com.crowsofwar.avatar.common.gui;
 import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
 import static net.minecraft.item.ItemStack.field_190927_a;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -124,6 +129,26 @@ public class ContainerGetBending extends Container {
 	
 	public void decrementIncompatibleMsgTicks(float amount) {
 		incompatibleMsgTicks -= amount;
+	}
+	
+	/**
+	 * Returns the BendingTypes that can be unlocked by the scrolls which are
+	 * currently in the slots.
+	 */
+	public BendingType[] getEligibleTypes() {
+		
+		List<BendingType> ret = Arrays.asList(BendingType.values());
+		ret.remove(BendingType.ERROR);
+		
+		Slot[] slots = new Slot[] { getSlot(0), getSlot(1), getSlot(2) };
+		
+		for (Slot slot : slots) {
+			if (!slot.getHasStack()) {
+				return new BendingType[0];
+			}
+			ScrollType scrollType = ItemScroll.getScrollType(slot.getStack());
+		}
+		
 	}
 	
 	private class ScrollSlot extends Slot {
