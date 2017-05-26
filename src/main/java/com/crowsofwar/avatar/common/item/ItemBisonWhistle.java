@@ -167,4 +167,28 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		return getBisonName(stack) != null && getBoundTo(stack) != null;
 	}
 	
+	/**
+	 * Returns whether the player owns the bison which the stack is bound to.
+	 * <p>
+	 * Special conditions:
+	 * <ul>
+	 * <li>If the stack is not bound to a bison, returns false.
+	 * <li>If the bison is not in the world, returns false.
+	 */
+	public static boolean doesPlayerOwn(ItemStack stack, EntityPlayer player) {
+		
+		if (isBound(stack)) {
+			
+			World world = player.worldObj;
+			EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
+			if (bison != null) {
+				return bison.getOwner() == player;
+			}
+			
+		}
+		
+		return false;
+		
+	}
+	
 }
