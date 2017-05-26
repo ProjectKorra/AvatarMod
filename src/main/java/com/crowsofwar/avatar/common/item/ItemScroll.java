@@ -19,7 +19,8 @@ package com.crowsofwar.avatar.common.item;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 
 import java.util.List;
-import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
@@ -144,16 +145,16 @@ public class ItemScroll extends Item implements AvatarItem {
 	}
 	
 	public enum ScrollType {
-		ALL(type -> true),
-		EARTH(type -> type == BendingType.EARTHBENDING),
-		FIRE(type -> type == BendingType.FIREBENDING),
-		WATER(type -> type == BendingType.WATERBENDING),
-		AIR(type -> type == BendingType.AIRBENDING);
+		ALL(null),
+		EARTH(BendingType.EARTHBENDING),
+		FIRE(BendingType.FIREBENDING),
+		WATER(BendingType.WATERBENDING),
+		AIR(BendingType.AIRBENDING);
 		
-		private final Predicate<BendingType> test;
+		private final BendingType type;
 		
-		private ScrollType(Predicate<BendingType> test) {
-			this.test = test;
+		private ScrollType(BendingType type) {
+			this.type = type;
 		}
 		
 		public boolean isCompatibleWith(ScrollType other) {
@@ -169,7 +170,17 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 		
 		public boolean accepts(BendingType type) {
-			return test.test(type);
+			return this.type == null || this.type == type;
+		}
+		
+		/**
+		 * Gets the corresponding bending type from this scroll. Returns null if
+		 * there isn't an exact corresponding type (ie, in the case of
+		 * {@link #ALL}).
+		 */
+		@Nullable
+		public BendingType getBendingType() {
+			return type;
 		}
 		
 		public static ScrollType fromId(int id) {
