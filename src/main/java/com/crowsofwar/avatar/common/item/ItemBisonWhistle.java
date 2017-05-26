@@ -103,6 +103,9 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 					EntityPlayer oldOwner = bison.getOwner();
 					bison.setOwner(player);
 					
+					MSG_BISON_TRANSFER_OLD.send(oldOwner, bison.getName(), player.getName());
+					MSG_BISON_TRANSFER_NEW.send(player, bison.getName(), oldOwner.getName());
+					
 					return new ActionResult<>(SUCCESS, stack);
 					
 				}
