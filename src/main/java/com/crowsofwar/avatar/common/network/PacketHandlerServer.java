@@ -46,6 +46,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
 import com.crowsofwar.avatar.common.network.packets.PacketSGetBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
+import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
@@ -133,6 +134,9 @@ public class PacketHandlerServer implements IPacketHandler {
 			return handleInventory((PacketSBisonInventory) packet, ctx);
 		
 		if (packet instanceof PacketSGetBending) return handleGetBending((PacketSGetBending) packet, ctx);
+		
+		if (packet instanceof PacketSUnlockBending)
+			return handleUnlockBending((PacketSUnlockBending) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -378,6 +382,11 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		return null;
 		
+	}
+	
+	private IMessage handleUnlockBending(PacketSUnlockBending packet, MessageContext ctx) {
+		
+		return null;
 	}
 	
 	private static class ProcessAbilityRequest {
