@@ -62,13 +62,10 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		if (!world.isRemote) {
 			
-			UUID boundTo = getBoundTo(stack);
-			List<EntitySkyBison> entities = world.getEntities(EntitySkyBison.class,
-					bison -> bison.getUniqueID().equals(boundTo));
+			EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
 			
-			if (!entities.isEmpty()) {
+			if (bison != null) {
 				
-				EntitySkyBison bison = entities.get(0);
 				double dist = entity.getDistanceToEntity(bison);
 				
 				double seconds = dist / 20;
@@ -92,10 +89,27 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		ItemStack stack = player.getHeldItem(hand);
 		if (isBound(stack)) {
-			System.out.println("Draw back");
 			
-			player.setActiveHand(hand);
-			return new ActionResult<>(SUCCESS, stack);
+			if (doesPlayerOwn(stack, player)) {
+				player.setActiveHand(hand);
+				return new ActionResult<>(SUCCESS, stack);
+			} else {
+				
+				EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
+				if (bison != null) {
+					
+					System.out.println("Transfer the bison");
+					
+					EntityPlayer oldOwner = bison.getOwner();
+					bison.setOwner(player);
+					
+					return new ActionResult<>(SUCCESS, stack);
+					
+				}
+				
+				return new ActionResult<>(PASS, stack);
+				
+			}
 			
 		} else {
 			
