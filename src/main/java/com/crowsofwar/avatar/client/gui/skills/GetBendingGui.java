@@ -70,8 +70,6 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		slotsFrame.setDimensions(Measurement.fromPercent(30, 35));
 		
 		Frame buttonsFrame = new Frame();
-		buttonsFrame
-				.setPosition(Measurement.fromPercent((100 - 40) / 2, slotsFrame.getCoordsMin().yInPercent()));
 		buttonsFrame.setDimensions(Measurement.fromPercent(40, 35));
 		
 		title = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.getBending.title"));
@@ -132,6 +130,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
 		handler.add(instructions);
 		
+		int totalWidth = 0;
 		BendingType[] types = BendingType.values();
 		bendingButtons = new UiComponent[types.length - 1];
 		for (int i = 0; i < bendingButtons.length; i++) {
@@ -146,11 +145,23 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 			});
 			
 			comp.setFrame(buttonsFrame);
+			comp.setScale(0.5f);
 			comp.setOffset(Measurement.fromPixels(buttonsFrame, comp.width() * i, 0));
 			
 			bendingButtons[i] = comp;
 			handler.add(comp);
+			totalWidth += comp.width();
+			
 		}
+		
+		// Center buttonsFrame by setting its width to the width of all buttons
+		// ... then setting its position by centering it based on new width
+		
+		float yPx = buttonsFrame.getDimensions().yInPixels();
+		buttonsFrame.setDimensions(Measurement.fromPixels(totalWidth, yPx));
+		buttonsFrame
+				.setPosition(Measurement.fromPercent((100 - buttonsFrame.getDimensions().xInPercent()) / 2,
+						slotsFrame.getCoordsMax().yInPercent()));
 		
 	}
 	
