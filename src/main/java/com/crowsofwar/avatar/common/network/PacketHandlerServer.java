@@ -394,14 +394,19 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (container instanceof ContainerGetBending) {
 			List<BendingType> eligible = ((ContainerGetBending) container).getEligibleTypes();
-			System.out.println(eligible);
 			
 			BendingType desired = packet.getUnlockType();
 			if (eligible.contains(desired)) {
 				
-				System.out.println("unlock!");
 				if (data.getAllBending().isEmpty()) {
 					data.addBending(desired);
+					
+					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
+						container.getSlot(i).putStack(ItemStack.field_190927_a);
+					}
+					
+					player.openGui(AvatarMod.instance, desired.id(), player.worldObj, 0, 0, 0);
+					
 				}
 				
 			}
