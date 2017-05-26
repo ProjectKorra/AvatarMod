@@ -89,10 +89,8 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltips,
 			boolean advanced) {
 		
-		NBTTagCompound nbt = stackCompound(stack);
-		int pts = nbt.getInteger("Points");
-		
-		tooltips.add(I18n.format("avatar.tooltip.scroll", pts));
+		String type = I18n.format("avatar." + getScrollType(stack).displayName());
+		tooltips.add(I18n.format("avatar.tooltip.scroll", type));
 		
 	}
 	
@@ -111,9 +109,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		
 		for (int meta = 0; meta < ScrollType.values().length; meta++) {
-			subItems.add(setPoints(new ItemStack(item, 1, meta), 1));
-			subItems.add(setPoints(new ItemStack(item, 1, meta), 2));
-			subItems.add(setPoints(new ItemStack(item, 1, meta), 3));
+			subItems.add(new ItemStack(item, 1, meta));
 		}
 		
 	}
@@ -121,7 +117,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack) {
-		return getPoints(stack) > 0;
+		return true;
 	}
 	
 	public static ScrollType getScrollType(ItemStack stack) {

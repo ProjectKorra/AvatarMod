@@ -55,7 +55,6 @@ public class AvatarScrollDrops {
 				
 				ItemStack stack = new ItemStack(AvatarItems.itemScroll);
 				ItemScroll.setScrollType(stack, type);
-				ItemScroll.setPoints(stack, 1);
 				
 				EntityItem entityItem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ,
 						stack);
