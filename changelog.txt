@@ -17,6 +17,7 @@ AV2 Changelog :: version a4.0
 * Waterbenders have infinite water arcs when it rains on them
 * Greatly increased XP gains for Mine Blocks ability
 * Vanilla mobs have rare chances of dropping scrolls
+* Can use [keybinding=key.X] in .lang file to use a keybinding
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs
