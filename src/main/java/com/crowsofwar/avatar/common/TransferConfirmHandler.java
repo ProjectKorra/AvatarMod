@@ -50,6 +50,10 @@ public class TransferConfirmHandler {
 		inProgressTransfers.put(from, new TransferData(from, to, bison));
 	}
 	
+	/**
+	 * Tries to transfer the player's bison to whoever was requested. Handles
+	 * all transferring and messaging logic.
+	 */
 	public static void confirmTransfer(EntityPlayer newOwner) {
 		TransferData transfer = inProgressTransfers.get(newOwner);
 		if (transfer != null) {
