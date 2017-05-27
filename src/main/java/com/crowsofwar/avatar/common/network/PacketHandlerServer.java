@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.network;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -336,17 +335,10 @@ public class PacketHandlerServer implements IPacketHandler {
 						// Try to use this scroll
 						ScrollType type = ScrollType.fromId(stack.getMetadata());
 						if (type.accepts(packet.getAbility().getBendingType())) {
-							int points = stackCompound(stack).getInteger("Points");
-							if (points > 0) {
-								points--;
-								if (points == 0) {
-									activeSlot.putStack(ItemStack.field_190927_a);
-								} else {
-									stackCompound(stack).setInteger("Points", points);
-								}
-								
-								abilityData.addLevel();
-							}
+							
+							activeSlot.putStack(ItemStack.field_190927_a);
+							abilityData.addLevel();
+							
 						}
 						
 					}
@@ -357,6 +349,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		}
 		
 		return null;
+		
 	}
 	
 	private IMessage handleInventory(PacketSBisonInventory packet, MessageContext ctx) {

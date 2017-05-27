@@ -69,7 +69,7 @@ public abstract class EntityHumanBender extends EntityBender {
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
-		scrollsLeft = rand.nextInt(3) + 3;
+		scrollsLeft = rand.nextInt(3) + 1;
 	}
 	
 	@Override
@@ -81,7 +81,7 @@ public abstract class EntityHumanBender extends EntityBender {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25);
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35);
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3);

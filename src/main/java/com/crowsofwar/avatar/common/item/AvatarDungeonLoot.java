@@ -160,10 +160,6 @@ public class AvatarDungeonLoot {
 			this.minStack = 1;
 			this.maxStack = 1;
 			this.nbt = new NBTTagCompound();
-			
-			if (item == AvatarItems.itemScroll) {
-				nbt.setInteger("Points", 1);
-			}
 		}
 		
 		private LootItem withMetadata(int metadata) {
