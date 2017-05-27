@@ -71,6 +71,8 @@ public class TransferConfirmHandler {
 			MSG_BISON_TRANSFER_OLD.send(oldOwner, bison.getName(), newOwner.getName());
 			MSG_BISON_TRANSFER_NEW.send(newOwner, bison.getName(), oldOwner.getName());
 			
+			inProgressTransfers.remove(oldOwner);
+			
 		} else {
 			
 			MSG_BISON_TRANSFER_NONE.send(oldOwner);
