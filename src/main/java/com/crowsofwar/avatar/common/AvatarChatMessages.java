@@ -76,6 +76,8 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_BISON_TRANSFER_OLD = newChatMessage(CFG, "avatar.bisonWhistle.transferAway", "bison", "newOwner");
 	public static final ChatMessage MSG_BISON_TRANSFER_NEW = newChatMessage(CFG, "avatar.bisonWhistle.transferTo", "bison", "oldOwner");
 	public static final ChatMessage MSG_BISON_TRANSFER_NONE = newChatMessage(CFG, "avatar.bisonWhistle.noTransfer");
+	public static final ChatMessage MSG_BISON_TRANSFER_OLD_START = newChatMessage(CFG, "avatar.bisonWhistle.transferAway.start", "bison", "newOwner");
+	public static final ChatMessage MSG_BISON_TRANSFER_NEW_START = newChatMessage(CFG, "avatar.bisonWhistle.transferTo.start", "bison", "oldOwner");
 	
 	public static final ChatMessage MSG_HUMANBENDER_NO_SCROLLS = newChatMessage(CFG, "avatar.outOfScrolls");
 	

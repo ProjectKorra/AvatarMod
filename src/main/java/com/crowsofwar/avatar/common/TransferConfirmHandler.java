@@ -46,8 +46,14 @@ public class TransferConfirmHandler {
 		MinecraftForge.EVENT_BUS.register(new TransferConfirmHandler.TickHandler());
 	}
 	
-	public static void registerTransfer(EntityPlayer from, EntityPlayer to, EntitySkyBison bison) {
+	/**
+	 * Initiates the transfer process and intializes data about the transfer.
+	 * Also sends messages to parties involved.
+	 */
+	public static void startTransfer(EntityPlayer from, EntityPlayer to, EntitySkyBison bison) {
 		inProgressTransfers.put(from, new TransferData(from, to, bison));
+		MSG_BISON_TRANSFER_OLD_START.send(from, bison.getName(), to.getName());
+		MSG_BISON_TRANSFER_NEW_START.send(to, bison.getName(), from.getName());
 	}
 	
 	/**

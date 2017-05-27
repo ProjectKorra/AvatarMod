@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -96,15 +97,10 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 			} else {
 				
 				EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
-				if (bison != null) {
-					
-					System.out.println("Transfer the bison");
+				if (bison != null && !bison.worldObj.isRemote) {
 					
 					EntityPlayer oldOwner = bison.getOwner();
-					bison.setOwner(player);
-					
-					MSG_BISON_TRANSFER_OLD.send(oldOwner, bison.getName(), player.getName());
-					MSG_BISON_TRANSFER_NEW.send(player, bison.getName(), oldOwner.getName());
+					TransferConfirmHandler.startTransfer(oldOwner, player, bison);
 					
 					return new ActionResult<>(SUCCESS, stack);
 					
