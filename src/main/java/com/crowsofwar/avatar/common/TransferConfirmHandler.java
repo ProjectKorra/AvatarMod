@@ -16,6 +16,9 @@
 */
 package com.crowsofwar.avatar.common;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+
+import java.util.HashMap;
 import java.util.Map;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
@@ -23,30 +26,47 @@ import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Manages information about bison transfer confirmation
+ * Manages information and handling of current bison transfers
  * 
  * @author CrowsOfWar
  */
 public class TransferConfirmHandler {
 	
-	private static final Map<EntityPlayer, TransferTarget> inProcessTransfers;
+	private static final Map<EntityPlayer, TransferData> inProgressTransfers = new HashMap<>();
 	
-	public static void registerTransfer(EntityPlayer from, EntityPlayer to, Runnable onConfirm) {
-		
+	public static void registerTransfer(EntityPlayer from, EntityPlayer to, EntitySkyBison bison) {
+		inProgressTransfers.put(from, new TransferData(from, to, bison));
 	}
 	
-	public static void confirmTransfer(EntityPlayer from) {
-		
+	public static void confirmTransfer(EntityPlayer newOwner) {
+		TransferData transfer = inProgressTransfers.get(newOwner);
+		if (transfer != null) {
+			
+			EntitySkyBison bison = transfer.bison;
+			EntityPlayer oldOwner = transfer.to;
+			bison.setOwner(newOwner);
+			
+			MSG_BISON_TRANSFER_OLD.send(oldOwner, bison.getName(), newOwner.getName());
+			MSG_BISON_TRANSFER_NEW.send(newOwner, bison.getName(), oldOwner.getName());
+			
+		} else {
+			
+			MSG_BISON_TRANSFER_NONE.send(newOwner);
+			
+		}
 	}
 	
-	private static class TransferTarget {
+	private static class TransferData {
 		
-		private final EntityPlayer transferTo;
+		private final EntityPlayer from, to;
 		private final EntitySkyBison bison;
+		private int ticksLeft;
 		
-		public TransferTarget(EntityPlayer transferTo, EntitySkyBison bison) {
-			this.transferTo = transferTo;
+		public TransferData(EntityPlayer from, EntityPlayer to, EntitySkyBison bison) {
+			this.from = from;
+			this.to = to;
 			this.bison = bison;
+			this.ticksLeft = 100;
 		}
 		
 	}
