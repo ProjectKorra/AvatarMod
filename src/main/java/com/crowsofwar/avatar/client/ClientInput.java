@@ -44,6 +44,7 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
@@ -99,6 +100,7 @@ public class ClientInput implements IControlsHandler {
 		addBendingButton(BendingType.WATERBENDING, Keyboard.KEY_C);
 		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_G);
 		addKeybinding(AvatarControl.KEY_SKILLS, Keyboard.KEY_K, "main");
+		addKeybinding(AvatarControl.KEY_TRANSFER_BISON, Keyboard.KEY_L, "main");
 		
 		this.wasAbilityDown = new boolean[BendingManager.allAbilities().size()];
 		
@@ -176,6 +178,9 @@ public class ClientInput implements IControlsHandler {
 			if (!controllers.isEmpty()) {
 				AvatarMod.network.sendToServer(new PacketSSkillsMenu(controllers.get(0).getType()));
 			}
+		}
+		if (isControlPressed(AvatarControl.KEY_TRANSFER_BISON)) {
+			AvatarMod.network.sendToServer(new PacketSConfirmTransfer());
 		}
 		
 	}
