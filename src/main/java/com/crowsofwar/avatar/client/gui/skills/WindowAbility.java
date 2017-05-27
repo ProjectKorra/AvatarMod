@@ -23,6 +23,7 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 
 import org.lwjgl.input.Mouse;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
@@ -37,6 +38,7 @@ import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.ChatSender;
 
@@ -64,7 +66,8 @@ public class WindowAbility {
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
-	private UiComponent unlockTitle, unlockText, unlockButton;
+	private UiComponent unlockTitle, unlockText;
+	private ComponentCustomButton unlockButton;
 	
 	public WindowAbility(BendingAbility ability, SkillsGui gui) {
 		this.ability = ability;
@@ -166,10 +169,12 @@ public class WindowAbility {
 		unlockText.setOffset(fromPixels(frameRight, 0, unlockTitle.height() + 10));
 		handler.add(unlockText);
 		
-		unlockButton = new ComponentUnlockAbility(ability);
+		unlockButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 196, 100, 20, 20,
+				() -> AvatarMod.network.sendToServer(new PacketSUseScroll(ability)));
 		unlockButton.setFrame(frameRight);
 		unlockButton.setOffset(fromPixels(unlockTitle.getFrame(), slot1.width() + 20,
 				unlockTitle.height() + unlockText.height() + 20));
+		unlockButton.setZLevel(4);
 		handler.add(unlockButton);
 		
 		backButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 0, 240, 16, 16,
@@ -200,6 +205,7 @@ public class WindowAbility {
 		button.setVisible(!data.isLocked());
 		
 		if (data.isLocked()) {
+			unlockButton.setEnabled(gui.inventorySlots.getSlot(0).getHasStack());
 			slot1.setVisible(true);
 			slot1.setFrame(unlockTitle.getFrame());
 			slot1.setOffset(
