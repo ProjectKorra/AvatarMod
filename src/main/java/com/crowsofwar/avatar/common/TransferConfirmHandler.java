@@ -60,12 +60,12 @@ public class TransferConfirmHandler {
 	 * Tries to transfer the player's bison to whoever was requested. Handles
 	 * all transferring and messaging logic.
 	 */
-	public static void confirmTransfer(EntityPlayer newOwner) {
-		TransferData transfer = inProgressTransfers.get(newOwner);
+	public static void confirmTransfer(EntityPlayer oldOwner) {
+		TransferData transfer = inProgressTransfers.get(oldOwner);
 		if (transfer != null) {
 			
 			EntitySkyBison bison = transfer.bison;
-			EntityPlayer oldOwner = transfer.to;
+			EntityPlayer newOwner = transfer.to;
 			bison.setOwner(newOwner);
 			
 			MSG_BISON_TRANSFER_OLD.send(oldOwner, bison.getName(), newOwner.getName());
@@ -73,7 +73,7 @@ public class TransferConfirmHandler {
 			
 		} else {
 			
-			MSG_BISON_TRANSFER_NONE.send(newOwner);
+			MSG_BISON_TRANSFER_NONE.send(oldOwner);
 			
 		}
 	}
