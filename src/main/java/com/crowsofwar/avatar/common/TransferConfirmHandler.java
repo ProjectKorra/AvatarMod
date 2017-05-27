@@ -19,11 +19,17 @@ package com.crowsofwar.avatar.common;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 /**
  * Manages information and handling of current bison transfers
@@ -33,6 +39,12 @@ import net.minecraft.entity.player.EntityPlayer;
 public class TransferConfirmHandler {
 	
 	private static final Map<EntityPlayer, TransferData> inProgressTransfers = new HashMap<>();
+	
+	private TransferConfirmHandler() {}
+	
+	public static void registerEventHandler() {
+		MinecraftForge.EVENT_BUS.register(new TransferConfirmHandler.TickHandler());
+	}
 	
 	public static void registerTransfer(EntityPlayer from, EntityPlayer to, EntitySkyBison bison) {
 		inProgressTransfers.put(from, new TransferData(from, to, bison));
@@ -67,6 +79,31 @@ public class TransferConfirmHandler {
 			this.to = to;
 			this.bison = bison;
 			this.ticksLeft = 100;
+		}
+		
+	}
+	
+	private static class TickHandler {
+		
+		@SubscribeEvent
+		public void onTick(TickEvent.ServerTickEvent e) {
+			if (e.phase == Phase.START) {
+				
+				Set<Map.Entry<EntityPlayer, TransferData>> entries = inProgressTransfers.entrySet();
+				Iterator<Map.Entry<EntityPlayer, TransferData>> iterator = entries.iterator();
+				
+				while (iterator.hasNext()) {
+					Map.Entry<EntityPlayer, TransferData> entry = iterator.next();
+					TransferData data = entry.getValue();
+					data.ticksLeft--;
+					
+					if (data.ticksLeft <= 0 || data.bison.isDead || data.from.isDead || data.to.isDead) {
+						iterator.remove();
+					}
+					
+				}
+				
+			}
 		}
 		
 	}
