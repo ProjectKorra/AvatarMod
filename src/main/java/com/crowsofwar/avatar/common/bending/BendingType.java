@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending;
 
+import java.util.Arrays;
+
 /**
  * Defines different types of bending without actually describing their
  * behavior. Useful for things like Id and Id lookup.
@@ -51,6 +53,14 @@ public enum BendingType {
 		if (id < 0 || id >= values().length)
 			throw new IllegalArgumentException("Cannot find BendingType with invalid id: " + id);
 		return values()[id];
+	}
+	
+	/**
+	 * Returns all bendingTypes, except for {@link #ERROR} (sorta like
+	 * <code>values()</code>)
+	 */
+	public static BendingType[] allExceptError() {
+		return Arrays.copyOfRange(values(), 1, values().length);
 	}
 	
 }

@@ -59,6 +59,13 @@ public interface UiTransform {
 	void setOffset(Measurement offset);
 	
 	/**
+	 * Adds the given offset to the current offset
+	 */
+	default void addOffset(Measurement offset) {
+		setOffset(offset().plus(offset));
+	}
+	
+	/**
 	 * Gets the scale of the actual component. Coordinates may be adjusted to
 	 * accommodate for this.
 	 */
