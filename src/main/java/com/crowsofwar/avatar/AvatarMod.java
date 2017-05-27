@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.AvatarScrollDrops;
 import com.crowsofwar.avatar.common.FallAbsorptionHandler;
+import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
@@ -74,6 +75,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
+import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
 import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
@@ -141,6 +143,7 @@ public class AvatarMod {
 		AirbendingEvents.register();
 		FallAbsorptionHandler.register();
 		AvatarScrollDrops.register();
+		TransferConfirmHandler.registerEventHandler();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
@@ -158,6 +161,7 @@ public class AvatarMod {
 		registerPacket(PacketSBisonInventory.class, Side.SERVER);
 		registerPacket(PacketSOpenUnlockGui.class, Side.SERVER);
 		registerPacket(PacketSUnlockBending.class, Side.SERVER);
+		registerPacket(PacketSConfirmTransfer.class, Side.SERVER);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		

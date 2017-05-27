@@ -65,6 +65,13 @@ avatar.bisonWhistle.notFound=[error]${bison} no longer lives in the physical wor
 avatar.bisonWhistle.notOwned=[error]You do not own this flying bison.[/error]
 avatar.bisonWhistle.tooltipBound=Bound to %s
 avatar.bisonWhistle.tooltipUnbound=Not bound
+avatar.bisonWhistle.transferAway=Your flying bison ${bison} has been transferred to ${newOwner}.
+avatar.bisonWhistle.transferTo=You now own ${oldOwner}'s flying bison ${bison}!
+avatar.bisonWhistle.noTransfer=[error]Nobody has recently requested a bison transfer.[/error]
+avatar.bisonWhistle.transferAway.start=${newOwner} would like to own your bison ${bison}. Press KEY to confirm, ignore to decline.
+avatar.bisonWhistle.transferTo.start=A message has been sent to ${oldOwner} to confirm the transfer of ${bison}.
+avatar.bisonWhistle.transferAway.ignore=The transfer with ${newOwner} has been ignored.
+avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to your transfer request.
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.

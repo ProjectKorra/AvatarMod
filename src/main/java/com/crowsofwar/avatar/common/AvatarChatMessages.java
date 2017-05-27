@@ -73,6 +73,13 @@ public class AvatarChatMessages {
 	public static final ChatMessage MSG_BISON_WHISTLE_NOT_FOUND = newChatMessage(CFG, "avatar.bisonWhistle.notFound", "bison");
 	public static final ChatMessage MSG_BISON_WHISTLE_NOTOWNED = newChatMessage(CFG, "avatar.bisonWhistle.notOwned");
 	public static final ChatMessage MSG_SKY_BISON_STATS = newChatMessage(CFG, "avatar.bisonStats", "food", "health", "domestication");
+	public static final ChatMessage MSG_BISON_TRANSFER_OLD = newChatMessage(CFG, "avatar.bisonWhistle.transferAway", "bison", "newOwner");
+	public static final ChatMessage MSG_BISON_TRANSFER_NEW = newChatMessage(CFG, "avatar.bisonWhistle.transferTo", "bison", "oldOwner");
+	public static final ChatMessage MSG_BISON_TRANSFER_NONE = newChatMessage(CFG, "avatar.bisonWhistle.noTransfer");
+	public static final ChatMessage MSG_BISON_TRANSFER_OLD_START = newChatMessage(CFG, "avatar.bisonWhistle.transferAway.start", "bison", "newOwner");
+	public static final ChatMessage MSG_BISON_TRANSFER_NEW_START = newChatMessage(CFG, "avatar.bisonWhistle.transferTo.start", "bison", "oldOwner");
+	public static final ChatMessage MSG_BISON_TRANSFER_OLD_IGNORE = newChatMessage(CFG, "avatar.bisonWhistle.transferAway.ignore", "newOwner");
+	public static final ChatMessage MSG_BISON_TRANSFER_NEW_IGNORE = newChatMessage(CFG, "avatar.bisonWhistle.transferTo.ignore", "oldOwner");
 	
 	public static final ChatMessage MSG_HUMANBENDER_NO_SCROLLS = newChatMessage(CFG, "avatar.outOfScrolls");
 	

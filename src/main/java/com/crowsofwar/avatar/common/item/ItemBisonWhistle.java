@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -62,13 +63,10 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		if (!world.isRemote) {
 			
-			UUID boundTo = getBoundTo(stack);
-			List<EntitySkyBison> entities = world.getEntities(EntitySkyBison.class,
-					bison -> bison.getUniqueID().equals(boundTo));
+			EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
 			
-			if (!entities.isEmpty()) {
+			if (bison != null) {
 				
-				EntitySkyBison bison = entities.get(0);
 				double dist = entity.getDistanceToEntity(bison);
 				
 				double seconds = dist / 20;
@@ -92,10 +90,25 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		ItemStack stack = player.getHeldItem(hand);
 		if (isBound(stack)) {
-			System.out.println("Draw back");
 			
-			player.setActiveHand(hand);
-			return new ActionResult<>(SUCCESS, stack);
+			if (doesPlayerOwn(stack, player)) {
+				player.setActiveHand(hand);
+				return new ActionResult<>(SUCCESS, stack);
+			} else {
+				
+				EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
+				if (bison != null && !bison.worldObj.isRemote) {
+					
+					EntityPlayer oldOwner = bison.getOwner();
+					TransferConfirmHandler.startTransfer(oldOwner, player, bison);
+					
+					return new ActionResult<>(SUCCESS, stack);
+					
+				}
+				
+				return new ActionResult<>(PASS, stack);
+				
+			}
 			
 		} else {
 			
@@ -165,6 +178,30 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	
 	public static boolean isBound(ItemStack stack) {
 		return getBisonName(stack) != null && getBoundTo(stack) != null;
+	}
+	
+	/**
+	 * Returns whether the player owns the bison which the stack is bound to.
+	 * <p>
+	 * Special conditions:
+	 * <ul>
+	 * <li>If the stack is not bound to a bison, returns false.
+	 * <li>If the bison is not in the world, returns false.
+	 */
+	public static boolean doesPlayerOwn(ItemStack stack, EntityPlayer player) {
+		
+		if (isBound(stack)) {
+			
+			World world = player.worldObj;
+			EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
+			if (bison != null) {
+				return bison.getOwner() == player;
+			}
+			
+		}
+		
+		return false;
+		
 	}
 	
 }

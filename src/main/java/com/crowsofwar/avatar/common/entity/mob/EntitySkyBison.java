@@ -414,6 +414,16 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		return list.isEmpty() ? null : list.get(0);
 	}
 	
+	/**
+	 * Returns the sky bison in that world with the specified uuid, or null if
+	 * no sky bison with that uuid.
+	 */
+	public static EntitySkyBison findBison(World world, UUID id) {
+		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class,
+				bison -> bison.getUniqueID().equals(id));
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
 	// ================================================================================
 	// CHUNK LOADING
 	// ================================================================================

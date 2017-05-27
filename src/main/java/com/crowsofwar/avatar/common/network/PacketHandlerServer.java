@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -43,6 +44,7 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
+import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
 import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
@@ -138,6 +140,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (packet instanceof PacketSUnlockBending)
 			return handleUnlockBending((PacketSUnlockBending) packet, ctx);
+		
+		if (packet instanceof PacketSConfirmTransfer)
+			return handleConfirmTransfer((PacketSConfirmTransfer) packet, ctx);
 		
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
@@ -407,7 +412,14 @@ public class PacketHandlerServer implements IPacketHandler {
 		}
 		
 		return null;
+	}
+	
+	private IMessage handleConfirmTransfer(PacketSConfirmTransfer packet, MessageContext ctx) {
 		
+		EntityPlayer player = ctx.getServerHandler().playerEntity;
+		TransferConfirmHandler.confirmTransfer(player);
+		
+		return null;
 	}
 	
 	private static class ProcessAbilityRequest {
