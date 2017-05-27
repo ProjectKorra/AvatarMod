@@ -110,6 +110,8 @@ public class TransferConfirmHandler {
 					data.ticksLeft--;
 					
 					if (data.ticksLeft <= 0 || data.bison.isDead || data.from.isDead || data.to.isDead) {
+						MSG_BISON_TRANSFER_OLD_IGNORE.send(data.from, data.to.getName());
+						MSG_BISON_TRANSFER_NEW_IGNORE.send(data.to, data.from.getName());
 						iterator.remove();
 					}
 					
