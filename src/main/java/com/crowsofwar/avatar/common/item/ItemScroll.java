@@ -20,8 +20,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -30,6 +35,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -48,6 +56,19 @@ public class ItemScroll extends Item implements AvatarItem {
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
 		setHasSubtypes(true);
+	}
+	
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		if (data.getAllBending().isEmpty()) {
+			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
+		} else {
+			BendingController controller = data.getAllBending().get(0);
+			player.openGui(AvatarMod.instance, controller.getType().id(), world, 0, 0, 0);
+		}
+		
+		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 	}
 	
 	@Override
