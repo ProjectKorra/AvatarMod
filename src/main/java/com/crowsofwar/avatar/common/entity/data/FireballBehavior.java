@@ -24,7 +24,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
@@ -171,6 +172,13 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);
 			entity.velocity().set(motion);
+			
+			if (data.getAbilityData(BendingAbility.ABILITY_FIREBALL).isMasterPath(AbilityTreePath.SECOND)) {
+				int size = entity.getSize();
+				if (size < 45) {
+					entity.setSize(size + 1);
+				}
+			}
 			
 			return this;
 		}

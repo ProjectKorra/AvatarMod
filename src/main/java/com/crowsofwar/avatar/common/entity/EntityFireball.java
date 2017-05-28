@@ -37,6 +37,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -56,6 +57,8 @@ public class EntityFireball extends AvatarEntity {
 			.createKey(EntityFireball.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	public static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
+			DataSerializers.VARINT);
 	
 	private final OwnerAttribute ownerAttr;
 	private AxisAlignedBB expandedHitbox;
@@ -75,6 +78,7 @@ public class EntityFireball extends AvatarEntity {
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
+		dataManager.register(SYNC_SIZE, 30);
 	}
 	
 	@Override
@@ -127,6 +131,14 @@ public class EntityFireball extends AvatarEntity {
 	
 	public void setDamage(float damage) {
 		this.damage = damage;
+	}
+	
+	public int getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+	
+	public void setSize(int size) {
+		dataManager.set(SYNC_SIZE, size);
 	}
 	
 	@Override
