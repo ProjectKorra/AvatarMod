@@ -39,9 +39,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -152,8 +154,6 @@ public class EntityFireball extends AvatarEntity {
 			AbilityData abilityData = Bender.getData(getOwner())
 					.getAbilityData(BendingAbility.ABILITY_FIREBALL);
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-				explosionSize *= 2;
-			} else if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 				destroyObsidian = true;
 			}
 		}
@@ -162,23 +162,19 @@ public class EntityFireball extends AvatarEntity {
 				!worldObj.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
 			
-			float oldResistance = 0;
-			if (destroyObsidian) {
-				// Hacky way to allow destruction of obsidian
-				// Entity parameter is unused by this block
-				oldResistance = Blocks.OBSIDIAN.getExplosionResistance(null) * 5;
-				// For some reason, param is mult by 3 in the method
-				// So really we set it to 60
-				Blocks.OBSIDIAN.setResistance(60f / 3);
-			}
-			
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
 			
-			if (destroyObsidian) {
-				Blocks.OBSIDIAN.setResistance(oldResistance / 3);
+		}
+		
+		if (destroyObsidian) {
+			for (EnumFacing dir : EnumFacing.values()) {
+				BlockPos pos = getPosition().offset(dir);
+				System.out.println(pos);
+				if (worldObj.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
+					worldObj.destroyBlock(pos, true);
+				}
 			}
-			
 		}
 		
 	}
