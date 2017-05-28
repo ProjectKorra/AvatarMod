@@ -314,18 +314,15 @@ public class EntityFloatingBlock extends AvatarEntity {
 				worldObj.spawnEntityInWorld(ei);
 			}
 		}
-		if (!worldObj.isRemote) {
-			AbilityData data = Bender.getData(getOwner())
-					.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
-			if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
-				
-				Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 2, false, false);
-				if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
-					explosion.doExplosionA();
-					explosion.doExplosionB(true);
-				}
-				
+		AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
+		if (data.isMasterPath(AbilityTreePath.SECOND)) {
+			
+			Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 2, false, false);
+			if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+				explosion.doExplosionA();
+				explosion.doExplosionB(true);
 			}
+			
 		}
 		
 	}
