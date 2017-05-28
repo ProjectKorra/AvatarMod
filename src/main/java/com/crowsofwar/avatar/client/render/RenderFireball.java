@@ -62,7 +62,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		
 		float rotation = ticks / 5f;
 		float size = .8f + cos(ticks / 5f) * .05f;
-		size *= entity.getSize() / 30f;
+		size *= Math.sqrt(entity.getSize() / 30f);
 		
 		enableBlend();
 		
