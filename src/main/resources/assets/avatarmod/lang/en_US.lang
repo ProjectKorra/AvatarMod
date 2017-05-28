@@ -75,6 +75,8 @@ avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to y
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
+avatar.ability.pickup_block.lvl4_1=Blocky boomerang ;; Block comes back after successful mob hit
+
 avatar.ability.ravine=Ravine
 avatar.ability.earth_wall=Wall
 avatar.ability.earth_wall.lvl1=Summon a small wall
