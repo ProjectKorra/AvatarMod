@@ -74,7 +74,7 @@ public class AbilityFireball extends FireAbility {
 			fireball.setOwner(entity);
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			fireball.setDamage(damage);
-			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(15);
+			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 			world.spawnEntityInWorld(fireball);
 			
 			data.addStatusControl(StatusControl.THROW_FIREBALL);

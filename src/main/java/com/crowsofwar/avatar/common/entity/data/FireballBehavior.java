@@ -175,7 +175,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			
 			if (data.getAbilityData(BendingAbility.ABILITY_FIREBALL).isMasterPath(AbilityTreePath.SECOND)) {
 				int size = entity.getSize();
-				if (size < 45) {
+				if (size < 60) {
 					entity.setSize(size + 1);
 				}
 			}
