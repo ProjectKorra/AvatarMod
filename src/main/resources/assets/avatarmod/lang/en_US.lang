@@ -75,6 +75,8 @@ avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to y
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
+avatar.ability.pickup_block.lvl2=Faster and farther when thrown
+avatar.ability.pickup_block.lvl3=Twice the damage
 avatar.ability.pickup_block.lvl4_1=Blocky boomerang ;; Block comes back after successful mob hit
 avatar.ability.pickup_block.lvl4_2=Large impact ;; 1/2 chance to create an explosion on landing
 
