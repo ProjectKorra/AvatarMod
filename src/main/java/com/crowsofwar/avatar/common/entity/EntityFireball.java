@@ -18,7 +18,10 @@ package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
@@ -30,6 +33,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -127,12 +131,42 @@ public class EntityFireball extends AvatarEntity {
 	
 	@Override
 	public void onCollideWithSolid() {
+		
+		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+		boolean destroyObsidian = false;
+		
+		if (getOwner() != null) {
+			AbilityData abilityData = Bender.getData(getOwner())
+					.getAbilityData(BendingAbility.ABILITY_FIREBALL);
+			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
+				explosionSize *= 2;
+			} else if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+				destroyObsidian = true;
+			}
+		}
+		
 		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ,
 				STATS_CONFIG.fireballSettings.explosionSize, !worldObj.isRemote,
 				STATS_CONFIG.fireballSettings.damageBlocks);
 		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+			
+			float oldResistance = 0;
+			if (destroyObsidian) {
+				// Hacky way to allow destruction of obsidian
+				// Entity parameter is unused by this block
+				oldResistance = Blocks.OBSIDIAN.getExplosionResistance(null) * 5;
+				// For some reason, param is mult by 3 in the method
+				// So really we set it to 60
+				Blocks.OBSIDIAN.setResistance(60f / 3);
+			}
+			
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
+			
+			if (destroyObsidian) {
+				Blocks.OBSIDIAN.setResistance(oldResistance / 3);
+			}
+			
 		}
 		
 	}
