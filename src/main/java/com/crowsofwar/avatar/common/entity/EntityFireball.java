@@ -145,6 +145,7 @@ public class EntityFireball extends AvatarEntity {
 	public void onCollideWithSolid() {
 		
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+		explosionSize *= getSize() / 30f;
 		boolean destroyObsidian = false;
 		
 		if (getOwner() != null) {
@@ -157,9 +158,8 @@ public class EntityFireball extends AvatarEntity {
 			}
 		}
 		
-		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ,
-				STATS_CONFIG.fireballSettings.explosionSize, !worldObj.isRemote,
-				STATS_CONFIG.fireballSettings.damageBlocks);
+		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, explosionSize,
+				!worldObj.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
 			
 			float oldResistance = 0;
