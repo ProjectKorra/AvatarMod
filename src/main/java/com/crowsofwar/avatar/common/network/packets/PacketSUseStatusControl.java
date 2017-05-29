@@ -48,7 +48,7 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 		int id = buf.readInt();
 		statusControl = StatusControl.lookup(id);
 		if (statusControl == null) {
-			AvatarLog.warn(WarningType.POSSIBLE_HACKING,
+			AvatarLog.warn(WarningType.BAD_CLIENT_PACKET,
 					"Player trying to crash the server?? While sending UseStatusControl packet, sent invalid id "
 							+ id);
 			return; // TODO Cancel packet processing

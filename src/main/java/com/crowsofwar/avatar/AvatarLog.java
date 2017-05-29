@@ -58,12 +58,19 @@ public class AvatarLog {
 		}
 	}
 	
+	public static void warn(WarningType type, String s, Throwable t) {
+		log.warn("[Warn/" + type + "]" + s, t);
+		if (type == WarningType.INVALID_CODE) {
+			Thread.dumpStack();
+		}
+	}
+	
 	/**
 	 * Output a warning to the log that the player might have been hacking
 	 */
 	// TODO Notify the admins
 	public static void warnHacking(String username, String s) {
-		warn(WarningType.POSSIBLE_HACKING, "Player " + username + ": Unexpected data, " + s);
+		warn(WarningType.BAD_CLIENT_PACKET, "Player " + username + ": Unexpected data, " + s);
 	}
 	
 	public enum WarningType {
@@ -82,7 +89,7 @@ public class AvatarLog {
 		/**
 		 * A client sent abnormal input which might try to exploit glitches
 		 */
-		POSSIBLE_HACKING,
+		BAD_CLIENT_PACKET,
 		/**
 		 * Server sent abnormal input which is not 'correct' on client
 		 */
