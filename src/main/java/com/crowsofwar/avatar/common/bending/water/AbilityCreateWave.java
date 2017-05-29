@@ -64,7 +64,8 @@ public class AbilityCreateWave extends WaterAbility {
 						wave.setOwner(entity);
 						wave.velocity().set(look.times(10));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
-						wave.setDamageMultiplier(1 + ctx.getData().getAbilityData(this).getTotalXp() / 100f);
+						
+						wave.setDamageMultiplier(ctx.getLevel() >= 1 ? 1.5f : 1);
 						wave.setWaveSize(ctx.getLevel() >= 2 ? 3 : 2);
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 							wave.setWaveSize(5);

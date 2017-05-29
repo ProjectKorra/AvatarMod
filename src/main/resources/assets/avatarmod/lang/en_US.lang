@@ -130,6 +130,8 @@ avatar.ability.water_arc.lvl4_1=Boomerang ;; Comes back to you if you hit a targ
 avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thrown, slower
 
 avatar.ability.wave=Wave
+avatar.ability.wave.lvl1=Slow wave to drown enemies
+avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
 avatar.ability.wave.lvl4_1=Tsunami ;; Much larger and affects creatures on land
 
