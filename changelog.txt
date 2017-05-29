@@ -18,6 +18,7 @@ AV2 Changelog :: version a4.0
 * Greatly increased XP gains for Mine Blocks ability
 * Vanilla mobs have rare chances of dropping scrolls
 * Can use [keybinding=key.X] in .lang file to use a keybinding
+* Can get water arcs from cauldrons
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs
