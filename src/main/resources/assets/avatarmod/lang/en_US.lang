@@ -130,6 +130,8 @@ avatar.ability.water_arc.lvl4_1=Boomerang ;; Comes back to you if you hit a targ
 avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thrown, slower
 
 avatar.ability.wave=Wave
+avatar.ability.wave.lvl3=Much larger
+
 avatar.ability.water_bubble=Water Bubble
 avatar.ability.water_skate=Water Skate
 
