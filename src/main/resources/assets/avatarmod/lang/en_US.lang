@@ -134,6 +134,7 @@ avatar.ability.wave.lvl1=Slow wave to drown enemies
 avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
 avatar.ability.wave.lvl4_1=Tsunami ;; Much larger and affects creatures on land
+avatar.ability.wave.lvl4_2=Surfing ;; Ride on the wave!
 
 avatar.ability.water_bubble=Water Bubble
 avatar.ability.water_skate=Water Skate

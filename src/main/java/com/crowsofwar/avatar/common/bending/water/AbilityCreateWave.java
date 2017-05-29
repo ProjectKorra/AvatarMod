@@ -75,6 +75,10 @@ public class AbilityCreateWave extends WaterAbility {
 						
 						world.spawnEntityInWorld(wave);
 						
+						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+							entity.startRiding(wave);
+						}
+						
 					}
 					
 					break;
