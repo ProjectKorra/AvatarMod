@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.particle;
 
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 /**
@@ -52,8 +53,8 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	void spawnOneParticle(World world, ParticleType particle, double x, double y, double z, double velocityX,
-			double velocityY, double velocityZ, int... parameters);
+	void spawnOneParticle(World world, EnumParticleTypes particle, double x, double y, double z,
+			double velocityX, double velocityY, double velocityZ, int... parameters);
 	
 	/**
 	 * Spawn a particle in the world manually. It's generally recommended to
@@ -71,7 +72,7 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	default void spawnOneParticle(World world, ParticleType particle, Vector position, Vector velocity,
+	default void spawnOneParticle(World world, EnumParticleTypes particle, Vector position, Vector velocity,
 			int... parameters) {
 		spawnOneParticle(world, particle, position.x(), position.y(), position.z(), velocity.x(),
 				velocity.y(), velocity.z(), parameters);
@@ -104,7 +105,7 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x, double y,
+	void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum, double x, double y,
 			double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ, int... parameters);
 	
 	/**
@@ -126,8 +127,8 @@ public interface ParticleSpawner {
 	 * @param parameters
 	 *            Extra parameters for the particle effect
 	 */
-	default void spawnParticles(World world, ParticleType particle, int minimum, int maximum, Vector position,
-			Vector maxVelocity, int... parameters) {
+	default void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum,
+			Vector position, Vector maxVelocity, int... parameters) {
 		spawnParticles(world, particle, minimum, maximum, position.x(), position.y(), position.z(),
 				maxVelocity.x(), maxVelocity.y(), maxVelocity.z(), parameters);
 	}

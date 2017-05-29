@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -54,7 +55,6 @@ import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
@@ -280,7 +280,7 @@ public class PacketHandlerServer implements IPacketHandler {
 				player.setVelocity(n.x(), n.y(), n.z());
 				player.connection.sendPacket(new SPacketEntityVelocity(player));
 				
-				new NetworkParticleSpawner().spawnParticles(world, ParticleType.AIR, 4, 10,
+				new NetworkParticleSpawner().spawnParticles(world, AvatarParticles.getParticleAir(), 4, 10,
 						new Vector(player).plus(n), n.times(3));
 				world.playSound(null, new BlockPos(player), block.getSoundType().getBreakSound(),
 						SoundCategory.PLAYERS, 1, 0.6f);
