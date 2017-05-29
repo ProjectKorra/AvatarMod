@@ -79,6 +79,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
@@ -165,10 +166,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@Override
 	public void init() {
-		Minecraft.getMinecraft().effectRenderer.registerParticle(
-				AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
-		mc.effectRenderer.registerParticle(AvatarParticles.getParticleAir().getParticleID(),
-				AvatarParticleAir::new);
+		
+		ParticleManager pm = mc.effectRenderer;
+		
+		pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
+		pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
+		
 	}
 	
 	@Override
