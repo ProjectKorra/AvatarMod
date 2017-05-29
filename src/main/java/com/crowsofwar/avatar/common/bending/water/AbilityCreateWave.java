@@ -60,9 +60,17 @@ public class AbilityCreateWave extends WaterAbility {
 					
 					if (ctx.consumeChi(STATS_CONFIG.chiWave)) {
 						
+						double speed = 10;
+						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+							speed = 8;
+						}
+						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+							speed = 18;
+						}
+						
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
-						wave.velocity().set(look.times(10));
+						wave.velocity().set(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
 						
 						wave.setDamageMultiplier(ctx.getLevel() >= 1 ? 1.5f : 1);
@@ -74,10 +82,6 @@ public class AbilityCreateWave extends WaterAbility {
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 						
 						world.spawnEntityInWorld(wave);
-						
-						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-							entity.startRiding(wave);
-						}
 						
 					}
 					
