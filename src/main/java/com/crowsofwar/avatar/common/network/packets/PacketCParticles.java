@@ -63,7 +63,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		particle = EnumParticleTypes.getParticleFromId(buf.readInt());
+		particle = EnumParticleTypes.values()[buf.readInt()];
 		minimum = buf.readInt();
 		maximum = buf.readInt();
 		x = buf.readDouble();
@@ -76,7 +76,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(particle.getParticleID());
+		buf.writeInt(particle.ordinal());
 		buf.writeInt(minimum);
 		buf.writeInt(maximum);
 		buf.writeDouble(x);
