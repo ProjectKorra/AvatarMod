@@ -37,6 +37,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
@@ -44,6 +45,8 @@ public class EntityWave extends Entity {
 	
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager.createKey(EntityWave.class,
 			AvatarDataSerializers.SERIALIZER_BENDER);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
+			DataSerializers.FLOAT);
 	
 	private final Vector internalVelocity;
 	private final Vector internalPosition;
@@ -58,7 +61,7 @@ public class EntityWave extends Entity {
 				() -> this.motionX * 20, () -> this.motionY * 20, () -> this.motionZ * 20);
 		this.internalPosition = new Vector();
 		
-		setSize(2f, 2);
+		setSize(2, 2);
 		
 		damageMult = 1;
 		
@@ -66,12 +69,27 @@ public class EntityWave extends Entity {
 		
 	}
 	
+	@Override
+	protected void entityInit() {
+		dataManager.register(SYNC_SIZE, 2f);
+	}
+	
 	public void setDamageMultiplier(float damageMult) {
 		this.damageMult = damageMult;
 	}
 	
+	public float getWaveSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+	
+	public void setWaveSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
+	
 	@Override
 	public void onUpdate() {
+		
+		setSize(getWaveSize() * 0.75f, 2);
 		
 		EntityLivingBase owner = getOwner();
 		
@@ -116,11 +134,6 @@ public class EntityWave extends Entity {
 	
 	public void setOwner(EntityLivingBase owner) {
 		ownerAttr.setOwner(owner);
-	}
-	
-	@Override
-	protected void entityInit() {
-		
 	}
 	
 	@Override
