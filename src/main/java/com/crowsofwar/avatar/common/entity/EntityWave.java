@@ -24,6 +24,8 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
@@ -53,6 +55,7 @@ public class EntityWave extends Entity {
 	private final OwnerAttribute ownerAttr;
 	
 	private float damageMult;
+	private int timeOnLand;
 	
 	public EntityWave(World world) {
 		super(world);
@@ -113,8 +116,26 @@ public class EntityWave extends Entity {
 			}
 		}
 		
-		if (ticksExisted > 7000 || worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) setDead();
+		if (ticksExisted > 7000) {
+			setDead();
+		}
+		if (!worldObj.isRemote && worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) {
+			timeOnLand++;
+			if (timeOnLand >= maxTimeOnLand()) {
+				setDead();
+			}
+		}
 		
+	}
+	
+	private int maxTimeOnLand() {
+		if (getOwner() != null) {
+			AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_WAVE);
+			if (data.isMasterPath(AbilityTreePath.FIRST)) {
+				return 30;
+			}
+		}
+		return 0;
 	}
 	
 	public Vector getVecPosition() {

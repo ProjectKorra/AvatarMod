@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWave;
@@ -65,6 +66,9 @@ public class AbilityCreateWave extends WaterAbility {
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
 						wave.setDamageMultiplier(1 + ctx.getData().getAbilityData(this).getTotalXp() / 100f);
 						wave.setWaveSize(ctx.getLevel() >= 2 ? 3 : 2);
+						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+							wave.setWaveSize(5);
+						}
 						
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 						
