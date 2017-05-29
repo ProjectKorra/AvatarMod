@@ -38,6 +38,9 @@ public class ConfigClient {
 	public float radialMenuAlpha = .75f;
 	
 	@Load
+	public boolean useCustomParticles = true;
+	
+	@Load
 	private Map<String, Integer> nameKeymappings = new HashMap<>();
 	public Map<BendingAbility, Integer> keymappings = new HashMap<>();
 	
