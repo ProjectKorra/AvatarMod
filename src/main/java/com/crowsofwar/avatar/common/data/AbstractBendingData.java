@@ -122,6 +122,12 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
+	public void setAllBending(List<BendingController> bending) {
+		bendings.clear();
+		bendings.addAll(bending);
+	}
+	
+	@Override
 	public void clearBending() {
 		bendings.clear();
 	}
@@ -152,6 +158,12 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public List<StatusControl> getAllStatusControls() {
 		return new ArrayList<>(statusControls);
+	}
+	
+	@Override
+	public void setAllStatusControls(List<StatusControl> controls) {
+		statusControls.clear();
+		statusControls.addAll(controls);
 	}
 	
 	@Override
@@ -199,6 +211,12 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public Map<BendingAbility, AbilityData> getAbilityDataMap() {
 		return new HashMap<>(abilityData);
+	}
+	
+	@Override
+	public void setAbilityDataMap(Map<BendingAbility, AbilityData> map) {
+		abilityData.clear();
+		abilityData.putAll(map);
 	}
 	
 	/**
@@ -253,6 +271,12 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public List<TickHandler> getAllTickHandlers() {
 		return new ArrayList<>(tickHandlers);
+	}
+	
+	@Override
+	public void setAllTickHandlers(List<TickHandler> handlers) {
+		tickHandlers.clear();
+		tickHandlers.addAll(handlers);
 	}
 	
 	@Override

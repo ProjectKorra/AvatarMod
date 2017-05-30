@@ -419,4 +419,24 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		bendingData.setPetSummonCooldown(cooldown);
 	}
 	
+	@Override
+	public void setAllBending(List<BendingController> bending) {
+		bendingData.setAllBending(bending);
+	}
+	
+	@Override
+	public void setAllStatusControls(List<StatusControl> controls) {
+		bendingData.setAllStatusControls(controls);
+	}
+	
+	@Override
+	public void setAbilityDataMap(Map<BendingAbility, AbilityData> map) {
+		bendingData.setAbilityDataMap(map);
+	}
+	
+	@Override
+	public void setAllTickHandlers(List<TickHandler> handlers) {
+		bendingData.setAllTickHandlers(handlers);
+	}
+	
 }
