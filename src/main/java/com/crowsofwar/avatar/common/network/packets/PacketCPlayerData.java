@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.DataCategory;
-import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.GoreCore;
 
 import io.netty.buffer.ByteBuf;
@@ -114,7 +113,12 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	@Override
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCPlayerData> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
+		
+		// Do nothing!
+		// In the avatarFromBytes method, already saved the data into the
+		// player-data (when DataCategory.read is called)
+		
+		return (msg, ctx) -> null;
 	}
 	
 	public UUID getPlayerId() {
