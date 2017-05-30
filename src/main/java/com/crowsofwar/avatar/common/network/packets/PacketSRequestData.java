@@ -48,12 +48,12 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		asking = GoreCoreByteBufUtil.readUUID(buf);
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeUUID(buf, asking);
 	}
 	

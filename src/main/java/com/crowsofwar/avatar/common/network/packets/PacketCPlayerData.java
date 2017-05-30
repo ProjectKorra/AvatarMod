@@ -46,15 +46,15 @@ public class PacketCPlayerData extends PacketModularData<PacketCPlayerData> {
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
-		super.fromBytes(buf);
+		super.avatarFromBytes(buf);
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeUUID(buf, playerId);
-		super.toBytes(buf);
+		super.avatarToBytes(buf);
 	}
 	
 	@Override

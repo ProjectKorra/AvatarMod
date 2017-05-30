@@ -89,12 +89,12 @@ public abstract class PacketModularData<MSG extends PacketModularData> extends A
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		this.buf = buf;
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		buf.writeInt(changed.size());
 		for (Networker.Property key : changed) {
 			buf.writeInt(key.id());
