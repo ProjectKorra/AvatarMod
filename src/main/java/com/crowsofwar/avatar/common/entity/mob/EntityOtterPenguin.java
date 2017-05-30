@@ -36,6 +36,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -93,12 +94,25 @@ public class EntityOtterPenguin extends EntityAnimal {
 	
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		
 		if (!super.processInteract(player, hand) && !worldObj.isRemote) {
-			player.startRiding(this);
-			return true;
+			
+			if (!isBreedingItem(player.getHeldItemMainhand())
+					&& !isBreedingItem(player.getHeldItemOffhand())) {
+				
+				player.startRiding(this);
+				return true;
+				
+			}
+			
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public boolean isBreedingItem(ItemStack stack) {
+		return stack.getItem() == Items.FISH;
 	}
 	
 	@Override
