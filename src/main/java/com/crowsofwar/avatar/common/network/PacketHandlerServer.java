@@ -343,6 +343,7 @@ public class PacketHandlerServer implements IPacketHandler {
 							
 							activeSlot.putStack(ItemStack.field_190927_a);
 							abilityData.addLevel();
+							abilityData.setXp(0);
 							
 						}
 						
