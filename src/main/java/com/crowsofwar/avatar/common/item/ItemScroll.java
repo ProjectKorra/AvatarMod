@@ -103,8 +103,11 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltips,
 			boolean advanced) {
 		
-		String type = I18n.format("avatar." + getScrollType(stack).displayName());
-		tooltips.add(I18n.format("avatar.tooltip.scroll", type));
+		BendingType bendingType = getScrollType(stack).getBendingType();
+		String bendingTypeName = bendingType == null ? "all" : bendingType.name().toLowerCase();
+		
+		String tooltip = I18n.format("avatar." + bendingTypeName);
+		tooltips.add(tooltip);
 		
 	}
 	
@@ -162,7 +165,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 		
 		public String displayName() {
-			return type == null ? "all" : type.name().toLowerCase();
+			return name().toLowerCase();
 		}
 		
 		public int id() {

@@ -221,6 +221,5 @@ item.avatarmod:bison_armor.chain.name=Chainmail Bison Armor
 item.avatarmod:bison_armor.wrought.name=Wrought Bison Armor
 item.avatarmod:bison_armor.legendary.name=Legendary Bison Armor
 
-avatar.tooltip.scroll=%s
 avatar.tooltip.water_pouch=%d/3 Water
 avatar.tooltip.water_pouch.empty=Empty
