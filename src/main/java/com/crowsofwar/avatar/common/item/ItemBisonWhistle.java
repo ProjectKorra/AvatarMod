@@ -100,9 +100,15 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 				if (bison != null && !bison.worldObj.isRemote) {
 					
 					EntityPlayer oldOwner = bison.getOwner();
-					TransferConfirmHandler.startTransfer(oldOwner, player, bison);
 					
-					return new ActionResult<>(SUCCESS, stack);
+					if (oldOwner != null) {
+						TransferConfirmHandler.startTransfer(oldOwner, player, bison);
+						return new ActionResult<>(SUCCESS, stack);
+					} else {
+						UUID id = bison.getOwnerId();
+						String username = "bob";
+						MSG_BISON_TRANSFER_OFFLINE.send(player, username);
+					}
 					
 				}
 				
