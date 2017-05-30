@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
+import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

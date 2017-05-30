@@ -20,8 +20,8 @@ package com.crowsofwar.avatar.client.render;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.entity.EntityFlames;
-import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.client.renderer.entity.Render;
