@@ -20,6 +20,7 @@ import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getPlainCardText
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static net.minecraft.client.Minecraft.getMinecraft;
 
 import org.lwjgl.input.Mouse;
 
@@ -44,6 +45,8 @@ import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
 /**
@@ -255,6 +258,25 @@ public class WindowAbility {
 		// Make slots update their position & disappear
 		slot1.draw(0, 0, 0);
 		slot2.draw(0, 0, 0);
+	}
+	
+	/**
+	 * Check whether the ItemStack is in a slot that doesn't have a tooltip.
+	 * This is to prevent an issue where there is an ItemStack tooltip and a
+	 * slot tooltip rendering at the same time.
+	 */
+	public boolean canRenderTooltip(ItemStack stack) {
+		
+		AbilityData data = AvatarPlayerData.fetcher().fetch(getMinecraft().thePlayer).getAbilityData(ability);
+		if (data.isLocked()) {
+			return true;
+		}
+		
+		Slot invSlot1 = gui.inventorySlots.getSlot(0);
+		Slot invSlot2 = gui.inventorySlots.getSlot(1);
+		
+		return invSlot1.getStack() != stack && invSlot2.getStack() != stack;
+		
 	}
 	
 }

@@ -238,6 +238,15 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		}
 	}
 	
+	@Override
+	protected void renderToolTip(ItemStack stack, int x, int y) {
+		// Prevent rendering tooltip of ItemStacks if they are in a slot that
+		// needs a tooltip
+		if (!isWindowOpen() || window.canRenderTooltip(stack)) {
+			super.renderToolTip(stack, x, y);
+		}
+	}
+	
 	private boolean isWindowOpen() {
 		return window != null;
 	}
