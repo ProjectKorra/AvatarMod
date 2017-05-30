@@ -337,7 +337,7 @@ public final class AccountUUIDs {
 		try {
 			
 			String idString = id.toString().replaceAll("-", "");
-			String url = "https://api.mojang.com/users/profiles/" + idString + "/names";
+			String url = "https://api.mojang.com/user/profiles/" + idString + "/names";
 			System.out.println(url);
 			
 			URL obj = new URL(url);
