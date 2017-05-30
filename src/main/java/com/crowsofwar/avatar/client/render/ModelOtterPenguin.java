@@ -1,7 +1,10 @@
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
@@ -103,6 +106,15 @@ public class ModelOtterPenguin extends ModelBase {
 	
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		// this part authored by CrowsOfWar
+		
+		EntityOtterPenguin penguin = (EntityOtterPenguin) entity;
+		if (penguin.isChild()) {
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(0.7f, 0.7f, 0.7f);
+		}
+		
+		// end CrowsOfWar
 		this.leftarm2.render(f5);
 		this.tail1.render(f5);
 		this.head.render(f5);
@@ -113,6 +125,11 @@ public class ModelOtterPenguin extends ModelBase {
 		this.leftleg.render(f5);
 		this.body.render(f5);
 		this.tail2.render(f5);
+		// this part authored by CrowsOfWar
+		if (penguin.isChild()) {
+			GlStateManager.popMatrix();
+		}
+		// end CrowsOfWar
 	}
 	
 	/**
