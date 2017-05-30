@@ -20,9 +20,12 @@ package com.crowsofwar.avatar.common.data;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarMod;
@@ -31,7 +34,6 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.network.Networker;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.DataSaver;
@@ -52,6 +54,10 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
 	private final AbstractBendingData bendingData;
+	/**
+	 * Changed DataCategories since last sent a packet
+	 */
+	private Set<DataCategory> changed;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
@@ -65,6 +71,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 				AvatarPlayerData.this.save(category);
 			}
 		};
+		
+		changed = new HashSet<>();
 		
 	}
 	
@@ -149,29 +157,23 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	@Override
 	public void save(DataCategory category) {
 		
-		networker.markChanged((Networker.Property<Object>) category.property(), category.get(this));
-		networker.sendUpdated();
+		changed.add(category);
+		sendPacket();
 		saveChanges();
 		
 	}
 	
 	public void saveAll() {
 		
-		for (DataCategory category : DataCategory.values()) {
-			networker.markChanged((Networker.Property<Object>) category.property(), category.get(this));
-		}
-		networker.sendUpdated();
+		changed.addAll(Arrays.asList(DataCategory.values()));
+		sendPacket();
 		saveChanges();
 		
 	}
 	
-	public Networker getNetworker() {
-		return networker;
-	}
-	
 	private void sendPacket() {
 		
-		PacketCPlayerData packet = new PacketCPlayerData(networker, playerID);
+		PacketCPlayerData packet = new PacketCPlayerData(this, playerID, changed);
 		EntityPlayer player = this.getPlayerEntity();
 		if (player != null && !player.worldObj.isRemote) {
 			

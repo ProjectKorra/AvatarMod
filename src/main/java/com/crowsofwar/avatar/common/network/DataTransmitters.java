@@ -31,19 +31,21 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData.DataCategory;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.DataCategory;
 import com.crowsofwar.avatar.common.data.MiscData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 
 import io.netty.buffer.ByteBuf;
 
 /**
- * 
+ * DataTransmitters are responsible for reading and writing certain parts of
+ * player data to the network. For example, there is a transmitter for the
+ * bending list, the ability data, and chi.
  * 
  * @author CrowsOfWar
  */
-public class Transmitters {
+public class DataTransmitters {
 	
 	public static final DataTransmitter<List<BendingController>, PlayerDataContext> CONTROLLER_LIST = new DataTransmitter<List<BendingController>, PlayerDataContext>() {
 		
