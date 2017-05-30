@@ -17,33 +17,16 @@
 
 package com.crowsofwar.avatar.client;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.BendingData.DataCategory;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.MiscData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
-import com.crowsofwar.avatar.common.network.Networker;
-import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -68,9 +51,6 @@ public class PacketHandlerClient implements IPacketHandler {
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		
 		if (packet instanceof PacketCParticles) return handlePacketParticles((PacketCParticles) packet, ctx);
-		
-		if (packet instanceof PacketCPlayerData)
-			return handlePacketNewPlayerData((PacketCPlayerData) packet, ctx);
 		
 		if (packet instanceof PacketCErrorMessage)
 			return handlePacketNotEnoughChi((PacketCErrorMessage) packet, ctx);
@@ -102,76 +82,6 @@ public class PacketHandlerClient implements IPacketHandler {
 					packet.getMaxVelocityX() * random.nextGaussian(),
 					packet.getMaxVelocityY() * random.nextGaussian(),
 					packet.getMaxVelocityZ() * random.nextGaussian());
-		}
-		
-		return null;
-	}
-	
-	/**
-	 */
-	private IMessage handlePacketNewPlayerData(PacketCPlayerData packet, MessageContext ctx) {
-		
-		EntityPlayer player = AccountUUIDs.findEntityFromUUID(mc.theWorld, packet.getPlayerId());
-		if (player == null) {
-			AvatarLog.warn(WarningType.WEIRD_PACKET,
-					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
-			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayerId());
-			return null;
-		}
-		AvatarLog.debug("Client: Received data packet for " + player);
-		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data != null) {
-			
-			Map<Networker.Property, Object> readData = packet.interpretData(data.getNetworker(),
-					new PlayerDataContext(data));
-			
-			if (readData.containsKey(DataCategory.BENDING.property())) {
-				data.clearBending();
-				List<BendingController> bending = (List<BendingController>) readData
-						.get(DataCategory.BENDING.property());
-				for (BendingController controller : bending) {
-					data.addBending(controller);
-				}
-			}
-			
-			if (readData.containsKey(DataCategory.ABILITY_DATA.property())) {
-				data.clearAbilityData();
-				Set<Map.Entry<BendingAbility, AbilityData>> entries = ((Map<BendingAbility, AbilityData>) readData
-						.get(DataCategory.ABILITY_DATA.property())).entrySet();
-				for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
-					data.getAbilityData(entry.getKey()).setXp(entry.getValue().getXp());
-					data.getAbilityData(entry.getKey()).setLevel(entry.getValue().getLevel());
-					data.getAbilityData(entry.getKey()).setPath(entry.getValue().getPath());
-				}
-			}
-			
-			if (readData.containsKey(DataCategory.STATUS_CONTROLS.property())) {
-				data.clearStatusControls();
-				List<StatusControl> controls = (List<StatusControl>) readData
-						.get(DataCategory.STATUS_CONTROLS.property());
-				for (StatusControl control : controls) {
-					data.addStatusControl(control);
-				}
-			}
-			
-			if (readData.containsKey(DataCategory.MISC.property())) {
-				data.setMiscData((MiscData) readData.get(DataCategory.MISC.property()));
-			}
-			
-			if (readData.containsKey(DataCategory.CHI.property())) {
-				data.setChi((Chi) readData.get(DataCategory.CHI.property()));
-			}
-			
-			if (readData.containsKey(DataCategory.TICK_HANDLERS.property())) {
-				data.clearTickHandlers();
-				List<TickHandler> tickHandlers = (List<TickHandler>) readData
-						.get(DataCategory.TICK_HANDLERS.property());
-				for (TickHandler tickHandler : tickHandlers) {
-					data.addTickHandler(tickHandler);
-				}
-			}
-			
 		}
 		
 		return null;
