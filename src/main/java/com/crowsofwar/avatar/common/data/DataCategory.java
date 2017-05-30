@@ -24,7 +24,14 @@ import com.crowsofwar.avatar.common.network.DataTransmitters;
 import io.netty.buffer.ByteBuf;
 
 /**
- * 
+ * Separates all of the methods of BendingData into different categories. This
+ * is so networking packets can only send some categories and not others
+ * depending on what's changed.
+ * <p>
+ * For example, if a player's chi is recharging, the packets only need to send
+ * info about the Chi and would add the {@link #CHI} DataCategory to the changed
+ * list. But they wouldn't send info about bending controllers since that is
+ * unnecessary.
  * 
  * @author CrowsOfWar
  */
@@ -48,12 +55,8 @@ public enum DataCategory {
 		this.transmitter = transmitter;
 	}
 	
-	public Object get(BendingData data) {
-		return getter.apply(data);
-	}
-	
-	public void write(ByteBuf buf, Object obj) {
-		((DataTransmitter<Object>) transmitter).write(buf, obj);
+	public void write(ByteBuf buf, AvatarPlayerData data) {
+		((DataTransmitter<Object>) transmitter).write(buf, getter.apply(data));
 	}
 	
 	public Object read(ByteBuf buf, BendingData data) {

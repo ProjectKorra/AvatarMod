@@ -22,10 +22,10 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarMod;
@@ -57,7 +57,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	/**
 	 * Changed DataCategories since last sent a packet
 	 */
-	private Set<DataCategory> changed;
+	private SortedSet<DataCategory> changed;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
@@ -72,7 +72,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 			}
 		};
 		
-		changed = new HashSet<>();
+		changed = new TreeSet<>();
 		
 	}
 	

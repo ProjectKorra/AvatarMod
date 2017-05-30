@@ -20,8 +20,8 @@ package com.crowsofwar.avatar.common.network.packets;
 import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
 import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -45,11 +45,16 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	private AvatarPlayerData data;
 	private UUID playerId;
 	
-	private Set<DataCategory> changed;
+	// We need a SortedSet since the order of writing/reading the data is
+	// determined by the order of the DataCategories
+	// If there was a regular set(no ordering guarantees), the order could have
+	// changed, which would make the data get read/written in the wrong order
+	// which would probably cause bugs/crashing
+	private SortedSet<DataCategory> changed;
 	
 	public PacketCPlayerData() {}
 	
-	public PacketCPlayerData(AvatarPlayerData data, UUID player, Set<DataCategory> changed) {
+	public PacketCPlayerData(AvatarPlayerData data, UUID player, SortedSet<DataCategory> changed) {
 		this.data = data;
 		this.playerId = player;
 		this.changed = changed;
@@ -60,10 +65,15 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		playerId = readUUID(buf);
 		
 		// Find what changed
-		changed = new HashSet<>();
+		changed = new TreeSet<>();
 		int size = buf.readInt();
 		for (int i = 0; i < size; i++) {
 			changed.add(DataCategory.values()[buf.readInt()]);
+		}
+		
+		// Read what changed
+		for (DataCategory category : changed) {
+			category.read(buf, data);
 		}
 		
 	}
@@ -79,6 +89,9 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		}
 		
 		// The "real" payload - player data
+		for (DataCategory category : changed) {
+			category.write(buf, data);
+		}
 		
 	}
 	
