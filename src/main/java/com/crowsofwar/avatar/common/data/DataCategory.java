@@ -18,6 +18,11 @@ package com.crowsofwar.avatar.common.data;
 
 import java.util.function.Function;
 
+import com.crowsofwar.avatar.common.network.DataTransmitter;
+import com.crowsofwar.avatar.common.network.DataTransmitters;
+
+import io.netty.buffer.ByteBuf;
+
 /**
  * 
  * 
@@ -26,21 +31,33 @@ import java.util.function.Function;
 
 public enum DataCategory {
 	
-	BENDING(data -> data.getAllBending()),
-	STATUS_CONTROLS(data -> data.getAllStatusControls()),
-	ABILITY_DATA(data -> data.getAbilityDataMap()),
-	CHI(data -> data.chi()),
-	MISC(data -> data.getMiscData()),
-	TICK_HANDLERS(data -> data.getAllTickHandlers());
+	// @formatter:off
+	BENDING(		data -> data.getAllBending(),		DataTransmitters.CONTROLLER_LIST),
+	STATUS_CONTROLS(data -> data.getAllStatusControls(),DataTransmitters.STATUS_CONTROLS),
+	ABILITY_DATA(	data -> data.getAbilityDataMap(),	DataTransmitters.ABILITY_DATA_MAP),
+	CHI(			data -> data.chi(),					DataTransmitters.CHI),
+	MISC(			data -> data.getMiscData(),			DataTransmitters.MISC),
+	TICK_HANDLERS(	data -> data.getAllTickHandlers(),	DataTransmitters.TICK_HANDLERS);
+	// @formatter:on
 	
 	private final Function<BendingData, Object> getter;
+	private final DataTransmitter<Object> transmitter;
 	
-	private DataCategory(Function<BendingData, Object> getter) {
+	private DataCategory(Function<BendingData, Object> getter, DataTransmitter<Object> transmitter) {
 		this.getter = getter;
+		this.transmitter = transmitter;
 	}
 	
 	public Object get(BendingData data) {
 		return getter.apply(data);
+	}
+	
+	public void write(ByteBuf buf, Object obj) {
+		transmitter.write(buf, obj);
+	}
+	
+	public Object read(ByteBuf buf, BendingData data) {
+		return transmitter.read(buf, data);
 	}
 	
 }
