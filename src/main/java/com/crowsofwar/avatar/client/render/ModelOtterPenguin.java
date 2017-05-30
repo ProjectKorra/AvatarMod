@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.render;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * TheOtterpenguin - talhanation<br />
@@ -112,6 +113,21 @@ public class ModelOtterPenguin extends ModelBase {
 		this.leftleg.render(f5);
 		this.body.render(f5);
 		this.tail2.render(f5);
+	}
+	
+	/**
+	 * This method made by CrowsOfWar
+	 */
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
+			float headPitch, float scaleFactor, Entity entity) {
+		
+		float pi = (float) Math.PI;
+		
+		head.rotateAngleY = (float) Math.toRadians(netHeadYaw);
+		rightleg.rotateAngleX = MathHelper.cos(limbSwing * 5) * limbSwingAmount;
+		leftleg.rotateAngleX = MathHelper.cos(limbSwing * 5 + pi) * limbSwingAmount;
+		
 	}
 	
 	/**
