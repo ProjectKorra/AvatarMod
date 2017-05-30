@@ -102,6 +102,7 @@ public class ModelOtterPenguin extends ModelBase {
 		this.rightleg.addChild(this.rightfoot);
 		this.leftleg.addChild(this.leftfoot);
 		this.head.addChild(this.nose);
+		
 	}
 	
 	@Override
@@ -112,6 +113,7 @@ public class ModelOtterPenguin extends ModelBase {
 		if (penguin.isChild()) {
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(0.7f, 0.7f, 0.7f);
+			GlStateManager.translate(0, 0.62f, 0);
 		}
 		
 		// end CrowsOfWar
@@ -130,6 +132,7 @@ public class ModelOtterPenguin extends ModelBase {
 			GlStateManager.popMatrix();
 		}
 		// end CrowsOfWar
+		
 	}
 	
 	/**
