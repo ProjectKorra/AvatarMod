@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import com.crowsofwar.avatar.common.network.DataTransmitter;
@@ -39,28 +40,39 @@ import io.netty.buffer.ByteBuf;
 public enum DataCategory {
 	
 	// @formatter:off
-	BENDING_LIST(	data -> data.getAllBending(),			DataTransmitters.BENDING_LIST),
-	STATUS_CONTROLS(data -> data.getAllStatusControls(),	DataTransmitters.STATUS_CONTROLS),
-	ABILITY_DATA(	data -> data.getAbilityDataMap(),		DataTransmitters.ABILITY_DATA),
-	CHI(			data -> data.chi(),						DataTransmitters.CHI),
-	MISC_DATA(		data -> data.getMiscData(),				DataTransmitters.MISC_DATA),
-	TICK_HANDLERS(	data -> data.getAllTickHandlers(),		DataTransmitters.TICK_HANDLERS);
+	BENDING_LIST(	data -> data.getAllBending(),			(data, obj) -> data.setAllBending(obj),			DataTransmitters.BENDING_LIST),
+	STATUS_CONTROLS(data -> data.getAllStatusControls(),	(data, obj) -> data.setAllStatusControls(obj),	DataTransmitters.STATUS_CONTROLS),
+	ABILITY_DATA(	data -> data.getAbilityDataMap(),		(data, obj) -> data.setAbilityDataMap(obj),		DataTransmitters.ABILITY_DATA),
+	CHI(			data -> data.chi(),						(data, obj) -> data.setChi(obj),				DataTransmitters.CHI),
+	MISC_DATA(		data -> data.getMiscData(),				(data, obj) -> data.setMiscData(obj),			DataTransmitters.MISC_DATA),
+	TICK_HANDLERS(	data -> data.getAllTickHandlers(),		(data, obj) -> data.setAllTickHandlers(obj),	DataTransmitters.TICK_HANDLERS);
 	// @formatter:on
 	
-	private final Function<BendingData, Object> getter;
+	private final Function<BendingData, ?> getter;
+	private final BiConsumer<BendingData, ?> setter;
 	private final DataTransmitter<?> transmitter;
 	
-	private DataCategory(Function<BendingData, Object> getter, DataTransmitter<?> transmitter) {
+	private <T> DataCategory(Function<BendingData, T> getter, BiConsumer<BendingData, T> setter,
+			DataTransmitter<?> transmitter) {
 		this.getter = getter;
+		this.setter = setter;
 		this.transmitter = transmitter;
 	}
 	
-	public void write(ByteBuf buf, AvatarPlayerData data) {
+	/**
+	 * Finds the necessary data from the PlayerData and then writes it to the
+	 * ByteBuf
+	 */
+	public void write(ByteBuf buf, BendingData data) {
 		((DataTransmitter<Object>) transmitter).write(buf, getter.apply(data));
 	}
 	
-	public Object read(ByteBuf buf, BendingData data) {
-		return transmitter.read(buf, data);
+	/**
+	 * Reads from the ByteBuf and saves the result into player data
+	 */
+	public void read(ByteBuf buf, BendingData data) {
+		Object obj = transmitter.read(buf, data);
+		((BiConsumer<BendingData, Object>) setter).accept(data, obj);
 	}
 	
 }

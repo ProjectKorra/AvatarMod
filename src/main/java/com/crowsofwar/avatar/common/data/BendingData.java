@@ -75,6 +75,8 @@ public interface BendingData {
 	
 	List<BendingController> getAllBending();
 	
+	void setAllBending(List<BendingController> controller);
+	
 	void clearBending();
 	
 	// ================================================================================
@@ -88,6 +90,8 @@ public interface BendingData {
 	void removeStatusControl(StatusControl control);
 	
 	List<StatusControl> getAllStatusControls();
+	
+	void setAllStatusControls(List<StatusControl> controls);
 	
 	void clearStatusControls();
 	
@@ -110,6 +114,8 @@ public interface BendingData {
 	List<AbilityData> getAllAbilityData();
 	
 	Map<BendingAbility, AbilityData> getAbilityDataMap();
+	
+	void setAbilityDataMap(Map<BendingAbility, AbilityData> map);
 	
 	/**
 	 * Removes all ability data associations
@@ -138,6 +144,8 @@ public interface BendingData {
 	void removeTickHandler(TickHandler handler);
 	
 	List<TickHandler> getAllTickHandlers();
+	
+	void setAllTickHandlers(List<TickHandler> handlers);
 	
 	void clearTickHandlers();
 	

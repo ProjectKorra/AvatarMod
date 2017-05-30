@@ -24,9 +24,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.DataCategory;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
+import com.crowsofwar.gorecore.GoreCore;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
@@ -63,17 +66,26 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
+		AvatarPlayerData data = AvatarPlayerData.fetcher()
+				.fetch(GoreCore.proxy.getClientSidePlayer().worldObj, playerId);
 		
-		// Find what changed
-		changed = new TreeSet<>();
-		int size = buf.readInt();
-		for (int i = 0; i < size; i++) {
-			changed.add(DataCategory.values()[buf.readInt()]);
-		}
-		
-		// Read what changed
-		for (DataCategory category : changed) {
-			category.read(buf, data);
+		if (data != null) {
+			
+			// Find what changed
+			changed = new TreeSet<>();
+			int size = buf.readInt();
+			for (int i = 0; i < size; i++) {
+				changed.add(DataCategory.values()[buf.readInt()]);
+			}
+			
+			// Read what changed
+			for (DataCategory category : changed) {
+				category.read(buf, data);
+			}
+			
+		} else {
+			AvatarLog.warn(WarningType.WEIRD_PACKET, "Server sent a packet about data for player " + playerId
+					+ " but data couldn't be found for them");
 		}
 		
 	}
