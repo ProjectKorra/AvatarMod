@@ -240,23 +240,22 @@ public class ClientInput implements IControlsHandler {
 		
 		if (player != null && player.worldObj != null) {
 			// Send any input to the server
-			// AvatarPlayerData data =
-			// AvatarPlayerDataFetcherClient.instance.getDataPerformance(
-			// Minecraft.getMinecraft().thePlayer);
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			
 			if (data != null) {
 				
-				Collection<AvatarControl> pressed = getAllPressed();
-				Collection<StatusControl> statusControls = data.getAllStatusControls();
-				
-				Iterator<StatusControl> sci = statusControls.iterator();
-				while (sci.hasNext()) {
-					StatusControl sc = sci.next();
-					if (pressed.contains(sc.getSubscribedControl())) {
-						Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-						
-						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+				if (mc.inGameHasFocus) {
+					Collection<AvatarControl> pressed = getAllPressed();
+					Collection<StatusControl> statusControls = data.getAllStatusControls();
+					
+					Iterator<StatusControl> sci = statusControls.iterator();
+					while (sci.hasNext()) {
+						StatusControl sc = sci.next();
+						if (pressed.contains(sc.getSubscribedControl())) {
+							Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
+							
+							AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+						}
 					}
 				}
 				
