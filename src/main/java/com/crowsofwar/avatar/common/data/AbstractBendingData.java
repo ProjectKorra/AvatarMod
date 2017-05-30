@@ -49,7 +49,7 @@ public abstract class AbstractBendingData implements BendingData {
 		abilityData = new HashMap<>();
 		tickHandlers = new HashSet<>();
 		chi = new Chi(this);
-		miscData = new MiscData(() -> save(DataCategory.MISC));
+		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
 	}
 	
 	// ================================================================================
@@ -81,7 +81,7 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public void addBending(BendingController bending) {
 		if (bendings.add(bending)) {
-			save(DataCategory.BENDING);
+			save(DataCategory.BENDING_LIST);
 		}
 	}
 	
@@ -102,7 +102,7 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public void removeBending(BendingController bending) {
 		if (bendings.remove(bending)) {
-			save(DataCategory.BENDING);
+			save(DataCategory.BENDING_LIST);
 		}
 	}
 	
@@ -177,7 +177,7 @@ public abstract class AbstractBendingData implements BendingData {
 		if (data == null) {
 			data = new AbilityData(this, ability);
 			abilityData.put(ability, data);
-			save(DataCategory.BENDING);
+			save(DataCategory.BENDING_LIST);
 		}
 		
 		return data;

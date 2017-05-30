@@ -32,18 +32,18 @@ import io.netty.buffer.ByteBuf;
 public enum DataCategory {
 	
 	// @formatter:off
-	BENDING(		data -> data.getAllBending(),		DataTransmitters.CONTROLLER_LIST),
-	STATUS_CONTROLS(data -> data.getAllStatusControls(),DataTransmitters.STATUS_CONTROLS),
-	ABILITY_DATA(	data -> data.getAbilityDataMap(),	DataTransmitters.ABILITY_DATA_MAP),
-	CHI(			data -> data.chi(),					DataTransmitters.CHI),
-	MISC(			data -> data.getMiscData(),			DataTransmitters.MISC),
-	TICK_HANDLERS(	data -> data.getAllTickHandlers(),	DataTransmitters.TICK_HANDLERS);
+	BENDING_LIST(	data -> data.getAllBending(),			DataTransmitters.BENDING_LIST),
+	STATUS_CONTROLS(data -> data.getAllStatusControls(),	DataTransmitters.STATUS_CONTROLS),
+	ABILITY_DATA(	data -> data.getAbilityDataMap(),		DataTransmitters.ABILITY_DATA),
+	CHI(			data -> data.chi(),						DataTransmitters.CHI),
+	MISC_DATA(		data -> data.getMiscData(),				DataTransmitters.MISC_DATA),
+	TICK_HANDLERS(	data -> data.getAllTickHandlers(),		DataTransmitters.TICK_HANDLERS);
 	// @formatter:on
 	
 	private final Function<BendingData, Object> getter;
-	private final DataTransmitter<Object> transmitter;
+	private final DataTransmitter<?> transmitter;
 	
-	private DataCategory(Function<BendingData, Object> getter, DataTransmitter<Object> transmitter) {
+	private DataCategory(Function<BendingData, Object> getter, DataTransmitter<?> transmitter) {
 		this.getter = getter;
 		this.transmitter = transmitter;
 	}
@@ -53,7 +53,7 @@ public enum DataCategory {
 	}
 	
 	public void write(ByteBuf buf, Object obj) {
-		transmitter.write(buf, obj);
+		((DataTransmitter<Object>) transmitter).write(buf, obj);
 	}
 	
 	public Object read(ByteBuf buf, BendingData data) {

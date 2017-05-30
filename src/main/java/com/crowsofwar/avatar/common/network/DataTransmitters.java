@@ -48,7 +48,7 @@ import io.netty.buffer.ByteBuf;
  */
 public class DataTransmitters {
 	
-	public static final DataTransmitter<List<BendingController>> CONTROLLER_LIST = new DataTransmitter<List<BendingController>>() {
+	public static final DataTransmitter<List<BendingController>> BENDING_LIST = new DataTransmitter<List<BendingController>>() {
 		
 		@Override
 		public void write(ByteBuf buf, List<BendingController> t) {
@@ -68,7 +68,7 @@ public class DataTransmitters {
 		}
 	};
 	
-	public static final DataTransmitter<Map<BendingAbility, AbilityData>> ABILITY_DATA_MAP = new DataTransmitter<Map<BendingAbility, AbilityData>>() {
+	public static final DataTransmitter<Map<BendingAbility, AbilityData>> ABILITY_DATA = new DataTransmitter<Map<BendingAbility, AbilityData>>() {
 		
 		@Override
 		public void write(ByteBuf buf, Map<BendingAbility, AbilityData> t) {
@@ -170,7 +170,7 @@ public class DataTransmitters {
 		
 	};
 	
-	public static final DataTransmitter<MiscData> MISC = new DataTransmitter<MiscData>() {
+	public static final DataTransmitter<MiscData> MISC_DATA = new DataTransmitter<MiscData>() {
 		
 		@Override
 		public void write(ByteBuf buf, MiscData t) {
@@ -179,7 +179,7 @@ public class DataTransmitters {
 		
 		@Override
 		public MiscData read(ByteBuf buf, BendingData data) {
-			MiscData misc = new MiscData(() -> data.save(DataCategory.MISC));
+			MiscData misc = new MiscData(() -> data.save(DataCategory.MISC_DATA));
 			misc.fromBytes(buf);
 			return misc;
 		}
