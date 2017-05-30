@@ -14,27 +14,33 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
+package com.crowsofwar.avatar.common.data;
 
-package com.crowsofwar.avatar.common.network;
-
-import io.netty.buffer.ByteBuf;
+import java.util.function.Function;
 
 /**
- * Used by the {@link Networker}, and is responsible for reading/writing the
- * data to the network.
+ * 
  * 
  * @author CrowsOfWar
  */
-public interface DataTransmitter<T, C extends Context> {
+
+public enum DataCategory {
 	
-	/**
-	 * Writes the <code>T</code> to network
-	 */
-	void write(ByteBuf buf, T t);
+	BENDING(data -> data.getAllBending()),
+	STATUS_CONTROLS(data -> data.getAllStatusControls()),
+	ABILITY_DATA(data -> data.getAbilityDataMap()),
+	CHI(data -> data.chi()),
+	MISC(data -> data.getMiscData()),
+	TICK_HANDLERS(data -> data.getAllTickHandlers());
 	
-	/**
-	 * Creates a new <code>T</code> and reads data from the network
-	 */
-	T read(ByteBuf buf, C ctx);
+	private final Function<BendingData, Object> getter;
+	
+	private DataCategory(Function<BendingData, Object> getter) {
+		this.getter = getter;
+	}
+	
+	public Object get(BendingData data) {
+		return getter.apply(data);
+	}
 	
 }

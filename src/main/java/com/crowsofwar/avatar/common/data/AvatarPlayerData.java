@@ -31,9 +31,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.network.DataTransmitter;
 import com.crowsofwar.avatar.common.network.Networker;
-import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.DataSaver;
@@ -53,14 +51,12 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
-	private final Networker networker;
 	private final AbstractBendingData bendingData;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
 		
 		boolean isClient = player instanceof AbstractClientPlayer;
-		networker = new Networker(!isClient, PacketCPlayerData.class, net -> sendPacket());
 		
 		bendingData = new AbstractBendingData() {
 			
@@ -69,15 +65,6 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 				AvatarPlayerData.this.save(category);
 			}
 		};
-		
-		for (DataCategory category : DataCategory.values()) {
-			
-			networker.register(//
-					category.get(this), //
-					(DataTransmitter<Object, PlayerDataContext>) category.getTransmitter(), //
-					(Networker.Property<Object>) category.property());
-			
-		}
 		
 	}
 	
