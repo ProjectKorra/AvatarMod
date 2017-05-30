@@ -162,7 +162,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 		
 		public String displayName() {
-			return name().toLowerCase();
+			return type.name().toLowerCase();
 		}
 		
 		public int id() {
