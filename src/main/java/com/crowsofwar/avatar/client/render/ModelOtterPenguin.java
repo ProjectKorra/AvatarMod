@@ -125,6 +125,8 @@ public class ModelOtterPenguin extends ModelBase {
 		float pi = (float) Math.PI;
 		
 		head.rotateAngleY = (float) Math.toRadians(netHeadYaw);
+		head.rotateAngleX = (float) Math.toRadians(headPitch);
+		
 		rightleg.rotateAngleX = MathHelper.cos(limbSwing * 2) * limbSwingAmount;
 		leftleg.rotateAngleX = MathHelper.cos(limbSwing * 2 + pi) * limbSwingAmount;
 		
