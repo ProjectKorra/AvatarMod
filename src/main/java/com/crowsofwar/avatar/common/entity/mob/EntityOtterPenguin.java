@@ -65,11 +65,11 @@ public class EntityOtterPenguin extends EntityAnimal {
 		Set<Item> temptItems = Sets.newHashSet(Items.FISH);
 		
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
+		this.tasks.addTask(1, new EntityAIPanic(this, 3D));
 		this.tasks.addTask(3, new EntityAIMate(this, 1.0D));
 		this.tasks.addTask(4, new EntityAITempt(this, 1.2D, false, temptItems));
 		this.tasks.addTask(5, new EntityAIFollowParent(this, 1.1D));
-		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
+		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 3));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 	}
@@ -78,7 +78,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.1);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
 	}
 	
 	@Override
