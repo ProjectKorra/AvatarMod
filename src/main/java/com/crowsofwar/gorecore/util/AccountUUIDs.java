@@ -333,6 +333,10 @@ public final class AccountUUIDs {
 		}
 	}
 	
+	/**
+	 * Lookup the username based on the account ID. Returns null on errors.
+	 * Warning: is not cached
+	 */
 	public static String getUsername(UUID id) {
 		try {
 			
