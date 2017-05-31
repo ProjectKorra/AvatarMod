@@ -55,6 +55,12 @@ public class EntityWaterBubble extends AvatarEntity {
 	private final OwnerAttribute ownerAttrib;
 	
 	/**
+	 * Whether the water bubble will create a water source upon landing. Only
+	 * set on server-side.
+	 */
+	private boolean sourceBlock;
+	
+	/**
 	 * @param world
 	 */
 	public EntityWaterBubble(World world) {
@@ -123,6 +129,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		ownerAttrib.load(compound);
 		setBehavior((WaterBubbleBehavior) Behavior.lookup(compound.getInteger("Behavior"), this));
 		getBehavior().load(compound);
+		setSourceBlock(compound.getBoolean("SourceBlock"));
 	}
 	
 	@Override
@@ -131,6 +138,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		ownerAttrib.save(compound);
 		compound.setInteger("Behavior", getBehavior().getId());
 		getBehavior().save(compound);
+		compound.setBoolean("SourceBlock", sourceBlock);
 	}
 	
 	public WaterBubbleBehavior getBehavior() {
@@ -148,6 +156,14 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	public void setOwner(EntityLivingBase player) {
 		ownerAttrib.setOwner(player);
+	}
+	
+	public boolean isSourceBlock() {
+		return sourceBlock;
+	}
+	
+	public void setSourceBlock(boolean sourceBlock) {
+		this.sourceBlock = sourceBlock;
 	}
 	
 	@Override

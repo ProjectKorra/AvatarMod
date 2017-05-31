@@ -122,8 +122,14 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		public Behavior onUpdate(EntityWaterBubble entity) {
 			entity.velocity().add(0, -9.81 / 10, 0);
 			if (entity.isCollided) {
-				entity.worldObj.setBlockState(entity.getPosition(), Blocks.FLOWING_WATER.getDefaultState(),
-						3);
+				
+				if (entity.isSourceBlock()) {
+					entity.worldObj.setBlockState(entity.getPosition(),
+							Blocks.FLOWING_WATER.getDefaultState(), 3);
+				} else {
+					
+				}
+				
 				entity.setDead();
 			}
 			return this;
