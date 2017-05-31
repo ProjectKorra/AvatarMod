@@ -38,12 +38,12 @@ public class PacketCErrorMessage extends AvatarPacket<PacketCErrorMessage> {
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		message = ByteBufUtils.readUTF8String(buf);
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		ByteBufUtils.writeUTF8String(buf, message);
 	}
 	

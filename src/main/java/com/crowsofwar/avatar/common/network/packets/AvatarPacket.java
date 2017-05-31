@@ -17,8 +17,11 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -57,6 +60,30 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 		return null;
 		
 	}
+	
+	@Override
+	public final void fromBytes(ByteBuf buf) {
+		try {
+			avatarFromBytes(buf);
+		} catch (RuntimeException ex) {
+			AvatarLog.warn(WarningType.BAD_CLIENT_PACKET,
+					"Error processing packet " + getClass().getSimpleName(), ex);
+		}
+	}
+	
+	@Override
+	public final void toBytes(ByteBuf buf) {
+		try {
+			avatarToBytes(buf);
+		} catch (RuntimeException ex) {
+			AvatarLog.warn(WarningType.BAD_CLIENT_PACKET,
+					"Error processing packet " + getClass().getSimpleName(), ex);
+		}
+	}
+	
+	protected abstract void avatarFromBytes(ByteBuf buf);
+	
+	protected abstract void avatarToBytes(ByteBuf buf);
 	
 	/**
 	 * Returns the side that this packet is meant to be received on.

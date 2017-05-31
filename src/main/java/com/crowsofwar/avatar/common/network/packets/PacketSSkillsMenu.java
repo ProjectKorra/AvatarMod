@@ -38,12 +38,12 @@ public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		element = buf.readInt();
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		buf.writeInt(element);
 	}
 	

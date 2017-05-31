@@ -38,12 +38,12 @@ public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		type = BendingType.find(buf.readInt());
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		buf.writeInt(type.id());
 	}
 	

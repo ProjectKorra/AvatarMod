@@ -49,7 +49,7 @@ public abstract class AbstractBendingData implements BendingData {
 		abilityData = new HashMap<>();
 		tickHandlers = new HashSet<>();
 		chi = new Chi(this);
-		miscData = new MiscData(() -> save(DataCategory.MISC));
+		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
 	}
 	
 	// ================================================================================
@@ -81,7 +81,7 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public void addBending(BendingController bending) {
 		if (bendings.add(bending)) {
-			save(DataCategory.BENDING);
+			save(DataCategory.BENDING_LIST);
 		}
 	}
 	
@@ -102,7 +102,7 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public void removeBending(BendingController bending) {
 		if (bendings.remove(bending)) {
-			save(DataCategory.BENDING);
+			save(DataCategory.BENDING_LIST);
 		}
 	}
 	
@@ -119,6 +119,12 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public List<BendingController> getAllBending() {
 		return new ArrayList<>(bendings);
+	}
+	
+	@Override
+	public void setAllBending(List<BendingController> bending) {
+		bendings.clear();
+		bendings.addAll(bending);
 	}
 	
 	@Override
@@ -155,6 +161,12 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
+	public void setAllStatusControls(List<StatusControl> controls) {
+		statusControls.clear();
+		statusControls.addAll(controls);
+	}
+	
+	@Override
 	public void clearStatusControls() {
 		statusControls.clear();
 	}
@@ -177,7 +189,7 @@ public abstract class AbstractBendingData implements BendingData {
 		if (data == null) {
 			data = new AbilityData(this, ability);
 			abilityData.put(ability, data);
-			save(DataCategory.BENDING);
+			save(DataCategory.BENDING_LIST);
 		}
 		
 		return data;
@@ -199,6 +211,12 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public Map<BendingAbility, AbilityData> getAbilityDataMap() {
 		return new HashMap<>(abilityData);
+	}
+	
+	@Override
+	public void setAbilityDataMap(Map<BendingAbility, AbilityData> map) {
+		abilityData.clear();
+		abilityData.putAll(map);
 	}
 	
 	/**
@@ -253,6 +271,12 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public List<TickHandler> getAllTickHandlers() {
 		return new ArrayList<>(tickHandlers);
+	}
+	
+	@Override
+	public void setAllTickHandlers(List<TickHandler> handlers) {
+		tickHandlers.clear();
+		tickHandlers.addAll(handlers);
 	}
 	
 	@Override

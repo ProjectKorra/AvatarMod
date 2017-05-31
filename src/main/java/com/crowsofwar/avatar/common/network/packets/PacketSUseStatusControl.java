@@ -44,11 +44,11 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		int id = buf.readInt();
 		statusControl = StatusControl.lookup(id);
 		if (statusControl == null) {
-			AvatarLog.warn(WarningType.POSSIBLE_HACKING,
+			AvatarLog.warn(WarningType.BAD_CLIENT_PACKET,
 					"Player trying to crash the server?? While sending UseStatusControl packet, sent invalid id "
 							+ id);
 			return; // TODO Cancel packet processing
@@ -58,7 +58,7 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		buf.writeInt(statusControl.id());
 		raytrace.toBytes(buf);
 	}

@@ -18,15 +18,11 @@ package com.crowsofwar.avatar.common.data;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.network.DataTransmitter;
-import com.crowsofwar.avatar.common.network.Networker;
-import com.crowsofwar.avatar.common.network.Transmitters;
 
 /**
  * 
@@ -79,6 +75,8 @@ public interface BendingData {
 	
 	List<BendingController> getAllBending();
 	
+	void setAllBending(List<BendingController> controller);
+	
 	void clearBending();
 	
 	// ================================================================================
@@ -92,6 +90,8 @@ public interface BendingData {
 	void removeStatusControl(StatusControl control);
 	
 	List<StatusControl> getAllStatusControls();
+	
+	void setAllStatusControls(List<StatusControl> controls);
 	
 	void clearStatusControls();
 	
@@ -114,6 +114,8 @@ public interface BendingData {
 	List<AbilityData> getAllAbilityData();
 	
 	Map<BendingAbility, AbilityData> getAbilityDataMap();
+	
+	void setAbilityDataMap(Map<BendingAbility, AbilityData> map);
 	
 	/**
 	 * Removes all ability data associations
@@ -142,6 +144,8 @@ public interface BendingData {
 	void removeTickHandler(TickHandler handler);
 	
 	List<TickHandler> getAllTickHandlers();
+	
+	void setAllTickHandlers(List<TickHandler> handlers);
 	
 	void clearTickHandlers();
 	
@@ -183,38 +187,5 @@ public interface BendingData {
 	 * Save this BendingData
 	 */
 	void save(DataCategory category);
-	
-	public enum DataCategory {
-		
-		BENDING(Transmitters.CONTROLLER_LIST, data -> data.getAllBending()),
-		STATUS_CONTROLS(Transmitters.STATUS_CONTROLS, data -> data.getAllStatusControls()),
-		ABILITY_DATA(Transmitters.ABILITY_DATA_MAP, data -> data.getAbilityDataMap()),
-		CHI(Transmitters.CHI, data -> data.chi()),
-		MISC(Transmitters.MISC, data -> data.getMiscData()),
-		TICK_HANDLERS(Transmitters.TICK_HANDLERS, data -> data.getAllTickHandlers());
-		
-		private final Networker.Property<?> property;
-		private final Function<BendingData, Object> getter;
-		private final DataTransmitter<?, ?> transmitter;
-		
-		private DataCategory(DataTransmitter transmitter, Function<BendingData, Object> getter) {
-			property = new Networker.Property<>(ordinal() + 1);
-			this.getter = getter;
-			this.transmitter = transmitter;
-		}
-		
-		public Networker.Property<?> property() {
-			return property;
-		}
-		
-		public Object get(BendingData data) {
-			return getter.apply(data);
-		}
-		
-		public DataTransmitter<?, ?> getTransmitter() {
-			return transmitter;
-		}
-		
-	}
 	
 }

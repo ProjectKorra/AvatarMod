@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.data.BendingData.DataCategory;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -243,7 +242,7 @@ public class AbilityData {
 	 * @return The ability data with correct ability and XP, but null if invalid
 	 *         ability ID (does not log errors)
 	 */
-	public static AbilityData createFromBytes(ByteBuf buf, AvatarPlayerData data) {
+	public static AbilityData createFromBytes(ByteBuf buf, BendingData data) {
 		int abilityId = buf.readInt();
 		BendingAbility ability = BendingManager.getAbility(abilityId);
 		if (ability == null) {

@@ -20,9 +20,12 @@ package com.crowsofwar.avatar.common.data;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarMod;
@@ -31,9 +34,6 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.network.DataTransmitter;
-import com.crowsofwar.avatar.common.network.Networker;
-import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.DataSaver;
@@ -53,14 +53,16 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
-	private final Networker networker;
 	private final AbstractBendingData bendingData;
+	/**
+	 * Changed DataCategories since last sent a packet
+	 */
+	private SortedSet<DataCategory> changed;
 	
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
 		
 		boolean isClient = player instanceof AbstractClientPlayer;
-		networker = new Networker(!isClient, PacketCPlayerData.class, net -> sendPacket());
 		
 		bendingData = new AbstractBendingData() {
 			
@@ -70,14 +72,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 			}
 		};
 		
-		for (DataCategory category : DataCategory.values()) {
-			
-			networker.register(//
-					category.get(this), //
-					(DataTransmitter<Object, PlayerDataContext>) category.getTransmitter(), //
-					(Networker.Property<Object>) category.property());
-			
-		}
+		changed = new TreeSet<>();
 		
 	}
 	
@@ -162,29 +157,23 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	@Override
 	public void save(DataCategory category) {
 		
-		networker.markChanged((Networker.Property<Object>) category.property(), category.get(this));
-		networker.sendUpdated();
+		changed.add(category);
+		sendPacket();
 		saveChanges();
 		
 	}
 	
 	public void saveAll() {
 		
-		for (DataCategory category : DataCategory.values()) {
-			networker.markChanged((Networker.Property<Object>) category.property(), category.get(this));
-		}
-		networker.sendUpdated();
+		changed.addAll(Arrays.asList(DataCategory.values()));
+		sendPacket();
 		saveChanges();
 		
 	}
 	
-	public Networker getNetworker() {
-		return networker;
-	}
-	
 	private void sendPacket() {
 		
-		PacketCPlayerData packet = new PacketCPlayerData(networker, playerID);
+		PacketCPlayerData packet = new PacketCPlayerData(this, playerID, changed);
 		EntityPlayer player = this.getPlayerEntity();
 		if (player != null && !player.worldObj.isRemote) {
 			
@@ -428,6 +417,26 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	@Override
 	public void setPetSummonCooldown(int cooldown) {
 		bendingData.setPetSummonCooldown(cooldown);
+	}
+	
+	@Override
+	public void setAllBending(List<BendingController> bending) {
+		bendingData.setAllBending(bending);
+	}
+	
+	@Override
+	public void setAllStatusControls(List<StatusControl> controls) {
+		bendingData.setAllStatusControls(controls);
+	}
+	
+	@Override
+	public void setAbilityDataMap(Map<BendingAbility, AbilityData> map) {
+		bendingData.setAbilityDataMap(map);
+	}
+	
+	@Override
+	public void setAllTickHandlers(List<TickHandler> handlers) {
+		bendingData.setAllTickHandlers(handlers);
 	}
 	
 }
