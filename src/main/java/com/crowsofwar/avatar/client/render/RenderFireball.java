@@ -62,6 +62,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		
 		float rotation = ticks / 5f;
 		float size = .8f + cos(ticks / 5f) * .05f;
+		size *= Math.sqrt(entity.getSize() / 30f);
 		
 		enableBlend();
 		
@@ -75,7 +76,7 @@ public class RenderFireball extends Render<EntityFireball> {
 			int i = 15728880;
 	        int j = i % 65536;
 	        int k = i / 65536;
-	        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
+	        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 	        
 		} else {
 			

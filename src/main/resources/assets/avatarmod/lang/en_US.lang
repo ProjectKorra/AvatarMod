@@ -75,6 +75,12 @@ avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to y
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
+avatar.ability.pickup_block.lvl1=Move and throw bendable blocks
+avatar.ability.pickup_block.lvl2=Faster and farther when thrown
+avatar.ability.pickup_block.lvl3=Twice the damage
+avatar.ability.pickup_block.lvl4_1=Blocky boomerang ;; Block comes back after successful mob hit
+avatar.ability.pickup_block.lvl4_2=Large impact ;; 1/2 chance to create an explosion on landing
+
 avatar.ability.ravine=Ravine
 avatar.ability.earth_wall=Wall
 avatar.ability.earth_wall.lvl1=Summon a small wall
@@ -110,6 +116,10 @@ avatar.ability.flamethrower.lvl4_1=Flamestream ;; Extremely long-ranged, concent
 avatar.ability.flamethrower.lvl4_2=The world will burn!! ;; Unfocused flames that create fires everywhere
 
 avatar.ability.fireball=Fireball
+avatar.ability.fireball.lvl2=Faster when thrown
+avatar.ability.fireball.lvl3=Tons more damage upon direct hit
+avatar.ability.fireball.lvl4_1=Focused explosion ;; Can sometimes destroy obsidian
+avatar.ability.fireball.lvl4_2=Charged explosion ;; Takes a few seconds to charge, larger explosion when charged
 
 avatar.ability.water_arc=Water Arc
 avatar.ability.water_arc.desc=One of waterbending's most common attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby.
@@ -120,6 +130,12 @@ avatar.ability.water_arc.lvl4_1=Boomerang ;; Comes back to you if you hit a targ
 avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thrown, slower
 
 avatar.ability.wave=Wave
+avatar.ability.wave.lvl1=Slow wave to drown enemies
+avatar.ability.wave.lvl2=A lot more damage
+avatar.ability.wave.lvl3=Much larger
+avatar.ability.wave.lvl4_1=Tsunami ;; Much larger and affects creatures on land
+avatar.ability.wave.lvl4_2=Force wave ;; Very fast waves
+
 avatar.ability.water_bubble=Water Bubble
 avatar.ability.water_skate=Water Skate
 

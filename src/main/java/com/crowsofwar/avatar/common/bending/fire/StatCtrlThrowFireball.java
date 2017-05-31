@@ -21,7 +21,9 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
@@ -58,7 +60,9 @@ public class StatCtrlThrowFireball extends StatusControl {
 				fireball -> fireball.getOwner() == entity);
 		
 		for (EntityFireball fireball : fireballs) {
-			fireball.velocity().add(Vector.getLookRectangular(entity).mul(25));
+			AbilityData abilityData = ctx.getData().getAbilityData(BendingAbility.ABILITY_FIREBALL);
+			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
+			fireball.velocity().add(Vector.getLookRectangular(entity).mul(speedMult));
 			fireball.setBehavior(new FireballBehavior.Thrown());
 		}
 		

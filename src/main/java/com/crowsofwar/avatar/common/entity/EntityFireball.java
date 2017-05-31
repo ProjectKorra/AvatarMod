@@ -18,7 +18,10 @@ package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
@@ -30,13 +33,17 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -52,6 +59,8 @@ public class EntityFireball extends AvatarEntity {
 			.createKey(EntityFireball.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	public static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
+			DataSerializers.VARINT);
 	
 	private final OwnerAttribute ownerAttr;
 	private AxisAlignedBB expandedHitbox;
@@ -71,6 +80,7 @@ public class EntityFireball extends AvatarEntity {
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
+		dataManager.register(SYNC_SIZE, 30);
 	}
 	
 	@Override
@@ -125,14 +135,46 @@ public class EntityFireball extends AvatarEntity {
 		this.damage = damage;
 	}
 	
+	public int getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+	
+	public void setSize(int size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
+	
 	@Override
 	public void onCollideWithSolid() {
-		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ,
-				STATS_CONFIG.fireballSettings.explosionSize, !worldObj.isRemote,
-				STATS_CONFIG.fireballSettings.damageBlocks);
+		
+		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+		explosionSize *= getSize() / 30f;
+		boolean destroyObsidian = false;
+		
+		if (getOwner() != null) {
+			AbilityData abilityData = Bender.getData(getOwner())
+					.getAbilityData(BendingAbility.ABILITY_FIREBALL);
+			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
+				destroyObsidian = true;
+			}
+		}
+		
+		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, explosionSize,
+				!worldObj.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+			
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
+			
+		}
+		
+		if (destroyObsidian) {
+			for (EnumFacing dir : EnumFacing.values()) {
+				BlockPos pos = getPosition().offset(dir);
+				System.out.println(pos);
+				if (worldObj.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
+					worldObj.destroyBlock(pos, true);
+				}
+			}
 		}
 		
 	}

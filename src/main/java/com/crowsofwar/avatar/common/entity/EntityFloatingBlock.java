@@ -23,6 +23,10 @@ import static net.minecraft.network.datasync.EntityDataManager.createKey;
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
@@ -47,7 +51,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -308,6 +314,17 @@ public class EntityFloatingBlock extends AvatarEntity {
 				worldObj.spawnEntityInWorld(ei);
 			}
 		}
+		AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
+		if (data.isMasterPath(AbilityTreePath.SECOND)) {
+			
+			Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 2, false, false);
+			if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+				explosion.doExplosionA();
+				explosion.doExplosionB(true);
+			}
+			
+		}
+		
 	}
 	
 	public float getFriction() {

@@ -115,7 +115,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 				floating.velocity().add(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
-				floating.setDamageMult(.75f + xp / 100);
+				floating.setDamageMult(abilityData.getLevel() >= 2 ? 2 : 1);
 				
 				world.spawnEntityInWorld(floating);
 				

@@ -24,6 +24,8 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
@@ -170,7 +172,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						collision((EntityLivingBase) collided, entity);
+						return collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
 						motion.mul(0.3);
@@ -185,7 +187,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 		}
 		
-		private void collision(EntityLivingBase collided, EntityFloatingBlock entity) {
+		private FloatingBlockBehavior collision(EntityLivingBase collided, EntityFloatingBlock entity) {
 			// Add damage
 			double speed = entity.velocity().magnitude();
 			collided.attackEntityFrom(
@@ -209,8 +211,22 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			}
 			
 			// Remove the floating block & spawn particles
-			if (!entity.worldObj.isRemote) entity.setDead();
 			entity.onCollideWithSolid();
+			if (!entity.worldObj.isRemote) {
+				if (data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK)
+						.isMasterPath(AbilityTreePath.FIRST)) {
+					
+					data.addStatusControl(StatusControl.THROW_BLOCK);
+					data.addStatusControl(StatusControl.PLACE_BLOCK);
+					return new FloatingBlockBehavior.PlayerControlled();
+					
+				} else {
+					entity.setDead();
+				}
+			}
+			
+			return this;
+			
 		}
 		
 		@Override

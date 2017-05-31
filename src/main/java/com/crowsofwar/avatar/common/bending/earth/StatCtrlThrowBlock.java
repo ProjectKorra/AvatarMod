@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -52,9 +53,8 @@ public class StatCtrlThrowBlock extends StatusControl {
 		World world = entity.worldObj;
 		BendingData data = ctx.getData();
 		
-		EntityFloatingBlock floating = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
-				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
-						&& fb.getOwner() == ctx.getBenderEntity());
+		EntityFloatingBlock floating = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class,
+				entity);
 		
 		if (floating != null) {
 			
@@ -62,8 +62,10 @@ public class StatCtrlThrowBlock extends StatusControl {
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
 			
 			// Calculate force and everything
+			double forceMult = data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK).getLevel() >= 1 //
+					? 35 : 25;
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
-			floating.velocity().add(lookDir.times(35));
+			floating.velocity().add(lookDir.times(forceMult));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
 			
 			data.removeStatusControl(PLACE_BLOCK);

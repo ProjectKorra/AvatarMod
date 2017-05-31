@@ -22,6 +22,7 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -66,13 +67,14 @@ public class AbilityFireball extends FireAbility {
 			
 			float xp = data.getAbilityData(this).getTotalXp();
 			float damage = STATS_CONFIG.fireballSettings.damage;
-			damage *= .75 + xp * .0075f; // 0=.75, 100=1.5
+			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
 			
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.position().set(target);
 			fireball.setOwner(entity);
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			fireball.setDamage(damage);
+			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 			world.spawnEntityInWorld(fireball);
 			
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
