@@ -156,7 +156,7 @@ public class AvatarUiRenderer extends Gui {
 		float width = 100 * scale;
 		float height = 9 * scale;
 		
-		mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
+		mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
 		
 		pushMatrix();
 		
