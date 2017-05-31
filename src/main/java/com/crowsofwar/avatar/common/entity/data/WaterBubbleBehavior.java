@@ -23,6 +23,8 @@ import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -123,14 +125,14 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			entity.velocity().add(0, -9.81 / 10, 0);
 			if (entity.isCollided) {
 				
-				if (entity.isSourceBlock()) {
-					entity.worldObj.setBlockState(entity.getPosition(),
-							Blocks.FLOWING_WATER.getDefaultState(), 3);
-				} else {
-					
+				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
+				if (!entity.isSourceBlock()) {
+					state.withProperty(BlockLiquid.LEVEL, 1);
 				}
 				
+				entity.worldObj.setBlockState(entity.getPosition(), state, 3);
 				entity.setDead();
+				
 			}
 			return this;
 		}
