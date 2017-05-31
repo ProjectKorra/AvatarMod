@@ -69,4 +69,8 @@ public class GoreCoreCommonProxy {
 		return null;
 	}
 	
+	public String getKeybindingDisplayName(String name) {
+		return null;
+	}
+	
 }

@@ -11,6 +11,7 @@ avatar.Firebend=Firebending
 avatar.Waterbend=Waterbending
 avatar.Airbend=Airbending
 avatar.Skills=Skills Menu
+avatar.TransferBison=Confirm Bison Transfer
 
 avatar.earthbending=Earthbending
 avatar.earthbending.demonym=Earthbender
@@ -68,10 +69,11 @@ avatar.bisonWhistle.tooltipUnbound=Not bound
 avatar.bisonWhistle.transferAway=Your flying bison ${bison} has been transferred to ${newOwner}.
 avatar.bisonWhistle.transferTo=You now own ${oldOwner}'s flying bison ${bison}!
 avatar.bisonWhistle.noTransfer=[error]Nobody has recently requested a bison transfer.[/error]
-avatar.bisonWhistle.transferAway.start=${newOwner} would like to own your bison ${bison}. Press KEY to confirm, ignore to decline.
+avatar.bisonWhistle.transferAway.start=${newOwner} would like to own your bison ${bison}. Press [keybinding=avatar.TransferBison] to confirm, ignore to decline.
 avatar.bisonWhistle.transferTo.start=A message has been sent to ${oldOwner} to confirm the transfer of ${bison}.
 avatar.bisonWhistle.transferAway.ignore=The transfer with ${newOwner} has been ignored.
 avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to your transfer request.
+avatar.bisonWhistle.transferOffline=[error]This bison isn't yours. You can't transfer the bison since the owner ${owner} is offline.[/error]
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
@@ -235,6 +237,5 @@ item.avatarmod:bison_armor.chain.name=Chainmail Bison Armor
 item.avatarmod:bison_armor.wrought.name=Wrought Bison Armor
 item.avatarmod:bison_armor.legendary.name=Legendary Bison Armor
 
-avatar.tooltip.scroll=%s
 avatar.tooltip.water_pouch=%d/3 Water
 avatar.tooltip.water_pouch.empty=Empty

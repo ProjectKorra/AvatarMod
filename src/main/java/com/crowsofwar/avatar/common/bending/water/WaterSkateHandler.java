@@ -35,7 +35,6 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
@@ -43,6 +42,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -132,7 +132,7 @@ public class WaterSkateHandler extends TickHandler {
 				if (player.ticksExisted % 3 == 0) {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 1, 1);
-					particles.spawnParticles(world, ParticleType.SPLASH, 2, 4,
+					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 2, 4,
 							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
 				}
 				

@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.chat.FormattingState.ChatFormatSet;
 import com.crowsofwar.gorecore.chat.FormattingState.Setting;
 
@@ -185,6 +186,12 @@ public class ChatSender {
 					
 					String key = tag.substring("translate=".length());
 					item = processText(I18n.format(key), cm, formatArgs);
+					recievedFormatInstruction = false;
+					
+				} else if (tag.startsWith("keybinding=")) {
+					
+					String key = tag.substring("keybinding=".length());
+					item = GoreCore.proxy.getKeybindingDisplayName(key);
 					recievedFormatInstruction = false;
 					
 				} else {

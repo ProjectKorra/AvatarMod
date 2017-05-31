@@ -64,7 +64,7 @@ public final class AccountUUIDs {
 	private static final Map<String, AccountId> idCache;
 	
 	static {
-		idCache = new HashMap<String, AccountId>();
+		idCache = new HashMap<>();
 	}
 	
 	/**
@@ -329,6 +329,58 @@ public final class AccountUUIDs {
 			
 		} catch (Exception e) {
 			GoreCore.LOGGER.error("Unexpected error getting UUID for " + username, e);
+			return null;
+		}
+	}
+	
+	/**
+	 * Lookup the username based on the account ID. Returns null on errors.
+	 * Warning: is not cached
+	 */
+	public static String getUsername(UUID id) {
+		try {
+			
+			String idString = id.toString().replaceAll("-", "");
+			String url = "https://api.mojang.com/user/profiles/" + idString + "/names";
+			System.out.println(url);
+			
+			URL obj = new URL(url);
+			HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+			
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+			
+			int responseCode = connection.getResponseCode();
+			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			
+			String line;
+			StringBuffer response = new StringBuffer();
+			while ((line = br.readLine()) != null)
+				response.append(line);
+			br.close();
+			
+			String result = response.toString();
+			
+			if (responseCode == 204) {
+				GoreCore.LOGGER.warn("Attempted to get a username for player " + id
+						+ ", but that account is not registered");
+				return null;
+			}
+			
+			if (responseCode != 200) {
+				GoreCore.LOGGER.warn("Attempted to get a username for player " + id
+						+ ", but the response code was unexpected (" + responseCode + ")");
+				return null;
+			}
+			
+			String searchFor = "\"name\":\"";
+			int index1 = result.lastIndexOf(searchFor) + searchFor.length();
+			int index2 = result.indexOf('"', index1);
+			
+			return result.substring(index1, index2);
+			
+		} catch (Exception e) {
+			GoreCore.LOGGER.error("Unexpected error getting username for " + id, e);
 			return null;
 		}
 	}

@@ -30,6 +30,8 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCauldron;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -192,8 +194,8 @@ public class BendingContext {
 	}
 	
 	/**
-	 * Consumes the given amount of water either from direct water source, or
-	 * from a water pouch.
+	 * Consumes the given amount of water either from direct water source, from
+	 * a water pouch, or several other sources.
 	 * <p>
 	 * First looks to see if looking at water block - any values >= 3 will also
 	 * consume the water block. Then, tries to see if there is a water pouch
@@ -218,6 +220,17 @@ public class BendingContext {
 				return true;
 				
 			}
+			
+			if (lookAt == Blocks.CAULDRON) {
+				IBlockState ibs = world.getBlockState(targetPos.toBlockPos());
+				int waterLevel = ibs.getValue(BlockCauldron.LEVEL);
+				if (waterLevel > 0) {
+					world.setBlockState(targetPos.toBlockPos(),
+							ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
+				}
+				return true;
+			}
+			
 		}
 		
 		return bender.consumeWaterLevel(amount);

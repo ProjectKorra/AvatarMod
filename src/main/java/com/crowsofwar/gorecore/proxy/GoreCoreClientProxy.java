@@ -22,6 +22,7 @@ import java.io.File;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class GoreCoreClientProxy extends GoreCoreCommonProxy {
@@ -58,6 +59,19 @@ public class GoreCoreClientProxy extends GoreCoreCommonProxy {
 	@Override
 	public EntityPlayer getClientSidePlayer() {
 		return Minecraft.getMinecraft().thePlayer;
+	}
+	
+	@Override
+	public String getKeybindingDisplayName(String name) {
+		
+		KeyBinding[] allKeybindings = Minecraft.getMinecraft().gameSettings.keyBindings;
+		for (KeyBinding kb : allKeybindings) {
+			if (kb.getKeyDescription().equals(name)) {
+				return kb.getDisplayName();
+			}
+		}
+		
+		return null;
 	}
 	
 }

@@ -52,6 +52,7 @@ public class AbilityWaterArc extends WaterAbility {
 	 */
 	public AbilityWaterArc() {
 		super("water_arc");
+		requireRaytrace(-1, true);
 	}
 	
 	@Override

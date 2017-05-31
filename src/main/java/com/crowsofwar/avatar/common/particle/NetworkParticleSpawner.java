@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.particle;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -34,7 +35,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 public class NetworkParticleSpawner implements ParticleSpawner {
 	
 	@Override
-	public void spawnOneParticle(World world, ParticleType particle, double x, double y, double z,
+	public void spawnOneParticle(World world, EnumParticleTypes particle, double x, double y, double z,
 			double velocityX, double velocityY, double velocityZ, int... parameters) {
 		
 		// Velocity -> max velocity... results in not expected velocity client
@@ -44,7 +45,7 @@ public class NetworkParticleSpawner implements ParticleSpawner {
 	}
 	
 	@Override
-	public void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x,
+	public void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum, double x,
 			double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
 			int... parameters) {
 		

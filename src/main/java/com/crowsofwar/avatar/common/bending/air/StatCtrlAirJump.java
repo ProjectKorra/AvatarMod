@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JU
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -31,7 +32,6 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -89,8 +89,8 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.worldObj, ParticleType.AIR, 2, 6, new Vector(entity),
-					new Vector(1, 0, 1));
+			spawner.spawnParticles(entity.worldObj, AvatarParticles.getParticleAir(), 2, 6,
+					new Vector(entity), new Vector(1, 0, 1));
 			
 			// Find approximate maximum distance. In actuality, a bit less, due
 			// to max velocity and drag

@@ -20,9 +20,11 @@ import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getPlainCardText
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static net.minecraft.client.Minecraft.getMinecraft;
 
 import org.lwjgl.input.Mouse;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
@@ -37,11 +39,14 @@ import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.chat.ChatMessage;
 import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
 /**
@@ -64,7 +69,8 @@ public class WindowAbility {
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
 	
-	private UiComponent unlockTitle, unlockText, unlockButton;
+	private UiComponent unlockTitle, unlockText;
+	private ComponentCustomButton unlockButton;
 	
 	public WindowAbility(BendingAbility ability, SkillsGui gui) {
 		this.ability = ability;
@@ -166,10 +172,12 @@ public class WindowAbility {
 		unlockText.setOffset(fromPixels(frameRight, 0, unlockTitle.height() + 10));
 		handler.add(unlockText);
 		
-		unlockButton = new ComponentUnlockAbility(ability);
+		unlockButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 196, 100, 20, 20,
+				() -> AvatarMod.network.sendToServer(new PacketSUseScroll(ability)));
 		unlockButton.setFrame(frameRight);
 		unlockButton.setOffset(fromPixels(unlockTitle.getFrame(), slot1.width() + 20,
 				unlockTitle.height() + unlockText.height() + 20));
+		unlockButton.setZLevel(4);
 		handler.add(unlockButton);
 		
 		backButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 0, 240, 16, 16,
@@ -200,6 +208,7 @@ public class WindowAbility {
 		button.setVisible(!data.isLocked());
 		
 		if (data.isLocked()) {
+			unlockButton.setEnabled(gui.inventorySlots.getSlot(0).getHasStack());
 			slot1.setVisible(true);
 			slot1.setFrame(unlockTitle.getFrame());
 			slot1.setOffset(
@@ -249,6 +258,25 @@ public class WindowAbility {
 		// Make slots update their position & disappear
 		slot1.draw(0, 0, 0);
 		slot2.draw(0, 0, 0);
+	}
+	
+	/**
+	 * Check whether the ItemStack is in a slot that doesn't have a tooltip.
+	 * This is to prevent an issue where there is an ItemStack tooltip and a
+	 * slot tooltip rendering at the same time.
+	 */
+	public boolean canRenderTooltip(ItemStack stack) {
+		
+		AbilityData data = AvatarPlayerData.fetcher().fetch(getMinecraft().thePlayer).getAbilityData(ability);
+		if (data.isLocked()) {
+			return true;
+		}
+		
+		Slot invSlot1 = gui.inventorySlots.getSlot(0);
+		Slot invSlot2 = gui.inventorySlots.getSlot(1);
+		
+		return invSlot1.getStack() != stack && invSlot2.getStack() != stack;
+		
 	}
 	
 }

@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -100,9 +101,15 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 				if (bison != null && !bison.worldObj.isRemote) {
 					
 					EntityPlayer oldOwner = bison.getOwner();
-					TransferConfirmHandler.startTransfer(oldOwner, player, bison);
 					
-					return new ActionResult<>(SUCCESS, stack);
+					if (oldOwner != null) {
+						TransferConfirmHandler.startTransfer(oldOwner, player, bison);
+						return new ActionResult<>(SUCCESS, stack);
+					} else {
+						UUID id = bison.getOwnerId();
+						String username = AccountUUIDs.getUsername(id);
+						MSG_BISON_TRANSFER_OFFLINE.send(player, username == null ? "{error}" : username);
+					}
 					
 				}
 				
