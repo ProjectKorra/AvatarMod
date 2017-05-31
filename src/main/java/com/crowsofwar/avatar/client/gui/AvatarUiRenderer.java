@@ -178,7 +178,7 @@ public class AvatarUiRenderer extends Gui {
 		drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
 		
 		drawString(mc.fontRendererObj, ((int) total) + "/" + ((int) max) + "," + ((int) available), 0, -20,
-				0xffffff);
+				0xffffff | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
 		
 		popMatrix();
 		
