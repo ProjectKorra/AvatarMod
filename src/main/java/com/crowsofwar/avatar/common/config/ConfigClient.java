@@ -35,7 +35,10 @@ public class ConfigClient {
 	public static ConfigClient CLIENT_CONFIG = new ConfigClient();
 	
 	@Load
-	public float radialMenuAlpha = .75f;
+	public float radialMenuAlpha = 0.75f;
+	
+	@Load
+	public float chiBarAlpha = 0.75f;
 	
 	@Load
 	public boolean useCustomParticles = true;

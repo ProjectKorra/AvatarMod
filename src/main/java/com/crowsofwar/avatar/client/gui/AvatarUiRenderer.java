@@ -139,7 +139,7 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderChiBar(ScaledResolution resolution) {
 		
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
