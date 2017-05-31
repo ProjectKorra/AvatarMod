@@ -139,7 +139,7 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderChiBar(ScaledResolution resolution) {
 		
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
@@ -156,7 +156,7 @@ public class AvatarUiRenderer extends Gui {
 		float width = 100 * scale;
 		float height = 9 * scale;
 		
-		mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
+		mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
 		
 		pushMatrix();
 		
@@ -165,13 +165,20 @@ public class AvatarUiRenderer extends Gui {
 		
 		// Background of chi bar
 		drawTexturedModalRect(0, 0, 0, 36, 100, 9);
+		
 		// Available chi
-		drawTexturedModalRect((int) (100 * unavailable / max), 0, 1, 27, (int) (100 * available / max), 9);
+		
+		float unadjustedU = 100 * unavailable / max;
+		int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
+		float uDiff = unadjustedU - adjustedU;
+		
+		drawTexturedModalRect(adjustedU, 0, 1, 27, (int) (100 * available / max + uDiff), 9);
+		
 		// Unavailable chi
 		drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
 		
 		drawString(mc.fontRendererObj, ((int) total) + "/" + ((int) max) + "," + ((int) available), 0, -20,
-				0xffffff);
+				0xffffff | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
 		
 		popMatrix();
 		

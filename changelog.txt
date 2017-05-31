@@ -5,9 +5,6 @@ AV2 Changelog :: version a4.0
 + Scrolls item
 + Level IV options for each ability
 
-- Removed progression points
-- Internal: removed bending states
-
 * Remove small space between radial segment hover
 * Abilities have multiple levels + xp instead of only 1 XP bar
 * Adjusted xp curves based on level
@@ -20,6 +17,8 @@ AV2 Changelog :: version a4.0
 * Can use [keybinding=key.X] in .lang file to use a keybinding
 * Can get water arcs from cauldrons
 * Option in cosmetic.yml to use vanilla instead of avatar particles
+* New chi bar textures from MadWrist
+* Chi bar is semitransparent (configurable in cosmetic.yml)
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs
@@ -27,3 +26,6 @@ AV2 Changelog :: version a4.0
 > Fix grass path not bendable
 > Fix water arc breaking when hit a block while under player control
 > Fix airjump and other status controls can be activated while in chat or other GUIs
+
+- Removed progression points
+- Internal: removed bending states

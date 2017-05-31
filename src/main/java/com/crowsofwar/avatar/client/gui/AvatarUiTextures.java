@@ -50,6 +50,7 @@ public class AvatarUiTextures {
 			"textures/gui/bg_earth_screen.png");
 	public static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
 			"textures/gui/status_controls.png");
+	public static final ResourceLocation CHI_BAR = new ResourceLocation("avatarmod", "textures/gui/chi.png");
 	
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
 	
