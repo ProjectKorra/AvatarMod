@@ -38,9 +38,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EntityEquipmentSlot.Type;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -63,6 +67,7 @@ public class EntityRavine extends AvatarEntity {
 	private float damageMult;
 	private double maxTravelDistanceSq;
 	private boolean breakBlocks;
+	private boolean dropEquipment;
 	
 	/**
 	 * @param world
@@ -88,6 +93,10 @@ public class EntityRavine extends AvatarEntity {
 	
 	public void setBreakBlocks(boolean breakBlocks) {
 		this.breakBlocks = breakBlocks;
+	}
+	
+	public void setDropEquipment(boolean dropEquipment) {
+		this.dropEquipment = dropEquipment;
 	}
 	
 	@Override
@@ -175,13 +184,8 @@ public class EntityRavine extends AvatarEntity {
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-						Vector push = velocity.copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
-						entity.addVelocity(push.x(), push.y(), push.z());
-						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, getOwner()),
-								STATS_CONFIG.ravineSettings.damage * damageMult))
-							attacked++;
-						AvatarUtils.afterVelocityAdded(entity);
+					if (attackEntity(entity)) {
+						attacked++;
 					}
 				}
 			}
@@ -210,6 +214,43 @@ public class EntityRavine extends AvatarEntity {
 				
 			}
 		}
+		
+	}
+	
+	private boolean attackEntity(Entity entity) {
+		
+		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
+			
+			Vector push = velocity().copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
+			entity.addVelocity(push.x(), push.y(), push.z());
+			AvatarUtils.afterVelocityAdded(entity);
+			
+			if (dropEquipment && entity instanceof EntityLivingBase) {
+				
+				EntityLivingBase elb = (EntityLivingBase) entity;
+				
+				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+					
+					ItemStack stack = elb.getItemStackFromSlot(slot);
+					if (!stack.func_190926_b()) {
+						double chance = slot.getSlotType() == Type.HAND ? 50 : 25;
+						if (rand.nextDouble() * 100 <= chance) {
+							elb.entityDropItem(stack, 0);
+							elb.setItemStackToSlot(slot, ItemStack.field_190927_a);
+						}
+					}
+					
+				}
+				
+			}
+			
+			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
+			float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
+			return entity.attackEntityFrom(ds, damage);
+			
+		}
+		
+		return false;
 		
 	}
 	
