@@ -213,7 +213,7 @@ public class AvatarMod {
 		
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
-		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 4, 10, EnumCreatureType.CREATURE, //
+		EntityRegistry.addSpawn(EntityOtterPenguin.class, 14, 4, 10, EnumCreatureType.CREATURE, //
 				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
 		
 		List<Biome> allBiomesList = ForgeRegistries.BIOMES.getValues();
