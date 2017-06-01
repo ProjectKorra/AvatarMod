@@ -69,7 +69,7 @@ public class AbilityRavine extends EarthAbility {
 			ravine.setDamageMult(.75f + xp / 100);
 			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
-			ravine.setDropEquipment(true);
+			ravine.setDropEquipment(ctx.isMasterLevel(AbilityTreePath.SECOND));
 			world.spawnEntityInWorld(ravine);
 			
 		}
