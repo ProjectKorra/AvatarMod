@@ -34,6 +34,7 @@ import java.util.Set;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.VectorI;
 
@@ -221,7 +222,7 @@ public class AbilityMining extends EarthAbility {
 		if (bendable) {
 			
 			boolean drop = !ctx.getBender().isCreativeMode();
-			wd.getScheduledDestroyBlocks().add(wd.new ScheduledDestroyBlock(pos, delay, drop, fortune));
+			wd.getScheduledDestroyBlocks().add(new ScheduledDestroyBlock(wd, pos, delay, drop, fortune));
 			
 			return true;
 			

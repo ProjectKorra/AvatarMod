@@ -21,7 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.Iterator;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.data.AvatarWorldData.ScheduledDestroyBlock;
+import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
