@@ -74,7 +74,7 @@ public class AbilityWaterBubble extends WaterAbility {
 					bubble.setPosition(pos.x(), pos.y(), pos.z());
 					bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
 					bubble.setOwner(entity);
-					bubble.setSourceBlock(false);
+					bubble.setSourceBlock(ctx.getLevel() >= 2);
 					world.spawnEntityInWorld(bubble);
 					
 					data.addStatusControl(StatusControl.THROW_BUBBLE);
