@@ -84,6 +84,12 @@ avatar.ability.pickup_block.lvl4_1=Blocky boomerang ;; Block comes back after su
 avatar.ability.pickup_block.lvl4_2=Large impact ;; 1/2 chance to create an explosion on landing
 
 avatar.ability.ravine=Ravine
+avatar.ability.ravine.lvl1=Slow, basic ravine
+avatar.ability.ravine.lvl2=Faster speed
+avatar.ability.ravine.lvl3=Ravine travels farther unless there is an obstacle
+avatar.ability.ravine.lvl4_1=Fissure ;; Destroys blocks under it, hit multiple enemies, but costs 1.5x chi
+avatar.ability.ravine.lvl4_2=Shaking earth ;; Chance to knock armor and weapons off hit enemies
+
 avatar.ability.earth_wall=Wall
 avatar.ability.earth_wall.lvl1=Summon a small wall
 avatar.ability.earth_wall.lvl2=Create a larger wall
