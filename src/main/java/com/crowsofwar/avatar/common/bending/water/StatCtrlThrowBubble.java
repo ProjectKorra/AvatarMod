@@ -20,7 +20,9 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -50,8 +52,12 @@ public class StatCtrlThrowBubble extends StatusControl {
 						&& bub.getOwner() == ctx.getBenderEntity());
 		
 		if (bubble != null) {
+			
+			AbilityData adata = data.getAbilityData(BendingAbility.ABILITY_WATER_BUBBLE);
+			double mult = adata.getLevel() >= 1 ? 14 : 8;
+			
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
-			bubble.velocity().set(Vector.getLookRectangular(ctx.getBenderEntity()).mul(10));
+			bubble.velocity().set(Vector.getLookRectangular(ctx.getBenderEntity()).mul(mult));
 		}
 		
 		return true;
