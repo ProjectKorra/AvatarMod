@@ -196,12 +196,18 @@ public class EntityRavine extends AvatarEntity {
 		
 		if (!worldObj.isRemote && (breakBlocks || true)) {
 			BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
-			System.out.println(last + " vs " + getPosition());
 			if (!last.equals(getPosition())) {
+				
 				worldObj.destroyBlock(last.down(), true);
-				if (rand.nextBoolean()) {
+				
+				double travel = Math.sqrt(getSqrDistanceTravelled()) / Math.sqrt(maxTravelDistanceSq);
+				double chance = -(travel - 0.5) * (travel - 0.5) + 0.25;
+				chance *= 2;
+				
+				if (rand.nextDouble() <= chance) {
 					worldObj.destroyBlock(last.down(2), true);
 				}
+				
 			}
 		}
 		
