@@ -200,7 +200,7 @@ public class EntityRavine extends AvatarEntity {
 				
 				worldObj.destroyBlock(last.down(), true);
 				
-				double travel = Math.sqrt(getSqrDistanceTravelled()) / Math.sqrt(maxTravelDistanceSq);
+				double travel = Math.sqrt(getSqrDistanceTravelled() / maxTravelDistanceSq);
 				double chance = -(travel - 0.5) * (travel - 0.5) + 0.25;
 				chance *= 2;
 				
