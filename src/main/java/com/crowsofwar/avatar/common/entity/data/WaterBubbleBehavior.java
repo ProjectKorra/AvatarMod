@@ -17,13 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TemporaryWaterLocation;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -31,8 +32,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * 
@@ -138,10 +137,12 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 						// state = state.withProperty(BlockLiquid.LEVEL, 1);
 					}
 					
-					entity.worldObj.setBlockState(entity.getPosition(), state, 3);
-					for (EnumFacing facing : EnumFacing.HORIZONTALS) {
-						BlockPos pos = entity.getPosition().offset(facing);
-						entity.worldObj.setBlockState(pos, state.withProperty(BlockLiquid.LEVEL, 1));
+					// entity.worldObj.setBlockState(entity.getPosition(),
+					// state, 3);
+					if (!entity.worldObj.isRemote) {
+						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.worldObj);
+						wd.geTemporaryWaterLocations()
+								.add(new TemporaryWaterLocation(wd, entity.getPosition(), 5));
 					}
 					
 				}
