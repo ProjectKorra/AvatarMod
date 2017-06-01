@@ -16,10 +16,20 @@
 */
 package com.crowsofwar.avatar.common;
 
+import java.util.Iterator;
+import java.util.List;
+
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.TemporaryWaterLocation;
+
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * A hacky workaround to manage a temporary water block at a position. The water
@@ -33,8 +43,30 @@ public class TemporaryWaterHandler {
 	private TemporaryWaterHandler() {}
 	
 	@SubscribeEvent
-	public void onTick(ServerTickEvent e) {
-		if (e.phase == Phase.START) {
+	public void onTick(WorldTickEvent e) {
+		if (e.phase == Phase.START && e.side == Side.SERVER) {
+			
+			World world = e.world;
+			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+			
+			List<TemporaryWaterLocation> twls = wd.geTemporaryWaterLocations();
+			Iterator<TemporaryWaterLocation> iterator = twls.iterator();
+			
+			while (iterator.hasNext()) {
+				
+				TemporaryWaterLocation twl = iterator.next();
+				
+				twl.decrementTicks();
+				if (twl.getTicks() <= 0) {
+					BlockPos pos = twl.getPos();
+					if (world.getBlockState(pos).getBlock() == Blocks.WATER) {
+						world.setBlockToAir(pos);
+					}
+					
+					iterator.remove();
+				}
+				
+			}
 			
 		}
 	}
