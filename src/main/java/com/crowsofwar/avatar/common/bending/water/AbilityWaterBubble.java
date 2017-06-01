@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -78,7 +79,10 @@ public class AbilityWaterBubble extends WaterAbility {
 					world.spawnEntityInWorld(bubble);
 					
 					data.addStatusControl(StatusControl.THROW_BUBBLE);
-					world.setBlockToAir(lookPos);
+					
+					if (!ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+						world.setBlockToAir(lookPos);
+					}
 					
 				}
 			}

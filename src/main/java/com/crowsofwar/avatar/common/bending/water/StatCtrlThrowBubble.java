@@ -23,6 +23,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -55,6 +56,9 @@ public class StatCtrlThrowBubble extends StatusControl {
 			
 			AbilityData adata = data.getAbilityData(BendingAbility.ABILITY_WATER_BUBBLE);
 			double mult = adata.getLevel() >= 1 ? 14 : 8;
+			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
+				mult = 20;
+			}
 			
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
 			bubble.velocity().set(Vector.getLookRectangular(ctx.getBenderEntity()).mul(mult));
