@@ -125,7 +125,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			entity.velocity().add(0, -9.81 / 10, 0);
 			if (entity.isCollided) {
 				
-				IBlockState state = Blocks.WATER.getDefaultState();
+				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
 				
 				System.out.println("AAA");
 				
