@@ -172,8 +172,8 @@ public abstract class EntityHumanBender extends EntityBender {
 		VillageCollection villages = worldObj.villageCollectionObj;
 		boolean nearbyVillage = villages.getNearestVillage(getPosition(), 50) != null;
 		
-		BlockPos min = getPosition().add(-25, -25, -25);
-		BlockPos max = getPosition().add(25, 25, 25);
+		BlockPos min = getPosition().add(-10, -10, -10);
+		BlockPos max = getPosition().add(10, 10, 10);
 		AxisAlignedBB aabb = new AxisAlignedBB(min, max);
 		
 		boolean nearbyBender = !worldObj
