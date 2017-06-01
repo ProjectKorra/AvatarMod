@@ -139,6 +139,12 @@ avatar.ability.wave.lvl4_1=Tsunami ;; Much larger and affects creatures on land
 avatar.ability.wave.lvl4_2=Force wave ;; Very fast waves
 
 avatar.ability.water_bubble=Water Bubble
+avatar.ability.water_bubble.lvl1=Short-ranged water bubble, water dries up after impact
+avatar.ability.water_bubble.lvl2=Throw the bubble much farther
+avatar.ability.water_bubble.lvl3=Bubble creates permanent water source on landing
+avatar.ability.water_bubble.lvl4_1=Throw water bubble very far
+avatar.ability.water_bubble.lvl4_2=Doesn't use up water to create bubble - infinite water
+
 avatar.ability.water_skate=Water Skate
 
 avatar.ability.air_gust=Air Gust
