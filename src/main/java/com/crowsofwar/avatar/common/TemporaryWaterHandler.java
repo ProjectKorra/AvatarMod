@@ -47,6 +47,7 @@ public class TemporaryWaterHandler {
 		if (e.phase == Phase.START && e.side == Side.SERVER) {
 			
 			World world = e.world;
+			System.out.println(world.provider.getDimension());
 			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 			
 			List<TemporaryWaterLocation> twls = wd.geTemporaryWaterLocations();
@@ -56,11 +57,14 @@ public class TemporaryWaterHandler {
 				
 				TemporaryWaterLocation twl = iterator.next();
 				
+				System.out.println("twl @" + twl.getPos());
 				twl.decrementTicks();
 				if (twl.getTicks() <= 0) {
 					BlockPos pos = twl.getPos();
 					if (world.getBlockState(pos).getBlock() == Blocks.WATER) {
-						world.setBlockToAir(pos);
+						// world.setBlockToAir(pos);
+						world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+						System.out.println("REMOVE");
 					}
 					
 					iterator.remove();

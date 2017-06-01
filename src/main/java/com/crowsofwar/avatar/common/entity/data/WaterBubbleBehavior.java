@@ -126,12 +126,14 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			entity.velocity().add(0, -9.81 / 10, 0);
 			if (entity.isCollided) {
 				
-				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
+				IBlockState state = Blocks.WATER.getDefaultState();
 				
 				if (entity.worldObj.getBlockState(entity.getPosition()) == state) {
-					entity.worldObj.setBlockToAir(entity.getPosition());
-					entity.setDead();
+					// entity.worldObj.setBlockToAir(entity.getPosition());
+					// entity.setDead();
 				} else {
+					
+					System.out.println("AAA");
 					
 					if (!entity.isSourceBlock()) {
 						// state = state.withProperty(BlockLiquid.LEVEL, 1);
@@ -140,9 +142,11 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 					// entity.worldObj.setBlockState(entity.getPosition(),
 					// state, 3);
 					if (!entity.worldObj.isRemote) {
+						entity.worldObj.setBlockState(entity.getPosition(), state, 3);
 						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.worldObj);
 						wd.geTemporaryWaterLocations()
 								.add(new TemporaryWaterLocation(wd, entity.getPosition(), 5));
+						entity.setDead();
 					}
 					
 				}
