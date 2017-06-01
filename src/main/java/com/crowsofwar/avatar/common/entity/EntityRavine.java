@@ -62,6 +62,7 @@ public class EntityRavine extends AvatarEntity {
 	
 	private float damageMult;
 	private double maxTravelDistanceSq;
+	private boolean breakBlocks;
 	
 	/**
 	 * @param world
@@ -83,6 +84,10 @@ public class EntityRavine extends AvatarEntity {
 	
 	public void setDistance(double dist) {
 		maxTravelDistanceSq = dist * dist;
+	}
+	
+	public void setBreakBlocks(boolean breakBlocks) {
+		this.breakBlocks = breakBlocks;
 	}
 	
 	@Override
@@ -111,6 +116,8 @@ public class EntityRavine extends AvatarEntity {
 	
 	@Override
 	public void onEntityUpdate() {
+		
+		super.onEntityUpdate();
 		
 		if (initialPosition == null) {
 			initialPosition = position().copy();
@@ -184,6 +191,17 @@ public class EntityRavine extends AvatarEntity {
 			BendingData data = ownerAttr.getOwnerBender().getData();
 			if (data != null) {
 				data.getAbilityData(ABILITY_RAVINE).addXp(SKILLS_CONFIG.ravineHit * attacked);
+			}
+		}
+		
+		if (!worldObj.isRemote && (breakBlocks || true)) {
+			BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
+			System.out.println(last + " vs " + getPosition());
+			if (!last.equals(getPosition())) {
+				worldObj.destroyBlock(last.down(), true);
+				if (rand.nextBoolean()) {
+					worldObj.destroyBlock(last.down(2), true);
+				}
 			}
 		}
 		
