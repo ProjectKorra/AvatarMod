@@ -31,6 +31,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * 
@@ -126,12 +128,23 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			if (entity.isCollided) {
 				
 				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
-				if (!entity.isSourceBlock()) {
-					state.withProperty(BlockLiquid.LEVEL, 1);
-				}
 				
-				entity.worldObj.setBlockState(entity.getPosition(), state, 3);
-				entity.setDead();
+				if (entity.worldObj.getBlockState(entity.getPosition()) == state) {
+					entity.worldObj.setBlockToAir(entity.getPosition());
+					entity.setDead();
+				} else {
+					
+					if (!entity.isSourceBlock()) {
+						// state = state.withProperty(BlockLiquid.LEVEL, 1);
+					}
+					
+					entity.worldObj.setBlockState(entity.getPosition(), state, 3);
+					for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+						BlockPos pos = entity.getPosition().offset(facing);
+						entity.worldObj.setBlockState(pos, state.withProperty(BlockLiquid.LEVEL, 1));
+					}
+					
+				}
 				
 			}
 			return this;
