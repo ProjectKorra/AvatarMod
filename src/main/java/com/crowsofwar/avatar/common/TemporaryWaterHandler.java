@@ -22,6 +22,7 @@ import java.util.List;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.TemporaryWaterLocation;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -62,7 +63,8 @@ public class TemporaryWaterHandler {
 					twl.decrementTicks();
 					if (twl.getTicks() <= 0) {
 						BlockPos pos = twl.getPos();
-						if (world.getBlockState(pos).getBlock() == Blocks.FLOWING_WATER) {
+						Block block = world.getBlockState(pos).getBlock();
+						if (block == Blocks.FLOWING_WATER || block == Blocks.WATER) {
 							// world.setBlockToAir(pos);
 							world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 							System.out.println("REMOVE");

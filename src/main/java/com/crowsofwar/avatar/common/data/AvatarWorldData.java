@@ -114,7 +114,7 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	}
 	
 	public void addTemporaryWaterLocation(BlockPos pos) {
-		temporaryWater.add(new TemporaryWaterLocation(this, pos, getWorld().provider.getDimension(), 5));
+		temporaryWater.add(new TemporaryWaterLocation(this, pos, getWorld().provider.getDimension(), 15));
 	}
 	
 }
