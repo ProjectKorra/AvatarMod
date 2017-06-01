@@ -61,6 +61,7 @@ public class EntityRavine extends AvatarEntity {
 	private final OwnerAttribute ownerAttr;
 	
 	private float damageMult;
+	private double maxTravelDistanceSq;
 	
 	/**
 	 * @param world
@@ -78,6 +79,10 @@ public class EntityRavine extends AvatarEntity {
 	
 	public void setDamageMult(float mult) {
 		this.damageMult = mult;
+	}
+	
+	public void setDistance(double dist) {
+		maxTravelDistanceSq = dist * dist;
 	}
 	
 	@Override
@@ -117,7 +122,7 @@ public class EntityRavine extends AvatarEntity {
 		Vector nowPos = position.add(velocity.times(0.05));
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
-		if (getSqrDistanceTravelled() > 100) {
+		if (getSqrDistanceTravelled() > maxTravelDistanceSq) {
 			setDead();
 		}
 		

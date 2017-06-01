@@ -54,13 +54,14 @@ public class AbilityRavine extends EarthAbility {
 			
 			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 			
-			double mult = ctx.getLevel() >= 2 ? 14 : 8;
+			double mult = ctx.getLevel() >= 1 ? 14 : 8;
 			
 			EntityRavine ravine = new EntityRavine(world);
 			ravine.setOwner(entity);
 			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
 			ravine.velocity().set(look.times(mult));
 			ravine.setDamageMult(.75f + xp / 100);
+			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			world.spawnEntityInWorld(ravine);
 			
 		}
