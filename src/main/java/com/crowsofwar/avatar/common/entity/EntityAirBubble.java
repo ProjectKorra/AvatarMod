@@ -125,6 +125,9 @@ public class EntityAirBubble extends AvatarEntity {
 		super.onUpdate();
 		
 		EntityLivingBase ownerEnt = getOwner();
+		if (ownerEnt == null) {
+			setDead();
+		}
 		if (ownerEnt != null) {
 			
 			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
