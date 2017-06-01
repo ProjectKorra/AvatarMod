@@ -194,7 +194,7 @@ public class EntityRavine extends AvatarEntity {
 			}
 		}
 		
-		if (!worldObj.isRemote && (breakBlocks || true)) {
+		if (!worldObj.isRemote && breakBlocks) {
 			BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
 			if (!last.equals(getPosition())) {
 				
