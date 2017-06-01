@@ -47,7 +47,7 @@ public class AbilityRavine extends EarthAbility {
 		
 		float chi = STATS_CONFIG.chiRavine;
 		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-			chi *= 2;
+			chi *= 1.5f;
 		}
 		
 		if (ctx.consumeChi(chi)) {
