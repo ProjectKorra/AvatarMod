@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TemporaryWaterLocation;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -128,27 +127,16 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 				
 				IBlockState state = Blocks.WATER.getDefaultState();
 				
-				if (entity.worldObj.getBlockState(entity.getPosition()) == state) {
-					// entity.worldObj.setBlockToAir(entity.getPosition());
-					// entity.setDead();
-				} else {
-					
-					System.out.println("AAA");
-					
-					if (!entity.isSourceBlock()) {
-						// state = state.withProperty(BlockLiquid.LEVEL, 1);
-					}
-					
-					// entity.worldObj.setBlockState(entity.getPosition(),
-					// state, 3);
-					if (!entity.worldObj.isRemote) {
-						entity.worldObj.setBlockState(entity.getPosition(), state, 3);
-						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.worldObj);
-						wd.geTemporaryWaterLocations()
-								.add(new TemporaryWaterLocation(wd, entity.getPosition(), 5));
-						entity.setDead();
-					}
-					
+				System.out.println("AAA");
+				
+				if (!entity.isSourceBlock()) {
+				}
+				
+				if (!entity.worldObj.isRemote) {
+					entity.worldObj.setBlockState(entity.getPosition(), state, 3);
+					AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.worldObj);
+					wd.addTemporaryWaterLocation(entity.getPosition());
+					entity.setDead();
 				}
 				
 			}

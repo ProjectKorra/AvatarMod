@@ -27,11 +27,13 @@ public class TemporaryWaterLocation {
 	
 	private final AvatarWorldData data;
 	private final BlockPos pos;
+	private final int dimension;
 	private int ticks;
 	
-	public TemporaryWaterLocation(AvatarWorldData data, BlockPos pos, int ticks) {
+	public TemporaryWaterLocation(AvatarWorldData data, BlockPos pos, int dimension, int ticks) {
 		this.data = data;
 		this.pos = pos;
+		this.dimension = dimension;
 		this.ticks = ticks;
 	}
 	
@@ -41,6 +43,10 @@ public class TemporaryWaterLocation {
 	
 	public BlockPos getPos() {
 		return pos;
+	}
+	
+	public int getDimension() {
+		return dimension;
 	}
 	
 	public int getTicks() {

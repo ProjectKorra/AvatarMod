@@ -73,7 +73,7 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 		AvatarUtils.readList(temporaryWater, c -> {
 			
 			BlockPos pos = new BlockPos(c.getInteger("x"), c.getInteger("y"), c.getInteger("z"));
-			return new TemporaryWaterLocation(this, pos, c.getInteger("Ticks"));
+			return new TemporaryWaterLocation(this, pos, c.getInteger("Dimension"), c.getInteger("Ticks"));
 			
 		}, nbt, "TemporaryWater");
 		
@@ -96,6 +96,7 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 			c.setInteger("y", water.getPos().getY());
 			c.setInteger("z", water.getPos().getZ());
 			c.setInteger("Ticks", water.getTicks());
+			c.setInteger("Dimension", water.getDimension());
 		}, nbt, "TemporaryWater");
 		return nbt;
 	}
@@ -110,6 +111,10 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
 	public List<TemporaryWaterLocation> geTemporaryWaterLocations() {
 		return temporaryWater;
+	}
+	
+	public void addTemporaryWaterLocation(BlockPos pos) {
+		temporaryWater.add(new TemporaryWaterLocation(this, pos, getWorld().provider.getDimension(), 5));
 	}
 	
 }
