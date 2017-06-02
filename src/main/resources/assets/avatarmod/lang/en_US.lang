@@ -152,6 +152,11 @@ avatar.ability.water_bubble.lvl4_1=Throw water bubble very far
 avatar.ability.water_bubble.lvl4_2=Doesn't use up water to create bubble - infinite water
 
 avatar.ability.water_skate=Water Skate
+avatar.ability.water_skate.lvl1=Slip across the water, can't use abilities
+avatar.ability.water_skate.lvl2=Can use abilities while skating
+avatar.ability.water_skate.lvl3=Much faster
+avatar.ability.water_skate.lvl4_1=Balanced skating ;; Can skate even on flowing water
+avatar.ability.water_skate.lvl4_2=Watery impact ;; Smash the ground after jumping
 
 avatar.ability.air_gust=Air Gust
 avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
