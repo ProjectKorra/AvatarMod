@@ -84,6 +84,7 @@ avatar.ability.pickup_block.lvl4_1=Blocky boomerang ;; Block comes back after su
 avatar.ability.pickup_block.lvl4_2=Large impact ;; 1/2 chance to create an explosion on landing
 
 avatar.ability.ravine=Ravine
+avatar.ability.ravine.desc=Create a powerful yet small fissure in the ground. Only works on level ground and earth, but can do plenty of damage.
 avatar.ability.ravine.lvl1=Slow, basic ravine
 avatar.ability.ravine.lvl2=Faster speed
 avatar.ability.ravine.lvl3=Ravine travels farther unless there is an obstacle
@@ -91,6 +92,7 @@ avatar.ability.ravine.lvl4_1=Fissure ;; Destroys blocks under it, hit multiple e
 avatar.ability.ravine.lvl4_2=Shaking earth ;; Chance to knock armor and weapons off hit enemies
 
 avatar.ability.earth_wall=Wall
+avatar.ability.earth_wall.desc=Raise a protective barrier in front of yourself. It can block incoming projectiles and mobs.
 avatar.ability.earth_wall.lvl1=Summon a small wall
 avatar.ability.earth_wall.lvl2=Create a larger wall
 avatar.ability.earth_wall.lvl3=Create a larger wall
@@ -115,8 +117,9 @@ avatar.ability.light_fire.lvl4_1=Flame wall ;; Create a line of fire in the dire
 avatar.ability.light_fire.lvl4_2=Wide range ;; Light nearby blocks on fire as well
 
 avatar.ability.fire_arc=Fire Arc
-avatar.ability.flamethrower=Flamethrower
 
+avatar.ability.flamethrower=Flamethrower
+avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
 avatar.ability.flamethrower.lvl1=Attack within a short range
 avatar.ability.flamethrower.lvl2=Nearly twice as many flames; but more chi
 avatar.ability.flamethrower.lvl3=Longer range, more precise
