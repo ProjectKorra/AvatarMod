@@ -28,6 +28,7 @@ import static net.minecraft.init.Blocks.WATER;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -38,6 +39,7 @@ import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -86,7 +88,7 @@ public class WaterSkateHandler extends TickHandler {
 	private void tryStartSkating(BendingData data, EntityLivingBase player) {
 		
 		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
-			if (shouldSkate(player)) {
+			if (shouldSkate(player, data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE))) {
 				data.removeStatusControl(SKATING_START);
 				data.addStatusControl(SKATING_JUMP);
 			}
@@ -105,7 +107,7 @@ public class WaterSkateHandler extends TickHandler {
 		World world = player.worldObj;
 		int yPos = getSurfacePos(player);
 		
-		if (!player.worldObj.isRemote && !shouldSkate(player)) {
+		if (!player.worldObj.isRemote && !shouldSkate(player, abilityData)) {
 			return true;
 		} else {
 			
@@ -182,12 +184,16 @@ public class WaterSkateHandler extends TickHandler {
 	/**
 	 * Determine if the player is in the ideal conditions to water-skate.
 	 */
-	private boolean shouldSkate(EntityLivingBase player) {
+	private boolean shouldSkate(EntityLivingBase player, AbilityData data) {
 		IBlockState below = player.worldObj.getBlockState(new BlockPos(player.getPosition()).down());
 		int surface = getSurfacePos(player);
 		
-		return !player.isSneaking() && (player.isInWater() || below.getBlock() == Blocks.WATER)
-				&& surface != -1 && surface - player.posY <= 3;
+		boolean allowWaterfallSkating = data.isMasterPath(AbilityTreePath.FIRST);
+		boolean inWaterBlock = below.getBlock() == Blocks.WATER
+				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating);
+		
+		return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
+				&& surface - player.posY <= 3;
 		
 	}
 	
