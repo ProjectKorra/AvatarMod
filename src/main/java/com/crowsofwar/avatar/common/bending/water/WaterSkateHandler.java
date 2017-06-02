@@ -123,6 +123,14 @@ public class WaterSkateHandler extends TickHandler {
 				
 				double speed = .4 + abilityData.getXp() * (.3 / 100);
 				
+				if (player.moveForward != 0) {
+					if (player.moveForward < 0) {
+						speed /= 2;
+					} else {
+						speed *= 1.3;
+					}
+				}
+				
 				player.setPosition(player.posX, yPos + .2, player.posZ);
 				Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);
 				Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).mul(speed);
@@ -132,6 +140,11 @@ public class WaterSkateHandler extends TickHandler {
 				targetVelocity.mul(targetWeight);
 				
 				Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().mul(speed);
+				
+				Vector playerMovement = toRectangular(toRadians(player.rotationYaw - 90),
+						toRadians(player.rotationPitch)).mul(player.moveStrafing * 0.02);
+				
+				newVelocity.add(playerMovement);
 				
 				player.motionX = newVelocity.x();
 				player.motionY = 0;
