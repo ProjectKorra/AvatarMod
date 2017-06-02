@@ -121,7 +121,7 @@ public class WaterSkateHandler extends TickHandler {
 					chi.changeAvailableChi(-required);
 				}
 				
-				double targetSpeed = .4 + abilityData.getXp() * (.3 / 100);
+				double targetSpeed = abilityData.getLevel() >= 2 ? 1.2 : 0.8;
 				
 				if (player.moveForward != 0) {
 					if (player.moveForward < 0) {
