@@ -127,6 +127,8 @@ avatar.ability.flamethrower.lvl4_1=Flamestream ;; Extremely long-ranged, concent
 avatar.ability.flamethrower.lvl4_2=The world will burn!! ;; Unfocused flames that create fires everywhere
 
 avatar.ability.fireball=Fireball
+avatar.ability.fireball.desc=Create a glowing orb of flame. It makes a firey explosion on impact.
+avatar.ability.fireball.lvl1=Create a basic fireball
 avatar.ability.fireball.lvl2=Faster when thrown
 avatar.ability.fireball.lvl3=Tons more damage upon direct hit
 avatar.ability.fireball.lvl4_1=Focused explosion ;; Can sometimes destroy obsidian
@@ -141,6 +143,7 @@ avatar.ability.water_arc.lvl4_1=Boomerang ;; Comes back to you if you hit a targ
 avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thrown, slower
 
 avatar.ability.wave=Wave
+avatar.ability.wave.desc=Summon a wave of water to destroy your enemies. Only works when they are in water.
 avatar.ability.wave.lvl1=Slow wave to drown enemies
 avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
@@ -148,6 +151,7 @@ avatar.ability.wave.lvl4_1=Tsunami ;; Much larger and affects creatures on land
 avatar.ability.wave.lvl4_2=Force wave ;; Very fast waves
 
 avatar.ability.water_bubble=Water Bubble
+avatar.ability.water_bubble.desc=Suspend and transport a bubble of water. Can be used like a long-range bucket.
 avatar.ability.water_bubble.lvl1=Short-ranged water bubble, water dries up after impact
 avatar.ability.water_bubble.lvl2=Throw the bubble much farther
 avatar.ability.water_bubble.lvl3=Bubble creates permanent water source on landing
@@ -155,6 +159,7 @@ avatar.ability.water_bubble.lvl4_1=Throw water bubble very far
 avatar.ability.water_bubble.lvl4_2=Doesn't use up water to create bubble - infinite water
 
 avatar.ability.water_skate=Water Skate
+avatar.ability.water_skate.desc=Run on the surface of water. Useful as an evasive ability, or just to get around.
 avatar.ability.water_skate.lvl1=Slip across the water, can't use abilities
 avatar.ability.water_skate.lvl2=Can use abilities while skating
 avatar.ability.water_skate.lvl3=Much faster
