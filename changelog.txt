@@ -19,6 +19,8 @@ AV2 Changelog :: version a4.0
 * Option in cosmetic.yml to use vanilla instead of avatar particles
 * New chi bar textures from MadWrist
 * Chi bar is semitransparent (configurable in cosmetic.yml)
+* More realistic water-skate movement; can control with wasd
+* Water skating is quieter
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs
