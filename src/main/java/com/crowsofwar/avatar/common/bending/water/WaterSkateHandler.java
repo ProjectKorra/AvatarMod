@@ -154,9 +154,9 @@ public class WaterSkateHandler extends TickHandler {
 				player.motionY = 0;
 				player.motionZ = newVelocity.z();
 				
-				if (player.ticksExisted % 3 == 0) {
+				if (player.ticksExisted % 5 == 0) {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
-							SoundCategory.PLAYERS, 1, 1);
+							SoundCategory.PLAYERS, 0.4f, 2f);
 					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 2, 4,
 							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
 				}
