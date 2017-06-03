@@ -41,6 +41,9 @@ public class ConfigClient {
 	public float chiBarAlpha = 0.5f;
 	
 	@Load
+	public float bendingCycleAlpha = 0.5f;
+	
+	@Load
 	public boolean useCustomParticles = true;
 	
 	@Load

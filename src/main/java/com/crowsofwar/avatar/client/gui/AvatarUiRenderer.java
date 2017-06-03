@@ -213,14 +213,15 @@ public class AvatarUiRenderer extends Gui {
 	}
 	
 	private void renderActiveBending(ScaledResolution res) {
-		GlStateManager.pushMatrix();
 		
 		BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		
 		if (data.getActiveBending() != null) {
 			
+			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha);
 			drawBendingIcon(0, 0, data.getActiveBending());
 			
+			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
 			List<BendingController> allBending = data.getAllBending();
 			
 			// Draw next
@@ -247,7 +248,6 @@ public class AvatarUiRenderer extends Gui {
 			
 		}
 		
-		GlStateManager.popMatrix();
 	}
 	
 	private void drawBendingIcon(int xOff, int yOff, BendingController controller) {
