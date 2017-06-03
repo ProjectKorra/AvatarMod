@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.client;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
-import static com.crowsofwar.avatar.common.bending.BendingManager.getBending;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
@@ -38,7 +37,6 @@ import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
@@ -96,21 +94,14 @@ public class ClientInput implements IControlsHandler {
 		keybindings = new HashMap();
 		
 		keyboardBending = new ArrayList<>();
-		addBendingButton(BendingType.EARTHBENDING, Keyboard.KEY_Z);
-		addBendingButton(BendingType.FIREBENDING, Keyboard.KEY_X);
-		addBendingButton(BendingType.WATERBENDING, Keyboard.KEY_C);
-		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_G);
+		addKeybinding("Bend", Keyboard.KEY_X, "main");
+		addKeybinding("BendingCycleLeft", Keyboard.KEY_Z, "main");
+		addKeybinding("BendingCycleRight", Keyboard.KEY_C, "main");
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
 		addKeybinding("TransferBison", Keyboard.KEY_L, "main");
 		
 		this.wasAbilityDown = new boolean[BendingManager.allAbilities().size()];
 		
-	}
-	
-	private void addBendingButton(BendingType id, int keycode) {
-		BendingController controller = getBending(id);
-		addKeybinding(controller.getRadialMenu().getKey(), keycode, "main");
-		keyboardBending.add(controller);
 	}
 	
 	private KeyBinding addKeybinding(String name, int key, String cat) {
