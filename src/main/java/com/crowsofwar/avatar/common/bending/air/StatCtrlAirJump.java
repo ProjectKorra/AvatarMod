@@ -38,8 +38,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -58,12 +60,20 @@ public class StatCtrlAirJump extends StatusControl {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+		World world = ctx.getWorld();
 		
 		AbilityData abilityData = data.getAbilityData(ABILITY_AIR_JUMP);
 		boolean allowDoubleJump = abilityData.getLevel() == 3
 				&& abilityData.getPath() == AbilityTreePath.FIRST;
 		
-		if (entity.onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
+		System.out.println(entity.onGround);
+		
+		BlockPos pos = entity.getPosition().add(0, -0.2, 0);
+		boolean onGround = world.isSideSolid(pos, EnumFacing.DOWN);
+		
+		if (onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
+			
+			System.out.println(5);
 			
 			float xp = 0;
 			if (data != null) {
@@ -77,7 +87,7 @@ public class StatCtrlAirJump extends StatusControl {
 			Vector velocity = rotations.toRectangular();
 			velocity.setY(Math.pow(velocity.y(), .1));
 			velocity.mul(1 + xp / 250.0);
-			if (!entity.onGround) {
+			if (!onGround) {
 				velocity.mul(0.6);
 				entity.motionX = 0;
 				entity.motionY = 0;
