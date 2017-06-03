@@ -33,6 +33,7 @@ AV2 Changelog :: version a4.0
 > Allow rebinding of jump key on airjump
 > Fix can't throw fireball on a server
 > Fix air bubble only protecting against projectiles
+> Ravine can only be used on non-bendable blocks
 
 - Removed progression points
 - Internal: removed bending states

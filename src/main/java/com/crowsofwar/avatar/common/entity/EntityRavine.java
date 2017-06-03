@@ -24,6 +24,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
@@ -33,6 +34,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -144,12 +146,16 @@ public class EntityRavine extends AvatarEntity {
 		
 		BlockPos above = getPosition().offset(EnumFacing.UP);
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		Block belowBlock = worldObj.getBlockState(below).getBlock();
 		
 		if (ticksExisted % 3 == 0) worldObj.playSound(posX, posY, posZ,
 				worldObj.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 				SoundCategory.PLAYERS, 1, 1, false);
 		
 		if (!worldObj.getBlockState(below).isNormalCube()) {
+			setDead();
+		}
+		if (!worldObj.isRemote && ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
 			setDead();
 		}
 		
