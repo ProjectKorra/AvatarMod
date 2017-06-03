@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.client;
 
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
@@ -49,6 +52,7 @@ import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
+import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
@@ -80,6 +84,7 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
@@ -97,6 +102,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
 	private boolean displayedMainMenu;
+	private List<KeyBinding> allKeybindings;
 	
 	@Override
 	public void preInit() {
@@ -172,6 +178,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 		pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
 		
+		initAllKeybindings();
+		
 	}
 	
 	@Override
@@ -223,6 +231,40 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			mc.displayGuiScreen(screen);
 			e.setGui(screen);
 			displayedMainMenu = true;
+		}
+	}
+	
+	@Override
+	public KeybindingWrapper createKeybindWrapper(String keybindName) {
+		
+		KeyBinding kb = null;
+		for (KeyBinding candidate : allKeybindings) {
+			if (candidate.getKeyDescription().equals(keybindName)) {
+				kb = candidate;
+				break;
+			}
+		}
+		
+		return kb == null ? new KeybindingWrapper() : new ClientKeybindWrapper(kb);
+		
+	}
+	
+	/**
+	 * Finds all keybindings list via reflection. Performance-wise this is ok
+	 * since only supposed to be called once, after keybindings are registered
+	 */
+	private void initAllKeybindings() {
+		try {
+			
+			Field field = KeyBinding.class.getFields()[0];
+			field.setAccessible(true);
+			List<KeyBinding> list = (List<KeyBinding>) field.get(null);
+			this.allKeybindings = list;
+			
+		} catch (Exception ex) {
+			AvatarLog.error(
+					"Could not load all keybindings list by using reflection. Will probably have serious problems",
+					ex);
 		}
 	}
 	

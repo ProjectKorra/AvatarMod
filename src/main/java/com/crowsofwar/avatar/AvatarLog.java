@@ -35,6 +35,10 @@ public class AvatarLog {
 		log.error("[Error] " + s);
 	}
 	
+	public static void error(String s, Throwable t) {
+		log.error("[Error] " + s, t);
+	}
+	
 	/**
 	 * @deprecated Use {@link #warn(WarningType, String)}.
 	 */

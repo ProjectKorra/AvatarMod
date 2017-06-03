@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.server;
 
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
+import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
@@ -75,6 +76,11 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	@Override
 	public int getParticleAmount() {
 		return 0;
+	}
+	
+	@Override
+	public KeybindingWrapper createKeybindWrapper(String keybindName) {
+		return new KeybindingWrapper();
 	}
 	
 }

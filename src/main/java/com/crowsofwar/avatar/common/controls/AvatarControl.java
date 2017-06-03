@@ -21,8 +21,6 @@ import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.AvatarMod;
 
-import net.minecraft.client.settings.KeyBinding;
-
 /**
  * Represents all controls needed to access by AvatarMod. This includes:
  * <ul>
@@ -35,7 +33,8 @@ import net.minecraft.client.settings.KeyBinding;
 public class AvatarControl {
 	
 	// @formatter:off
-	public static AvatarControl KEY_EARTHBENDING,
+	public static AvatarControl
+		KEY_EARTHBENDING,
 		KEY_FIREBENDING,
 		KEY_WATERBENDING,
 		KEY_AIRBENDING,
@@ -60,15 +59,13 @@ public class AvatarControl {
 	}
 	
 	private final String name;
-	private KeyBinding kb;
+	private KeybindingWrapper kb;
 	
-	private AvatarControl(String name) {
+	private AvatarControl(String name, boolean keybinding) {
 		this.name = name;
-	}
-	
-	private AvatarControl(KeyBinding kb) {
-		this.name = kb.getKeyDescription();
-		this.kb = kb;
+		if (keybinding) {
+			kb = AvatarMod.proxy.createKeybindWrapper(name);
+		}
 	}
 	
 	/**
@@ -82,7 +79,7 @@ public class AvatarControl {
 	 * Get the keybinding for this control. Returns null for controls that aren't linked to a keybinding.
 	 */
 	@Nullable
-	public KeyBinding getKeybinding() {
+	public KeybindingWrapper getKeybinding() {
 		return kb;
 	}
 	
