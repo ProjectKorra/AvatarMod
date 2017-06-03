@@ -167,7 +167,7 @@ public class ClientInput implements IControlsHandler {
 		for (BendingController controller : keyboardBending) {
 			openBendingMenu(controller);
 		}
-		if (isControlPressed(AvatarControl.KEY_SKILLS)) {
+		if (AvatarControl.KEY_SKILLS.isPressed()) {
 			BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 			List<BendingController> controllers = data.getAllBending();
 			if (controllers.isEmpty()) {
@@ -176,7 +176,7 @@ public class ClientInput implements IControlsHandler {
 				AvatarMod.network.sendToServer(new PacketSSkillsMenu(controllers.get(0).getType()));
 			}
 		}
-		if (isControlPressed(AvatarControl.KEY_TRANSFER_BISON)) {
+		if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {
 			AvatarMod.network.sendToServer(new PacketSConfirmTransfer());
 		}
 		
@@ -281,7 +281,7 @@ public class ClientInput implements IControlsHandler {
 		List<AvatarControl> list = new ArrayList<>();
 		
 		for (AvatarControl control : AvatarControl.ALL_CONTROLS) {
-			if (isControlPressed(control)) {
+			if (control.isPressed()) {
 				list.add(control);
 			}
 		}

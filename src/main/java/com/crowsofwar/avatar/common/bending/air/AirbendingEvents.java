@@ -57,7 +57,7 @@ public class AirbendingEvents {
 	private void tick(EntityPlayer player, World world, AvatarPlayerData data) {
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
 				&& !player.isCollidedVertically && data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
-			if (AvatarMod.proxy.getKeyHandler().isControlPressed(CONTROL_SPACE_DOWN)) {
+			if (CONTROL_SPACE_DOWN.isPressed()) {
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
 		}
@@ -87,13 +87,15 @@ public class AirbendingEvents {
 			BendingData data = Bender.create(inBubble).getData();
 			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 				
-				List<EntityAirBubble> entities = inBubble.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
-						inBubble.getEntityBoundingBox(), bubble -> bubble.getOwner() == inBubble);
+				List<EntityAirBubble> entities = inBubble.worldObj.getEntitiesWithinAABB(
+						EntityAirBubble.class, inBubble.getEntityBoundingBox(),
+						bubble -> bubble.getOwner() == inBubble);
 				for (EntityAirBubble bubble : entities) {
 					
 					DamageSource source = e.getSource();
 					Entity sourceEntity = source.getEntity();
-					if (sourceEntity != null && (sourceEntity instanceof AvatarEntity || sourceEntity instanceof EntityArrow)) {
+					if (sourceEntity != null && (sourceEntity instanceof AvatarEntity
+							|| sourceEntity instanceof EntityArrow)) {
 						sourceEntity.setDead();
 						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
 						bubble.setHealth(bubble.getHealth() - e.getAmount());
