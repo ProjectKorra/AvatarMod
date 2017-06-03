@@ -7,9 +7,9 @@ avatar.ThrowBlock=Throw Block
 avatar.ToggleBending=Pick up block
 
 avatar.RadialMenu=Earthbending
-avatar.Firebend=Firebending
-avatar.Waterbend=Waterbending
-avatar.Airbend=Airbending
+avatar.Bend=Use Bending
+avatar.BendingCycleLeft=Cycle Bending Left
+avatar.BendingCycleRight=Cycle Bending Right
 avatar.Skills=Skills Menu
 avatar.TransferBison=Confirm Bison Transfer
 

@@ -39,10 +39,9 @@ public class AvatarControl {
 	
 	// @formatter:off
 	public static AvatarControl
-		KEY_EARTHBENDING,
-		KEY_FIREBENDING,
-		KEY_WATERBENDING,
-		KEY_AIRBENDING,
+		KEY_USE_BENDING,
+		KEY_BENDING_CYCLE_LEFT,
+		KEY_BENDING_CYCLE_RIGHT,
 		KEY_SKILLS,
 		KEY_TRANSFER_BISON,
 		CONTROL_LEFT_CLICK,
@@ -62,10 +61,9 @@ public class AvatarControl {
 	
 	public static void initControls() {
 		ALL_CONTROLS = new ArrayList<>();
-		KEY_EARTHBENDING = new AvatarControl("avatar.Earthbend", true);
-		KEY_FIREBENDING = new AvatarControl("avatar.Firebend", true);
-		KEY_WATERBENDING = new AvatarControl("avatar.Waterbend", true);
-		KEY_AIRBENDING = new AvatarControl("avatar.Airbend", true);
+		KEY_USE_BENDING = new AvatarControl("avatar.Bend", true);
+		KEY_BENDING_CYCLE_LEFT = new AvatarControl("avatar.BendingCycleLeft", true);
+		KEY_BENDING_CYCLE_RIGHT = new AvatarControl("avatar.BendingCycleRight", true);
 		KEY_SKILLS = new AvatarControl("avatar.Skills", true);
 		KEY_TRANSFER_BISON = new AvatarControl("avatar.TransferBison", true);
 		CONTROL_LEFT_CLICK = new AvatarControl("LeftClick", false);
