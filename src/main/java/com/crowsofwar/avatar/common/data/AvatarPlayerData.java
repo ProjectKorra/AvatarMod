@@ -42,9 +42,9 @@ import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherServer;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherSided;
 
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -62,7 +62,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
 		
-		boolean isClient = player instanceof AbstractClientPlayer;
+		boolean isClient = !(player instanceof EntityPlayerMP);
 		
 		bendingData = new AbstractBendingData() {
 			
