@@ -17,6 +17,9 @@
 
 package com.crowsofwar.avatar.common.controls;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.AvatarMod;
@@ -31,6 +34,8 @@ import com.crowsofwar.avatar.AvatarMod;
  * 
  */
 public class AvatarControl {
+	
+	public static List<AvatarControl> ALL_CONTROLS;
 	
 	// @formatter:off
 	public static AvatarControl
@@ -55,12 +60,33 @@ public class AvatarControl {
 	// @formatter:off
 	
 	public static void initControls() {
-		
+		ALL_CONTROLS = new ArrayList<>();
+		KEY_EARTHBENDING = new AvatarControl("avatar.Earthbend", true);
+		KEY_FIREBENDING = new AvatarControl("avatar.Firebend", true);
+		KEY_WATERBENDING = new AvatarControl("avatar.Waterbend", true);
+		KEY_AIRBENDING = new AvatarControl("avatar.Airbend", true);
+		KEY_SKILLS = new AvatarControl("avatar.Skills", true);
+		KEY_TRANSFER_BISON = new AvatarControl("avatar.TransferBison", true);
+		CONTROL_LEFT_CLICK = new AvatarControl("LeftClick", false);
+		CONTROL_RIGHT_CLICK = new AvatarControl("RightClick", false);
+		CONTROL_MIDDLE_CLICK = new AvatarControl("MiddleClick", false);
+		CONTROL_LEFT_CLICK_DOWN = new AvatarControl("LeftClickDown", false);
+		CONTROL_RIGHT_CLICK_DOWN = new AvatarControl("RightClickDown", false);
+		CONTROL_MIDDLE_CLICK_DOWN = new AvatarControl("MiddleClickDown", false);
+		CONTROL_SPACE = new AvatarControl("Space", false);
+		CONTROL_SPACE_DOWN = new AvatarControl("SpaceDown", false);
+		CONTROL_LEFT_CLICK_UP = new AvatarControl("LeftClickUp", false);
+		CONTROL_RIGHT_CLICK_UP = new AvatarControl("RightClickUp", false);
+		CONTROL_MIDDLE_CLICK_UP = new AvatarControl("MiddleClickUp", false);
+		CONTROL_SHIFT = new AvatarControl("Shift", false);
 	}
 	
 	private final String name;
 	private KeybindingWrapper kb;
 	
+	/**
+	 * Creates a new AvatarControl. If the parameter <code>keybinding</code> is true, then initializes to the keybinding with the given name.
+	 */
 	private AvatarControl(String name, boolean keybinding) {
 		this.name = name;
 		if (keybinding) {
