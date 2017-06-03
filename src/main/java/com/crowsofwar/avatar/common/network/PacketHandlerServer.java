@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -36,6 +37,7 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -428,8 +430,25 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleCycleBending(PacketSCycleBending packet, MessageContext ctx) {
-		// TODO Auto-generated method stub
+		
+		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		BendingData data = Bender.getData(player);
+		
+		List<BendingController> controllers = data.getAllBending();
+		if (controllers.size() > 1) {
+			
+			int index = controllers.indexOf(data.getActiveBending());
+			index += packet.cycleRight() ? 1 : -1;
+			
+			if (index == -1) index = controllers.size() - 1;
+			if (index == controllers.size()) index = 0;
+			
+			data.setActiveBending(controllers.get(index));
+			
+		}
+		
 		return null;
+		
 	}
 	
 	private static class ProcessAbilityRequest {

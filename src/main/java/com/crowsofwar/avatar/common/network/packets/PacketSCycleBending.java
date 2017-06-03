@@ -56,4 +56,8 @@ public class PacketSCycleBending extends AvatarPacket<PacketSCycleBending> {
 		return PacketRedirector::redirectMessage;
 	}
 	
+	public boolean cycleRight() {
+		return right;
+	}
+	
 }
