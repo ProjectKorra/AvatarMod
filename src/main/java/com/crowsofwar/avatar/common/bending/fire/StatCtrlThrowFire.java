@@ -17,8 +17,10 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -51,9 +53,11 @@ public class StatCtrlThrowFire extends StatusControl {
 		
 		if (fire != null) {
 			
+			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC);
+			
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
-			force.mul(10);
+			force.mul(abilityData.getLevel() >= 1 ? 12 : 8);
 			fire.velocity().add(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
 			
