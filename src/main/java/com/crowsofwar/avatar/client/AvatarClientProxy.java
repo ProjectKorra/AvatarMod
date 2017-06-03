@@ -258,7 +258,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private void initAllKeybindings() {
 		try {
 			
-			Field field = KeyBinding.class.getFields()[0];
+			Field field = KeyBinding.class.getDeclaredFields()[0];
 			field.setAccessible(true);
 			List<KeyBinding> list = (List<KeyBinding>) field.get(null);
 			this.allKeybindings = list;

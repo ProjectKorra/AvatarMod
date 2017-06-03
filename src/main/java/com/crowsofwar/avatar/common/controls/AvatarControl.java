@@ -83,15 +83,14 @@ public class AvatarControl {
 	
 	private final String name;
 	private KeybindingWrapper kb;
+	private boolean needsKeybinding;
 	
 	/**
 	 * Creates a new AvatarControl. If the parameter <code>keybinding</code> is true, then initializes to the keybinding with the given name.
 	 */
 	private AvatarControl(String name, boolean keybinding) {
 		this.name = name;
-		if (keybinding) {
-			kb = AvatarMod.proxy.createKeybindWrapper(name);
-		}
+		this.needsKeybinding = keybinding;
 		ALL_CONTROLS.add(this);
 	}
 	
@@ -107,6 +106,9 @@ public class AvatarControl {
 	 */
 	@Nullable
 	public KeybindingWrapper getKeybinding() {
+		if (needsKeybinding && kb == null) {
+			kb = AvatarMod.proxy.createKeybindWrapper(name);
+		}
 		return kb;
 	}
 	
@@ -114,11 +116,11 @@ public class AvatarControl {
 	 * Returns whether this control is linked to a keybinding
 	 */
 	public boolean isKeybinding() {
-		return kb != null;
+		return getKeybinding() != null;
 	}
 	
 	public boolean isPressed() {
-		return isKeybinding() ? kb.isPressed() : AvatarMod.proxy.getKeyHandler().isControlPressed(this);
+		return isKeybinding() ? getKeybinding().isPressed() : AvatarMod.proxy.getKeyHandler().isControlPressed(this);
 	}
 	
 }
