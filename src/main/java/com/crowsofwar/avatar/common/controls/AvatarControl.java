@@ -17,42 +17,38 @@
 
 package com.crowsofwar.avatar.common.controls;
 
+import javax.swing.text.JTextComponent.KeyBinding;
+
 /**
  * A list of all of the control names.
  *
  */
-public enum AvatarControl {
+public class AvatarControl {
 	
-	/** No control is pressed */
-	NONE(""),
-	KEY_EARTHBENDING("RadialMenu"),
-	KEY_FIREBENDING("Firebend"),
-	KEY_WATERBENDING("Waterbend"),
-	KEY_AIRBENDING("Airbend"),
-	KEY_SKILLS("Skills"),
-	KEY_TRANSFER_BISON("TransferBison"),
-	/** Left mouse button is held down */
-	CONTROL_LEFT_CLICK("LeftClick"),
-	/** Right mouse button is held down */
-	CONTROL_RIGHT_CLICK("RightClick"),
-	/** Middle mouse button is held down */
-	CONTROL_MIDDLE_CLICK("MiddleClick"),
-	/** Left mouse button just got pressed */
-	CONTROL_LEFT_CLICK_DOWN("LeftClickDown"),
-	/** Right mouse button just got pressed */
-	CONTROL_RIGHT_CLICK_DOWN("RightClickDown"),
-	/** Middle mouse button just got pressed */
-	CONTROL_MIDDLE_CLICK_DOWN("MiddleClickDown"),
-	/** Space key (not jump) is held */
-	CONTROL_SPACE("Space"),
-	CONTROL_SPACE_DOWN("SpaceDown"),
-	/** Left mouse button was just released */
-	CONTROL_LEFT_CLICK_UP("LeftClickUp"),
-	/** Right mouse button was just released */
-	CONTROL_RIGHT_CLICK_UP("RightClickUp"),
-	/** Middle mouse button was just released */
-	CONTROL_MIDDLE_CLICK_UP("MiddleClickUp"),
-	CONTROL_SHIFT("Shift");
+	// @formatter:off
+	public static AvatarControl KEY_EARTHBENDING,
+		KEY_FIREBENDING,
+		KEY_WATERBENDING,
+		KEY_AIRBENDING,
+		KEY_SKILLS,
+		KEY_TRANSFER_BISON,
+		CONTROL_LEFT_CLICK,
+		CONTROL_RIGHT_CLICK,
+		CONTROL_MIDDLE_CLICK,
+		CONTROL_LEFT_CLICK_DOWN,
+		CONTROL_RIGHT_CLICK_DOWN,
+		CONTROL_MIDDLE_CLICK_DOWN,
+		CONTROL_SPACE,
+		CONTROL_SPACE_DOWN,
+		CONTROL_LEFT_CLICK_UP,
+		CONTROL_RIGHT_CLICK_UP,
+		CONTROL_MIDDLE_CLICK_UP,
+		CONTROL_SHIFT;
+	// @formatter:off
+	
+	public static void initControls() {
+		
+	}
 	
 	private String name;
 	private boolean isKey;
@@ -60,6 +56,10 @@ public enum AvatarControl {
 	private AvatarControl(String name) {
 		this.name = name;
 		this.isKey = name().startsWith("KEY");
+	}
+	
+	private AvatarControl(KeyBinding kb) {
+		
 	}
 	
 	/**
