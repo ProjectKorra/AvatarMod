@@ -100,8 +100,8 @@ public class ClientInput implements IControlsHandler {
 		addBendingButton(BendingType.FIREBENDING, Keyboard.KEY_X);
 		addBendingButton(BendingType.WATERBENDING, Keyboard.KEY_C);
 		addBendingButton(BendingType.AIRBENDING, Keyboard.KEY_G);
-		addKeybinding(AvatarControl.KEY_SKILLS, Keyboard.KEY_K, "main");
-		addKeybinding(AvatarControl.KEY_TRANSFER_BISON, Keyboard.KEY_L, "main");
+		addKeybinding("Skills", Keyboard.KEY_K, "main");
+		addKeybinding("TransferBison", Keyboard.KEY_L, "main");
 		
 		AvatarControl.initControls();
 		
@@ -115,9 +115,9 @@ public class ClientInput implements IControlsHandler {
 		keyboardBending.add(controller);
 	}
 	
-	private KeyBinding addKeybinding(AvatarControl control, int key, String cat) {
-		KeyBinding kb = new KeyBinding("avatar." + control.getName(), key, "avatar.category." + cat);
-		keybindings.put(control.getName(), kb);
+	private KeyBinding addKeybinding(String name, int key, String cat) {
+		KeyBinding kb = new KeyBinding("avatar." + name, key, "avatar.category." + cat);
+		keybindings.put(name, kb);
 		ClientRegistry.registerKeyBinding(kb);
 		return kb;
 		

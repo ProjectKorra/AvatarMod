@@ -17,7 +17,11 @@
 
 package com.crowsofwar.avatar.common.controls;
 
-import javax.swing.text.JTextComponent.KeyBinding;
+import javax.annotation.Nullable;
+
+import com.crowsofwar.avatar.AvatarMod;
+
+import net.minecraft.client.settings.KeyBinding;
 
 /**
  * A list of all of the control names.
@@ -51,15 +55,14 @@ public class AvatarControl {
 	}
 	
 	private String name;
-	private boolean isKey;
+	private KeyBinding kb;
 	
 	private AvatarControl(String name) {
 		this.name = name;
-		this.isKey = name().startsWith("KEY");
 	}
 	
 	private AvatarControl(KeyBinding kb) {
-		
+		this.kb = kb;
 	}
 	
 	/**
@@ -70,35 +73,22 @@ public class AvatarControl {
 	}
 	
 	/**
-	 * Get the Id of this control.
-	 * 
-	 * @see #findFromId(int)
+	 * Get the keybinding for this control. Returns null for controls that aren't linked to a keybinding.
 	 */
-	public int getId() {
-		return ordinal();
+	@Nullable
+	public Keybinding getKeybinding() {
+		return kb;
 	}
 	
 	/**
-	 * Returns whether this control is a keybinding.
+	 * Returns whether this control is linked to a keybinding
 	 */
 	public boolean isKeybinding() {
-		return isKey;
+		return kb != null;
 	}
 	
-	/**
-	 * Find the Avatar control with that Id. If the Id is invalid, throws an
-	 * IllegalArgumentException.
-	 * 
-	 * @param id
-	 *            Id of the control, obtained with {@link #getId()}.
-	 * @return The control with that Id
-	 * @throws IllegalArgumentException
-	 *             If that Id refers to no control.
-	 */
-	public static AvatarControl findFromId(int id) {
-		if (id < 0 || id >= values().length)
-			throw new IllegalArgumentException("AvatarControl Id '" + id + "' is invalid");
-		return values()[id];
+	public boolean isPressed() {
+		return isKeybinding() ? kb.isPressed() : AvatarMod.proxy.isControlPressed(this);
 	}
 	
 }

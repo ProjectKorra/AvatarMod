@@ -24,7 +24,6 @@ import java.awt.Color;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -47,8 +46,7 @@ public class Earthbending extends BendingController {
 		ThemeColor background = new ThemeColor(lightBrown, brown);
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
-		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F),
-				AvatarControl.KEY_EARTHBENDING, this);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F), "Earthbend", this);
 		
 	}
 	
