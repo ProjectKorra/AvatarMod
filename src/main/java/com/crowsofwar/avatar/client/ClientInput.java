@@ -43,6 +43,7 @@ import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
+import com.crowsofwar.avatar.common.network.packets.PacketSCycleBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -154,6 +155,7 @@ public class ClientInput implements IControlsHandler {
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
 		
 		tryOpenBendingMenu();
+		tryCycleBending();
 		
 		if (AvatarControl.KEY_SKILLS.isPressed()) {
 			BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
@@ -199,6 +201,16 @@ public class ClientInput implements IControlsHandler {
 			
 		}
 		
+	}
+	
+	private void tryCycleBending() {
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		if (AvatarControl.KEY_BENDING_CYCLE_LEFT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
+			AvatarMod.network.sendToServer(new PacketSCycleBending(false));
+		}
+		if (AvatarControl.KEY_BENDING_CYCLE_RIGHT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
+			AvatarMod.network.sendToServer(new PacketSCycleBending(true));
+		}
 	}
 	
 	@SubscribeEvent
