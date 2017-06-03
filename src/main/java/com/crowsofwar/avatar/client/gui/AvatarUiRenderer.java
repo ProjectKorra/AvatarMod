@@ -238,7 +238,7 @@ public class AvatarUiRenderer extends Gui {
 			int indexPrevious = allBending.indexOf(data.getActiveBending()) - 1;
 			if (indexPrevious == -1) indexPrevious = allBending.size() - 1;
 			
-			if (allBending.size() > 1) {
+			if (allBending.size() > 2) {
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0, 0, -1);
 				drawBendingIcon(-25, 25, allBending.get(indexPrevious));
