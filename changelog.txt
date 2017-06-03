@@ -31,6 +31,7 @@ AV2 Changelog :: version a4.0
 > Fix water arc breaking when hit a block while under player control
 > Fix airjump and other status controls can be activated while in chat or other GUIs
 > Allow rebinding of jump key on airjump
+> Fix can't throw fireball on a server
 
 - Removed progression points
 - Internal: removed bending states
