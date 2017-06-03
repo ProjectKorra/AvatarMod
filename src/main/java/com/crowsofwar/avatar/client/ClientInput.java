@@ -125,7 +125,6 @@ public class ClientInput implements IControlsHandler {
 	
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
-		if (control == NONE) return false;
 		
 		if (control.isKeybinding()) {
 			String keyName = control.getName();

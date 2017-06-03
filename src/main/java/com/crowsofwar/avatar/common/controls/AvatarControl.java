@@ -24,8 +24,13 @@ import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.client.settings.KeyBinding;
 
 /**
- * A list of all of the control names.
- *
+ * Represents all controls needed to access by AvatarMod. This includes:
+ * <ul>
+ * <li>Keybindings added by AvatarMod
+ * <li>Vanilla keybindings
+ * <li>Special controls from AvatarMod like mouse button up/down
+ * </ul>
+ * 
  */
 public class AvatarControl {
 	
@@ -54,7 +59,7 @@ public class AvatarControl {
 		
 	}
 	
-	private String name;
+	private final String name;
 	private KeyBinding kb;
 	
 	private AvatarControl(String name) {
@@ -62,6 +67,7 @@ public class AvatarControl {
 	}
 	
 	private AvatarControl(KeyBinding kb) {
+		this.name = kb.getKeyDescription();
 		this.kb = kb;
 	}
 	
@@ -76,7 +82,7 @@ public class AvatarControl {
 	 * Get the keybinding for this control. Returns null for controls that aren't linked to a keybinding.
 	 */
 	@Nullable
-	public Keybinding getKeybinding() {
+	public KeyBinding getKeybinding() {
 		return kb;
 	}
 	
@@ -88,7 +94,7 @@ public class AvatarControl {
 	}
 	
 	public boolean isPressed() {
-		return isKeybinding() ? kb.isPressed() : AvatarMod.proxy.isControlPressed(this);
+		return isKeybinding() ? kb.isPressed() : AvatarMod.proxy.getKeyHandler().isControlPressed(this);
 	}
 	
 }
