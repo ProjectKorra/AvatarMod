@@ -40,6 +40,7 @@ public abstract class AbstractBendingData implements BendingData {
 	private final Set<StatusControl> statusControls;
 	private final Map<BendingAbility, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
+	private BendingController activeBending;
 	private Chi chi;
 	private MiscData miscData;
 	
@@ -48,6 +49,7 @@ public abstract class AbstractBendingData implements BendingData {
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
 		tickHandlers = new HashSet<>();
+		activeBending = null;
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
 	}
@@ -130,6 +132,40 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public void clearBending() {
 		bendings.clear();
+	}
+	
+	// ================================================================================
+	// ACTIVE BENDING
+	// ================================================================================
+	
+	@Override
+	public BendingController getActiveBending() {
+		if (!bendings.isEmpty() && activeBending == null) {
+			activeBending = bendings.iterator().next();
+		}
+		if (bendings.isEmpty() && activeBending != null) {
+			activeBending = null;
+		}
+		return activeBending;
+	}
+	
+	@Override
+	public BendingType getActiveBendingType() {
+		BendingController controller = getActiveBending();
+		return controller == null ? null : controller.getType();
+	}
+	
+	@Override
+	public void setActiveBending(BendingController controller) {
+		if (!bendings.isEmpty() && bendings.contains(controller)) {
+			activeBending = controller;
+		}
+	}
+	
+	@Override
+	public void setActiveBendingType(BendingType type) {
+		BendingController controller = BendingManager.getBending(type);
+		setActiveBending(controller);
 	}
 	
 	// ================================================================================

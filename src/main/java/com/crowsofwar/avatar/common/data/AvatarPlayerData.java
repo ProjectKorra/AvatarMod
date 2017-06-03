@@ -54,6 +54,27 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 	
 	private final AbstractBendingData bendingData;
+	
+	@Override
+	public BendingController getActiveBending() {
+		return bendingData.getActiveBending();
+	}
+	
+	@Override
+	public BendingType getActiveBendingType() {
+		return bendingData.getActiveBendingType();
+	}
+	
+	@Override
+	public void setActiveBending(BendingController controller) {
+		bendingData.setActiveBending(controller);
+	}
+	
+	@Override
+	public void setActiveBendingType(BendingType type) {
+		bendingData.setActiveBendingType(type);
+	}
+	
 	/**
 	 * Changed DataCategories since last sent a packet
 	 */

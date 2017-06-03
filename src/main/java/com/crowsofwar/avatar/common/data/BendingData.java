@@ -80,6 +80,32 @@ public interface BendingData {
 	void clearBending();
 	
 	// ================================================================================
+	// ACTIVE BENDING
+	// ================================================================================
+	
+	/**
+	 * Gets the currently in-use bending controller. Null if player has no
+	 * bending
+	 */
+	BendingController getActiveBending();
+	
+	/**
+	 * Gets the type of the in-use bending controller. Null if the player has no
+	 * bending
+	 */
+	BendingType getActiveBendingType();
+	
+	/**
+	 * Set the currently in-use bending. If null, will be rejected
+	 */
+	void setActiveBending(BendingController controller);
+	
+	/**
+	 * Set the currently in-use type. If null, will be rejected
+	 */
+	void setActiveBendingType(BendingType type);
+	
+	// ================================================================================
 	// STATUS CONTROLS
 	// ================================================================================
 	
