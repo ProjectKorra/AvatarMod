@@ -17,8 +17,7 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
@@ -90,11 +89,32 @@ public class AvatarUiRenderer extends Gui {
 		
 		if (data.getActiveBending() != null) {
 			
+			int x = screenWidth() / scaleFactor() - 50;
+			int y = screenHeight() / scaleFactor() - 50;
 			int u = 50 * (data.getActiveBendingType().id() - 1);
 			int v = 137;
 			
 			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-			drawTexturedModalRect(screenWidth() / scaleFactor() - 50, 0, u, v, 50, 50);
+			drawTexturedModalRect(x, y, u, v, 50, 50);
+			
+			List<BendingController> allBending = data.getAllBending();
+			
+			// Draw next
+			int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
+			if (indexNext == allBending.size()) indexNext = 0;
+			
+			if (allBending.size() > 1) {
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(0, 0, -1);
+				int x2 = screenWidth() / scaleFactor() - 75;
+				int y2 = screenHeight() / scaleFactor() - 25;
+				int u2 = 50 * (allBending.get(indexNext).getType().id() - 1);
+				int v2 = 137;
+				drawTexturedModalRect(x2, y2, u2, v2, 50, 50);
+				GlStateManager.popMatrix();
+			}
+			
+			// Draw previous
 			
 		}
 		
