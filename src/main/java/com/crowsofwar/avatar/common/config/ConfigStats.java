@@ -104,6 +104,9 @@ public class ConfigStats {
 	
 	public static void load() {
 		ConfigLoader.load(STATS_CONFIG, "avatar/stats.yml");
+	}
+	
+	public void loadBlocks() {
 		STATS_CONFIG.loadBendableBlocks();
 	}
 	

@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
@@ -224,6 +225,10 @@ public class AvatarMod {
 		
 		EntityRegistry.addSpawn(EntityFirebender.class, 1000, 1, 1, EnumCreatureType.CREATURE, allBiomes);
 		EntityRegistry.addSpawn(EntityAirbender.class, 1000, 1, 1, EnumCreatureType.CREATURE, allBiomes);
+		
+		// Second loading required since other mods blocks might not be
+		// registered
+		STATS_CONFIG.loadBlocks();
 		
 		proxy.init();
 		AvatarCrafting.register();
