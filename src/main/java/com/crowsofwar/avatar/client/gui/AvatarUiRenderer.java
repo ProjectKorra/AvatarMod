@@ -82,56 +82,7 @@ public class AvatarUiRenderer extends Gui {
 		renderStatusControls(resolution);
 		renderChiBar(resolution);
 		renderChiMsg(resolution);
-		
-		GlStateManager.pushMatrix();
-		
-		BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
-		
-		if (data.getActiveBending() != null) {
-			
-			int x = screenWidth() / scaleFactor() - 50;
-			int y = screenHeight() / scaleFactor() - 50;
-			int u = 50 * (data.getActiveBendingType().id() - 1);
-			int v = 137;
-			
-			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-			drawTexturedModalRect(x, y, u, v, 50, 50);
-			
-			List<BendingController> allBending = data.getAllBending();
-			
-			// Draw next
-			int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
-			if (indexNext == allBending.size()) indexNext = 0;
-			
-			if (allBending.size() > 1) {
-				GlStateManager.pushMatrix();
-				GlStateManager.translate(0, 0, -1);
-				int x2 = screenWidth() / scaleFactor() - 75;
-				int y2 = screenHeight() / scaleFactor() - 25;
-				int u2 = 50 * (allBending.get(indexNext).getType().id() - 1);
-				int v2 = 137;
-				drawTexturedModalRect(x2, y2, u2, v2, 50, 50);
-				GlStateManager.popMatrix();
-			}
-			
-			// Draw previous
-			int indexPrevious = allBending.indexOf(data.getActiveBending()) - 1;
-			if (indexPrevious == -1) indexPrevious = allBending.size() - 1;
-			
-			if (allBending.size() > 2) {
-				GlStateManager.pushMatrix();
-				GlStateManager.translate(0, 0, -1);
-				int x2 = screenWidth() / scaleFactor() - 25;
-				int y2 = screenHeight() / scaleFactor() - 25;
-				int u2 = 50 * (allBending.get(indexPrevious).getType().id() - 1);
-				int v2 = 137;
-				drawTexturedModalRect(x2, y2, u2, v2, 50, 50);
-				GlStateManager.popMatrix();
-			}
-			
-		}
-		
-		GlStateManager.popMatrix();
+		renderActiveBending(resolution);
 		
 	}
 	
@@ -259,6 +210,53 @@ public class AvatarUiRenderer extends Gui {
 			
 		}
 		
+	}
+	
+	private void renderActiveBending(ScaledResolution res) {
+		GlStateManager.pushMatrix();
+		
+		BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		
+		if (data.getActiveBending() != null) {
+			
+			drawBendingIcon(0, 0, data.getActiveBending());
+			
+			List<BendingController> allBending = data.getAllBending();
+			
+			// Draw next
+			int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
+			if (indexNext == allBending.size()) indexNext = 0;
+			
+			if (allBending.size() > 1) {
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(0, 0, -1);
+				drawBendingIcon(25, 25, allBending.get(indexNext));
+				GlStateManager.popMatrix();
+			}
+			
+			// Draw previous
+			int indexPrevious = allBending.indexOf(data.getActiveBending()) - 1;
+			if (indexPrevious == -1) indexPrevious = allBending.size() - 1;
+			
+			if (allBending.size() > 1) {
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(0, 0, -1);
+				drawBendingIcon(-25, 25, allBending.get(indexPrevious));
+				GlStateManager.popMatrix();
+			}
+			
+		}
+		
+		GlStateManager.popMatrix();
+	}
+	
+	private void drawBendingIcon(int xOff, int yOff, BendingController controller) {
+		int x = screenWidth() / scaleFactor() - 85 + xOff;
+		int y = screenHeight() / scaleFactor() - 60 + yOff;
+		int u = 50 * (controller.getType().id() - 1);
+		int v = 137;
+		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
+		drawTexturedModalRect(x, y, u, v, 50, 50);
 	}
 	
 	public static void openBendingGui(BendingType bending) {
