@@ -117,6 +117,12 @@ avatar.ability.light_fire.lvl4_1=Flame wall ;; Create a line of fire in the dire
 avatar.ability.light_fire.lvl4_2=Wide range ;; Light nearby blocks on fire as well
 
 avatar.ability.fire_arc=Fire Arc
+avatar.ability.fire_arc.desc=Make a flaming whip of fire and throw it at your enemies.
+avatar.ability.fire_arc.lvl1=Create a fire arc
+avatar.ability.fire_arc.lvl2=Moves faster
+avatar.ability.fire_arc.lvl3=More damage
+avatar.ability.fire_arc.lvl4_1=Large fire ;; Can make even more fire upon landing
+avatar.ability.fire_arc.lvl4_2=Boomerang ;; Comes back upon a successful hit
 
 avatar.ability.flamethrower=Flamethrower
 avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
