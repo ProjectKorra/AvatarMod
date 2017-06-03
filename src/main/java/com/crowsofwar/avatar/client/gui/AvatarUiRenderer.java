@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.client.gui;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
@@ -30,6 +32,7 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 
@@ -80,6 +83,22 @@ public class AvatarUiRenderer extends Gui {
 		renderStatusControls(resolution);
 		renderChiBar(resolution);
 		renderChiMsg(resolution);
+		
+		GlStateManager.pushMatrix();
+		
+		BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		
+		if (data.getActiveBending() != null) {
+			
+			int u = 50 * (data.getActiveBendingType().id() - 1);
+			int v = 137;
+			
+			mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
+			drawTexturedModalRect(screenWidth() / scaleFactor() - 50, 0, u, v, 50, 50);
+			
+		}
+		
+		GlStateManager.popMatrix();
 		
 	}
 	
