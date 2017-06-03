@@ -143,7 +143,7 @@ public class ClientInput implements IControlsHandler {
 	
 	@Override
 	public int getKeyCode(AvatarControl control) {
-		String keyName = control.getName();
+		String keyName = control.getName().substring("avatar.".length());
 		KeyBinding kb = keybindings.get(keyName);
 		if (kb == null) AvatarLog.warn("Key control '" + keyName + "' is undefined");
 		return kb == null ? -1 : kb.getKeyCode();
