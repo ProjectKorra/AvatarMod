@@ -214,8 +214,7 @@ public class AvatarUiRenderer extends Gui {
 		BendingController controller = BendingManager.getBending(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
-		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getControl(),
-				menu.getButtons());
+		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getButtons());
 		instance.mc.setIngameNotInFocus();
 		
 	}

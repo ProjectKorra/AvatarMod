@@ -194,7 +194,7 @@ public class ClientInput implements IControlsHandler {
 	 */
 	private void openBendingMenu(BendingController controller) {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
-		if (controller.getRadialMenu().getControl().isPressed() && !AvatarUiRenderer.hasBendingGui()) {
+		if (AvatarControl.KEY_USE_BENDING.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			
 			if (data.hasBending(controller.getType())) {
 				AvatarUiRenderer.openBendingGui(controller.getType());

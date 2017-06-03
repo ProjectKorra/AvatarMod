@@ -62,7 +62,6 @@ public class RadialMenu extends Gui {
 	public static final float menuScale = 0.36f;
 	
 	private RadialSegment[] segments;
-	private AvatarControl pressing;
 	private BendingAbility[] controls;
 	private MenuTheme theme;
 	private final BendingController controller;
@@ -86,12 +85,10 @@ public class RadialMenu extends Gui {
 	 *            less than 8, then the array is filled with null. The arguments
 	 *            can only be a maximum of 8.
 	 */
-	public RadialMenu(BendingController controller, MenuTheme theme, AvatarControl pressing,
-			BendingAbility... controls) {
+	public RadialMenu(BendingController controller, MenuTheme theme, BendingAbility... controls) {
 		this.controller = controller;
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
-		this.pressing = pressing;
 		this.ticksExisted = 0;
 		
 		if (controls == null) {
@@ -192,7 +189,8 @@ public class RadialMenu extends Gui {
 		
 		ticksExisted++;
 		
-		boolean closeGui = !Keyboard.isKeyDown(proxy.getKeyHandler().getKeyCode(pressing))
+		boolean closeGui = !Keyboard
+				.isKeyDown(proxy.getKeyHandler().getKeyCode(AvatarControl.KEY_USE_BENDING))
 				|| AvatarControl.CONTROL_LEFT_CLICK.isPressed();
 		
 		// Find current mouse over
