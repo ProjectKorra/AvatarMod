@@ -32,6 +32,7 @@ AV2 Changelog :: version a4.0
 > Fix airjump and other status controls can be activated while in chat or other GUIs
 > Allow rebinding of jump key on airjump
 > Fix can't throw fireball on a server
+> Fix air bubble only protecting against projectiles
 
 - Removed progression points
 - Internal: removed bending states
