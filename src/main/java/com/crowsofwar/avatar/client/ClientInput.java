@@ -162,9 +162,8 @@ public class ClientInput implements IControlsHandler {
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
 		
-		for (BendingController controller : keyboardBending) {
-			openBendingMenu(controller);
-		}
+		tryOpenBendingMenu();
+		
 		if (AvatarControl.KEY_SKILLS.isPressed()) {
 			BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 			List<BendingController> controllers = data.getAllBending();
@@ -192,17 +191,17 @@ public class ClientInput implements IControlsHandler {
 	/**
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
-	private void openBendingMenu(BendingController controller) {
+	private void tryOpenBendingMenu() {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		if (AvatarControl.KEY_USE_BENDING.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			
-			if (data.hasBending(controller.getType())) {
-				AvatarUiRenderer.openBendingGui(controller.getType());
+			if (data.getActiveBending() != null) {
+				AvatarUiRenderer.openBendingGui(data.getActiveBendingType());
 			} else {
 				
 				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
 				message = ChatSender.instance.processText(message, MSG_DONT_HAVE_BENDING,
-						controller.getControllerName(), mc.thePlayer.getName());
+						mc.thePlayer.getName());
 				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
 				
 			}
