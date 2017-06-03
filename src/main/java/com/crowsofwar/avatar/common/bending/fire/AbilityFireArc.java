@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -69,6 +70,7 @@ public class AbilityFireArc extends FireAbility {
 			fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, entity));
 			fire.setOwner(entity);
 			fire.setDamageMult(ctx.getLevel() >= 2 ? 2 : 1);
+			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			
 			world.spawnEntityInWorld(fire);
 			

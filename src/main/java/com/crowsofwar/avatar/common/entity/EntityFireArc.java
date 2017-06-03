@@ -31,6 +31,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -44,6 +45,7 @@ public class EntityFireArc extends EntityArc {
 			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
 	
 	private float damageMult;
+	private boolean createBigFire;
 	
 	public EntityFireArc(World world) {
 		super(world);
@@ -99,7 +101,18 @@ public class EntityFireArc extends EntityArc {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
-			worldObj.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
+			BlockPos pos = new BlockPos(x, y, z);
+			worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			
+			if (createBigFire) {
+				for (EnumFacing dir : EnumFacing.HORIZONTALS) {
+					BlockPos offsetPos = pos.offset(dir);
+					if (worldObj.isAirBlock(offsetPos)) {
+						worldObj.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
+					}
+				}
+			}
+			
 			if (tryDestroy()) {
 				setDead();
 			}
@@ -135,6 +148,10 @@ public class EntityFireArc extends EntityArc {
 	
 	public void setDamageMult(float damageMult) {
 		this.damageMult = damageMult;
+	}
+	
+	public void setCreateBigFire(boolean createBigFire) {
+		this.createBigFire = createBigFire;
 	}
 	
 	public static class FireControlPoint extends ControlPoint {
