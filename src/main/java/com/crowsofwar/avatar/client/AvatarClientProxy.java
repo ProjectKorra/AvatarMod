@@ -178,8 +178,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 		pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
 		
-		initAllKeybindings();
-		
 	}
 	
 	@Override
@@ -236,6 +234,10 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@Override
 	public KeybindingWrapper createKeybindWrapper(String keybindName) {
+		
+		if (allKeybindings == null) {
+			initAllKeybindings();
+		}
 		
 		KeyBinding kb = null;
 		for (KeyBinding candidate : allKeybindings) {
