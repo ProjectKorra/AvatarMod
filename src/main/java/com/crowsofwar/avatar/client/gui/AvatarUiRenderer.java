@@ -237,7 +237,7 @@ public class AvatarUiRenderer extends Gui {
 			
 			// Draw previous
 			int indexPrevious = allBending.indexOf(data.getActiveBending()) - 1;
-			if (indexPrevious == -1) indexPrevious = allBending.size() - 1;
+			if (indexPrevious <= -1) indexPrevious = allBending.size() - 1;
 			
 			if (allBending.size() > 2) {
 				GlStateManager.pushMatrix();
