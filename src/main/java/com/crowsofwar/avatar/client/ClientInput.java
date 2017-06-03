@@ -152,7 +152,7 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public String getDisplayName(AvatarControl control) {
 		if (control.isKeybinding()) {
-			KeyBinding kb = keybindings.get(control.getName());
+			KeyBinding kb = keybindings.get(control.getName().substring("avatar.".length()));
 			return kb == null ? null : kb.getDisplayName();
 		} else {
 			return null;
