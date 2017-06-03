@@ -45,7 +45,8 @@ public enum DataCategory {
 	ABILITY_DATA(	data -> data.getAbilityDataMap(),		(data, obj) -> data.setAbilityDataMap(obj),		DataTransmitters.ABILITY_DATA),
 	CHI(			data -> data.chi(),						(data, obj) -> data.setChi(obj),				DataTransmitters.CHI),
 	MISC_DATA(		data -> data.getMiscData(),				(data, obj) -> data.setMiscData(obj),			DataTransmitters.MISC_DATA),
-	TICK_HANDLERS(	data -> data.getAllTickHandlers(),		(data, obj) -> data.setAllTickHandlers(obj),	DataTransmitters.TICK_HANDLERS);
+	TICK_HANDLERS(	data -> data.getAllTickHandlers(),		(data, obj) -> data.setAllTickHandlers(obj),	DataTransmitters.TICK_HANDLERS),
+	ACTIVE_BENDING(	data -> data.getActiveBending(),		(data, obj) -> data.setActiveBending(obj),		DataTransmitters.ACTIVE_BENDING);
 	// @formatter:on
 	
 	private final Function<BendingData, ?> getter;

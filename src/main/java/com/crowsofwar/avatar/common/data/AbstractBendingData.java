@@ -159,6 +159,7 @@ public abstract class AbstractBendingData implements BendingData {
 	public void setActiveBending(BendingController controller) {
 		if (!bendings.isEmpty() && bendings.contains(controller)) {
 			activeBending = controller;
+			save(DataCategory.ACTIVE_BENDING);
 		}
 	}
 	

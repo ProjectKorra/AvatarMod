@@ -185,4 +185,18 @@ public class DataTransmitters {
 		}
 	};
 	
+	public static final DataTransmitter<BendingController> ACTIVE_BENDING = new DataTransmitter<BendingController>() {
+		
+		@Override
+		public void write(ByteBuf buf, BendingController t) {
+			buf.writeInt(t.getType().id());
+		}
+		
+		@Override
+		public BendingController read(ByteBuf buf, BendingData data) {
+			BendingType type = BendingType.find(buf.readInt());
+			return BendingManager.getBending(type);
+		}
+	};
+	
 }

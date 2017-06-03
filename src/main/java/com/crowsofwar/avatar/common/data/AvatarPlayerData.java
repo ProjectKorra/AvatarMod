@@ -86,7 +86,6 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		boolean isClient = !(player instanceof EntityPlayerMP);
 		
 		bendingData = new AbstractBendingData() {
-			
 			@Override
 			public void save(DataCategory category) {
 				AvatarPlayerData.this.save(category);
