@@ -115,6 +115,19 @@ public class AvatarUiRenderer extends Gui {
 			}
 			
 			// Draw previous
+			int indexPrevious = allBending.indexOf(data.getActiveBending()) - 1;
+			if (indexPrevious == -1) indexPrevious = allBending.size() - 1;
+			
+			if (allBending.size() > 2) {
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(0, 0, -1);
+				int x2 = screenWidth() / scaleFactor() - 25;
+				int y2 = screenHeight() / scaleFactor() - 25;
+				int u2 = 50 * (allBending.get(indexPrevious).getType().id() - 1);
+				int v2 = 137;
+				drawTexturedModalRect(x2, y2, u2, v2, 50, 50);
+				GlStateManager.popMatrix();
+			}
 			
 		}
 		
