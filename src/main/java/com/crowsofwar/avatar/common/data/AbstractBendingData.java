@@ -143,6 +143,9 @@ public abstract class AbstractBendingData implements BendingData {
 		if (!bendings.isEmpty() && activeBending == null) {
 			activeBending = bendings.iterator().next();
 		}
+		if (activeBending != null && !bendings.isEmpty() && !bendings.contains(activeBending)) {
+			activeBending = bendings.iterator().next();
+		}
 		if (bendings.isEmpty() && activeBending != null) {
 			activeBending = null;
 		}
