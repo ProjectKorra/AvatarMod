@@ -66,8 +66,6 @@ public class StatCtrlAirJump extends StatusControl {
 		boolean allowDoubleJump = abilityData.getLevel() == 3
 				&& abilityData.getPath() == AbilityTreePath.FIRST;
 		
-		System.out.println(entity.onGround);
-		
 		BlockPos pos = entity.getPosition().add(0, -0.2, 0);
 		boolean onGround = world.isSideSolid(pos, EnumFacing.DOWN);
 		
