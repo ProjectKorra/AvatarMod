@@ -67,7 +67,7 @@ public class AbilityFireArc extends FireAbility {
 			
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
-			fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, entity));
+			fire.setBehavior(new FireArcBehavior.PlayerControlled());
 			fire.setOwner(entity);
 			fire.setDamageMult(ctx.getLevel() >= 2 ? 2 : 1);
 			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
