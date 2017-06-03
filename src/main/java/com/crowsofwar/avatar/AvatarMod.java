@@ -40,6 +40,7 @@ import com.crowsofwar.avatar.common.config.ConfigClient;
 import com.crowsofwar.avatar.common.config.ConfigMobs;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
@@ -136,6 +137,7 @@ public class AvatarMod {
 		ConfigChi.load();
 		ConfigMobs.load();
 		
+		AvatarControl.initControls();
 		BendingManager.init();
 		AvatarItems.init();
 		AvatarDungeonLoot.register();

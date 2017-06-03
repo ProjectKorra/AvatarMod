@@ -103,8 +103,6 @@ public class ClientInput implements IControlsHandler {
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
 		addKeybinding("TransferBison", Keyboard.KEY_L, "main");
 		
-		AvatarControl.initControls();
-		
 		this.wasAbilityDown = new boolean[BendingManager.allAbilities().size()];
 		
 	}
