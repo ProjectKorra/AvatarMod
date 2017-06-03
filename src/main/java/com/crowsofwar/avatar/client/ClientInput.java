@@ -126,27 +126,20 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
 		
-		if (control.isKeybinding()) {
-			String keyName = control.getName();
-			KeyBinding kb = keybindings.get(keyName);
-			if (kb == null) AvatarLog.warn("Avatar key '" + keyName + "' is undefined");
-			return kb == null ? false : kb.isPressed();
-		} else {
-			if (control == CONTROL_LEFT_CLICK) return mouseLeft;
-			if (control == CONTROL_RIGHT_CLICK) return mouseRight;
-			if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
-			if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;
-			if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
-			if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
-			if (control == CONTROL_SPACE) return space;
-			if (control == CONTROL_SPACE_DOWN) return space && !wasSpace;
-			if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
-			if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
-			if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
-			if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-			AvatarLog.warn("ClientInput- Unknown control: " + control);
-			return false;
-		}
+		if (control == CONTROL_LEFT_CLICK) return mouseLeft;
+		if (control == CONTROL_RIGHT_CLICK) return mouseRight;
+		if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
+		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;
+		if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
+		if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
+		if (control == CONTROL_SPACE) return space;
+		if (control == CONTROL_SPACE_DOWN) return space && !wasSpace;
+		if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
+		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
+		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
+		if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		AvatarLog.warn("ClientInput- Unknown control: " + control);
+		return false;
 		
 	}
 	
@@ -203,7 +196,7 @@ public class ClientInput implements IControlsHandler {
 	 */
 	private void openBendingMenu(BendingController controller) {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
-		if (isControlPressed(controller.getRadialMenu().getKey()) && !AvatarUiRenderer.hasBendingGui()) {
+		if (controller.getRadialMenu().getControl().isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			
 			if (data.hasBending(controller.getType())) {
 				AvatarUiRenderer.openBendingGui(controller.getType());
@@ -287,9 +280,10 @@ public class ClientInput implements IControlsHandler {
 	public List<AvatarControl> getAllPressed() {
 		List<AvatarControl> list = new ArrayList<>();
 		
-		for (int i = 0; i < AvatarControl.values().length; i++) {
-			AvatarControl control = AvatarControl.values()[i];
-			if (isControlPressed(control)) list.add(control);
+		for (AvatarControl control : AvatarControl.ALL_CONTROLS) {
+			if (isControlPressed(control)) {
+				list.add(control);
+			}
 		}
 		
 		return list;

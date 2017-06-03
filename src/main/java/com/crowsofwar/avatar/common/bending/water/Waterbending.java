@@ -24,6 +24,7 @@ import java.awt.Color;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -44,8 +45,10 @@ public class Waterbending extends BendingController {
 		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
-		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
-				new ThemeColor(icon, base), 0x57E8F2), "Waterbend", this);
+		menu = new BendingMenuInfo(
+				new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
+						new ThemeColor(icon, base), 0x57E8F2),
+				"Waterbend", AvatarControl.KEY_WATERBENDING, this);
 	}
 	
 	@Override

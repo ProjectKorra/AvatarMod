@@ -24,6 +24,7 @@ import java.awt.Color;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -47,7 +48,8 @@ public class Firebending extends BendingController {
 		ThemeColor background = new ThemeColor(light, red);
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
-		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A), "Firebend", this);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A), "Firebend",
+				AvatarControl.KEY_FIREBENDING, this);
 		
 	}
 	

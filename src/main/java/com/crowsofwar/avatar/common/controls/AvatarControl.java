@@ -92,6 +92,7 @@ public class AvatarControl {
 		if (keybinding) {
 			kb = AvatarMod.proxy.createKeybindWrapper(name);
 		}
+		ALL_CONTROLS.add(this);
 	}
 	
 	/**

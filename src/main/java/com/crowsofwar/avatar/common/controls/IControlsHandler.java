@@ -26,7 +26,11 @@ import java.util.List;
 public interface IControlsHandler {
 	
 	/**
-	 * Get whether that control is pressed
+	 * <strong>For internal use only. To check if a control is pressed, you
+	 * should use {@link AvatarControl#isPressed()}.</strong>
+	 * <p>
+	 * Get whether that control is pressed, only used for non-keybinding
+	 * controls
 	 */
 	boolean isControlPressed(AvatarControl control);
 	
