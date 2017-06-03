@@ -49,7 +49,7 @@ import net.minecraft.util.math.BlockPos;
 public class StatCtrlAirJump extends StatusControl {
 	
 	public StatCtrlAirJump() {
-		super(0, AvatarControl.CONTROL_SPACE, CrosshairPosition.BELOW_CROSSHAIR);
+		super(0, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
 	}
 	
 	@Override

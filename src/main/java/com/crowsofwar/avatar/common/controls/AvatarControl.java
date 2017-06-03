@@ -53,6 +53,7 @@ public class AvatarControl {
 		CONTROL_MIDDLE_CLICK_DOWN,
 		CONTROL_SPACE,
 		CONTROL_SPACE_DOWN,
+		CONTROL_JUMP,
 		CONTROL_LEFT_CLICK_UP,
 		CONTROL_RIGHT_CLICK_UP,
 		CONTROL_MIDDLE_CLICK_UP,
@@ -75,6 +76,7 @@ public class AvatarControl {
 		CONTROL_MIDDLE_CLICK_DOWN = new AvatarControl("MiddleClickDown", false);
 		CONTROL_SPACE = new AvatarControl("Space", false);
 		CONTROL_SPACE_DOWN = new AvatarControl("SpaceDown", false);
+		CONTROL_JUMP = new AvatarControl("key.jump", true);
 		CONTROL_LEFT_CLICK_UP = new AvatarControl("LeftClickUp", false);
 		CONTROL_RIGHT_CLICK_UP = new AvatarControl("RightClickUp", false);
 		CONTROL_MIDDLE_CLICK_UP = new AvatarControl("MiddleClickUp", false);

@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE_DOWN;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -39,7 +39,7 @@ import net.minecraft.entity.EntityLivingBase;
 public class StatCtrlSkateJump extends StatusControl {
 	
 	public StatCtrlSkateJump() {
-		super(9, CONTROL_SPACE_DOWN, BELOW_CROSSHAIR);
+		super(9, CONTROL_JUMP, BELOW_CROSSHAIR);
 	}
 	
 	@Override
