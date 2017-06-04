@@ -72,6 +72,15 @@ public class HumanBenderSpawner {
 			boolean result = super.generateStructure(worldIn, randomIn, chunkCoord);
 			if (result) {
 				
+				// Use for determining which type of bender will spawn
+				// x << 4 basically divides x by 16
+				// This is to cause 256x256 regions to either be airbender or
+				// firebender (i think)
+				int x = chunkCoord.chunkXPos << 4;
+				int z = chunkCoord.chunkZPos << 4;
+				int benderCode = new ChunkPos(x, z).hashCode();
+				System.out.println(new ChunkPos(x, z) + " Combined: " + benderCode);
+				
 				// This list contains villagers in that structure
 				
 				List<EntityVillager> villagers = worldIn.getEntities(EntityVillager.class, villager -> {
@@ -85,11 +94,9 @@ public class HumanBenderSpawner {
 					Village village = worldIn.getVillageCollection()
 							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
 					
-					System.out.println(village + " " + (village == null ? "null" : village.hashCode()));
-					
 					EntityHumanBender bender;
 					
-					if (village == null || village.hashCode() % 2 == 0) {
+					if (benderCode % 2 == 0) {
 						bender = new EntityFirebender(worldIn);
 					} else {
 						bender = new EntityAirbender(worldIn);
