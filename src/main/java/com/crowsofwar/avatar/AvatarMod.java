@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
 import com.crowsofwar.avatar.common.AvatarScrollDrops;
 import com.crowsofwar.avatar.common.FallAbsorptionHandler;
+import com.crowsofwar.avatar.common.HumanBenderSpawner;
 import com.crowsofwar.avatar.common.TemporaryWaterHandler;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -150,6 +151,7 @@ public class AvatarMod {
 		AvatarScrollDrops.register();
 		TransferConfirmHandler.registerEventHandler();
 		TemporaryWaterHandler.register();
+		HumanBenderSpawner.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
