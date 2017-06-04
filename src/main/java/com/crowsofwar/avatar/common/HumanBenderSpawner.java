@@ -16,9 +16,14 @@
 */
 package com.crowsofwar.avatar.common;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
+import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
@@ -37,16 +42,19 @@ public class HumanBenderSpawner {
 	private HumanBenderSpawner() {}
 	
 	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new HumanBenderSpawner());
+		MinecraftForge.TERRAIN_GEN_BUS.register(new HumanBenderSpawner());
 	}
 	
 	@SubscribeEvent
 	public void modifyVillageSpawner(InitMapGenEvent e) {
 		
+		System.out.println("aaabbb");
+		
 		System.out.println(e.getType());
 		if (e.getType() == EventType.VILLAGE) {
+			// TODO See if this messes up superflat world options
 			System.out.println("Modify village spawner");
-			
+			e.setNewGen(new MapGenVillageWithHumanbenders());
 		}
 		
 	}
@@ -64,9 +72,22 @@ public class HumanBenderSpawner {
 		@Override
 		public synchronized boolean generateStructure(World worldIn, Random randomIn, ChunkPos chunkCoord) {
 			boolean result = super.generateStructure(worldIn, randomIn, chunkCoord);
-			System.out.println("Result: " + result);
 			if (result) {
-				System.out.println("Proceed to spawn some humanbenders");
+				
+				// This list contains villagers in that structure
+				
+				List<EntityVillager> villagers = worldIn.getEntities(EntityVillager.class, villager -> {
+					return new ChunkPos(villager.getPosition()).equals(chunkCoord);
+				});
+				
+				double chance = 40;
+				Random rand = new Random();
+				if (!villagers.isEmpty() && rand.nextDouble() * 100 < chance) {
+					EntityHumanBender bender = new EntityFirebender(worldIn);
+					bender.copyLocationAndAnglesFrom(villagers.get(0));
+					worldIn.spawnEntityInWorld(bender);
+				}
+				
 			}
 			return result;
 		}
