@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
@@ -72,20 +73,18 @@ public class HumanBenderSpawner {
 			boolean result = super.generateStructure(worldIn, randomIn, chunkCoord);
 			if (result) {
 				
-				// Use for determining which type of bender will spawn
-				// x << 4 basically divides x by 16
-				// This is to cause 256x256 regions to either be airbender or
-				// firebender (i think)
-				int x = chunkCoord.chunkXPos << 4;
-				int z = chunkCoord.chunkZPos << 4;
-				int benderCode = new ChunkPos(x, z).hashCode();
-				System.out.println(new ChunkPos(x, z) + " Combined: " + benderCode);
-				
 				// This list contains villagers in that structure
-				
 				List<EntityVillager> villagers = worldIn.getEntities(EntityVillager.class, villager -> {
 					return new ChunkPos(villager.getPosition()).equals(chunkCoord);
 				});
+				
+				// To attempt to have all humanbenders be same type, check if
+				// there are nearby humanbenders
+				// If there are just copy their type
+				AxisAlignedBB aabb = new AxisAlignedBB(chunkCoord.getBlock(-30, 50, -30),
+						chunkCoord.getBlock(30, 150, 30));
+				List<EntityHumanBender> nearbyBenders = worldIn.getEntitiesWithinAABB(EntityHumanBender.class,
+						aabb);
 				
 				double chance = 100;
 				Random rand = new Random();
@@ -94,14 +93,16 @@ public class HumanBenderSpawner {
 					Village village = worldIn.getVillageCollection()
 							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
 					
-					EntityHumanBender bender;
+					boolean firebender;
 					
-					if (benderCode % 2 == 0) {
-						bender = new EntityFirebender(worldIn);
+					if (nearbyBenders.isEmpty()) {
+						firebender = new Random().nextBoolean();
 					} else {
-						bender = new EntityAirbender(worldIn);
+						firebender = nearbyBenders.get(0) instanceof EntityFirebender;
 					}
 					
+					EntityHumanBender bender = firebender ? new EntityFirebender(worldIn)
+							: new EntityAirbender(worldIn);
 					bender.copyLocationAndAnglesFrom(villagers.get(0));
 					worldIn.spawnEntityInWorld(bender);
 					
