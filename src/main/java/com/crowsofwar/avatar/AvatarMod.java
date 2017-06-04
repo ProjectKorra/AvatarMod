@@ -227,9 +227,6 @@ public class AvatarMod {
 		Biome[] allBiomes = new Biome[allBiomesList.size()];
 		allBiomes = allBiomesList.toArray(allBiomes);
 		
-		EntityRegistry.addSpawn(EntityFirebender.class, 1000, 1, 1, EnumCreatureType.CREATURE, allBiomes);
-		EntityRegistry.addSpawn(EntityAirbender.class, 1000, 1, 1, EnumCreatureType.CREATURE, allBiomes);
-		
 		// Second loading required since other mods blocks might not be
 		// registered
 		STATS_CONFIG.loadBlocks();

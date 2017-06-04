@@ -44,10 +44,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.village.VillageCollection;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
@@ -147,47 +144,7 @@ public abstract class EntityHumanBender extends EntityBender {
 		setEquipmentBasedOnDifficulty(difficulty);
 		setHomePosAndDistance(getPosition(), 20);
 		
-		if (!getCanSpawnHere()) {
-			setDead();
-		}
-		
 		return livingdata;
-	}
-	
-	// IMPORTANT:
-	// For some reason getCanSpawnHere isn't working on its own - mobs still
-	// spawn when it returns false
-	// Forum threads here:
-	// -
-	// http://www.minecraftforge.net/forum/topic/58190-1112-custom-mob-spawn-logic-ignored-getcanspawnhere/#comment-268609
-	// -
-	// http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/modification-development/2823844-mob-spawn-logic-getcanspawnhere-not-working
-	//
-	// Temporary workaround in place - in onInitialSpawn, checks if can't
-	// getCanSpawnHere and if so setDead() - works
-	
-	@Override
-	public boolean getCanSpawnHere() {
-		
-		VillageCollection villages = worldObj.villageCollectionObj;
-		boolean nearbyVillage = villages.getNearestVillage(getPosition(), 50) != null;
-		
-		BlockPos min = getPosition().add(-10, -10, -10);
-		BlockPos max = getPosition().add(10, 10, 10);
-		AxisAlignedBB aabb = new AxisAlignedBB(min, max);
-		
-		boolean nearbyBender = !worldObj
-				.getEntitiesWithinAABB(EntityHumanBender.class, aabb, candidate -> candidate != this)
-				.isEmpty();
-		
-		// System.out.println("Nearby village: " +
-		// villages.getNearestVillage(getPosition(), 50));
-		// System.out
-		// .println("nearby benders: " +
-		// worldObj.getEntitiesWithinAABB(EntityHumanBender.class, aabb));
-		
-		return super.getCanSpawnHere() && nearbyVillage && !nearbyBender;
-		
 	}
 	
 	@Override
