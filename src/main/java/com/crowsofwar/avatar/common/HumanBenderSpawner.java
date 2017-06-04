@@ -48,12 +48,8 @@ public class HumanBenderSpawner {
 	@SubscribeEvent
 	public void modifyVillageSpawner(InitMapGenEvent e) {
 		
-		System.out.println("aaabbb");
-		
-		System.out.println(e.getType());
 		if (e.getType() == EventType.VILLAGE) {
 			// TODO See if this messes up superflat world options
-			System.out.println("Modify village spawner");
 			e.setNewGen(new MapGenVillageWithHumanbenders());
 		}
 		
