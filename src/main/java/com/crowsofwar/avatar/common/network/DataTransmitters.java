@@ -189,12 +189,16 @@ public class DataTransmitters {
 		
 		@Override
 		public void write(ByteBuf buf, BendingController t) {
-			buf.writeInt(t.getType().id());
+			buf.writeInt(t == null ? -1 : t.getType().id());
 		}
 		
 		@Override
 		public BendingController read(ByteBuf buf, BendingData data) {
-			BendingType type = BendingType.find(buf.readInt());
+			int id = buf.readInt();
+			if (id == -1) {
+				return null;
+			}
+			BendingType type = BendingType.find(id);
 			return BendingManager.getBending(type);
 		}
 	};
