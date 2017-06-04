@@ -23,6 +23,7 @@ AV2 Changelog :: version a4.0
 * Water skating is quieter
 * Refactored networking code to be simpler & more secure
 * Refactored controls code to be simpler
+* Spanish and Mexican translations from MadWrist
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs
