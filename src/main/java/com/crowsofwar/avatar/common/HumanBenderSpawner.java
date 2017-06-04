@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraftforge.common.MinecraftForge;
@@ -76,12 +78,26 @@ public class HumanBenderSpawner {
 					return new ChunkPos(villager.getPosition()).equals(chunkCoord);
 				});
 				
-				double chance = 40;
+				double chance = 100;
 				Random rand = new Random();
 				if (!villagers.isEmpty() && rand.nextDouble() * 100 < chance) {
-					EntityHumanBender bender = new EntityFirebender(worldIn);
+					
+					Village village = worldIn.getVillageCollection()
+							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
+					
+					System.out.println(village + " " + (village == null ? "null" : village.hashCode()));
+					
+					EntityHumanBender bender;
+					
+					if (village == null || village.hashCode() % 2 == 0) {
+						bender = new EntityFirebender(worldIn);
+					} else {
+						bender = new EntityAirbender(worldIn);
+					}
+					
 					bender.copyLocationAndAnglesFrom(villagers.get(0));
 					worldIn.spawnEntityInWorld(bender);
+					
 				}
 				
 			}
