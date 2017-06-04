@@ -17,7 +17,7 @@ AV2 Changelog :: version a4.0
 * Can use [keybinding=key.X] in .lang file to use a keybinding
 * Can get water arcs from cauldrons
 * Option in cosmetic.yml to use vanilla instead of avatar particles
-* New chi bar textures from MadWrist
+* New chi bar textures from Sean_Amor
 * Chi bar is semitransparent (configurable in cosmetic.yml)
 * More realistic water-skate movement; can control with wasd
 * Water skating is quieter
