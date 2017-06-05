@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.DataCategory;
 import com.crowsofwar.gorecore.GoreCore;
@@ -78,9 +79,11 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 			}
 			
 			// Read what changed
-			for (DataCategory category : changed) {
-				category.read(buf, data);
-			}
+			AvatarMod.proxy.getClientThreadListener().addScheduledTask(() -> {
+				for (DataCategory category : changed) {
+					category.read(buf, data);
+				}
+			});
 			
 		} else {
 			AvatarLog.warn(WarningType.WEIRD_PACKET, "Server sent a packet about data for player " + playerId
