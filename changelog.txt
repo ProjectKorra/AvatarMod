@@ -1,29 +1,36 @@
 AV2 Changelog :: version a4.0
 
-+ Ability Level System
+(important! detailed info can be found on avatarmod2.wikia.com)
+
 + New skills menu
++ Get bending menu (ie get bending in survival mode!)
++ Ability Levelling(leveling?) System
 + Scrolls item
 + Level IV options for each ability
++ Flying Bison
++ Flying Bison Armor, Saddles, Whistle
++ Otter Penguins
++ Water pouches
++ Firebenders and airbenders in villages
 
 * Remove small space between radial segment hover
-* Abilities have multiple levels + xp instead of only 1 XP bar
-* Adjusted xp curves based on level
-* Generally triple xp gains to account for levels
-* Airblade and airgust, by default, have less push
-* Airblade can chop flowers, etc. at level II
+* Adjusted xp curves and xp gains based on level
 * Waterbenders have infinite water arcs when it rains on them
-* Greatly increased XP gains for Mine Blocks ability
 * Vanilla mobs have rare chances of dropping scrolls
 * Can use [keybinding=key.X] in .lang file to use a keybinding
 * Can get water arcs from cauldrons
 * Option in cosmetic.yml to use vanilla instead of avatar particles
-* New chi bar textures from Sean_Amor
 * Chi bar is semitransparent (configurable in cosmetic.yml)
 * More realistic water-skate movement; can control with wasd
 * Water skating is quieter
 * Refactored networking code to be simpler & more secure
 * Refactored controls code to be simpler
-* Spanish and Mexican translations from MadWrist
+* Modified controls system: only uses X
+* Air bubble changes
+* Massive internal code changes to allow bending mobs
+
+* Spanish and Mexican translations from MadWrist. Thanks!
+* New chi bar textures from Sean_Amor. Thanks, it looks great!
 
 > Fix airblade weird angles
 > Fix flamethrower not aggroing mobs
