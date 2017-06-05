@@ -96,11 +96,14 @@ public class AirbendingEvents {
 					DamageSource source = e.getSource();
 					Entity sourceEntity = source.getEntity();
 					
-					if (sourceEntity != null) {
+					if (sourceEntity != null
+							&& data.chi().consumeChi(e.getAmount() * STATS_CONFIG.chiAirBubbleTakeDamage)) {
+						
 						sourceEntity.setDead();
 						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
 						bubble.setHealth(bubble.getHealth() - e.getAmount());
 						e.setCanceled(true);
+						
 					}
 					
 				}
