@@ -66,6 +66,8 @@ public class EntityAirBubble extends AvatarEntity {
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.FLOAT);
+	public static final DataParameter<Float> SYNC_MAX_HEALTH = EntityDataManager
+			.createKey(EntityAirBubble.class, DataSerializers.FLOAT);
 	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
@@ -89,6 +91,7 @@ public class EntityAirBubble extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_DISSIPATE, 0);
 		dataManager.register(SYNC_HEALTH, 20f);
+		dataManager.register(SYNC_MAX_HEALTH, 20f);
 		dataManager.register(SYNC_HOVERING, false);
 		dataManager.register(SYNC_SIZE, 2.5f);
 	}
@@ -338,6 +341,15 @@ public class EntityAirBubble extends AvatarEntity {
 	public void setHealth(float health) {
 		dataManager.set(SYNC_HEALTH, health);
 		if (health <= 0) dissipateSmall();
+		if (health > getMaxHealth()) health = getMaxHealth();
+	}
+	
+	public float getMaxHealth() {
+		return dataManager.get(SYNC_MAX_HEALTH);
+	}
+	
+	public void setMaxHealth(float health) {
+		dataManager.set(SYNC_MAX_HEALTH, health);
 	}
 	
 	public void dissipateLarge() {
