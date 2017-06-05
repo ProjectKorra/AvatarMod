@@ -40,6 +40,8 @@ public class AvatarUiTextures {
 			"textures/gui/skillmenu.png");
 	public static final ResourceLocation getBending = new ResourceLocation("avatarmod",
 			"textures/gui/getbending.png");
+	public static final ResourceLocation airBubbleHealth = new ResourceLocation("avatarmod",
+			"textures/gui/airbubble_health.png");
 	
 	static final ResourceLocation bgWater = new ResourceLocation("avatarmod",
 			"textures/gui/bg_water_screen.png");

@@ -266,6 +266,8 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderAirBubbleHealth(ScaledResolution res) {
 		
+		mc.renderEngine.bindTexture(AvatarUiTextures.airBubbleHealth);
+		
 		World world = mc.theWorld;
 		EntityPlayer player = mc.thePlayer;
 		BendingData data = Bender.getData(player);
@@ -274,6 +276,22 @@ public class AvatarUiRenderer extends Gui {
 			EntityAirBubble bubble = EntityAirBubble.lookupControlledEntity(world, EntityAirBubble.class,
 					player);
 			if (bubble != null) {
+				
+				int hearts = (int) (bubble.getMaxHealth() / 2);
+				for (int i = 0; i < hearts; i++) {
+					
+					// Draw background
+					drawTexturedModalRect(i * 9, 0, 0, 0, 9, 9);
+					
+					// Draw hearts or half hearts
+					int diff = (int) (bubble.getHealth() - i * 2);
+					if (diff >= 2) {
+						drawTexturedModalRect(i * 9, 0, 18, 0, 9, 9);
+					} else {
+						drawTexturedModalRect(i * 9, 0, 27, 0, 9, 9);
+					}
+					
+				}
 				
 			}
 		}
