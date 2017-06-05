@@ -267,6 +267,7 @@ public class AvatarUiRenderer extends Gui {
 	private void renderAirBubbleHealth(ScaledResolution res) {
 		
 		mc.renderEngine.bindTexture(AvatarUiTextures.airBubbleHealth);
+		GlStateManager.color(1, 1, 1, 1);
 		
 		World world = mc.theWorld;
 		EntityPlayer player = mc.thePlayer;
@@ -287,7 +288,7 @@ public class AvatarUiRenderer extends Gui {
 					int diff = (int) (bubble.getHealth() - i * 2);
 					if (diff >= 2) {
 						drawTexturedModalRect(i * 9, 0, 18, 0, 9, 9);
-					} else {
+					} else if (diff == 1) {
 						drawTexturedModalRect(i * 9, 0, 27, 0, 9, 9);
 					}
 					
