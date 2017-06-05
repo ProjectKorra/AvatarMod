@@ -76,17 +76,17 @@ public class AirbendingEvents {
 	public void airBubbleShield(LivingAttackEvent e) {
 		World world = e.getEntity().worldObj;
 		
-		EntityLivingBase inBubble = (EntityLivingBase) e.getEntity();
-		BendingData data = Bender.create(inBubble).getData();
+		EntityLivingBase attacked = (EntityLivingBase) e.getEntity();
 		
-		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
-			
-			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
-					inBubble);
-			if (bubble != null) {
-				bubble.attackEntityFrom(e.getSource(), e.getAmount());
+		if (Bender.isBenderSupported(attacked)) {
+			BendingData data = Bender.create(attacked).getData();
+			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
+				EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
+						attacked);
+				if (bubble != null) {
+					bubble.attackEntityFrom(e.getSource(), e.getAmount());
+				}
 			}
-			
 		}
 		
 	}
