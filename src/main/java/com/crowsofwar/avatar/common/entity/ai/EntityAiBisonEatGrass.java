@@ -72,16 +72,12 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	public boolean continueExecuting() {
 		
 		boolean keepExecuting = !bison.isFull() && isOnGround();
-		// System.out.println("y= " + bison.posY);
-		
 		World world = bison.worldObj;
 		EntityMoveHelper mh = bison.getMoveHelper();
 		
 		if (!isEatingGrass()) {
 			// Just reached ground
 			eatGrassTime = 0;
-			// bison.getMoveHelper().setMoveTo(bison.posX, bison.posY,
-			// bison.posZ, 1);
 		}
 		tryEatGrass();
 		if (!bison.isSitting()) {

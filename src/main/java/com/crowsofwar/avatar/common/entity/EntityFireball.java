@@ -170,7 +170,6 @@ public class EntityFireball extends AvatarEntity {
 		if (destroyObsidian) {
 			for (EnumFacing dir : EnumFacing.values()) {
 				BlockPos pos = getPosition().offset(dir);
-				System.out.println(pos);
 				if (worldObj.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
 					worldObj.destroyBlock(pos, true);
 				}

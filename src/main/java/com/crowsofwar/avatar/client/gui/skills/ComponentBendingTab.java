@@ -39,7 +39,6 @@ public class ComponentBendingTab extends ComponentImage {
 	
 	@Override
 	protected void click(int button) {
-		System.out.println("Clicked " + type);
 		AvatarMod.network.sendToServer(new PacketSSkillsMenu(type));
 	}
 	

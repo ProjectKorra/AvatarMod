@@ -53,7 +53,6 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	
 	@Override
 	public void startExecuting() {
-		System.out.println("in love");
 		bison.setLoveParticles(true);
 	}
 	

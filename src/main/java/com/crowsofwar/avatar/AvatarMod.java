@@ -191,7 +191,6 @@ public class AvatarMod {
 		PacketHandlerServer.register();
 		
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
-			System.out.println("Loaded tickets back! " + tickets);
 		});
 		
 	}

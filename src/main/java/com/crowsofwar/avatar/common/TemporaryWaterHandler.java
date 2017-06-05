@@ -59,7 +59,6 @@ public class TemporaryWaterHandler {
 				
 				if (twl.getDimension() == world.provider.getDimension()) {
 					
-					System.out.println("twl " + twl.getTicks() + " @ " + twl.getPos());
 					twl.decrementTicks();
 					if (twl.getTicks() <= 0) {
 						BlockPos pos = twl.getPos();
@@ -67,7 +66,6 @@ public class TemporaryWaterHandler {
 						if (block == Blocks.FLOWING_WATER || block == Blocks.WATER) {
 							// world.setBlockToAir(pos);
 							world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-							System.out.println("REMOVE");
 						}
 						
 						iterator.remove();

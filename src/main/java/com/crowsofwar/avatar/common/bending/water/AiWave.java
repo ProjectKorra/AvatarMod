@@ -50,10 +50,7 @@ public class AiWave extends BendingAi {
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
 			
-			System.out.println("Wave should execute?");
-			
 			if (isAtEdgeOfWater()) {
-				System.out.println("On the edge");
 				return true;
 			}
 			
@@ -71,8 +68,6 @@ public class AiWave extends BendingAi {
 	@Override
 	public boolean continueExecuting() {
 		
-		System.out.println("Continue");
-		
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
 			entity.getLookHelper().setLookPosition(target.posX, target.posY, target.posZ, 10, 10);
@@ -83,8 +78,6 @@ public class AiWave extends BendingAi {
 				entity.rotationYaw = (float) toDegrees(rotations.y());
 				entity.rotationPitch = (float) toDegrees(rotations.x());
 				
-				System.out.println("Spawn wave");
-				
 				execAbility();
 				return false;
 				
@@ -94,7 +87,6 @@ public class AiWave extends BendingAi {
 			
 		}
 		
-		System.out.println("Stop " + target.isInWater());
 		return false;
 		
 	}

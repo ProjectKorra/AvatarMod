@@ -73,7 +73,6 @@ public class AbilityMining extends EarthAbility {
 			
 			abilityData.addXp(SKILLS_CONFIG.miningUse);
 			
-			System.out.println("XP " + abilityData.getXp());
 			//@formatter:off
 			// 0 = S 0x +z    1 = SW -x +z
 			// 2 = W -x 0z    3 = NW -x -z

@@ -298,7 +298,6 @@ public class EntityAirBubble extends AvatarEntity {
 				if (sourceEntity != null) {
 					if (!owner.isEntityInvulnerable(source)) {
 						BendingData data = Bender.getData(owner);
-						System.out.println(amount);
 						if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
 							
 							data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);

@@ -71,8 +71,6 @@ public class StatCtrlAirJump extends StatusControl {
 		
 		if (onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
 			
-			System.out.println(5);
-			
 			float xp = 0;
 			if (data != null) {
 				xp = abilityData.getTotalXp();

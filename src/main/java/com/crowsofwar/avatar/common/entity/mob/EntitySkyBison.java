@@ -210,7 +210,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.tasks.addTask(7, new EntityAiBisonFollowOwner(this));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.tasks.addTask(9, new EntityAiBisonWander(this));
-		System.out.println("Set aiEatGrass to " + aiEatGrass);
 		
 	}
 	
@@ -526,7 +525,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				
 				if (domesticationValue > 0) {
 					condition.addDomestication(domesticationValue);
-					System.out.println("Now domestication is " + condition.getDomestication());
 					
 					if (!condition.canHaveOwner() || item != Items.APPLE) {
 						playTameEffect(false);
@@ -554,7 +552,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		
 		if (willBeOwned) {
-			System.out.println("Im tame now lel");
 			playTameEffect(true);
 			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
 			if (!player.capabilities.isCreativeMode) {
@@ -665,8 +662,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 * Updates chest size based on current chest slots
 	 */
 	private void initChest() {
-		
-		System.out.println("Slots " + getChestSlots());
 		
 		InventoryBisonChest old = chest;
 		chest = new InventoryBisonChest(getChestSlots());
