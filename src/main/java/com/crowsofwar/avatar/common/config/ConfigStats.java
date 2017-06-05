@@ -59,8 +59,8 @@ public class ConfigStats {
 	
 	@Load
 	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 6f,
-			chiAirBubbleTakeDamage = 0.5f, chiRavine = 3f, chiWall = 5f, chiPickUpBlock = 2.5f,
-			chiMining = 4f, chiMiningMaster = 1f, chiFireArc = 2f, chiFireball = 4f,
+			chiAirBubbleTakeDamage = 0.5f, chiAirBubbleOneSecond = 0.5f, chiRavine = 3f, chiWall = 5f,
+			chiPickUpBlock = 2.5f, chiMining = 4f, chiMiningMaster = 1f, chiFireArc = 2f, chiFireball = 4f,
 			chiFlamethrowerSecond = 2f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
 			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.25f;
 	

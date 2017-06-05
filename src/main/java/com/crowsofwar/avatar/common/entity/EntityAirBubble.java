@@ -133,6 +133,12 @@ public class EntityAirBubble extends AvatarEntity {
 			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
 			
 			Bender ownerBender = ownerAttr.getOwnerBender();
+			if (!worldObj.isRemote
+					&& !ownerBender.getData().chi().consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
+				
+				dissipateSmall();
+				
+			}
 			
 			ItemStack chest = ownerEnt.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
