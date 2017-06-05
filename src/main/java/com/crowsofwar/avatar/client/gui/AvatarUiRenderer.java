@@ -33,6 +33,8 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 
 import net.minecraft.client.Minecraft;
@@ -40,7 +42,9 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -83,6 +87,7 @@ public class AvatarUiRenderer extends Gui {
 		renderChiBar(resolution);
 		renderChiMsg(resolution);
 		renderActiveBending(resolution);
+		renderAirBubbleHealth(resolution);
 		
 	}
 	
@@ -257,6 +262,22 @@ public class AvatarUiRenderer extends Gui {
 		int v = 137;
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		drawTexturedModalRect(x, y, u, v, 50, 50);
+	}
+	
+	private void renderAirBubbleHealth(ScaledResolution res) {
+		
+		World world = mc.theWorld;
+		EntityPlayer player = mc.thePlayer;
+		BendingData data = Bender.getData(player);
+		
+		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
+			EntityAirBubble bubble = EntityAirBubble.lookupControlledEntity(world, EntityAirBubble.class,
+					player);
+			if (bubble != null) {
+				
+			}
+		}
+		
 	}
 	
 	public static void openBendingGui(BendingType bending) {
