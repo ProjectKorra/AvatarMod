@@ -293,16 +293,22 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityLivingBase owner = getOwner();
 		if (owner != null) {
 			
-			Entity sourceEntity = source.getEntity();
-			if (sourceEntity != null) {
-				if (!owner.isEntityInvulnerable(source)) {
-					BendingData data = Bender.getData(owner);
-					if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
-						
-						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
-						setHealth(getHealth() - amount);
-						return true;
-						
+			if (!worldObj.isRemote) {
+				Entity sourceEntity = source.getEntity();
+				if (sourceEntity != null) {
+					if (!owner.isEntityInvulnerable(source)) {
+						BendingData data = Bender.getData(owner);
+						System.out.println(amount);
+						if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
+							
+							data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
+							setHealth(getHealth() - amount);
+							return true;
+							
+						} else {
+							dissipateSmall();
+							return true;
+						}
 					}
 				}
 			}
