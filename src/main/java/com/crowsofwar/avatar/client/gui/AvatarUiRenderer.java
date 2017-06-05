@@ -45,6 +45,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -278,18 +279,24 @@ public class AvatarUiRenderer extends Gui {
 					player);
 			if (bubble != null) {
 				
+				int x = res.getScaledWidth() / 2 - 91;
+				int y = res.getScaledHeight() - GuiIngameForge.left_height;
+				if (mc.thePlayer.getTotalArmorValue() == 0) {
+					y += 10;
+				}
+				
 				int hearts = (int) (bubble.getMaxHealth() / 2);
 				for (int i = 0; i < hearts; i++) {
 					
 					// Draw background
-					drawTexturedModalRect(i * 9, 0, 0, 0, 9, 9);
+					drawTexturedModalRect(x + i * 9, y, 0, 0, 9, 9);
 					
 					// Draw hearts or half hearts
 					int diff = (int) (bubble.getHealth() - i * 2);
 					if (diff >= 2) {
-						drawTexturedModalRect(i * 9, 0, 18, 0, 9, 9);
+						drawTexturedModalRect(x + i * 9, y, 18, 0, 9, 9);
 					} else if (diff == 1) {
-						drawTexturedModalRect(i * 9, 0, 27, 0, 9, 9);
+						drawTexturedModalRect(x + i * 9, y, 27, 0, 9, 9);
 					}
 					
 				}
