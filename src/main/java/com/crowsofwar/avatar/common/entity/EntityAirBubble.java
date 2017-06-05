@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.util.EnumFacing.UP;
 
@@ -288,32 +290,29 @@ public class EntityAirBubble extends AvatarEntity {
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		System.out.println("ATTACK");
 		
-		/*
-		 * 
-		 * DamageSource source = e.getSource(); Entity sourceEntity =
-		 * source.getEntity();
-		 * 
-		 * System.out.println(e.getAmount());
-		 * 
-		 * if (sourceEntity != null && data.chi().consumeChi(e.getAmount() *
-		 * STATS_CONFIG.chiAirBubbleTakeDamage)) {
-		 * 
-		 * sourceEntity.setDead();
-		 * data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.
-		 * airbubbleProtect); bubble.setHealth(bubble.getHealth() -
-		 * e.getAmount()); e.setCanceled(true);
-		 * 
-		 * }
-		 * 
-		 * 
-		 */
-		
-		if (!isEntityInvulnerable(source)) {
-			setHealth(getHealth() - amount);
-			setBeenAttacked();
+		EntityLivingBase owner = getOwner();
+		if (owner != null) {
+			
+			Entity sourceEntity = source.getEntity();
+			if (sourceEntity != null) {
+				if (!owner.isEntityInvulnerable(source)) {
+					BendingData data = Bender.getData(owner);
+					if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
+						
+						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
+						setHealth(getHealth() - amount);
+						return true;
+						
+					}
+				}
+			}
+			
+		} else {
+			dissipateSmall();
 			return true;
 		}
 		return false;
+		
 	}
 	
 	@Override
