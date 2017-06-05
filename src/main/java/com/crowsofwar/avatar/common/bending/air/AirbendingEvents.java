@@ -16,11 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -29,14 +25,13 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -82,34 +77,18 @@ public class AirbendingEvents {
 		World world = e.getEntity().worldObj;
 		
 		EntityLivingBase inBubble = (EntityLivingBase) e.getEntity();
-		if (!world.isRemote && Bender.isBenderSupported(inBubble)) {
-			BendingData data = Bender.create(inBubble).getData();
+		BendingData data = Bender.create(inBubble).getData();
+		
+		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 			
-			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
-				
-				List<EntityAirBubble> entities = inBubble.worldObj.getEntitiesWithinAABB(
-						EntityAirBubble.class, inBubble.getEntityBoundingBox(),
-						bubble -> bubble.getOwner() == inBubble);
-				
-				for (EntityAirBubble bubble : entities) {
-					
-					DamageSource source = e.getSource();
-					Entity sourceEntity = source.getEntity();
-					
-					if (sourceEntity != null
-							&& data.chi().consumeChi(e.getAmount() * STATS_CONFIG.chiAirBubbleTakeDamage)) {
-						
-						sourceEntity.setDead();
-						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
-						bubble.setHealth(bubble.getHealth() - e.getAmount());
-						e.setCanceled(true);
-						
-					}
-					
-				}
-				
+			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
+					inBubble);
+			if (bubble != null) {
+				bubble.attackEntityFrom(e.getSource(), e.getAmount());
 			}
+			
 		}
+		
 	}
 	
 	public static void register() {
