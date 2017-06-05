@@ -146,7 +146,7 @@ public class RadialMenu extends Gui {
 				
 				if (abilityData.getLevel() == 3) {
 					secondKey = "avatar.radial.max";
-					secondArgs[0] = abilityData.getPath().name().toLowerCase();
+					secondArgs[1] = abilityData.getPath().name().toLowerCase();
 				}
 				if (abilityData.isLocked()) {
 					secondKey = "avatar.radial.locked2";
