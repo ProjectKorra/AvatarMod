@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static java.lang.Math.abs;
 import static net.minecraft.util.EnumFacing.NORTH;
 
@@ -154,24 +154,25 @@ public class EntityWall extends AvatarEntity {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
-			segments[i].readFromNBT(findNestedCompound(nbt, "Wall" + i));
+			segments[i].readFromNBT(nestedCompound(nbt, "Wall" + i));
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
-			segments[i].writeToNBT(findNestedCompound(nbt, "Wall" + i));
+			segments[i].writeToNBT(nestedCompound(nbt, "Wall" + i));
 	}
 	
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && !(entity instanceof EntityWallSegment);
+		return super.canCollideWith(entity) && !(entity instanceof EntityWall)
+				&& !(entity instanceof EntityWallSegment);
 	}
 	
 	@Override
-	protected void updateHidden() {
-		setHidden(false);
+	public boolean tryDestroy() {
+		return false;
 	}
 	
 }

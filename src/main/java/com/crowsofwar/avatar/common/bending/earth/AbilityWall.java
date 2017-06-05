@@ -22,14 +22,14 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -47,12 +47,12 @@ public class AbilityWall extends EarthAbility {
 		
 		if (ctx.consumeChi(STATS_CONFIG.chiWall)) {
 			
-			EntityPlayer player = ctx.getPlayerEntity();
+			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
-			EnumFacing cardinal = player.getHorizontalFacing();
-			AvatarPlayerData data = ctx.getData();
+			EnumFacing cardinal = entity.getHorizontalFacing();
+			BendingData data = ctx.getData();
 			
-			float xp = data.getAbilityData(this).getXp();
+			float xp = data.getAbilityData(this).getTotalXp();
 			int whMin, whMax;
 			Random random = new Random();
 			if (xp == 100) {
@@ -100,7 +100,7 @@ public class AbilityWall extends EarthAbility {
 				seg.attachToWall(wall);
 				seg.setPosition(x + .5, y, z + .5);
 				seg.setDirection(cardinal);
-				seg.setOwner(player);
+				seg.setOwner(entity);
 				
 				boolean foundAir = false, dontBreakMore = false;
 				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {

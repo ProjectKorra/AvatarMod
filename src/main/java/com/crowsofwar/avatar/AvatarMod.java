@@ -17,24 +17,34 @@
 
 package com.crowsofwar.avatar;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static net.minecraft.init.Biomes.*;
+import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
+
+import java.util.List;
+
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.AvatarPlayerTick;
+import com.crowsofwar.avatar.common.AvatarScrollDrops;
 import com.crowsofwar.avatar.common.FallAbsorptionHandler;
+import com.crowsofwar.avatar.common.HumanBenderSpawner;
+import com.crowsofwar.avatar.common.TemporaryWaterHandler;
+import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
-import com.crowsofwar.avatar.common.bending.earth.EarthSoundHandler;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
-import com.crowsofwar.avatar.common.bending.fire.FirebendingUpdate;
-import com.crowsofwar.avatar.common.bending.water.WaterbendingUpdate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.ConfigChi;
 import com.crowsofwar.avatar.common.config.ConfigClient;
+import com.crowsofwar.avatar.common.config.ConfigMobs;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
@@ -54,21 +64,38 @@ import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
+import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
+import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
+import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.item.AvatarCrafting;
+import com.crowsofwar.avatar.common.item.AvatarDungeonLoot;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
+import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
+import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
+import com.crowsofwar.avatar.common.network.packets.PacketSCycleBending;
+import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
+import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
+import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -81,6 +108,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
@@ -110,14 +138,20 @@ public class AvatarMod {
 		ConfigSkills.load();
 		ConfigClient.load();
 		ConfigChi.load();
+		ConfigMobs.load();
 		
+		AvatarControl.initControls();
 		BendingManager.init();
-		
-		EarthSoundHandler.register();
+		AvatarItems.init();
+		AvatarDungeonLoot.register();
 		
 		AvatarParticles.register();
 		AirbendingEvents.register();
 		FallAbsorptionHandler.register();
+		AvatarScrollDrops.register();
+		TransferConfirmHandler.registerEventHandler();
+		TemporaryWaterHandler.register();
+		HumanBenderSpawner.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
@@ -129,7 +163,14 @@ public class AvatarMod {
 		registerPacket(PacketCParticles.class, Side.CLIENT);
 		registerPacket(PacketCPlayerData.class, Side.CLIENT);
 		registerPacket(PacketSWallJump.class, Side.SERVER);
+		registerPacket(PacketSSkillsMenu.class, Side.SERVER);
+		registerPacket(PacketSUseScroll.class, Side.SERVER);
 		registerPacket(PacketCErrorMessage.class, Side.CLIENT);
+		registerPacket(PacketSBisonInventory.class, Side.SERVER);
+		registerPacket(PacketSOpenUnlockGui.class, Side.SERVER);
+		registerPacket(PacketSUnlockBending.class, Side.SERVER);
+		registerPacket(PacketSConfirmTransfer.class, Side.SERVER);
+		registerPacket(PacketSCycleBending.class, Side.SERVER);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		
@@ -145,11 +186,12 @@ public class AvatarMod {
 		
 		AvatarChatMessages.loadAll();
 		
-		MinecraftForge.EVENT_BUS.register(new FirebendingUpdate());
-		WaterbendingUpdate.register();
 		EarthbendingEvents.register();
 		
 		PacketHandlerServer.register();
+		
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
+		});
 		
 	}
 	
@@ -168,7 +210,29 @@ public class AvatarMod {
 		registerEntity(EntityFireball.class, "Fireball");
 		registerEntity(EntityAirblade.class, "Airblade");
 		registerEntity(EntityAirBubble.class, "AirBubble");
+		registerEntity(EntityFirebender.class, "Firebender", 0xffffff, 0xffffff);
+		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
+		registerEntity(EntityWaterbender.class, "Waterbender", 0xffffff, 0xffffff);
+		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
+		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
+		registerEntity(AvatarEntityItem.class, "Item");
+		
+		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
+				EXTREME_HILLS, MUTATED_SAVANNA);
+		EntityRegistry.addSpawn(EntityOtterPenguin.class, 14, 4, 10, EnumCreatureType.CREATURE, //
+				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
+		
+		List<Biome> allBiomesList = ForgeRegistries.BIOMES.getValues();
+		Biome[] allBiomes = new Biome[allBiomesList.size()];
+		allBiomes = allBiomesList.toArray(allBiomes);
+		
+		// Second loading required since other mods blocks might not be
+		// registered
+		STATS_CONFIG.loadBlocks();
+		
 		proxy.init();
+		AvatarCrafting.register();
+		
 	}
 	
 	@EventHandler
@@ -187,7 +251,12 @@ public class AvatarMod {
 	
 	private void registerEntity(Class<? extends Entity> entity, String name) {
 		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name,
-				nextEntityID++, this, 64, 20, true);
+				nextEntityID++, this, 64, 3, true);
+	}
+	
+	private void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
+		registerEntity(entity, name);
+		registerEgg(new ResourceLocation("avatarmod", name), primary, secondary);
 	}
 	
 }

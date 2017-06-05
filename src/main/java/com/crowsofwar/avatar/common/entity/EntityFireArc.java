@@ -20,15 +20,18 @@ package com.crowsofwar.avatar.common.entity;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -42,6 +45,7 @@ public class EntityFireArc extends EntityArc {
 			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
 	
 	private float damageMult;
+	private boolean createBigFire;
 	
 	public EntityFireArc(World world) {
 		super(world);
@@ -83,22 +87,35 @@ public class EntityFireArc extends EntityArc {
 	public void setDead() {
 		super.setDead();
 		if (getOwner() != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			BendingData data = Bender.create(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIRE);
 			if (!worldObj.isRemote) {
 				data.removeStatusControl(StatusControl.THROW_FIRE);
-				data.sync();
 			}
 		}
 	}
 	
 	@Override
-	protected void onCollideWithBlock() {
+	public void onCollideWithSolid() {
 		if (!worldObj.isRemote) {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
-			worldObj.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
+			BlockPos pos = new BlockPos(x, y, z);
+			worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			
+			if (createBigFire) {
+				for (EnumFacing dir : EnumFacing.HORIZONTALS) {
+					BlockPos offsetPos = pos.offset(dir);
+					if (worldObj.isAirBlock(offsetPos)) {
+						worldObj.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
+					}
+				}
+			}
+			
+			if (tryDestroy()) {
+				setDead();
+			}
 		}
 	}
 	
@@ -120,12 +137,21 @@ public class EntityFireArc extends EntityArc {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 	
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof FireArcBehavior.PlayerControlled ? getOwner() : null;
+	}
+	
 	public float getDamageMult() {
 		return damageMult;
 	}
 	
 	public void setDamageMult(float damageMult) {
 		this.damageMult = damageMult;
+	}
+	
+	public void setCreateBigFire(boolean createBigFire) {
+		this.createBigFire = createBigFire;
 	}
 	
 	public static class FireControlPoint extends ControlPoint {

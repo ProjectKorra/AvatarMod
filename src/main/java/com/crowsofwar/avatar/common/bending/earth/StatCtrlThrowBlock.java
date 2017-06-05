@@ -17,18 +17,20 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -43,32 +45,30 @@ public class StatCtrlThrowBlock extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
+	public boolean execute(BendingContext ctx) {
 		
-		BendingController controller = (BendingController) BendingManager
-				.getBending(BendingType.EARTHBENDING);
+		BendingController controller = BendingManager.getBending(BendingType.EARTHBENDING);
 		
-		EarthbendingState ebs = (EarthbendingState) ctx.getData().getBendingState(controller);
-		EntityPlayer player = ctx.getPlayerEntity();
-		World world = player.worldObj;
-		EntityFloatingBlock floating = ebs.getPickupBlock();
-		AvatarPlayerData data = ctx.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		World world = entity.worldObj;
+		BendingData data = ctx.getData();
+		
+		EntityFloatingBlock floating = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class,
+				entity);
 		
 		if (floating != null) {
 			
-			float yaw = (float) Math.toRadians(player.rotationYaw);
-			float pitch = (float) Math.toRadians(player.rotationPitch);
+			float yaw = (float) Math.toRadians(entity.rotationYaw);
+			float pitch = (float) Math.toRadians(entity.rotationPitch);
 			
 			// Calculate force and everything
+			double forceMult = data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK).getLevel() >= 1 //
+					? 35 : 25;
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
-			floating.velocity().add(lookDir.times(35));
+			floating.velocity().add(lookDir.times(forceMult));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
-			ebs.setPickupBlock(null);
-			
-			controller.post(new FloatingBlockEvent.BlockThrown(floating, player));
 			
 			data.removeStatusControl(PLACE_BLOCK);
-			data.sync();
 			
 		}
 		

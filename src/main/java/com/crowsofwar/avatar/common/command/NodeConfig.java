@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.config.ConfigChi;
 import com.crowsofwar.avatar.common.config.ConfigClient;
+import com.crowsofwar.avatar.common.config.ConfigMobs;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.gorecore.config.ConfigurationException;
@@ -69,6 +70,7 @@ public class NodeConfig extends NodeFunctional {
 				ConfigSkills.load();
 				ConfigClient.load();
 				ConfigChi.load();
+				ConfigMobs.load();
 				
 			} catch (ConfigurationException e) {
 				

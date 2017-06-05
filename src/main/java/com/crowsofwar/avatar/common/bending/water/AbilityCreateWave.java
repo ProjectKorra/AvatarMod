@@ -19,14 +19,18 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
@@ -38,12 +42,12 @@ public class AbilityCreateWave extends WaterAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
-		Vector look = Vector.getLookRectangular(player);
+		Vector look = Vector.getLookRectangular(entity);
 		look.setY(0);
-		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(player).add(0, -1, 0),
+		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).add(0, -1, 0),
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
 			
@@ -56,11 +60,24 @@ public class AbilityCreateWave extends WaterAbility {
 					
 					if (ctx.consumeChi(STATS_CONFIG.chiWave)) {
 						
+						double speed = 10;
+						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+							speed = 8;
+						}
+						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+							speed = 18;
+						}
+						
 						EntityWave wave = new EntityWave(world);
-						wave.setOwner(player);
-						wave.velocity().set(look.times(10));
+						wave.setOwner(entity);
+						wave.velocity().set(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
-						wave.setDamageMultiplier(1 + ctx.getData().getAbilityData(this).getXp() / 100f);
+						
+						wave.setDamageMultiplier(ctx.getLevel() >= 1 ? 1.5f : 1);
+						wave.setWaveSize(ctx.getLevel() >= 2 ? 3 : 2);
+						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+							wave.setWaveSize(5);
+						}
 						
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 						
@@ -76,6 +93,11 @@ public class AbilityCreateWave extends WaterAbility {
 			
 		}
 		
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiWave(this, entity, bender);
 	}
 	
 }

@@ -43,7 +43,7 @@ public class NodeBendingRemove extends NodeFunctional {
 		super("remove", true);
 		
 		this.argPlayerName = new ArgumentPlayerName("player");
-		this.argBendingController = new ArgumentOptions<List<BendingController>>(
+		this.argBendingController = new ArgumentOptions<>(
 				AvatarCommand.CONVERTER_BENDING, "bending", AvatarCommand.CONTROLLER_BENDING_OPTIONS);
 		
 		this.addArgument(argPlayerName);
@@ -68,9 +68,8 @@ public class NodeBendingRemove extends NodeFunctional {
 				MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
 			} else {
 				
-				if (data.hasBending(controller.getID())) {
+				if (data.hasBending(controller)) {
 					data.removeBending(controller);
-					data.sync();
 					MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getControllerName());
 				} else {
 					MSG_BENDING_REMOVE_DOESNT_HAVE.send(sender, playerName, controller.getControllerName());

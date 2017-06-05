@@ -22,21 +22,38 @@ import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityArc {
 	
 	public static final Vector ZERO = new Vector(0, 0, 0);
 	
+	private boolean airGrab, destroyProjectiles;
+	
 	public EntityAirGust(World world) {
 		super(world);
 		setSize(0.5f, 0.5f);
 		putsOutFires = true;
+	}
+	
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		airGrab = nbt.getBoolean("AirGrab");
+		destroyProjectiles = nbt.getBoolean("DestroyProjectiles");
+	}
+	
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setBoolean("AirGrab", airGrab);
+		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
 	}
 	
 	@Override
@@ -51,8 +68,10 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	protected void onCollideWithBlock() {
-		
+	public void onCollideWithSolid() {
+		if (tryDestroy()) {
+			setDead();
+		}
 	}
 	
 	@Override
@@ -82,6 +101,22 @@ public class EntityAirGust extends EntityArc {
 		return 200;
 	}
 	
+	public boolean doesAirGrab() {
+		return airGrab;
+	}
+	
+	public void setAirGrab(boolean airGrab) {
+		this.airGrab = airGrab;
+	}
+	
+	public boolean doesDestroyProjectiles() {
+		return destroyProjectiles;
+	}
+	
+	public void setDestroyProjectiles(boolean destroyProjectiles) {
+		this.destroyProjectiles = destroyProjectiles;
+	}
+	
 	public static class AirGustControlPoint extends ControlPoint {
 		
 		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
@@ -90,24 +125,31 @@ public class EntityAirGust extends EntityArc {
 		
 		@Override
 		protected void onCollision(Entity entity) {
-			if (!entity.worldObj.isRemote && entity != owner
-					&& entity != GoreCore.proxy.getClientSidePlayer()) {
+			if (!entity.worldObj.isRemote && entity != owner) {
 				
-				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+				BendingData data = Bender.create(owner).getData();
 				float xp = 0;
 				if (data != null) {
 					AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_GUST);
-					xp = abilityData.getXp();
+					xp = abilityData.getTotalXp();
 					abilityData.addXp(SKILLS_CONFIG.airGustHit);
 				}
 				
-				Vector velocity = velocity().times(0.3).times(1 + xp / 200.0);
-				velocity.setY(1);
+				boolean airGrab = ((EntityAirGust) arc).airGrab;
+				Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
+				velocity.setY(airGrab ? -1 : 1);
+				velocity.mul(airGrab ? -0.8 : 1);
 				
 				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 				afterVelocityAdded(entity);
 				
 				setDead();
+				
+				if (entity instanceof AvatarEntity) {
+					if (((AvatarEntity) entity).tryDestroy()) {
+						entity.setDead();
+					}
+				}
 				
 			}
 		}

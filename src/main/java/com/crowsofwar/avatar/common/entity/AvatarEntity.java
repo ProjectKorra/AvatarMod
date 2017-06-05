@@ -18,23 +18,29 @@
 package com.crowsofwar.avatar.common.entity;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -46,8 +52,6 @@ import net.minecraft.world.World;
  */
 public abstract class AvatarEntity extends Entity {
 	
-	public static final DataParameter<Boolean> SYNC_HIDDEN = EntityDataManager.createKey(AvatarEntity.class,
-			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
 			DataSerializers.VARINT);
 	
@@ -76,10 +80,26 @@ public abstract class AvatarEntity extends Entity {
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
 				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
-		dataManager.register(SYNC_HIDDEN, false);
 	}
 	
-	public EntityPlayer getOwner() {
+	/**
+	 * Get the "owner", or the creator, of this entity. Most AvatarEntities have
+	 * an owner, though some do not.
+	 */
+	public EntityLivingBase getOwner() {
+		return null;
+	}
+	
+	/**
+	 * Get whoever is currently controlling the movement of this entity, or null
+	 * if nobody is controlling it.
+	 * <p>
+	 * While most AvatarEntities have an {@link #getOwner() owner} during their
+	 * whole existence, controlling this entity is only when the bender can
+	 * control the movement of the entity. When it is, for example, thrown, the
+	 * entity won't be considered "controlled" anymore so this will return null.
+	 */
+	public EntityLivingBase getController() {
 		return null;
 	}
 	
@@ -105,14 +125,6 @@ public abstract class AvatarEntity extends Entity {
 	
 	private void setAvId(int id) {
 		dataManager.set(SYNC_ID, id);
-	}
-	
-	public boolean isHidden() {
-		return dataManager.get(SYNC_HIDDEN);
-	}
-	
-	public void setHidden(boolean hidden) {
-		dataManager.set(SYNC_HIDDEN, hidden);
 	}
 	
 	@Override
@@ -148,9 +160,29 @@ public abstract class AvatarEntity extends Entity {
 		return entities.isEmpty() ? null : (T) entities.get(0);
 	}
 	
+	public static <T extends AvatarEntity> T lookupEntity(World world, Class<T> cls, Predicate<T> predicate) {
+		List<Entity> entities = world.loadedEntityList;
+		for (Entity ent : entities) {
+			if (ent.getClass().isAssignableFrom(cls) && predicate.test((T) ent)) {
+				return (T) ent;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Find the entity controlled by the given player.
+	 */
+	public static <T extends AvatarEntity> T lookupControlledEntity(World world, Class<T> cls,
+			EntityLivingBase controller) {
+		List<T> list = world.getEntities(cls, ent -> ent.getController() == controller);
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
 	@Override
 	public boolean canBeCollidedWith() {
-		return !isHidden();
+		return true;
 	}
 	
 	@Override
@@ -160,11 +192,6 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public void onUpdate() {
-		
-		updateHidden();
-		if (isHidden()) {
-			return;
-		}
 		
 		super.onUpdate();
 		collideWithNearbyEntities();
@@ -187,8 +214,7 @@ public abstract class AvatarEntity extends Entity {
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				ent -> EntitySelectors.<Entity>getTeamCollisionPredicate(this).apply(ent)
-						&& canCollideWith(ent));
+				EntitySelectors.<Entity>getTeamCollisionPredicate(this));
 		
 		if (!list.isEmpty()) {
 			int i = this.worldObj.getGameRules().getInt("maxEntityCramming");
@@ -209,18 +235,32 @@ public abstract class AvatarEntity extends Entity {
 			
 			for (int l = 0; l < list.size(); ++l) {
 				Entity entity = list.get(l);
-				entity.applyEntityCollision(this);
-				onCollideWithEntity(entity);
+				if (canCollideWith(entity)) {
+					entity.applyEntityCollision(this);
+					onCollideWithEntity(entity);
+				}
 			}
 		}
 	}
 	
+	/**
+	 * Dictates whether this entity will be aware of the collision. However, the
+	 * other entity will still execute the collision logic.
+	 * <p>
+	 * This affects the {@link #onCollideWithEntity(Entity)} hook. Also prevents
+	 * {@link #applyEntityCollision(Entity) vanilla logic} from occurring which
+	 * pushes the entities away.
+	 */
 	protected boolean canCollideWith(Entity entity) {
-		return entity instanceof AvatarEntity && !entity.getClass().isInstance(this);
+		return entity instanceof AvatarEntity;
 	}
 	
-	protected void updateHidden() {
-		setHidden(getOwner() == null);
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		if (canCollideWith(entity)) {
+			super.applyEntityCollision(entity);
+			onCollideWithEntity(entity);
+		}
 	}
 	
 	/**
@@ -235,9 +275,61 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	public void onCollideWithSolid() {}
 	
+	/**
+	 * Called when another entity destroys this AvatarEntity. If it is
+	 * considered to be destroyable, this is where things should be "cleaned up"
+	 * (eg remove status control). Returns true if it was destroyed. Some
+	 * entities are too strong to destroy, such as an air bubble.
+	 */
+	public boolean tryDestroy() {
+		return true;
+	}
+	
+	/**
+	 * Break the block at the given position, playing sound/particles, and
+	 * dropping item
+	 */
+	protected void breakBlock(BlockPos position) {
+		
+		IBlockState blockState = worldObj.getBlockState(position);
+		
+		Block destroyed = blockState.getBlock();
+		SoundEvent sound;
+		if (destroyed == Blocks.FIRE) {
+			sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
+		} else {
+			sound = destroyed.getSoundType().getBreakSound();
+		}
+		worldObj.playSound(null, getPosition(), sound, SoundCategory.BLOCKS, 1, 1);
+		
+		// Spawn particles
+		
+		for (int i = 0; i < 7; i++) {
+			worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
+					3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
+					3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
+		}
+		worldObj.setBlockToAir(getPosition());
+		
+		// Create drops
+		
+		if (!worldObj.isRemote) {
+			List<ItemStack> drops = blockState.getBlock().getDrops(worldObj, position, blockState, 0);
+			for (ItemStack stack : drops) {
+				EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
+				item.setDefaultPickupDelay();
+				item.motionX *= 2;
+				item.motionY *= 1.2;
+				item.motionZ *= 2;
+				worldObj.spawnEntityInWorld(item);
+			}
+		}
+		
+	}
+	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {
-		return isHidden() ? null : getEntityBoundingBox();
+		return getEntityBoundingBox();
 	}
 	
 	@Override
@@ -247,17 +339,17 @@ public abstract class AvatarEntity extends Entity {
 	
 	@Override
 	public boolean canRenderOnFire() {
-		return !putsOutFires && !flammable && super.canRenderOnFire();
+		return !putsOutFires && flammable && super.canRenderOnFire();
 	}
 	
 	@Override
 	public void setFire(int seconds) {
-		if (!putsOutFires && !flammable) super.setFire(seconds);
+		if (!putsOutFires && flammable) super.setFire(seconds);
 	}
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return super.shouldRenderInPass(pass) && !isHidden();
+		return super.shouldRenderInPass(pass);
 	}
 	
 	// disable stepping sounds

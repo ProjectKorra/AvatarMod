@@ -21,6 +21,7 @@ import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarMod;
 
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 /**
@@ -34,12 +35,12 @@ import net.minecraft.world.World;
 public class ClientParticleSpawner implements ParticleSpawner {
 	
 	@Override
-	public void spawnOneParticle(World world, ParticleType particle, double x, double y, double z,
+	public void spawnOneParticle(World world, EnumParticleTypes particle, double x, double y, double z,
 			double velocityX, double velocityY, double velocityZ, int... parameters) {
 		
 		if (world.isRemote) {
 			
-			world.spawnParticle(particle.vanilla(), x, y, z, velocityX / 20, velocityY / 20, velocityZ / 20,
+			world.spawnParticle(particle, x, y, z, velocityX / 20, velocityY / 20, velocityZ / 20,
 					parameters);
 			
 		}
@@ -47,7 +48,7 @@ public class ClientParticleSpawner implements ParticleSpawner {
 	}
 	
 	@Override
-	public void spawnParticles(World world, ParticleType particle, int minimum, int maximum, double x,
+	public void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum, double x,
 			double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
 			int... parameters) {
 		
@@ -62,8 +63,7 @@ public class ClientParticleSpawner implements ParticleSpawner {
 			
 			for (int i = 0; i < particlesToSpawn; i++) {
 				
-				world.spawnParticle(particle.vanilla(), x, y, z,
-						random(random, -maxVelocityX, maxVelocityX) / 20,
+				world.spawnParticle(particle, x, y, z, random(random, -maxVelocityX, maxVelocityX) / 20,
 						random(random, -maxVelocityY, maxVelocityY) / 20,
 						random(random, -maxVelocityZ, maxVelocityZ) / 20, parameters);
 				

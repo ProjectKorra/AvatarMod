@@ -21,12 +21,13 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -45,18 +46,18 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
+	public boolean execute(BendingContext ctx) {
 		
-		AvatarPlayerData data = ctx.getData();
-		EntityPlayer player = data.getPlayerEntity();
-		World world = data.getWorld();
+		BendingData data = ctx.getData();
+		EntityLivingBase bender = ctx.getBenderEntity();
+		World world = ctx.getWorld();
 		
 		if (data.hasBending(BendingType.FIREBENDING)) {
-			FirebendingState state = (FirebendingState) data.getBendingState(BendingType.FIREBENDING);
-			state.setFlamethrowing(setting);
 			if (setting) {
 				data.addStatusControl(STOP_FLAMETHROW);
-				data.sync();
+				data.addTickHandler(TickHandler.FLAMETHROWER);
+			} else {
+				data.removeTickHandler(TickHandler.FLAMETHROWER);
 			}
 		}
 		

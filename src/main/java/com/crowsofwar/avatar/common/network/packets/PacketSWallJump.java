@@ -29,10 +29,10 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {}
+	public void avatarFromBytes(ByteBuf buf) {}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {}
+	public void avatarToBytes(ByteBuf buf) {}
 	
 	@Override
 	protected Side getRecievedSide() {

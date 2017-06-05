@@ -36,7 +36,12 @@ public class AvatarUiTextures {
 	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
 	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
 			"textures/gui/blurred_icons.png");
-	static final ResourceLocation skillsGui = new ResourceLocation("avatarmod", "textures/gui/skillmenu.png");
+	public static final ResourceLocation skillsGui = new ResourceLocation("avatarmod",
+			"textures/gui/skillmenu.png");
+	public static final ResourceLocation getBending = new ResourceLocation("avatarmod",
+			"textures/gui/getbending.png");
+	public static final ResourceLocation airBubbleHealth = new ResourceLocation("avatarmod",
+			"textures/gui/airbubble_health.png");
 	
 	static final ResourceLocation bgWater = new ResourceLocation("avatarmod",
 			"textures/gui/bg_water_screen.png");
@@ -47,21 +52,34 @@ public class AvatarUiTextures {
 			"textures/gui/bg_earth_screen.png");
 	public static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
 			"textures/gui/status_controls.png");
+	public static final ResourceLocation CHI_BAR = new ResourceLocation("avatarmod", "textures/gui/chi.png");
+	
+	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
 	
 	private static final Map<BendingAbility, ResourceLocation> abilityTextures = new HashMap<>();
+	private static final Map<BendingAbility, ResourceLocation> abilityCards = new HashMap<>();
+	private static final Map<BendingAbility, ResourceLocation> abilityCardsPlain = new HashMap<>();
+	
+	private static <T> ResourceLocation getCachedImage(Map<T, ResourceLocation> map, T obj, String loc) {
+		if (!map.containsKey(obj)) {
+			ResourceLocation location = new ResourceLocation("avatarmod", loc);
+			map.put(obj, location);
+			return location;
+		}
+		return map.get(obj);
+	}
 	
 	public static ResourceLocation getAbilityTexture(BendingAbility ability) {
-		
-		if (!abilityTextures.containsKey(ability)) {
-			
-			ResourceLocation location = new ResourceLocation("avatarmod",
-					"textures/radial/icon_" + ability.getName() + ".png");
-			abilityTextures.put(ability, location);
-			return location;
-			
-		}
-		return abilityTextures.get(ability);
-		
+		return getCachedImage(abilityTextures, ability, "textures/radial/icon_" + ability.getName() + ".png");
+	}
+	
+	public static ResourceLocation getCardTexture(BendingAbility ability) {
+		return getCachedImage(abilityCards, ability, "textures/gui/skillmenu/" + ability.getName() + ".png");
+	}
+	
+	public static ResourceLocation getPlainCardTexture(BendingAbility ability) {
+		return getCachedImage(abilityCardsPlain, ability,
+				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");
 	}
 	
 }

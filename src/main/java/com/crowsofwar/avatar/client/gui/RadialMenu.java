@@ -19,18 +19,22 @@ package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.AvatarMod.proxy;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.chat.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -41,6 +45,8 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
 
 public class RadialMenu extends Gui {
+	
+	private static final ChatMessage MSG_RADIAL_XP = newChatMessage("avatar.radial.xp", "level", "xp");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png
@@ -56,7 +62,6 @@ public class RadialMenu extends Gui {
 	public static final float menuScale = 0.36f;
 	
 	private RadialSegment[] segments;
-	private AvatarControl pressing;
 	private BendingAbility[] controls;
 	private MenuTheme theme;
 	private final BendingController controller;
@@ -80,12 +85,10 @@ public class RadialMenu extends Gui {
 	 *            less than 8, then the array is filled with null. The arguments
 	 *            can only be a maximum of 8.
 	 */
-	public RadialMenu(BendingController controller, MenuTheme theme, AvatarControl pressing,
-			BendingAbility... controls) {
+	public RadialMenu(BendingController controller, MenuTheme theme, BendingAbility... controls) {
 		this.controller = controller;
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
-		this.pressing = pressing;
 		this.ticksExisted = 0;
 		
 		if (controls == null) {
@@ -124,20 +127,47 @@ public class RadialMenu extends Gui {
 	}
 	
 	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
-		String translated = I18n
-				.format(ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName());
+		
+		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
-		drawCenteredString(mc.fontRendererObj, translated, x, y, 0xffffff);
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
 		if (data != null) {
-			String second = I18n.format(ability == null ? "avatar.radial.undefined" : "avatar.radial.xp",
-					(int) data.getAbilityData(ability).getXp());
+			
+			AbilityData abilityData = data.getAbilityData(ability);
+			
+			String secondKey = "avatar.radial.undefined";
+			String[] secondArgs = { "", "" };
+			if (ability != null) {
+				secondKey = "avatar.radial.xp";
+				secondArgs[0] = abilityData.getLevel() + "";
+				secondArgs[1] = (int) (abilityData.getXp()) + "";
+				
+				if (abilityData.getLevel() == 3) {
+					secondKey = "avatar.radial.max";
+					secondArgs[1] = abilityData.getPath().name().toLowerCase();
+				}
+				if (abilityData.isLocked()) {
+					secondKey = "avatar.radial.locked2";
+					secondArgs[0] = AvatarMod.proxy.getKeyHandler().getDisplayName(AvatarControl.KEY_SKILLS)
+							+ "";
+					nameKey = "avatar.radial.locked1";
+				}
+				
+			}
+			String second = I18n.format(secondKey);
+			
+			second = ChatSender.instance.processText(second, MSG_RADIAL_XP,
+					(Object[]) ArrayUtils.addAll(secondArgs, abilityData.getLevel() + ""));
+			
 			drawCenteredString(mc.fontRendererObj, second, x,
 					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),
 					0xffffff);
+			
 		}
+		
+		drawCenteredString(mc.fontRendererObj, I18n.format(nameKey), x, y, 0xffffff);
 		
 	}
 	
@@ -159,8 +189,9 @@ public class RadialMenu extends Gui {
 		
 		ticksExisted++;
 		
-		boolean closeGui = !Keyboard.isKeyDown(proxy.getKeyHandler().getKeyCode(pressing))
-				|| AvatarMod.proxy.getKeyHandler().isControlPressed(AvatarControl.CONTROL_LEFT_CLICK);
+		boolean closeGui = !Keyboard
+				.isKeyDown(proxy.getKeyHandler().getKeyCode(AvatarControl.KEY_USE_BENDING))
+				|| AvatarControl.CONTROL_LEFT_CLICK.isPressed();
 		
 		// Find current mouse over
 		RadialSegment currentMouseover = null;
@@ -187,16 +218,6 @@ public class RadialMenu extends Gui {
 			drawCenteredString(mc.fontRendererObj, I18n.format("avatar.ui.openSkillsMenu"), centerX,
 					centerY + mc.fontRendererObj.FONT_HEIGHT / 4, 0xffffff);
 			
-		}
-		
-		if (Mouse.isButtonDown(0)) {
-			int centeredX = mouseX - resolution.getScaledWidth() / 2;
-			int centeredY = mouseY - resolution.getScaledHeight() / 2;
-			if (currentMouseover == null
-					&& Math.sqrt(centeredX * centeredX + centeredY * centeredY) / menuScale < 100) {
-				mc.displayGuiScreen(new SkillsGui(controller));
-				return true;
-			}
 		}
 		
 		if (closeGui) {

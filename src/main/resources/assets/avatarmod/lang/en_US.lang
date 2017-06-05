@@ -7,10 +7,11 @@ avatar.ThrowBlock=Throw Block
 avatar.ToggleBending=Pick up block
 
 avatar.RadialMenu=Earthbending
-avatar.Firebend=Firebending
-avatar.Waterbend=Waterbending
-avatar.Airbend=Airbending
+avatar.Bend=Use Bending
+avatar.BendingCycleLeft=Cycle Bending Left
+avatar.BendingCycleRight=Cycle Bending Right
 avatar.Skills=Skills Menu
+avatar.TransferBison=Confirm Bison Transfer
 
 avatar.earthbending=Earthbending
 avatar.earthbending.demonym=Earthbender
@@ -20,6 +21,7 @@ avatar.waterbending=Waterbending
 avatar.waterbending.demonym=Waterbender
 avatar.airbending=Airbending
 avatar.airbending.demonym=Airbender
+avatar.all=Universal
 
 avatar.ui.openSkillsMenu=Click to open
 
@@ -53,31 +55,176 @@ avatar.cmd.pp.set.range=[error]Progression points must be more than 0.[/error]
 avatar.donthavebending=[error]You haven't learned ${bending} yet. To get it, type in: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
 avatar.nochi=Not enough chi!
 avatar.airBubbleElytra=Cannot use air bubble with elytra
+avatar.bisonStats=Bison is at ${food}%% food, ${health}%% health, and ${domestication} domestication.
+avatar.outOfScrolls=This bender's pack is empty. They probably wouldn't have any scrolls to give you.
+avatar.abilityLocked=You need to unlock that ability before you can use it!
+
+avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
+avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
+avatar.bisonWhistle.notAssigned=[error]This bison whistle has not been bound to a bison; sneak-click a bison with this to bind it.[/error]
+avatar.bisonWhistle.notFound=[error]${bison} no longer lives in the physical world.[/error]
+avatar.bisonWhistle.notOwned=[error]You do not own this flying bison.[/error]
+avatar.bisonWhistle.tooltipBound=Bound to %s
+avatar.bisonWhistle.tooltipUnbound=Not bound
+avatar.bisonWhistle.transferAway=Your flying bison ${bison} has been transferred to ${newOwner}.
+avatar.bisonWhistle.transferTo=You now own ${oldOwner}'s flying bison ${bison}!
+avatar.bisonWhistle.noTransfer=[error]Nobody has recently requested a bison transfer.[/error]
+avatar.bisonWhistle.transferAway.start=${newOwner} would like to own your bison ${bison}. Press [keybinding=avatar.TransferBison] to confirm, ignore to decline.
+avatar.bisonWhistle.transferTo.start=A message has been sent to ${oldOwner} to confirm the transfer of ${bison}.
+avatar.bisonWhistle.transferAway.ignore=The transfer with ${newOwner} has been ignored.
+avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to your transfer request.
+avatar.bisonWhistle.transferOffline=[error]This bison isn't yours. You can't transfer the bison since the owner ${owner} is offline.[/error]
 
 avatar.ability.pickup_block=Pick Up Block
+avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
+avatar.ability.pickup_block.lvl1=Move and throw bendable blocks
+avatar.ability.pickup_block.lvl2=Faster and farther when thrown
+avatar.ability.pickup_block.lvl3=Twice the damage
+avatar.ability.pickup_block.lvl4_1=Blocky boomerang ;; Block comes back after successful mob hit
+avatar.ability.pickup_block.lvl4_2=Large impact ;; 1/2 chance to create an explosion on landing
+
 avatar.ability.ravine=Ravine
+avatar.ability.ravine.desc=Create a powerful yet small fissure in the ground. Only works on level ground and earth, but can do plenty of damage.
+avatar.ability.ravine.lvl1=Slow, basic ravine
+avatar.ability.ravine.lvl2=Faster speed
+avatar.ability.ravine.lvl3=Ravine travels farther unless there is an obstacle
+avatar.ability.ravine.lvl4_1=Fissure ;; Destroys blocks under it, hit multiple enemies, but costs 1.5x chi
+avatar.ability.ravine.lvl4_2=Shaking earth ;; Chance to knock armor and weapons off hit enemies
+
 avatar.ability.earth_wall=Wall
+avatar.ability.earth_wall.desc=Raise a protective barrier in front of yourself. It can block incoming projectiles and mobs.
+avatar.ability.earth_wall.lvl1=Summon a small wall
+avatar.ability.earth_wall.lvl2=Create a larger wall
+avatar.ability.earth_wall.lvl3=Create a larger wall
+avatar.ability.earth_wall.lvl4_1=Shoot projectiles through the wall
+avatar.ability.earth_wall.lvl4_2=Wall stays up for longer, but uses up chi
+
 avatar.ability.mine_blocks=Mine Blocks
+avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels
+avatar.ability.mine_blocks.lvl1=Mine a few blocks
+avatar.ability.mine_blocks.lvl2=Mine out even more blocks
+avatar.ability.mine_blocks.lvl3=Fortune level I when mining
+avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
+avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
 
 avatar.ability.light_fire=Light Fire
+avatar.ability.light_fire.desc=A small, utility type ability to light fires. It's less practical in combat than some other abilities.
+avatar.ability.light_fire.fail=You weren't able to light the fire. Maybe you should try again...
+avatar.ability.light_fire.lvl1=Try to create a small fire
+avatar.ability.light_fire.lvl2=Greater chance of creating fire
+avatar.ability.light_fire.lvl3=Greater chance of creating fire
+avatar.ability.light_fire.lvl4_1=Flame wall ;; Create a line of fire in the direction you're looking
+avatar.ability.light_fire.lvl4_2=Wide range ;; Light nearby blocks on fire as well
+
 avatar.ability.fire_arc=Fire Arc
+avatar.ability.fire_arc.desc=Make a flaming whip of fire and throw it at your enemies.
+avatar.ability.fire_arc.lvl1=Create a fire arc
+avatar.ability.fire_arc.lvl2=Moves faster
+avatar.ability.fire_arc.lvl3=Tons more damage
+avatar.ability.fire_arc.lvl4_1=Large fire ;; Can make even more fire upon landing
+avatar.ability.fire_arc.lvl4_2=Boomerang ;; Comes back upon a successful hit
+
 avatar.ability.flamethrower=Flamethrower
+avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
+avatar.ability.flamethrower.lvl1=Attack within a short range
+avatar.ability.flamethrower.lvl2=Nearly twice as many flames; but more chi
+avatar.ability.flamethrower.lvl3=Longer range, more precise
+avatar.ability.flamethrower.lvl4_1=Flamestream ;; Extremely long-ranged, concentrated flames
+avatar.ability.flamethrower.lvl4_2=The world will burn!! ;; Unfocused flames that create fires everywhere
+
 avatar.ability.fireball=Fireball
+avatar.ability.fireball.desc=Create a glowing orb of flame. It makes a firey explosion on impact.
+avatar.ability.fireball.lvl1=Create a basic fireball
+avatar.ability.fireball.lvl2=Faster when thrown
+avatar.ability.fireball.lvl3=Tons more damage upon direct hit
+avatar.ability.fireball.lvl4_1=Focused explosion ;; Can sometimes destroy obsidian
+avatar.ability.fireball.lvl4_2=Charged explosion ;; Takes a few seconds to charge, larger explosion when charged
 
 avatar.ability.water_arc=Water Arc
+avatar.ability.water_arc.desc=One of waterbending's most common attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby.
+avatar.ability.water_arc.lvl1=Basic water arc
+avatar.ability.water_arc.lvl2=Farther pick-up range
+avatar.ability.water_arc.lvl3=Much faster
+avatar.ability.water_arc.lvl4_1=Boomerang ;; Comes back to you if you hit a target
+avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thrown, slower
+
 avatar.ability.wave=Wave
+avatar.ability.wave.desc=Summon a wave of water to destroy your enemies. Only works when they are in water.
+avatar.ability.wave.lvl1=Slow wave to drown enemies
+avatar.ability.wave.lvl2=A lot more damage
+avatar.ability.wave.lvl3=Much larger
+avatar.ability.wave.lvl4_1=Tsunami ;; Much larger and affects creatures on land
+avatar.ability.wave.lvl4_2=Force wave ;; Very fast waves
+
 avatar.ability.water_bubble=Water Bubble
+avatar.ability.water_bubble.desc=Suspend and transport a bubble of water. Can be used like a long-range bucket.
+avatar.ability.water_bubble.lvl1=Short-ranged water bubble, water dries up after impact
+avatar.ability.water_bubble.lvl2=Throw the bubble much farther
+avatar.ability.water_bubble.lvl3=Bubble creates permanent water source on landing
+avatar.ability.water_bubble.lvl4_1=Throw water bubble very far
+avatar.ability.water_bubble.lvl4_2=Doesn't use up water to create bubble - infinite water
+
 avatar.ability.water_skate=Water Skate
+avatar.ability.water_skate.desc=Run on the surface of water. Useful as an evasive ability, or just to get around.
+avatar.ability.water_skate.lvl1=Slip across the water, can't use abilities
+avatar.ability.water_skate.lvl2=Can use abilities while skating
+avatar.ability.water_skate.lvl3=Much faster
+avatar.ability.water_skate.lvl4_1=Balanced skating ;; Can skate even on flowing water
+avatar.ability.water_skate.lvl4_2=Watery impact ;; Smash the ground after jumping
 
 avatar.ability.air_gust=Air Gust
+avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
+avatar.ability.air_gust.lvl1=Blast enemies away
+avatar.ability.air_gust.lvl2=Half the cooldown
+avatar.ability.air_gust.lvl3=Stronger push
+avatar.ability.air_gust.lvl4_1=Extinguish ;; Destroys weaker projectiles
+avatar.ability.air_gust.lvl4_2=Vacuum ;; Sucks enemies TOWARDS you
+
 avatar.ability.air_jump=Air Jump
+avatar.ability.air_jump.desc=Manipulate the air around you to boost off the ground. Perfect for catching up to an unsuspecting enemy.
+avatar.ability.air_jump.lvl1=Jump through the air
+avatar.ability.air_jump.lvl2=Slightly improved jumping power
+avatar.ability.air_jump.lvl3=Even better jumping
+avatar.ability.air_jump.lvl4_1=Double-jump ;; Costs double chi
+avatar.ability.air_jump.lvl4_2=Ground pound ;; Attack nearby enemies on land
+
 avatar.ability.airblade=Airblade
+avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh. Can be deadly in quick succession.
+avatar.ability.airblade.lvl1=Base ability
+avatar.ability.airblade.lvl2=Higher speeds and damage
+avatar.ability.airblade.lvl3=Can now cut blocks
+avatar.ability.airblade.lvl4_1=Chainblade ;; Bounces through multiple enemies
+avatar.ability.airblade.lvl4_2=Armor piercer ;; Cuts through armor and stone
+
 avatar.ability.air_bubble=Air Bubble
+avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.
+avatar.ability.air_bubble.lvl1=Small range and knockback
+avatar.ability.air_bubble.lvl2=Medium-sized air bubble
+avatar.ability.air_bubble.lvl3=More knockback
+avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
+avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by sneak
 
 avatar.ability.undefined=???
 
-avatar.radial.xp=%1$f%%
+avatar.ui.level0=Level I
+avatar.ui.level1=Level II
+avatar.ui.level2=Level III
+avatar.ui.level3=-MAX-
+avatar.ui.path_first=First Path
+avatar.ui.path_second=Second Path
+avatar.ui.unlock=Ability Locked
+avatar.ui.unlockDesc=Spend a [translate=avatar.${bending}] or Universal scroll to unlock
+avatar.ui.skillsMenu=[translate=avatar.${bending}] Ability Experience
+
 avatar.radial.undefined=Coming soon!
+avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
+avatar.radial.max=Level IV, [translate=avatar.ui.path_${xp}]
+avatar.radial.locked1=Ability Locked
+avatar.radial.locked2=Press ${level} to unlock
+
+avatar.getBending.title=Unlock Bending
+avatar.getBending.incompatible=You can only use scrolls of the same or universal type
+avatar.getBending.guide=Insert 3 scrolls of the same or universal type to unlock Bending
 
 avatar.key.none1=No key
 avatar.key.none2=Click to edit
@@ -94,3 +241,34 @@ death.attack.avatar_ravine=%2$s crushed %1$s in a ravine
 death.attack.avatar_wave=%1$s can't surf
 death.attack.avatar_fireball=%2$s blasted %1$s with a fireball
 death.attack.avatar_airblade=%1$s was sliced by %2$s
+death.attack.avatar_flamethrower=%1$s just got ROASTED by %2$s!!
+death.attack.avatar_groundSmash=%2$s smashed %1$s to a pulp
+
+entity.Airbender.name=Airbender
+entity.Firebender.name=Firebender
+entity.Waterbender.name=Waterbender
+entity.SkyBison.name=Flying Bison
+entity.OtterPenguin.name=Otter Penguin
+
+itemGroup.avatar.items=Avatar Items
+
+item.avatarmod:scroll.all.name=Scroll 
+item.avatarmod:scroll.air.name=Airbending Scroll
+item.avatarmod:scroll.fire.name=Firebending Scroll
+item.avatarmod:scroll.earth.name=Earthbending Scroll
+item.avatarmod:scroll.water.name=Waterbending Scroll
+item.avatarmod:water_pouch.name=Water Skin
+item.avatarmod:bison_whistle.name=Bison Whistle
+
+item.avatarmod:bison_saddle.basic.name=Basic Bison Saddle
+item.avatarmod:bison_saddle.sturdy.name=Sturdy Bison Saddle
+item.avatarmod:bison_saddle.studded.name=Studded Bison Saddle
+item.avatarmod:bison_saddle.majestic.name=Majestic Bison Saddle
+
+item.avatarmod:bison_armor.woven.name=Woven Bison Armor
+item.avatarmod:bison_armor.chain.name=Chainmail Bison Armor
+item.avatarmod:bison_armor.wrought.name=Wrought Bison Armor
+item.avatarmod:bison_armor.legendary.name=Legendary Bison Armor
+
+avatar.tooltip.water_pouch=%d/3 Water
+avatar.tooltip.water_pouch.empty=Empty

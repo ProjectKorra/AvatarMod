@@ -23,7 +23,7 @@ import com.crowsofwar.gorecore.util.ImmutableVector;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -41,7 +41,7 @@ public class ControlPoint {
 	private static int nextId = 1;
 	
 	protected EntityArc arc;
-	protected EntityPlayer owner;
+	protected EntityLivingBase owner;
 	
 	private final Vector internalVelocity;
 	private final Vector internalPosition;
@@ -196,11 +196,11 @@ public class ControlPoint {
 		return arc;
 	}
 	
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		return owner;
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		this.owner = owner;
 	}
 	

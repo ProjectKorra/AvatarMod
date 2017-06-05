@@ -17,17 +17,18 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -41,26 +42,24 @@ public class StatCtrlThrowFire extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext context) {
+	public boolean execute(BendingContext ctx) {
 		
-		EntityPlayer player = context.getPlayerEntity();
-		AvatarPlayerData data = context.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
 		
-		FirebendingState bendingState = (FirebendingState) data
-				.getBendingState(BendingManager.getBending(BendingType.FIREBENDING));
+		EntityFireArc fire = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFireArc.class, //
+				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
+						&& arc.getOwner() == ctx.getBenderEntity());
 		
-		if (bendingState.isManipulatingFire()) {
+		if (fire != null) {
 			
-			EntityFireArc fire = bendingState.getFireArc();
+			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC);
 			
-			Vector force = Vector.toRectangular(Math.toRadians(player.rotationYaw),
-					Math.toRadians(player.rotationPitch));
-			force.mul(10);
+			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
+					Math.toRadians(entity.rotationPitch));
+			force.mul(abilityData.getLevel() >= 1 ? 12 : 8);
 			fire.velocity().add(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
-			
-			bendingState.setNoFireArc();
-			data.sendBendingState(bendingState);
 			
 			return true;
 			

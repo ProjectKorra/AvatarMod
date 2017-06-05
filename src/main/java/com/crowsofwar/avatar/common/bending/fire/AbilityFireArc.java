@@ -19,14 +19,18 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -49,35 +53,36 @@ public class AbilityFireArc extends FireAbility {
 		
 		if (ctx.consumeChi(STATS_CONFIG.chiFireArc)) {
 			
-			EntityPlayer player = ctx.getPlayerEntity();
+			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
-			FirebendingState fs = (FirebendingState) ctx.getData().getBendingState(controller());
-			AvatarPlayerData data = ctx.getData();
+			BendingData data = ctx.getData();
 			
 			Vector lookPos;
 			if (ctx.isLookingAtBlock()) {
 				lookPos = ctx.getLookPos();
 			} else {
-				Vector look = Vector.getLookRectangular(player);
-				lookPos = Vector.getEyePos(player).plus(look.times(3));
+				Vector look = Vector.getLookRectangular(entity);
+				lookPos = Vector.getEyePos(entity).plus(look.times(3));
 			}
 			
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
-			fire.setBehavior(new FireArcBehavior.PlayerControlled(fire, player));
-			fire.setOwner(player);
-			fire.setDamageMult(0.75f + ctx.getData().getAbilityData(this).getXp() / 100);
+			fire.setBehavior(new FireArcBehavior.PlayerControlled());
+			fire.setOwner(entity);
+			fire.setDamageMult(ctx.getLevel() >= 2 ? 2 : 1);
+			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			
 			world.spawnEntityInWorld(fire);
 			
-			fs.setFireArc(fire);
-			data.sendBendingState(fs);
-			
 			data.addStatusControl(StatusControl.THROW_FIRE);
-			data.sync();
 			
 		}
 		
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiFireArc(this, entity, bender);
 	}
 	
 }

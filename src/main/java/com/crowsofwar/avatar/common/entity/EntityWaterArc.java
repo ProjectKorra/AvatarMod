@@ -17,12 +17,17 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
+
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -67,7 +72,13 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected void onCollideWithBlock() {
+	public void onCollideWithSolid() {
+		
+		if (!worldObj.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
+			if (tryDestroy()) {
+				setDead();
+			}
+		}
 		
 		if (worldObj.isRemote) {
 			Random random = new Random();
@@ -141,13 +152,6 @@ public class EntityWaterArc extends EntityArc {
 			}
 		}
 		
-		// if (worldObj.getBlockState(getPosition()).getBlock() == Blocks.FIRE)
-		// {
-		// worldObj.setBlockToAir(getPosition());
-		// worldObj.playSound(posX, posY, posZ,
-		// SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 1,
-		// 1, false);
-		// }
 	}
 	
 	public static EntityWaterArc findFromId(World world, int id) {
@@ -182,8 +186,22 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof WaterArcBehavior.PlayerControlled ? getOwner() : null;
+	}
+	
+	@Override
 	protected double getControlPointTeleportDistanceSq() {
 		return 9;
+	}
+	
+	@Override
+	public boolean tryDestroy() {
+		if (getOwner() != null) {
+			BendingData data = Bender.create(getOwner()).getData();
+			data.removeStatusControl(THROW_WATER);
+		}
+		return true;
 	}
 	
 	public static class WaterControlPoint extends ControlPoint {

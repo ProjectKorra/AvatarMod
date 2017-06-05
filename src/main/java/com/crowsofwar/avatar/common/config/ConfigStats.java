@@ -43,13 +43,13 @@ public class ConfigStats {
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(6, 6), //
-			airbladeSettings = new AttackSettings(4, .1);
+			airbladeSettings = new AttackSettings(4, .03);
 	
 	@Load
 	public List<String> bendableBlocksNames;
 	
 	@Load
-	public double wallWaitTime = 10, wallMomentum = 10;
+	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
 	
 	@Load
 	public int wallJumpDelay = 10;
@@ -58,10 +58,11 @@ public class ConfigStats {
 	public FireballSettings fireballSettings = new FireballSettings();
 	
 	@Load
-	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 6f, chiRavine = 3f,
-			chiWall = 5f, chiPickUpBlock = 2.5f, chiMining = 4f, chiFireArc = 2f, chiFireball = 4f,
+	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 3f,
+			chiAirBubbleTakeDamage = 0.5f, chiAirBubbleOneSecond = 0.25f, chiRavine = 3f, chiWall = 5f,
+			chiPickUpBlock = 2.5f, chiMining = 4f, chiMiningMaster = 1f, chiFireArc = 2f, chiFireball = 4f,
 			chiFlamethrowerSecond = 2f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
-			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f;
+			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.25f;
 	
 	@Load
 	public boolean allowAirBubbleElytra = false;
@@ -69,13 +70,17 @@ public class ConfigStats {
 	@Load
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
 	
+	@Load
+	public boolean addDungeonLoot = true;
+	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {
 		bendableBlocksNames = new ArrayList<>();
 		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
 				STONEBRICK, CLAY, HARDENED_CLAY, STAINED_HARDENED_CLAY, COAL_ORE, IRON_ORE, EMERALD_ORE,
-				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE, GRASS);
+				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE, GRASS, GRASS_PATH);
+		
 	}
 	
 	private void addBendableBlock(Block... blocks) {
@@ -100,6 +105,9 @@ public class ConfigStats {
 	
 	public static void load() {
 		ConfigLoader.load(STATS_CONFIG, "avatar/stats.yml");
+	}
+	
+	public void loadBlocks() {
 		STATS_CONFIG.loadBendableBlocks();
 	}
 	

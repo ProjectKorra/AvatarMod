@@ -17,15 +17,17 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 import java.util.List;
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingState;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
@@ -37,6 +39,7 @@ import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +51,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -69,8 +74,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
 			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
 	
-	private static final DataParameter<String> SYNC_OWNER_NAME = createKey(EntityFloatingBlock.class,
-			DataSerializers.STRING);
+	private static final DataParameter<BenderInfo> SYNC_OWNER = createKey(EntityFloatingBlock.class,
+			AvatarDataSerializers.SERIALIZER_BENDER);
 	
 	private static int nextBlockID = 0;
 	
@@ -104,11 +109,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			setID(nextBlockID++);
 		}
 		this.enableItemDrops = true;
-		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER_NAME, newOwner -> {
-			EarthbendingState state = (EarthbendingState) AvatarPlayerData.fetcher().fetch(newOwner)
-					.getBendingState(EARTHBENDING);
-			if (state != null) state.setPickupBlock(this);
-		});
+		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
 		this.damageMult = 1;
 		
 	}
@@ -174,7 +175,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
-		getBehavior().save(findNestedCompound(nbt, "BehaviorData"));
+		getBehavior().save(nestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
 		ownerAttrib.save(nbt);
 	}
@@ -215,7 +216,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	public static EntityFloatingBlock getFromID(World world, int id) {
 		for (int i = 0; i < world.loadedEntityList.size(); i++) {
-			Entity e = (Entity) world.loadedEntityList.get(i);
+			Entity e = world.loadedEntityList.get(i);
 			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id)
 				return (EntityFloatingBlock) e;
 		}
@@ -313,6 +314,17 @@ public class EntityFloatingBlock extends AvatarEntity {
 				worldObj.spawnEntityInWorld(ei);
 			}
 		}
+		AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
+		if (data.isMasterPath(AbilityTreePath.SECOND)) {
+			
+			Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 2, false, false);
+			if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+				explosion.doExplosionA();
+				explosion.doExplosionB(true);
+			}
+			
+		}
+		
 	}
 	
 	public float getFriction() {
@@ -327,11 +339,12 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setBehavior(new FloatingBlockBehavior.Fall());
 	}
 	
-	public EntityPlayer getOwner() {
+	@Override
+	public EntityLivingBase getOwner() {
 		return ownerAttrib.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		ownerAttrib.setOwner(owner);
 	}
 	
@@ -343,6 +356,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 		// FIXME research: why doesn't sync_Behavior cause an update to client?
 		if (behavior == null) throw new IllegalArgumentException("Cannot have null behavior");
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+	
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
 	}
 	
 	public AxisAlignedBB getExpandedHitbox() {
@@ -367,9 +385,13 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	@Override
-	public void applyEntityCollision(Entity entity) {
-		// super.applyEntityCollision(entity);
-		// entity.applyEntityCollision(entity);
+	protected boolean canCollideWith(Entity entity) {
+		return false;
+	}
+	
+	@Override
+	public boolean tryDestroy() {
+		return false;
 	}
 	
 }

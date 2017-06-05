@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.findNestedCompound;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,14 +34,14 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class Chi {
 	
-	private final AvatarPlayerData data;
+	private final BendingData data;
 	
 	// These fields are not for modification directly; use getters/setters
 	private float max;
 	private float total;
 	private float availableMark;
 	
-	public Chi(AvatarPlayerData data) {
+	public Chi(BendingData data) {
 		this.data = data;
 		
 		// Default values for testing
@@ -145,10 +145,23 @@ public class Chi {
 		return max - availableMark;
 	}
 	
+	/**
+	 * Tries to consume the amount of available chi; returns whether there was
+	 * enough.
+	 */
+	public boolean consumeChi(float amount) {
+		float available = getAvailableChi();
+		if (available >= amount) {
+			changeTotalChi(-amount);
+			changeAvailableChi(-amount);
+			return true;
+		}
+		return false;
+	}
+	
 	private void save() {
 		checkConsistency();
-		data.getNetworker().changeAndSync(AvatarPlayerData.KEY_CHI, this);
-		data.saveChanges();
+		data.save(DataCategory.CHI);
 	}
 	
 	/**
@@ -168,7 +181,7 @@ public class Chi {
 	 * parameter
 	 */
 	public void readFromNBT(NBTTagCompound compound) {
-		NBTTagCompound nbt = findNestedCompound(compound, "ChiData");
+		NBTTagCompound nbt = nestedCompound(compound, "ChiData");
 		this.max = nbt.getFloat("Max");
 		this.total = nbt.getFloat("Current");
 		this.availableMark = nbt.getFloat("AvailableMark");
@@ -184,7 +197,7 @@ public class Chi {
 	 * parameter
 	 */
 	public void writeToNBT(NBTTagCompound compound) {
-		NBTTagCompound nbt = findNestedCompound(compound, "ChiData");
+		NBTTagCompound nbt = nestedCompound(compound, "ChiData");
 		nbt.setFloat("Max", max);
 		nbt.setFloat("Current", total);
 		nbt.setFloat("AvailableMark", availableMark);

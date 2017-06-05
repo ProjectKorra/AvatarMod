@@ -1,18 +1,47 @@
-AV2 Changelog :: version a3.1
+AV2 Changelog :: version a4.0
 
-+ Added allowAirBubbleElytra option to stats.yml; default false
-+ Added infiniteInCreative option to chi.yml; whether chi is infinite in creative mode
+(important! detailed info can be found on avatarmod2.wikia.com)
 
-* By default, mining takes only 4 instead of 8 chi
-* Commands no longer case-sensitive (capital/lowercase doesn't matter)
-* Don't have to look directly at water to make water arc
-* Infinite chi while in creative mode
-* When player logs out, all entities become "hidden" and disappear until logs back in
++ New skills menu
++ Get bending menu (ie get bending in survival mode!)
++ Ability Levelling(leveling?) System
++ Scrolls item
++ Level IV options for each ability
++ Flying Bison
++ Flying Bison Armor, Saddles, Whistle
++ Otter Penguins
++ Water pouches
++ Firebenders and airbenders in villages
 
-> Fix elytra flight allowing infinite height
-> Fix problem with radial menu in 3rd person
-> Fix air bubble blocking fall damage, etc
-> Fix flamethrower not stopping when reached 0 chi
-> Don't play punch sound when clicking on an avatar entity
-> Fix rare crash with water arc
-> Don't display chi if don't have bending
+* Remove small space between radial segment hover
+* Adjusted xp curves and xp gains based on level
+* Waterbenders have infinite water arcs when it rains on them
+* Vanilla mobs have rare chances of dropping scrolls
+* Can use [keybinding=key.X] in .lang file to use a keybinding
+* Can get water arcs from cauldrons
+* Option in cosmetic.yml to use vanilla instead of avatar particles
+* Chi bar is semitransparent (configurable in cosmetic.yml)
+* More realistic water-skate movement; can control with wasd
+* Water skating is quieter
+* Refactored networking code to be simpler & more secure
+* Refactored controls code to be simpler
+* Modified controls system: only uses X
+* Air bubble changes
+* Massive internal code changes to allow bending mobs
+
+* Spanish and Mexican translations from MadWrist. Thanks!
+* New chi bar textures from Sean_Amor. Thanks, it looks great!
+
+> Fix airblade weird angles
+> Fix flamethrower not aggroing mobs
+> Fix some entities can be set on fire(like airblade)
+> Fix grass path not bendable
+> Fix water arc breaking when hit a block while under player control
+> Fix airjump and other status controls can be activated while in chat or other GUIs
+> Allow rebinding of jump key on airjump
+> Fix can't throw fireball on a server
+> Fix air bubble only protecting against projectiles
+> Ravine can only be used on non-bendable blocks
+
+- Removed progression points
+- Internal: removed bending states

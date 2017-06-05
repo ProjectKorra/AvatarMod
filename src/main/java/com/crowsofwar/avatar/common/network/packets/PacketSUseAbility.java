@@ -46,7 +46,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		ability = BendingManager.getAbility(buf.readInt());
 		if (ability == null) {
 			throw new NullPointerException("Server sent invalid ability over network: ID " + ability);
@@ -55,7 +55,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		buf.writeInt(ability.getId());
 		raytrace.toBytes(buf);
 	}

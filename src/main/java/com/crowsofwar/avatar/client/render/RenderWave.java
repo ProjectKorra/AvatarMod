@@ -52,6 +52,8 @@ public class RenderWave extends Render<EntityWave> {
 	public void doRender(EntityWave entity, double x, double y, double z, float entityYaw,
 			float partialTicks) {
 		
+		float size = entity.getWaveSize();
+		
 		float fx = (float) x;
 		float fy = (float) y;
 		float fz = (float) z;
@@ -67,7 +69,7 @@ public class RenderWave extends Render<EntityWave> {
 		matrix.translate(fx, fy + 1, fz);
 		matrix.rotate((float) Math.toRadians(entity.rotationYaw), 0, -1, 0);
 		matrix.translate(-1.5f, 0, -entity.width / 2);
-		matrix.scale(3, 0.5f, 1);
+		matrix.scale(size, size / 6f, 1);
 		
 		Vector4f a = new Vector4f(1, 1, 0.5f, 1).mul(matrix);
 		Vector4f b = new Vector4f(0, 1, 0.5f, 1).mul(matrix);

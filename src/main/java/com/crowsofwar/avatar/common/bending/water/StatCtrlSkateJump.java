@@ -17,15 +17,19 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE_DOWN;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -35,26 +39,28 @@ import net.minecraft.entity.player.EntityPlayer;
 public class StatCtrlSkateJump extends StatusControl {
 	
 	public StatCtrlSkateJump() {
-		super(9, CONTROL_SPACE_DOWN, BELOW_CROSSHAIR);
+		super(9, CONTROL_JUMP, BELOW_CROSSHAIR);
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
-		AvatarPlayerData data = ctx.getData();
-		EntityPlayer player = ctx.getPlayerEntity();
-		if (data.isSkating()) {
-			data.setSkating(false);
-			data.sync();
+	public boolean execute(BendingContext ctx) {
+		BendingData data = ctx.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		if (data.hasTickHandler(TickHandler.WATER_SKATE)) {
+			data.removeTickHandler(TickHandler.WATER_SKATE);
 			
-			Vector velocity = Vector.getLookRectangular(player);
+			Vector velocity = Vector.getLookRectangular(entity);
 			velocity.mul(1.5);
-			player.motionX = velocity.x() * 2;
-			player.motionY = velocity.y();
-			player.motionZ = velocity.z() * 2;
+			entity.motionX = velocity.x() * 2;
+			entity.motionY = velocity.y();
+			entity.motionZ = velocity.z() * 2;
+			AvatarUtils.afterVelocityAdded(entity);
 			
 			data.setFallAbsorption(6);
-			
-			AvatarUtils.afterVelocityAdded(player);
+			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
+			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+				data.setSmashGround(true);
+			}
 			
 		}
 		

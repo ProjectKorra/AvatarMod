@@ -22,18 +22,21 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 
 /**
  * 
@@ -50,19 +53,20 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext context) {
+	public boolean execute(BendingContext ctx) {
 		
-		BendingController controller = (BendingController) BendingManager
-				.getBending(BendingType.EARTHBENDING);
+		BendingController controller = BendingManager.getBending(BendingType.EARTHBENDING);
 		
-		AvatarPlayerData data = context.getData();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller);
+		BendingData data = ctx.getData();
 		
-		EntityFloatingBlock floating = ebs.getPickupBlock();
+		EntityFloatingBlock floating = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
+				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
+						&& fb.getOwner() == ctx.getBenderEntity());
+		
 		if (floating != null) {
 			// TODO Verify look at block
-			VectorI looking = context.getClientLookBlock();
-			EnumFacing lookingSide = context.getLookSide();
+			VectorI looking = ctx.getClientLookBlock();
+			EnumFacing lookingSide = ctx.getLookSide();
 			if (looking != null && lookingSide != null) {
 				looking.offset(lookingSide);
 				
@@ -70,12 +74,14 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				Vector force = looking.precision().minus(new Vector(floating));
 				force.normalize();
 				floating.velocity().add(force);
-				ebs.dropBlock();
 				
-				controller.post(new FloatingBlockEvent.BlockPlaced(floating, context.getPlayerEntity()));
+				SoundType sound = floating.getBlock().getSoundType();
+				if (sound != null) {
+					floating.worldObj.playSound(null, floating.getPosition(), sound.getPlaceSound(),
+							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+				}
 				
 				data.removeStatusControl(THROW_BLOCK);
-				data.sync();
 				
 				data.getAbilityData(ABILITY_PICK_UP_BLOCK).addXp(SKILLS_CONFIG.blockPlaced);
 				

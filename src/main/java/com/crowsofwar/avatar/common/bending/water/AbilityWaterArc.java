@@ -23,15 +23,18 @@ import static java.lang.Math.toRadians;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -49,31 +52,41 @@ public class AbilityWaterArc extends WaterAbility {
 	 */
 	public AbilityWaterArc() {
 		super("water_arc");
+		requireRaytrace(-1, true);
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		WaterbendingState bendingState = (WaterbendingState) ctx.getData().getBendingState(controller());
 		World world = ctx.getWorld();
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		
-		Vector targetPos = getClosestWater(player);
-		if (targetPos != null) {
+		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
+		
+		if (targetPos != null || ctx.consumeWater(1)) {
+			
+			if (targetPos == null) {
+				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
+			}
 			
 			if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
 				
-				AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5,
-						player.posZ - 5, player.posX + 5, player.posY + 5, player.posZ + 5);
+				// Remove existing water arc
+				
+				AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5,
+						entity.posZ - 5, entity.posX + 5, entity.posY + 5, entity.posZ + 5);
+				
 				List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
-						arc -> arc.getOwner() == player
+						arc -> arc.getOwner() == entity
 								&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
 				
 				for (EntityWaterArc arc : existing) {
 					arc.setBehavior(new WaterArcBehavior.Thrown());
 				}
 				
+				// Spawn new water arc
+				
 				EntityWaterArc water = new EntityWaterArc(world);
-				water.setOwner(player);
+				water.setOwner(entity);
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setDamageMult(1 + ctx.getData().getAbilityData(this).getXp() / 200);
 				
@@ -82,24 +95,27 @@ public class AbilityWaterArc extends WaterAbility {
 				world.spawnEntityInWorld(water);
 				
 				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
-				ctx.getData().sync();
 				
 			}
 		}
-		
 	}
 	
-	private Vector getClosestWater(EntityPlayer player) {
-		World world = player.worldObj;
+	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
+		World world = entity.worldObj;
 		
-		Vector eye = Vector.getEyePos(player);
+		Vector eye = Vector.getEyePos(entity);
 		
-		double range = STATS_CONFIG.waterArcSearchRadius;
+		double rangeMult = 0.6;
+		if (level >= 1) {
+			rangeMult = 1;
+		}
+		
+		double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
 		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
 			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
 				
-				double yaw = player.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
-				double pitch = player.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
+				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
+				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
 				
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
 						|| state.getBlock() == Blocks.FLOWING_WATER;
@@ -111,10 +127,16 @@ public class AbilityWaterArc extends WaterAbility {
 				}
 				
 			}
+			
 		}
 		
 		return null;
 		
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiWaterArc(this, entity, bender);
 	}
 	
 }

@@ -18,9 +18,9 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class StatCtrlSkateStart extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
+	public boolean execute(BendingContext ctx) {
 		return true;
 	}
 	

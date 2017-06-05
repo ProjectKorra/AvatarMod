@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.chat.FormattingState.ChatFormatSet;
 import com.crowsofwar.gorecore.chat.FormattingState.Setting;
 
@@ -55,8 +56,8 @@ public class ChatSender {
 	static {
 		instance = new ChatSender();
 		MinecraftForge.EVENT_BUS.register(instance);
-		referenceToChatMessage = new HashMap<String, ChatMessage>();
-		translateKeyToChatMessage = new HashMap<String, ChatMessage>();
+		referenceToChatMessage = new HashMap<>();
+		translateKeyToChatMessage = new HashMap<>();
 	}
 	
 	private ChatSender() {}
@@ -101,13 +102,14 @@ public class ChatSender {
 		String result = null;
 		if (chat instanceof TextComponentTranslation) {
 			TextComponentTranslation translate = (TextComponentTranslation) chat;
-			String key = (String) getKey(translate);
+			String key = getKey(translate);
 			ChatMessage cm = translateKeyToChatMessage.get(key);
 			
 			if (cm != null) {
 				
 				try {
-					result = processText(translate.getUnformattedText(), cm, translate.getFormatArgs());
+					result = processText(translate.getUnformattedText().replaceAll("%", "%%"), cm,
+							translate.getFormatArgs());
 				} catch (ProcessingException e) {
 					result = "Error processing text; see log for details";
 					e.printStackTrace();
@@ -184,6 +186,12 @@ public class ChatSender {
 					
 					String key = tag.substring("translate=".length());
 					item = processText(I18n.format(key), cm, formatArgs);
+					recievedFormatInstruction = false;
+					
+				} else if (tag.startsWith("keybinding=")) {
+					
+					String key = tag.substring("keybinding=".length());
+					item = GoreCore.proxy.getKeybindingDisplayName(key);
 					recievedFormatInstruction = false;
 					
 				} else {

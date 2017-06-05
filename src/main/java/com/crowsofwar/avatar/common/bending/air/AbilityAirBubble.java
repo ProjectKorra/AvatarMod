@@ -17,15 +17,20 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -45,35 +50,46 @@ public class AbilityAirBubble extends AirAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		
-		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		ItemStack chest = bender.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
 		
-		if (!elytraOk) {
+		if (!elytraOk && bender instanceof EntityPlayerMP) {
 			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
-					(EntityPlayerMP) player);
+					(EntityPlayerMP) bender);
 		}
 		
 		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
 			
 			if (!ctx.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 			
-			float xp = data.getAbilityData(this).getXp();
+			float xp = data.getAbilityData(this).getTotalXp();
+			
+			float size = 1.5f;
+			if (ctx.getLevel() > 0) size = 2.5f;
+			if (ctx.isMasterLevel(FIRST)) size = 4f;
 			
 			EntityAirBubble bubble = new EntityAirBubble(world);
-			bubble.setOwner(player);
-			bubble.setPosition(player.posX, player.posY, player.posZ);
-			bubble.setHealth(15 + xp / 10f);
+			bubble.setOwner(bender);
+			bubble.setPosition(bender.posX, bender.posY, bender.posZ);
+			bubble.setHealth(10 + ctx.getLevel() * 6);
+			bubble.setMaxHealth(10 + ctx.getLevel() * 6);
+			bubble.setSize(size);
+			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
 			world.spawnEntityInWorld(bubble);
 			
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.addStatusControl(StatusControl.BUBBLE_CONTRACT);
-			data.sync();
 		}
 		
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiAirBubble(this, entity, bender);
 	}
 	
 }

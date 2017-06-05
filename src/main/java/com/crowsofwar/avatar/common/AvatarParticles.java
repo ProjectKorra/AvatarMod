@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public class AvatarParticles {
 	private static Map<Integer, EnumParticleTypes> lookup;
 	
 	public static void register() {
-		lookup = new HashMap<Integer, EnumParticleTypes>();
+		lookup = new HashMap<>();
 		particleFlames = addParticle("flames");
 		particleAir = addParticle("air");
 	}
@@ -65,11 +67,11 @@ public class AvatarParticles {
 	}
 	
 	public static EnumParticleTypes getParticleFlames() {
-		return particleFlames;
+		return CLIENT_CONFIG.useCustomParticles ? particleFlames : EnumParticleTypes.FLAME;
 	}
 	
 	public static EnumParticleTypes getParticleAir() {
-		return particleAir;
+		return CLIENT_CONFIG.useCustomParticles ? particleAir : EnumParticleTypes.CLOUD;
 	}
 	
 	/**

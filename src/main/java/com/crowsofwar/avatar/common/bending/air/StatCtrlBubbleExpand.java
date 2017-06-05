@@ -18,12 +18,12 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -37,11 +37,11 @@ public class StatCtrlBubbleExpand extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
+	public boolean execute(BendingContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
 		
-		List<EntityAirBubble> entities = player.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
-				player.getEntityBoundingBox(), bubble -> bubble.getOwner() == player);
+		List<EntityAirBubble> entities = entity.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
+				entity.getEntityBoundingBox(), bubble -> bubble.getOwner() == entity);
 		for (EntityAirBubble bubble : entities) {
 			bubble.dissipateLarge();
 		}

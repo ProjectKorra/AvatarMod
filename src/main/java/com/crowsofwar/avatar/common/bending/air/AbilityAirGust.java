@@ -18,12 +18,17 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -43,21 +48,33 @@ public class AbilityAirGust extends AirAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
 		if (!ctx.consumeChi(STATS_CONFIG.chiAirGust)) return;
 		
-		Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw),
-				Math.toRadians(player.rotationPitch));
-		Vector pos = Vector.getEyePos(player);
+		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw),
+				Math.toRadians(bender.rotationPitch));
+		Vector pos = Vector.getEyePos(bender);
 		
 		EntityAirGust gust = new EntityAirGust(world);
 		gust.velocity().set(look.times(25));
 		gust.setPosition(pos.x(), pos.y(), pos.z());
-		gust.setOwner(player);
+		gust.setOwner(bender);
+		gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
+		gust.setAirGrab(ctx.isMasterLevel(SECOND));
 		
 		world.spawnEntityInWorld(gust);
+	}
+	
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return ctx.getLevel() >= 1 ? 30 : 60;
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiAirGust(this, entity, bender);
 	}
 	
 }

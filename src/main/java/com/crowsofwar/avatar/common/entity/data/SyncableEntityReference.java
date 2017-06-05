@@ -17,11 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import javax.annotation.Nullable;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.CachedEntity;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 
@@ -40,7 +43,7 @@ import net.minecraft.network.datasync.DataParameter;
  */
 public class SyncableEntityReference<T extends AvatarEntity> {
 	
-	private final AvatarEntity using;
+	private final Entity using;
 	private final DataParameter<Integer> sync;
 	private final CachedEntity<T> cache;
 	private boolean allowNullSaving;
@@ -53,12 +56,13 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	 *            <code>this</code>. Not the entity being referenced
 	 * @param sync
 	 *            DataParameter used to sync. Should NOT be created specifically
-	 *            for this SyncableEntityReference - use a constant
+	 *            for this SyncableEntityReference - use a constant. Will not
+	 *            register to entity DataManager.
 	 */
-	public SyncableEntityReference(AvatarEntity entity, DataParameter<Integer> sync) {
+	public SyncableEntityReference(Entity entity, DataParameter<Integer> sync) {
 		this.using = entity;
 		this.sync = sync;
-		this.cache = new CachedEntity<T>(-1);
+		this.cache = new CachedEntity<>(-1);
 		this.allowNullSaving = false;
 	}
 	
@@ -71,6 +75,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 		allowNullSaving = true;
 	}
 	
+	@Nullable
 	public T getEntity() {
 		// Cache may have an incorrect id; other side could have changed
 		// dataManager id, but not the cached entity id.
@@ -78,7 +83,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 		return cache.getEntity(using.worldObj);
 	}
 	
-	public void setEntity(T entity) {
+	public void setEntity(@Nullable T entity) {
 		cache.setEntity(entity);
 		using.getDataManager().set(sync, cache.getEntityId());
 	}

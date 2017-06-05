@@ -1,0 +1,272 @@
+avatar.category.main=Avatar Mod
+
+avatar.BendingList=Mostrar lista de Artes de Control
+avatar.CheatEarthbending=Hacer trampa con Tierra Control
+avatar.ThrowBlock=Lanzar bloques
+avatar.ToggleBending=Levantar bloque
+
+avatar.RadialMenu=Tierra Control
+avatar.Bend=Usar Arte de Control
+avatar.BendingCycleLeft=Cambiar Arte de Control a la IZQ
+avatar.BendingCycleRight=Cambiar Arte de Control a la DER
+avatar.Skills=Menu de habilidades
+avatar.TransferBison=Confirmar transferencia
+
+avatar.earthbending=Tierra Control
+avatar.earthbending.demonym=Maestro Tierra
+avatar.firebending=Fuego Control
+avatar.firebending.demonym=Maestro Fuego
+avatar.waterbending=Agua Control
+avatar.waterbending.demonym=Maestro Agua
+avatar.airbending=Aire Control
+avatar.airbending.demonym=Maestro Aire
+avatar.all=Universal
+
+avatar.ui.openSkillsMenu=Clic para abrir
+
+avatar.cmd.bending=Manejar las teclas para Artes de Control del usuario.
+avatar.cmd.bending.list.noData=[error][error_value]${player}[/error_value] no esta registrado.[/error]
+avatar.cmd.bending.list.nonbender=[italic][value]${player}[/value] no domina ningun Arte de Control.[/italic]
+avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
+avatar.cmd.bending.list.top=[bold]Listando las [value]${amount}[/value] teclas de Arte de Control para [value]${player}[/value][/bold]:
+
+avatar.cmd.bending.add.alreadyHas=[error][error_value]${player}[/error_value] ya es un [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.add.success=[bold][value]${player}[/value] ahora es un [value][translate=avatar.${bending}.demonym][/value]![/bold]
+
+avatar.cmd.bending.remove.doesntHave=[error][error_value]${player}[/error_value] no es un [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.remove.success=[bold]Se le quito [value][translate=avatar.${bending}][/value] a [value]${player}[/value]![/bold]
+
+avatar.cmd.ability.set.range=[error]La experiencia de la habilidad debe ser de [error_value]0[/error_value] hasta [error_value]100[/error_value].
+avatar.cmd.ability.set.success=[bold]Se establecio con exito la experiencia de [value]${player}[/value] para [value]${ability}[/value] a [value]${amount}[/value][/bold]
+
+avatar.cmd.ability.get=[bold]La experiencia de [value]${player}[/value] con la habilidad de [value]${ability}[/value] es [value]${amount}[/value][/bold]
+
+avatar.cmd.cfg.exception1=[error]Ocurrio un error al tratar de cargar la configuracion[/error]
+avatar.cmd.cfg.exception2=[error]Detalles: [error_value]${details}[/error_value] leer el log para mas informacion[/error]
+
+avatar.cmd.cfg.successful=[bold]Se reiniciaron los valores de la configuracion con exito[/bold]
+
+avatar.cmd.pp.add=Se aumento la experiencia de [value]${player}[/value] [value][translate=avatar.${bending}][/value] en los puntos de progresion [value]${pps}[/value].
+avatar.cmd.pp.get=[value]${player}[/value] ahora mismo tiene [value]${pps}[/value] [value][translate=avatar.${bending}][/value] puntos de progresion.
+avatar.cmd.pp.set=Fijar los puntos de progresion de [value]${player}[/value] [value][translate=avatar.${bending}][/value] a [value]${pps}[/value].
+avatar.cmd.pp.set.range=[error]Los puntos de progresion deben ser mayor a 0.[/error]
+
+avatar.donthavebending=[error]Usted no ha aprendido ${bending} aun. Para obtenerlo, escriba: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
+avatar.nochi=No tiene suficiente chi!
+avatar.airBubbleElytra=No puede usar la burbuja de aire con elytras equipadas
+avatar.bisonStats=Bison esta a ${food}%% de comida, ${health}%% de salud, y ${domestication} de domesticacion.
+avatar.outOfScrolls=El bolso de este Maestro de Control esta vacio. Probablemente no tenga mas pergaminos que darte.
+avatar.abilityLocked=Tienes que desbloquear la habilidad antes de poder usarla!
+
+avatar.bisonWhistle.summon=Tu bisonte fue llamado y estara aqui en aproximadamente ${time} segundos!
+avatar.bisonWhistle.assign=Se ha ligado este Silbato de Bisonte a ${bison}.
+avatar.bisonWhistle.notAssigned=[error]Este silbato de bisonte no ha sido ligado a ningun bisonte; shift + clic un bisonte con el para ligarlo.[/error]
+avatar.bisonWhistle.notFound=[error]${bison} ya no vive en el mundo fisico.[/error]
+avatar.bisonWhistle.notOwned=[error]Este bisonte volador no te pertenece.[/error]
+avatar.bisonWhistle.tooltipBound=Ligado a %s
+avatar.bisonWhistle.tooltipUnbound=No esta ligado
+avatar.bisonWhistle.transferAway=Tu bisonte volador ${bison} ha sido transferido a ${newOwner}.
+avatar.bisonWhistle.transferTo=Ahora te pertene el bisonte volador de ${oldOwner}, ${bison}!
+avatar.bisonWhistle.noTransfer=[error]Nadie ha pedido una transferencia de bisonte.[/error]
+avatar.bisonWhistle.transferAway.start=${newOwner} quiere ser dueno de ${bison}. Presiona [keybinding=avatar.TransferBison] para confirmar, ignora para declinar.
+avatar.bisonWhistle.transferTo.start=Un mensaje le fue enviado a ${oldOwner} para confirmar la transferencia de ${bison}.
+avatar.bisonWhistle.transferAway.ignore=La transferencia con ${newOwner} ha sido ignorada.
+avatar.bisonWhistle.transferTo.ignore=${oldOwner} ha decidido no responder a la transferencia.
+avatar.bisonWhistle.transferOffline=[error]Este bisonte no es tuyo. No puedes transferir el bisonte porque el dueno ${owner} esta desconectado.[/error]
+
+avatar.ability.pickup_block=Levantar bloque
+avatar.ability.pickup_block.desc=Usa la Tierra control para mover bloques de tierra. Colocalos en un lugar deseado, o lanzalos a tu enemigos.
+avatar.ability.pickup_block.lvl1=Mueve bloques de origen terrestre.
+avatar.ability.pickup_block.lvl2=Los bloques llegan mas rapido y mas lejos
+avatar.ability.pickup_block.lvl3=El dano se duplica
+avatar.ability.pickup_block.lvl4_1=Bloque Boomerang ;; El bloque regresa y golpeas a un mob
+avatar.ability.pickup_block.lvl4_2=Gran impacto ;; 1/2 probabilidad que el bloque explote
+
+avatar.ability.ravine=Quebrada
+avatar.ability.ravine.desc=crea una quebrada pequena pero poderosa en la tierra. Solo funciona en el mimso nivel del eje Y.
+avatar.ability.ravine.lvl1=Lenta, quebrada basica
+avatar.ability.ravine.lvl2=Viaja mas rapido
+avatar.ability.ravine.lvl3=La fisura viaja mas lejos
+avatar.ability.ravine.lvl4_1=Fisura ;; Destruye bloques debajo, golpea multiples enemigos y cuesta 1.5x chi
+avatar.ability.ravine.lvl4_2=Tierra temblorosa ;; Probabilidad de tumbar armaduras y objetos de los oponentes
+
+avatar.ability.earth_wall=Pared
+avatar.ability.earth_wall.lvl1=Invoca una pared pequena
+avatar.ability.earth_wall.lvl2=Crea una pared mas grande
+avatar.ability.earth_wall.lvl3=Crea una pared mas grande
+avatar.ability.earth_wall.lvl4_1=Lanza proyectiles a traves de la pared
+avatar.ability.earth_wall.lvl4_2=La pared se mantiene arriba por mas tiempo, pero consume chi
+
+avatar.ability.mine_blocks=Romper bloques
+avatar.ability.mine_blocks.desc=Destruye bloques con rapidez para crear tuneles
+avatar.ability.mine_blocks.lvl1=Rompe par de bloques
+avatar.ability.mine_blocks.lvl2=Rompe mas bloques
+avatar.ability.mine_blocks.lvl3=Nivel de fortuna I cuando rompes bloques
+avatar.ability.mine_blocks.lvl4_1=Rompe bloques muy lejos, nivel III de fortuna
+avatar.ability.mine_blocks.lvl4_2=Rompe venas de menas, nivel IV de fortuna
+
+avatar.ability.light_fire=Encender llama
+avatar.ability.light_fire.desc=Simple habilidad de utilidad que enciende llamas. Es menos practica en combate que otras habilidades.
+avatar.ability.light_fire.fail=No fuiste capaz de encender una llama. Quizas deberias volverlo a intentar...
+avatar.ability.light_fire.lvl1=Intenta crear una llama
+avatar.ability.light_fire.lvl2=Mayor posibilidad de crear una llama
+avatar.ability.light_fire.lvl3=Aun mas posibilidad de crear una llama
+avatar.ability.light_fire.lvl4_1=Pared de flama ;; Crea una linea de fuego en la direccion que estas mirando
+avatar.ability.light_fire.lvl4_2=Rango Amplio ;; Crea llamas en bloques cercanos tambien
+
+avatar.ability.fire_arc=Arco de fuego
+avatar.ability.fire_arc.desc=Forma un latigo de fuego y lanzalo a tus enemigos.
+avatar.ability.fire_arc.lvl1=Simple latigo de fuego
+avatar.ability.fire_arc.lvl2=Se mueve mas rapido
+avatar.ability.fire_arc.lvl3=Mucho mas dano
+avatar.ability.fire_arc.lvl4_1=Gran flama ;; Quema mas bloques al impactar
+avatar.ability.fire_arc.lvl4_2=Boomerang de fuego ;; Regresa a ti si golpeas a un enemigo
+
+avatar.ability.flamethrower=Lanzallamas
+avatar.ability.flamethrower.desc=Genera una corriente de fuego de corto alcance. La habilidad fundamental del Maestro Fuego.
+avatar.ability.flamethrower.lvl1=Ataca en un rango corto
+avatar.ability.flamethrower.lvl2=Casi el doble de llamas; pero consume mas chi
+avatar.ability.flamethrower.lvl3=Mayor rango, mas preciso
+avatar.ability.flamethrower.lvl4_1=Corriente de fuego ;; Extremadamente de largo alcance, llamas concentradas
+avatar.ability.flamethrower.lvl4_2=El mundo ardera!! ;; Fuego no concentrado que crea llamas en todos lados
+
+avatar.ability.fireball=Bola de fuego
+avatar.ability.fireball.desc=Crea un orbe de fuego. Hace una explosion cuando impacta.
+avatar.ability.fireball.lvl1=Genera una bola de fuego basica
+avatar.ability.fireball.lvl2=Viaja mas rapido cuando se lanza
+avatar.ability.fireball.lvl3=Mucho mas dano cuando impacta
+avatar.ability.fireball.lvl4_1=Explosion enfocada ;; Puede destruir obsidiana
+avatar.ability.fireball.lvl4_2=Explosion cargada ;; Toma un par de segundos para cargar, la explosion es mas grande
+
+avatar.ability.water_arc=Arco de agua
+avatar.ability.water_arc.desc=Uno de los ataques más comunes del Agua Control. Dispara un arco de agua a tu enemigo, pero sólo cuando el agua está cerca.
+avatar.ability.water_arc.lvl1=Arco de agua basico
+avatar.ability.water_arc.lvl2=Rango de obtencion mas amplio
+avatar.ability.water_arc.lvl3=Mas rapido
+avatar.ability.water_arc.lvl4_1=Boomerang ;; Regresa a ti si golpeas un enemigo
+avatar.ability.water_arc.lvl4_2=Lanza de agua ;; Gravedad desactivada al ser lanzado, pero es mas lento
+
+avatar.ability.wave=Ola
+avatar.ability.wave.desc=Invoca una ola para destruir a tus enemigos. Solo funciona si estan dentro del agua.
+avatar.ability.wave.lvl1=Ola lenta para ahogar a tus enemigos
+avatar.ability.wave.lvl2=Mucho mas dano
+avatar.ability.wave.lvl3=Mas grande
+avatar.ability.wave.lvl4_1=Tsunami ;; Mucho mas grande y afecta entidades en tierra
+avatar.ability.wave.lvl4_2=Ola forzada ;; Ola muy rapida
+
+avatar.ability.water_bubble=Burbuja de agua
+avatar.ability.water_bubble.desc=Suspende y transporta una burbuja de agua. Puede ser usando con un cubo de largo alcance.
+avatar.ability.water_bubble.lvl1=Burbuja de corto alcance. El agua se seca despues del impacto
+avatar.ability.water_bubble.lvl2=La burbuja se puede tirar mas lejos
+avatar.ability.water_bubble.lvl3=La burbuja crea una fuente de agua al impactar
+avatar.ability.water_bubble.lvl4_1=Burbuja de Largo Alcance ;; Lanza la burbuja muy lejos
+avatar.ability.water_bubble.lvl4_2=Maestro Burbuja ;; No usa agua para crear la burbuja
+
+avatar.ability.water_skate=Patinaje acuatico
+avatar.ability.water_skate.desc=Corre por encima del agua. Muy util para moverte y explorar.
+avatar.ability.water_skate.lvl1=Camina sobre el agua, no puedes usar habilidades
+avatar.ability.water_skate.lvl2=Puedes usar habilidades mientras patinas
+avatar.ability.water_skate.lvl3=Patinas mas rapido
+avatar.ability.water_skate.lvl4_1=Patinaje equilibrado ;; Puede patinar en agua en movimiento (corriente)
+avatar.ability.water_skate.lvl4_2=Impacto Acuoso ;; Golpea el suelo despues de saltar
+
+avatar.ability.air_gust=Rafaga de viento
+avatar.ability.air_gust.desc=Crea una rafaga de viento que empuja a los enemigos, permitiendote enfocarte en otro problema.
+avatar.ability.air_gust.lvl1=Empuja a los enemigos mas lejos
+avatar.ability.air_gust.lvl2=Mitad de tiempo de reactivacion
+avatar.ability.air_gust.lvl3=Empuje aun mas fuerte
+avatar.ability.air_gust.lvl4_1=Extinguir ;; Destruye proyectiles debiles
+avatar.ability.air_gust.lvl4_2=Aspirar ;; Trae a los enemigos hacia ti
+
+avatar.ability.air_jump=Salto de aire
+avatar.ability.air_jump.desc=Manipula el aire debajo de ti para impulsarte. Perfecto para atrapar un enemigo desapercibido.
+avatar.ability.air_jump.lvl1=Salta atraves del aire
+avatar.ability.air_jump.lvl2=El salto es levemente mejorado
+avatar.ability.air_jump.lvl3=Salto aun mejor
+avatar.ability.air_jump.lvl4_1=Doble salto ;; Cuesta el doble de chi
+avatar.ability.air_jump.lvl4_2=Onda expansiva ;; Ataca a los enemigos cercanos cuando aterrizas
+
+avatar.ability.airblade=Cuchilla de aire
+avatar.ability.airblade.desc=Un disco giratorio de viento, suficientemente poderoso para cortar piel, puede ser letal en sucesiones seguidas.
+avatar.ability.airblade.lvl1=Habilidad base
+avatar.ability.airblade.lvl2=Velocidad y dano aumentado
+avatar.ability.airblade.lvl3=Puede cortar bloques
+avatar.ability.airblade.lvl4_1=Hoja en cadena ;; Rebota entre enemigos
+avatar.ability.airblade.lvl4_2=Perforador de armadura ;; Corta a traves de armadura y piedra
+
+avatar.ability.air_bubble=Burbuja de aire
+avatar.ability.air_bubble.desc=Crea una burbuja de aire a tu alrededor para protegerte de ataques. Sin embargo, usas demasiado chi para mantenerla.
+avatar.ability.air_bubble.lvl1=Rango pequeno y empuje
+avatar.ability.air_bubble.lvl2=Tamano mediano
+avatar.ability.air_bubble.lvl3=Mas empuje
+avatar.ability.air_bubble.lvl4_1=Burbuja presurizada ;; Tamano muy grande
+avatar.ability.air_bubble.lvl4_2=Corriente inferior ;; Puedes flotar, agacharse para desactivar
+
+avatar.ability.undefined=???
+
+avatar.ui.level0=Nivel I
+avatar.ui.level1=Nivel II
+avatar.ui.level2=Nivel III
+avatar.ui.level3=-MAX-
+avatar.ui.path_first=Primer camino
+avatar.ui.path_second=Segundo camino
+avatar.ui.unlock=Habilidad bloqueada
+avatar.ui.unlockDesc=Gaste un [translate=avatar.${bending}] o Pergamino universal para desbloquear
+avatar.ui.skillsMenu=[translate=avatar.${bending}] Experiencia de habilidad
+
+avatar.radial.undefined=Proximamente!
+avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
+avatar.radial.max=Nivel IV, [translate=avatar.ui.path_${xp}]
+avatar.radial.locked1=Habilidad bloqueada
+avatar.radial.locked2=Presione ${level} para desbloquear
+
+avatar.getBending.title=Desbloquear Arte de Control
+avatar.getBending.incompatible=Solo puede usar pergaminos del mismo tipo o de tipo universal
+avatar.getBending.guide=Coloque 3 pergaminos del mismo tipo o del tipo universal para desbloquear el Arte de Control
+
+avatar.key.none1=No hay tecla
+avatar.key.none2=Haga clic para editar
+avatar.key.set1=%1$s
+avatar.key.set2=Clic para editar
+avatar.key.editing1=> %1$s <
+avatar.key.editing2=Presiona ESC para desligar
+avatar.key.conflict1=%1$s
+avatar.key.conflict2=Conflicto con %1$s
+
+death.attack.avatar_earthbendBlock=%2$s Aplasto a %1$s con Tierra Control
+death.attack.avatar_waterArc=%2$s uso Agua Control para derrotar a %1$s
+death.attack.avatar_ravine=%2$s aplasto a %1$s en una quebrada
+death.attack.avatar_wave=%1$s no pudo surfear
+death.attack.avatar_fireball=%2$s exploto a %1$s con una bola de fuego
+death.attack.avatar_airblade=%1$s fue rebanado por %2$s
+death.attack.avatar_flamethrower=%1$s fue calcinado por %2$s!!
+death.attack.avatar_groundSmash=%2$s volvio pulpa a %1$s 
+
+entity.Airbender.name=Maestro de Aire
+entity.Firebender.name=Maestro de Fuego
+entity.Waterbender.name=Maestro de Agua
+entity.SkyBison.name=Bisonte volador
+entity.OtterPenguin.name=Pinguino nutria
+
+itemGroup.avatar.items=Objetos de Avatar
+
+item.avatarmod:scroll.all.name=Pergamino
+item.avatarmod:scroll.air.name=Pergamino de Aire Control
+item.avatarmod:scroll.fire.name=Pergamino de Fuego Control
+item.avatarmod:scroll.earth.name=Pergamino de Tierra Control
+item.avatarmod:scroll.water.name=Pergamino de Agua Control
+item.avatarmod:water_pouch.name=Saco de agua
+item.avatarmod:bison_whistle.name=Silbato de bisonte
+
+item.avatarmod:bison_saddle.basic.name=Montura de bisonte basica
+item.avatarmod:bison_saddle.sturdy.name=Montura de bisonte robusta
+item.avatarmod:bison_saddle.studded.name=Montura de bisonte tachonada
+item.avatarmod:bison_saddle.majestic.name=Montura de bisonte majestuosa
+
+item.avatarmod:bison_armor.woven.name=Armadura de bisonte tejida
+item.avatarmod:bison_armor.chain.name=Armadura de bisonte metalica
+item.avatarmod:bison_armor.wrought.name=Armadura de bisonte forjada
+item.avatarmod:bison_armor.legendary.name=Armadura de bisonte legendaria
+
+avatar.tooltip.water_pouch=%d/3 de agua
+avatar.tooltip.water_pouch.empty=Esta vacia

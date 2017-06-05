@@ -22,12 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-import com.crowsofwar.avatar.common.util.event.EventNotifier;
-import com.crowsofwar.avatar.common.util.event.Observer;
-import com.crowsofwar.avatar.common.util.event.Subject;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
@@ -53,7 +48,7 @@ import net.minecraft.nbt.NBTTagCompound;
  *            The BendingState this controller is using
  * 
  */
-public abstract class BendingController implements ReadableWritable, Subject {
+public abstract class BendingController implements ReadableWritable {
 	
 	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
 		@Override
@@ -85,11 +80,9 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	public static final Random random = new Random();
 	
 	private final List<BendingAbility> abilities;
-	private final Subject eventNotifier;
 	
 	public BendingController() {
 		this.abilities = new ArrayList<>();
-		this.eventNotifier = new EventNotifier();
 	}
 	
 	protected void addAbility(BendingAbility ability) {
@@ -110,21 +103,6 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	public abstract BendingType getType();
 	
 	/**
-	 * Called to create an BendingState for the player. This allows the
-	 * BendingController to store specific metadata for each player, making
-	 * things much easier. <br />
-	 * <br />
-	 * Keep in mind - when loading a saved state, it will be read from NBT.
-	 * However, when creating a new bending state when an ability is activated,
-	 * it will NOT read from NBT. So ensure that all values are initialized.
-	 * 
-	 * @return
-	 */
-	public BendingState createState(AvatarPlayerData data) {
-		return null;
-	}
-	
-	/**
 	 * Get information about this bending controller's radial menu.
 	 */
 	public abstract BendingMenuInfo getRadialMenu();
@@ -143,21 +121,6 @@ public abstract class BendingController implements ReadableWritable, Subject {
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {}
-	
-	@Override
-	public <E> void addObserver(Observer<E> obs, Class<E> eventClass) {
-		eventNotifier.addObserver(obs, eventClass);
-	}
-	
-	@Override
-	public <E> void removeObserver(Observer<E> obs, Class<E> eventClass) {
-		eventNotifier.removeObserver(obs, eventClass);
-	}
-	
-	@Override
-	public void post(Object e) {
-		eventNotifier.post(e);
-	}
 	
 	public static BendingController find(int id) {
 		

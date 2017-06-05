@@ -24,25 +24,30 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.earth.RavineEvent;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -54,11 +59,17 @@ import net.minecraft.world.World;
  */
 public class EntityRavine extends AvatarEntity {
 	
+	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityRavine.class, AvatarDataSerializers.SERIALIZER_BENDER);
+	
 	private final IEntityProperty<Vector> propVelocity;
 	private Vector initialPosition;
-	private EntityPlayer owner;
+	private final OwnerAttribute ownerAttr;
 	
 	private float damageMult;
+	private double maxTravelDistanceSq;
+	private boolean breakBlocks;
+	private boolean dropEquipment;
 	
 	/**
 	 * @param world
@@ -70,6 +81,7 @@ public class EntityRavine extends AvatarEntity {
 		setSize(1, 1);
 		
 		this.damageMult = 1;
+		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 		
 	}
 	
@@ -77,8 +89,25 @@ public class EntityRavine extends AvatarEntity {
 		this.damageMult = mult;
 	}
 	
-	public void setOwner(EntityPlayer owner) {
-		this.owner = owner;
+	public void setDistance(double dist) {
+		maxTravelDistanceSq = dist * dist;
+	}
+	
+	public void setBreakBlocks(boolean breakBlocks) {
+		this.breakBlocks = breakBlocks;
+	}
+	
+	public void setDropEquipment(boolean dropEquipment) {
+		this.dropEquipment = dropEquipment;
+	}
+	
+	@Override
+	public EntityLivingBase getOwner() {
+		return ownerAttr.getOwner();
+	}
+	
+	public void setOwner(EntityLivingBase owner) {
+		ownerAttr.setOwner(owner);
 	}
 	
 	public double getSqrDistanceTravelled() {
@@ -99,6 +128,8 @@ public class EntityRavine extends AvatarEntity {
 	@Override
 	public void onEntityUpdate() {
 		
+		super.onEntityUpdate();
+		
 		if (initialPosition == null) {
 			initialPosition = position().copy();
 		}
@@ -109,27 +140,28 @@ public class EntityRavine extends AvatarEntity {
 		Vector nowPos = position.add(velocity.times(0.05));
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
-		if (getSqrDistanceTravelled() > 100) {
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.End(this));
+		if (!worldObj.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
 			setDead();
 		}
 		
 		BlockPos above = getPosition().offset(EnumFacing.UP);
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		Block belowBlock = worldObj.getBlockState(below).getBlock();
 		
 		if (ticksExisted % 3 == 0) worldObj.playSound(posX, posY, posZ,
 				worldObj.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 				SoundCategory.PLAYERS, 1, 1, false);
 		
 		if (!worldObj.getBlockState(below).isNormalCube()) {
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
+			setDead();
+		}
+		if (!worldObj.isRemote && ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
 			setDead();
 		}
 		
 		// Destroy if in a block
 		IBlockState inBlock = worldObj.getBlockState(getPosition());
 		if (inBlock.isFullBlock()) {
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
 			setDead();
 		}
 		
@@ -138,31 +170,11 @@ public class EntityRavine extends AvatarEntity {
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 			
 			if (inBlock.getBlockHardness(worldObj, getPosition()) == 0) {
-				BendingManager.getBending(BendingType.EARTHBENDING)
-						.post(new RavineEvent.DestroyBlock(this, inBlock, inPos));
 				
-				for (int i = 0; i < 7; i++) {
-					worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
-							3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
-							3 * (rand.nextGaussian() - 0.5), Block.getStateId(inBlock));
-				}
-				worldObj.setBlockToAir(getPosition());
-				
-				if (!worldObj.isRemote) {
-					List<ItemStack> drops = inBlock.getBlock().getDrops(worldObj, inPos, inBlock, 0);
-					for (ItemStack stack : drops) {
-						EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
-						item.setDefaultPickupDelay();
-						item.motionX *= 2;
-						item.motionY *= 1.2;
-						item.motionZ *= 2;
-						worldObj.spawnEntityInWorld(item);
-					}
-				}
+				breakBlock(getPosition());
 				
 			} else {
 				
-				BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Stop(this));
 				setDead();
 				
 			}
@@ -175,36 +187,77 @@ public class EntityRavine extends AvatarEntity {
 		// Push collided entities back
 		if (!worldObj.isRemote) {
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != owner);
+					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-						BendingManager.getBending(BendingType.EARTHBENDING)
-								.post(new RavineEvent.HitEntity(this, entity));
-						
-						Vector push = velocity.copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
-						entity.addVelocity(push.x(), push.y(), push.z());
-						if (entity.attackEntityFrom(AvatarDamageSource.causeRavineDamage(entity, owner),
-								STATS_CONFIG.ravineSettings.damage * damageMult))
-							attacked++;
-						AvatarUtils.afterVelocityAdded(entity);
+					if (attackEntity(entity)) {
+						attacked++;
 					}
 				}
 			}
 		}
 		
-		if (!worldObj.isRemote && owner != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+		if (!worldObj.isRemote && getOwner() != null) {
+			BendingData data = ownerAttr.getOwnerBender().getData();
 			if (data != null) {
 				data.getAbilityData(ABILITY_RAVINE).addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}
 		}
 		
+		if (!worldObj.isRemote && breakBlocks) {
+			BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
+			if (!last.equals(getPosition())) {
+				
+				worldObj.destroyBlock(last.down(), true);
+				
+				double travel = Math.sqrt(getSqrDistanceTravelled() / maxTravelDistanceSq);
+				double chance = -(travel - 0.5) * (travel - 0.5) + 0.25;
+				chance *= 2;
+				
+				if (rand.nextDouble() <= chance) {
+					worldObj.destroyBlock(last.down(2), true);
+				}
+				
+			}
+		}
+		
 	}
 	
-	@Override
-	protected void updateHidden() {
-		setHidden(false);
+	private boolean attackEntity(Entity entity) {
+		
+		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
+			
+			Vector push = velocity().copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
+			entity.addVelocity(push.x(), push.y(), push.z());
+			AvatarUtils.afterVelocityAdded(entity);
+			
+			if (dropEquipment && entity instanceof EntityLivingBase) {
+				
+				EntityLivingBase elb = (EntityLivingBase) entity;
+				
+				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+					
+					ItemStack stack = elb.getItemStackFromSlot(slot);
+					if (!stack.func_190926_b()) {
+						double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
+						if (rand.nextDouble() * 100 <= chance) {
+							elb.entityDropItem(stack, 0);
+							elb.setItemStackToSlot(slot, ItemStack.field_190927_a);
+						}
+					}
+					
+				}
+				
+			}
+			
+			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
+			float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
+			return entity.attackEntityFrom(ds, damage);
+			
+		}
+		
+		return false;
+		
 	}
 	
 }

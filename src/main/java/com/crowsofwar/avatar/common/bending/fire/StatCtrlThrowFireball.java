@@ -19,17 +19,16 @@ package com.crowsofwar.avatar.common.bending.fire;
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
-import java.util.List;
-
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -44,21 +43,18 @@ public class StatCtrlThrowFireball extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
+	public boolean execute(BendingContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
 		double size = 6;
-		Vec3d playerPos = player.getPositionVector();
-		AxisAlignedBB boundingBox = new AxisAlignedBB(playerPos.subtract(size, size, size),
-				playerPos.addVector(size, size, size));
 		
-		List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class, //
-				boundingBox, //
-				fireball -> fireball.getOwner() == player);
+		EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 		
-		for (EntityFireball fireball : fireballs) {
-			fireball.velocity().add(Vector.getLookRectangular(player).mul(25));
+		if (fireball != null) {
+			AbilityData abilityData = ctx.getData().getAbilityData(BendingAbility.ABILITY_FIREBALL);
+			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
+			fireball.velocity().add(Vector.getLookRectangular(entity).mul(speedMult));
 			fireball.setBehavior(new FireballBehavior.Thrown());
 		}
 		

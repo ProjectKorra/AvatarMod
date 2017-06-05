@@ -39,12 +39,12 @@ public class PacketCStatusControl extends AvatarPacket<PacketCStatusControl> {
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void avatarFromBytes(ByteBuf buf) {
 		control = StatusControl.lookup(buf.readInt());
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void avatarToBytes(ByteBuf buf) {
 		buf.writeInt(control.id());
 	}
 	

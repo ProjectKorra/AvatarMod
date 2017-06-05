@@ -17,18 +17,19 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -47,10 +48,9 @@ public class AbilityWaterBubble extends WaterAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		EntityPlayer player = ctx.getPlayerEntity();
-		AvatarPlayerData data = ctx.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		WaterbendingState bendingState = (WaterbendingState) data.getBendingState(WATERBENDING);
 		
 		if (ctx.isLookingAtBlock()) {
 			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
@@ -59,23 +59,30 @@ public class AbilityWaterBubble extends WaterAbility {
 				
 				if (ctx.consumeChi(STATS_CONFIG.chiWaterBubble)) {
 					
-					if (bendingState.getBubble(world) != null) {
-						bendingState.getBubble(world).setBehavior(new WaterBubbleBehavior.Drop());
+					EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
+							bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
+									&& bub.getOwner() == entity);
+					
+					if (existing != null) {
+						existing.setBehavior(new WaterBubbleBehavior.Drop());
 						// prevent bubble from removing status control
-						bendingState.getBubble(world).setOwner(null);
-						bendingState.setBubble(null);
+						existing.setOwner(null);
 					}
 					
 					Vector pos = ctx.getLookPos();
+					
 					EntityWaterBubble bubble = new EntityWaterBubble(world);
 					bubble.setPosition(pos.x(), pos.y(), pos.z());
 					bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
-					bubble.setOwner(player);
+					bubble.setOwner(entity);
+					bubble.setSourceBlock(ctx.getLevel() >= 2);
 					world.spawnEntityInWorld(bubble);
+					
 					data.addStatusControl(StatusControl.THROW_BUBBLE);
-					data.sync();
-					world.setBlockToAir(lookPos);
-					bendingState.setBubble(bubble);
+					
+					if (!ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+						world.setBlockToAir(lookPos);
+					}
 					
 				}
 			}

@@ -16,23 +16,30 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static net.minecraft.util.EnumFacing.UP;
 
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
@@ -43,6 +50,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -52,11 +60,17 @@ import net.minecraft.world.World;
  */
 public class EntityAirBubble extends AvatarEntity {
 	
-	public static final DataParameter<String> SYNC_OWNER = EntityDataManager.createKey(EntityAirBubble.class,
-			DataSerializers.STRING);
+	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityAirBubble.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityAirBubble.class,
+			DataSerializers.FLOAT);
+	public static final DataParameter<Float> SYNC_MAX_HEALTH = EntityDataManager
+			.createKey(EntityAirBubble.class, DataSerializers.FLOAT);
+	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager
+			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.FLOAT);
 	
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
@@ -67,7 +81,8 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	public EntityAirBubble(World world) {
 		super(world);
-		setSize(2.5f, 2.5f);
+		// setSize(2.5f, 2.5f);
+		setSize(0, 0);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 	}
 	
@@ -76,71 +91,140 @@ public class EntityAirBubble extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_DISSIPATE, 0);
 		dataManager.register(SYNC_HEALTH, 20f);
+		dataManager.register(SYNC_MAX_HEALTH, 20f);
+		dataManager.register(SYNC_HOVERING, false);
+		dataManager.register(SYNC_SIZE, 2.5f);
 	}
 	
 	@Override
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		ownerAttr.setOwner(owner);
+	}
+	
+	@Override
+	public EntityLivingBase getController() {
+		return !isDissipating() ? getOwner() : null;
+	}
+	
+	public boolean doesAllowHovering() {
+		return dataManager.get(SYNC_HOVERING);
+	}
+	
+	public void setAllowHovering(boolean floating) {
+		dataManager.set(SYNC_HOVERING, floating);
+	}
+	
+	public float getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+	
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
 	}
 	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		
-		EntityPlayer owner = getOwner();
-		if (owner != null) {
+		EntityLivingBase ownerEnt = getOwner();
+		if (ownerEnt == null) {
+			setDead();
+		}
+		if (ownerEnt != null) {
 			
-			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
+			
+			Bender ownerBender = ownerAttr.getOwnerBender();
+			if (!worldObj.isRemote
+					&& !ownerBender.getData().chi().consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
+				
+				dissipateSmall();
+				
+			}
+			
+			ItemStack chest = ownerEnt.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
 			if (!elytraOk && !worldObj.isRemote) {
 				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
-						(EntityPlayerMP) owner);
+						(EntityPlayerMP) ownerEnt);
 				dissipateSmall();
 			}
 			
-			setPosition(owner.posX, owner.posY, owner.posZ);
-			if (owner.isDead) {
+			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
+			if (ownerEnt.isDead) {
 				dissipateSmall();
 			}
 			
 			if (!isDissipating()) {
-				IAttributeInstance attribute = owner
+				IAttributeInstance attribute = ownerEnt
 						.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 					attribute.applyModifier(SLOW_ATTR);
 				}
-				if (!owner.onGround && !owner.isInWater() && !owner.capabilities.isFlying
-						&& chest.getItem() != Items.ELYTRA)
-					owner.motionY += .03;
+				
+				if (!ownerEnt.onGround && !ownerEnt.isInWater() && !ownerBender.isFlying()
+						&& chest.getItem() != Items.ELYTRA) {
+					
+					ownerEnt.motionY += .03;
+					
+					if (doesAllowHovering() && !ownerEnt.isSneaking()) {
+						
+						// Find the closest BlockPos below owner that has a
+						// block
+						BlockPos pos;
+						for (pos = ownerEnt.getPosition(); !worldObj.isSideSolid(pos, UP)
+								&& !(worldObj.getBlockState(pos).getBlock() instanceof BlockLiquid); pos = pos
+										.down())
+							
+							;
+						
+						double distFromGround = ownerEnt.posY - (pos.getY() + 1);
+						if (distFromGround >= 0.5 && distFromGround <= 2) {
+							ownerEnt.motionY += 0.02;
+							
+							if (ownerEnt.motionY < 0) {
+								ownerEnt.motionY = 0;
+							}
+						}
+						
+					}
+					
+				}
+				
 			}
 			
 		}
+		
+		float size = getSize();
+		
 		if (isDissipatingLarge()) {
 			setDissipateTime(getDissipateTime() + 1);
 			float mult = 1 + getDissipateTime() / 10f;
-			setSize(2.5f * mult, 2.5f * mult);
+			setSize(size * mult, size * mult);
 			if (getDissipateTime() >= 10) {
 				setDead();
 			}
-		}
-		if (isDissipatingSmall()) {
+		} else if (isDissipatingSmall()) {
 			setDissipateTime(getDissipateTime() - 1);
 			float mult = 1 + getDissipateTime() / 40f;
-			setSize(2.5f * mult, 2.5f * mult);
+			setSize(size * mult, size * mult);
 			if (getDissipateTime() <= -10) {
 				setDead();
 			}
+		} else {
+			setSize(size, size);
 		}
+		
 	}
 	
 	@Override
 	public void setDead() {
 		super.setDead();
-		EntityPlayer owner = getOwner();
+		EntityLivingBase owner = getOwner();
 		if (owner != null) {
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
@@ -150,10 +234,7 @@ public class EntityAirBubble extends AvatarEntity {
 	}
 	
 	@Override
-	public void applyEntityCollision(Entity entity) {
-		if (isHidden()) return;
-		if (entity == getOwner()) return;
-		if (entity instanceof AvatarEntity || entity instanceof EntityArrow) return;
+	protected void onCollideWithEntity(Entity entity) {
 		
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;
@@ -179,11 +260,17 @@ public class EntityAirBubble extends AvatarEntity {
 	}
 	
 	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return entity != getOwner() && !(entity instanceof AvatarEntity) && !(entity instanceof EntityArrow);
+	}
+	
+	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
 		setDissipateTime(nbt.getInteger("Dissipate"));
 		setHealth(nbt.getFloat("Health"));
+		setAllowHovering(nbt.getBoolean("AllowHovering"));
 	}
 	
 	@Override
@@ -192,20 +279,49 @@ public class EntityAirBubble extends AvatarEntity {
 		ownerAttr.save(nbt);
 		nbt.setInteger("Dissipate", getDissipateTime());
 		nbt.setFloat("Health", getHealth());
+		nbt.setBoolean("AllowHovering", doesAllowHovering());
 	}
 	
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1 && !isHidden();
+		return pass == 1;
 	}
 	
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if (!isEntityInvulnerable(source)) {
-			setHealth(getHealth() - amount);
-			setBeenAttacked();
+		
+		EntityLivingBase owner = getOwner();
+		if (owner != null) {
+			
+			if (!worldObj.isRemote) {
+				Entity sourceEntity = source.getEntity();
+				if (sourceEntity != null) {
+					if (!owner.isEntityInvulnerable(source)) {
+						BendingData data = Bender.getData(owner);
+						if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
+							
+							data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
+							setHealth(getHealth() - amount);
+							return true;
+							
+						} else {
+							dissipateSmall();
+							return true;
+						}
+					}
+				}
+			}
+			
+		} else {
+			dissipateSmall();
 			return true;
 		}
+		return false;
+		
+	}
+	
+	@Override
+	public boolean tryDestroy() {
 		return false;
 	}
 	
@@ -224,6 +340,15 @@ public class EntityAirBubble extends AvatarEntity {
 	public void setHealth(float health) {
 		dataManager.set(SYNC_HEALTH, health);
 		if (health <= 0) dissipateSmall();
+		if (health > getMaxHealth()) health = getMaxHealth();
+	}
+	
+	public float getMaxHealth() {
+		return dataManager.get(SYNC_MAX_HEALTH);
+	}
+	
+	public void setMaxHealth(float health) {
+		dataManager.set(SYNC_MAX_HEALTH, health);
 	}
 	
 	public void dissipateLarge() {
@@ -250,10 +375,9 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(getOwner());
+			BendingData data = Bender.create(getOwner()).getData();
 			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-			data.sync();
 			
 			IAttributeInstance attribute = getOwner()
 					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);

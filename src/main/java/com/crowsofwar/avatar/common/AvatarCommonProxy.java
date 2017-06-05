@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
+import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
@@ -82,5 +83,13 @@ public interface AvatarCommonProxy {
 	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
 	 */
 	int getParticleAmount();
+	
+	/**
+	 * Creates a wrapper so that the keybinding can be used on both sides
+	 * (KeyBinding is client SideOnly)
+	 * <p>
+	 * Looks up keybinding by name
+	 */
+	KeybindingWrapper createKeybindWrapper(String keybindName);
 	
 }

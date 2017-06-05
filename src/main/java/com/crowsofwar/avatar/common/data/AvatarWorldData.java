@@ -34,11 +34,13 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	private int nextEntityId;
 	
 	private List<ScheduledDestroyBlock> scheduledDestroyBlocks;
+	private List<TemporaryWaterLocation> temporaryWater;
 	
 	public AvatarWorldData() {
 		super(WORLD_DATA_KEY);
 		nextEntityId = 0;
 		scheduledDestroyBlocks = new ArrayList<>();
+		temporaryWater = new ArrayList<>();
 	}
 	
 	public AvatarWorldData(String key) {
@@ -58,13 +60,23 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		nextEntityId = nbt.getInteger("NextEntityId");
+		
 		AvatarUtils.readList(scheduledDestroyBlocks, compound -> {
 			
 			BlockPos pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"),
 					compound.getInteger("z"));
-			return new ScheduledDestroyBlock(pos, compound.getInteger("Ticks"), compound.getBoolean("Drop"));
+			return new ScheduledDestroyBlock(this, pos, compound.getInteger("Ticks"),
+					compound.getBoolean("Drop"), compound.getInteger("Fortune"));
 			
 		}, nbt, "DestroyBlocks");
+		
+		AvatarUtils.readList(temporaryWater, c -> {
+			
+			BlockPos pos = new BlockPos(c.getInteger("x"), c.getInteger("y"), c.getInteger("z"));
+			return new TemporaryWaterLocation(this, pos, c.getInteger("Dimension"), c.getInteger("Ticks"));
+			
+		}, nbt, "TemporaryWater");
+		
 	}
 	
 	@Override
@@ -77,7 +89,15 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 			compound.setInteger("z", sdb.pos.getZ());
 			compound.setInteger("Ticks", sdb.ticks);
 			compound.setBoolean("Drop", sdb.drop);
+			compound.setInteger("Fortune", sdb.fortune);
 		}, nbt, "DestroyBlocks");
+		AvatarUtils.writeList(temporaryWater, (c, water) -> {
+			c.setInteger("x", water.getPos().getX());
+			c.setInteger("y", water.getPos().getY());
+			c.setInteger("z", water.getPos().getZ());
+			c.setInteger("Ticks", water.getTicks());
+			c.setInteger("Dimension", water.getDimension());
+		}, nbt, "TemporaryWater");
 		return nbt;
 	}
 	
@@ -89,35 +109,12 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 		return scheduledDestroyBlocks;
 	}
 	
-	public class ScheduledDestroyBlock {
-		
-		private final BlockPos pos;
-		private final boolean drop;
-		private int ticks;
-		
-		public ScheduledDestroyBlock(BlockPos pos, int ticks, boolean drop) {
-			this.pos = pos;
-			this.ticks = ticks;
-			this.drop = drop;
-		}
-		
-		public int getTicks() {
-			return ticks;
-		}
-		
-		public void decrementTicks() {
-			this.ticks--;
-			AvatarWorldData.this.setDirty(true);
-		}
-		
-		public BlockPos getPos() {
-			return pos;
-		}
-		
-		public boolean isDrop() {
-			return drop;
-		}
-		
+	public List<TemporaryWaterLocation> geTemporaryWaterLocations() {
+		return temporaryWater;
+	}
+	
+	public void addTemporaryWaterLocation(BlockPos pos) {
+		temporaryWater.add(new TemporaryWaterLocation(this, pos, getWorld().provider.getDimension(), 15));
 	}
 	
 }

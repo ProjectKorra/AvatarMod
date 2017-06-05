@@ -16,9 +16,10 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 /**
  * 
@@ -33,9 +34,9 @@ public class AbilityWaterSkate extends WaterAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.SKATING_START);
-		data.sync();
+		ctx.getData().addTickHandler(TickHandler.WATER_SKATE);
 	}
 	
 }

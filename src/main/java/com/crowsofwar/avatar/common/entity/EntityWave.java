@@ -24,24 +24,38 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 public class EntityWave extends Entity {
 	
+	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager.createKey(EntityWave.class,
+			AvatarDataSerializers.SERIALIZER_BENDER);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
+			DataSerializers.FLOAT);
+	
 	private final Vector internalVelocity;
 	private final Vector internalPosition;
-	
-	private EntityPlayer owner;
+	private final OwnerAttribute ownerAttr;
 	
 	private float damageMult;
+	private int timeOnLand;
 	
 	public EntityWave(World world) {
 		super(world);
@@ -50,18 +64,37 @@ public class EntityWave extends Entity {
 				() -> this.motionX * 20, () -> this.motionY * 20, () -> this.motionZ * 20);
 		this.internalPosition = new Vector();
 		
-		setSize(2f, 2);
+		setSize(2, 2);
 		
 		damageMult = 1;
 		
+		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		
+	}
+	
+	@Override
+	protected void entityInit() {
+		dataManager.register(SYNC_SIZE, 2f);
 	}
 	
 	public void setDamageMultiplier(float damageMult) {
 		this.damageMult = damageMult;
 	}
 	
+	public float getWaveSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+	
+	public void setWaveSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
+	
 	@Override
 	public void onUpdate() {
+		
+		setSize(getWaveSize() * 0.75f, 2);
+		
+		EntityLivingBase owner = getOwner();
 		
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = getVecPosition().add(move);
@@ -76,15 +109,33 @@ public class EntityWave extends Entity {
 				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), STATS_CONFIG.waveSettings.damage * damageMult);
 			}
 			if (!collided.isEmpty()) {
-				AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+				BendingData data = Bender.create(owner).getData();
 				if (data != null) {
 					data.getAbilityData(BendingAbility.ABILITY_WAVE).addXp(SKILLS_CONFIG.waveHit);
 				}
 			}
 		}
 		
-		if (ticksExisted > 7000 || worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) setDead();
+		if (ticksExisted > 7000) {
+			setDead();
+		}
+		if (!worldObj.isRemote && worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) {
+			timeOnLand++;
+			if (timeOnLand >= maxTimeOnLand()) {
+				setDead();
+			}
+		}
 		
+	}
+	
+	private int maxTimeOnLand() {
+		if (getOwner() != null) {
+			AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_WAVE);
+			if (data.isMasterPath(AbilityTreePath.FIRST)) {
+				return 30;
+			}
+		}
+		return 0;
 	}
 	
 	public Vector getVecPosition() {
@@ -98,13 +149,12 @@ public class EntityWave extends Entity {
 		return internalVelocity;
 	}
 	
-	public void setOwner(EntityPlayer owner) {
-		this.owner = owner;
+	public EntityLivingBase getOwner() {
+		return ownerAttr.getOwner();
 	}
 	
-	@Override
-	protected void entityInit() {
-		
+	public void setOwner(EntityLivingBase owner) {
+		ownerAttr.setOwner(owner);
 	}
 	
 	@Override

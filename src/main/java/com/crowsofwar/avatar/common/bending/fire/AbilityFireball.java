@@ -20,14 +20,18 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -45,9 +49,9 @@ public class AbilityFireball extends FireAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityPlayer player = ctx.getPlayerEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
-		AvatarPlayerData data = ctx.getData();
+		BendingData data = ctx.getData();
 		
 		if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
 		
@@ -57,26 +61,31 @@ public class AbilityFireball extends FireAbility {
 			if (ctx.isLookingAtBlock()) {
 				target = ctx.getLookPos();
 			} else {
-				Vector playerPos = getEyePos(player);
-				target = playerPos.plus(getLookRectangular(player).times(2.5));
+				Vector playerPos = getEyePos(entity);
+				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 			
-			float xp = data.getAbilityData(this).getXp();
+			float xp = data.getAbilityData(this).getTotalXp();
 			float damage = STATS_CONFIG.fireballSettings.damage;
-			damage *= .75 + xp * .0075f; // 0=.75, 100=1.5
+			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
 			
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.position().set(target);
-			fireball.setOwner(player);
+			fireball.setOwner(entity);
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			fireball.setDamage(damage);
+			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 			world.spawnEntityInWorld(fireball);
 			
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
-			data.sync();
 			
 		}
 		
+	}
+	
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiFireball(this, entity, bender);
 	}
 	
 }

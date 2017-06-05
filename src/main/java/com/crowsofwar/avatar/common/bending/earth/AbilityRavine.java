@@ -19,14 +19,13 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -46,24 +45,32 @@ public class AbilityRavine extends EarthAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		if (ctx.consumeChi(STATS_CONFIG.chiRavine)) {
+		float chi = STATS_CONFIG.chiRavine;
+		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+			chi *= 1.5f;
+		}
+		
+		if (ctx.consumeChi(chi)) {
 			
 			AbilityData abilityData = ctx.getData().getAbilityData(this);
-			float xp = abilityData.getXp();
+			float xp = abilityData.getTotalXp();
 			
-			EntityPlayer player = ctx.getPlayerEntity();
+			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			
-			Vector look = Vector.toRectangular(Math.toRadians(player.rotationYaw), 0);
+			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+			
+			double mult = ctx.getLevel() >= 1 ? 14 : 8;
 			
 			EntityRavine ravine = new EntityRavine(world);
-			ravine.setOwner(player);
-			ravine.setPosition(player.posX, player.posY, player.posZ);
-			ravine.velocity().set(look.times(10));
+			ravine.setOwner(entity);
+			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
+			ravine.velocity().set(look.times(mult));
 			ravine.setDamageMult(.75f + xp / 100);
+			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
+			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
+			ravine.setDropEquipment(ctx.isMasterLevel(AbilityTreePath.SECOND));
 			world.spawnEntityInWorld(ravine);
-			
-			BendingManager.getBending(BendingType.EARTHBENDING).post(new RavineEvent.Created(ravine, player));
 			
 		}
 		

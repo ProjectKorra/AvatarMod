@@ -20,11 +20,13 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -43,16 +45,23 @@ public class StatCtrlThrowBubble extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
-		AvatarPlayerData data = ctx.getData();
-		WaterbendingState state = (WaterbendingState) data
-				.getBendingState(BendingManager.getBending(BendingType.WATERBENDING));
+	public boolean execute(BendingContext ctx) {
+		BendingData data = ctx.getData();
 		
-		EntityWaterBubble bubble = state.getBubble(ctx.getWorld());
+		EntityWaterBubble bubble = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterBubble.class, //
+				bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
+						&& bub.getOwner() == ctx.getBenderEntity());
+		
 		if (bubble != null) {
+			
+			AbilityData adata = data.getAbilityData(BendingAbility.ABILITY_WATER_BUBBLE);
+			double mult = adata.getLevel() >= 1 ? 14 : 8;
+			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
+				mult = 20;
+			}
+			
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
-			bubble.velocity().set(Vector.getLookRectangular(ctx.getPlayerEntity()).mul(10));
-			state.setBubble(null);
+			bubble.velocity().set(Vector.getLookRectangular(ctx.getBenderEntity()).mul(mult));
 		}
 		
 		return true;

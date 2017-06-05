@@ -31,11 +31,28 @@ public class ConfigSkills {
 	
 	private ConfigSkills() {}
 	
+	// @formatter:off
 	@Load
-	public float blockPlaced = .3f, blockThrowHit = .5f, blockKill = 1.5f, airJump = 0.25f, airGustHit = .25f,
-			ravineHit = .1f, waveHit = .4f, waterHit = .7f, fireHit = .7f, flamethrowerHit = 0.08f,
-			fireballHit = 1.5f, airbladeHit = .4f, miningUse = .3f, waterSkateOneSecond = .4f,
-			wallRaised = .5f, wallBlockedAttack = .15f, airbubbleProtect = .5f;
+	public float blockPlaced = 5f,
+		blockThrowHit = 6.5f,
+		blockKill = 4f,
+		airJump = 2f,
+		airGustHit = 4f,
+		ravineHit = 3f,
+		waveHit = 4f,
+		waterHit = 3f,
+		fireHit = 3f,
+		flamethrowerHit = 0.75f,
+		fireballHit = 4.5f,
+		airbladeHit = 3f,
+		miningUse = 10f,
+		miningBreakOre = 5f,
+		waterSkateOneSecond = 1.5f,
+		wallRaised = 1f,
+		wallBlockedAttack = 3f,
+		airbubbleProtect = 6f,
+		litFire = 20;
+	// @formatter:on
 	
 	public static void load() {
 		ConfigLoader.load(SKILLS_CONFIG, "avatar/skills.yml");

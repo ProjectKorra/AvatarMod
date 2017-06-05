@@ -25,6 +25,7 @@ import com.crowsofwar.gorecore.util.VectorI;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
@@ -37,63 +38,65 @@ public class Raytrace {
 	private Raytrace() {}
 	
 	/**
-	 * Returns the position of the block the player is looking at. Null if the
-	 * player is not targeting anything in range. This does not raycast liquids.
+	 * Returns the position of the block the entity is looking at. Null if the
+	 * entity is not targeting anything in range. This does not raycast liquids.
 	 * 
-	 * @param player
-	 *            Player entity (works both client-side and server-side)
+	 * @param entity
+	 *            Bending entity (for players, works both client-side and
+	 *            server-side)
 	 * @param range
-	 *            How far to raytrace. If -1, then it is how far the player can
+	 *            How far to raytrace. If -1, then it is how far the entity can
 	 *            reach.
-	 * @return The position of the block that the player is looking at. May
+	 * @return The position of the block that the entity is looking at. May
 	 *         differ between server and client.
 	 */
-	public static Result getTargetBlock(EntityPlayer player, double range) {
+	public static Result getTargetBlock(EntityLivingBase entity, double range) {
 		
-		return getTargetBlock(player, range, false);
+		return getTargetBlock(entity, range, false);
 		
 	}
 	
 	/**
-	 * Returns the position of the block the player is looking at.
-	 * {@link Raytrace.Result#hitSomething() No hit} if the player is not
+	 * Returns the position of the block the entity is looking at.
+	 * {@link Raytrace.Result#hitSomething() No hit} if the entity is not
 	 * targeting anything in range, or the information doesn't require raytrace.
 	 * 
 	 * @param info
 	 *            Information of this raytrace
 	 */
-	public static Result getTargetBlock(EntityPlayer player, Raytrace.Info info) {
+	public static Result getTargetBlock(EntityLivingBase entity, Raytrace.Info info) {
 		
 		if (!info.needsRaytrace()) return new Raytrace.Result();
 		
-		if (info.predicateRaytrace()) return predicateRaytrace(player.worldObj, Vector.getEyePos(player),
-				Vector.getLookRectangular(player), info.range, info.predicate);
+		if (info.predicateRaytrace()) return predicateRaytrace(entity.worldObj, Vector.getEyePos(entity),
+				Vector.getLookRectangular(entity), info.range, info.predicate);
 		
-		return getTargetBlock(player, info.getRange(), info.raycastLiquids());
+		return getTargetBlock(entity, info.getRange(), info.raycastLiquids());
 		
 	}
 	
 	/**
-	 * Returns the position of the block the player is looking at.
+	 * Returns the position of the block the entity is looking at.
 	 * 
-	 * @param player
-	 *            Player entity (works both client-side and server-side)
+	 * @param entity
+	 *            Bending entity (for players, works both client-side and
+	 *            server-side)
 	 * @param range
-	 *            How far to raytrace. If -1, then it is how far the player can
+	 *            How far to raytrace. If -1, then it is how far the entity can
 	 *            reach.
 	 * @param raycastLiquids
 	 *            Whether liquids are detected in the raycast.
-	 * @return The position of the block that the player is looking at. May
+	 * @return The position of the block that the entity is looking at. May
 	 *         differ between server and client.
 	 */
-	public static Result getTargetBlock(EntityPlayer player, double range, boolean raycastLiquids) {
+	public static Result getTargetBlock(EntityLivingBase entity, double range, boolean raycastLiquids) {
 		
-		if (range == -1) range = getReachDistance(player);
+		if (range == -1) range = getReachDistance(entity);
 		
-		Vector playerPos = Vector.getEyePos(player);
-		Vector look = new Vector(player.getLookVec());
-		Vector end = playerPos.plus(look.times(range));
-		RayTraceResult res = player.worldObj.rayTraceBlocks(playerPos.toMinecraft(), end.toMinecraft(),
+		Vector eyePos = Vector.getEyePos(entity);
+		Vector look = new Vector(entity.getLookVec());
+		Vector end = eyePos.plus(look.times(range));
+		RayTraceResult res = entity.worldObj.rayTraceBlocks(eyePos.toMinecraft(), end.toMinecraft(),
 				!raycastLiquids, raycastLiquids, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
@@ -104,17 +107,18 @@ public class Raytrace {
 	}
 	
 	/**
-	 * Returns how far the player can reach.
+	 * Returns how far the entity can reach.
 	 * 
-	 * @param player
+	 * @param entity
 	 * @return
 	 */
-	public static double getReachDistance(EntityPlayer player) {
-		if (player instanceof EntityPlayerMP) {
-			// TODO [1.10] how does reach distance work?
+	public static double getReachDistance(EntityLivingBase entity) {
+		if (entity instanceof EntityPlayerMP) {
 			return 5;
-		} else {
+		} else if (entity instanceof EntityPlayer) {
 			return AvatarMod.proxy.getPlayerReach();
+		} else {
+			return 4;
 		}
 	}
 	
@@ -280,7 +284,7 @@ public class Raytrace {
 		 * designated parameters.
 		 * 
 		 * @param range
-		 *            Range of raytrace. If -1, how far player can reach.
+		 *            Range of raytrace. If -1, is how far entity can reach.
 		 * @param raycastLiquids
 		 *            Whether to keep going when liquids are hit
 		 */

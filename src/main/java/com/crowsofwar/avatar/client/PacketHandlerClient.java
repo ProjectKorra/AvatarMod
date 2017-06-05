@@ -17,33 +17,16 @@
 
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.data.AvatarPlayerData.*;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.BendingState;
-import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
-import com.crowsofwar.avatar.common.network.Networker;
-import com.crowsofwar.avatar.common.network.PlayerDataContext;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -68,9 +51,6 @@ public class PacketHandlerClient implements IPacketHandler {
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		
 		if (packet instanceof PacketCParticles) return handlePacketParticles((PacketCParticles) packet, ctx);
-		
-		if (packet instanceof PacketCPlayerData)
-			return handlePacketNewPlayerData((PacketCPlayerData) packet, ctx);
 		
 		if (packet instanceof PacketCErrorMessage)
 			return handlePacketNotEnoughChi((PacketCErrorMessage) packet, ctx);
@@ -102,68 +82,6 @@ public class PacketHandlerClient implements IPacketHandler {
 					packet.getMaxVelocityX() * random.nextGaussian(),
 					packet.getMaxVelocityY() * random.nextGaussian(),
 					packet.getMaxVelocityZ() * random.nextGaussian());
-		}
-		
-		return null;
-	}
-	
-	/**
-	 */
-	private IMessage handlePacketNewPlayerData(PacketCPlayerData packet, MessageContext ctx) {
-		
-		EntityPlayer player = AccountUUIDs.findEntityFromUUID(mc.theWorld, packet.getPlayerId());
-		if (player == null) {
-			AvatarLog.warn(WarningType.WEIRD_PACKET,
-					"Recieved player data packet about a player, but the player couldn't be found. Is he unloaded?");
-			AvatarLog.warn(WarningType.WEIRD_PACKET, "The player ID was: " + packet.getPlayerId());
-			return null;
-		}
-		AvatarLog.debug("Client: Received data packet for " + player);
-		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data != null) {
-			
-			Map<Networker.Property, Object> readData = packet.interpretData(data.getNetworker(),
-					new PlayerDataContext(data));
-			if (readData.containsKey(KEY_CONTROLLERS)) {
-				data.takeBending();
-				List<BendingController> bending = (List<BendingController>) readData.get(KEY_CONTROLLERS);
-				for (BendingController controller : bending) {
-					data.addBending(controller);
-				}
-			}
-			
-			if (readData.containsKey(KEY_STATES)) {
-				data.clearBendingStates();
-				for (BendingState state : (List<BendingState>) readData.get(KEY_STATES))
-					data.addBendingState(state);
-			}
-			
-			if (readData.containsKey(KEY_ABILITY_DATA)) {
-				data.clearAbilityData();
-				Set<Map.Entry<BendingAbility, AbilityData>> entries = ((Map<BendingAbility, AbilityData>) readData
-						.get(KEY_ABILITY_DATA)).entrySet();
-				for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
-					data.getAbilityData(entry.getKey()).setXp(entry.getValue().getXp());
-				}
-			}
-			
-			if (readData.containsKey(KEY_STATUS_CONTROLS)) {
-				data.clearStatusControls();
-				Set<StatusControl> controls = (Set<StatusControl>) readData.get(KEY_STATUS_CONTROLS);
-				for (StatusControl control : controls) {
-					data.addStatusControl(control);
-				}
-			}
-			
-			if (readData.containsKey(KEY_SKATING)) {
-				data.setSkating((Boolean) readData.get(KEY_SKATING));
-			}
-			
-			if (readData.containsKey(KEY_CHI)) {
-				data.setChi((Chi) readData.get(KEY_CHI));
-			}
-			
 		}
 		
 		return null;

@@ -17,9 +17,15 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -33,12 +39,12 @@ import net.minecraft.world.World;
  */
 public class OwnerAttribute {
 	
-	private final DataParameter<String> sync;
+	private final DataParameter<BenderInfo> sync;
 	private final Entity entity;
 	private final World world;
-	private final Consumer<EntityPlayer> setOwnerCallback;
+	private final Consumer<EntityLivingBase> setOwnerCallback;
 	
-	private EntityPlayer ownerCached;
+	private EntityLivingBase ownerCached;
 	
 	/**
 	 * Create a new owner attribute.
@@ -49,7 +55,7 @@ public class OwnerAttribute {
 	 *            Synchronization key. You don't have to register to entity's
 	 *            data manager.
 	 */
-	public OwnerAttribute(Entity entity, DataParameter<String> sync) {
+	public OwnerAttribute(Entity entity, DataParameter<BenderInfo> sync) {
 		this(entity, sync, player -> {
 		});
 	}
@@ -65,30 +71,30 @@ public class OwnerAttribute {
 	 * @param setOwnerCallback
 	 *            Called when the owner has been changed.
 	 */
-	public OwnerAttribute(Entity entity, DataParameter<String> sync,
-			Consumer<EntityPlayer> setOwnerCallback) {
+	public OwnerAttribute(Entity entity, DataParameter<BenderInfo> sync,
+			Consumer<EntityLivingBase> setOwnerCallback) {
 		this.entity = entity;
 		this.sync = sync;
 		this.world = entity.worldObj;
 		this.setOwnerCallback = setOwnerCallback;
-		this.entity.getDataManager().register(sync, "");
+		this.entity.getDataManager().register(sync, new NoBenderInfo());
 	}
 	
 	public void save(NBTTagCompound nbt) {
-		nbt.setString("Owner", getOwnerName());
+		getOwnerInfo().writeToNbt(nbt);
 	}
 	
 	public void load(NBTTagCompound nbt) {
-		setOwnerName(nbt.getString("Owner"));
+		setOwnerInfo(BenderInfo.readFromNbt(nbt));
 		getOwner(); // Look up owner in world
 	}
 	
-	private String getOwnerName() {
+	public BenderInfo getOwnerInfo() {
 		return entity.getDataManager().get(sync);
 	}
 	
-	private void setOwnerName(String name) {
-		entity.getDataManager().set(sync, name);
+	public void setOwnerInfo(BenderInfo info) {
+		entity.getDataManager().set(sync, info);
 	}
 	
 	/**
@@ -99,13 +105,13 @@ public class OwnerAttribute {
 	 * look for a player in the world with that name. Will then call
 	 * {@link #setOwner(EntityPlayer)}.
 	 */
-	public EntityPlayer getOwner() {
+	public EntityLivingBase getOwner() {
 		
 		if (isCacheInvalid()) {
-			// Slightly cosmetic, but only call setOwner(...) if the player was
-			// found
-			EntityPlayer player = world.getPlayerEntityByName(getOwnerName());
-			if (player != null) setOwner(player);
+			Bender bender = getOwnerInfo().find(world);
+			if (bender != null) {
+				ownerCached = bender.getEntity();
+			}
 		}
 		
 		return ownerCached;
@@ -119,14 +125,30 @@ public class OwnerAttribute {
 	 * @param owner
 	 *            Owner to set to. Can set to null...
 	 */
-	public void setOwner(EntityPlayer owner) {
+	public void setOwner(EntityLivingBase owner) {
 		this.ownerCached = owner;
-		setOwnerName(owner == null ? "" : owner.getName());
+		setOwnerInfo(owner == null ? new NoBenderInfo() : new BenderInfo(owner));
 		
 		if (owner != null) {
 			setOwnerCallback.accept(owner);
 		}
 		
+	}
+	
+	/**
+	 * Get the owner as a Bender. Null if owner not present.
+	 */
+	public Bender getOwnerBender() {
+		EntityLivingBase owner = getOwner();
+		if (owner == null) {
+			return null;
+		} else {
+			return Bender.create(owner);
+		}
+	}
+	
+	public UUID getId() {
+		return getOwnerInfo().getId();
 	}
 	
 	/**
@@ -141,8 +163,11 @@ public class OwnerAttribute {
 	 * <li>There is not supposed to be an owner
 	 */
 	private boolean isCacheInvalid() {
-		if (ownerCached == null || ownerCached.isDead || !ownerCached.getName().equals(getOwnerName())
-				|| getOwnerName() == null) {
+		
+		UUID id = getOwnerInfo().getId();
+		boolean idConsistent = id != null && getOwnerInfo().getId().equals(id);
+		
+		if (ownerCached == null || ownerCached.isDead || !idConsistent || getOwnerInfo() == null) {
 			ownerCached = null;
 			return true;
 		}

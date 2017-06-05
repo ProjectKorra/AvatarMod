@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
@@ -30,6 +30,15 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
  * @author CrowsOfWar
  */
 public interface BendingData {
+	
+	// ================================================================================
+	// BENDING CONTROLLERS
+	// ================================================================================
+	
+	/**
+	 * Check if the player has that bending controller
+	 */
+	boolean hasBending(BendingController bending);
 	
 	/**
 	 * Check if the player has that type of bending
@@ -64,75 +73,84 @@ public interface BendingData {
 	 */
 	void removeBending(BendingType type);
 	
-	List<BendingController> getBendingControllers();
+	List<BendingController> getAllBending();
+	
+	void setAllBending(List<BendingController> controller);
+	
+	void clearBending();
+	
+	// ================================================================================
+	// ACTIVE BENDING
+	// ================================================================================
 	
 	/**
-	 * Get the BendingController with that type. Returns null if there is no
-	 * bending controller for that type.
+	 * Gets the currently in-use bending controller. Null if player has no
+	 * bending
 	 */
-	BendingController getBendingController(BendingType type);
+	BendingController getActiveBending();
 	
 	/**
-	 * Gets extra metadata for the given bending controller with that type, or
-	 * null if there is no bending controller.
-	 * <p>
-	 * Will automatically create a state and sync changes if the controller is
-	 * present.
+	 * Gets the type of the in-use bending controller. Null if the player has no
+	 * bending
 	 */
-	BendingState getBendingState(BendingType type);
+	BendingType getActiveBendingType();
 	
 	/**
-	 * Get extra metadata for the given bending controller, returns null if no
-	 * Bending controller.
-	 * 
-	 * @see #getBendingState(BendingType)
+	 * Set the currently in-use bending. If null, will be rejected
 	 */
-	BendingState getBendingState(BendingController controller);
+	void setActiveBending(BendingController controller);
 	
 	/**
-	 * Returns whether a bending state for the bending controller is present.
-	 * Does not add one if necessary.
+	 * Set the currently in-use type. If null, will be rejected
 	 */
-	boolean hasBendingState(BendingController controller);
+	void setActiveBendingType(BendingType type);
 	
-	List<BendingState> getAllBendingStates();
+	// ================================================================================
+	// STATUS CONTROLS
+	// ================================================================================
 	
-	void clearBendingStates();
-	
-	/**
-	 * Adds the bending state to this player data, replacing the existing one of
-	 * that type if necessary.
-	 */
-	void addBendingState(BendingState state);
-	
-	/**
-	 * Removes that bending state from this player data. Note: Must be the exact
-	 * instance already present to successfully occur.
-	 */
-	void removeBendingState(BendingState state);
-	
-	Set<StatusControl> getActiveStatusControls();
-	
-	boolean hasStatusControl(StatusControl status);
+	boolean hasStatusControl(StatusControl control);
 	
 	void addStatusControl(StatusControl control);
 	
 	void removeStatusControl(StatusControl control);
 	
+	List<StatusControl> getAllStatusControls();
+	
+	void setAllStatusControls(List<StatusControl> controls);
+	
 	void clearStatusControls();
+	
+	// ================================================================================
+	// ABILITY DATA
+	// ================================================================================
+	
+	boolean hasAbilityData(BendingAbility ability);
 	
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
 	AbilityData getAbilityData(BendingAbility ability);
 	
+	void setAbilityData(BendingAbility ability, AbilityData data);
+	
 	/**
-	 * Gets a list of all ability data contained in this player data. The list
-	 * is immutable.
+	 * Gets a list of all ability data contained in this player data.
 	 */
 	List<AbilityData> getAllAbilityData();
 	
+	Map<BendingAbility, AbilityData> getAbilityDataMap();
+	
+	void setAbilityDataMap(Map<BendingAbility, AbilityData> map);
+	
+	/**
+	 * Removes all ability data associations
+	 */
 	void clearAbilityData();
+	
+	// ================================================================================
+	// CHI
+	// ================================================================================
 	
 	/**
 	 * Gets the chi information about the bender
@@ -140,5 +158,60 @@ public interface BendingData {
 	Chi chi();
 	
 	void setChi(Chi chi);
+	
+	// ================================================================================
+	// TICK HANDLERS
+	// ================================================================================
+	
+	boolean hasTickHandler(TickHandler handler);
+	
+	void addTickHandler(TickHandler handler);
+	
+	void removeTickHandler(TickHandler handler);
+	
+	List<TickHandler> getAllTickHandlers();
+	
+	void setAllTickHandlers(List<TickHandler> handlers);
+	
+	void clearTickHandlers();
+	
+	// ================================================================================
+	// MISC
+	// ================================================================================
+	
+	MiscData getMiscData();
+	
+	void setMiscData(MiscData miscData);
+	
+	float getFallAbsorption();
+	
+	void setFallAbsorption(float fallAbsorption);
+	
+	int getTimeInAir();
+	
+	void setTimeInAir(int time);
+	
+	int getAbilityCooldown();
+	
+	void setAbilityCooldown(int cooldown);
+	
+	void decrementCooldown();
+	
+	boolean isWallJumping();
+	
+	void setWallJumping(boolean wallJumping);
+	
+	boolean willSmashGround();
+	
+	void setSmashGround(boolean smash);
+	
+	int getPetSummonCooldown();
+	
+	void setPetSummonCooldown(int cooldown);
+	
+	/**
+	 * Save this BendingData
+	 */
+	void save(DataCategory category);
 	
 }

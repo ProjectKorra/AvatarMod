@@ -19,14 +19,11 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.KEY_WATERBENDING;
 
 import java.awt.Color;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.BendingState;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -48,7 +45,7 @@ public class Waterbending extends BendingController {
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
 		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
-				new ThemeColor(icon, base), 0x57E8F2), KEY_WATERBENDING, this);
+				new ThemeColor(icon, base), 0x57E8F2), "Waterbend", this);
 	}
 	
 	@Override
@@ -64,11 +61,6 @@ public class Waterbending extends BendingController {
 	@Override
 	public BendingType getType() {
 		return WATERBENDING;
-	}
-	
-	@Override
-	public BendingState createState(AvatarPlayerData data) {
-		return new WaterbendingState(data);
 	}
 	
 	@Override

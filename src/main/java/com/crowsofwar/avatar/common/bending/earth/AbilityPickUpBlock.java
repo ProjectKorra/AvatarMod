@@ -21,21 +21,25 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -56,62 +60,83 @@ public class AbilityPickUpBlock extends EarthAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		AvatarPlayerData data = ctx.getData();
-		EarthbendingState ebs = (EarthbendingState) data.getBendingState(controller());
-		EntityPlayer player = data.getPlayerEntity();
-		World world = data.getWorld();
+		BendingData data = ctx.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
 		
-		if (ebs.getPickupBlock() != null) {
-			ebs.getPickupBlock().drop();
-			ebs.setPickupBlock(null);
+		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
+				EntityFloatingBlock.class,
+				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
+						&& fb.getOwner() == ctx.getBenderEntity());
+		
+		if (currentBlock != null) {
+			currentBlock.drop();
 			data.removeStatusControl(StatusControl.THROW_BLOCK);
 			data.removeStatusControl(StatusControl.PLACE_BLOCK);
-			data.sync();
 		} else {
 			VectorI target = ctx.verifyClientLookBlock(-1, 5);
 			if (target != null) {
-				IBlockState ibs = world.getBlockState(target.toBlockPos());
-				Block block = ibs.getBlock();
-				if (STATS_CONFIG.bendableBlocks.contains(block)) {
-					
-					if (ctx.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
-						
-						AbilityData abilityData = data.getAbilityData(this);
-						float xp = abilityData.getXp();
-						
-						EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
-						floating.setPosition(target.x() + 0.5, target.y(), target.z() + 0.5);
-						floating.setItemDropsEnabled(!player.capabilities.isCreativeMode);
-						
-						double dist = 2.5;
-						Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
-						floating.velocity().add(force);
-						floating.setBehavior(new FloatingBlockBehavior.PickUp());
-						floating.setOwner(player);
-						floating.setDamageMult(.75f + xp / 100);
-						
-						world.spawnEntityInWorld(floating);
-						
-						ebs.setPickupBlock(floating);
-						data.sendBendingState(ebs);
-						
-						world.setBlockState(target.toBlockPos(), Blocks.AIR.getDefaultState());
-						
-						controller().post(new FloatingBlockEvent.BlockPickedUp(floating, player));
-						
-						data.addStatusControl(StatusControl.PLACE_BLOCK);
-						data.addStatusControl(StatusControl.THROW_BLOCK);
-						data.sync();
-						
-					}
-					
-				} else {
-					world.playSound(null, player.getPosition(), SoundEvents.BLOCK_LEVER_CLICK,
-							SoundCategory.PLAYERS, 1, (float) (random.nextGaussian() / 0.25 + 0.375));
-				}
+				
+				pickupBlock(ctx, target.toBlockPos());
+				
+				// EnumFacing direction = entity.getHorizontalFacing();
+				// pickupBlock(ctx, target.toBlockPos().offset(direction));
+				// pickupBlock(ctx,
+				// target.toBlockPos().offset(direction.getOpposite()));
 				
 			}
 		}
+	}
+	
+	private void pickupBlock(AbilityContext ctx, BlockPos pos) {
+		
+		World world = ctx.getWorld();
+		Bender bender = ctx.getBender();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
+		
+		IBlockState ibs = world.getBlockState(pos);
+		Block block = ibs.getBlock();
+		
+		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block)) {
+			
+			if (ctx.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+				
+				AbilityData abilityData = data.getAbilityData(this);
+				float xp = abilityData.getTotalXp();
+				
+				EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
+				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+				floating.setItemDropsEnabled(!bender.isCreativeMode());
+				
+				double dist = 2.5;
+				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
+				floating.velocity().add(force);
+				floating.setBehavior(new FloatingBlockBehavior.PickUp());
+				floating.setOwner(entity);
+				floating.setDamageMult(abilityData.getLevel() >= 2 ? 2 : 1);
+				
+				world.spawnEntityInWorld(floating);
+				
+				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				
+				SoundType sound = block.getSoundType();
+				if (sound != null) {
+					world.playSound(null, floating.getPosition(), sound.getBreakSound(),
+							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+				}
+				
+				data.addStatusControl(StatusControl.PLACE_BLOCK);
+				data.addStatusControl(StatusControl.THROW_BLOCK);
+				
+			}
+			
+		} else {
+			world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS,
+					1, (float) (random.nextGaussian() / 0.25 + 0.375));
+		}
+		
 	}
 	
 }

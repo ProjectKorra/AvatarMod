@@ -22,9 +22,11 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import java.util.List;
 import java.util.Random;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -32,11 +34,11 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -55,7 +57,9 @@ public class EntityFlames extends AvatarEntity {
 	/**
 	 * The owner, null client side
 	 */
-	private EntityPlayer owner;
+	private EntityLivingBase owner;
+	
+	private boolean lightsFires;
 	
 	/**
 	 * @param worldIn
@@ -66,7 +70,7 @@ public class EntityFlames extends AvatarEntity {
 		setSize(0.1f, 0.1f);
 	}
 	
-	public EntityFlames(World world, EntityPlayer owner) {
+	public EntityFlames(World world, EntityLivingBase owner) {
 		this(world);
 		this.owner = owner;
 	}
@@ -99,20 +103,46 @@ public class EntityFlames extends AvatarEntity {
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
 			velocity().set(velocity().reflect(new Vector(sideHit)).times(0.5));
+			
+			// Try to light firest
+			if (lightsFires && sideHit != EnumFacing.DOWN && !worldObj.isRemote) {
+				
+				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(),
+						-sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());
+				
+				if (sideHit == EnumFacing.UP || worldObj.getBlockState(bouncingOff).getBlock()
+						.isFlammable(worldObj, bouncingOff, sideHit)) {
+					
+					worldObj.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
+					
+				}
+				
+			}
+			
 		}
 		
 		if (!worldObj.isRemote) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(owner);
+			BendingData data = Bender.create(owner).getData();
 			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FLAMETHROWER);
 			
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != owner && !(entity instanceof EntityFlames));
 			
 			for (Entity entity : collided) {
-				if (abilityData.getXp() >= 50) {
-					entity.attackEntityFrom(DamageSource.inFire, 2 + (abilityData.getXp() - 50) / 25);
+				
+				entity.setFire((int) (3 * 1 + abilityData.getTotalXp() / 100f));
+				
+				// Add extra damage
+				// Adding 0 since even though this doesn't affect health, will
+				// cause mobs to aggro
+				
+				float additionalDamage = 0;
+				if (abilityData.getTotalXp() >= 50) {
+					additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
 				}
-				entity.setFire((int) (3 * 1 + abilityData.getXp() / 100f));
+				entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
+						additionalDamage);
+				
 			}
 			
 			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
@@ -148,9 +178,12 @@ public class EntityFlames extends AvatarEntity {
 	@Override
 	protected void playStepSound(BlockPos pos, Block blockIn) {}
 	
-	@Override
-	protected void updateHidden() {
-		setHidden(false);
+	public boolean doesLightFires() {
+		return lightsFires;
+	}
+	
+	public void setLightsFires(boolean lightsFires) {
+		this.lightsFires = lightsFires;
 	}
 	
 }

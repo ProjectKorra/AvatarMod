@@ -24,20 +24,22 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.earth.FloatingBlockEvent;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -106,8 +108,11 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				entity.setDead();
 				entity.worldObj.setBlockState(new BlockPos(entity), entity.getBlockState());
 				
-				BendingManager.getBending(BendingType.EARTHBENDING)
-						.post(new FloatingBlockEvent.BlockPlacedReached(entity));
+				SoundType sound = entity.getBlock().getSoundType();
+				if (sound != null) {
+					entity.worldObj.playSound(null, entity.getPosition(), sound.getPlaceSound(),
+							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+				}
 				
 			}
 			
@@ -147,8 +152,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			if (entity.isCollided) {
 				if (!entity.worldObj.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
-				BendingManager.getBending(BendingType.EARTHBENDING)
-						.post(new FloatingBlockEvent.BlockThrownReached(entity));
+				
+				World world = entity.worldObj;
+				Block block = entity.getBlockState().getBlock();
+				SoundType sound = block.getSoundType();
+				if (sound != null) {
+					entity.worldObj.playSound(null, entity.getPosition(), sound.getBreakSound(),
+							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+				}
 				
 			}
 			
@@ -161,7 +172,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						collision((EntityLivingBase) collided, entity);
+						return collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
 						motion.mul(0.3);
@@ -176,7 +187,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 		}
 		
-		private void collision(EntityLivingBase collided, EntityFloatingBlock entity) {
+		private FloatingBlockBehavior collision(EntityLivingBase collided, EntityFloatingBlock entity) {
 			// Add damage
 			double speed = entity.velocity().magnitude();
 			collided.attackEntityFrom(
@@ -190,7 +201,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			// Add XP
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(entity.getOwner());
+			BendingData data = Bender.create(entity.getOwner()).getData();
 			if (!collided.worldObj.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.blockThrowHit;
 				if (collided.getHealth() <= 0) {
@@ -200,8 +211,22 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			}
 			
 			// Remove the floating block & spawn particles
-			if (!entity.worldObj.isRemote) entity.setDead();
 			entity.onCollideWithSolid();
+			if (!entity.worldObj.isRemote) {
+				if (data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK)
+						.isMasterPath(AbilityTreePath.FIRST)) {
+					
+					data.addStatusControl(StatusControl.THROW_BLOCK);
+					data.addStatusControl(StatusControl.PLACE_BLOCK);
+					return new FloatingBlockBehavior.PlayerControlled();
+					
+				} else {
+					entity.setDead();
+				}
+			}
+			
+			return this;
+			
 		}
 		
 		@Override
@@ -254,16 +279,16 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			EntityPlayer player = entity.getOwner();
+			EntityLivingBase owner = entity.getOwner();
 			
-			if (player == null) return this;
+			if (owner == null) return this;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = Bender.create(owner).getData();
 			
-			double yaw = Math.toRadians(player.rotationYaw);
-			double pitch = Math.toRadians(player.rotationPitch);
+			double yaw = Math.toRadians(owner.rotationYaw);
+			double pitch = Math.toRadians(owner.rotationPitch);
 			Vector forward = Vector.toRectangular(yaw, pitch);
-			Vector eye = Vector.getEyePos(player);
+			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(entity));
 			motion.mul(5);

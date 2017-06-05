@@ -17,12 +17,15 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -76,21 +79,21 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
-			EntityPlayer player = entity.getOwner();
+			EntityLivingBase owner = entity.getOwner();
 			
-			if (player == null) return this;
+			if (owner == null) return this;
 			
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = Bender.create(owner).getData();
 			
 			Vector target;
-			Raytrace.Result raytrace = Raytrace.getTargetBlock(player, 3, false);
+			Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 3, false);
 			if (raytrace.hitSomething()) {
 				target = raytrace.getPosPrecise().plus(0, .2, 0);
 			} else {
-				double yaw = Math.toRadians(player.rotationYaw);
-				double pitch = Math.toRadians(player.rotationPitch);
+				double yaw = Math.toRadians(owner.rotationYaw);
+				double pitch = Math.toRadians(owner.rotationPitch);
 				Vector forward = Vector.toRectangular(yaw, pitch);
-				Vector eye = Vector.getEyePos(player);
+				Vector eye = Vector.getEyePos(owner);
 				target = forward.times(3).plus(eye);
 			}
 			
@@ -121,9 +124,21 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		public Behavior onUpdate(EntityWaterBubble entity) {
 			entity.velocity().add(0, -9.81 / 10, 0);
 			if (entity.isCollided) {
-				entity.worldObj.setBlockState(entity.getPosition(), Blocks.FLOWING_WATER.getDefaultState(),
-						3);
-				entity.setDead();
+				
+				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
+				
+				if (!entity.worldObj.isRemote) {
+					
+					entity.worldObj.setBlockState(entity.getPosition(), state, 3);
+					entity.setDead();
+					
+					if (!entity.isSourceBlock()) {
+						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.worldObj);
+						wd.addTemporaryWaterLocation(entity.getPosition());
+					}
+					
+				}
+				
 			}
 			return this;
 		}

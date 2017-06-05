@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-import com.crowsofwar.avatar.common.particle.ParticleType;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumParticleTypes;
@@ -31,7 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	
-	private ParticleType particle;
+	private EnumParticleTypes particle;
 	private int minimum, maximum;
 	private double x, y, z;
 	private double maxVelocityX, maxVelocityY, maxVelocityZ;
@@ -49,8 +48,8 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	 * @param maxVelocityY
 	 * @param maxVelocityZ
 	 */
-	public PacketCParticles(ParticleType particle, int minimum, int maximum, double x, double y, double z,
-			double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
+	public PacketCParticles(EnumParticleTypes particle, int minimum, int maximum, double x, double y,
+			double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
 		this.particle = particle;
 		this.minimum = minimum;
 		this.maximum = maximum;
@@ -63,8 +62,8 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	}
 	
 	@Override
-	public void fromBytes(ByteBuf buf) {
-		particle = ParticleType.lookup(buf.readInt());
+	public void avatarFromBytes(ByteBuf buf) {
+		particle = EnumParticleTypes.values()[buf.readInt()];
 		minimum = buf.readInt();
 		maximum = buf.readInt();
 		x = buf.readDouble();
@@ -76,8 +75,8 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	}
 	
 	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(particle.id());
+	public void avatarToBytes(ByteBuf buf) {
+		buf.writeInt(particle.ordinal());
 		buf.writeInt(minimum);
 		buf.writeInt(maximum);
 		buf.writeDouble(x);
@@ -99,7 +98,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	}
 	
 	public EnumParticleTypes getParticle() {
-		return particle.vanilla();
+		return particle;
 	}
 	
 	public int getMinimum() {

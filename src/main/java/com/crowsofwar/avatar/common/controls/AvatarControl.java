@@ -17,48 +17,81 @@
 
 package com.crowsofwar.avatar.common.controls;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import com.crowsofwar.avatar.AvatarMod;
+
 /**
- * A list of all of the control names.
- *
+ * Represents all controls needed to access by AvatarMod. This includes:
+ * <ul>
+ * <li>Keybindings added by AvatarMod
+ * <li>Vanilla keybindings
+ * <li>Special controls from AvatarMod like mouse button up/down
+ * </ul>
+ * 
  */
-public enum AvatarControl {
+public class AvatarControl {
 	
-	/** No control is pressed */
-	NONE(""),
-	KEY_EARTHBENDING("RadialMenu"),
-	KEY_FIREBENDING("Firebend"),
-	KEY_WATERBENDING("Waterbend"),
-	KEY_AIRBENDING("Airbend"),
-	KEY_SKILLS("Skills"),
-	/** Left mouse button is held down */
-	CONTROL_LEFT_CLICK("LeftClick"),
-	/** Right mouse button is held down */
-	CONTROL_RIGHT_CLICK("RightClick"),
-	/** Middle mouse button is held down */
-	CONTROL_MIDDLE_CLICK("MiddleClick"),
-	/** Left mouse button just got pressed */
-	CONTROL_LEFT_CLICK_DOWN("LeftClickDown"),
-	/** Right mouse button just got pressed */
-	CONTROL_RIGHT_CLICK_DOWN("RightClickDown"),
-	/** Middle mouse button just got pressed */
-	CONTROL_MIDDLE_CLICK_DOWN("MiddleClickDown"),
-	/** Space key (not jump) is held */
-	CONTROL_SPACE("Space"),
-	CONTROL_SPACE_DOWN("SpaceDown"),
-	/** Left mouse button was just released */
-	CONTROL_LEFT_CLICK_UP("LeftClickUp"),
-	/** Right mouse button was just released */
-	CONTROL_RIGHT_CLICK_UP("RightClickUp"),
-	/** Middle mouse button was just released */
-	CONTROL_MIDDLE_CLICK_UP("MiddleClickUp"),
-	CONTROL_SHIFT("Shift");
+	public static List<AvatarControl> ALL_CONTROLS;
 	
-	private String name;
-	private boolean isKey;
+	// @formatter:off
+	public static AvatarControl
+		KEY_USE_BENDING,
+		KEY_BENDING_CYCLE_LEFT,
+		KEY_BENDING_CYCLE_RIGHT,
+		KEY_SKILLS,
+		KEY_TRANSFER_BISON,
+		CONTROL_LEFT_CLICK,
+		CONTROL_RIGHT_CLICK,
+		CONTROL_MIDDLE_CLICK,
+		CONTROL_LEFT_CLICK_DOWN,
+		CONTROL_RIGHT_CLICK_DOWN,
+		CONTROL_MIDDLE_CLICK_DOWN,
+		CONTROL_SPACE,
+		CONTROL_SPACE_DOWN,
+		CONTROL_JUMP,
+		CONTROL_LEFT_CLICK_UP,
+		CONTROL_RIGHT_CLICK_UP,
+		CONTROL_MIDDLE_CLICK_UP,
+		CONTROL_SHIFT;
+	// @formatter:off
 	
-	private AvatarControl(String name) {
+	public static void initControls() {
+		ALL_CONTROLS = new ArrayList<>();
+		KEY_USE_BENDING = new AvatarControl("avatar.Bend", true);
+		KEY_BENDING_CYCLE_LEFT = new AvatarControl("avatar.BendingCycleLeft", true);
+		KEY_BENDING_CYCLE_RIGHT = new AvatarControl("avatar.BendingCycleRight", true);
+		KEY_SKILLS = new AvatarControl("avatar.Skills", true);
+		KEY_TRANSFER_BISON = new AvatarControl("avatar.TransferBison", true);
+		CONTROL_LEFT_CLICK = new AvatarControl("LeftClick", false);
+		CONTROL_RIGHT_CLICK = new AvatarControl("RightClick", false);
+		CONTROL_MIDDLE_CLICK = new AvatarControl("MiddleClick", false);
+		CONTROL_LEFT_CLICK_DOWN = new AvatarControl("LeftClickDown", false);
+		CONTROL_RIGHT_CLICK_DOWN = new AvatarControl("RightClickDown", false);
+		CONTROL_MIDDLE_CLICK_DOWN = new AvatarControl("MiddleClickDown", false);
+		CONTROL_SPACE = new AvatarControl("Space", false);
+		CONTROL_SPACE_DOWN = new AvatarControl("SpaceDown", false);
+		CONTROL_JUMP = new AvatarControl("key.jump", true);
+		CONTROL_LEFT_CLICK_UP = new AvatarControl("LeftClickUp", false);
+		CONTROL_RIGHT_CLICK_UP = new AvatarControl("RightClickUp", false);
+		CONTROL_MIDDLE_CLICK_UP = new AvatarControl("MiddleClickUp", false);
+		CONTROL_SHIFT = new AvatarControl("Shift", false);
+	}
+	
+	private final String name;
+	private KeybindingWrapper kb;
+	private boolean needsKeybinding;
+	
+	/**
+	 * Creates a new AvatarControl. If the parameter <code>keybinding</code> is true, then initializes to the keybinding with the given name.
+	 */
+	private AvatarControl(String name, boolean keybinding) {
 		this.name = name;
-		this.isKey = name().startsWith("KEY");
+		this.needsKeybinding = keybinding;
+		ALL_CONTROLS.add(this);
 	}
 	
 	/**
@@ -69,35 +102,25 @@ public enum AvatarControl {
 	}
 	
 	/**
-	 * Get the Id of this control.
-	 * 
-	 * @see #findFromId(int)
+	 * Get the keybinding for this control. Returns null for controls that aren't linked to a keybinding.
 	 */
-	public int getId() {
-		return ordinal();
+	@Nullable
+	public KeybindingWrapper getKeybinding() {
+		if (needsKeybinding && kb == null) {
+			kb = AvatarMod.proxy.createKeybindWrapper(name);
+		}
+		return kb;
 	}
 	
 	/**
-	 * Returns whether this control is a keybinding.
+	 * Returns whether this control is linked to a keybinding
 	 */
 	public boolean isKeybinding() {
-		return isKey;
+		return getKeybinding() != null;
 	}
 	
-	/**
-	 * Find the Avatar control with that Id. If the Id is invalid, throws an
-	 * IllegalArgumentException.
-	 * 
-	 * @param id
-	 *            Id of the control, obtained with {@link #getId()}.
-	 * @return The control with that Id
-	 * @throws IllegalArgumentException
-	 *             If that Id refers to no control.
-	 */
-	public static AvatarControl findFromId(int id) {
-		if (id < 0 || id >= values().length)
-			throw new IllegalArgumentException("AvatarControl Id '" + id + "' is invalid");
-		return values()[id];
+	public boolean isPressed() {
+		return isKeybinding() ? getKeybinding().isPressed() : AvatarMod.proxy.getKeyHandler().isControlPressed(this);
 	}
 	
 }

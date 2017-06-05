@@ -17,25 +17,31 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleType;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * 
@@ -45,38 +51,52 @@ import net.minecraft.util.math.BlockPos;
 public class StatCtrlAirJump extends StatusControl {
 	
 	public StatCtrlAirJump() {
-		super(0, AvatarControl.CONTROL_SPACE, CrosshairPosition.BELOW_CROSSHAIR);
+		super(0, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
 	}
 	
 	@Override
-	public boolean execute(AbilityContext context) {
+	public boolean execute(BendingContext ctx) {
 		
-		EntityPlayer player = context.getPlayerEntity();
+		Bender bender = ctx.getBender();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
+		World world = ctx.getWorld();
 		
-		if (player.onGround) {
+		AbilityData abilityData = data.getAbilityData(ABILITY_AIR_JUMP);
+		boolean allowDoubleJump = abilityData.getLevel() == 3
+				&& abilityData.getPath() == AbilityTreePath.FIRST;
+		
+		BlockPos pos = entity.getPosition().add(0, -0.2, 0);
+		boolean onGround = world.isSideSolid(pos, EnumFacing.DOWN);
+		
+		if (onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
 			
 			float xp = 0;
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			if (data != null) {
-				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_JUMP);
-				xp = abilityData.getXp();
+				xp = abilityData.getTotalXp();
 				abilityData.addXp(SKILLS_CONFIG.airJump);
 			}
 			
-			Vector rotations = new Vector(Math.toRadians((player.rotationPitch) / 1),
-					Math.toRadians(player.rotationYaw), 0);
+			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
+					Math.toRadians(entity.rotationYaw), 0);
 			
 			Vector velocity = rotations.toRectangular();
 			velocity.setY(Math.pow(velocity.y(), .1));
 			velocity.mul(1 + xp / 250.0);
-			player.addVelocity(velocity.x(), velocity.y(), velocity.z());
-			((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
+			if (!onGround) {
+				velocity.mul(0.6);
+				entity.motionX = 0;
+				entity.motionY = 0;
+				entity.motionZ = 0;
+			}
+			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+			if (entity instanceof EntityPlayerMP) {
+				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+			}
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(player.worldObj, ParticleType.AIR, 2, 6, new Vector(player),
-					new Vector(1, 0, 1));
-			
-			AirJumpParticleSpawner.spawnParticles(player);
+			spawner.spawnParticles(entity.worldObj, AvatarParticles.getParticleAir(), 2, 6,
+					new Vector(entity), new Vector(1, 0, 1));
 			
 			// Find approximate maximum distance. In actuality, a bit less, due
 			// to max velocity and drag
@@ -90,12 +110,19 @@ public class StatCtrlAirJump extends StatusControl {
 			fallAbsorption -= 2; // compensate that it may be a bit extra
 			data.setFallAbsorption(fallAbsorption);
 			
-			player.worldObj.playSound(null, new BlockPos(player), SoundEvents.ENTITY_BAT_TAKEOFF,
+			data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
+			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
+				data.setSmashGround(true);
+			}
+			
+			entity.worldObj.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
+			
+			return true;
 			
 		}
 		
-		return player.onGround;
+		return false;
 		
 	}
 	

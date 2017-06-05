@@ -16,26 +16,22 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_SPACE_DOWN;
-
-import java.util.List;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -54,7 +50,7 @@ public class AirbendingEvents {
 	private void tick(EntityPlayer player, World world, AvatarPlayerData data) {
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
 				&& !player.isCollidedVertically && data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
-			if (AvatarMod.proxy.getKeyHandler().isControlPressed(CONTROL_SPACE_DOWN)) {
+			if (AvatarControl.CONTROL_JUMP.isPressed()) {
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
 		}
@@ -79,28 +75,20 @@ public class AirbendingEvents {
 	@SubscribeEvent
 	public void airBubbleShield(LivingAttackEvent e) {
 		World world = e.getEntity().worldObj;
-		if (!world.isRemote && e.getEntity() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) e.getEntity();
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		
+		EntityLivingBase attacked = (EntityLivingBase) e.getEntity();
+		
+		if (Bender.isBenderSupported(attacked)) {
+			BendingData data = Bender.create(attacked).getData();
 			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
-				
-				List<EntityAirBubble> entities = player.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
-						player.getEntityBoundingBox(), bubble -> bubble.getOwner() == player);
-				for (EntityAirBubble bubble : entities) {
-					
-					DamageSource source = e.getSource();
-					Entity entity = source.getEntity();
-					if (entity != null && (entity instanceof AvatarEntity || entity instanceof EntityArrow)) {
-						entity.setDead();
-						data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
-						bubble.setHealth(bubble.getHealth() - e.getAmount());
-						e.setCanceled(true);
-					}
-					
+				EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
+						attacked);
+				if (bubble != null) {
+					bubble.attackEntityFrom(e.getSource(), e.getAmount());
 				}
-				
 			}
 		}
+		
 	}
 	
 	public static void register() {

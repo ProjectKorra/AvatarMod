@@ -43,7 +43,7 @@ public class NodeBendingAdd extends NodeFunctional {
 		super("add", true);
 		
 		this.argPlayerName = addArgument(new ArgumentPlayerName("player"));
-		this.argBendingController = addArgument(new ArgumentOptions<List<BendingController>>(
+		this.argBendingController = addArgument(new ArgumentOptions<>(
 				AvatarCommand.CONVERTER_BENDING, "bending", AvatarCommand.CONTROLLER_BENDING_OPTIONS));
 		
 	}
@@ -70,7 +70,6 @@ public class NodeBendingAdd extends NodeFunctional {
 					MSG_BENDING_ADD_ALREADY_HAS.send(sender, playerName, controller.getControllerName());
 				} else {
 					data.addBending(controller);
-					data.sync();
 					MSG_BENDING_ADD_SUCCESS.send(sender, playerName, controller.getControllerName());
 				}
 				

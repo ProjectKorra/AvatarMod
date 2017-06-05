@@ -19,15 +19,18 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.AbilityContext;
+import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -43,24 +46,34 @@ public class StatCtrlThrowWater extends StatusControl {
 	}
 	
 	@Override
-	public boolean execute(AbilityContext ctx) {
+	public boolean execute(BendingContext ctx) {
 		
-		EntityPlayer player = ctx.getPlayerEntity();
-		AvatarPlayerData data = ctx.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
+		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_ARC);
 		
-		AxisAlignedBB boundingBox = new AxisAlignedBB(player.posX - 5, player.posY - 5, player.posZ - 5,
-				player.posX + 5, player.posY + 5, player.posZ + 5);
+		int lvl = abilityData.getLevel();
+		double velocity = 6;
+		if (lvl >= 2) {
+			velocity = 10;
+		}
+		if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+			velocity = 8;
+		}
+		
+		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,
+				entity.posX + 5, entity.posY + 5, entity.posZ + 5);
 		List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
-				arc -> arc.getOwner() == player
+				arc -> arc.getOwner() == entity
 						&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
 		
 		for (EntityWaterArc arc : existing) {
 			arc.setBehavior(new WaterArcBehavior.Thrown());
 			
-			Vector force = Vector.toRectangular(Math.toRadians(player.rotationYaw),
-					Math.toRadians(player.rotationPitch));
-			force.mul(10);
+			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
+					Math.toRadians(entity.rotationPitch));
+			force.mul(velocity);
 			arc.velocity().add(force);
 			arc.setBehavior(new WaterArcBehavior.Thrown());
 			
