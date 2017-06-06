@@ -238,13 +238,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		this.enableItemDrops = enable;
 	}
 	
-	/**
-	 * Disable dropping an item when the floating block is destroyed.
-	 */
-	public void disableItemDrops() {
-		setItemDropsEnabled(false);
-	}
-	
 	public float getDamageMult() {
 		return damageMult;
 	}

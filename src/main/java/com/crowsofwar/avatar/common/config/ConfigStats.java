@@ -73,6 +73,9 @@ public class ConfigStats {
 	@Load
 	public boolean addDungeonLoot = true;
 	
+	@Load
+	public boolean preventPickupBlockGriefing = false;
+	
 	public List<Block> bendableBlocks;
 	
 	private ConfigStats() {

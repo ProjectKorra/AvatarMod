@@ -117,9 +117,13 @@ public class AbilityPickUpBlock extends EarthAbility {
 				floating.setOwner(entity);
 				floating.setDamageMult(abilityData.getLevel() >= 2 ? 2 : 1);
 				
-				world.spawnEntityInWorld(floating);
+				if (STATS_CONFIG.preventPickupBlockGriefing) {
+					floating.setItemDropsEnabled(false);
+				} else {
+					world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				}
 				
-				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				world.spawnEntityInWorld(floating);
 				
 				SoundType sound = block.getSoundType();
 				if (sound != null) {
