@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -58,6 +59,7 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(1, BendingAbility.ABILITY_FLAMETHROWER.getAi(this, this));
 		this.tasks.addTask(3, BendingAbility.ABILITY_FIREBALL.getAi(this, this));
 		this.tasks.addTask(2, BendingAbility.ABILITY_FIRE_ARC.getAi(this, this));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 	
 	@Override
