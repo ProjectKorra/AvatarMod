@@ -88,6 +88,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -760,6 +761,19 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		float saddle = getSaddle() == null ? 0 : getSaddle().getArmorPoints();
 		float armor = getArmor() == null ? 0 : getArmor().getArmorPoints();
 		return saddle + armor;
+	}
+	
+	@Override
+	public void onDeath(DamageSource cause) {
+		super.onDeath(cause);
+		if (!worldObj.isRemote) {
+			for (int i = 0; i < chest.getSizeInventory(); i++) {
+				ItemStack stack = chest.getStackInSlot(i);
+				if (!stack.func_190926_b()) {
+					entityDropItem(stack, 0);
+				}
+			}
+		}
 	}
 	
 	// ================================================================================
