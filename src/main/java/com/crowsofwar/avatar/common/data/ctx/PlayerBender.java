@@ -74,17 +74,20 @@ public class PlayerBender implements Bender {
 		
 		if (total >= amount) {
 			
-			int i = 0;
-			while (amount > 0) {
-				ItemStack stack = inv.getStackInSlot(i);
-				if (stack.getItem() == AvatarItems.itemWaterPouch) {
-					int oldMetadata = stack.getMetadata();
-					int newMetadata = stack.getMetadata() - amount;
-					if (newMetadata < 0) newMetadata = 0;
-					amount -= oldMetadata - newMetadata;
-					stack.setItemDamage(newMetadata);
+			// Reduce water pouch level
+			if (!isCreativeMode()) {
+				int i = 0;
+				while (amount > 0) {
+					ItemStack stack = inv.getStackInSlot(i);
+					if (stack.getItem() == AvatarItems.itemWaterPouch) {
+						int oldMetadata = stack.getMetadata();
+						int newMetadata = stack.getMetadata() - amount;
+						if (newMetadata < 0) newMetadata = 0;
+						amount -= oldMetadata - newMetadata;
+						stack.setItemDamage(newMetadata);
+					}
+					i++;
 				}
-				i++;
 			}
 			
 			return true;
