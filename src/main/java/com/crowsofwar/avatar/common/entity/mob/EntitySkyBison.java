@@ -812,7 +812,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		setSize(2.5f * sizeMult, 2 * sizeMult);
 		
 		condition.onUpdate();
-		if (condition.getFoodPoints() == 0) {
+		if (condition.getFoodPoints() == 0 && getOwner() != null) {
 			setSitting(true);
 		} else if (!hasOwner()) {
 			setSitting(false);
