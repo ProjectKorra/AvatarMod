@@ -36,6 +36,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumFacing;
@@ -67,7 +68,9 @@ public class StatCtrlAirJump extends StatusControl {
 				&& abilityData.getPath() == AbilityTreePath.FIRST;
 		
 		BlockPos pos = entity.getPosition().add(0, -0.2, 0);
-		boolean onGround = world.isSideSolid(pos, EnumFacing.DOWN);
+		boolean onGround = world.isSideSolid(pos, EnumFacing.DOWN)
+				|| world.getBlockState(pos).getBlock() == Blocks.LEAVES
+				|| world.getBlockState(pos).getBlock() == Blocks.LEAVES2;
 		
 		if (onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
 			
