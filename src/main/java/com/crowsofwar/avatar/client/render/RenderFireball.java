@@ -91,6 +91,8 @@ public class RenderFireball extends Render<EntityFireball> {
 			
 		}
 		
+		disableBlend();
+		
 	}
 	// @formatter:on
 	
