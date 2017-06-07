@@ -201,10 +201,6 @@ public interface BendingData {
 	
 	void setWallJumping(boolean wallJumping);
 	
-	boolean willSmashGround();
-	
-	void setSmashGround(boolean smash);
-	
 	int getPetSummonCooldown();
 	
 	void setPetSummonCooldown(int cooldown);

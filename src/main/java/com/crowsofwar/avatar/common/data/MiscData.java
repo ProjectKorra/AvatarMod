@@ -32,7 +32,6 @@ public class MiscData {
 	private int timeInAir;
 	private int abilityCooldown;
 	private boolean wallJumping;
-	private boolean smashGround;
 	private int petSummonCooldown;
 	
 	public MiscData(Runnable save) {
@@ -44,7 +43,6 @@ public class MiscData {
 		buf.writeInt(timeInAir);
 		buf.writeInt(abilityCooldown);
 		buf.writeBoolean(wallJumping);
-		buf.writeBoolean(smashGround);
 		buf.writeInt(petSummonCooldown);
 	}
 	
@@ -53,7 +51,6 @@ public class MiscData {
 		timeInAir = buf.readInt();
 		abilityCooldown = buf.readInt();
 		wallJumping = buf.readBoolean();
-		smashGround = buf.readBoolean();
 		petSummonCooldown = buf.readInt();
 	}
 	
@@ -62,7 +59,6 @@ public class MiscData {
 		timeInAir = nbt.getInteger("TimeInAir");
 		abilityCooldown = nbt.getInteger("AbilityCooldown");
 		wallJumping = nbt.getBoolean("WallJumping");
-		smashGround = nbt.getBoolean("SmashGround");
 		petSummonCooldown = nbt.getInteger("PetSummonCooldown");
 	}
 	
@@ -71,7 +67,6 @@ public class MiscData {
 		nbt.setInteger("TimeInAir", timeInAir);
 		nbt.setInteger("AbilityCooldown", abilityCooldown);
 		nbt.setBoolean("WallJumping", wallJumping);
-		nbt.setBoolean("SmashGround", smashGround);
 		nbt.setInteger("PetSummonCooldown", petSummonCooldown);
 	}
 	
@@ -114,14 +109,6 @@ public class MiscData {
 	
 	public void setWallJumping(boolean wallJumping) {
 		this.wallJumping = wallJumping;
-	}
-	
-	public boolean willSmashGround() {
-		return smashGround;
-	}
-	
-	public void setSmashGround(boolean smashGround) {
-		this.smashGround = smashGround;
 	}
 	
 	public int getPetSummonCooldown() {

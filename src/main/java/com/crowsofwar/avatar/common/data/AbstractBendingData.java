@@ -384,16 +384,6 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public boolean willSmashGround() {
-		return miscData.willSmashGround();
-	}
-	
-	@Override
-	public void setSmashGround(boolean smash) {
-		miscData.setSmashGround(smash);
-	}
-	
-	@Override
 	public int getPetSummonCooldown() {
 		return miscData.getPetSummonCooldown();
 	}
