@@ -155,7 +155,8 @@ public class EntityRavine extends AvatarEntity {
 		if (!worldObj.getBlockState(below).isNormalCube()) {
 			setDead();
 		}
-		if (!worldObj.isRemote && ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
+		
+		if (!worldObj.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
 			setDead();
 		}
 		
