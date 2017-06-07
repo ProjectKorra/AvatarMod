@@ -14,40 +14,56 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.bending.air;
+package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
+import java.util.List;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class AirParticleSpawner extends TickHandler {
-	
-	private static final ParticleSpawner particles = new ClientParticleSpawner();
+public class SmashGroundHandler extends TickHandler {
 	
 	@Override
 	public boolean tick(BendingContext ctx) {
+		
 		EntityLivingBase target = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		
-		Vector pos = Vector.getEntityPos(target);
-		pos.setY(pos.y() + 1.3);
+		if (target.isInWater() || target.onGround || bender.isFlying()) {
+			
+			if (target.onGround && bender.getData().willSmashGround()) {
+				
+				double range = 3;
+				
+				World world = target.worldObj;
+				AxisAlignedBB box = new AxisAlignedBB(target.posX - range, target.posY - range,
+						target.posZ - range, target.posX + range, target.posY + range, target.posZ + range);
+				
+				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+				for (EntityLivingBase entity : nearby) {
+					if (entity != target) {
+						entity.attackEntityFrom(AvatarDamageSource.causeSmashDamage(entity, target), 5);
+					}
+				}
+				
+			}
+			bender.getData().setSmashGround(false);
+			
+			return true;
+		}
 		
-		particles.spawnParticles(target.worldObj, AvatarParticles.getParticleAir(), 1, 1, pos,
-				new Vector(0.7, 0.2, 0.7));
-		
-		return target.isInWater() || target.onGround || bender.isFlying();
-		
+		return false;
 	}
 	
 }

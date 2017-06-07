@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.crowsofwar.avatar.common.bending.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
 import com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.common.bending.water.WaterSkateHandler;
@@ -38,6 +39,7 @@ public abstract class TickHandler {
 	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
 	public static TickHandler WATER_SKATE = new WaterSkateHandler();
 	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();
+	public static TickHandler SMASH_GROUND = new SmashGroundHandler();
 	
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
