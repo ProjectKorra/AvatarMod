@@ -74,20 +74,23 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		
 		EntitySkyBison nearest = bison.worldObj.findNearestEntityWithinAABB(EntitySkyBison.class, aabb,
 				bison);
+		
 		if (nearest != null) {
-			bison.getMoveHelper().setMoveTo(nearest.posX, nearest.posY, nearest.posZ, 1);
-			// 7 obtained through real-world testing
-			if (bison.getDistanceSqToEntity(nearest) <= 7) {
-				
-				spawnBaby(nearest);
-				
-				bison.getCondition().setBreedTimer(generateBreedTimer());
-				nearest.getCondition().setBreedTimer(generateBreedTimer());
-				bison.setLoveParticles(false);
-				nearest.setLoveParticles(false);
-				
-				return true;
-				
+			if (getNearbyBison(nearest) < 15) {
+				bison.getMoveHelper().setMoveTo(nearest.posX, nearest.posY, nearest.posZ, 1);
+				// 7 obtained through real-world testing
+				if (bison.getDistanceSqToEntity(nearest) <= 7) {
+					
+					spawnBaby(nearest);
+					
+					bison.getCondition().setBreedTimer(generateBreedTimer());
+					nearest.getCondition().setBreedTimer(generateBreedTimer());
+					bison.setLoveParticles(false);
+					nearest.setLoveParticles(false);
+					
+					return true;
+					
+				}
 			}
 		}
 		
@@ -141,7 +144,20 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		float min = MOBS_CONFIG.bisonBreedMinMinutes;
 		float max = MOBS_CONFIG.bisonBreedMaxMinutes;
 		float minutes = min + random.nextFloat() * (max - min);
-		return (int) (minutes * 1200);
+		// return (int) (minutes * 1200);
+		return 40;
+	}
+	
+	private int getNearbyBison(EntitySkyBison otherBison) {
+		
+		World world = bison.worldObj;
+		
+		AxisAlignedBB aabb = new AxisAlignedBB(bison.posX - 32, 0, bison.posZ - 32, bison.posX + 32, 255,
+				bison.posZ + 32);
+		
+		return world.getEntitiesWithinAABB(EntitySkyBison.class, aabb, b -> b != bison && b != otherBison)
+				.size();
+		
 	}
 	
 }
