@@ -115,7 +115,7 @@ public class StatCtrlAirJump extends StatusControl {
 			
 			data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
-				data.setSmashGround(true);
+				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}
 			
 			entity.worldObj.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,

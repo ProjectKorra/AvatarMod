@@ -42,7 +42,7 @@ public class SmashGroundHandler extends TickHandler {
 		
 		if (target.isInWater() || target.onGround || bender.isFlying()) {
 			
-			if (target.onGround && bender.getData().willSmashGround()) {
+			if (target.onGround) {
 				
 				double range = 3;
 				
@@ -58,7 +58,6 @@ public class SmashGroundHandler extends TickHandler {
 				}
 				
 			}
-			bender.getData().setSmashGround(false);
 			
 			return true;
 		}

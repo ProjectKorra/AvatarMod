@@ -59,7 +59,7 @@ public class StatCtrlSkateJump extends StatusControl {
 			data.setFallAbsorption(6);
 			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-				data.setSmashGround(true);
+				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}
 			
 		}
