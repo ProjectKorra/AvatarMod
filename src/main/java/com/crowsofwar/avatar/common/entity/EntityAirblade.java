@@ -74,16 +74,36 @@ public class EntityAirblade extends AvatarEntity {
 		super.onUpdate();
 		
 		Vector v = velocity().mul(.96).dividedBy(20);
-		if (worldObj.isRemote || !piercing) {
-			moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
-		} else {
+		
+		boolean moveAsNormal = true;
+		
+		// piercing = false;
+		
+		// Don't bounce off a block if piercing
+		// bouncing would prevent destroying the block
+		if (!worldObj.isRemote && piercing) {
 			position().add(v);
+			moveAsNormal = false;
+			
+			// Check if the block is too strong
+			// If so, don't go through it since it can't be destroyed
+			// just bounce off as normal
+			IBlockState inBlockState = worldObj.getBlockState(getPosition());
+			Block inBlock = inBlockState.getBlock();
+			if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj, getPosition()) > 2f) {
+				position().add(v.times(-1));
+				moveAsNormal = true;
+				System.out.println("Bounce back");
+			}
+			
 		}
+		if (moveAsNormal) {
+			moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
+		}
+		
 		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) {
-			System.out.println("Magnitude too small");
 			setDead();
 		}
-		System.out.println("alalala");
 		
 		IBlockState inBlockState = worldObj.getBlockState(getPosition());
 		Block inBlock = inBlockState.getBlock();
@@ -138,7 +158,6 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	public void setDead() {
 		super.setDead();
-		Thread.dumpStack();
 	}
 	
 	@Override
