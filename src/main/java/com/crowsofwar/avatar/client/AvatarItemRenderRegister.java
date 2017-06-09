@@ -60,7 +60,7 @@ public class AvatarItemRenderRegister {
 			
 		}
 		
-		for (int i = 0; i <= 3; i++) {
+		for (int i = 0; i <= 5; i++) {
 			register(AvatarItems.itemWaterPouch, i);
 		}
 		register(AvatarItems.itemBisonWhistle);

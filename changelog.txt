@@ -12,6 +12,7 @@ AV2 Changelog :: version a4.1
 * Airblade "Chainsaw" can destroy multiple blocks
 * Special error message when trying to bind whistle to untamed bison
 * Flying bison have 50 instead of 10 hearts
+* Water pouches can hold up to 5 water instead of 3
 
 > Fix misspeilling of talhanation in mcmod.info (mods screen)
 > Fix glowing mobs w/ fireball bug

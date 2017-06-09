@@ -76,7 +76,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		
-		for (int meta = 0; meta <= 3; meta++) {
+		for (int meta = 0; meta <= 5; meta++) {
 			subItems.add(new ItemStack(item, 1, meta));
 		}
 		
@@ -97,7 +97,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			BlockPos pos = raytrace.getPos().toBlockPos();
 			IBlockState state = world.getBlockState(pos);
 			if (state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER) {
-				stack.setItemDamage(3);
+				stack.setItemDamage(5);
 			}
 		}
 		
