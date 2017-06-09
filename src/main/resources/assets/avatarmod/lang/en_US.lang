@@ -59,6 +59,7 @@ avatar.spec.lvl3=level III
 avatar.spec.lvl4_1=level IV, first path
 avatar.spec.lvl4_2=level IV, second path
 avatar.cmd.xpset=Set [value]${player}[/value]'s [value]${ability}[/value] progress to [value][translate=avatar.spec.${spec}][/value]
+avatar.cmd.noAbility=There isn't an ability called %s
 
 avatar.donthavebending=[error]You haven't learned ${bending} yet. To get it, type in: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
 avatar.nochi=Not enough chi!
