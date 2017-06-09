@@ -32,7 +32,6 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.init.Blocks;
@@ -73,9 +72,18 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		
 		Vector v = velocity().mul(.96).dividedBy(20);
-		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
-		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) setDead();
+		if (worldObj.isRemote || !piercing) {
+			moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
+		} else {
+			position().add(v);
+		}
+		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) {
+			System.out.println("Magnitude too small");
+			setDead();
+		}
+		System.out.println("alalala");
 		
 		IBlockState inBlockState = worldObj.getBlockState(getPosition());
 		Block inBlock = inBlockState.getBlock();
@@ -96,23 +104,19 @@ public class EntityAirblade extends AvatarEntity {
 		}
 		
 		if (!isDead && !worldObj.isRemote) {
-			List<Entity> collidedList = worldObj.getEntitiesWithinAABBExcludingEntity(this,
+			List<EntityLivingBase> collidedList = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
 					getEntityBoundingBox());
 			
 			if (!collidedList.isEmpty()) {
 				
-				Entity collided = collidedList.get(0);
-				if (collided instanceof EntityLivingBase) {
-					
-					EntityLivingBase lb = (EntityLivingBase) collided;
-					DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner()),
-							damage;
-					if (piercing) {
-						source.setDamageBypassesArmor();
-					}
-					lb.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
-					
+				EntityLivingBase collided = collidedList.get(0);
+				
+				EntityLivingBase lb = collided;
+				DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner()), damage;
+				if (piercing) {
+					source.setDamageBypassesArmor();
 				}
+				lb.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
 				
 				Vector motion = velocity().copy();
 				motion.mul(STATS_CONFIG.airbladeSettings.push);
@@ -129,6 +133,12 @@ public class EntityAirblade extends AvatarEntity {
 			}
 		}
 		
+	}
+	
+	@Override
+	public void setDead() {
+		super.setDead();
+		Thread.dumpStack();
 	}
 	
 	@Override
