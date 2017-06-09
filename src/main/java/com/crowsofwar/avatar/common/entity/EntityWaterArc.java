@@ -138,9 +138,14 @@ public class EntityWaterArc extends EntityArc {
 			lastPlayedSplash++;
 			if (lastPlayedSplash > 20) lastPlayedSplash = -1;
 		}
-		getBehavior().onUpdate(this);
 		
-		if (inWater && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
+		WaterArcBehavior behavior = getBehavior();
+		WaterArcBehavior next = (WaterArcBehavior) behavior.onUpdate(this);
+		if (next != behavior) {
+			setBehavior(next);
+		}
+		
+		if (inWater && behavior instanceof WaterArcBehavior.PlayerControlled) {
 			// try to go upwards
 			for (double i = 0.1; i <= 3; i += 0.05) {
 				BlockPos pos = new Vector(this).add(0, i, 0).toBlockPos();
