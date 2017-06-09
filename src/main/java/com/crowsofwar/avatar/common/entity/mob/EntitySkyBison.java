@@ -189,6 +189,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(2);
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
 	}
 	
 	@Override
