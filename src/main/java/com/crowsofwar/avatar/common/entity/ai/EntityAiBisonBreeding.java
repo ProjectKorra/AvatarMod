@@ -144,8 +144,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		float min = MOBS_CONFIG.bisonBreedMinMinutes;
 		float max = MOBS_CONFIG.bisonBreedMaxMinutes;
 		float minutes = min + random.nextFloat() * (max - min);
-		// return (int) (minutes * 1200);
-		return 40;
+		return (int) (minutes * 1200);
 	}
 	
 	private int getNearbyBison(EntitySkyBison otherBison) {
