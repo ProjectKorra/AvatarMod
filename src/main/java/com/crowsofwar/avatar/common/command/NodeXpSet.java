@@ -89,6 +89,9 @@ public class NodeXpSet extends NodeFunctional {
 		}
 		
 		System.out.printf("Parsed to: level %d, xp %f, path %s", level, xp, path);
+		abilityData.setLevel(level);
+		abilityData.setXp(xp);
+		abilityData.setPath(path);
 		
 		return null;
 		
