@@ -18,6 +18,7 @@
 package com.crowsofwar.gorecore.tree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.crowsofwar.gorecore.chat.ChatMessage;
@@ -51,6 +52,10 @@ public abstract class NodeFunctional implements ICommandNode {
 	protected <T extends IArgument<?>> T addArgument(T argument) {
 		this.args.add(argument);
 		return argument;
+	}
+	
+	protected void addArguments(IArgument<?>... arguments) {
+		this.args.addAll(Arrays.asList(arguments));
 	}
 	
 	@Override
