@@ -589,7 +589,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				ItemBisonWhistle.setBisonName(stack, getName());
 				MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
 			} else {
-				MSG_BISON_WHISTLE_NOTOWNED.send(player);
+				if (getOwner() != null) {
+					MSG_BISON_WHISTLE_NOTOWNED.send(player);
+				} else {
+					MSG_BISON_WHISTLE_UNTAMED.send(player);
+				}
 			}
 			
 			return true;

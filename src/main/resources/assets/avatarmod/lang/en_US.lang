@@ -73,6 +73,7 @@ avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
 avatar.bisonWhistle.notAssigned=[error]This bison whistle has not been bound to a bison; sneak-click a bison with this to bind it.[/error]
 avatar.bisonWhistle.notFound=[error]${bison} no longer lives in the physical world.[/error]
 avatar.bisonWhistle.notOwned=[error]You do not own this flying bison.[/error]
+avatar.bisonWhistle.untamed=[error]This flying bison is wild and you need to tame it first.[/error]
 avatar.bisonWhistle.tooltipBound=Bound to %s
 avatar.bisonWhistle.tooltipUnbound=Not bound
 avatar.bisonWhistle.transferAway=Your flying bison ${bison} has been transferred to ${newOwner}.
