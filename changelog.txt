@@ -3,6 +3,7 @@ AV2 Changelog :: version a4.1
 [[ check does bison drop inventory ]]
 
 + Added option to avoid blocks being destroyed by earthbenders in stats.yml : preventPickupBlockGriefing
++ Added "/avatar xp" command to easily change ability level & path
 
 * Water pouches are no longer consumed in creative mode
 * Sky bison mating avoid overpopulation
