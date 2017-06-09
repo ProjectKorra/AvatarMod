@@ -6,6 +6,7 @@ AV2 Changelog :: version a4.1
 
 * Water pouches are no longer consumed in creative mode
 * Sky bison mating avoid overpopulation
+* Water arc "Boomerang" works when killed a mob
 
 > Fix misspeilling of talhanation in mcmod.info (mods screen)
 > Fix glowing mobs w/ fireball bug

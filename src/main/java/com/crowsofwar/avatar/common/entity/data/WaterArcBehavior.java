@@ -131,7 +131,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					
 					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
 					
-					if (abilityData.isMasterPath(AbilityTreePath.FIRST) && collided.getHealth() > 0) {
+					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 						entity.setBehavior(new PlayerControlled());
 						data.addStatusControl(StatusControl.THROW_WATER);
 					}
