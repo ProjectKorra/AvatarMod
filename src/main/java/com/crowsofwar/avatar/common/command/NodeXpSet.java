@@ -18,6 +18,9 @@ package com.crowsofwar.avatar.common.command;
 
 import java.util.List;
 
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.tree.ArgumentList;
@@ -37,16 +40,18 @@ import com.crowsofwar.gorecore.tree.NodeFunctional;
 public class NodeXpSet extends NodeFunctional {
 	
 	private final IArgument<String> argPlayerName;
+	private final IArgument<BendingAbility> argAbility;
 	private final IArgument<String> argNewLevel;
 	
 	public NodeXpSet() {
 		super("xp", true);
 		
 		argPlayerName = new ArgumentPlayerName("player");
+		argAbility = new ArgumentAbility("ability");
 		argNewLevel = new ArgumentOptions<>(ITypeConverter.CONVERTER_STRING, "level", "locked", "lvl1",
 				"lvl2", "lvl3", "lvl4_1", "lvl4_2");
 		
-		addArguments(argPlayerName, argNewLevel);
+		addArguments(argPlayerName, argAbility, argNewLevel);
 		
 	}
 	
@@ -55,9 +60,32 @@ public class NodeXpSet extends NodeFunctional {
 		
 		ArgumentList args = call.popArguments(this);
 		String playerName = args.get(argPlayerName);
+		BendingAbility ability = args.get(argAbility);
 		String level = args.get(argNewLevel);
 		
 		BendingData data = AvatarPlayerData.fetcher().fetch(call.getFrom().getEntityWorld(), playerName);
+		AbilityData abilityData = data.getAbilityData(ability);
+		
+		int lvl;
+		float xp;
+		AbilityTreePath path = AbilityTreePath.MAIN;
+		
+		if (level.equals("locked")) {
+			lvl = -1;
+			xp = 0;
+		} else {
+			String secondPart = level.substring("lvl".length());
+			lvl = Integer.parseInt(secondPart.charAt(0) + "") - 1;
+			
+			if (lvl == 3) {
+				String pathStr = secondPart.substring("n_".length());
+				int index = Integer.parseInt(pathStr);
+				path = AbilityTreePath.values()[index];
+			}
+			
+		}
+		
+		System.out.printf("Parsed to: level %d, xp %f, path %s", lvl, xp, path);
 		
 		return null;
 		
