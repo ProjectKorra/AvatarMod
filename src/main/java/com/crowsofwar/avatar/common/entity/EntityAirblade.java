@@ -90,7 +90,7 @@ public class EntityAirblade extends AvatarEntity {
 				motionZ *= 0.6;
 			}
 			if (piercing && inBlock != Blocks.AIR
-					&& inBlockState.getBlockHardness(worldObj, getPosition()) <= 0.5) {
+					&& inBlockState.getBlockHardness(worldObj, getPosition()) <= 2f) {
 				breakBlock(getPosition());
 			}
 		}
