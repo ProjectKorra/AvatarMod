@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.command;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_XPSET_SUCCESS;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -88,10 +90,11 @@ public class NodeXpSet extends NodeFunctional {
 			
 		}
 		
-		System.out.printf("Parsed to: level %d, xp %f, path %s", level, xp, path);
 		abilityData.setLevel(level);
 		abilityData.setXp(xp);
 		abilityData.setPath(path);
+		
+		MSG_XPSET_SUCCESS.send(call.getFrom(), playerName, ability.getName(), specification);
 		
 		return null;
 		

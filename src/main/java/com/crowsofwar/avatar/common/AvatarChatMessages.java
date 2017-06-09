@@ -60,6 +60,8 @@ public class AvatarChatMessages {
 	
 	public static final ChatMessage MSG_ABILITY_GET = newChatMessage(CFG, "avatar.cmd.ability.get", "player", "ability", "amount");
 	
+	public static final ChatMessage MSG_XPSET_SUCCESS = newChatMessage(CFG, "avatar.cmd.xpset", "player", "ability", "spec");
+	
 	public static final ChatMessage MSG_PROGRESS_POINT_ADDED = newChatMessage(CFG, "avatar.cmd.pp.add", "player", "pps", "bending");
 	public static final ChatMessage MSG_PROGRESS_POINT_GET = newChatMessage(CFG, "avatar.cmd.pp.get", "player", "pps", "bending");
 	public static final ChatMessage MSG_PROGRESS_POINT_SET = newChatMessage(CFG, "avatar.cmd.pp.set", "player", "pps", "bending");
