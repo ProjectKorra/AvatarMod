@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.client;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
 import java.lang.reflect.Field;
@@ -175,8 +176,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		
 		ParticleManager pm = mc.effectRenderer;
 		
-		pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
-		pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
+		if (CLIENT_CONFIG.useCustomParticles) {
+			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
+					AvatarParticleFlames::new);
+			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
+		}
 		
 	}
 	

@@ -20,3 +20,4 @@ AV2 Changelog :: version a4.1
 > Fix ravine working on nonbendable blocks only, now only on bendable blocks
 > Fix skating jump's "Ground Pound" level IV upgrade not working
 > Fix fire arc "Boomerang" upgrade not working
+> Fix vanilla particles config option messes up vanilla particle sources (eg torch)
