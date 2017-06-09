@@ -7,6 +7,8 @@ AV2 Changelog :: version a4.1
 * Water pouches are no longer consumed in creative mode
 * Sky bison mating avoid overpopulation
 * Water arc "Boomerang" works when killed a mob
+* Airblade "Chainsaw" upgrade destroys harder blocks (up to hardness 2 vs 0.5)
+* Airblade "Chainsaw" can destroy multiple blocks
 
 > Fix misspeilling of talhanation in mcmod.info (mods screen)
 > Fix glowing mobs w/ fireball bug
@@ -16,3 +18,4 @@ AV2 Changelog :: version a4.1
 > Fix firebenders don't watch/follow the player when aggressive
 > Fix ravine working on nonbendable blocks only, now only on bendable blocks
 > Fix skating jump's "Ground Pound" level IV upgrade not working
+> Fix fire arc "Boomerang" upgrade not working
