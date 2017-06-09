@@ -80,7 +80,7 @@ public class AvatarCommand extends TreeCommand {
 		NodeBranch branchAbility = new NodeBranch(branchHelpDefault, "ability", new NodeAbilityGet(),
 				new NodeAbilitySet());
 		
-		return new ICommandNode[] { branchBending, new NodeConfig(), branchAbility };
+		return new ICommandNode[] { branchBending, new NodeConfig(), branchAbility, new NodeXpSet() };
 		
 	}
 	
