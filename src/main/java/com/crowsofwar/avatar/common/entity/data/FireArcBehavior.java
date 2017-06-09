@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -123,6 +124,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				BendingData data = Bender.getData(entity.getOwner());
 				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC);
 				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+					data.addStatusControl(StatusControl.THROW_FIRE);
 					return new FireArcBehavior.PlayerControlled();
 				}
 			}
