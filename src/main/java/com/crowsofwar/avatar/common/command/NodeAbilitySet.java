@@ -17,16 +17,12 @@
 
 package com.crowsofwar.avatar.common.command;
 
-import static com.crowsofwar.avatar.common.command.NodeAbilityGet.allAbilities;
-import static com.crowsofwar.avatar.common.command.NodeAbilityGet.convertAbility;
-
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.tree.ArgumentList;
-import com.crowsofwar.gorecore.tree.ArgumentOptions;
 import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
 import com.crowsofwar.gorecore.tree.ArgumentRangeInteger;
 import com.crowsofwar.gorecore.tree.CommandCall;
@@ -48,7 +44,7 @@ public class NodeAbilitySet extends NodeFunctional {
 	public NodeAbilitySet() {
 		super("set", true);
 		argPlayer = addArgument(new ArgumentPlayerName("player"));
-		argAbility = addArgument(new ArgumentOptions<>(convertAbility, "ability", allAbilities));
+		argAbility = addArgument(new ArgumentAbility("ability"));
 		argSetTo = addArgument(new ArgumentRangeInteger("value", 0, 100));
 	}
 	
