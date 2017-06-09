@@ -113,13 +113,12 @@ public class EntityAirblade extends AvatarEntity {
 			if (chopBlocks && inBlock != Blocks.AIR
 					&& inBlockState.getBlockHardness(worldObj, getPosition()) == 0) {
 				breakBlock(getPosition());
-				motionX *= 0.6;
-				motionY *= 0.6;
-				motionZ *= 0.6;
+				velocity().mul(0.75);
 			}
 			if (piercing && inBlock != Blocks.AIR
 					&& inBlockState.getBlockHardness(worldObj, getPosition()) <= 2f) {
 				breakBlock(getPosition());
+				velocity().mul(0.6);
 			}
 		}
 		
