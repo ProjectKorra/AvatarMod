@@ -58,6 +58,13 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 				color);
 		this.fontRendererObj.drawString(playerInventory.getDisplayName().getUnformattedText(), 8,
 				this.ySize - 96 + 2, color);
+		
+		if (bison.getInventory().getSizeInventory() == 2) {
+			// this.fontRendererObj.drawString("Bison will have inventory slots
+			// when it reaches adult age", 0, 0,
+			// 0xffffff);
+		}
+		
 	}
 	
 	@Override
