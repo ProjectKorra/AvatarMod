@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
@@ -74,10 +73,16 @@ public class StatCtrlAirJump extends StatusControl {
 		
 		if (onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
 			
-			float xp = 0;
-			if (data != null) {
-				xp = abilityData.getTotalXp();
-				abilityData.addXp(SKILLS_CONFIG.airJump);
+			int lvl = abilityData.getLevel();
+			double multiplier = 0.65;
+			if (lvl >= 1) {
+				multiplier = 1;
+			}
+			if (lvl >= 2) {
+				multiplier = 1.2;
+			}
+			if (lvl >= 3) {
+				multiplier = 1.4;
 			}
 			
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
@@ -85,7 +90,7 @@ public class StatCtrlAirJump extends StatusControl {
 			
 			Vector velocity = rotations.toRectangular();
 			velocity.setY(Math.pow(velocity.y(), .1));
-			velocity.mul(1 + xp / 250.0);
+			velocity.mul(multiplier);
 			if (!onGround) {
 				velocity.mul(0.6);
 				entity.motionX = 0;
@@ -101,16 +106,17 @@ public class StatCtrlAirJump extends StatusControl {
 			spawner.spawnParticles(entity.worldObj, AvatarParticles.getParticleAir(), 2, 6,
 					new Vector(entity), new Vector(1, 0, 1));
 			
-			// Find approximate maximum distance. In actuality, a bit less, due
-			// to max velocity and drag
-			// Using kinematic equation, gravity for players is 32 m/s
-			float fallAbsorption;
-			{
-				float h = (5 + xp / 50) / 8f;
-				float v = 20 * (1 + xp / 250f);
-				fallAbsorption = v * h - 16 * h * h;
+			float fallAbsorption = 0;
+			if (lvl == 0) {
+				fallAbsorption = 8;
+			} else if (lvl == 1) {
+				fallAbsorption = 13;
+			} else if (lvl == 2) {
+				fallAbsorption = 16;
+			} else if (lvl == 3) {
+				fallAbsorption = 19;
 			}
-			fallAbsorption -= 2; // compensate that it may be a bit extra
+			
 			data.setFallAbsorption(fallAbsorption);
 			
 			data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
