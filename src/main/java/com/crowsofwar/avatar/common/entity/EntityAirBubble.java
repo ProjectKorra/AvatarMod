@@ -154,7 +154,6 @@ public class EntityAirBubble extends AvatarEntity {
 				dissipateSmall();
 			}
 			
-			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
 			if (ownerEnt.isDead) {
 				dissipateSmall();
 			}
