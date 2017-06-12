@@ -342,7 +342,6 @@ public final class AccountUUIDs {
 			
 			String idString = id.toString().replaceAll("-", "");
 			String url = "https://api.mojang.com/user/profiles/" + idString + "/names";
-			System.out.println(url);
 			
 			URL obj = new URL(url);
 			HttpURLConnection connection = (HttpURLConnection) obj.openConnection();

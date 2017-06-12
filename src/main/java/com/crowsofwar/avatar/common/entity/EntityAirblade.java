@@ -93,7 +93,6 @@ public class EntityAirblade extends AvatarEntity {
 			if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj, getPosition()) > 2f) {
 				position().add(v.times(-1));
 				moveAsNormal = true;
-				System.out.println("Bounce back");
 			}
 			
 		}
