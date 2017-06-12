@@ -26,3 +26,5 @@ AV2 Changelog :: version a4.1
 > Fix vanilla particles config option messes up vanilla particle sources (eg torch)
 > Fix air jump causing damage on landing
 > Fix wall not repelling mobs & players
+
+- Removed waterbenders (were not supposed to exist)

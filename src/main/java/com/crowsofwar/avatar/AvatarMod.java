@@ -69,7 +69,6 @@ import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarCrafting;
 import com.crowsofwar.avatar.common.item.AvatarDungeonLoot;
@@ -214,7 +213,6 @@ public class AvatarMod {
 		registerEntity(EntityAirBubble.class, "AirBubble");
 		registerEntity(EntityFirebender.class, "Firebender", 0xffffff, 0xffffff);
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
-		registerEntity(EntityWaterbender.class, "Waterbender", 0xffffff, 0xffffff);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
 		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
 		registerEntity(AvatarEntityItem.class, "Item");
