@@ -310,7 +310,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			}
 		}
 		
-		return super.canCollideWith(entity) && notWall && !friendlyProjectile;
+		return notWall && !friendlyProjectile;
 		
 	}
 	
