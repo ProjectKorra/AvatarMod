@@ -70,7 +70,7 @@ public abstract class BendingController implements ReadableWritable {
 		@Override
 		public void write(NBTTagCompound nbt, BendingController object, Object[] methodsExtraData,
 				Object[] extraData) {
-			nbt.setInteger("ControllerID", object.getID());
+			nbt.setInteger("ControllerID", object.getId());
 		}
 	};
 	
@@ -90,19 +90,6 @@ public abstract class BendingController implements ReadableWritable {
 	}
 	
 	/**
-	 * @deprecated Use {@link #getType()} instead.
-	 */
-	@Deprecated
-	public final int getID() {
-		return getType().id();
-	}
-	
-	/**
-	 * Gets an identifier for this bending controller.
-	 */
-	public abstract int getType();
-	
-	/**
 	 * Get information about this bending controller's radial menu.
 	 */
 	public abstract BendingMenuInfo getRadialMenu();
@@ -111,6 +98,10 @@ public abstract class BendingController implements ReadableWritable {
 	 * Get the name of this bending controller in lowercase. e.g. "earthbending"
 	 */
 	public abstract String getControllerName();
+	
+	public int getId() {
+		return BendingManager.getControllerId(this);
+	}
 	
 	public List<BendingAbility> getAllAbilities() {
 		return this.abilities;

@@ -50,6 +50,7 @@ public class BendingManager {
 	private static Map<Integer, BendingController> bending;
 	private static Map<String, BendingController> bendingByName;
 	private static List<BendingController> allBending;
+	private static Map<BendingController, Integer> bendingIds;
 	
 	private static Map<Integer, BendingAbility> abilities;
 	private static List<BendingAbility> allAbilities;
@@ -60,6 +61,7 @@ public class BendingManager {
 		bending = new HashMap<>();
 		bendingByName = new HashMap<>();
 		allBending = new ArrayList<>();
+		bendingIds = new HashMap<>();
 		abilities = new HashMap<>();
 		allAbilities = new ArrayList<>();
 	}
@@ -118,6 +120,13 @@ public class BendingManager {
 	}
 	
 	/**
+	 * Get the id of the controller. 0 on error
+	 */
+	public static int getControllerId(BendingController controller) {
+		return bendingIds.get(controller) == null ? 0 : bendingIds.get(controller);
+	}
+	
+	/**
 	 * Returns an unmodifiable view of all abilities.
 	 */
 	public static List<BendingAbility> allAbilities() {
@@ -128,6 +137,7 @@ public class BendingManager {
 		bending.put(nextId, controller);
 		bendingByName.put(controller.getControllerName(), controller);
 		allBending.add(controller);
+		bendingIds.put(controller, nextId);
 		
 		// Avoid "return nextId++" since that's less readable
 		int id = nextId;
