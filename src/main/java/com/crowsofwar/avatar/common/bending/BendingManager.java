@@ -30,8 +30,8 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
 
 /**
  * Manages instances of bending controllers. Bending controllers can be
- * retrieved via {@link #getBending(int)}. Contains constants which
- * specify the IDs of bending. <br />
+ * retrieved via {@link #getBending(int)}. Contains constants which specify the
+ * IDs of bending. <br />
  * <br />
  * Third-party mods can use {@link #registerBending(BendingController)} to
  * enable custom bending controllers.
@@ -39,12 +39,13 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
  */
 public class BendingManager {
 	
-	/**
-	 * Use {@link int} instead.
-	 */
-	@Deprecated
-	public static final int BENDINGID_EARTHBENDING = 1, BENDINGID_FIREBENDING = 2, BENDINGID_WATERBENDING = 3,
-			BENDINGID_AIRBENDING = 4;
+	// @formatter:off
+	public static int
+		ID_EARTHBENDING,
+		ID_FIREBENDING,
+		ID_WATERBENDING,
+		ID_AIRBENDING;
+	// @formatter:on
 	
 	private static Map<Integer, BendingController> bending;
 	private static Map<String, BendingController> bendingByName;
@@ -53,10 +54,12 @@ public class BendingManager {
 	private static Map<Integer, BendingAbility> abilities;
 	private static List<BendingAbility> allAbilities;
 	
+	private static int nextId = 1;
+	
 	static {
-		bending = new HashMap<Integer, BendingController>();
-		bendingByName = new HashMap<String, BendingController>();
-		allBending = new ArrayList<BendingController>();
+		bending = new HashMap<>();
+		bendingByName = new HashMap<>();
+		allBending = new ArrayList<>();
 		abilities = new HashMap<>();
 		allAbilities = new ArrayList<>();
 	}
@@ -66,34 +69,24 @@ public class BendingManager {
 	 * done in a static block. Requires BendingAbilities to be created.
 	 */
 	public static void init() {
-		registerBending(new Earthbending());
-		registerBending(new Firebending());
-		registerBending(new Waterbending());
-		registerBending(new Airbending());
-	}
-	
-	/**
-	 * @deprecated Use {@link #getBending(int)} instead.
-	 * @throws IllegalArgumentException
-	 *             if there is no bending with the ID
-	 */
-	@Deprecated
-	public static BendingController getBending(int id) {
-		return bending.get(int.find(id));
+		ID_EARTHBENDING = registerBending(new Earthbending());
+		ID_FIREBENDING = registerBending(new Firebending());
+		ID_WATERBENDING = registerBending(new Waterbending());
+		ID_AIRBENDING = registerBending(new Airbending());
 	}
 	
 	/**
 	 * Get the BendingController for that bending type.
 	 * 
-	 * @param type
+	 * @param id
 	 *            Bending type to look for
 	 * @throws IllegalArgumentException
 	 *             If no bending controller for that type (shouldn't happen)
 	 */
-	public static BendingController getBending(int type) {
-		if (!bending.containsKey(type)) throw new IllegalArgumentException(
-				"No bending controller with type " + type + "... devs forgot to add a bending controller!");
-		return bending.get(type);
+	public static BendingController getBending(int id) {
+		if (!bending.containsKey(id)) throw new IllegalArgumentException(
+				"No bending controller with type " + id + "... devs forgot to add a bending controller!");
+		return bending.get(id);
 	}
 	
 	/**
@@ -131,10 +124,16 @@ public class BendingManager {
 		return Collections.unmodifiableList(allAbilities);
 	}
 	
-	public static void registerBending(BendingController controller) {
-		bending.put(controller.getType(), controller);
+	public static int registerBending(BendingController controller) {
+		bending.put(nextId, controller);
 		bendingByName.put(controller.getControllerName(), controller);
 		allBending.add(controller);
+		
+		// Avoid "return nextId++" since that's less readable
+		int id = nextId;
+		nextId++;
+		return id;
+		
 	}
 	
 	public static void registerAbility(BendingAbility ability) {
