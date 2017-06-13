@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 
 /**
@@ -45,7 +46,8 @@ public class BendingManager {
 		ID_EARTHBENDING,
 		ID_FIREBENDING,
 		ID_WATERBENDING,
-		ID_AIRBENDING;
+		ID_AIRBENDING,
+		ID_LIGHTNINGBENDING;
 	// @formatter:on
 	
 	private static Map<Integer, BendingController> bending;
@@ -76,6 +78,7 @@ public class BendingManager {
 		ID_FIREBENDING = registerBending(new Firebending());
 		ID_WATERBENDING = registerBending(new Waterbending());
 		ID_AIRBENDING = registerBending(new Airbending());
+		ID_LIGHTNINGBENDING = registerBending(new Lightningbending());
 	}
 	
 	/**
@@ -87,8 +90,8 @@ public class BendingManager {
 	 *             If no bending controller for that type (shouldn't happen)
 	 */
 	public static BendingController getBending(int id) {
-		if (!bending.containsKey(id)) throw new IllegalArgumentException(
-				"No bending controller with type " + id + "... devs forgot to add a bending controller!");
+		if (!bending.containsKey(id))
+			throw new IllegalArgumentException("No bending controller with type " + id);
 		return bending.get(id);
 	}
 	
