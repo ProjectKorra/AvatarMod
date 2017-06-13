@@ -49,11 +49,6 @@ public class Earthbending extends BendingController {
 	}
 	
 	@Override
-	public int getType() {
-		return EARTHBENDING;
-	}
-	
-	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}

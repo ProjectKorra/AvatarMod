@@ -163,7 +163,7 @@ public class ClientInput implements IControlsHandler {
 			if (controllers.isEmpty()) {
 				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
 			} else {
-				AvatarMod.network.sendToServer(new PacketSSkillsMenu(controllers.get(0).getType()));
+				AvatarMod.network.sendToServer(new PacketSSkillsMenu(controllers.get(0).getId()));
 			}
 		}
 		if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {

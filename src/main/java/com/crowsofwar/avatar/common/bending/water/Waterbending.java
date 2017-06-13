@@ -57,11 +57,6 @@ public class Waterbending extends BendingController {
 	}
 	
 	@Override
-	public int getType() {
-		return WATERBENDING;
-	}
-	
-	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}

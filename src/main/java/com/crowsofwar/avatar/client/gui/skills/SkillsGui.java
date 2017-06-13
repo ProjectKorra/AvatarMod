@@ -100,7 +100,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		handler = new UiComponentHandler();
 		
 		int[] types = data.getAllBending().stream()//
-				.map(c -> c.getType())//
+				.map(c -> c.getId())//
 				.sorted((c1, c2) -> c1.name().compareTo(c2.name()))//
 				.toArray(int[]::new);
 		

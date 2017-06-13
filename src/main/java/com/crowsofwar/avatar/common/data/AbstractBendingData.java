@@ -154,7 +154,7 @@ public abstract class AbstractBendingData implements BendingData {
 	@Override
 	public int getActiveint() {
 		BendingController controller = getActiveBending();
-		return controller == null ? null : controller.getType();
+		return controller == null ? null : controller.getId();
 	}
 	
 	@Override

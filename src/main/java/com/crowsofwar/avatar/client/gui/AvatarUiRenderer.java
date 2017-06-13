@@ -258,7 +258,7 @@ public class AvatarUiRenderer extends Gui {
 	private void drawBendingIcon(int xOff, int yOff, BendingController controller) {
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
-		int u = 50 * (controller.getType().id() - 1);
+		int u = 50 * (controller.getId().id() - 1);
 		int v = 137;
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		drawTexturedModalRect(x, y, u, v, 50, 50);

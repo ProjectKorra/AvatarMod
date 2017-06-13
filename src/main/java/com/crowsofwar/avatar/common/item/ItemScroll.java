@@ -65,7 +65,7 @@ public class ItemScroll extends Item implements AvatarItem {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
 		} else {
 			BendingController controller = data.getAllBending().get(0);
-			player.openGui(AvatarMod.instance, controller.getType().id(), world, 0, 0, 0);
+			player.openGui(AvatarMod.instance, controller.getId().id(), world, 0, 0, 0);
 		}
 		
 		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));

@@ -59,11 +59,6 @@ public class Airbending extends BendingController {
 	}
 	
 	@Override
-	public int getType() {
-		return AIRBENDING;
-	}
-	
-	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}

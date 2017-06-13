@@ -60,11 +60,6 @@ public class Firebending extends BendingController {
 	}
 	
 	@Override
-	public int getType() {
-		return FIREBENDING;
-	}
-	
-	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
