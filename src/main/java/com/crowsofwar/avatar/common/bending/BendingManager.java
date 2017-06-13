@@ -42,29 +42,25 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
 public class BendingManager {
 	
 	// @formatter:off
-	public static int
-		ID_EARTHBENDING,
-		ID_FIREBENDING,
-		ID_WATERBENDING,
-		ID_AIRBENDING,
-		ID_LIGHTNINGBENDING;
+	public static final int
+		ID_EARTHBENDING = 1,
+		ID_FIREBENDING = 2,
+		ID_WATERBENDING = 3,
+		ID_AIRBENDING = 4,
+		ID_LIGHTNINGBENDING = 5;
 	// @formatter:on
 	
 	private static Map<Integer, BendingController> bending;
 	private static Map<String, BendingController> bendingByName;
 	private static List<BendingController> allBending;
-	private static Map<BendingController, Integer> bendingIds;
 	
 	private static Map<Integer, BendingAbility> abilities;
 	private static List<BendingAbility> allAbilities;
-	
-	private static int nextId = 1;
 	
 	static {
 		bending = new HashMap<>();
 		bendingByName = new HashMap<>();
 		allBending = new ArrayList<>();
-		bendingIds = new HashMap<>();
 		abilities = new HashMap<>();
 		allAbilities = new ArrayList<>();
 	}
@@ -74,11 +70,11 @@ public class BendingManager {
 	 * done in a static block. Requires BendingAbilities to be created.
 	 */
 	public static void init() {
-		ID_EARTHBENDING = registerBending(new Earthbending());
-		ID_FIREBENDING = registerBending(new Firebending());
-		ID_WATERBENDING = registerBending(new Waterbending());
-		ID_AIRBENDING = registerBending(new Airbending());
-		ID_LIGHTNINGBENDING = registerBending(new Lightningbending());
+		registerBending(new Earthbending());
+		registerBending(new Firebending());
+		registerBending(new Waterbending());
+		registerBending(new Airbending());
+		registerBending(new Lightningbending());
 	}
 	
 	/**
@@ -131,7 +127,7 @@ public class BendingManager {
 	 * Get the id of the controller. 0 on error
 	 */
 	public static int getControllerId(BendingController controller) {
-		return bendingIds.get(controller) == null ? 0 : bendingIds.get(controller);
+		return controller.getId();
 	}
 	
 	/**
@@ -141,17 +137,10 @@ public class BendingManager {
 		return Collections.unmodifiableList(allAbilities);
 	}
 	
-	public static int registerBending(BendingController controller) {
-		bending.put(nextId, controller);
+	public static void registerBending(BendingController controller) {
+		bending.put(controller.getId(), controller);
 		bendingByName.put(controller.getName(), controller);
 		allBending.add(controller);
-		bendingIds.put(controller, nextId);
-		
-		// Avoid "return nextId++" since that's less readable
-		int id = nextId;
-		nextId++;
-		return id;
-		
 	}
 	
 	public static void registerAbility(BendingAbility ability) {

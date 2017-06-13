@@ -99,9 +99,7 @@ public abstract class BendingController implements ReadableWritable {
 	 */
 	public abstract String getName();
 	
-	public int getId() {
-		return BendingManager.getControllerId(this);
-	}
+	public abstract int getId();
 	
 	public List<BendingAbility> getAllAbilities() {
 		return this.abilities;
