@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -54,7 +53,7 @@ public class DataTransmitters {
 		public void write(ByteBuf buf, List<BendingController> t) {
 			buf.writeInt(t.size());
 			for (BendingController controller : t)
-				buf.writeInt(controller.getType().id());
+				buf.writeInt(controller.getId());
 		}
 		
 		@Override
@@ -62,7 +61,7 @@ public class DataTransmitters {
 			int size = buf.readInt();
 			List<BendingController> out = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
-				out.add(BendingManager.getBending(int.find(buf.readInt())));
+				out.add(BendingManager.getBending(buf.readInt()));
 			}
 			return out;
 		}
@@ -189,7 +188,7 @@ public class DataTransmitters {
 		
 		@Override
 		public void write(ByteBuf buf, BendingController t) {
-			buf.writeInt(t == null ? -1 : t.getType().id());
+			buf.writeInt(t == null ? -1 : t.getId());
 		}
 		
 		@Override
@@ -198,8 +197,7 @@ public class DataTransmitters {
 			if (id == -1) {
 				return null;
 			}
-			int type = int.find(id);
-			return BendingManager.getBending(type);
+			return BendingManager.getBending(id);
 		}
 	};
 	

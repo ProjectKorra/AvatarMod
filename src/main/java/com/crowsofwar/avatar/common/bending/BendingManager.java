@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
@@ -107,6 +108,10 @@ public class BendingManager {
 	 */
 	public static List<BendingController> allBending() {
 		return Collections.unmodifiableList(allBending);
+	}
+	
+	public static List<Integer> allBendingIds() {
+		return allBending.stream().map(b -> b.getId()).collect(Collectors.toList());
 	}
 	
 	/**

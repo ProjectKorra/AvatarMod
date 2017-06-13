@@ -22,7 +22,7 @@ import static net.minecraft.item.ItemStack.field_190927_a;
 import java.util.Arrays;
 import java.util.List;
 
-
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
@@ -147,12 +147,12 @@ public class ContainerGetBending extends Container {
 	}
 	
 	/**
-	 * Returns the ints that can be unlocked by the scrolls which are
-	 * currently in the slots.
+	 * Returns the ints that can be unlocked by the scrolls which are currently
+	 * in the slots.
 	 */
-	public List<int> getEligibleTypes() {
+	public List<Integer> getEligibleTypes() {
 		
-		int foundType = null;
+		int foundType = -1;
 		
 		for (int i = 0; i <= 2; i++) {
 			Slot slot = getSlot(i);
@@ -167,16 +167,16 @@ public class ContainerGetBending extends Container {
 			// compatible (or they couldn't be added)
 			// Don't return here b/c didn't check if all slots aren't empty
 			int type = ItemScroll.getScrollType(slot.getStack()).getint();
-			if (type != null) {
+			if (type != -1) {
 				foundType = type;
 			}
 			
 		}
 		
-		if (foundType == null) {
+		if (foundType == -1) {
 			// Didn't find scroll of a specific type
 			// all universal scrolls
-			return Arrays.asList(int.allExceptError());
+			return BendingManager.allBendingIds();
 		} else {
 			// Found scroll of specific type
 			return Arrays.asList(foundType);

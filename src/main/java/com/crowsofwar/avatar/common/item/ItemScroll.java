@@ -65,7 +65,7 @@ public class ItemScroll extends Item implements AvatarItem {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
 		} else {
 			BendingController controller = data.getAllBending().get(0);
-			player.openGui(AvatarMod.instance, controller.getId().id(), world, 0, 0, 0);
+			player.openGui(AvatarMod.instance, controller.getId(), world, 0, 0, 0);
 		}
 		
 		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
@@ -103,8 +103,9 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltips,
 			boolean advanced) {
 		
-		int bendingType = getScrollType(stack).getint();
-		String bendingTypeName = bendingType == null ? "all" : bendingType.name().toLowerCase();
+		int bendingType = getScrollType(stack).getBending();
+		String bendingTypeName = bendingType == 0 ? "all"
+				: BendingManager.getBending(bendingType).getControllerName();
 		
 		String tooltip = I18n.format("avatar." + bendingTypeName);
 		tooltips.add(tooltip);
@@ -148,17 +149,11 @@ public class ItemScroll extends Item implements AvatarItem {
 	}
 	
 	public enum ScrollType {
-		ALL(null),
-		EARTH(BendingManager.ID_EARTHBENDING),
-		FIRE(BendingManager.ID_FIREBENDING),
-		WATER(BendingManager.ID_WATERBENDING),
-		AIR(BendingManager.ID_AIRBENDING);
-		
-		private final int type;
-		
-		private ScrollType(int type) {
-			this.type = type;
-		}
+		ALL,
+		EARTH,
+		FIRE,
+		WATER,
+		AIR;
 		
 		public boolean isCompatibleWith(ScrollType other) {
 			return other == this || this == ALL || other == ALL;
@@ -173,17 +168,16 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 		
 		public boolean accepts(int type) {
-			return this.type == null || this.type == type;
+			return getBending() == 0 || getBending() == type;
 		}
 		
 		/**
-		 * Gets the corresponding bending type from this scroll. Returns null if
-		 * there isn't an exact corresponding type (ie, in the case of
-		 * {@link #ALL}).
+		 * Gets the corresponding bending ID from this scroll. Returns 0 in the
+		 * case of ALL.
 		 */
 		@Nullable
-		public int getint() {
-			return type;
+		public int getBending() {
+			return ordinal();
 		}
 		
 		public static ScrollType fromId(int id) {

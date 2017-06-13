@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.gui;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
-
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +40,7 @@ public class AvatarGuiHandler implements IGuiHandler {
 		
 		if (id >= GUI_ID_SKILLS_EARTH && id <= GUI_ID_SKILLS_AIR) {
 			int element = id - GUI_ID_SKILLS_EARTH + 1;
-			return new ContainerSkillsGui(player, int.values()[id]);
+			return new ContainerSkillsGui(player, id);
 		}
 		if (id == GUI_ID_BISON_CHEST) {
 			// x-coordinate represents ID of sky bison

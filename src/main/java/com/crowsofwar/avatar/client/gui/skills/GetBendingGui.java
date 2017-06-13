@@ -31,7 +31,7 @@ import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
-
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
@@ -136,17 +136,17 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
 		handler.add(instructions);
 		
-		int[] types = int.values();
-		bendingButtons = new UiComponent[types.length - 1];
+		List<Integer> bendingIds = BendingManager.allBendingIds();
+		bendingButtons = new UiComponent[bendingIds.size() - 1];
 		for (int i = 0; i < bendingButtons.length; i++) {
 			
-			int type = int.find(i + 1);
+			int bendingId = bendingIds.get(i);
 			
 			int u = (i % 2) * 120;
 			int v = 124 + 60 * (i / 2);
 			
 			UiComponent comp = new ComponentCustomButton(AvatarUiTextures.getBending, u, v, 60, 60, () -> {
-				AvatarMod.network.sendToServer(new PacketSUnlockBending(type));
+				AvatarMod.network.sendToServer(new PacketSUnlockBending(bendingId));
 			});
 			
 			comp.setFrame(buttonsFrame);
@@ -169,11 +169,11 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		
-		List<int> allowedTypes = container.getEligibleTypes();
+		List<Integer> allowedTypes = container.getEligibleTypes();
 		
 		int visibleBtns = 0;
 		for (int i = 0; i < bendingButtons.length; i++) {
-			int type = int.find(i + 1);
+			int type = allowedTypes.get(i);
 			UiComponent btn = bendingButtons[i];
 			btn.setVisible(allowedTypes.contains(type));
 			btn.setOffset(Measurement.fromPixels(buttonsFrame, btn.width() * visibleBtns, 0));

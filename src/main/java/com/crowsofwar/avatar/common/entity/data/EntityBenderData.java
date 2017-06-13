@@ -55,7 +55,7 @@ public class EntityBenderData extends AbstractBendingData {
 	public void writeToNbt(NBTTagCompound writeTo) {
 		
 		AvatarUtils.writeList(getAllBending(),
-				(compound, controller) -> compound.setInteger("ControllerID", controller.getID()), writeTo,
+				(compound, controller) -> compound.setInteger("ControllerID", controller.getId()), writeTo,
 				"BendingControllers");
 		
 		AvatarUtils.writeList(getAllStatusControls(),

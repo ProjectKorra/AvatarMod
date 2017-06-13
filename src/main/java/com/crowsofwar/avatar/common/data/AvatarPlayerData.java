@@ -148,7 +148,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	protected void writePlayerDataToNBT(NBTTagCompound writeTo) {
 		
 		AvatarUtils.writeList(getAllBending(),
-				(compound, controller) -> compound.setInteger("ControllerID", controller.getID()), writeTo,
+				(compound, controller) -> compound.setInteger("ControllerID", controller.getId()), writeTo,
 				"BendingControllers");
 		
 		AvatarUtils.writeList(getAllStatusControls(),
