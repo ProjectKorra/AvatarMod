@@ -49,7 +49,7 @@ public class AvatarCommand extends TreeCommand {
 		
 		@Override
 		public String toString(List<BendingController> obj) {
-			return obj.equals(BendingManager.allBending()) ? "all" : obj.get(0).getControllerName();
+			return obj.equals(BendingManager.allBending()) ? "all" : obj.get(0).getName();
 		}
 		
 		@Override

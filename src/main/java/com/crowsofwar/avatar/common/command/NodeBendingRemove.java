@@ -70,9 +70,9 @@ public class NodeBendingRemove extends NodeFunctional {
 				
 				if (data.hasBending(controller)) {
 					data.removeBending(controller);
-					MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getControllerName());
+					MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getName());
 				} else {
-					MSG_BENDING_REMOVE_DOESNT_HAVE.send(sender, playerName, controller.getControllerName());
+					MSG_BENDING_REMOVE_DOESNT_HAVE.send(sender, playerName, controller.getName());
 				}
 			}
 		}

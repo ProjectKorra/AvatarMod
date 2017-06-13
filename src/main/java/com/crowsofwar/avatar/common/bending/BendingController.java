@@ -97,7 +97,7 @@ public abstract class BendingController implements ReadableWritable {
 	/**
 	 * Get the name of this bending controller in lowercase. e.g. "earthbending"
 	 */
-	public abstract String getControllerName();
+	public abstract String getName();
 	
 	public int getId() {
 		return BendingManager.getControllerId(this);

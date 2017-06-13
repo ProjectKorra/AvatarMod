@@ -67,10 +67,10 @@ public class NodeBendingAdd extends NodeFunctional {
 				MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
 			} else {
 				if (data.hasBending(controller.getId())) {
-					MSG_BENDING_ADD_ALREADY_HAS.send(sender, playerName, controller.getControllerName());
+					MSG_BENDING_ADD_ALREADY_HAS.send(sender, playerName, controller.getName());
 				} else {
 					data.addBending(controller);
-					MSG_BENDING_ADD_SUCCESS.send(sender, playerName, controller.getControllerName());
+					MSG_BENDING_ADD_SUCCESS.send(sender, playerName, controller.getName());
 				}
 				
 			}

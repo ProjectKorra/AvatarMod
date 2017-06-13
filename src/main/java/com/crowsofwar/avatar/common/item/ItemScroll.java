@@ -105,7 +105,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		
 		int bendingType = getScrollType(stack).getBendingId();
 		String bendingTypeName = bendingType == 0 ? "all"
-				: BendingManager.getBending(bendingType).getControllerName();
+				: BendingManager.getBending(bendingType).getName();
 		
 		String tooltip = I18n.format("avatar." + bendingTypeName);
 		tooltips.add(tooltip);

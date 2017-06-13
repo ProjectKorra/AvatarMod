@@ -96,7 +96,7 @@ public abstract class BendingAbility {
 	/**
 	 * Get the bending type that this ability belongs to
 	 */
-	public final int getint() {
+	public final int getBendingId() {
 		return type;
 	}
 	

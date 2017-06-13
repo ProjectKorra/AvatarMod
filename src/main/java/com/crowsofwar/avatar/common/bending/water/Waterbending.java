@@ -62,7 +62,7 @@ public class Waterbending extends BendingController {
 	}
 	
 	@Override
-	public String getControllerName() {
+	public String getName() {
 		return "waterbending";
 	}
 	

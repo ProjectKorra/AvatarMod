@@ -65,7 +65,7 @@ public class Firebending extends BendingController {
 	}
 	
 	@Override
-	public String getControllerName() {
+	public String getName() {
 		return "firebending";
 	}
 	

@@ -64,7 +64,7 @@ public class Airbending extends BendingController {
 	}
 	
 	@Override
-	public String getControllerName() {
+	public String getName() {
 		return "airbending";
 	}
 	

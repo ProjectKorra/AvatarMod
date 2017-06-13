@@ -54,7 +54,7 @@ public class Earthbending extends BendingController {
 	}
 	
 	@Override
-	public String getControllerName() {
+	public String getName() {
 		return "earthbending";
 	}
 	

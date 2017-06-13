@@ -165,7 +165,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			
 			BendingAbility ability = packet.getAbility();
-			if (data.hasBending(ability.getint())) {
+			if (data.hasBending(ability.getBendingId())) {
 				if (!data.getAbilityData(ability).isLocked()) {
 					if (data.getAbilityCooldown() == 0) {
 						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
@@ -345,7 +345,7 @@ public class PacketHandlerServer implements IPacketHandler {
 						
 						// Try to use this scroll
 						ScrollType type = ScrollType.fromId(stack.getMetadata());
-						if (type.accepts(packet.getAbility().getint())) {
+						if (type.accepts(packet.getAbility().getBendingId())) {
 							
 							activeSlot.putStack(ItemStack.field_190927_a);
 							abilityData.addLevel();

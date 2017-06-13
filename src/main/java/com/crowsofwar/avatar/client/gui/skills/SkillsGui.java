@@ -104,7 +104,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 				.sorted((id1, id2) -> {
 					BendingController c1 = BendingManager.getBending(id1);
 					BendingController c2 = BendingManager.getBending(id2);
-					return c1.getControllerName().compareTo(c2.getControllerName());
+					return c1.getName().compareTo(c2.getName());
 				})//
 				.toArray(Integer[]::new);
 		
@@ -130,7 +130,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		title = new ComponentText(
 				TextFormatting.BOLD + ChatSender.instance.processText(I18n.format("avatar.ui.skillsMenu"),
-						MSG_TITLE, BendingManager.getBending(type).getControllerName().toLowerCase()));
+						MSG_TITLE, BendingManager.getBending(type).getName().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);

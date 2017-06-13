@@ -212,7 +212,7 @@ public class RadialMenu extends Gui {
 			MenuTheme theme = controller.getRadialMenu().getTheme();
 			
 			drawCenteredString(mc.fontRendererObj,
-					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getControllerName()),
+					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getName()),
 					centerX, centerY - mc.fontRendererObj.FONT_HEIGHT, theme.getText());
 			
 			drawCenteredString(mc.fontRendererObj, I18n.format("avatar.ui.openSkillsMenu"), centerX,

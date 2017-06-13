@@ -64,7 +64,7 @@ public class NodeBendingList extends NodeFunctional {
 				AvatarChatMessages.MSG_BENDING_LIST_TOP.send(sender, playerName, allControllers.size());
 				
 				for (BendingController controller : allControllers) {
-					AvatarChatMessages.MSG_BENDING_LIST_ITEM.send(sender, controller.getControllerName());
+					AvatarChatMessages.MSG_BENDING_LIST_ITEM.send(sender, controller.getName());
 				}
 				
 			} else {

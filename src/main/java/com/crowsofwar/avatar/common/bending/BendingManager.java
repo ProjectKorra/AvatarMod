@@ -140,7 +140,7 @@ public class BendingManager {
 	
 	public static int registerBending(BendingController controller) {
 		bending.put(nextId, controller);
-		bendingByName.put(controller.getControllerName(), controller);
+		bendingByName.put(controller.getName(), controller);
 		allBending.add(controller);
 		bendingIds.put(controller, nextId);
 		
