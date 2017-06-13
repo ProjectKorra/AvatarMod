@@ -26,7 +26,7 @@ import java.util.Set;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 
 /**
@@ -70,7 +70,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * Check if the player has that type of bending
 	 */
 	@Override
-	public boolean hasBending(BendingType type) {
+	public boolean hasBending(int type) {
 		return hasBending(BendingManager.getBending(type));
 	}
 	
@@ -92,7 +92,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * controller.
 	 */
 	@Override
-	public void addBending(BendingType type) {
+	public void addBending(int type) {
 		addBending(BendingManager.getBending(type));
 	}
 	
@@ -114,7 +114,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * @see #removeBending(BendingController)
 	 */
 	@Override
-	public void removeBending(BendingType type) {
+	public void removeBending(int type) {
 		removeBending(BendingManager.getBending(type));
 	}
 	
@@ -153,7 +153,7 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public BendingType getActiveBendingType() {
+	public int getActiveint() {
 		BendingController controller = getActiveBending();
 		return controller == null ? null : controller.getType();
 	}
@@ -167,7 +167,7 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public void setActiveBendingType(BendingType type) {
+	public void setActiveint(int type) {
 		BendingController controller = BendingManager.getBending(type);
 		setActiveBending(controller);
 	}

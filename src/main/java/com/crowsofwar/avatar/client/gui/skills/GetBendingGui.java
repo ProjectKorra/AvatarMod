@@ -31,7 +31,7 @@ import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
@@ -136,11 +136,11 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
 		handler.add(instructions);
 		
-		BendingType[] types = BendingType.values();
+		int[] types = int.values();
 		bendingButtons = new UiComponent[types.length - 1];
 		for (int i = 0; i < bendingButtons.length; i++) {
 			
-			BendingType type = BendingType.find(i + 1);
+			int type = int.find(i + 1);
 			
 			int u = (i % 2) * 120;
 			int v = 124 + 60 * (i / 2);
@@ -169,11 +169,11 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		
-		List<BendingType> allowedTypes = container.getEligibleTypes();
+		List<int> allowedTypes = container.getEligibleTypes();
 		
 		int visibleBtns = 0;
 		for (int i = 0; i < bendingButtons.length; i++) {
-			BendingType type = BendingType.find(i + 1);
+			int type = int.find(i + 1);
 			UiComponent btn = bendingButtons[i];
 			btn.setVisible(allowedTypes.contains(type));
 			btn.setOffset(Measurement.fromPixels(buttonsFrame, btn.width() * visibleBtns, 0));

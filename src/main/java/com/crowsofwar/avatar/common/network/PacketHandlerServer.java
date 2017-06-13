@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -165,7 +165,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			
 			BendingAbility ability = packet.getAbility();
-			if (data.hasBending(ability.getBendingType())) {
+			if (data.hasBending(ability.getint())) {
 				if (!data.getAbilityData(ability).isLocked()) {
 					if (data.getAbilityCooldown() == 0) {
 						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
@@ -236,7 +236,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		World world = player.worldObj;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(BendingType.AIRBENDING) && !data.isWallJumping()
+		if (data.hasBending(int.AIRBENDING) && !data.isWallJumping()
 				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			
 			data.setWallJumping(true);
@@ -307,7 +307,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		int el = packet.getElement();
 		
 		if (el >= 1 && el <= 4) {
-			if (data.hasBending(BendingType.find(el))) {
+			if (data.hasBending(int.find(el))) {
 				player.openGui(AvatarMod.instance, el, player.worldObj, 0, 0, 0);
 			}
 		}
@@ -345,7 +345,7 @@ public class PacketHandlerServer implements IPacketHandler {
 						
 						// Try to use this scroll
 						ScrollType type = ScrollType.fromId(stack.getMetadata());
-						if (type.accepts(packet.getAbility().getBendingType())) {
+						if (type.accepts(packet.getAbility().getint())) {
 							
 							activeSlot.putStack(ItemStack.field_190927_a);
 							abilityData.addLevel();
@@ -398,9 +398,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		Container container = player.openContainer;
 		
 		if (container instanceof ContainerGetBending) {
-			List<BendingType> eligible = ((ContainerGetBending) container).getEligibleTypes();
+			List<int> eligible = ((ContainerGetBending) container).getEligibleTypes();
 			
-			BendingType desired = packet.getUnlockType();
+			int desired = packet.getUnlockType();
 			if (eligible.contains(desired)) {
 				
 				if (data.getAllBending().isEmpty()) {

@@ -32,7 +32,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -61,8 +61,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public BendingType getActiveBendingType() {
-		return bendingData.getActiveBendingType();
+	public int getActiveint() {
+		return bendingData.getActiveint();
 	}
 	
 	@Override
@@ -71,8 +71,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void setActiveBendingType(BendingType type) {
-		bendingData.setActiveBendingType(type);
+	public void setActiveint(int type) {
+		bendingData.setActiveint(type);
 	}
 	
 	/**
@@ -240,7 +240,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public boolean hasBending(BendingType type) {
+	public boolean hasBending(int type) {
 		return bendingData.hasBending(type);
 	}
 	
@@ -250,7 +250,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void addBending(BendingType type) {
+	public void addBending(int type) {
 		bendingData.addBending(type);
 	}
 	
@@ -260,7 +260,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void removeBending(BendingType type) {
+	public void removeBending(int type) {
 		bendingData.removeBending(type);
 	}
 	

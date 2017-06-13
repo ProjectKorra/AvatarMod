@@ -100,7 +100,7 @@ public abstract class BendingController implements ReadableWritable {
 	/**
 	 * Gets an identifier for this bending controller.
 	 */
-	public abstract BendingType getType();
+	public abstract int getType();
 	
 	/**
 	 * Get information about this bending controller's radial menu.

@@ -76,12 +76,12 @@ public abstract class BendingAbility {
 	
 	private static int nextId = 1;
 	
-	private final BendingType type;
+	private final int type;
 	protected final int id;
 	private final String name;
 	private Raytrace.Info raytrace;
 	
-	public BendingAbility(BendingType bendingType, String name) {
+	public BendingAbility(int bendingType, String name) {
 		this.type = bendingType;
 		this.id = nextId++;
 		this.name = name;
@@ -96,7 +96,7 @@ public abstract class BendingAbility {
 	/**
 	 * Get the bending type that this ability belongs to
 	 */
-	public final BendingType getBendingType() {
+	public final int getint() {
 		return type;
 	}
 	

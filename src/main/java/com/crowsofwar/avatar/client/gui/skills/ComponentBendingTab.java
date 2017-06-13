@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 
 /**
@@ -29,9 +29,9 @@ import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
  */
 public class ComponentBendingTab extends ComponentImage {
 	
-	private final BendingType type;
+	private final int type;
 	
-	public ComponentBendingTab(BendingType type, boolean isFullTab, boolean isSelected) {
+	public ComponentBendingTab(int type, boolean isFullTab, boolean isSelected) {
 		super(AvatarUiTextures.skillsGui, !isFullTab && isSelected ? 216 : 236, type.ordinal() * 20, 20,
 				isFullTab || isSelected ? 20 : 17);
 		this.type = type;

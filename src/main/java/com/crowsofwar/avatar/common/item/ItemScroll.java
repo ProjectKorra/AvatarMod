@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
@@ -103,7 +103,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltips,
 			boolean advanced) {
 		
-		BendingType bendingType = getScrollType(stack).getBendingType();
+		int bendingType = getScrollType(stack).getint();
 		String bendingTypeName = bendingType == null ? "all" : bendingType.name().toLowerCase();
 		
 		String tooltip = I18n.format("avatar." + bendingTypeName);
@@ -149,14 +149,14 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	public enum ScrollType {
 		ALL(null),
-		EARTH(BendingType.EARTHBENDING),
-		FIRE(BendingType.FIREBENDING),
-		WATER(BendingType.WATERBENDING),
-		AIR(BendingType.AIRBENDING);
+		EARTH(int.EARTHBENDING),
+		FIRE(int.FIREBENDING),
+		WATER(int.WATERBENDING),
+		AIR(int.AIRBENDING);
 		
-		private final BendingType type;
+		private final int type;
 		
-		private ScrollType(BendingType type) {
+		private ScrollType(int type) {
 			this.type = type;
 		}
 		
@@ -172,7 +172,7 @@ public class ItemScroll extends Item implements AvatarItem {
 			return ordinal();
 		}
 		
-		public boolean accepts(BendingType type) {
+		public boolean accepts(int type) {
 			return this.type == null || this.type == type;
 		}
 		
@@ -182,7 +182,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		 * {@link #ALL}).
 		 */
 		@Nullable
-		public BendingType getBendingType() {
+		public int getint() {
 			return type;
 		}
 		

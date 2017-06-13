@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 
 import io.netty.buffer.ByteBuf;
@@ -29,17 +29,17 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
 	
-	private BendingType type;
+	private int type;
 	
 	public PacketSUnlockBending() {}
 	
-	public PacketSUnlockBending(BendingType type) {
+	public PacketSUnlockBending(int type) {
 		this.type = type;
 	}
 	
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		type = BendingType.find(buf.readInt());
+		type = int.find(buf.readInt());
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
 		return PacketRedirector::redirectMessage;
 	}
 	
-	public BendingType getUnlockType() {
+	public int getUnlockType() {
 		return type;
 	}
 	

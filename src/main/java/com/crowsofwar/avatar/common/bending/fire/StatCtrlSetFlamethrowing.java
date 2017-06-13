@@ -21,7 +21,7 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
 
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -52,7 +52,7 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
-		if (data.hasBending(BendingType.FIREBENDING)) {
+		if (data.hasBending(int.FIREBENDING)) {
 			if (setting) {
 				data.addStatusControl(STOP_FLAMETHROW);
 				data.addTickHandler(TickHandler.FLAMETHROWER);

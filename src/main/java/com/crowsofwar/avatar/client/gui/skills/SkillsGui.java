@@ -39,7 +39,7 @@ import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
@@ -78,7 +78,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private ComponentText title;
 	private UiComponentHandler handler;
 	
-	public SkillsGui(BendingType type) {
+	public SkillsGui(int type) {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, type));
 		
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
@@ -100,10 +100,10 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		handler = new UiComponentHandler();
 		
-		BendingType[] types = data.getAllBending().stream()//
+		int[] types = data.getAllBending().stream()//
 				.map(c -> c.getType())//
 				.sorted((c1, c2) -> c1.name().compareTo(c2.name()))//
-				.toArray(BendingType[]::new);
+				.toArray(int[]::new);
 		
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {

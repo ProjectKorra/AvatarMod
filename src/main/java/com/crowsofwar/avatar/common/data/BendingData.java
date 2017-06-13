@@ -21,7 +21,7 @@ import java.util.Map;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 
 /**
@@ -43,7 +43,7 @@ public interface BendingData {
 	/**
 	 * Check if the player has that type of bending
 	 */
-	boolean hasBending(BendingType type);
+	boolean hasBending(int type);
 	
 	/**
 	 * If the bending controller is not already present, adds the bending
@@ -57,7 +57,7 @@ public interface BendingData {
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
 	 */
-	void addBending(BendingType type);
+	void addBending(int type);
 	
 	/**
 	 * Remove the specified bending controller and its associated state. Please
@@ -71,7 +71,7 @@ public interface BendingData {
 	 * 
 	 * @see #removeBending(BendingController)
 	 */
-	void removeBending(BendingType type);
+	void removeBending(int type);
 	
 	List<BendingController> getAllBending();
 	
@@ -93,7 +93,7 @@ public interface BendingData {
 	 * Gets the type of the in-use bending controller. Null if the player has no
 	 * bending
 	 */
-	BendingType getActiveBendingType();
+	int getActiveint();
 	
 	/**
 	 * Set the currently in-use bending. If null, will be rejected
@@ -103,7 +103,7 @@ public interface BendingData {
 	/**
 	 * Set the currently in-use type. If null, will be rejected
 	 */
-	void setActiveBendingType(BendingType type);
+	void setActiveint(int type);
 	
 	// ================================================================================
 	// STATUS CONTROLS

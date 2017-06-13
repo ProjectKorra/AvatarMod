@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
 
 /**
  * Manages instances of bending controllers. Bending controllers can be
- * retrieved via {@link #getBending(BendingType)}. Contains constants which
+ * retrieved via {@link #getBending(int)}. Contains constants which
  * specify the IDs of bending. <br />
  * <br />
  * Third-party mods can use {@link #registerBending(BendingController)} to
@@ -40,13 +40,13 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
 public class BendingManager {
 	
 	/**
-	 * Use {@link BendingType} instead.
+	 * Use {@link int} instead.
 	 */
 	@Deprecated
 	public static final int BENDINGID_EARTHBENDING = 1, BENDINGID_FIREBENDING = 2, BENDINGID_WATERBENDING = 3,
 			BENDINGID_AIRBENDING = 4;
 	
-	private static Map<BendingType, BendingController> bending;
+	private static Map<Integer, BendingController> bending;
 	private static Map<String, BendingController> bendingByName;
 	private static List<BendingController> allBending;
 	
@@ -54,7 +54,7 @@ public class BendingManager {
 	private static List<BendingAbility> allAbilities;
 	
 	static {
-		bending = new HashMap<BendingType, BendingController>();
+		bending = new HashMap<Integer, BendingController>();
 		bendingByName = new HashMap<String, BendingController>();
 		allBending = new ArrayList<BendingController>();
 		abilities = new HashMap<>();
@@ -73,13 +73,13 @@ public class BendingManager {
 	}
 	
 	/**
-	 * @deprecated Use {@link #getBending(BendingType)} instead.
+	 * @deprecated Use {@link #getBending(int)} instead.
 	 * @throws IllegalArgumentException
 	 *             if there is no bending with the ID
 	 */
 	@Deprecated
 	public static BendingController getBending(int id) {
-		return bending.get(BendingType.find(id));
+		return bending.get(int.find(id));
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class BendingManager {
 	 * @throws IllegalArgumentException
 	 *             If no bending controller for that type (shouldn't happen)
 	 */
-	public static BendingController getBending(BendingType type) {
+	public static BendingController getBending(int type) {
 		if (!bending.containsKey(type)) throw new IllegalArgumentException(
 				"No bending controller with type " + type + "... devs forgot to add a bending controller!");
 		return bending.get(type);

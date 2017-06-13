@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 
 import io.netty.buffer.ByteBuf;
@@ -33,7 +33,7 @@ public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 	
 	public PacketSSkillsMenu() {}
 	
-	public PacketSSkillsMenu(BendingType element) {
+	public PacketSSkillsMenu(int element) {
 		this.element = element.id();
 	}
 	

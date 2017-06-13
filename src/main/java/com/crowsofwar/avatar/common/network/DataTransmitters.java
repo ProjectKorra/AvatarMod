@@ -28,7 +28,7 @@ import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -62,7 +62,7 @@ public class DataTransmitters {
 			int size = buf.readInt();
 			List<BendingController> out = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
-				out.add(BendingManager.getBending(BendingType.find(buf.readInt())));
+				out.add(BendingManager.getBending(int.find(buf.readInt())));
 			}
 			return out;
 		}
@@ -198,7 +198,7 @@ public class DataTransmitters {
 			if (id == -1) {
 				return null;
 			}
-			BendingType type = BendingType.find(id);
+			int type = int.find(id);
 			return BendingManager.getBending(type);
 		}
 	};

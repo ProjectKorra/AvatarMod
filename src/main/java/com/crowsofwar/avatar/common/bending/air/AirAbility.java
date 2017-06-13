@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.int;
 
 /**
  * 
@@ -31,7 +31,7 @@ public abstract class AirAbility extends BendingAbility {
 	 * @param name
 	 */
 	public AirAbility(String name) {
-		super(BendingType.AIRBENDING, name);
+		super(int.AIRBENDING, name);
 	}
 	
 }

@@ -25,7 +25,7 @@ import java.util.Arrays;
  * 
  * @author CrowsOfWar
  */
-public enum BendingType {
+public enum int {
 	
 	ERROR,
 	EARTHBENDING,
@@ -34,24 +34,24 @@ public enum BendingType {
 	AIRBENDING;
 	
 	/**
-	 * Get the Id of this BendingType.
+	 * Get the Id of this int.
 	 */
 	public int id() {
 		return ordinal();
 	}
 	
 	/**
-	 * Find the BendingType with the given Id.
+	 * Find the int with the given Id.
 	 * 
 	 * @param id
 	 *            Id of bending type
-	 * @return BendingType of that Id
+	 * @return int of that Id
 	 * @throws IllegalArgumentException
 	 *             if the Id is invalid
 	 */
-	public static BendingType find(int id) {
+	public static int find(int id) {
 		if (id < 0 || id >= values().length)
-			throw new IllegalArgumentException("Cannot find BendingType with invalid id: " + id);
+			throw new IllegalArgumentException("Cannot find int with invalid id: " + id);
 		return values()[id];
 	}
 	
@@ -59,7 +59,7 @@ public enum BendingType {
 	 * Returns all bendingTypes, except for {@link #ERROR} (sorta like
 	 * <code>values()</code>)
 	 */
-	public static BendingType[] allExceptError() {
+	public static int[] allExceptError() {
 		return Arrays.copyOfRange(values(), 1, values().length);
 	}
 	

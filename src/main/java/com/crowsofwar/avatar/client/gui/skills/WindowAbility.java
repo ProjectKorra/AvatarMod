@@ -163,7 +163,7 @@ public class WindowAbility {
 		unlockTitle.setZLevel(4);
 		handler.add(unlockTitle);
 		
-		String bendingName = ability.getBendingType().name().toLowerCase();
+		String bendingName = ability.getint().name().toLowerCase();
 		String text = ChatSender.instance.processText(I18n.format("avatar.ui.unlockDesc"), MSG_UNLOCK_TEXT,
 				bendingName);
 		unlockText = new ComponentLongText(text, frameRight.getDimensions());
