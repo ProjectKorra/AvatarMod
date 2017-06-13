@@ -103,7 +103,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltips,
 			boolean advanced) {
 		
-		int bendingType = getScrollType(stack).getBending();
+		int bendingType = getScrollType(stack).getBendingId();
 		String bendingTypeName = bendingType == 0 ? "all"
 				: BendingManager.getBending(bendingType).getControllerName();
 		
@@ -168,7 +168,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 		
 		public boolean accepts(int type) {
-			return getBending() == 0 || getBending() == type;
+			return getBendingId() == 0 || getBendingId() == type;
 		}
 		
 		/**
@@ -176,7 +176,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		 * case of ALL.
 		 */
 		@Nullable
-		public int getBending() {
+		public int getBendingId() {
 			return ordinal();
 		}
 		

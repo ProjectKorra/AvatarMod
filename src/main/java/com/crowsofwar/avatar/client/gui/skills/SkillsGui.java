@@ -99,10 +99,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		handler = new UiComponentHandler();
 		
-		int[] types = data.getAllBending().stream()//
+		Integer[] types = data.getAllBending().stream()//
 				.map(c -> c.getId())//
-				.sorted((c1, c2) -> c1.name().compareTo(c2.name()))//
-				.toArray(int[]::new);
+				.sorted((id1, id2) -> {
+					BendingController c1 = BendingManager.getBending(id1);
+					BendingController c2 = BendingManager.getBending(id2);
+					return c1.getControllerName().compareTo(c2.getControllerName());
+				})//
+				.toArray(Integer[]::new);
 		
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
@@ -124,8 +128,9 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
 		
-		title = new ComponentText(TextFormatting.BOLD + ChatSender.instance
-				.processText(I18n.format("avatar.ui.skillsMenu"), MSG_TITLE, type.name().toLowerCase()));
+		title = new ComponentText(
+				TextFormatting.BOLD + ChatSender.instance.processText(I18n.format("avatar.ui.skillsMenu"),
+						MSG_TITLE, BendingManager.getBending(type).getControllerName().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);

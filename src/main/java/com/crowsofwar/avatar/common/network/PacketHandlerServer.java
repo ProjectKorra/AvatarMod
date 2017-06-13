@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -307,7 +307,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		int el = packet.getElement();
 		
 		if (el >= 1 && el <= 4) {
-			if (data.hasBending(int.find(el))) {
+			if (data.hasBending(el)) {
 				player.openGui(AvatarMod.instance, el, player.worldObj, 0, 0, 0);
 			}
 		}
@@ -398,7 +398,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		Container container = player.openContainer;
 		
 		if (container instanceof ContainerGetBending) {
-			List<int> eligible = ((ContainerGetBending) container).getEligibleTypes();
+			List<Integer> eligible = ((ContainerGetBending) container).getEligibleTypes();
 			
 			int desired = packet.getUnlockType();
 			if (eligible.contains(desired)) {
@@ -410,7 +410,7 @@ public class PacketHandlerServer implements IPacketHandler {
 						container.getSlot(i).putStack(ItemStack.field_190927_a);
 					}
 					
-					player.openGui(AvatarMod.instance, desired.id(), player.worldObj, 0, 0, 0);
+					player.openGui(AvatarMod.instance, desired, player.worldObj, 0, 0, 0);
 					
 				}
 				

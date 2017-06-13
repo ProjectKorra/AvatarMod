@@ -166,7 +166,7 @@ public class ContainerGetBending extends Container {
 			// Possible since all scroll stacks in the inventory must all be
 			// compatible (or they couldn't be added)
 			// Don't return here b/c didn't check if all slots aren't empty
-			int type = ItemScroll.getScrollType(slot.getStack()).getint();
+			int type = ItemScroll.getScrollType(slot.getStack()).getBendingId();
 			if (type != -1) {
 				foundType = type;
 			}

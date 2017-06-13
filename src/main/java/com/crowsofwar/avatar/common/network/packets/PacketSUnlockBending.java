@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 
 import io.netty.buffer.ByteBuf;
@@ -39,12 +38,12 @@ public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
 	
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		type = int.find(buf.readInt());
+		type = buf.readInt();
 	}
 	
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		buf.writeInt(type.id());
+		buf.writeInt(type);
 	}
 	
 	@Override

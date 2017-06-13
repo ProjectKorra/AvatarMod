@@ -37,6 +37,7 @@ import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
@@ -163,7 +164,7 @@ public class WindowAbility {
 		unlockTitle.setZLevel(4);
 		handler.add(unlockTitle);
 		
-		String bendingName = ability.getint().name().toLowerCase();
+		String bendingName = BendingManager.getBending(ability.getint()).getControllerName().toLowerCase();
 		String text = ChatSender.instance.processText(I18n.format("avatar.ui.unlockDesc"), MSG_UNLOCK_TEXT,
 				bendingName);
 		unlockText = new ComponentLongText(text, frameRight.getDimensions());
