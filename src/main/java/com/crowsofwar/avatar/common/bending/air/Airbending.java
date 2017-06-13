@@ -18,12 +18,10 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
-import static com.crowsofwar.avatar.common.bending.int.AIRBENDING;
 
 import java.awt.Color;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;

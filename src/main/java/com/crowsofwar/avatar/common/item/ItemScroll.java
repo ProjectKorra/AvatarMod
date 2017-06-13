@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.int;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
@@ -149,10 +149,10 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	public enum ScrollType {
 		ALL(null),
-		EARTH(int.EARTHBENDING),
-		FIRE(int.FIREBENDING),
-		WATER(int.WATERBENDING),
-		AIR(int.AIRBENDING);
+		EARTH(BendingManager.ID_EARTHBENDING),
+		FIRE(BendingManager.ID_FIREBENDING),
+		WATER(BendingManager.ID_WATERBENDING),
+		AIR(BendingManager.ID_AIRBENDING);
 		
 		private final int type;
 		

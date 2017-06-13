@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.int;
+
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 
 import io.netty.buffer.ByteBuf;

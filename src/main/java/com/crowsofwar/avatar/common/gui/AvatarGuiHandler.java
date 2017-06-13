@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.common.gui;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.int;
+
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.player.EntityPlayer;

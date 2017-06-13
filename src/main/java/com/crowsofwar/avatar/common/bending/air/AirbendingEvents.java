@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.bending.air;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.int;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -67,7 +67,7 @@ public class AirbendingEvents {
 		EntityPlayer player = e.player;
 		World world = player.worldObj;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(int.AIRBENDING)) {
+		if (data.hasBending(BendingManager.ID_AIRBENDING)) {
 			tick(player, world, data);
 		}
 	}

@@ -31,7 +31,7 @@ import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
-import com.crowsofwar.avatar.common.bending.int;
+
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;

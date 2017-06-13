@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.client.gui.skills;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
-import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 
 /**

@@ -24,7 +24,6 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.int;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -55,7 +54,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		
-		BendingController controller = BendingManager.getBending(int.EARTHBENDING);
+		BendingController controller = BendingManager.getBending(BendingManager.ID_EARTHBENDING);
 		
 		BendingData data = ctx.getData();
 		

@@ -18,7 +18,8 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.int;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+
 
 /**
  * 
@@ -31,7 +32,7 @@ public abstract class EarthAbility extends BendingAbility {
 	 * @param name
 	 */
 	public EarthAbility(String name) {
-		super(int.EARTHBENDING, name);
+		super(BendingManager.ID_EARTHBENDING, name);
 	}
 	
 }

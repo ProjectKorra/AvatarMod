@@ -22,7 +22,7 @@ import static net.minecraft.item.ItemStack.field_190927_a;
 import java.util.Arrays;
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.int;
+
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;

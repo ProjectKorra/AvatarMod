@@ -18,7 +18,8 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.int;
+import com.crowsofwar.avatar.common.bending.BendingManager;
+
 
 /**
  * 
@@ -31,7 +32,7 @@ public abstract class FireAbility extends BendingAbility {
 	 * @param name
 	 */
 	public FireAbility(String name) {
-		super(int.FIREBENDING, name);
+		super(BendingManager.ID_FIREBENDING, name);
 	}
 	
 }

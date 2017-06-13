@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.int;
+
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -236,7 +236,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		World world = player.worldObj;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(int.AIRBENDING) && !data.isWallJumping()
+		if (data.hasBending(BendingManager.ID_AIRBENDING) && !data.isWallJumping()
 				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			
 			data.setWallJumping(true);
