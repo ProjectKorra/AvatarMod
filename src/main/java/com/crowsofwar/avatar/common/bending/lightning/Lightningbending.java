@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -49,6 +50,11 @@ public class Lightningbending extends BendingController {
 	@Override
 	public String getName() {
 		return "lightningbending";
+	}
+	
+	@Override
+	public int getId() {
+		return BendingManager.ID_LIGHTNINGBENDING;
 	}
 	
 }

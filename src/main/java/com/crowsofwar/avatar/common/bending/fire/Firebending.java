@@ -22,6 +22,7 @@ import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
 import java.awt.Color;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -67,6 +68,11 @@ public class Firebending extends BendingController {
 	@Override
 	public String getName() {
 		return "firebending";
+	}
+	
+	@Override
+	public int getId() {
+		return BendingManager.ID_FIREBENDING;
 	}
 	
 }
