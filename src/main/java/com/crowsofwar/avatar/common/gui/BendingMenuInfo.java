@@ -30,7 +30,6 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 public class BendingMenuInfo {
 	
 	private MenuTheme theme;
-	private final String key;
 	private final BendingAbility[] buttons;
 	
 	/**
@@ -38,19 +37,16 @@ public class BendingMenuInfo {
 	 * 
 	 * @param theme
 	 *            The theme of this menu, defines colors, etc.
-	 * @param key
-	 *            The key which must be held to use this radial menu
 	 * @param buttons
 	 *            An array of abilities which will be used as the buttons. Can't
 	 *            be more than 8. If it is less than 8, the unspecified elements
 	 *            are filled with {@link AvatarAbility#NONE}.
 	 */
-	public BendingMenuInfo(MenuTheme theme, String key, BendingController bending) {
+	public BendingMenuInfo(MenuTheme theme, BendingController bending) {
 		List<BendingAbility> buttons = bending.getAllAbilities();
 		if (buttons.size() > 8) throw new IllegalArgumentException(
 				"Cannot create BendingMenuInfo with buttons being larger than 8");
 		this.theme = theme;
-		this.key = key;
 		this.buttons = new BendingAbility[8];
 		for (int i = 0; i < 8; i++)
 			this.buttons[i] = i < buttons.size() ? buttons.get(i) : null;
@@ -58,10 +54,6 @@ public class BendingMenuInfo {
 	
 	public MenuTheme getTheme() {
 		return theme;
-	}
-	
-	public String getKey() {
-		return key;
 	}
 	
 	/**

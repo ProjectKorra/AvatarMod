@@ -43,7 +43,7 @@ public class Waterbending extends BendingController {
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
 		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
-				new ThemeColor(icon, base), 0x57E8F2), "Waterbend", this);
+				new ThemeColor(icon, base), 0x57E8F2), this);
 	}
 	
 	@Override

@@ -44,7 +44,7 @@ public class Earthbending extends BendingController {
 		ThemeColor background = new ThemeColor(lightBrown, brown);
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
-		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F), "Earthbend", this);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F), this);
 		
 	}
 	
