@@ -189,7 +189,7 @@ public class ClientInput implements IControlsHandler {
 		if (AvatarControl.KEY_USE_BENDING.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			
 			if (data.getActiveBending() != null) {
-				AvatarUiRenderer.openBendingGui(data.getActiveint());
+				AvatarUiRenderer.openBendingGui(data.getActiveBendingId());
 			} else {
 				
 				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());

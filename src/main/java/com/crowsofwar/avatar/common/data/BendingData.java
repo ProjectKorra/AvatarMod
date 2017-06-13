@@ -92,7 +92,7 @@ public interface BendingData {
 	 * Gets the type of the in-use bending controller. Null if the player has no
 	 * bending
 	 */
-	int getActiveint();
+	int getActiveBendingId();
 	
 	/**
 	 * Set the currently in-use bending. If null, will be rejected

@@ -60,8 +60,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public int getActiveint() {
-		return bendingData.getActiveint();
+	public int getActiveBendingId() {
+		return bendingData.getActiveBendingId();
 	}
 	
 	@Override
