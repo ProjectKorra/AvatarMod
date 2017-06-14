@@ -304,11 +304,12 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		BendingData data = AvatarPlayerData.fetcher().fetch(player);
-		int el = packet.getElement();
+		int element = packet.getElement();
 		
-		if (el >= 1 && el <= 4) {
-			if (data.hasBending(el)) {
-				player.openGui(AvatarMod.instance, el, player.worldObj, 0, 0, 0);
+		if (BendingManager.hasBending(element)) {
+			if (data.hasBending(element)) {
+				int guiId = AvatarGuiHandler.getBendingId(element);
+				player.openGui(AvatarMod.instance, guiId, player.worldObj, 0, 0, 0);
 			}
 		}
 		

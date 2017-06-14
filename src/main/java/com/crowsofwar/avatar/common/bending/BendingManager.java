@@ -103,6 +103,13 @@ public class BendingManager {
 	}
 	
 	/**
+	 * Check whether a BendingController under that ID exists.
+	 */
+	public static boolean hasBending(int id) {
+		return bending.containsKey(id);
+	}
+	
+	/**
 	 * Get an unmodifiable list of all bending controllers.
 	 */
 	public static List<BendingController> allBending() {
