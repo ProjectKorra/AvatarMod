@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_LIGHTNING_STRIKE;
+
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -39,6 +41,8 @@ public class Lightningbending extends BendingController {
 		
 		MenuTheme theme = new MenuTheme(bkgd, edge, icon, 0xFFEBC2);
 		menu = new BendingMenuInfo(theme, this);
+		
+		addAbility(ABILITY_LIGHTNING_STRIKE);
 		
 	}
 	

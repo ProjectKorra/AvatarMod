@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningStrike;
 import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
@@ -50,7 +51,7 @@ public abstract class BendingAbility {
 	public static BendingAbility ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE,
 			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER, ABILITY_WATER_ARC, ABILITY_WAVE,
 			ABILITY_WATER_BUBBLE, ABILITY_WALL, ABILITY_WATER_SKATE, ABILITY_FIREBALL, ABILITY_AIRBLADE,
-			ABILITY_MINING, ABILITY_AIR_BUBBLE;
+			ABILITY_MINING, ABILITY_AIR_BUBBLE, ABILITY_LIGHTNING_STRIKE;
 	
 	/**
 	 * Creates all abilities. Done before bending controllers are created.
@@ -72,6 +73,7 @@ public abstract class BendingAbility {
 		ABILITY_AIRBLADE = new AbilityAirblade();
 		ABILITY_MINING = new AbilityMining();
 		ABILITY_AIR_BUBBLE = new AbilityAirBubble();
+		ABILITY_LIGHTNING_STRIKE = new AbilityLightningStrike();
 	}
 	
 	private static int nextId = 1;
