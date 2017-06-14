@@ -65,7 +65,8 @@ public class ItemScroll extends Item implements AvatarItem {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
 		} else {
 			BendingController controller = data.getAllBending().get(0);
-			player.openGui(AvatarMod.instance, controller.getId(), world, 0, 0, 0);
+			int guiId = AvatarGuiHandler.getGuiId(controller.getId());
+			player.openGui(AvatarMod.instance, guiId, world, 0, 0, 0);
 		}
 		
 		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
@@ -104,8 +105,7 @@ public class ItemScroll extends Item implements AvatarItem {
 			boolean advanced) {
 		
 		int bendingType = getScrollType(stack).getBendingId();
-		String bendingTypeName = bendingType == 0 ? "all"
-				: BendingManager.getBending(bendingType).getName();
+		String bendingTypeName = bendingType == 0 ? "all" : BendingManager.getBending(bendingType).getName();
 		
 		String tooltip = I18n.format("avatar." + bendingTypeName);
 		tooltips.add(tooltip);

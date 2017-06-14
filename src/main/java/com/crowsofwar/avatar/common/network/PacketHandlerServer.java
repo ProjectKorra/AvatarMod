@@ -401,17 +401,18 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (container instanceof ContainerGetBending) {
 			List<Integer> eligible = ((ContainerGetBending) container).getEligibleTypes();
 			
-			int desired = packet.getUnlockType();
-			if (eligible.contains(desired)) {
+			int bending = packet.getUnlockType();
+			if (eligible.contains(bending)) {
 				
 				if (data.getAllBending().isEmpty()) {
-					data.addBending(desired);
+					data.addBending(bending);
 					
 					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
 						container.getSlot(i).putStack(ItemStack.field_190927_a);
 					}
 					
-					player.openGui(AvatarMod.instance, desired, player.worldObj, 0, 0, 0);
+					int guiId = AvatarGuiHandler.getGuiId(bending);
+					player.openGui(AvatarMod.instance, guiId, player.worldObj, 0, 0, 0);
 					
 				}
 				
