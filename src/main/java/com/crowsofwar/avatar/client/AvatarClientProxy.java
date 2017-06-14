@@ -51,7 +51,6 @@ import com.crowsofwar.avatar.client.render.RenderWaterBubble;
 import com.crowsofwar.avatar.client.render.RenderWave;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -187,10 +186,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
-		if (id == AvatarGuiHandler.GUI_ID_SKILLS_EARTH) return new SkillsGui(BendingManager.ID_EARTHBENDING);
-		if (id == AvatarGuiHandler.GUI_ID_SKILLS_FIRE) return new SkillsGui(BendingManager.ID_FIREBENDING);
-		if (id == AvatarGuiHandler.GUI_ID_SKILLS_WATER) return new SkillsGui(BendingManager.ID_WATERBENDING);
-		if (id == AvatarGuiHandler.GUI_ID_SKILLS_AIR) return new SkillsGui(BendingManager.ID_AIRBENDING);
+		if (AvatarGuiHandler.isBendingGui(id)) {
+			return new SkillsGui(AvatarGuiHandler.getBendingId(id));
+		}
 		if (id == AvatarGuiHandler.GUI_ID_BISON_CHEST) {
 			// x-coordinate represents ID of sky bison
 			int bisonId = x;

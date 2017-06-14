@@ -47,8 +47,8 @@ public class AbilityLightningStrike extends BendingAbility {
 			World world = ctx.getWorld();
 			BlockPos hitAt = hit.getPos().toBlockPos();
 			
-			EntityLightningBolt bolt = new EntityLightningBolt(world, entity.posX, entity.posY, entity.posZ,
-					false);
+			EntityLightningBolt bolt = new EntityLightningBolt(world, hitAt.getX(), hitAt.getY(),
+					hitAt.getZ(), false);
 			world.addWeatherEffect(bolt);
 			
 		}
