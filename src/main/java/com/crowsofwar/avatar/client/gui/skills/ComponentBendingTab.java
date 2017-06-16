@@ -74,8 +74,8 @@ public class ComponentBendingTab extends UiComponent {
 		// Draw component image
 		mc.renderEngine.bindTexture(bendingIconLocation);
 		GlStateManager.pushMatrix();
-		GlStateManager.scale(20.0 / 128, 20.0 / 128, 1);
-		drawTexturedModalRect(0, 0, 0, 0, 128, 128);
+		GlStateManager.scale(20.0 / 256, 20.0 / 256, 1);
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GlStateManager.popMatrix();
 		
 	}
