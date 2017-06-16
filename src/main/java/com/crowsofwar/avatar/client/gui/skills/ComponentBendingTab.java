@@ -59,7 +59,7 @@ public class ComponentBendingTab extends UiComponent {
 	
 	@Override
 	protected float componentHeight() {
-		return 20;
+		return fullTab ? 23 : 20;
 	}
 	
 	@Override
@@ -67,15 +67,15 @@ public class ComponentBendingTab extends UiComponent {
 		
 		// Draw tab image
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-		int tabU = fullTab ? 216 : 236;
-		int tabV = mouseHover ? 20 : 0;
-		drawTexturedModalRect(0, 0, tabU, tabV, 20, 20);
+		int tabU = fullTab ? 236 : 216;
+		int tabV = mouseHover ? 23 : 0;
+		drawTexturedModalRect(0, 0, tabU, tabV, 20, fullTab ? 23 : 20);
 		
 		// Draw component image
 		mc.renderEngine.bindTexture(bendingIconLocation);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(20.0 / 256, 20.0 / 256, 1);
-		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		drawTexturedModalRect(0, fullTab ? -3 : 0, 0, 0, 256, 256);
 		GlStateManager.popMatrix();
 		
 	}
