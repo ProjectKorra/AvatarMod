@@ -107,9 +107,11 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
+			float scale = 1.4f;
 			tabs[i] = new ComponentBendingTab(types[i], types[i] == type);
 			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
-			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2), 0));
+			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2) * scale, 0));
+			tabs[i].setScale(scale);
 			handler.add(tabs[i]);
 		}
 		
