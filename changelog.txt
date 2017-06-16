@@ -2,3 +2,5 @@ AV2 Changelog :: version a4.2
 
 * Water pouches can now hold up to 5 water
 * New bending tab icons from FavouriteDragon
+
+> Fix penguin, firebender, and airbender name tags being shown

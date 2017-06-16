@@ -18,7 +18,7 @@ package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 
-import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -27,7 +27,7 @@ import net.minecraft.util.ResourceLocation;
  * 
  * @author CrowsOfWar
  */
-public class RenderOtterPenguin extends RenderLivingBase<EntityOtterPenguin> {
+public class RenderOtterPenguin extends RenderLiving<EntityOtterPenguin> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/mob/otterpenguin.png");
