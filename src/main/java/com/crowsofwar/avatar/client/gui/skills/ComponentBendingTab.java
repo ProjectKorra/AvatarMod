@@ -18,11 +18,11 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.ComponentImage;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -35,16 +35,12 @@ public class ComponentBendingTab extends UiComponent {
 	private final BendingType type;
 	private final boolean fullTab;
 	
-	private final ComponentImage tabImg, tabImgHover, bendingImg;
+	private final ResourceLocation bendingIconLocation;
 	
 	public ComponentBendingTab(BendingType type, boolean fullTab) {
 		
-		tabImg = new ComponentImage(AvatarUiTextures.skillsGui, fullTab ? 216 : 236, 0, 20, 20);
-		tabImgHover = new ComponentImage(AvatarUiTextures.skillsGui, fullTab ? 216 : 236, 20, 20, 20);
-		
-		ResourceLocation iconRl = new ResourceLocation(
-				"avatarmod:textures/gui/tab/" + type.name().toLowerCase());
-		bendingImg = new ComponentImage(iconRl, 0, 0, 128, 128);
+		bendingIconLocation = new ResourceLocation(
+				"avatarmod:textures/gui/tab/" + type.name().toLowerCase() + ".png");
 		
 		this.type = type;
 		this.fullTab = fullTab;
@@ -68,9 +64,20 @@ public class ComponentBendingTab extends UiComponent {
 	
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
-		if (mouseHover) {
-			tabImgHover.componentDraw(partialTicks, mouseHover);
-		}
+		
+		// Draw tab image
+		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
+		int tabU = fullTab ? 216 : 236;
+		int tabV = mouseHover ? 20 : 0;
+		drawTexturedModalRect(0, 0, tabU, tabV, 20, 20);
+		
+		// Draw component image
+		mc.renderEngine.bindTexture(bendingIconLocation);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(20.0 / 128, 20.0 / 128, 1);
+		drawTexturedModalRect(0, 0, 0, 0, 128, 128);
+		GlStateManager.popMatrix();
+		
 	}
 	
 }
