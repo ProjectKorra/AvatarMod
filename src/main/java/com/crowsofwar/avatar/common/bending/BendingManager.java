@@ -47,7 +47,8 @@ public class BendingManager {
 		ID_FIREBENDING = 2,
 		ID_WATERBENDING = 3,
 		ID_AIRBENDING = 4,
-		ID_LIGHTNINGBENDING = 5;
+		ID_LIGHTNINGBENDING = 5,
+		ID_ICEBENDING = 6;
 	// @formatter:on
 	
 	private static Map<Integer, BendingController> bending;
