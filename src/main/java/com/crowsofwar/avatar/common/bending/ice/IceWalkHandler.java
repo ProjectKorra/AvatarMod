@@ -32,10 +32,13 @@ public class IceWalkHandler extends TickHandler {
 	
 	@Override
 	public boolean tick(BendingContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-		World world = ctx.getWorld();
-		EnchantmentFrostWalker.freezeNearby(entity, world, entity.getPosition(), 1);
-		return false;
+		if (!ctx.getWorld().isRemote && ctx.consumeChi(2.0f / 20)) {
+			EntityLivingBase entity = ctx.getBenderEntity();
+			World world = ctx.getWorld();
+			EnchantmentFrostWalker.freezeNearby(entity, world, entity.getPosition(), 1);
+			return false;
+		}
+		return true;
 	}
 	
 }
