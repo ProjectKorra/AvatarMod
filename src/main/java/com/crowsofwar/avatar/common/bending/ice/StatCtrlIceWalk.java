@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.bending.ice;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 /**
  * 
@@ -26,14 +28,14 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
  */
 public class StatCtrlIceWalk extends StatusControl {
 	
-	/**
-	 * @param texture
-	 * @param subscribeTo
-	 * @param position
-	 */
-	public StatCtrlIceWalk(int texture, AvatarControl subscribeTo, CrosshairPosition position) {
-		super(texture, subscribeTo, position);
-		// TODO Auto-generated constructor stub
+	public StatCtrlIceWalk() {
+		super(8, AvatarControl.CONTROL_SHIFT, CrosshairPosition.BELOW_CROSSHAIR);
+	}
+	
+	@Override
+	public boolean execute(BendingContext ctx) {
+		ctx.getData().removeTickHandler(TickHandler.ICE_WALK);
+		return true;
 	}
 	
 }

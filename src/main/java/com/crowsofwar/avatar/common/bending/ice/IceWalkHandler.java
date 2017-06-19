@@ -19,6 +19,10 @@ package com.crowsofwar.avatar.common.bending.ice;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
+import net.minecraft.enchantment.EnchantmentFrostWalker;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
+
 /**
  * 
  * 
@@ -28,6 +32,9 @@ public class IceWalkHandler extends TickHandler {
 	
 	@Override
 	public boolean tick(BendingContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+		World world = ctx.getWorld();
+		EnchantmentFrostWalker.freezeNearby(entity, world, entity.getPosition(), 1);
 		return false;
 	}
 	
