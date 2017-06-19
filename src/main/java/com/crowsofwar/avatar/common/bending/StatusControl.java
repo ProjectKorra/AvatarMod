@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlSetFlamethrowing;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlThrowFire;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlThrowFireball;
+import com.crowsofwar.avatar.common.bending.ice.StatCtrlIceWalk;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateJump;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateStart;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowBubble;
@@ -66,7 +67,8 @@ public abstract class StatusControl {
 			SKATING_START = new StatCtrlSkateStart(),
 			THROW_FIREBALL = new StatCtrlThrowFireball(),
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
-			BUBBLE_CONTRACT = new StatCtrlBubbleContract();
+			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
+			ICE_WALK = new StatCtrlIceWalk();
 	// @formatter:on
 	
 	private static int nextId = 0;

@@ -22,6 +22,7 @@ import java.util.Map;
 import com.crowsofwar.avatar.common.bending.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
 import com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick;
+import com.crowsofwar.avatar.common.bending.ice.IceWalkHandler;
 import com.crowsofwar.avatar.common.bending.water.WaterSkateHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
@@ -40,6 +41,7 @@ public abstract class TickHandler {
 	public static TickHandler WATER_SKATE = new WaterSkateHandler();
 	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();
 	public static TickHandler SMASH_GROUND = new SmashGroundHandler();
+	public static TickHandler ICE_WALK = new IceWalkHandler();
 	
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 
@@ -76,6 +77,7 @@ public class BendingManager {
 		registerBending(new Waterbending());
 		registerBending(new Airbending());
 		registerBending(new Lightningbending());
+		registerBending(new Icebending());
 	}
 	
 	/**
