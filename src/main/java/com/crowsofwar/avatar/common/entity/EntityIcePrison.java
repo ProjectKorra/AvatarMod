@@ -16,12 +16,14 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
-import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import java.util.UUID;
+
+import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
+import com.google.common.base.Optional;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
@@ -32,42 +34,40 @@ import net.minecraft.world.World;
  */
 public class EntityIcePrison extends AvatarEntity {
 	
-	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityIcePrison.class, AvatarDataSerializers.SERIALIZER_BENDER);
+	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
+			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	
-	private OwnerAttribute ownerAttr;
+	private SyncableEntityReference<EntityLivingBase> imprisoned;
 	
 	/**
 	 * @param world
 	 */
 	public EntityIcePrison(World world) {
 		super(world);
-		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		imprisoned = new SyncableEntityReference<>(this, SYNC_IMPRISONED);
 		setSize(3, 4);
 	}
 	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getOwner();
+	public EntityLivingBase getImprisoned() {
+		return imprisoned.getEntity();
 	}
 	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setOwner(owner);
-	}
-	
-	@Override
-	public EntityLivingBase getController() {
-		return getOwner();
+	public void setImprisoned(EntityLivingBase entity) {
+		imprisoned.setEntity(entity);
 	}
 	
 	public static boolean isImprisoned(EntityLivingBase entity) {
-		return lookupControlledEntity(entity.worldObj, EntityIcePrison.class, entity) != null;
+		
+		World world = entity.worldObj;
+		return !world.getEntities(EntityIcePrison.class, prison -> prison.getImprisoned() == entity)
+				.isEmpty();
+		
 	}
 	
 	public static void imprison(EntityLivingBase entity) {
 		World world = entity.worldObj;
 		EntityIcePrison prison = new EntityIcePrison(world);
-		prison.setOwner(entity);
+		prison.setImprisoned(entity);
 		prison.copyLocationAndAnglesFrom(entity);
 		world.spawnEntityInWorld(prison);
 	}
