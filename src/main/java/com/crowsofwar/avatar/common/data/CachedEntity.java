@@ -102,8 +102,7 @@ public class CachedEntity<T extends Entity> {
 	 * @return whether cache is invalid; if true the cached entity is null
 	 */
 	private boolean checkCacheValidity() {
-		if (entityId == null || cachedEntity == null || cachedEntity.isDead
-				|| cachedEntity.getUniqueID() != entityId) {
+		if (cachedEntity == null || cachedEntity.isDead || cachedEntity.getUniqueID() != entityId) {
 			cachedEntity = null;
 			return true;
 		}
