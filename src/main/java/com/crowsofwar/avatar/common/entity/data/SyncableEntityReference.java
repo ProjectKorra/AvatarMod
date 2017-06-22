@@ -17,12 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import java.util.UUID;
+
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.CachedEntity;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,10 +42,10 @@ import net.minecraft.network.datasync.DataParameter;
  * 
  * @author CrowsOfWar
  */
-public class SyncableEntityReference<T extends AvatarEntity> {
+public class SyncableEntityReference<T extends Entity> {
 	
 	private final Entity using;
-	private final DataParameter<Integer> sync;
+	private final DataParameter<UUID> sync;
 	private final CachedEntity<T> cache;
 	private boolean allowNullSaving;
 	
@@ -59,10 +60,10 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 	 *            for this SyncableEntityReference - use a constant. Will not
 	 *            register to entity DataManager.
 	 */
-	public SyncableEntityReference(Entity entity, DataParameter<Integer> sync) {
+	public SyncableEntityReference(Entity entity, DataParameter<UUID> sync) {
 		this.using = entity;
 		this.sync = sync;
-		this.cache = new CachedEntity<>(-1);
+		this.cache = new CachedEntity<>(null);
 		this.allowNullSaving = false;
 	}
 	
