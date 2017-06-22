@@ -48,6 +48,12 @@ public class EntityIcePrison extends AvatarEntity {
 		setSize(3, 4);
 	}
 	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_IMPRISONED, Optional.absent());
+	}
+	
 	public EntityLivingBase getImprisoned() {
 		return imprisoned.getEntity();
 	}
