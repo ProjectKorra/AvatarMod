@@ -16,7 +16,13 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 /**
@@ -26,11 +32,32 @@ import net.minecraft.world.World;
  */
 public class EntityIcePrison extends AvatarEntity {
 	
+	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
+			.createKey(EntityIcePrison.class, AvatarDataSerializers.SERIALIZER_BENDER);
+	
+	private OwnerAttribute ownerAttr;
+	
 	/**
 	 * @param world
 	 */
 	public EntityIcePrison(World world) {
 		super(world);
+		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		setSize(3, 4);
+	}
+	
+	@Override
+	public EntityLivingBase getOwner() {
+		return ownerAttr.getOwner();
+	}
+	
+	public void setOwner(EntityLivingBase owner) {
+		ownerAttr.setOwner(owner);
+	}
+	
+	@Override
+	public EntityLivingBase getController() {
+		return getOwner();
 	}
 	
 	public static boolean isImprisoned(EntityLivingBase entity) {
@@ -40,7 +67,7 @@ public class EntityIcePrison extends AvatarEntity {
 	public static void imprison(EntityLivingBase entity) {
 		World world = entity.worldObj;
 		EntityIcePrison prison = new EntityIcePrison(world);
-		// prison.setOwner(entity);
+		prison.setOwner(entity);
 		prison.copyLocationAndAnglesFrom(entity);
 		world.spawnEntityInWorld(prison);
 	}
