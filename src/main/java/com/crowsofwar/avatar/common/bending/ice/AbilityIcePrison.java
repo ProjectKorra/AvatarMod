@@ -17,10 +17,12 @@
 package com.crowsofwar.avatar.common.bending.ice;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -47,8 +49,16 @@ public class AbilityIcePrison extends BendingAbility {
 		Vector start = Vector.getEyePos(caster);
 		Vector direction = Vector.getLookRectangular(caster);
 		
-		List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, 10, entity -> entity != caster);
+		Predicate<Entity> filter = entity -> entity != caster && entity instanceof EntityLivingBase;
+		List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, 10, filter);
 		System.out.println(hit);
+		
+		if (!hit.isEmpty()) {
+			EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
+			if (!world.isRemote) {
+				EntityIcePrison.imprison(prisoner);
+			}
+		}
 		
 	}
 	
