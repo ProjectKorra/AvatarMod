@@ -80,7 +80,7 @@ public class EntityIceShield extends AvatarEntity {
 		// }
 		// }
 		
-		double halfRange = 10;
+		double halfRange = 20;
 		AxisAlignedBB aabb = new AxisAlignedBB(//
 				owner.posX - halfRange, owner.posY - halfRange, owner.posZ - halfRange, //
 				owner.posX + halfRange, owner.posY + halfRange, owner.posZ + halfRange);
@@ -89,22 +89,25 @@ public class EntityIceShield extends AvatarEntity {
 		for (int i = 0; i < targets.size() && i < 5; i++) {
 			
 			EntityMob target = targets.get(i);
-			Vector targetPos = Vector.getEntityPos(target);
-			Vector ownerPos = Vector.getEntityPos(owner);
+			Vector targetPos = Vector.getEyePos(target);
+			Vector ownerPos = Vector.getEyePos(owner);
 			
 			Vector direction = Vector.getRotationTo(ownerPos, targetPos);
 			float yaw = (float) Math.toDegrees(direction.y());
 			
 			double horizDist = targetPos.copy().setY(0).dist(ownerPos.copy().setY(0));
 			double vertDist = targetPos.y() - ownerPos.y();
-			float pitch = (float) Math.toRadians(Vector.getProjectileAngle(20, 20, horizDist, vertDist));
+			// ItemBow
+			float pitch = (float) Math.toRadians(Vector.getProjectileAngle(53, 20, horizDist, vertDist));
 			
 			System.out.println("Hit " + target);
 			
 			EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
-			arrow.setAim(owner, pitch, yaw, 0, 1, 0);
+			arrow.setAim(owner, pitch, yaw, 0, 3, 0);
 			arrow.pickupStatus = PickupStatus.DISALLOWED;
 			worldObj.spawnEntityInWorld(arrow);
+			
+			System.out.println(Vector.getVelocityMpS(arrow).magnitude());
 			
 		}
 		
