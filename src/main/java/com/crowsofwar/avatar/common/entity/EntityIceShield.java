@@ -23,9 +23,11 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 /**
@@ -48,7 +50,11 @@ public class EntityIceShield extends AvatarEntity {
 	
 	public void shatter() {
 		System.out.println("Shattering");
+		
+		worldObj.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1,
+				1);
 		setDead();
+		
 	}
 	
 	@Override
