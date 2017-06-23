@@ -16,13 +16,17 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
 import net.minecraft.entity.projectile.EntityTippedArrow;
@@ -31,6 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 /**
@@ -58,20 +63,43 @@ public class EntityIceShield extends AvatarEntity {
 		setDead();
 		
 		EntityLivingBase owner = getOwner();
-		int anglesYawAmount = 8;
-		float[] anglesPitch = { 20, 0, -30 };
+		// int anglesYawAmount = 8;
+		// float[] anglesPitch = { 20, 0, -30 };
+		//
+		// for (int i = 0; i < anglesYawAmount; i++) {
+		// float yaw = 360f / anglesYawAmount * i;
+		// for (int j = 0; j < anglesPitch.length; j++) {
+		// float pitch = anglesPitch[j];
+		//
+		// EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
+		// arrow.setAim(owner, pitch + owner.rotationPitch, yaw +
+		// owner.rotationYaw, 0, 1, 0);
+		// arrow.pickupStatus = PickupStatus.DISALLOWED;
+		// worldObj.spawnEntityInWorld(arrow);
+		//
+		// }
+		// }
 		
-		for (int i = 0; i < anglesYawAmount; i++) {
-			float yaw = 360f / anglesYawAmount * i;
-			for (int j = 0; j < anglesPitch.length; j++) {
-				float pitch = anglesPitch[j];
-				
-				EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
-				arrow.setAim(owner, pitch + owner.rotationPitch, yaw + owner.rotationYaw, 0, 1, 0);
-				arrow.pickupStatus = PickupStatus.DISALLOWED;
-				worldObj.spawnEntityInWorld(arrow);
-				
-			}
+		double halfRange = 10;
+		AxisAlignedBB aabb = new AxisAlignedBB(//
+				owner.posX - halfRange, owner.posY - halfRange, owner.posZ - halfRange, //
+				owner.posX + halfRange, owner.posY + halfRange, owner.posZ + halfRange);
+		List<EntityMob> targets = worldObj.getEntitiesWithinAABB(EntityMob.class, aabb);
+		
+		for (int i = 0; i < targets.size() && i < 5; i++) {
+			
+			EntityMob target = targets.get(i);
+			Vector direction = Vector.getRotationTo(Vector.getEntityPos(owner), Vector.getEntityPos(target));
+			float yaw = (float) Math.toDegrees(direction.y());
+			float pitch = (float) Math.toDegrees(direction.x());
+			
+			System.out.println("Hit " + target);
+			
+			EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
+			arrow.setAim(owner, pitch, yaw, 0, 1, 0);
+			arrow.pickupStatus = PickupStatus.DISALLOWED;
+			worldObj.spawnEntityInWorld(arrow);
+			
 		}
 		
 	}
