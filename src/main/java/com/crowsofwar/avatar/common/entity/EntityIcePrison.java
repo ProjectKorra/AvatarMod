@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
@@ -24,9 +23,7 @@ import com.google.common.base.Optional;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -42,10 +39,7 @@ public class EntityIcePrison extends AvatarEntity {
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	
-	public static final UUID MODIFIER_SPEED_ID = UUID.fromString("fcef88b8-ef1f-4f3a-ba5e-12ef98c220d1");
-	public static final AttributeModifier MODIFIER_SPEED = new AttributeModifier(MODIFIER_SPEED_ID,
-			"Prison movement lock", -999, 1);
-	
+	private double normalBaseValue;
 	private SyncableEntityReference<EntityLivingBase> imprisonedAttr;
 	
 	/**
@@ -77,18 +71,9 @@ public class EntityIcePrison extends AvatarEntity {
 		EntityLivingBase imprisoned = getImprisoned();
 		if (imprisoned != null) {
 			IAttributeInstance speed = imprisoned.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			if (!speed.hasModifier(MODIFIER_SPEED)) {
-				speed.applyModifier(MODIFIER_SPEED);
-			}
-			// System.out.println(speed.getAttributeValue());
-			
-			try {
-				Method m = ModifiableAttributeInstance.class.getDeclaredMethod("computeValue");
-				m.setAccessible(true);
-				// System.out.println(m.invoke(speed) + "!");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (speed.getBaseValue() != 0) {
+				normalBaseValue = speed.getBaseValue();
+				speed.setBaseValue(0);
 			}
 		}
 	}
@@ -99,7 +84,7 @@ public class EntityIcePrison extends AvatarEntity {
 		EntityLivingBase imprisoned = getImprisoned();
 		if (imprisoned != null) {
 			IAttributeInstance speed = imprisoned.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			speed.removeModifier(MODIFIER_SPEED);
+			speed.setBaseValue(normalBaseValue);
 		}
 	}
 	
