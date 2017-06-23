@@ -21,6 +21,8 @@ import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -37,6 +39,7 @@ public class EntityIceShield extends AvatarEntity {
 			.createKey(EntityIceShield.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	
 	private final OwnerAttribute ownerAttr;
+	private double normalBaseValue;
 	
 	public EntityIceShield(World world) {
 		super(world);
@@ -58,15 +61,45 @@ public class EntityIceShield extends AvatarEntity {
 	}
 	
 	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		EntityLivingBase owner = getOwner();
+		if (owner != null) {
+			IAttributeInstance speed = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			if (speed.getBaseValue() != 0) {
+				normalBaseValue = speed.getBaseValue();
+				speed.setBaseValue(0);
+			}
+			owner.posX = this.posX;
+			owner.posY = this.posY;
+			owner.posZ = this.posZ;
+		}
+	}
+	
+	@Override
+	public void setDead() {
+		super.setDead();
+		EntityLivingBase owner = getOwner();
+		if (owner != null) {
+			IAttributeInstance speed = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			if (speed.getBaseValue() == 0) {
+				speed.setBaseValue(normalBaseValue);
+			}
+		}
+	}
+	
+	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
+		normalBaseValue = nbt.getDouble("NormalBaseValue");
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
+		nbt.setDouble("NormalBaseValue", normalBaseValue);
 	}
 	
 }
