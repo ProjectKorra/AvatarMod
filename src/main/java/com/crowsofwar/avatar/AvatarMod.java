@@ -217,7 +217,7 @@ public class AvatarMod {
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
 		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
 		registerEntity(AvatarEntityItem.class, "Item");
-		registerENtity(EntityIceShield.class, "iceshield");
+		registerEntity(EntityIceShield.class, "iceshield");
 		
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
