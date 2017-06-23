@@ -22,6 +22,9 @@ import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.google.common.base.Optional;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -37,14 +40,18 @@ public class EntityIcePrison extends AvatarEntity {
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	
-	private SyncableEntityReference<EntityLivingBase> imprisoned;
+	public static final UUID MODIFIER_SPEED_ID = UUID.fromString("fcef88b8-ef1f-4f3a-ba5e-12ef98c220d1");
+	public static final AttributeModifier MODIFIER_SPEED = new AttributeModifier(MODIFIER_SPEED_ID,
+			"Prison movement lock", 0, 1);
+	
+	private SyncableEntityReference<EntityLivingBase> imprisonedAttr;
 	
 	/**
 	 * @param world
 	 */
 	public EntityIcePrison(World world) {
 		super(world);
-		imprisoned = new SyncableEntityReference<>(this, SYNC_IMPRISONED);
+		imprisonedAttr = new SyncableEntityReference<>(this, SYNC_IMPRISONED);
 		setSize(3, 4);
 	}
 	
@@ -55,11 +62,31 @@ public class EntityIcePrison extends AvatarEntity {
 	}
 	
 	public EntityLivingBase getImprisoned() {
-		return imprisoned.getEntity();
+		return imprisonedAttr.getEntity();
 	}
 	
 	public void setImprisoned(EntityLivingBase entity) {
-		imprisoned.setEntity(entity);
+		imprisonedAttr.setEntity(entity);
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		EntityLivingBase imprisoned = getImprisoned();
+		if (imprisoned != null) {
+			IAttributeInstance speed = imprisoned.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			speed.applyModifier(MODIFIER_SPEED);
+		}
+	}
+	
+	@Override
+	public void setDead() {
+		super.setDead();
+		EntityLivingBase imprisoned = getImprisoned();
+		if (imprisoned != null) {
+			IAttributeInstance speed = imprisoned.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			speed.removeModifier(MODIFIER_SPEED);
+		}
 	}
 	
 	public static boolean isImprisoned(EntityLivingBase entity) {
