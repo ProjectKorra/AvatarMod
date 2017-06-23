@@ -22,8 +22,11 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.crowsofwar.gorecore.util.AccountUUIDs;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -81,7 +84,7 @@ public class CachedEntity<T extends Entity> {
 	 */
 	public @Nullable T getEntity(World world) {
 		if (checkCacheValidity() && entityId != null) {
-			List<Entity> list = world.getEntities(Entity.class, entity -> entity.getUniqueID() == entityId);
+			List<Entity> list = world.getEntities(Entity.class, entity -> getId(entity) == entityId);
 			cachedEntity = list.isEmpty() ? null : (T) list.get(0);
 		}
 		return cachedEntity;
@@ -92,7 +95,7 @@ public class CachedEntity<T extends Entity> {
 	 */
 	public void setEntity(@Nullable T entity) {
 		cachedEntity = entity;
-		entityId = entity == null ? null : entity.getUniqueID();
+		entityId = entity == null ? null : getId(entity);
 	}
 	
 	/**
@@ -108,6 +111,11 @@ public class CachedEntity<T extends Entity> {
 		}
 		
 		return false;
+	}
+	
+	private static UUID getId(Entity entity) {
+		return entity instanceof EntityPlayer ? AccountUUIDs.getId(entity.getName()).getUUID()
+				: entity.getUniqueID();
 	}
 	
 }
