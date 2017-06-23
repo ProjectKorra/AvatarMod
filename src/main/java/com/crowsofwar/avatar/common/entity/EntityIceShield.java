@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -62,23 +63,11 @@ public class EntityIceShield extends AvatarEntity {
 				1);
 		setDead();
 		
+		int arrowsLeft = 12;
+		
 		EntityLivingBase owner = getOwner();
-		// int anglesYawAmount = 8;
-		// float[] anglesPitch = { 20, 0, -30 };
-		//
-		// for (int i = 0; i < anglesYawAmount; i++) {
-		// float yaw = 360f / anglesYawAmount * i;
-		// for (int j = 0; j < anglesPitch.length; j++) {
-		// float pitch = anglesPitch[j];
-		//
-		// EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
-		// arrow.setAim(owner, pitch + owner.rotationPitch, yaw +
-		// owner.rotationYaw, 0, 1, 0);
-		// arrow.pickupStatus = PickupStatus.DISALLOWED;
-		// worldObj.spawnEntityInWorld(arrow);
-		//
-		// }
-		// }
+		
+		// Shoot arrows at mobs
 		
 		double halfRange = 20;
 		AxisAlignedBB aabb = new AxisAlignedBB(//
@@ -86,31 +75,54 @@ public class EntityIceShield extends AvatarEntity {
 				owner.posX + halfRange, owner.posY + halfRange, owner.posZ + halfRange);
 		List<EntityMob> targets = worldObj.getEntitiesWithinAABB(EntityMob.class, aabb);
 		
-		for (int i = 0; i < targets.size() && i < 5; i++) {
-			
-			EntityMob target = targets.get(i);
-			Vector targetPos = Vector.getEyePos(target);
-			Vector ownerPos = Vector.getEyePos(owner);
-			
-			Vector direction = Vector.getRotationTo(ownerPos, targetPos);
-			float yaw = (float) Math.toDegrees(direction.y());
-			
-			double horizDist = targetPos.copy().setY(0).dist(ownerPos.copy().setY(0));
-			double vertDist = targetPos.y() - ownerPos.y();
-			// ItemBow
-			float pitch = (float) Math.toRadians(Vector.getProjectileAngle(53, 20, horizDist, vertDist));
-			
-			System.out.println("Hit " + target);
-			
-			EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
-			arrow.setAim(owner, pitch, yaw, 0, 3, 0);
-			arrow.pickupStatus = PickupStatus.DISALLOWED;
-			worldObj.spawnEntityInWorld(arrow);
-			
-			System.out.println(Vector.getVelocityMpS(arrow).magnitude());
-			
+		int arrowsAtMobs = Math.min(targets.size(), 5);
+		for (int i = 0; i < arrowsAtMobs; i++) {
+			shootArrowAt(targets.get(i));
 		}
+		arrowsLeft -= arrowsAtMobs;
 		
+		// Shoot remaining arrows around player
+		
+		int anglesYawAmount = 4;
+		float[] anglesPitch = { 20, 0, -30 };
+		
+		for (int i = 0; i < anglesYawAmount; i++) {
+			float yaw = 360f / anglesYawAmount * i;
+			for (int j = 0; j < anglesPitch.length; j++) {
+				
+				if (arrowsLeft == 0) {
+					break;
+				}
+				
+				float pitch = anglesPitch[j];
+				EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
+				arrow.setAim(owner, pitch + owner.rotationPitch, yaw + owner.rotationYaw, 0, 1, 0);
+				arrow.pickupStatus = PickupStatus.DISALLOWED;
+				worldObj.spawnEntityInWorld(arrow);
+				
+				arrowsLeft--;
+				
+			}
+		}
+	}
+	
+	private void shootArrowAt(Entity target) {
+		EntityLivingBase owner = getOwner();
+		Vector targetPos = Vector.getEyePos(target);
+		Vector ownerPos = Vector.getEyePos(owner);
+		
+		Vector direction = Vector.getRotationTo(ownerPos, targetPos);
+		float yaw = (float) Math.toDegrees(direction.y());
+		
+		double horizDist = targetPos.copy().setY(0).dist(ownerPos.copy().setY(0));
+		double vertDist = targetPos.y() - ownerPos.y();
+		// ItemBow
+		float pitch = (float) Math.toRadians(Vector.getProjectileAngle(53, 20, horizDist, vertDist));
+		
+		EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
+		arrow.setAim(owner, pitch, yaw, 0, 3, 0);
+		arrow.pickupStatus = PickupStatus.DISALLOWED;
+		worldObj.spawnEntityInWorld(arrow);
 	}
 	
 	@Override
