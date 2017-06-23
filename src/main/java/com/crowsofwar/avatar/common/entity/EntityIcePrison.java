@@ -24,6 +24,7 @@ import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -86,6 +87,20 @@ public class EntityIcePrison extends AvatarEntity {
 			IAttributeInstance speed = imprisoned.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			speed.setBaseValue(normalBaseValue);
 		}
+	}
+	
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		imprisonedAttr.readFromNBT(nbt);
+		normalBaseValue = nbt.getDouble("NormalSpeed");
+	}
+	
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		imprisonedAttr.writeToNBT(nbt);
+		nbt.setDouble("NormalSpeed", normalBaseValue);
 	}
 	
 	public static boolean isImprisoned(EntityLivingBase entity) {
