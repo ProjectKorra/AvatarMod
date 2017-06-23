@@ -76,6 +76,9 @@ public class EntityIcePrison extends AvatarEntity {
 				normalBaseValue = speed.getBaseValue();
 				speed.setBaseValue(0);
 			}
+			imprisoned.posX = this.posX;
+			imprisoned.posY = this.posY;
+			imprisoned.posZ = this.posZ;
 		}
 	}
 	
