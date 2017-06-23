@@ -23,6 +23,9 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
+import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -49,11 +52,27 @@ public class EntityIceShield extends AvatarEntity {
 	}
 	
 	public void shatter() {
-		System.out.println("Shattering");
 		
 		worldObj.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1,
 				1);
 		setDead();
+		
+		EntityLivingBase owner = getOwner();
+		int anglesYawAmount = 8;
+		float[] anglesPitch = { 30, 0, -45 };
+		
+		for (int i = 0; i < anglesYawAmount; i++) {
+			float yaw = 360f / anglesYawAmount * i;
+			for (int j = 0; j < anglesPitch.length; j++) {
+				float pitch = anglesPitch[j];
+				
+				EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
+				arrow.setAim(owner, pitch, yaw, 0, 1, 0);
+				arrow.pickupStatus = PickupStatus.DISALLOWED;
+				worldObj.spawnEntityInWorld(arrow);
+				
+			}
+		}
 		
 	}
 	
