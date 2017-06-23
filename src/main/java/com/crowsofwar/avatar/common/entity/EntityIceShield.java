@@ -46,6 +46,11 @@ public class EntityIceShield extends AvatarEntity {
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 	}
 	
+	public void shatter() {
+		System.out.println("Shattering");
+		setDead();
+	}
+	
 	@Override
 	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();
