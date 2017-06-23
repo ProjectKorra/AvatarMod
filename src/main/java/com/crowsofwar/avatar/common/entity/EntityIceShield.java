@@ -59,7 +59,7 @@ public class EntityIceShield extends AvatarEntity {
 		
 		EntityLivingBase owner = getOwner();
 		int anglesYawAmount = 8;
-		float[] anglesPitch = { 30, 0, -45 };
+		float[] anglesPitch = { 20, 0, -30 };
 		
 		for (int i = 0; i < anglesYawAmount; i++) {
 			float yaw = 360f / anglesYawAmount * i;
@@ -67,7 +67,7 @@ public class EntityIceShield extends AvatarEntity {
 				float pitch = anglesPitch[j];
 				
 				EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
-				arrow.setAim(owner, pitch, yaw, 0, 1, 0);
+				arrow.setAim(owner, pitch + owner.rotationPitch, yaw + owner.rotationYaw, 0, 1, 0);
 				arrow.pickupStatus = PickupStatus.DISALLOWED;
 				worldObj.spawnEntityInWorld(arrow);
 				
