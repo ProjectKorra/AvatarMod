@@ -19,8 +19,10 @@ package com.crowsofwar.avatar.common;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -41,6 +43,16 @@ public class PrisonActionCanceller {
 		EntityLivingBase entity = e.getEntityLiving();
 		if (EntityIcePrison.isImprisoned(entity)) {
 			entity.motionY = 0;
+		}
+	}
+	
+	@SubscribeEvent
+	public void onInteract(PlayerInteractEvent e) {
+		EntityPlayer player = e.getEntityPlayer();
+		if (EntityIcePrison.isImprisoned(player)) {
+			if (e.isCancelable()) {
+				e.setCanceled(true);
+			}
 		}
 	}
 	
