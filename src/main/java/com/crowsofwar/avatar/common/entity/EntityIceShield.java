@@ -89,9 +89,15 @@ public class EntityIceShield extends AvatarEntity {
 		for (int i = 0; i < targets.size() && i < 5; i++) {
 			
 			EntityMob target = targets.get(i);
-			Vector direction = Vector.getRotationTo(Vector.getEntityPos(owner), Vector.getEntityPos(target));
+			Vector targetPos = Vector.getEntityPos(target);
+			Vector ownerPos = Vector.getEntityPos(owner);
+			
+			Vector direction = Vector.getRotationTo(ownerPos, targetPos);
 			float yaw = (float) Math.toDegrees(direction.y());
-			float pitch = (float) Math.toDegrees(direction.x());
+			
+			double horizDist = targetPos.copy().setY(0).dist(ownerPos.copy().setY(0));
+			double vertDist = targetPos.y() - ownerPos.y();
+			float pitch = (float) Math.toRadians(Vector.getProjectileAngle(20, 20, horizDist, vertDist));
 			
 			System.out.println("Hit " + target);
 			
