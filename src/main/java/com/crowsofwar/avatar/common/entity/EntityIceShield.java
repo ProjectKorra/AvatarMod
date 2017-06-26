@@ -100,7 +100,7 @@ public class EntityIceShield extends AvatarEntity {
 		// worldObj.spawnEntityInWorld(arrow);
 		
 		EntityIceShard shard = new EntityIceShard(worldObj);
-		shard.setLocationAndAngles(owner.posX, owner.posY, owner.posZ, yaw, pitch);
+		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
 		shard.aim(yaw, pitch, 53);
 		worldObj.spawnEntityInWorld(shard);
 		
@@ -131,7 +131,8 @@ public class EntityIceShield extends AvatarEntity {
 				float pitch = pitchAngles[j];
 				
 				EntityIceShard shard = new EntityIceShard(worldObj);
-				shard.setLocationAndAngles(shooter.posX, shooter.posY, shooter.posZ, 0, 0);
+				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ,
+						0, 0);
 				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
 				worldObj.spawnEntityInWorld(shard);
 				

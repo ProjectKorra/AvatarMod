@@ -23,6 +23,7 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -52,7 +53,8 @@ public class EntityIceShard extends Entity {
 		moveEntity(MoverType.SELF, motionX, motionY, motionZ);
 		
 		Vector direction = Vector.toRectangular(Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
-		List<Entity> collidedEntities = Raytrace.entityRaytrace(worldObj, new Vector(this), direction, 2);
+		List<Entity> collidedEntities = Raytrace.entityRaytrace(worldObj, new Vector(this), direction, 4,
+				entity -> !(entity instanceof EntityPlayer));
 		
 		if (!collidedEntities.isEmpty()) {
 			
