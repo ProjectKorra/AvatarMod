@@ -63,11 +63,11 @@ public class EntityIceShield extends AvatarEntity {
 				1);
 		setDead();
 		
-		int arrowsLeft = 12;
-		
 		EntityLivingBase owner = getOwner();
 		
 		// Shoot arrows at mobs
+		
+		int arrowsLeft = 12;
 		
 		double halfRange = 20;
 		AxisAlignedBB aabb = new AxisAlignedBB(//
@@ -81,29 +81,8 @@ public class EntityIceShield extends AvatarEntity {
 		}
 		arrowsLeft -= arrowsAtMobs;
 		
-		// Shoot remaining arrows around player
+		shootArrowsAround(owner, 4, new float[] { 20, 0, -30 }, arrowsLeft);
 		
-		int anglesYawAmount = 4;
-		float[] anglesPitch = { 20, 0, -30 };
-		
-		for (int i = 0; i < anglesYawAmount; i++) {
-			float yaw = 360f / anglesYawAmount * i;
-			for (int j = 0; j < anglesPitch.length; j++) {
-				
-				if (arrowsLeft == 0) {
-					break;
-				}
-				
-				float pitch = anglesPitch[j];
-				EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
-				arrow.setAim(owner, pitch + owner.rotationPitch, yaw + owner.rotationYaw, 0, 1, 0);
-				arrow.pickupStatus = PickupStatus.DISALLOWED;
-				worldObj.spawnEntityInWorld(arrow);
-				
-				arrowsLeft--;
-				
-			}
-		}
 	}
 	
 	private void shootArrowAt(Entity target) {
@@ -116,13 +95,46 @@ public class EntityIceShield extends AvatarEntity {
 		
 		double horizDist = targetPos.copy().setY(0).dist(ownerPos.copy().setY(0));
 		double vertDist = targetPos.y() - ownerPos.y();
-		// ItemBow
 		float pitch = (float) Math.toRadians(Vector.getProjectileAngle(53, 20, horizDist, vertDist));
 		
 		EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
 		arrow.setAim(owner, pitch, yaw, 0, 3, 0);
 		arrow.pickupStatus = PickupStatus.DISALLOWED;
 		worldObj.spawnEntityInWorld(arrow);
+	}
+	
+	/**
+	 * Shoot arrows around the entity.
+	 * 
+	 * @param yawAngles
+	 *            Spacing for yaw angles
+	 * @param pitchAngles
+	 *            All of the pitch angles
+	 * @param arrowsLeft
+	 *            Limit the number of arrows to shoot. Note that setting this
+	 *            very high won't increase arrows shot since this only limits
+	 *            the arrows shot
+	 */
+	private void shootArrowsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
+			int arrowsLeft) {
+		for (int i = 0; i < yawAngles; i++) {
+			float yaw = 360f / yawAngles * i;
+			for (int j = 0; j < pitchAngles.length; j++) {
+				
+				if (arrowsLeft == 0) {
+					break;
+				}
+				
+				float pitch = pitchAngles[j];
+				EntityArrow arrow = new EntityTippedArrow(worldObj, shooter);
+				arrow.setAim(shooter, pitch + shooter.rotationPitch, yaw + shooter.rotationYaw, 0, 1, 0);
+				arrow.pickupStatus = PickupStatus.DISALLOWED;
+				worldObj.spawnEntityInWorld(arrow);
+				
+				arrowsLeft--;
+				
+			}
+		}
 	}
 	
 	@Override
