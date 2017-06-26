@@ -84,7 +84,7 @@ public class CachedEntity<T extends Entity> {
 	 */
 	public @Nullable T getEntity(World world) {
 		if (checkCacheValidity() && entityId != null) {
-			List<Entity> list = world.getEntities(Entity.class, entity -> getId(entity) == entityId);
+			List<Entity> list = world.getEntities(Entity.class, entity -> getId(entity).equals(entityId));
 			cachedEntity = list.isEmpty() ? null : (T) list.get(0);
 		}
 		return cachedEntity;
