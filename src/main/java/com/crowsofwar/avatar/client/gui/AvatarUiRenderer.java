@@ -333,7 +333,10 @@ public class AvatarUiRenderer extends Gui {
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			
 			color(1, 1, 1, 0.5f);
-			int crackIndex = (int) ((double) prison.ticksExisted / IMPRISONED_TIME * BLOCK_BREAK.length);
+			// int crackIndex = (int) ((double) prison.ticksExisted /
+			// IMPRISONED_TIME * BLOCK_BREAK.length);
+			float percent = (float) prison.ticksExisted / IMPRISONED_TIME;
+			int crackIndex = (int) (percent * percent * BLOCK_BREAK.length);
 			mc.renderEngine.bindTexture(BLOCK_BREAK[crackIndex]);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			
