@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -41,6 +42,9 @@ public class EntityIceShard extends Entity {
 		if (onGround) {
 			setDead();
 		}
+		
+		moveEntity(MoverType.SELF, motionX, motionY, motionZ);
+		
 	}
 	
 	/**
