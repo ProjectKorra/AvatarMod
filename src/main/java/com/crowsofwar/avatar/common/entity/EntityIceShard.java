@@ -22,6 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
@@ -42,19 +43,36 @@ public class EntityIceShard extends Entity {
 		super.onUpdate();
 		motionY -= 1.0 / 20;
 		if (onGround) {
-			
-			if (!worldObj.isRemote) {
-				float volume = 0.3f + rand.nextFloat() * 0.3f;
-				float pitch = 1.1f + rand.nextFloat() * 0.2f;
-				worldObj.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK,
-						SoundCategory.PLAYERS, volume, pitch);
-			}
-			
-			setDead();
+			shatter();
 		}
 		
 		moveEntity(MoverType.SELF, motionX, motionY, motionZ);
 		
+	}
+	
+	@Override
+	public void applyEntityCollision(Entity collided) {
+		super.applyEntityCollision(collided);
+		
+		DamageSource source = DamageSource.anvil;
+		collided.attackEntityFrom(source, 5);
+		
+		shatter();
+		
+	}
+	
+	/**
+	 * Breaks the ice shard and plays particle/sound effects
+	 */
+	private void shatter() {
+		if (!worldObj.isRemote) {
+			float volume = 0.3f + rand.nextFloat() * 0.3f;
+			float pitch = 1.1f + rand.nextFloat() * 0.2f;
+			worldObj.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS,
+					volume, pitch);
+		}
+		
+		setDead();
 	}
 	
 	/**
