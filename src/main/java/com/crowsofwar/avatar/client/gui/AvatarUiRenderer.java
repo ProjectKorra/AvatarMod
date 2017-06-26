@@ -88,6 +88,7 @@ public class AvatarUiRenderer extends Gui {
 		renderChiMsg(resolution);
 		renderActiveBending(resolution);
 		renderAirBubbleHealth(resolution);
+		renderPrisonCracks(resolution);
 		
 	}
 	
@@ -302,6 +303,10 @@ public class AvatarUiRenderer extends Gui {
 				
 			}
 		}
+		
+	}
+	
+	private void renderPrisonCracks(ScaledResolution res) {
 		
 	}
 	

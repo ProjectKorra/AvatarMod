@@ -54,6 +54,9 @@ public class AvatarUiTextures {
 			"textures/gui/status_controls.png");
 	public static final ResourceLocation CHI_BAR = new ResourceLocation("avatarmod", "textures/gui/chi.png");
 	
+	public static final ResourceLocation ICE = new ResourceLocation("minecraft", "textures/blocks/ice.png");
+	public static final ResourceLocation[] BLOCK_BREAK = getBlockBreakTextures();
+	
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
 	
 	private static final Map<BendingAbility, ResourceLocation> abilityTextures = new HashMap<>();
@@ -80,6 +83,14 @@ public class AvatarUiTextures {
 	public static ResourceLocation getPlainCardTexture(BendingAbility ability) {
 		return getCachedImage(abilityCardsPlain, ability,
 				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");
+	}
+	
+	private static ResourceLocation[] getBlockBreakTextures() {
+		ResourceLocation[] array = new ResourceLocation[10];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = new ResourceLocation("minecraft", "textures/blocks/destroy_stage_" + i);
+		}
+		return array;
 	}
 	
 }
