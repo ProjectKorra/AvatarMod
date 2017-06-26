@@ -310,11 +310,16 @@ public class AvatarUiRenderer extends Gui {
 		
 		GlStateManager.pushMatrix();
 		
-		int scaleFactor = res.getScaleFactor();
-		float scaleX = (float) res.getScaledWidth() / 256;
-		float scaleY = (float) res.getScaledHeight() / 256;
+		float scaledWidth = res.getScaledWidth();
+		float scaledHeight = res.getScaledHeight();
+		float scaleX = scaledWidth / 256;
+		float scaleY = scaledHeight / 256;
 		float scale = Math.max(scaleX, scaleY);
 		
+		// Width of screen: scaledWidth
+		// Width of ice: scale * 256
+		
+		GlStateManager.translate((scaledWidth - scale * 256) / 2, (scaledHeight - scale * 256) / 2, 0);
 		GlStateManager.scale(scale, scale, 1);
 		
 		mc.renderEngine.bindTexture(AvatarUiTextures.ICE);
