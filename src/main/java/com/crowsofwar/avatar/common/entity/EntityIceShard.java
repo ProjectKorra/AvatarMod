@@ -16,6 +16,9 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
@@ -48,16 +51,18 @@ public class EntityIceShard extends Entity {
 		
 		moveEntity(MoverType.SELF, motionX, motionY, motionZ);
 		
-	}
-	
-	@Override
-	public void applyEntityCollision(Entity collided) {
-		super.applyEntityCollision(collided);
+		Vector direction = Vector.toRectangular(Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
+		List<Entity> collidedEntities = Raytrace.entityRaytrace(worldObj, new Vector(this), direction, 2);
 		
-		DamageSource source = DamageSource.anvil;
-		collided.attackEntityFrom(source, 5);
-		
-		shatter();
+		if (!collidedEntities.isEmpty()) {
+			
+			Entity collided = collidedEntities.get(0);
+			
+			DamageSource source = DamageSource.anvil;
+			collided.attackEntityFrom(source, 5);
+			
+			shatter();
+		}
 		
 	}
 	
