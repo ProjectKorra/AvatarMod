@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
@@ -39,6 +40,8 @@ public class EntityIcePrison extends AvatarEntity {
 	
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	
+	public static final int IMPRISONED_TIME = 100;
 	
 	private double normalBaseValue;
 	private SyncableEntityReference<EntityLivingBase> imprisonedAttr;
@@ -80,6 +83,9 @@ public class EntityIcePrison extends AvatarEntity {
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
 		}
+		if (ticksExisted >= IMPRISONED_TIME) {
+			setDead();
+		}
 	}
 	
 	@Override
@@ -108,9 +114,21 @@ public class EntityIcePrison extends AvatarEntity {
 	
 	public static boolean isImprisoned(EntityLivingBase entity) {
 		
+		return getPrison(entity) != null;
+		
+	}
+	
+	/**
+	 * Get the prison holding that entity, or null if the entity is not
+	 * imprisoned
+	 */
+	public static EntityIcePrison getPrison(EntityLivingBase entity) {
+		
 		World world = entity.worldObj;
-		return !world.getEntities(EntityIcePrison.class, prison -> prison.getImprisoned() == entity)
-				.isEmpty();
+		List<EntityIcePrison> prisons = world.getEntities(EntityIcePrison.class,
+				prison -> prison.getImprisoned() == entity);
+		
+		return prisons.isEmpty() ? null : prisons.get(0);
 		
 	}
 	
