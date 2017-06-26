@@ -97,10 +97,15 @@ public class EntityIceShield extends AvatarEntity {
 		double vertDist = targetPos.y() - ownerPos.y();
 		float pitch = (float) Math.toRadians(Vector.getProjectileAngle(53, 20, horizDist, vertDist));
 		
-		EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
-		arrow.setAim(owner, pitch, yaw, 0, 3, 0);
-		arrow.pickupStatus = PickupStatus.DISALLOWED;
-		worldObj.spawnEntityInWorld(arrow);
+		// EntityArrow arrow = new EntityTippedArrow(worldObj, owner);
+		// arrow.setAim(owner, pitch, yaw, 0, 3, 0);
+		// arrow.pickupStatus = PickupStatus.DISALLOWED;
+		// worldObj.spawnEntityInWorld(arrow);
+		
+		EntityIceShard shard = new EntityIceShard(worldObj);
+		shard.setLocationAndAngles(owner.posX, owner.posY, owner.posZ, yaw, pitch);
+		worldObj.spawnEntityInWorld(shard);
+		
 	}
 	
 	/**
