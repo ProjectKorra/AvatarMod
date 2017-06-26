@@ -308,6 +308,21 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderPrisonCracks(ScaledResolution res) {
 		
+		mc.renderEngine.bindTexture(AvatarUiTextures.ICE);
+		
+		GlStateManager.pushMatrix();
+		
+		int scaleFactor = res.getScaleFactor();
+		float scaleX = (float) res.getScaledWidth() / 256;
+		float scaleY = (float) res.getScaledHeight() / 256;
+		float scale = Math.max(scaleX, scaleY);
+		
+		GlStateManager.scale(scale, scale, 1);
+		
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		
+		GlStateManager.popMatrix();
+		
 	}
 	
 	public static void openBendingGui(int bending) {
