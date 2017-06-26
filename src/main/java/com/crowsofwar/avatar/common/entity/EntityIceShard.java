@@ -46,7 +46,7 @@ public class EntityIceShard extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 		motionY -= 1.0 / 20;
-		if (onGround) {
+		if (isCollided) {
 			shatter();
 		}
 		
@@ -67,6 +67,10 @@ public class EntityIceShard extends Entity {
 		}
 		
 	}
+	
+	// Prevent bouncing off of other entities
+	@Override
+	public void applyEntityCollision(Entity entity) {}
 	
 	/**
 	 * Breaks the ice shard and plays particle/sound effects
