@@ -28,9 +28,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
-import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -132,10 +129,11 @@ public class EntityIceShield extends AvatarEntity {
 				}
 				
 				float pitch = pitchAngles[j];
-				EntityArrow arrow = new EntityTippedArrow(worldObj, shooter);
-				arrow.setAim(shooter, pitch + shooter.rotationPitch, yaw + shooter.rotationYaw, 0, 1, 0);
-				arrow.pickupStatus = PickupStatus.DISALLOWED;
-				worldObj.spawnEntityInWorld(arrow);
+				
+				EntityIceShard shard = new EntityIceShard(worldObj);
+				shard.setLocationAndAngles(shooter.posX, shooter.posY, shooter.posZ, 0, 0);
+				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
+				worldObj.spawnEntityInWorld(shard);
 				
 				arrowsLeft--;
 				
