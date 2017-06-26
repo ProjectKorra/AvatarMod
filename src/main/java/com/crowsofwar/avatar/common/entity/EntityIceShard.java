@@ -54,7 +54,7 @@ public class EntityIceShard extends Entity {
 		
 		Vector direction = Vector.toRectangular(Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
 		List<Entity> collidedEntities = Raytrace.entityRaytrace(worldObj, new Vector(this), direction, 4,
-				entity -> !(entity instanceof EntityPlayer));
+				entity -> !(entity instanceof EntityPlayer) && !(entity instanceof EntityIceShard));
 		
 		if (!collidedEntities.isEmpty()) {
 			
@@ -64,6 +64,7 @@ public class EntityIceShard extends Entity {
 			collided.attackEntityFrom(source, 5);
 			
 			shatter();
+			
 		}
 		
 	}
