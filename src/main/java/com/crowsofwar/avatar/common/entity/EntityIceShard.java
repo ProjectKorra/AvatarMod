@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.gorecore.util.Vector;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -35,6 +37,28 @@ public class EntityIceShard extends Entity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		motionY -= 1.0 / 20;
+		if (onGround) {
+			setDead();
+		}
+	}
+	
+	/**
+	 * Sets the shard's rotations and motion to the given rotations/speed.
+	 * Parameters should be in radians.
+	 * 
+	 * @param speed
+	 *            Speed in m/s
+	 */
+	public void aim(float yaw, float pitch, double speed) {
+		rotationYaw = yaw;
+		rotationPitch = pitch;
+		
+		Vector velocity = Vector.toRectangular(yaw, pitch).times(speed).dividedBy(20);
+		motionX = velocity.x();
+		motionY = velocity.y();
+		motionZ = velocity.z();
+		
 	}
 	
 	@Override

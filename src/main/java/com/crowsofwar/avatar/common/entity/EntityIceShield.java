@@ -104,6 +104,7 @@ public class EntityIceShield extends AvatarEntity {
 		
 		EntityIceShard shard = new EntityIceShard(worldObj);
 		shard.setLocationAndAngles(owner.posX, owner.posY, owner.posZ, yaw, pitch);
+		shard.aim(yaw, pitch, 53);
 		worldObj.spawnEntityInWorld(shard);
 		
 	}
