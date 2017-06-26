@@ -88,7 +88,7 @@ public class AvatarUiTextures {
 	private static ResourceLocation[] getBlockBreakTextures() {
 		ResourceLocation[] array = new ResourceLocation[10];
 		for (int i = 0; i < array.length; i++) {
-			array[i] = new ResourceLocation("minecraft", "textures/blocks/destroy_stage_" + i);
+			array[i] = new ResourceLocation("minecraft", "textures/blocks/destroy_stage_" + i + ".png");
 		}
 		return array;
 	}

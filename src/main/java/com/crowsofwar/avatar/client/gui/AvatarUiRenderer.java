@@ -308,8 +308,6 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderPrisonCracks(ScaledResolution res) {
 		
-		mc.renderEngine.bindTexture(AvatarUiTextures.ICE);
-		
 		GlStateManager.pushMatrix();
 		
 		int scaleFactor = res.getScaleFactor();
@@ -319,6 +317,10 @@ public class AvatarUiRenderer extends Gui {
 		
 		GlStateManager.scale(scale, scale, 1);
 		
+		mc.renderEngine.bindTexture(AvatarUiTextures.ICE);
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		
+		mc.renderEngine.bindTexture(AvatarUiTextures.BLOCK_BREAK[2]);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		
 		GlStateManager.popMatrix();
