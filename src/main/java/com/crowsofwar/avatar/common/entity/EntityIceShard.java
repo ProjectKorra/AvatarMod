@@ -49,7 +49,7 @@ public class EntityIceShard extends Entity {
 	
 	/**
 	 * Sets the shard's rotations and motion to the given rotations/speed.
-	 * Parameters should be in radians.
+	 * Parameters should be in degrees.
 	 * 
 	 * @param speed
 	 *            Speed in m/s
@@ -58,7 +58,9 @@ public class EntityIceShard extends Entity {
 		rotationYaw = yaw;
 		rotationPitch = pitch;
 		
-		Vector velocity = Vector.toRectangular(yaw, pitch).times(speed).dividedBy(20);
+		double yawRad = Math.toRadians(yaw);
+		double pitchRad = Math.toRadians(pitch);
+		Vector velocity = Vector.toRectangular(yawRad, pitchRad).times(speed).dividedBy(20);
 		motionX = velocity.x();
 		motionY = velocity.y();
 		motionZ = velocity.z();
