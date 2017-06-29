@@ -52,6 +52,12 @@ public class EntityIceShard extends Entity {
 		
 		moveEntity(MoverType.SELF, motionX, motionY, motionZ);
 		
+		// Update rotation to match the velocity adjusted from gravity
+		Vector newRotation = Vector.getRotationTo(Vector.ZERO, new Vector(motionX, motionY, motionZ));
+		rotationYaw = (float) Math.toDegrees(newRotation.y());
+		rotationPitch = (float) Math.toDegrees(newRotation.x());
+		
+		// Perform raycast to find targets
 		Vector direction = Vector.toRectangular(Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
 		List<Entity> collidedEntities = Raytrace.entityRaytrace(worldObj, new Vector(this), direction, 4,
 				entity -> !(entity instanceof EntityPlayer) && !(entity instanceof EntityIceShard));

@@ -16,13 +16,15 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import org.joml.Matrix4f;
 import org.joml.Vector4d;
 import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.common.entity.EntityIceShard;
 import com.crowsofwar.gorecore.util.Vector;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -37,19 +39,38 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderIceShard extends Render<EntityIceShard> {
 	
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
+			"textures/entity/ice-shard.png");
+	
+	private ModelBase model;
+	
 	/**
 	 * @param renderManager
 	 */
-	protected RenderIceShard(RenderManager renderManager) {
+	public RenderIceShard(RenderManager renderManager) {
 		super(renderManager);
+		this.model = new ModelIceShard();
 	}
 	
 	@Override
 	public void doRender(EntityIceShard entity, double x, double y, double z, float entityYaw,
 			float partialTicks) {
 		
-		Matrix4f mat = new Matrix4f();
-		Vector4d spike1Top = new Vector4d(0, 0, -3, 1).mul(mat);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		GlStateManager.enableBlend();
+		
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
+		
+		// Should be rotating in degrees here...?
+		// radians doesn't work
+		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
+		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+		
+		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
+		GlStateManager.popMatrix();
+		
+		GlStateManager.disableBlend();
 		
 	}
 	
