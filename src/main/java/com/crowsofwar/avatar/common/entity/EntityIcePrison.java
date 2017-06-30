@@ -30,6 +30,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
@@ -91,6 +93,8 @@ public class EntityIcePrison extends AvatarEntity {
 			if (!worldObj.isRemote && imprisoned != null) {
 				worldObj.playSound(null, imprisoned.posX, imprisoned.posY, imprisoned.posZ,
 						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
+				imprisoned.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"),
+						60, 1, false, false));
 			}
 			
 		}
