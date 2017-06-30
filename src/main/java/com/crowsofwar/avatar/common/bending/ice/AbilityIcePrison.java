@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -44,20 +45,23 @@ public class AbilityIcePrison extends BendingAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityLivingBase caster = ctx.getBenderEntity();
-		World world = ctx.getWorld();
-		Vector start = Vector.getEyePos(caster);
-		Vector direction = Vector.getLookRectangular(caster);
-		
-		Predicate<Entity> filter = entity -> entity != caster && entity instanceof EntityLivingBase;
-		List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, 10, filter);
-		System.out.println(hit);
-		
-		if (!hit.isEmpty()) {
-			EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
-			if (!world.isRemote) {
-				EntityIcePrison.imprison(prisoner);
+		if (ctx.consumeChi(ConfigStats.STATS_CONFIG.chiPrison)) {
+			
+			EntityLivingBase caster = ctx.getBenderEntity();
+			World world = ctx.getWorld();
+			Vector start = Vector.getEyePos(caster);
+			Vector direction = Vector.getLookRectangular(caster);
+			
+			Predicate<Entity> filter = entity -> entity != caster && entity instanceof EntityLivingBase;
+			List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, 10, filter);
+			
+			if (!hit.isEmpty()) {
+				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
+				if (!world.isRemote) {
+					EntityIcePrison.imprison(prisoner);
+				}
 			}
+			
 		}
 		
 	}
