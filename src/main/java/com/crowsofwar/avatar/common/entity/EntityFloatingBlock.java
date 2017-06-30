@@ -318,6 +318,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 			
 		}
 		
+		setDead();
+		
 	}
 	
 	public float getFriction() {

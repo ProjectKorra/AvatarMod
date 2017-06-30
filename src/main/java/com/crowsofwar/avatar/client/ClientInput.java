@@ -37,6 +37,7 @@ import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
@@ -159,11 +160,11 @@ public class ClientInput implements IControlsHandler {
 		
 		if (AvatarControl.KEY_SKILLS.isPressed()) {
 			BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
-			List<BendingController> controllers = data.getAllBending();
-			if (controllers.isEmpty()) {
+			BendingType active = data.getActiveBendingType();
+			if (active == null) {
 				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
 			} else {
-				AvatarMod.network.sendToServer(new PacketSSkillsMenu(controllers.get(0).getType()));
+				AvatarMod.network.sendToServer(new PacketSSkillsMenu(active));
 			}
 		}
 		if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {
