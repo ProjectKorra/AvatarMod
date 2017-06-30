@@ -65,6 +65,9 @@ public class ConfigStats {
 			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.25f;
 	
 	@Load
+	public float sleepChiRegen = 99999;
+	
+	@Load
 	public boolean allowAirBubbleElytra = false;
 	
 	@Load

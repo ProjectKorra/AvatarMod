@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.AvatarScrollDrops;
 import com.crowsofwar.avatar.common.BisonInventoryPreventDismount;
 import com.crowsofwar.avatar.common.FallAbsorptionHandler;
 import com.crowsofwar.avatar.common.HumanBenderSpawner;
+import com.crowsofwar.avatar.common.SleepChiRegenHandler;
 import com.crowsofwar.avatar.common.TemporaryWaterHandler;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -153,6 +154,7 @@ public class AvatarMod {
 		TemporaryWaterHandler.register();
 		HumanBenderSpawner.register();
 		BisonInventoryPreventDismount.register();
+		SleepChiRegenHandler.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
