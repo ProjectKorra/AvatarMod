@@ -5,3 +5,4 @@ AV2 Changelog :: version a4.2
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username
+> Fix crash when killing entity without a registered lang file name
