@@ -25,10 +25,12 @@ import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 /**
@@ -85,6 +87,12 @@ public class EntityIcePrison extends AvatarEntity {
 		}
 		if (ticksExisted >= IMPRISONED_TIME) {
 			setDead();
+			
+			if (!worldObj.isRemote && imprisoned != null) {
+				worldObj.playSound(null, imprisoned.posX, imprisoned.posY, imprisoned.posZ,
+						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
+			}
+			
 		}
 	}
 	

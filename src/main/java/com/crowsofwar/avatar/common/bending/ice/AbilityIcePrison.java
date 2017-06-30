@@ -29,6 +29,8 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 /**
@@ -57,9 +59,14 @@ public class AbilityIcePrison extends BendingAbility {
 			
 			if (!hit.isEmpty()) {
 				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
-				if (!world.isRemote) {
-					EntityIcePrison.imprison(prisoner);
-				}
+				EntityIcePrison.imprison(prisoner);
+				
+				world.playSound(null, prisoner.posX, prisoner.posY, prisoner.posZ,
+						SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.PLAYERS, 2, 2);
+				
+				world.playSound(null, prisoner.posX, prisoner.posY, prisoner.posZ,
+						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
+				
 			}
 			
 		}
