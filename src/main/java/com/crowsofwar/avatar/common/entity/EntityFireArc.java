@@ -161,10 +161,7 @@ public class EntityFireArc extends EntityArc {
 		}
 		
 		@Override
-		protected void onCollision(Entity entity) {
-			entity.setFire(3);
-			arc.setDead();
-		}
+		protected void onCollision(Entity entity) {}
 		
 	}
 	

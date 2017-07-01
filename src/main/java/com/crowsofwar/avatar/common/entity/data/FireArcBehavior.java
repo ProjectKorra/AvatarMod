@@ -105,10 +105,11 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {
-				if (collided != entity.getOwner()) return this;
+				
 				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
 						6 * entity.getDamageMult());
+				collided.setFire(3);
 				
 				if (!entity.worldObj.isRemote) {
 					BendingData data = Bender.create(entity.getOwner()).getData();

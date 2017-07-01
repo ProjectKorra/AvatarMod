@@ -11,3 +11,4 @@ AV2 Changelog :: version a4.2
 > Fix wall w/ floating block causing item duplication
 > Fix issue w/ summoning sky bison (having to do with IDs)
 > Fix air jump not working issues (path block, on edge of block, etc)
+> Fix fire arc boomerang not working
