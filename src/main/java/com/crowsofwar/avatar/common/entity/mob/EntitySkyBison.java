@@ -249,6 +249,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		riderTicks = nbt.getInteger("RiderTicks");
 		setLoveParticles(nbt.getBoolean("InLove"));
 		setId(nbt.getInteger("BisonId"));
+		// id 0 is invalid; regenerate id if it is invalid
+		// this usually happens in /summon command
+		if (nbt.getInteger("BisonId") == 0) {
+			setId(AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+		}
 		
 		// Update chest size based on just read data
 		initChest();
