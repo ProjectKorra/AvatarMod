@@ -13,6 +13,10 @@ buildscript {
         classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
     }
 }
+plugins {
+    id "org.sonarqube" version "2.2"
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 

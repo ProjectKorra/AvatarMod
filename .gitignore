@@ -13,7 +13,7 @@ eclipse/
 1.10_Client 2.launch
 gradlew
 gradlew.bat
-
+sonarqube.sh
 
 GoreCore_ClientUUIDCache.txt
 /config
