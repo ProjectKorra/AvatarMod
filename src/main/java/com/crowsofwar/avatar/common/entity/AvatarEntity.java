@@ -28,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -212,6 +213,9 @@ public abstract class AvatarEntity extends Entity {
 		if (isCollided) {
 			onCollideWithSolid();
 		}
+		
+		Vector v = velocity().dividedBy(20);
+		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
 		
 	}
 	

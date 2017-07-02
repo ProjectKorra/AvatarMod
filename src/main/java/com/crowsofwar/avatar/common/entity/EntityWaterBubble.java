@@ -32,7 +32,6 @@ import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -80,7 +79,6 @@ public class EntityWaterBubble extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		velocity().mul(0.9);
 		
 		WaterBubbleBehavior currentBehavior = getBehavior();

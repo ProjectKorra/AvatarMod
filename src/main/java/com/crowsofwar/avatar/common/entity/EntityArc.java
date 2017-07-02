@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -100,9 +99,6 @@ public abstract class EntityArc extends AvatarEntity {
 		}
 		
 		ignoreFrustumCheck = true;
-		
-		Vector velPerTick = velocity().dividedBy(20);
-		moveEntity(MoverType.SELF, velPerTick.x(), velPerTick.y(), velPerTick.z());
 		
 	}
 	

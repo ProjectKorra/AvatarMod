@@ -35,7 +35,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -90,9 +89,6 @@ public class EntityFlames extends AvatarEntity {
 	
 	@Override
 	public void onUpdate() {
-		
-		Vector velocityPerTick = velocity().dividedBy(20);
-		moveEntity(MoverType.SELF, velocityPerTick.x(), velocityPerTick.y(), velocityPerTick.z());
 		
 		velocity().mul(0.94);
 		

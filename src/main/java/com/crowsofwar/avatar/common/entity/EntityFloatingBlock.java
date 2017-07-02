@@ -40,7 +40,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -277,11 +276,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		lastTickPosX = posX;
 		lastTickPosY = posY;
 		lastTickPosZ = posZ;
-		motionX = velocity().x() / 20;
-		motionY = velocity().y() / 20;
-		motionZ = velocity().z() / 20;
-		
-		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);

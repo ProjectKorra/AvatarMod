@@ -33,7 +33,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -77,12 +76,9 @@ public class EntityAirblade extends AvatarEntity {
 		
 		boolean moveAsNormal = true;
 		
-		// piercing = false;
-		
 		// Don't bounce off a block if piercing
 		// bouncing would prevent destroying the block
 		if (!worldObj.isRemote && piercing) {
-			position().add(v);
 			moveAsNormal = false;
 			
 			// Check if the block is too strong
@@ -95,9 +91,6 @@ public class EntityAirblade extends AvatarEntity {
 				moveAsNormal = true;
 			}
 			
-		}
-		if (moveAsNormal) {
-			moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
 		}
 		
 		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) {
