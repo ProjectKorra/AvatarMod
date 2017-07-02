@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -159,9 +158,6 @@ public class EntityFireArc extends EntityArc {
 		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
-		
-		@Override
-		protected void onCollision(Entity entity) {}
 		
 	}
 	

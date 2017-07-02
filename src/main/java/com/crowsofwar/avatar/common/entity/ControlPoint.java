@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-
 import com.crowsofwar.gorecore.util.ImmutableVector;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -37,8 +35,6 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class ControlPoint {
-	
-	private static int nextId = 1;
 	
 	protected EntityArc arc;
 	protected EntityLivingBase owner;
@@ -128,18 +124,7 @@ public class ControlPoint {
 		position().add(velocity().times(0.05));
 		velocity().mul(0.4);
 		
-		List<Entity> collisions = world.getEntitiesWithinAABBExcludingEntity(arc, hitbox);
-		if (!collisions.isEmpty()) {
-			Entity collidedWith = collisions.get(0);
-			onCollision(collisions.get(0));
-		}
-		
 	}
-	
-	/**
-	 * Called whenever the control point is in contact with this entity.
-	 */
-	protected void onCollision(Entity entity) {}
 	
 	/**
 	 * @deprecated Use {@link #position()}.{@link Vector#set(Vector) set(pos)}
