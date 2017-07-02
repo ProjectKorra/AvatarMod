@@ -103,21 +103,27 @@ public abstract class EntityArc extends AvatarEntity {
 		
 		Vector velPerTick = velocity().dividedBy(20);
 		moveEntity(MoverType.SELF, velPerTick.x(), velPerTick.y(), velPerTick.z());
-		getLeader().position().set(posX, posY, posZ);
-		getLeader().velocity().set(velocity());
-		
-		for (ControlPoint cp : points)
-			cp.onUpdate();
 		
 		if (isCollided) {
 			onCollideWithSolid();
 		}
 		
+	}
+	
+	private void updateControlPoints() {
+		
+		// Set leader at the arc pos
+		
+		getLeader().position().set(posX, posY, posZ);
+		getLeader().velocity().set(velocity());
+		
+		// Move control points to follow leader
+		
 		for (int i = 1; i < points.length; i++) {
 			
 			ControlPoint leader = points[i - 1];
 			ControlPoint p = points[i];
-			Vector leadPos = i == 0 ? velocity() : getLeader(i).position();
+			Vector leadPos = leader.position();
 			double sqrDist = p.position().sqrDist(leadPos);
 			
 			if (sqrDist > getControlPointTeleportDistanceSq()) {
@@ -132,11 +138,6 @@ public abstract class EntityArc extends AvatarEntity {
 				p.position().set(revisedOffset);
 				p.velocity().set(Vector.ZERO);
 				
-				// Vector diff = leader.position().minus(p.position());
-				// double speed = leader.velocity().magnitude();
-				//
-				// p.velocity().set(diff.normalize().times(speed));
-				
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 				
 				Vector diff = leader.position().minus(p.position());
@@ -146,6 +147,11 @@ public abstract class EntityArc extends AvatarEntity {
 				
 			}
 			
+		}
+		
+		// Update velocity
+		for (ControlPoint cp : points) {
+			cp.onUpdate();
 		}
 		
 	}
