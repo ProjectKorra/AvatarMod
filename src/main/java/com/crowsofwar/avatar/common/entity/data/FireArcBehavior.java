@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
@@ -106,9 +108,10 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			
 			for (EntityLivingBase collided : collidedList) {
 				
-				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
-				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
-						6 * entity.getDamageMult());
+				double push = STATS_CONFIG.fireballSettings.push;
+				collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
+				collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
+						STATS_CONFIG.fireballSettings.damage * entity.getDamageMult());
 				collided.setFire(3);
 				
 				if (!entity.worldObj.isRemote) {
