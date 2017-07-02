@@ -209,6 +209,10 @@ public abstract class AvatarEntity extends Entity {
 			}
 		}
 		
+		if (isCollided) {
+			onCollideWithSolid();
+		}
+		
 	}
 	
 	// copied from EntityLivingBase -- mostly

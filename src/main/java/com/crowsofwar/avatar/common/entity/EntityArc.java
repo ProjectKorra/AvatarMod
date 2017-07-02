@@ -104,10 +104,6 @@ public abstract class EntityArc extends AvatarEntity {
 		Vector velPerTick = velocity().dividedBy(20);
 		moveEntity(MoverType.SELF, velPerTick.x(), velPerTick.y(), velPerTick.z());
 		
-		if (isCollided) {
-			onCollideWithSolid();
-		}
-		
 	}
 	
 	private void updateControlPoints() {
