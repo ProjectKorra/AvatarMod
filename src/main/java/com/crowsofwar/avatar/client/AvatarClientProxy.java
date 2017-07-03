@@ -43,6 +43,7 @@ import com.crowsofwar.avatar.client.render.RenderFlames;
 import com.crowsofwar.avatar.client.render.RenderFloatingBlock;
 import com.crowsofwar.avatar.client.render.RenderHumanBender;
 import com.crowsofwar.avatar.client.render.RenderIceShard;
+import com.crowsofwar.avatar.client.render.RenderOstrichHorse;
 import com.crowsofwar.avatar.client.render.RenderOtterPenguin;
 import com.crowsofwar.avatar.client.render.RenderRavine;
 import com.crowsofwar.avatar.client.render.RenderSkyBison;
@@ -70,6 +71,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
+import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
 import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
@@ -143,6 +145,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntitySkyBison.class, RenderSkyBison::new);
 		registerEntityRenderingHandler(EntityOtterPenguin.class, RenderOtterPenguin::new);
 		registerEntityRenderingHandler(EntityIceShard.class, RenderIceShard::new);
+		registerEntityRenderingHandler(EntityOstrichHorse.class, RenderOstrichHorse::new);
 		
 		registerEntityRenderingHandler(EntityAirbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 7));
