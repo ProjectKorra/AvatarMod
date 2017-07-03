@@ -32,6 +32,7 @@ public class EntityOstrichHorse extends EntityAnimal {
 	 */
 	public EntityOstrichHorse(World world) {
 		super(world);
+		setSize(1, 2);
 	}
 	
 	@Override
