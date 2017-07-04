@@ -123,7 +123,8 @@ public class EntityOstrichHorse extends EntityAnimal {
 			
 			if (this.canPassengerSteer()) {
 				
-				updateRideSpeed(forward);
+				updateRideSpeed(driver.moveForward);
+				setAIMoveSpeed(getRideSpeed());
 				
 				forward = getRideSpeed() > 0 ? 0.98f : 0;
 				strafe = driver.moveStrafing * 0.3f;
