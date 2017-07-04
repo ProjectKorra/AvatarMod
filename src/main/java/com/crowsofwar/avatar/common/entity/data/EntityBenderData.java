@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -99,15 +99,15 @@ public class EntityBenderData extends AbstractBendingData {
 			addStatusControl(sc);
 		}
 		
-		Map<BendingAbility, AbilityData> abilityData = new HashMap<>();
+		Map<Ability, AbilityData> abilityData = new HashMap<>();
 		AvatarUtils.readMap(abilityData, nbt -> BendingManager.getAbility(nbt.getInteger("Id")), nbt -> {
-			BendingAbility ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
+			Ability ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
 			AbilityData data = new AbilityData(this, ability);
 			data.readFromNbt(nbt);
 			return data;
 		}, readFrom, "AbilityData");
 		clearAbilityData();
-		for (Map.Entry<BendingAbility, AbilityData> entry : abilityData.entrySet()) {
+		for (Map.Entry<Ability, AbilityData> entry : abilityData.entrySet()) {
 			setAbilityData(entry.getKey(), entry.getValue());
 		}
 		

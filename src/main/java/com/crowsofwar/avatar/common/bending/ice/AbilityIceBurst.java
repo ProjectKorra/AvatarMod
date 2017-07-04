@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -31,7 +31,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityIceBurst extends BendingAbility {
+public class AbilityIceBurst extends Ability {
 	
 	public AbilityIceBurst() {
 		super(BendingManager.ID_ICEBENDING, "ice_burst");

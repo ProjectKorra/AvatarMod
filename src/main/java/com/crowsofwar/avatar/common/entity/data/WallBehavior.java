@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WALL;
+import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_WALL;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.data.AbilityData;

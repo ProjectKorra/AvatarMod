@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.common.command;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.tree.ArgumentList;
 import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
@@ -38,7 +38,7 @@ import com.crowsofwar.gorecore.tree.NodeFunctional;
 public class NodeAbilitySet extends NodeFunctional {
 	
 	private final IArgument<String> argPlayer;
-	private final IArgument<BendingAbility> argAbility;
+	private final IArgument<Ability> argAbility;
 	private final IArgument<Integer> argSetTo;
 	
 	public NodeAbilitySet() {
@@ -53,7 +53,7 @@ public class NodeAbilitySet extends NodeFunctional {
 		
 		ArgumentList args = call.popArguments(this);
 		String player = args.get(argPlayer);
-		BendingAbility ability = args.get(argAbility);
+		Ability ability = args.get(argAbility);
 		int setXp = args.get(argSetTo);
 		
 		if (setXp >= 0 && setXp <= 100) {

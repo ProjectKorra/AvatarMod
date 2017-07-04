@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_LIGHTNING_STRIKE;
+import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_LIGHTNING_STRIKE;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;

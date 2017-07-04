@@ -29,7 +29,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -117,15 +117,15 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 			addStatusControl(sc);
 		}
 		
-		Map<BendingAbility, AbilityData> abilityData = new HashMap<>();
+		Map<Ability, AbilityData> abilityData = new HashMap<>();
 		AvatarUtils.readMap(abilityData, nbt -> BendingManager.getAbility(nbt.getInteger("Id")), nbt -> {
-			BendingAbility ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
+			Ability ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
 			AbilityData data = new AbilityData(this, ability);
 			data.readFromNbt(nbt);
 			return data;
 		}, readFrom, "AbilityData");
 		clearAbilityData();
-		for (Map.Entry<BendingAbility, AbilityData> entry : abilityData.entrySet()) {
+		for (Map.Entry<Ability, AbilityData> entry : abilityData.entrySet()) {
 			setAbilityData(entry.getKey(), entry.getValue());
 		}
 		
@@ -299,17 +299,17 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public boolean hasAbilityData(BendingAbility ability) {
+	public boolean hasAbilityData(Ability ability) {
 		return bendingData.hasAbilityData(ability);
 	}
 	
 	@Override
-	public AbilityData getAbilityData(BendingAbility ability) {
+	public AbilityData getAbilityData(Ability ability) {
 		return bendingData.getAbilityData(ability);
 	}
 	
 	@Override
-	public void setAbilityData(BendingAbility ability, AbilityData data) {
+	public void setAbilityData(Ability ability, AbilityData data) {
 		bendingData.setAbilityData(ability, data);
 	}
 	
@@ -319,7 +319,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public Map<BendingAbility, AbilityData> getAbilityDataMap() {
+	public Map<Ability, AbilityData> getAbilityDataMap() {
 		return bendingData.getAbilityDataMap();
 	}
 	
@@ -439,7 +439,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void setAbilityDataMap(Map<BendingAbility, AbilityData> map) {
+	public void setAbilityDataMap(Map<Ability, AbilityData> map) {
 		bendingData.setAbilityDataMap(map);
 	}
 	

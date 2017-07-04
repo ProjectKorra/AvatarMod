@@ -23,7 +23,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -111,7 +111,7 @@ public class EntityWave extends Entity {
 			if (!collided.isEmpty()) {
 				BendingData data = Bender.create(owner).getData();
 				if (data != null) {
-					data.getAbilityData(BendingAbility.ABILITY_WAVE).addXp(SKILLS_CONFIG.waveHit);
+					data.getAbilityData(Ability.ABILITY_WAVE).addXp(SKILLS_CONFIG.waveHit);
 				}
 			}
 		}
@@ -130,7 +130,7 @@ public class EntityWave extends Entity {
 	
 	private int maxTimeOnLand() {
 		if (getOwner() != null) {
-			AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_WAVE);
+			AbilityData data = Bender.getData(getOwner()).getAbilityData(Ability.ABILITY_WAVE);
 			if (data.isMasterPath(AbilityTreePath.FIRST)) {
 				return 30;
 			}

@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -31,7 +31,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityLightningStrike extends BendingAbility {
+public class AbilityLightningStrike extends Ability {
 	
 	public AbilityLightningStrike() {
 		super(BendingManager.ID_LIGHTNINGBENDING, "lightning_strike");

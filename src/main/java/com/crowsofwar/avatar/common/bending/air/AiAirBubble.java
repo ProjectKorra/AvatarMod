@@ -18,7 +18,7 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -40,7 +40,7 @@ public class AiAirBubble extends BendingAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiAirBubble(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiAirBubble(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		this.random = new Random();
 	}

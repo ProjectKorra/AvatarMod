@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.common.entity.data;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -113,7 +113,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				if (!entity.worldObj.isRemote) {
 					BendingData data = Bender.create(entity.getOwner()).getData();
 					if (data != null) {
-						data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC)
+						data.getAbilityData(Ability.ABILITY_FIRE_ARC)
 								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
 					}
 				}
@@ -122,7 +122,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			
 			if (!collidedList.isEmpty() && entity.getOwner() != null) {
 				BendingData data = Bender.getData(entity.getOwner());
-				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC);
+				AbilityData abilityData = data.getAbilityData(Ability.ABILITY_FIRE_ARC);
 				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 					data.addStatusControl(StatusControl.THROW_FIRE);
 					return new FireArcBehavior.PlayerControlled();

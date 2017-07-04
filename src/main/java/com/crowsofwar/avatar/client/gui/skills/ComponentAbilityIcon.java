@@ -18,7 +18,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 
 import net.minecraft.client.Minecraft;
@@ -30,11 +30,11 @@ import net.minecraft.client.Minecraft;
  */
 public class ComponentAbilityIcon extends ComponentImage {
 	
-	public ComponentAbilityIcon(BendingAbility ability) {
+	public ComponentAbilityIcon(Ability ability) {
 		super(AvatarUiTextures.skillsGui, getCurrentLevel(ability) * 16, 240, 16, 16);
 	}
 	
-	private static int getCurrentLevel(BendingAbility ability) {
+	private static int getCurrentLevel(Ability ability) {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(Minecraft.getMinecraft().thePlayer);
 		return data.getAbilityData(ability).getLevel();
 	}

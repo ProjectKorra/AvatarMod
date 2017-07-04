@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
+import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -34,7 +34,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -200,9 +200,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 		
-		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
-		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
+		this.tasks.addTask(1, Ability.ABILITY_AIR_BUBBLE.getAi(this, this));
+		this.tasks.addTask(2, Ability.ABILITY_AIR_GUST.getAi(this, this));
+		this.tasks.addTask(3, Ability.ABILITY_AIRBLADE.getAi(this, this));
 		
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
 		this.tasks.addTask(4, new EntityAiBisonBreeding(this));

@@ -34,7 +34,7 @@ import com.crowsofwar.avatar.common.HumanBenderSpawner;
 import com.crowsofwar.avatar.common.PrisonActionCanceller;
 import com.crowsofwar.avatar.common.TemporaryWaterHandler;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
@@ -136,7 +136,7 @@ public class AvatarMod {
 		
 		AvatarLog.log = e.getModLog();
 		
-		BendingAbility.registerAbilities();
+		Ability.registerAbilities();
 		
 		ConfigStats.load();
 		ConfigSkills.load();

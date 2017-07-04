@@ -34,20 +34,20 @@ import net.minecraft.entity.ai.EntityAIBase;
  * <p>
  * BendingAi is a subclass of EntityAIBase, meaning that a new instance is
  * applied per-entity in its tasks list. A new instance of a BendingAi is
- * acquired via the ability's {@link BendingAbility#getAi(EntityLiving, Bender)
+ * acquired via the ability's {@link Ability#getAi(EntityLiving, Bender)
  * getAi method} for the specific mob.
  * 
  * @author CrowsOfWar
  */
 public abstract class BendingAi extends EntityAIBase {
 	
-	protected final BendingAbility ability;
+	protected final Ability ability;
 	protected final EntityLiving entity;
 	protected final Bender bender;
 	
 	protected int timeExecuting;
 	
-	protected BendingAi(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected BendingAi(Ability ability, EntityLiving entity, Bender bender) {
 		this.ability = ability;
 		this.entity = entity;
 		this.bender = bender;

@@ -27,7 +27,7 @@ import net.minecraft.entity.EntityLiving;
  */
 public class DefaultAbilityAi extends BendingAi {
 	
-	protected DefaultAbilityAi(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected DefaultAbilityAi(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
 	

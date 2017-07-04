@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -37,7 +37,7 @@ public abstract class AbstractBendingData implements BendingData {
 	
 	private final Set<BendingController> bendings;
 	private final Set<StatusControl> statusControls;
-	private final Map<BendingAbility, AbilityData> abilityData;
+	private final Map<Ability, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
 	private BendingController activeBending;
 	private Chi chi;
@@ -215,7 +215,7 @@ public abstract class AbstractBendingData implements BendingData {
 	// ================================================================================
 	
 	@Override
-	public boolean hasAbilityData(BendingAbility ability) {
+	public boolean hasAbilityData(Ability ability) {
 		return abilityData.get(ability) != null;
 	}
 	
@@ -223,7 +223,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
 	@Override
-	public AbilityData getAbilityData(BendingAbility ability) {
+	public AbilityData getAbilityData(Ability ability) {
 		AbilityData data = abilityData.get(ability);
 		if (data == null) {
 			data = new AbilityData(this, ability);
@@ -235,7 +235,7 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public void setAbilityData(BendingAbility ability, AbilityData data) {
+	public void setAbilityData(Ability ability, AbilityData data) {
 		abilityData.put(ability, data);
 	}
 	
@@ -248,12 +248,12 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public Map<BendingAbility, AbilityData> getAbilityDataMap() {
+	public Map<Ability, AbilityData> getAbilityDataMap() {
 		return new HashMap<>(abilityData);
 	}
 	
 	@Override
-	public void setAbilityDataMap(Map<BendingAbility, AbilityData> map) {
+	public void setAbilityDataMap(Map<Ability, AbilityData> map) {
 		abilityData.clear();
 		abilityData.putAll(map);
 	}

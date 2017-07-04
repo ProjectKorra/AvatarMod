@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_RAVINE;
+import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_RAVINE;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 

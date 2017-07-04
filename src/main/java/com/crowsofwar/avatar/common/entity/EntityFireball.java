@@ -18,7 +18,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -152,7 +152,7 @@ public class EntityFireball extends AvatarEntity {
 		
 		if (getOwner() != null) {
 			AbilityData abilityData = Bender.getData(getOwner())
-					.getAbilityData(BendingAbility.ABILITY_FIREBALL);
+					.getAbilityData(Ability.ABILITY_FIREBALL);
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 				destroyObsidian = true;
 			}

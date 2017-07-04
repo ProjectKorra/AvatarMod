@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 
@@ -30,11 +30,11 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketSUseScroll extends AvatarPacket<PacketSUseScroll> {
 	
-	private BendingAbility ability;
+	private Ability ability;
 	
 	public PacketSUseScroll() {}
 	
-	public PacketSUseScroll(BendingAbility ability) {
+	public PacketSUseScroll(Ability ability) {
 		this.ability = ability;
 	}
 	
@@ -58,7 +58,7 @@ public class PacketSUseScroll extends AvatarPacket<PacketSUseScroll> {
 		return PacketRedirector::redirectMessage;
 	}
 	
-	public BendingAbility getAbility() {
+	public Ability getAbility() {
 		return ability;
 	}
 	

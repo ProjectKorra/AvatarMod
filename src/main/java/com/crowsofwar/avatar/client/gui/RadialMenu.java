@@ -25,7 +25,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -62,7 +62,7 @@ public class RadialMenu extends Gui {
 	public static final float menuScale = 0.36f;
 	
 	private RadialSegment[] segments;
-	private BendingAbility[] controls;
+	private Ability[] controls;
 	private MenuTheme theme;
 	private final BendingController controller;
 	
@@ -85,7 +85,7 @@ public class RadialMenu extends Gui {
 	 *            less than 8, then the array is filled with null. The arguments
 	 *            can only be a maximum of 8.
 	 */
-	public RadialMenu(BendingController controller, MenuTheme theme, BendingAbility... controls) {
+	public RadialMenu(BendingController controller, MenuTheme theme, Ability... controls) {
 		this.controller = controller;
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
@@ -98,7 +98,7 @@ public class RadialMenu extends Gui {
 			throw new IllegalArgumentException("The length of controls can't be more than 8");
 		}
 		
-		BendingAbility[] ctrl = new BendingAbility[8];
+		Ability[] ctrl = new Ability[8];
 		for (int i = 0; i < ctrl.length; i++) {
 			ctrl[i] = i < controls.length ? controls[i] : null;
 		}
@@ -126,7 +126,7 @@ public class RadialMenu extends Gui {
 		
 	}
 	
-	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
+	private void displaySegmentDetails(Ability ability, ScaledResolution resolution) {
 		
 		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
 		int x = resolution.getScaledWidth() / 2;

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -123,7 +123,7 @@ public class EntityFlames extends AvatarEntity {
 		
 		if (!worldObj.isRemote) {
 			BendingData data = Bender.create(owner).getData();
-			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FLAMETHROWER);
+			AbilityData abilityData = data.getAbilityData(Ability.ABILITY_FLAMETHROWER);
 			
 			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != owner && !(entity instanceof EntityFlames));

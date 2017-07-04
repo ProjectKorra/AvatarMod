@@ -23,7 +23,7 @@ import static net.minecraft.network.datasync.EntityDataManager.createKey;
 import java.util.List;
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -307,7 +307,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 				worldObj.spawnEntityInWorld(ei);
 			}
 		}
-		AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
+		AbilityData data = Bender.getData(getOwner()).getAbilityData(Ability.ABILITY_PICK_UP_BLOCK);
 		if (data.isMasterPath(AbilityTreePath.SECOND)) {
 			
 			Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 2, false, false);

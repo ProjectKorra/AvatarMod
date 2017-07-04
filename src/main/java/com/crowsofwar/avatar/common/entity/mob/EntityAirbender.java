@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -50,9 +50,9 @@ public class EntityAirbender extends EntityHumanBender {
 	
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
-		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
+		this.tasks.addTask(1, Ability.ABILITY_AIR_BUBBLE.getAi(this, this));
+		this.tasks.addTask(2, Ability.ABILITY_AIR_GUST.getAi(this, this));
+		this.tasks.addTask(3, Ability.ABILITY_AIRBLADE.getAi(this, this));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 	

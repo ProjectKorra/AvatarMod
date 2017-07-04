@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 
 import io.netty.buffer.ByteBuf;
@@ -34,7 +34,7 @@ public class AbilityData {
 	public static final int MAX_LEVEL = 3;
 	
 	private final BendingData data;
-	private final BendingAbility ability;
+	private final Ability ability;
 	private float xp;
 	/**
 	 * The current level. -1 for locked
@@ -44,7 +44,7 @@ public class AbilityData {
 	private int level;
 	private AbilityTreePath path;
 	
-	public AbilityData(BendingData data, BendingAbility ability) {
+	public AbilityData(BendingData data, Ability ability) {
 		this.data = data;
 		this.ability = ability;
 		this.xp = 0;
@@ -52,7 +52,7 @@ public class AbilityData {
 		this.path = AbilityTreePath.MAIN;
 	}
 	
-	public BendingAbility getAbility() {
+	public Ability getAbility() {
 		return ability;
 	}
 	
@@ -244,7 +244,7 @@ public class AbilityData {
 	 */
 	public static AbilityData createFromBytes(ByteBuf buf, BendingData data) {
 		int abilityId = buf.readInt();
-		BendingAbility ability = BendingManager.getAbility(abilityId);
+		Ability ability = BendingManager.getAbility(abilityId);
 		if (ability == null) {
 			return null;
 		} else {

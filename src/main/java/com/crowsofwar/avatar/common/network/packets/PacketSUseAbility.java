@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
@@ -35,12 +35,12 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
-	private BendingAbility ability;
+	private Ability ability;
 	private Raytrace.Result raytrace;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(BendingAbility ability, Raytrace.Result raytrace) {
+	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace) {
 		this.ability = ability;
 		this.raytrace = raytrace;
 	}
@@ -65,7 +65,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		return Side.SERVER;
 	}
 	
-	public BendingAbility getAbility() {
+	public Ability getAbility() {
 		return ability;
 	}
 	

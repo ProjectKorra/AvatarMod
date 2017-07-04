@@ -79,13 +79,13 @@ public abstract class BendingController implements ReadableWritable {
 	 */
 	public static final Random random = new Random();
 	
-	private final List<BendingAbility> abilities;
+	private final List<Ability> abilities;
 	
 	public BendingController() {
 		this.abilities = new ArrayList<>();
 	}
 	
-	protected void addAbility(BendingAbility ability) {
+	protected void addAbility(Ability ability) {
 		this.abilities.add(ability);
 	}
 	
@@ -101,7 +101,7 @@ public abstract class BendingController implements ReadableWritable {
 	
 	public abstract int getId();
 	
-	public List<BendingAbility> getAllAbilities() {
+	public List<Ability> getAllAbilities() {
 		return this.abilities;
 	}
 	

@@ -36,7 +36,7 @@ import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -60,7 +60,7 @@ public class WindowAbility {
 	private static final ChatMessage MSG_UNLOCK_TEXT = ChatMessage.newChatMessage("avatar.ui.unlockDesc",
 			"bending");
 	
-	private final BendingAbility ability;
+	private final Ability ability;
 	private final SkillsGui gui;
 	private final UiComponentHandler handler;
 	
@@ -73,7 +73,7 @@ public class WindowAbility {
 	private UiComponent unlockTitle, unlockText;
 	private ComponentCustomButton unlockButton;
 	
-	public WindowAbility(BendingAbility ability, SkillsGui gui) {
+	public WindowAbility(Ability ability, SkillsGui gui) {
 		this.ability = ability;
 		this.gui = gui;
 		this.handler = new UiComponentHandler();

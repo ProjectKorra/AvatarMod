@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
@@ -42,9 +42,9 @@ public class EntityFirebender extends EntityHumanBender {
 	public EntityFirebender(World world) {
 		super(world);
 		
-		AbilityData flamethrowerData = new AbilityData(getData(), BendingAbility.ABILITY_FLAMETHROWER);
+		AbilityData flamethrowerData = new AbilityData(getData(), Ability.ABILITY_FLAMETHROWER);
 		flamethrowerData.setLevel(2);
-		getData().setAbilityData(BendingAbility.ABILITY_FLAMETHROWER, flamethrowerData);
+		getData().setAbilityData(Ability.ABILITY_FLAMETHROWER, flamethrowerData);
 		
 	}
 	
@@ -56,9 +56,9 @@ public class EntityFirebender extends EntityHumanBender {
 	
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, BendingAbility.ABILITY_FLAMETHROWER.getAi(this, this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_FIREBALL.getAi(this, this));
-		this.tasks.addTask(2, BendingAbility.ABILITY_FIRE_ARC.getAi(this, this));
+		this.tasks.addTask(1, Ability.ABILITY_FLAMETHROWER.getAi(this, this));
+		this.tasks.addTask(3, Ability.ABILITY_FIREBALL.getAi(this, this));
+		this.tasks.addTask(2, Ability.ABILITY_FIRE_ARC.getAi(this, this));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 	

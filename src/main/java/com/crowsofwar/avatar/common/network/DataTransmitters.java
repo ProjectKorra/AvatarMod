@@ -25,7 +25,7 @@ import java.util.Set;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -67,20 +67,20 @@ public class DataTransmitters {
 		}
 	};
 	
-	public static final DataTransmitter<Map<BendingAbility, AbilityData>> ABILITY_DATA = new DataTransmitter<Map<BendingAbility, AbilityData>>() {
+	public static final DataTransmitter<Map<Ability, AbilityData>> ABILITY_DATA = new DataTransmitter<Map<Ability, AbilityData>>() {
 		
 		@Override
-		public void write(ByteBuf buf, Map<BendingAbility, AbilityData> t) {
-			Set<Map.Entry<BendingAbility, AbilityData>> entries = t.entrySet();
+		public void write(ByteBuf buf, Map<Ability, AbilityData> t) {
+			Set<Map.Entry<Ability, AbilityData>> entries = t.entrySet();
 			buf.writeInt(entries.size());
-			for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
+			for (Map.Entry<Ability, AbilityData> entry : entries) {
 				entry.getValue().toBytes(buf);
 			}
 		}
 		
 		@Override
-		public Map<BendingAbility, AbilityData> read(ByteBuf buf, BendingData data) {
-			Map<BendingAbility, AbilityData> out = new HashMap<>();
+		public Map<Ability, AbilityData> read(ByteBuf buf, BendingData data) {
+			Map<Ability, AbilityData> out = new HashMap<>();
 			int size = buf.readInt();
 			for (int i = 0; i < size; i++) {
 				AbilityData abilityData = AbilityData.createFromBytes(buf, data);

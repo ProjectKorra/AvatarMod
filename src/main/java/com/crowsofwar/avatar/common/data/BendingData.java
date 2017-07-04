@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.data;
 import java.util.List;
 import java.util.Map;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 
@@ -124,23 +124,23 @@ public interface BendingData {
 	// ABILITY DATA
 	// ================================================================================
 	
-	boolean hasAbilityData(BendingAbility ability);
+	boolean hasAbilityData(Ability ability);
 	
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
-	AbilityData getAbilityData(BendingAbility ability);
+	AbilityData getAbilityData(Ability ability);
 	
-	void setAbilityData(BendingAbility ability, AbilityData data);
+	void setAbilityData(Ability ability, AbilityData data);
 	
 	/**
 	 * Gets a list of all ability data contained in this player data.
 	 */
 	List<AbilityData> getAllAbilityData();
 	
-	Map<BendingAbility, AbilityData> getAbilityDataMap();
+	Map<Ability, AbilityData> getAbilityDataMap();
 	
-	void setAbilityDataMap(Map<BendingAbility, AbilityData> map);
+	void setAbilityDataMap(Map<Ability, AbilityData> map);
 	
 	/**
 	 * Removes all ability data associations

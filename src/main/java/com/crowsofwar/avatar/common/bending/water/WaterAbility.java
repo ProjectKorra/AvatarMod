@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 
 
@@ -26,7 +26,7 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
  * 
  * @author CrowsOfWar
  */
-public abstract class WaterAbility extends BendingAbility {
+public abstract class WaterAbility extends Ability {
 	
 	/**
 	 * @param name

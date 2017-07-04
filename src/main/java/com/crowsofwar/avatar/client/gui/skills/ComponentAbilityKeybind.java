@@ -21,7 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import org.lwjgl.input.Keyboard;
 
 import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
@@ -35,7 +35,7 @@ import net.minecraft.client.settings.KeyBinding;
  */
 public class ComponentAbilityKeybind extends UiComponent {
 	
-	private final BendingAbility ability;
+	private final Ability ability;
 	private String text1, text2;
 	private int color;
 	
@@ -43,7 +43,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	private Conflictable conflict;
 	private Integer editContents;
 	
-	public ComponentAbilityKeybind(BendingAbility ability) {
+	public ComponentAbilityKeybind(Ability ability) {
 		this.ability = ability;
 		this.text1 = this.text2 = "";
 		this.color = 0xffffff;
@@ -175,7 +175,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 		return () -> GameSettings.getKeyDisplayString(keybind.getKeyCode());
 	}
 	
-	private static Conflictable conflictableAbility(BendingAbility ability) {
+	private static Conflictable conflictableAbility(Ability ability) {
 		return () -> GameSettings.getKeyDisplayString(CLIENT_CONFIG.keymappings.get(ability));
 	}
 	

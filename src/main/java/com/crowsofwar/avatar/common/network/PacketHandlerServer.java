@@ -28,7 +28,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -164,7 +164,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data != null) {
 			
-			BendingAbility ability = packet.getAbility();
+			Ability ability = packet.getAbility();
 			if (data.hasBending(ability.getBendingId())) {
 				if (!data.getAbilityData(ability).isLocked()) {
 					if (data.getAbilityCooldown() == 0) {
@@ -458,11 +458,11 @@ public class PacketHandlerServer implements IPacketHandler {
 		private int ticks;
 		private final EntityPlayer player;
 		private final AvatarPlayerData data;
-		private final BendingAbility ability;
+		private final Ability ability;
 		private final Raytrace.Result raytrace;
 		
 		public ProcessAbilityRequest(int ticks, EntityPlayer player, AvatarPlayerData data,
-				BendingAbility ability, Raytrace.Result raytrace) {
+				Ability ability, Raytrace.Result raytrace) {
 			this.ticks = ticks;
 			this.player = player;
 			this.data = data;

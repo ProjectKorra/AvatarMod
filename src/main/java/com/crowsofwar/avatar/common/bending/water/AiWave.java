@@ -20,7 +20,7 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -40,7 +40,7 @@ import net.minecraft.world.World;
  */
 public class AiWave extends BendingAi {
 	
-	protected AiWave(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiWave(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
 	

@@ -34,7 +34,7 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -172,7 +172,7 @@ public class ClientInput implements IControlsHandler {
 		
 	}
 	
-	private boolean isAbilityPressed(BendingAbility ability) {
+	private boolean isAbilityPressed(Ability ability) {
 		Integer key = CLIENT_CONFIG.keymappings.get(ability);
 		if (key != null) {
 			if (key < 0 && Mouse.isButtonDown(key + 100)) return true;
@@ -255,9 +255,9 @@ public class ClientInput implements IControlsHandler {
 				
 			}
 			
-			List<BendingAbility> allAbilities = BendingManager.allAbilities();
+			List<Ability> allAbilities = BendingManager.allAbilities();
 			for (int i = 0; i < allAbilities.size(); i++) {
-				BendingAbility ability = allAbilities.get(i);
+				Ability ability = allAbilities.get(i);
 				boolean down = isAbilityPressed(ability);
 				
 				if (!CLIENT_CONFIG.conflicts.containsKey(ability))

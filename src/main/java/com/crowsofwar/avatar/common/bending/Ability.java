@@ -49,9 +49,9 @@ import net.minecraft.entity.EntityLiving;
  * 
  * @author CrowsOfWar
  */
-public abstract class BendingAbility {
+public abstract class Ability {
 	
-	public static BendingAbility ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE,
+	public static Ability ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE,
 			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER, ABILITY_WATER_ARC, ABILITY_WAVE,
 			ABILITY_WATER_BUBBLE, ABILITY_WALL, ABILITY_WATER_SKATE, ABILITY_FIREBALL, ABILITY_AIRBLADE,
 			ABILITY_MINING, ABILITY_AIR_BUBBLE, ABILITY_LIGHTNING_STRIKE, ABILITY_ICE_WALK, ABILITY_ICE_BURST,
@@ -90,7 +90,7 @@ public abstract class BendingAbility {
 	private final String name;
 	private Raytrace.Info raytrace;
 	
-	public BendingAbility(int bendingType, String name) {
+	public Ability(int bendingType, String name) {
 		this.type = bendingType;
 		this.id = nextId++;
 		this.name = name;

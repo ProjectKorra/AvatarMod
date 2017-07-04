@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.data.ctx;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -32,15 +32,15 @@ import net.minecraft.entity.EntityLivingBase;
  */
 public class AbilityContext extends BendingContext {
 	
-	private final BendingAbility ability;
+	private final Ability ability;
 	
-	public AbilityContext(AvatarPlayerData data, Result raytrace, BendingAbility ability) {
+	public AbilityContext(AvatarPlayerData data, Result raytrace, Ability ability) {
 		super(data, raytrace);
 		this.ability = ability;
 	}
 	
 	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace,
-			BendingAbility ability) {
+			Ability ability) {
 		super(data, entity, bender, raytrace);
 		this.ability = ability;
 	}

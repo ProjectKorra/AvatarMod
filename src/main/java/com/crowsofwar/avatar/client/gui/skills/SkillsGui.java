@@ -36,7 +36,7 @@ import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -91,7 +91,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		ScreenInfo.refreshDimensions();
 		
 		BendingController controller = BendingManager.getBending(type);
-		List<BendingAbility> abilities = controller.getAllAbilities();
+		List<Ability> abilities = controller.getAllAbilities();
 		cards = new AbilityCard[abilities.size()];
 		for (int i = 0; i < abilities.size(); i++) {
 			cards[i] = new AbilityCard(abilities.get(i), i);
@@ -272,7 +272,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	/**
 	 * Called when the 'use scroll' button is clicked
 	 */
-	public void useScroll(BendingAbility ability) {
+	public void useScroll(Ability ability) {
 		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
 		
 		if (container.getSlot(0).getHasStack() || container.getSlot(1).getHasStack()) {

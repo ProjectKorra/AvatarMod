@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.gui;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingController;
 
 /**
@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.bending.BendingController;
 public class BendingMenuInfo {
 	
 	private MenuTheme theme;
-	private final BendingAbility[] buttons;
+	private final Ability[] buttons;
 	
 	/**
 	 * Create information for an BendingController's radial menu.
@@ -43,11 +43,11 @@ public class BendingMenuInfo {
 	 *            are filled with {@link AvatarAbility#NONE}.
 	 */
 	public BendingMenuInfo(MenuTheme theme, BendingController bending) {
-		List<BendingAbility> buttons = bending.getAllAbilities();
+		List<Ability> buttons = bending.getAllAbilities();
 		if (buttons.size() > 8) throw new IllegalArgumentException(
 				"Cannot create BendingMenuInfo with buttons being larger than 8");
 		this.theme = theme;
-		this.buttons = new BendingAbility[8];
+		this.buttons = new Ability[8];
 		for (int i = 0; i < 8; i++)
 			this.buttons[i] = i < buttons.size() ? buttons.get(i) : null;
 	}
@@ -60,7 +60,7 @@ public class BendingMenuInfo {
 	 * Get all the buttons. Size is guaranteed to be 8; if there is no button in
 	 * that slot, it is null.
 	 */
-	public BendingAbility[] getButtons() {
+	public Ability[] getButtons() {
 		return buttons;
 	}
 	

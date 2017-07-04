@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.bending.ice;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -38,7 +38,7 @@ import net.minecraft.world.World;
  * 
  * @author CrowsOfWar
  */
-public class AbilityIcePrison extends BendingAbility {
+public class AbilityIcePrison extends Ability {
 	
 	public AbilityIcePrison() {
 		super(BendingManager.ID_ICEBENDING, "ice_prison");

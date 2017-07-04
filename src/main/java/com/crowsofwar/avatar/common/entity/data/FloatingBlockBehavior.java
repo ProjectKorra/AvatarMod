@@ -23,7 +23,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -207,13 +207,13 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (collided.getHealth() <= 0) {
 					xp = SKILLS_CONFIG.blockKill;
 				}
-				data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK).addXp(xp);
+				data.getAbilityData(Ability.ABILITY_PICK_UP_BLOCK).addXp(xp);
 			}
 			
 			// Remove the floating block & spawn particles
 			entity.onCollideWithSolid();
 			if (!entity.worldObj.isRemote) {
-				if (data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK)
+				if (data.getAbilityData(Ability.ABILITY_PICK_UP_BLOCK)
 						.isMasterPath(AbilityTreePath.FIRST)) {
 					
 					data.addStatusControl(StatusControl.THROW_BLOCK);

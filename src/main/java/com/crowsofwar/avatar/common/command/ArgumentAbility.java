@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.gorecore.tree.IArgument;
 import com.crowsofwar.gorecore.tree.TreeCommandException;
@@ -27,12 +27,12 @@ import com.crowsofwar.gorecore.tree.TreeCommandException;
 import net.minecraft.command.ICommandSender;
 
 /**
- * Argument for an ability specified by its {@link BendingAbility#getName()
+ * Argument for an ability specified by its {@link Ability#getName()
  * internal name}. Will give null if incorrect input
  * 
  * @author CrowsOfWar
  */
-public class ArgumentAbility implements IArgument<BendingAbility> {
+public class ArgumentAbility implements IArgument<Ability> {
 	
 	private final String name;
 	
@@ -46,14 +46,14 @@ public class ArgumentAbility implements IArgument<BendingAbility> {
 	}
 	
 	@Override
-	public BendingAbility getDefaultValue() {
+	public Ability getDefaultValue() {
 		return null;
 	}
 	
 	@Override
-	public BendingAbility convert(String input) {
+	public Ability convert(String input) {
 		
-		for (BendingAbility ability : BendingManager.allAbilities()) {
+		for (Ability ability : BendingManager.allAbilities()) {
 			if (ability.getName().equals(input)) {
 				return ability;
 			}
@@ -71,7 +71,7 @@ public class ArgumentAbility implements IArgument<BendingAbility> {
 	@Override
 	public String getHelpString() {
 		String out = "<";
-		for (BendingAbility ability : BendingManager.allAbilities()) {
+		for (Ability ability : BendingManager.allAbilities()) {
 			out += ability.getName() + "|";
 		}
 		return out.substring(0, out.length() - 1) + ">";
@@ -85,7 +85,7 @@ public class ArgumentAbility implements IArgument<BendingAbility> {
 	@Override
 	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
 		List<String> out = new ArrayList<>();
-		for (BendingAbility ability : BendingManager.allAbilities()) {
+		for (Ability ability : BendingManager.allAbilities()) {
 			out.add(ability.getName());
 		}
 		return out;

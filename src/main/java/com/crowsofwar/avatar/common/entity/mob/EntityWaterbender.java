@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WAVE;
+import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_WAVE;
 
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 

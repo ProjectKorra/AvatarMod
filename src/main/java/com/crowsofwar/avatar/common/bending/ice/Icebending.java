@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
+import static com.crowsofwar.avatar.common.bending.Ability.*;
 
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;

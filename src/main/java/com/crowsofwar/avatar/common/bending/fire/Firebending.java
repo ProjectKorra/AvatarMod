@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
+import static com.crowsofwar.avatar.common.bending.Ability.*;
 
 import java.awt.Color;
 

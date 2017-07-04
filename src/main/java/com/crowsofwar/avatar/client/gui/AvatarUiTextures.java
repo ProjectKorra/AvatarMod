@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.client.gui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -59,9 +59,9 @@ public class AvatarUiTextures {
 	
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
 	
-	private static final Map<BendingAbility, ResourceLocation> abilityTextures = new HashMap<>();
-	private static final Map<BendingAbility, ResourceLocation> abilityCards = new HashMap<>();
-	private static final Map<BendingAbility, ResourceLocation> abilityCardsPlain = new HashMap<>();
+	private static final Map<Ability, ResourceLocation> abilityTextures = new HashMap<>();
+	private static final Map<Ability, ResourceLocation> abilityCards = new HashMap<>();
+	private static final Map<Ability, ResourceLocation> abilityCardsPlain = new HashMap<>();
 	
 	private static <T> ResourceLocation getCachedImage(Map<T, ResourceLocation> map, T obj, String loc) {
 		if (!map.containsKey(obj)) {
@@ -72,15 +72,15 @@ public class AvatarUiTextures {
 		return map.get(obj);
 	}
 	
-	public static ResourceLocation getAbilityTexture(BendingAbility ability) {
+	public static ResourceLocation getAbilityTexture(Ability ability) {
 		return getCachedImage(abilityTextures, ability, "textures/radial/icon_" + ability.getName() + ".png");
 	}
 	
-	public static ResourceLocation getCardTexture(BendingAbility ability) {
+	public static ResourceLocation getCardTexture(Ability ability) {
 		return getCachedImage(abilityCards, ability, "textures/gui/skillmenu/" + ability.getName() + ".png");
 	}
 	
-	public static ResourceLocation getPlainCardTexture(BendingAbility ability) {
+	public static ResourceLocation getPlainCardTexture(Ability ability) {
 		return getCachedImage(abilityCardsPlain, ability,
 				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");
 	}
