@@ -33,6 +33,9 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -44,12 +47,21 @@ import net.minecraft.world.World;
  */
 public class EntityOstrichHorse extends EntityAnimal {
 	
+	private static final DataParameter<Float> SYNC_RIDE_SPEED = EntityDataManager
+			.createKey(EntityOstrichHorse.class, DataSerializers.FLOAT);
+	
 	/**
 	 * @param world
 	 */
 	public EntityOstrichHorse(World world) {
 		super(world);
 		setSize(1, 2);
+	}
+	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_RIDE_SPEED, 0f);
 	}
 	
 	@Override
@@ -111,12 +123,11 @@ public class EntityOstrichHorse extends EntityAnimal {
 			
 			if (this.canPassengerSteer()) {
 				
-				forward = driver.moveForward;
+				updateRideSpeed(forward);
+				
+				forward = getRideSpeed() > 0 ? 0.98f : 0;
 				strafe = driver.moveStrafing * 0.3f;
 				
-				setAIMoveSpeed(
-						(float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue()
-								* 1.5f);
 				super.moveEntityWithHeading(strafe, forward);
 				
 			} else {
@@ -139,8 +150,66 @@ public class EntityOstrichHorse extends EntityAnimal {
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
+			setRideSpeed(0);
 			super.moveEntityWithHeading(strafe, forward);
 		}
+	}
+	
+	/**
+	 * Get ride speed.
+	 * <p>
+	 * Ride speed represents the current speed of the ostrich when being ridden.
+	 * When the ostrich starts running, it's slow but speeds up as it continues
+	 * running. Then when the driver tells it to stop, the ostrich doesn't stop
+	 * immediately, and instead slows down to a stop. Ride speed represents the
+	 * ostrich's current speed, which is influenced by the driver's directions.
+	 */
+	private float getRideSpeed() {
+		return dataManager.get(SYNC_RIDE_SPEED);
+	}
+	
+	private void setRideSpeed(float rideSpeed) {
+		dataManager.set(SYNC_RIDE_SPEED, rideSpeed);
+	}
+	
+	/**
+	 * Assuming that the ostrich is currently ridden, update ride speed to the
+	 * driver's specifications
+	 * 
+	 * @see #getRideSpeed()
+	 * @param instructions
+	 *            Positive if the ostrich should move faster, negative if the
+	 *            ostrich should move slower, zero to stay the same
+	 */
+	private void updateRideSpeed(float instructions) {
+		
+		float moveSpeedAttr = (float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
+				.getAttributeValue();
+		float current = getRideSpeed();
+		float target = moveSpeedAttr * 1.5f;
+		float next = current;
+		
+		if (instructions > 0) {
+			
+			// Move faster!
+			if (current < target) {
+				next += moveSpeedAttr * 0.02f;
+			}
+			
+		}
+		if (instructions < 0) {
+			
+			// Move slower!
+			if (current > 0) {
+				next -= moveSpeedAttr * 0.03f;
+			}
+			
+		}
+		
+		// Update to dataManager
+		next = MathHelper.clamp_float(next, 0, target);
+		setRideSpeed(next);
+		
 	}
 	
 }
