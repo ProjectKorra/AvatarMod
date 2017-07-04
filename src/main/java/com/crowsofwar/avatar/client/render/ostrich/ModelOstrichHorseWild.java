@@ -361,9 +361,8 @@ public class ModelOstrichHorseWild extends ModelBase {
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
 			float headPitch, float scaleFactor, Entity ostrich) {
 		
-		// BodyMain.rotateAngleY = 0;
-		neck1.rotateAngleY = (float) Math.toDegrees(netHeadYaw);
-		neck1.rotateAngleX = (float) Math.toDegrees(headPitch);
+		neck1.rotateAngleY = (float) Math.toRadians(netHeadYaw);
+		neck1.rotateAngleX = (float) Math.toRadians(headPitch);
 		
 	}
 	

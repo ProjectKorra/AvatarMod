@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMate;
@@ -51,7 +52,7 @@ public class EntityOstrichHorse extends EntityAnimal {
 	}
 	
 	@Override
-	public void initEntityAI() {
+	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 1));
 		this.tasks.addTask(2, new EntityAIMate(this, 0.75));
@@ -60,6 +61,12 @@ public class EntityOstrichHorse extends EntityAnimal {
 		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
+	}
+	
+	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2);
 	}
 	
 }
