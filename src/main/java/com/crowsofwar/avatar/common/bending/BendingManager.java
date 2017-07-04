@@ -36,8 +36,8 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
  * retrieved via {@link #getBending(int)}. Contains constants which specify the
  * IDs of bending. <br />
  * <br />
- * Third-party mods can use {@link #registerBending(BendingStyle)} to
- * enable custom bending controllers.
+ * Third-party mods can use {@link #registerBending(BendingStyle)} to enable
+ * custom bending controllers.
  *
  */
 public class BendingManager {
@@ -56,15 +56,10 @@ public class BendingManager {
 	private static Map<String, BendingStyle> bendingByName;
 	private static List<BendingStyle> allBending;
 	
-	private static Map<Integer, Ability> abilities;
-	private static List<Ability> allAbilities;
-	
 	static {
 		bending = new HashMap<>();
 		bendingByName = new HashMap<>();
 		allBending = new ArrayList<>();
-		abilities = new HashMap<>();
-		allAbilities = new ArrayList<>();
 	}
 	
 	/**
@@ -124,38 +119,16 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the ability with the given Id, or null if the ability is undefined.
-	 * 
-	 * @param id
-	 *            The Id of the ability
-	 */
-	public static Ability getAbility(int id) {
-		return abilities.get(id);
-	}
-	
-	/**
 	 * Get the id of the controller. 0 on error
 	 */
 	public static int getControllerId(BendingStyle controller) {
 		return controller.getId();
 	}
 	
-	/**
-	 * Returns an unmodifiable view of all abilities.
-	 */
-	public static List<Ability> allAbilities() {
-		return Collections.unmodifiableList(allAbilities);
-	}
-	
 	public static void registerBending(BendingStyle controller) {
 		bending.put(controller.getId(), controller);
 		bendingByName.put(controller.getName(), controller);
 		allBending.add(controller);
-	}
-	
-	public static void registerAbility(Ability ability) {
-		abilities.put(ability.getId(), ability);
-		allAbilities.add(ability);
 	}
 	
 }
