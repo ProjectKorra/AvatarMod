@@ -54,10 +54,10 @@ public class EntityOstrichHorse extends EntityAnimal {
 	@Override
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIPanic(this, 1));
-		this.tasks.addTask(2, new EntityAIMate(this, 0.75));
-		this.tasks.addTask(3, new EntityAITempt(this, 0.75, Items.WHEAT, false));
-		this.tasks.addTask(4, new EntityAIFollowParent(this, 1.5));
+		this.tasks.addTask(1, new EntityAIPanic(this, 0.3));
+		this.tasks.addTask(2, new EntityAIMate(this, 0.1));
+		this.tasks.addTask(3, new EntityAITempt(this, 1, Items.WHEAT, false));
+		this.tasks.addTask(4, new EntityAIFollowParent(this, 0.25));
 		this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
