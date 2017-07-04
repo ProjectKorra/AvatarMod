@@ -62,7 +62,7 @@ public class ConfigStats {
 			chiAirBubbleTakeDamage = 0.5f, chiAirBubbleOneSecond = 0.25f, chiRavine = 3f, chiWall = 5f,
 			chiPickUpBlock = 2.5f, chiMining = 4f, chiMiningMaster = 1f, chiFireArc = 2f, chiFireball = 4f,
 			chiFlamethrowerSecond = 2f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
-			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.25f;
+			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.25f, chiPrison = 5;
 	
 	@Load
 	public boolean allowAirBubbleElytra = false;

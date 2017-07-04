@@ -17,29 +17,33 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import java.util.List;
+import java.util.UUID;
+
 import javax.annotation.Nullable;
 
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
- * Represents an AvatarEntity which is stored by ID but also cached for
+ * Represents an entity which is stored by its UUID but also cached for
  * performance.
  * <p>
- * Note: is not synced; designed to be manipulated by someone with a
- * synchronized ID.
+ * Note: is not synchronized
  * 
  * @author CrowsOfWar
  */
-public class CachedEntity<T extends AvatarEntity> {
+public class CachedEntity<T extends Entity> {
 	
 	private T cachedEntity;
-	private int entityId;
+	private UUID entityId;
 	
-	public CachedEntity(int id) {
+	public CachedEntity(UUID id) {
 		this.entityId = id;
 	}
 	
@@ -49,26 +53,27 @@ public class CachedEntity<T extends AvatarEntity> {
 	 * this cached entity.
 	 */
 	public void readFromNBT(NBTTagCompound nbt) {
-		entityId = nbt.getInteger("EntityId");
+		entityId = nbt.getUniqueId("EntityUuid");
 	}
 	
 	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("EntityId", entityId);
+		nbt.setUniqueId("EntityUuid", entityId);
 	}
 	
 	public void fromBytes(ByteBuf buf) {
-		entityId = buf.readInt();
+		entityId = new UUID(buf.readLong(), buf.readLong());
 	}
 	
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(entityId);
+		buf.writeLong(entityId.getMostSignificantBits());
+		buf.writeLong(entityId.getLeastSignificantBits());
 	}
 	
-	public int getEntityId() {
+	public UUID getEntityId() {
 		return entityId;
 	}
 	
-	public void setEntityId(int entityId) {
+	public void setEntityId(UUID entityId) {
 		this.entityId = entityId;
 	}
 	
@@ -78,8 +83,9 @@ public class CachedEntity<T extends AvatarEntity> {
 	 * Null if entity cannot be found.
 	 */
 	public @Nullable T getEntity(World world) {
-		if (checkCacheValidity() && entityId > -1) {
-			cachedEntity = AvatarEntity.lookupEntity(world, entityId);
+		if (checkCacheValidity() && entityId != null) {
+			List<Entity> list = world.getEntities(Entity.class, entity -> getId(entity).equals(entityId));
+			cachedEntity = list.isEmpty() ? null : (T) list.get(0);
 		}
 		return cachedEntity;
 	}
@@ -89,7 +95,7 @@ public class CachedEntity<T extends AvatarEntity> {
 	 */
 	public void setEntity(@Nullable T entity) {
 		cachedEntity = entity;
-		entityId = entity == null ? -1 : entity.getAvId();
+		entityId = entity == null ? null : getId(entity);
 	}
 	
 	/**
@@ -99,13 +105,17 @@ public class CachedEntity<T extends AvatarEntity> {
 	 * @return whether cache is invalid; if true the cached entity is null
 	 */
 	private boolean checkCacheValidity() {
-		if (entityId < 0 || cachedEntity == null || cachedEntity.isDead
-				|| cachedEntity.getAvId() != entityId) {
+		if (cachedEntity == null || cachedEntity.isDead || cachedEntity.getUniqueID() != entityId) {
 			cachedEntity = null;
 			return true;
 		}
 		
 		return false;
+	}
+	
+	private static UUID getId(Entity entity) {
+		return entity instanceof EntityPlayer ? AccountUUIDs.getId(entity.getName()).getUUID()
+				: entity.getUniqueID();
 	}
 	
 }

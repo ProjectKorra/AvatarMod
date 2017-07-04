@@ -21,6 +21,8 @@ import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WALL;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -61,8 +63,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	
 	public static final int SEGMENT_HEIGHT = 5;
 	
-	private static final DataParameter<Integer> SYNC_WALL = EntityDataManager
-			.createKey(EntityWallSegment.class, DataSerializers.VARINT);
+	private static final DataParameter<Optional<UUID>> SYNC_WALL = EntityDataManager
+			.createKey(EntityWallSegment.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
@@ -96,7 +98,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_WALL, -1);
+		dataManager.register(SYNC_WALL, null);
 		for (DataParameter<Optional<IBlockState>> sync : SYNC_BLOCKS_DATA)
 			dataManager.register(sync, Optional.of(Blocks.STONE.getDefaultState()));
 		dataManager.register(SYNC_BEHAVIOR, new WallBehavior.Rising());

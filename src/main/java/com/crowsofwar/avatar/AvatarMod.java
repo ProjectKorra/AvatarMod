@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.AvatarScrollDrops;
 import com.crowsofwar.avatar.common.BisonInventoryPreventDismount;
 import com.crowsofwar.avatar.common.FallAbsorptionHandler;
 import com.crowsofwar.avatar.common.HumanBenderSpawner;
+import com.crowsofwar.avatar.common.PrisonActionCanceller;
 import com.crowsofwar.avatar.common.TemporaryWaterHandler;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -53,6 +54,7 @@ import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import com.crowsofwar.avatar.common.entity.EntityIceShard;
 import com.crowsofwar.avatar.common.entity.EntityIceShield;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
@@ -155,6 +157,7 @@ public class AvatarMod {
 		TemporaryWaterHandler.register();
 		HumanBenderSpawner.register();
 		BisonInventoryPreventDismount.register();
+		PrisonActionCanceller.register();
 		
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
@@ -220,6 +223,7 @@ public class AvatarMod {
 		registerEntity(AvatarEntityItem.class, "Item");
 		registerEntity(EntityIceShield.class, "iceshield");
 		registerEntity(EntityIceShard.class, "iceshard");
+		registerEntity(EntityIcePrison.class, "iceprison");
 		
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
