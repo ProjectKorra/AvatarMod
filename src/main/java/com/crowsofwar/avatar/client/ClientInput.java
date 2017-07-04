@@ -34,9 +34,9 @@ import org.lwjgl.input.Mouse;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
@@ -101,7 +101,7 @@ public class ClientInput implements IControlsHandler {
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
 		addKeybinding("TransferBison", Keyboard.KEY_L, "main");
 		
-		this.wasAbilityDown = new boolean[BendingManager.allAbilities().size()];
+		this.wasAbilityDown = new boolean[Abilities.all().size()];
 		
 	}
 	
@@ -255,7 +255,7 @@ public class ClientInput implements IControlsHandler {
 				
 			}
 			
-			List<Ability> allAbilities = BendingManager.allAbilities();
+			List<Ability> allAbilities = Abilities.all();
 			for (int i = 0; i < allAbilities.size(); i++) {
 				Ability ability = allAbilities.get(i);
 				boolean down = isAbilityPressed(ability);

@@ -16,10 +16,10 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  */
 public class Abilities {
 	
-	private static final Set<Ability> abilities = new HashSet<>();
+	private static final List<Ability> abilities = new ArrayList<>();
 	private static final Map<UUID, Ability> abilitiesById = new HashMap<>();
 	private static final Map<String, Ability> abilitiesByName = new HashMap<>();
 	
@@ -45,7 +45,7 @@ public class Abilities {
 		return abilitiesByName.get(name);
 	}
 	
-	public static Set<Ability> getAll() {
+	public static List<Ability> all() {
 		return abilities;
 	}
 	

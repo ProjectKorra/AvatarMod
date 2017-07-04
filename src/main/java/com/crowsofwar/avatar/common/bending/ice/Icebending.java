@@ -16,10 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
-import static com.crowsofwar.avatar.common.bending.Ability.*;
-
-import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -35,9 +33,9 @@ public class Icebending extends BendingStyle {
 	
 	public Icebending() {
 		
-		addAbility(ABILITY_ICE_WALK);
-		addAbility(ABILITY_ICE_BURST);
-		addAbility(ABILITY_ICE_PRISON);
+		addAbility(AbilityIceWalk.ID);
+		addAbility(AbilityIceBurst.ID);
+		addAbility(AbilityIcePrison.ID);
 		
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);

@@ -17,12 +17,10 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.bending.Ability.*;
-
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -34,10 +32,10 @@ public class Airbending extends BendingStyle {
 	private BendingMenuInfo menu;
 	
 	public Airbending() {
-		addAbility(ABILITY_AIR_GUST);
-		addAbility(ABILITY_AIR_JUMP);
-		addAbility(ABILITY_AIRBLADE);
-		addAbility(ABILITY_AIR_BUBBLE);
+		addAbility(AbilityAirGust.ID);
+		addAbility(AbilityAirJump.ID);
+		addAbility(AbilityAirblade.ID);
+		addAbility(AbilityAirBubble.ID);
 		
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);

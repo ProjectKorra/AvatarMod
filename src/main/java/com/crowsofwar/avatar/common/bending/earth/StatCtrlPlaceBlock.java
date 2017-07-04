@@ -17,13 +17,12 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_PICK_UP_BLOCK;
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -82,7 +81,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				
 				data.removeStatusControl(THROW_BLOCK);
 				
-				data.getAbilityData(ABILITY_PICK_UP_BLOCK).addXp(SKILLS_CONFIG.blockPlaced);
+				data.getAbilityData(AbilityPickUpBlock.ID).addXp(SKILLS_CONFIG.blockPlaced);
 				
 				return true;
 			}

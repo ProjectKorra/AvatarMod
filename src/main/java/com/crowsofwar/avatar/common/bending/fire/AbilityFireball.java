@@ -69,7 +69,7 @@ public class AbilityFireball extends FireAbility {
 				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 			
-			float xp = data.getAbilityData(this).getTotalXp();
+			float xp = data.getAbilityData(ID).getTotalXp();
 			float damage = STATS_CONFIG.fireballSettings.damage;
 			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
 			

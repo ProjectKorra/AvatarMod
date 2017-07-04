@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_FLAMETHROWER;
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -52,7 +51,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		
-		AbilityData abilityData = data.getAbilityData(ABILITY_FLAMETHROWER);
+		AbilityData abilityData = data.getAbilityData(AbilityFlamethrower.ID);
 		AbilityTreePath path = abilityData.getPath();
 		float totalXp = abilityData.getTotalXp();
 		int level = abilityData.getLevel();

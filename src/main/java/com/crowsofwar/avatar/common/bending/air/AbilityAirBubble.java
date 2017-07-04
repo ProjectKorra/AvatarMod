@@ -70,7 +70,7 @@ public class AbilityAirBubble extends AirAbility {
 			
 			if (!ctx.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 			
-			float xp = data.getAbilityData(this).getTotalXp();
+			float xp = data.getAbilityData(ID).getTotalXp();
 			
 			float size = 1.5f;
 			if (ctx.getLevel() > 0) size = 2.5f;

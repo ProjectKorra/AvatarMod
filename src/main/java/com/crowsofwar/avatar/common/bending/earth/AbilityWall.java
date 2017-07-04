@@ -23,6 +23,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.Random;
 import java.util.UUID;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
@@ -55,7 +56,9 @@ public class AbilityWall extends EarthAbility {
 			EnumFacing cardinal = entity.getHorizontalFacing();
 			BendingData data = ctx.getData();
 			
-			float xp = data.getAbilityData(this).getTotalXp();
+			AbilityData abilityData = data.getAbilityData(ID);
+			float xp = abilityData.getTotalXp();
+			
 			int whMin, whMax;
 			Random random = new Random();
 			if (xp == 100) {
@@ -74,7 +77,7 @@ public class AbilityWall extends EarthAbility {
 				whMax = 3;
 			}
 			
-			data.getAbilityData(this).addXp(SKILLS_CONFIG.wallRaised);
+			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 			
 			if (!ctx.isLookingAtBlock()) return;
 			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();

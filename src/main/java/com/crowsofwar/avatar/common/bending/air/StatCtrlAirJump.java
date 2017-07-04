@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
@@ -62,7 +61,7 @@ public class StatCtrlAirJump extends StatusControl {
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 		
-		AbilityData abilityData = data.getAbilityData(ABILITY_AIR_JUMP);
+		AbilityData abilityData = data.getAbilityData(AbilityAirJump.ID);
 		boolean allowDoubleJump = abilityData.getLevel() == 3
 				&& abilityData.getPath() == AbilityTreePath.FIRST;
 		

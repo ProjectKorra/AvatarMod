@@ -35,7 +35,6 @@ import com.crowsofwar.avatar.common.PrisonActionCanceller;
 import com.crowsofwar.avatar.common.TemporaryWaterHandler;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
@@ -156,8 +155,6 @@ public class AvatarMod {
 	public void preInit(FMLPreInitializationEvent e) {
 		
 		AvatarLog.log = e.getModLog();
-		
-		Ability.registerAbilities();
 		
 		ConfigStats.load();
 		ConfigSkills.load();

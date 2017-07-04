@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.bending.water;
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -54,7 +53,7 @@ public class StatCtrlThrowBubble extends StatusControl {
 		
 		if (bubble != null) {
 			
-			AbilityData adata = data.getAbilityData(Ability.ABILITY_WATER_BUBBLE);
+			AbilityData adata = data.getAbilityData(AbilityWaterBubble.ID);
 			double mult = adata.getLevel() >= 1 ? 14 : 8;
 			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
 				mult = 20;

@@ -17,9 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -61,7 +60,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
 			
 			// Calculate force and everything
-			double forceMult = data.getAbilityData(Ability.ABILITY_PICK_UP_BLOCK).getLevel() >= 1 //
+			double forceMult = data.getAbilityData(AbilityPickUpBlock.ID).getLevel() >= 1 //
 					? 35 : 25;
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
 			floating.velocity().add(lookDir.times(forceMult));

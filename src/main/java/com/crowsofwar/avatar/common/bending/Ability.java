@@ -41,7 +41,6 @@ public abstract class Ability {
 		this.type = bendingType;
 		this.name = name;
 		this.raytrace = new Raytrace.Info();
-		BendingManager.registerAbility(this);
 	}
 	
 	protected BendingStyle controller() {

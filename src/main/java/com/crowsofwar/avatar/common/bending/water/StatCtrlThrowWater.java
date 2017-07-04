@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -51,7 +50,7 @@ public class StatCtrlThrowWater extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		AbilityData abilityData = data.getAbilityData(Ability.ABILITY_WATER_ARC);
+		AbilityData abilityData = data.getAbilityData(AbilityWaterArc.ID);
 		
 		int lvl = abilityData.getLevel();
 		double velocity = 6;

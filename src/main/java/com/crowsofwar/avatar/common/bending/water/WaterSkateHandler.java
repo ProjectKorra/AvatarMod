@@ -25,7 +25,6 @@ import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
 import static net.minecraft.init.Blocks.WATER;
 
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -88,7 +87,7 @@ public class WaterSkateHandler extends TickHandler {
 	private void tryStartSkating(BendingData data, EntityLivingBase player) {
 		
 		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
-			if (shouldSkate(player, data.getAbilityData(Ability.ABILITY_WATER_SKATE))) {
+			if (shouldSkate(player, data.getAbilityData(AbilityWaterSkate.ID))) {
 				data.removeStatusControl(SKATING_START);
 				data.addStatusControl(SKATING_JUMP);
 			}
@@ -102,7 +101,7 @@ public class WaterSkateHandler extends TickHandler {
 	 */
 	private boolean skate(BendingData data, EntityLivingBase player, Bender bender) {
 		
-		AbilityData abilityData = data.getAbilityData(Ability.ABILITY_WATER_SKATE);
+		AbilityData abilityData = data.getAbilityData(AbilityWaterSkate.ID);
 		
 		World world = player.worldObj;
 		int yPos = getSurfacePos(player);

@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -85,8 +86,8 @@ public abstract class BendingStyle implements ReadableWritable {
 		this.abilities = new ArrayList<>();
 	}
 	
-	protected void addAbility(Ability ability) {
-		this.abilities.add(ability);
+	protected void addAbility(UUID abilityId) {
+		this.abilities.add(Abilities.get(abilityId));
 	}
 	
 	/**

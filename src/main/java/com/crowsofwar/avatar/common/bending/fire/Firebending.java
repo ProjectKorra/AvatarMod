@@ -17,12 +17,10 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.bending.Ability.*;
-
 import java.awt.Color;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -35,10 +33,10 @@ public class Firebending extends BendingStyle {
 	
 	public Firebending() {
 		
-		addAbility(ABILITY_LIGHT_FIRE);
-		addAbility(ABILITY_FIRE_ARC);
-		addAbility(ABILITY_FLAMETHROWER);
-		addAbility(ABILITY_FIREBALL);
+		addAbility(AbilityLightFire.ID);
+		addAbility(AbilityFireArc.ID);
+		addAbility(AbilityFlamethrower.ID);
+		addAbility(AbilityFireball.ID);
 		
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
