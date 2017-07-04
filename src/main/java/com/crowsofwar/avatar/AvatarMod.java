@@ -34,10 +34,31 @@ import com.crowsofwar.avatar.common.HumanBenderSpawner;
 import com.crowsofwar.avatar.common.PrisonActionCanceller;
 import com.crowsofwar.avatar.common.TemporaryWaterHandler;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
+import com.crowsofwar.avatar.common.bending.earth.AbilityMining;
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
+import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
+import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
+import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
+import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
+import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
+import com.crowsofwar.avatar.common.bending.ice.AbilityIceWalk;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningStrike;
+import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.ConfigChi;
 import com.crowsofwar.avatar.common.config.ConfigClient;
@@ -265,6 +286,29 @@ public class AvatarMod {
 	private void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
 		registerEntity(entity, name);
 		registerEgg(new ResourceLocation("avatarmod", name), primary, secondary);
+	}
+	
+	private static void registerAbilities() {
+		Abilities.register(new AbilityAirGust());
+		Abilities.register(new AbilityAirJump());
+		Abilities.register(new AbilityPickUpBlock());
+		Abilities.register(new AbilityRavine());
+		Abilities.register(new AbilityLightFire());
+		Abilities.register(new AbilityFireArc());
+		Abilities.register(new AbilityFlamethrower());
+		Abilities.register(new AbilityWaterArc());
+		Abilities.register(new AbilityCreateWave());
+		Abilities.register(new AbilityWaterBubble());
+		Abilities.register(new AbilityWall());
+		Abilities.register(new AbilityWaterSkate());
+		Abilities.register(new AbilityFireball());
+		Abilities.register(new AbilityAirblade());
+		Abilities.register(new AbilityMining());
+		Abilities.register(new AbilityAirBubble());
+		Abilities.register(new AbilityLightningStrike());
+		Abilities.register(new AbilityIceWalk());
+		Abilities.register(new AbilityIceBurst());
+		Abilities.register(new AbilityIcePrison());
 	}
 	
 }
