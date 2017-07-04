@@ -71,6 +71,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
+import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
 import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -224,6 +225,7 @@ public class AvatarMod {
 		registerEntity(EntityIceShield.class, "iceshield");
 		registerEntity(EntityIceShard.class, "iceshard");
 		registerEntity(EntityIcePrison.class, "iceprison");
+		registerEntity(EntityOstrichHorse.class, "OstrichHorse");
 		
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
