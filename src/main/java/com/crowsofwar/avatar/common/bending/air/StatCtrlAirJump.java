@@ -125,6 +125,7 @@ public class StatCtrlAirJump extends StatusControl {
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
 				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}
+			abilityData.addXp(STATS_CONFIG.chiAirJump);
 			
 			entity.worldObj.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
