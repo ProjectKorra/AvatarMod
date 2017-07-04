@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
@@ -30,7 +30,7 @@ import com.crowsofwar.gorecore.tree.TreeCommand;
 
 public class AvatarCommand extends TreeCommand {
 	
-	public static final List<BendingController>[] CONTROLLER_BENDING_OPTIONS;
+	public static final List<BendingStyle>[] CONTROLLER_BENDING_OPTIONS;
 	static {
 		CONTROLLER_BENDING_OPTIONS = new List[BendingManager.allBending().size() + 1];
 		CONTROLLER_BENDING_OPTIONS[0] = BendingManager.allBending();
@@ -39,16 +39,16 @@ public class AvatarCommand extends TreeCommand {
 		}
 	}
 	
-	public static final ITypeConverter<List<BendingController>> CONVERTER_BENDING = new ITypeConverter<List<BendingController>>() {
+	public static final ITypeConverter<List<BendingStyle>> CONVERTER_BENDING = new ITypeConverter<List<BendingStyle>>() {
 		
 		@Override
-		public List<BendingController> convert(String str) {
+		public List<BendingStyle> convert(String str) {
 			return str.equals("all") ? BendingManager.allBending()
 					: Arrays.asList(BendingManager.getBending(str.toLowerCase()));
 		}
 		
 		@Override
-		public String toString(List<BendingController> obj) {
+		public String toString(List<BendingStyle> obj) {
 			return obj.equals(BendingManager.allBending()) ? "all" : obj.get(0).getName();
 		}
 		

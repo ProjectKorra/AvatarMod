@@ -48,14 +48,14 @@ import net.minecraft.nbt.NBTTagCompound;
  *            The BendingState this controller is using
  * 
  */
-public abstract class BendingController implements ReadableWritable {
+public abstract class BendingStyle implements ReadableWritable {
 	
-	public static final CreateFromNBT<BendingController> creator = new CreateFromNBT<BendingController>() {
+	public static final CreateFromNBT<BendingStyle> creator = new CreateFromNBT<BendingStyle>() {
 		@Override
-		public BendingController create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
+		public BendingStyle create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
 			int id = nbt.getInteger("ControllerID");
 			try {
-				BendingController bc = BendingManager.getBending(id);
+				BendingStyle bc = BendingManager.getBending(id);
 				return bc;
 			} catch (Exception e) {
 				AvatarLog.error(
@@ -66,9 +66,9 @@ public abstract class BendingController implements ReadableWritable {
 		}
 	};
 	
-	public static final WriteToNBT<BendingController> writer = new WriteToNBT<BendingController>() {
+	public static final WriteToNBT<BendingStyle> writer = new WriteToNBT<BendingStyle>() {
 		@Override
-		public void write(NBTTagCompound nbt, BendingController object, Object[] methodsExtraData,
+		public void write(NBTTagCompound nbt, BendingStyle object, Object[] methodsExtraData,
 				Object[] extraData) {
 			nbt.setInteger("ControllerID", object.getId());
 		}
@@ -81,7 +81,7 @@ public abstract class BendingController implements ReadableWritable {
 	
 	private final List<Ability> abilities;
 	
-	public BendingController() {
+	public BendingStyle() {
 		this.abilities = new ArrayList<>();
 	}
 	
@@ -111,10 +111,10 @@ public abstract class BendingController implements ReadableWritable {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {}
 	
-	public static BendingController find(int id) {
+	public static BendingStyle find(int id) {
 		
 		try {
-			BendingController bc = BendingManager.getBending(id);
+			BendingStyle bc = BendingManager.getBending(id);
 			return bc;
 		} catch (Exception e) {
 			AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,

@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -46,7 +46,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		
-		BendingController controller = BendingManager.getBending(BendingManager.ID_EARTHBENDING);
+		BendingStyle controller = BendingManager.getBending(BendingManager.ID_EARTHBENDING);
 		
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.worldObj;

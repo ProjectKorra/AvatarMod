@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -82,12 +82,12 @@ public class EntityBenderData extends AbstractBendingData {
 	
 	public void readFromNbt(NBTTagCompound readFrom) {
 		
-		List<BendingController> bendings = new ArrayList<>();
+		List<BendingStyle> bendings = new ArrayList<>();
 		AvatarUtils.readList(bendings,
-				compound -> BendingController.find(compound.getInteger("ControllerID")), readFrom,
+				compound -> BendingStyle.find(compound.getInteger("ControllerID")), readFrom,
 				"BendingControllers");
 		clearBending();
-		for (BendingController bending : bendings) {
+		for (BendingStyle bending : bendings) {
 			addBending(bending);
 		}
 		

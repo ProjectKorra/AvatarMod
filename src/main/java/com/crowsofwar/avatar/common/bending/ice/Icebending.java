@@ -18,7 +18,7 @@ package com.crowsofwar.avatar.common.bending.ice;
 
 import static com.crowsofwar.avatar.common.bending.Ability.*;
 
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -29,7 +29,7 @@ import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
  * 
  * @author CrowsOfWar
  */
-public class Icebending extends BendingController {
+public class Icebending extends BendingStyle {
 	
 	private final BendingMenuInfo menu;
 	

@@ -26,7 +26,7 @@ import java.util.Set;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -47,19 +47,19 @@ import io.netty.buffer.ByteBuf;
  */
 public class DataTransmitters {
 	
-	public static final DataTransmitter<List<BendingController>> BENDING_LIST = new DataTransmitter<List<BendingController>>() {
+	public static final DataTransmitter<List<BendingStyle>> BENDING_LIST = new DataTransmitter<List<BendingStyle>>() {
 		
 		@Override
-		public void write(ByteBuf buf, List<BendingController> t) {
+		public void write(ByteBuf buf, List<BendingStyle> t) {
 			buf.writeInt(t.size());
-			for (BendingController controller : t)
+			for (BendingStyle controller : t)
 				buf.writeInt(controller.getId());
 		}
 		
 		@Override
-		public List<BendingController> read(ByteBuf buf, BendingData data) {
+		public List<BendingStyle> read(ByteBuf buf, BendingData data) {
 			int size = buf.readInt();
-			List<BendingController> out = new ArrayList<>(size);
+			List<BendingStyle> out = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
 				out.add(BendingManager.getBending(buf.readInt()));
 			}
@@ -184,15 +184,15 @@ public class DataTransmitters {
 		}
 	};
 	
-	public static final DataTransmitter<BendingController> ACTIVE_BENDING = new DataTransmitter<BendingController>() {
+	public static final DataTransmitter<BendingStyle> ACTIVE_BENDING = new DataTransmitter<BendingStyle>() {
 		
 		@Override
-		public void write(ByteBuf buf, BendingController t) {
+		public void write(ByteBuf buf, BendingStyle t) {
 			buf.writeInt(t == null ? -1 : t.getId());
 		}
 		
 		@Override
-		public BendingController read(ByteBuf buf, BendingData data) {
+		public BendingStyle read(ByteBuf buf, BendingData data) {
 			int id = buf.readInt();
 			if (id == -1) {
 				return null;

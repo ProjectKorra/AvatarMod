@@ -30,7 +30,7 @@ import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -55,7 +55,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	private final AbstractBendingData bendingData;
 	
 	@Override
-	public BendingController getActiveBending() {
+	public BendingStyle getActiveBending() {
 		return bendingData.getActiveBending();
 	}
 	
@@ -65,7 +65,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void setActiveBending(BendingController controller) {
+	public void setActiveBending(BendingStyle controller) {
 		bendingData.setActiveBending(controller);
 	}
 	
@@ -100,12 +100,12 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 		AvatarPlayerData playerData = this;
 		
-		List<BendingController> bendings = new ArrayList<>();
+		List<BendingStyle> bendings = new ArrayList<>();
 		AvatarUtils.readList(bendings,
-				compound -> BendingController.find(compound.getInteger("ControllerID")), readFrom,
+				compound -> BendingStyle.find(compound.getInteger("ControllerID")), readFrom,
 				"BendingControllers");
 		clearBending();
-		for (BendingController bending : bendings) {
+		for (BendingStyle bending : bendings) {
 			addBending(bending);
 		}
 		
@@ -234,7 +234,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	// ================================================================================
 	
 	@Override
-	public boolean hasBending(BendingController bending) {
+	public boolean hasBending(BendingStyle bending) {
 		return bendingData.hasBending(bending);
 	}
 	
@@ -244,7 +244,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void addBending(BendingController bending) {
+	public void addBending(BendingStyle bending) {
 		bendingData.addBending(bending);
 	}
 	
@@ -254,7 +254,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void removeBending(BendingController bending) {
+	public void removeBending(BendingStyle bending) {
 		bendingData.removeBending(bending);
 	}
 	
@@ -264,7 +264,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public List<BendingController> getAllBending() {
+	public List<BendingStyle> getAllBending() {
 		return bendingData.getAllBending();
 	}
 	
@@ -429,7 +429,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	@Override
-	public void setAllBending(List<BendingController> bending) {
+	public void setAllBending(List<BendingStyle> bending) {
 		bendingData.setAllBending(bending);
 	}
 	

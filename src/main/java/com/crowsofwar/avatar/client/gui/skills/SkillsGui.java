@@ -37,7 +37,7 @@ import com.crowsofwar.avatar.client.uitools.ScreenInfo;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -90,7 +90,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		ScreenInfo.refreshDimensions();
 		
-		BendingController controller = BendingManager.getBending(type);
+		BendingStyle controller = BendingManager.getBending(type);
 		List<Ability> abilities = controller.getAllAbilities();
 		cards = new AbilityCard[abilities.size()];
 		for (int i = 0; i < abilities.size(); i++) {
@@ -102,8 +102,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		Integer[] types = data.getAllBending().stream()//
 				.map(c -> c.getId())//
 				.sorted((id1, id2) -> {
-					BendingController c1 = BendingManager.getBending(id1);
-					BendingController c2 = BendingManager.getBending(id2);
+					BendingStyle c1 = BendingManager.getBending(id1);
+					BendingStyle c2 = BendingManager.getBending(id2);
 					return c1.getName().compareTo(c2.getName());
 				})//
 				.toArray(Integer[]::new);

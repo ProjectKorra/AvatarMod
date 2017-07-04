@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 
@@ -35,11 +35,11 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
  */
 public abstract class AbstractBendingData implements BendingData {
 	
-	private final Set<BendingController> bendings;
+	private final Set<BendingStyle> bendings;
 	private final Set<StatusControl> statusControls;
 	private final Map<Ability, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
-	private BendingController activeBending;
+	private BendingStyle activeBending;
 	private Chi chi;
 	private MiscData miscData;
 	
@@ -61,7 +61,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * Check if the player has that bending controller
 	 */
 	@Override
-	public boolean hasBending(BendingController bending) {
+	public boolean hasBending(BendingStyle bending) {
 		return bendings.contains(bending);
 	}
 	
@@ -80,7 +80,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * Also adds the state if it isn't present.
 	 */
 	@Override
-	public void addBending(BendingController bending) {
+	public void addBending(BendingStyle bending) {
 		if (bendings.add(bending)) {
 			save(DataCategory.BENDING_LIST);
 		}
@@ -101,7 +101,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 * controller is added).
 	 */
 	@Override
-	public void removeBending(BendingController bending) {
+	public void removeBending(BendingStyle bending) {
 		if (bendings.remove(bending)) {
 			save(DataCategory.BENDING_LIST);
 		}
@@ -110,7 +110,7 @@ public abstract class AbstractBendingData implements BendingData {
 	/**
 	 * Remove the bending controller and its state with that type.
 	 * 
-	 * @see #removeBending(BendingController)
+	 * @see #removeBending(BendingStyle)
 	 */
 	@Override
 	public void removeBending(int type) {
@@ -118,12 +118,12 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public List<BendingController> getAllBending() {
+	public List<BendingStyle> getAllBending() {
 		return new ArrayList<>(bendings);
 	}
 	
 	@Override
-	public void setAllBending(List<BendingController> bending) {
+	public void setAllBending(List<BendingStyle> bending) {
 		bendings.clear();
 		bendings.addAll(bending);
 	}
@@ -138,7 +138,7 @@ public abstract class AbstractBendingData implements BendingData {
 	// ================================================================================
 	
 	@Override
-	public BendingController getActiveBending() {
+	public BendingStyle getActiveBending() {
 		if (!bendings.isEmpty() && activeBending == null) {
 			activeBending = bendings.iterator().next();
 		}
@@ -153,12 +153,12 @@ public abstract class AbstractBendingData implements BendingData {
 	
 	@Override
 	public int getActiveBendingId() {
-		BendingController controller = getActiveBending();
+		BendingStyle controller = getActiveBending();
 		return controller == null ? null : controller.getId();
 	}
 	
 	@Override
-	public void setActiveBending(BendingController controller) {
+	public void setActiveBending(BendingStyle controller) {
 		if (!bendings.isEmpty() && bendings.contains(controller)) {
 			activeBending = controller;
 			save(DataCategory.ACTIVE_BENDING);
@@ -167,7 +167,7 @@ public abstract class AbstractBendingData implements BendingData {
 	
 	@Override
 	public void setActiveint(int type) {
-		BendingController controller = BendingManager.getBending(type);
+		BendingStyle controller = BendingManager.getBending(type);
 		setActiveBending(controller);
 	}
 	

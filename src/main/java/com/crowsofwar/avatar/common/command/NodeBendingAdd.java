@@ -21,7 +21,7 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.gorecore.tree.ArgumentList;
 import com.crowsofwar.gorecore.tree.ArgumentOptions;
@@ -37,7 +37,7 @@ import net.minecraft.world.World;
 public class NodeBendingAdd extends NodeFunctional {
 	
 	private final IArgument<String> argPlayerName;
-	private final IArgument<List<BendingController>> argBendingController;
+	private final IArgument<List<BendingStyle>> argBendingController;
 	
 	public NodeBendingAdd() {
 		super("add", true);
@@ -58,9 +58,9 @@ public class NodeBendingAdd extends NodeFunctional {
 		
 		String playerName = args.get(argPlayerName);
 		
-		List<BendingController> controllers = args.get(argBendingController);
+		List<BendingStyle> controllers = args.get(argBendingController);
 		
-		for (BendingController controller : controllers) {
+		for (BendingStyle controller : controllers) {
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName);
 			
 			if (data == null) {

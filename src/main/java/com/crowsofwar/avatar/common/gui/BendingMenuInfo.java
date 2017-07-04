@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.common.gui;
 import java.util.List;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 
 /**
  * Encapsulates information about an BendingController's radial menu- the
@@ -42,7 +42,7 @@ public class BendingMenuInfo {
 	 *            be more than 8. If it is less than 8, the unspecified elements
 	 *            are filled with {@link AvatarAbility#NONE}.
 	 */
-	public BendingMenuInfo(MenuTheme theme, BendingController bending) {
+	public BendingMenuInfo(MenuTheme theme, BendingStyle bending) {
 		List<Ability> buttons = bending.getAllAbilities();
 		if (buttons.size() > 8) throw new IllegalArgumentException(
 				"Cannot create BendingMenuInfo with buttons being larger than 8");

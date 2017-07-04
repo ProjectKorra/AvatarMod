@@ -36,7 +36,7 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
  * retrieved via {@link #getBending(int)}. Contains constants which specify the
  * IDs of bending. <br />
  * <br />
- * Third-party mods can use {@link #registerBending(BendingController)} to
+ * Third-party mods can use {@link #registerBending(BendingStyle)} to
  * enable custom bending controllers.
  *
  */
@@ -52,9 +52,9 @@ public class BendingManager {
 		ID_ICEBENDING = 6;
 	// @formatter:on
 	
-	private static Map<Integer, BendingController> bending;
-	private static Map<String, BendingController> bendingByName;
-	private static List<BendingController> allBending;
+	private static Map<Integer, BendingStyle> bending;
+	private static Map<String, BendingStyle> bendingByName;
+	private static List<BendingStyle> allBending;
 	
 	private static Map<Integer, Ability> abilities;
 	private static List<Ability> allAbilities;
@@ -88,7 +88,7 @@ public class BendingManager {
 	 * @throws IllegalArgumentException
 	 *             If no bending controller for that type (shouldn't happen)
 	 */
-	public static BendingController getBending(int id) {
+	public static BendingStyle getBending(int id) {
 		if (!bending.containsKey(id))
 			throw new IllegalArgumentException("No bending controller with type " + id);
 		return bending.get(id);
@@ -101,7 +101,7 @@ public class BendingManager {
 	 * @param name
 	 *            The name of the bending controller
 	 */
-	public static BendingController getBending(String name) {
+	public static BendingStyle getBending(String name) {
 		return bendingByName.get(name);
 	}
 	
@@ -115,7 +115,7 @@ public class BendingManager {
 	/**
 	 * Get an unmodifiable list of all bending controllers.
 	 */
-	public static List<BendingController> allBending() {
+	public static List<BendingStyle> allBending() {
 		return Collections.unmodifiableList(allBending);
 	}
 	
@@ -136,7 +136,7 @@ public class BendingManager {
 	/**
 	 * Get the id of the controller. 0 on error
 	 */
-	public static int getControllerId(BendingController controller) {
+	public static int getControllerId(BendingStyle controller) {
 		return controller.getId();
 	}
 	
@@ -147,7 +147,7 @@ public class BendingManager {
 		return Collections.unmodifiableList(allAbilities);
 	}
 	
-	public static void registerBending(BendingController controller) {
+	public static void registerBending(BendingStyle controller) {
 		bending.put(controller.getId(), controller);
 		bendingByName.put(controller.getName(), controller);
 		allBending.add(controller);

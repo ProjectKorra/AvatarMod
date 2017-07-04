@@ -98,7 +98,7 @@ public abstract class Ability {
 		BendingManager.registerAbility(this);
 	}
 	
-	protected BendingController controller() {
+	protected BendingStyle controller() {
 		return BendingManager.getBending(type);
 	}
 	

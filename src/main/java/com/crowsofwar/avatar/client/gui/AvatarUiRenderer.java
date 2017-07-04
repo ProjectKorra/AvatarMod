@@ -28,7 +28,7 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -231,7 +231,7 @@ public class AvatarUiRenderer extends Gui {
 			drawBendingIcon(0, 0, data.getActiveBending());
 			
 			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
-			List<BendingController> allBending = data.getAllBending();
+			List<BendingStyle> allBending = data.getAllBending();
 			
 			// Draw next
 			int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
@@ -259,7 +259,7 @@ public class AvatarUiRenderer extends Gui {
 		
 	}
 	
-	private void drawBendingIcon(int xOff, int yOff, BendingController controller) {
+	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller) {
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
 		int u = 50 * (controller.getId() - 1);
@@ -348,7 +348,7 @@ public class AvatarUiRenderer extends Gui {
 	
 	public static void openBendingGui(int bending) {
 		
-		BendingController controller = BendingManager.getBending(bending);
+		BendingStyle controller = BendingManager.getBending(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
 		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getButtons());

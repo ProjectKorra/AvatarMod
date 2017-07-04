@@ -22,7 +22,7 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -54,7 +54,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		
-		BendingController controller = BendingManager.getBending(BendingManager.ID_EARTHBENDING);
+		BendingStyle controller = BendingManager.getBending(BendingManager.ID_EARTHBENDING);
 		
 		BendingData data = ctx.getData();
 		

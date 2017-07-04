@@ -29,7 +29,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -436,7 +436,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 		BendingData data = Bender.getData(player);
 		
-		List<BendingController> controllers = data.getAllBending();
+		List<BendingStyle> controllers = data.getAllBending();
 		if (controllers.size() > 1) {
 			
 			int index = controllers.indexOf(data.getActiveBending());

@@ -21,7 +21,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -64,7 +64,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		if (data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
 		} else {
-			BendingController controller = data.getAllBending().get(0);
+			BendingStyle controller = data.getAllBending().get(0);
 			int guiId = AvatarGuiHandler.getGuiId(controller.getId());
 			player.openGui(AvatarMod.instance, guiId, world, 0, 0, 0);
 		}

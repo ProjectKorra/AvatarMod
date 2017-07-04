@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.common.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.gorecore.tree.IArgument;
 
@@ -31,7 +31,7 @@ import net.minecraft.command.ICommandSender;
  * 
  * @author CrowsOfWar
  */
-public class ArgumentBendingController implements IArgument<BendingController> {
+public class ArgumentBendingController implements IArgument<BendingStyle> {
 	
 	private final String name;
 	
@@ -45,12 +45,12 @@ public class ArgumentBendingController implements IArgument<BendingController> {
 	}
 	
 	@Override
-	public BendingController getDefaultValue() {
+	public BendingStyle getDefaultValue() {
 		return null;
 	}
 	
 	@Override
-	public BendingController convert(String input) {
+	public BendingStyle convert(String input) {
 		return BendingManager.getBending(input.toLowerCase());
 	}
 	
@@ -62,7 +62,7 @@ public class ArgumentBendingController implements IArgument<BendingController> {
 	@Override
 	public String getHelpString() {
 		String out = "<";
-		for (BendingController bc : BendingManager.allBending()) {
+		for (BendingStyle bc : BendingManager.allBending()) {
 			out += bc.getName() + "|";
 		}
 		return out.substring(0, out.length() - 1) + ">";
@@ -76,7 +76,7 @@ public class ArgumentBendingController implements IArgument<BendingController> {
 	@Override
 	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
 		List<String> out = new ArrayList<>();
-		for (BendingController bc : BendingManager.allBending())
+		for (BendingStyle bc : BendingManager.allBending())
 			out.add(bc.getName());
 		return out;
 	}

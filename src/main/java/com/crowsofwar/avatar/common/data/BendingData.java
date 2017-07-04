@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 
 /**
@@ -37,7 +37,7 @@ public interface BendingData {
 	/**
 	 * Check if the player has that bending controller
 	 */
-	boolean hasBending(BendingController bending);
+	boolean hasBending(BendingStyle bending);
 	
 	/**
 	 * Check if the player has that type of bending
@@ -50,7 +50,7 @@ public interface BendingData {
 	 * <p>
 	 * Also adds the state if it isn't present.
 	 */
-	void addBending(BendingController bending);
+	void addBending(BendingStyle bending);
 	
 	/**
 	 * If the bending controller is not already present, adds the bending
@@ -63,18 +63,18 @@ public interface BendingData {
 	 * note, this will be saved, so is permanent (unless another bending
 	 * controller is added).
 	 */
-	void removeBending(BendingController bending);
+	void removeBending(BendingStyle bending);
 	
 	/**
 	 * Remove the bending controller and its state with that type.
 	 * 
-	 * @see #removeBending(BendingController)
+	 * @see #removeBending(BendingStyle)
 	 */
 	void removeBending(int type);
 	
-	List<BendingController> getAllBending();
+	List<BendingStyle> getAllBending();
 	
-	void setAllBending(List<BendingController> controller);
+	void setAllBending(List<BendingStyle> controller);
 	
 	void clearBending();
 	
@@ -86,7 +86,7 @@ public interface BendingData {
 	 * Gets the currently in-use bending controller. Null if player has no
 	 * bending
 	 */
-	BendingController getActiveBending();
+	BendingStyle getActiveBending();
 	
 	/**
 	 * Gets the type of the in-use bending controller. Null if the player has no
@@ -97,7 +97,7 @@ public interface BendingData {
 	/**
 	 * Set the currently in-use bending. If null, will be rejected
 	 */
-	void setActiveBending(BendingController controller);
+	void setActiveBending(BendingStyle controller);
 	
 	/**
 	 * Set the currently in-use type. If null, will be rejected

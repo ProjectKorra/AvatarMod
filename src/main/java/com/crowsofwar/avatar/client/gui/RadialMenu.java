@@ -26,7 +26,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -64,7 +64,7 @@ public class RadialMenu extends Gui {
 	private RadialSegment[] segments;
 	private Ability[] controls;
 	private MenuTheme theme;
-	private final BendingController controller;
+	private final BendingStyle controller;
 	
 	/**
 	 * Current radial segment that the mouse is over, null for none.
@@ -85,7 +85,7 @@ public class RadialMenu extends Gui {
 	 *            less than 8, then the array is filled with null. The arguments
 	 *            can only be a maximum of 8.
 	 */
-	public RadialMenu(BendingController controller, MenuTheme theme, Ability... controls) {
+	public RadialMenu(BendingStyle controller, MenuTheme theme, Ability... controls) {
 		this.controller = controller;
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
