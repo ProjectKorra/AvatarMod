@@ -206,9 +206,20 @@ public class EntityOstrichHorse extends EntityAnimal {
 			}
 			
 		}
+		if (instructions == 0) {
+			
+			// Don't move very fast
+			target = moveSpeedAttr * 0.5f;
+			
+		}
 		
 		// Update to dataManager
-		next = MathHelper.clamp_float(next, 0, target);
+		if (next < 0) {
+			next = 0;
+		}
+		if (next > target) {
+			next += (target - next) * 0.05f;
+		}
 		setRideSpeed(next);
 		
 	}
