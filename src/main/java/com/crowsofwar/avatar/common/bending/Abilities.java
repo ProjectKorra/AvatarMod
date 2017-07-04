@@ -16,11 +16,43 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 /**
  * 
  * 
  * @author CrowsOfWar
  */
 public class Abilities {
+	
+	private static final Set<Ability> abilities = new HashSet<>();
+	private static final Map<UUID, Ability> abilitiesById = new HashMap<>();
+	private static final Map<String, Ability> abilitiesByName = new HashMap<>();
+	
+	@Nullable
+	public static Ability get(UUID id) {
+		return abilitiesById.get(id);
+	}
+	
+	@Nullable
+	public static Ability get(String name) {
+		return abilitiesByName.get(name);
+	}
+	
+	public static Set<Ability> getAll() {
+		return abilities;
+	}
+	
+	public static void register(Ability ability) {
+		abilities.add(ability);
+		abilitiesById.put(ability.getId(), ability);
+		abilitiesByName.put(ability.getName(), ability);
+	}
 	
 }
