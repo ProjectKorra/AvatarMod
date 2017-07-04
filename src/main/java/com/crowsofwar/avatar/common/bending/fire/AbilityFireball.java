@@ -20,6 +20,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -40,6 +42,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityFireball extends FireAbility {
+	
+	public static final UUID ID = UUID.fromString("c6d1a13e-06fd-4d58-be21-f187995717c0");
 	
 	public AbilityFireball() {
 		super("fireball");
@@ -86,6 +90,11 @@ public class AbilityFireball extends FireAbility {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFireball(this, entity, bender);
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

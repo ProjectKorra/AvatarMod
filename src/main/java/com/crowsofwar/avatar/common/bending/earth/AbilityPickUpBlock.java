@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending.earth;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.Random;
+import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -48,6 +49,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityPickUpBlock extends EarthAbility {
+	
+	public static final UUID ID = UUID.fromString("a1fec675-871e-4ea0-950c-bb67c1e7898e");
 	
 	private final Random random;
 	
@@ -141,6 +144,11 @@ public class AbilityPickUpBlock extends EarthAbility {
 					1, (float) (random.nextGaussian() / 0.25 + 0.375));
 		}
 		
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

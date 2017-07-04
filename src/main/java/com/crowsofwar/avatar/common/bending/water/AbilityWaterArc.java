@@ -21,6 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.toRadians;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BiPredicate;
 
 import com.crowsofwar.avatar.common.bending.BendingAi;
@@ -46,6 +47,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityWaterArc extends WaterAbility {
+	
+	public static final UUID ID = UUID.fromString("577c67ea-9e7c-4797-b100-c62d37e7d946");
 	
 	/**
 	 * @param controller
@@ -137,6 +140,11 @@ public class AbilityWaterArc extends WaterAbility {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiWaterArc(this, entity, bender);
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

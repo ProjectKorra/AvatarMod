@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -35,6 +37,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public class AbilityCreateWave extends WaterAbility {
+	
+	public static final UUID ID = UUID.fromString("1ec5d5d4-fd6b-4359-a015-39434ee01bf8");
 	
 	public AbilityCreateWave() {
 		super("wave");
@@ -98,6 +102,11 @@ public class AbilityCreateWave extends WaterAbility {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiWave(this, entity, bender);
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

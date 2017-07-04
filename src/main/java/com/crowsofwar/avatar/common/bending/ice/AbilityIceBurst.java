@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -32,6 +34,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityIceBurst extends Ability {
+	
+	public static final UUID ID = UUID.fromString("c6bb814c-4808-4bc1-a6aa-fc01c871eedb");
 	
 	public AbilityIceBurst() {
 		super(BendingManager.ID_ICEBENDING, "ice_burst");
@@ -50,6 +54,11 @@ public class AbilityIceBurst extends Ability {
 		world.spawnEntityInWorld(shield);
 		data.addStatusControl(StatusControl.SHIELD_SHATTER);
 		
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

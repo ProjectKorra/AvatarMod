@@ -17,26 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
-import com.crowsofwar.avatar.common.bending.earth.AbilityMining;
-import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
-import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
-import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
-import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIceWalk;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningStrike;
-import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -51,48 +33,12 @@ import net.minecraft.entity.EntityLiving;
  */
 public abstract class Ability {
 	
-	public static Ability ABILITY_AIR_GUST, ABILITY_AIR_JUMP, ABILITY_PICK_UP_BLOCK, ABILITY_RAVINE,
-			ABILITY_LIGHT_FIRE, ABILITY_FIRE_ARC, ABILITY_FLAMETHROWER, ABILITY_WATER_ARC, ABILITY_WAVE,
-			ABILITY_WATER_BUBBLE, ABILITY_WALL, ABILITY_WATER_SKATE, ABILITY_FIREBALL, ABILITY_AIRBLADE,
-			ABILITY_MINING, ABILITY_AIR_BUBBLE, ABILITY_LIGHTNING_STRIKE, ABILITY_ICE_WALK, ABILITY_ICE_BURST,
-			ABILITY_ICE_PRISON;
-	
-	/**
-	 * Creates all abilities. Done before bending controllers are created.
-	 */
-	public static void registerAbilities() {
-		ABILITY_AIR_GUST = new AbilityAirGust();
-		ABILITY_AIR_JUMP = new AbilityAirJump();
-		ABILITY_PICK_UP_BLOCK = new AbilityPickUpBlock();
-		ABILITY_RAVINE = new AbilityRavine();
-		ABILITY_LIGHT_FIRE = new AbilityLightFire();
-		ABILITY_FIRE_ARC = new AbilityFireArc();
-		ABILITY_FLAMETHROWER = new AbilityFlamethrower();
-		ABILITY_WATER_ARC = new AbilityWaterArc();
-		ABILITY_WAVE = new AbilityCreateWave();
-		ABILITY_WATER_BUBBLE = new AbilityWaterBubble();
-		ABILITY_WALL = new AbilityWall();
-		ABILITY_WATER_SKATE = new AbilityWaterSkate();
-		ABILITY_FIREBALL = new AbilityFireball();
-		ABILITY_AIRBLADE = new AbilityAirblade();
-		ABILITY_MINING = new AbilityMining();
-		ABILITY_AIR_BUBBLE = new AbilityAirBubble();
-		ABILITY_LIGHTNING_STRIKE = new AbilityLightningStrike();
-		ABILITY_ICE_WALK = new AbilityIceWalk();
-		ABILITY_ICE_BURST = new AbilityIceBurst();
-		ABILITY_ICE_PRISON = new AbilityIcePrison();
-	}
-	
-	private static int nextId = 1;
-	
 	private final int type;
-	protected final int id;
 	private final String name;
 	private Raytrace.Info raytrace;
 	
 	public Ability(int bendingType, String name) {
 		this.type = bendingType;
-		this.id = nextId++;
 		this.name = name;
 		this.raytrace = new Raytrace.Info();
 		BendingManager.registerAbility(this);
@@ -125,11 +71,10 @@ public abstract class Ability {
 	}
 	
 	/**
-	 * Get the Id of this ability.
+	 * Get the Id of this ability. It is unique from all other abilities, and is
+	 * the same every time Minecraft runs (i.e. is not dynamically generated)
 	 */
-	public final int getId() {
-		return id;
-	}
+	public abstract UUID getId();
 	
 	/**
 	 * Require that a raycast be sent prior to {@link #execute(AbilityContext)}.

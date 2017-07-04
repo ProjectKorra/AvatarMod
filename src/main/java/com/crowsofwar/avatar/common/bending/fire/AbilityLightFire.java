@@ -21,6 +21,8 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.floor;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -45,6 +47,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityLightFire extends FireAbility {
+	
+	public static final UUID ID = UUID.fromString("f699bff5-8c0b-49a9-a328-19e15e0c2f6f");
 	
 	private final ParticleSpawner particles;
 	
@@ -148,6 +152,11 @@ public class AbilityLightFire extends FireAbility {
 		
 		return false;
 		
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

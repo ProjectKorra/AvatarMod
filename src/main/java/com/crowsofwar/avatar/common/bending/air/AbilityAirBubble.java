@@ -20,6 +20,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -43,6 +45,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityAirBubble extends AirAbility {
+	
+	public static final UUID ID = UUID.fromString("1376828c-a702-4bff-b2f1-372054398fe4");
 	
 	public AbilityAirBubble() {
 		super("air_bubble");
@@ -90,6 +94,11 @@ public class AbilityAirBubble extends AirAbility {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirBubble(this, entity, bender);
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

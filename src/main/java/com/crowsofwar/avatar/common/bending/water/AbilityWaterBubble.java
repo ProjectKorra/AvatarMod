@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -40,6 +42,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityWaterBubble extends WaterAbility {
+	
+	public static final UUID ID = UUID.fromString("d4884203-e156-4f06-bd51-c31aeb45d71e");
 	
 	public AbilityWaterBubble() {
 		super("water_bubble");
@@ -87,6 +91,11 @@ public class AbilityWaterBubble extends WaterAbility {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

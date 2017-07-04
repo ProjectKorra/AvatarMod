@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.bending.ice;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 import com.crowsofwar.avatar.common.bending.Ability;
@@ -39,6 +40,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityIcePrison extends Ability {
+	
+	public static final UUID ID = UUID.fromString("54ca4e9c-4d77-4941-a3e0-9d33022a66e5");
 	
 	public AbilityIcePrison() {
 		super(BendingManager.ID_ICEBENDING, "ice_prison");
@@ -71,6 +74,11 @@ public class AbilityIcePrison extends Ability {
 			
 		}
 		
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

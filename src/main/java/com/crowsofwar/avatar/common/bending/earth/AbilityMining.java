@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.UUID;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -53,6 +54,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityMining extends EarthAbility {
+	
+	public static final UUID ID = UUID.fromString("0fffb2ce-0673-49d6-bcfd-f61b911495fa");
 	
 	public AbilityMining() {
 		super("mine_blocks");
@@ -277,6 +280,11 @@ public class AbilityMining extends EarthAbility {
 	private boolean isBreakableOre(World world, BlockPos pos) {
 		Block block = world.getBlockState(pos).getBlock();
 		return block instanceof BlockOre || block instanceof BlockRedstoneOre;
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

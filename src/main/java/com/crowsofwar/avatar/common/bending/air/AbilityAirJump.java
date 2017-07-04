@@ -20,6 +20,8 @@ package com.crowsofwar.avatar.common.bending.air;
 import static com.crowsofwar.avatar.common.bending.StatusControl.AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -33,6 +35,8 @@ import com.crowsofwar.avatar.common.util.Raytrace;
  * @author CrowsOfWar
  */
 public class AbilityAirJump extends AirAbility {
+	
+	public static final UUID ID = UUID.fromString("c14bd8ec-84a6-4721-8b4f-ab3f384cdd0c");
 	
 	/**
 	 * @param controller
@@ -59,6 +63,11 @@ public class AbilityAirJump extends AirAbility {
 			}
 			
 		}
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

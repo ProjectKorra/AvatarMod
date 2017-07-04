@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -39,6 +41,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityFireArc extends FireAbility {
+	
+	public static final UUID ID = UUID.fromString("48a755a4-5d4f-4b32-b299-093786dd93f3");
 	
 	/**
 	 * @param controller
@@ -83,6 +87,11 @@ public class AbilityFireArc extends FireAbility {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFireArc(this, entity, bender);
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

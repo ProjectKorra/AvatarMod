@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -30,6 +32,8 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
  */
 public class AbilityIceWalk extends Ability {
 	
+	public static final UUID ID = UUID.fromString("ed4e5ba6-65b9-41b6-9b90-d2d169ae839e");
+	
 	public AbilityIceWalk() {
 		super(BendingManager.ID_ICEBENDING, "ice_walk");
 	}
@@ -39,6 +43,11 @@ public class AbilityIceWalk extends Ability {
 		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.ICE_WALK);
 		data.addTickHandler(TickHandler.ICE_WALK);
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

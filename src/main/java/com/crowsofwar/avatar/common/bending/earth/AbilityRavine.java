@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -34,6 +36,8 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityRavine extends EarthAbility {
+	
+	public static final UUID ID = UUID.fromString("7a9b9e37-d0b9-43b2-b3be-b49a86d3cf83");
 	
 	/**
 	 * @param controller
@@ -74,6 +78,11 @@ public class AbilityRavine extends EarthAbility {
 			
 		}
 		
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }
