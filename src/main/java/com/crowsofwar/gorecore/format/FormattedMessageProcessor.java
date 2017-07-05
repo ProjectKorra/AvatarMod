@@ -99,6 +99,9 @@ public class FormattedMessageProcessor {
 				} else if (getTfColor(tag) != null) {
 					format.pushFormat(new ChatFormat(tag).setColor(getTfColor(tag)));
 					refreshFormatting = true;
+				} else if (cfg.getColor(tag) != null) {
+					format.pushFormat(new ChatFormat(tag).setColor(cfg.getColor(tag)));
+					refreshFormatting = true;
 				} else if (tag.startsWith("/")) {
 					if (tag.substring(1).equals(format.topFormat().name)) {
 						format.popFormat();
@@ -356,7 +359,7 @@ public class FormattedMessageProcessor {
 		
 		private ChatFormat(String name) {
 			this.name = name;
-			bold = null;
+			bold = FormatSetting.UNAFFECTED;
 			italic = FormatSetting.UNAFFECTED;
 			color = null;
 		}
