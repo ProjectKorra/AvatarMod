@@ -63,7 +63,7 @@ public class FormattedMessageProcessor {
 			text = text.replace("${" + entry.getKey() + "}", entry.getValue());
 		}
 		
-		// Apply chat formats
+		// Apply tags
 		FormattingState format = new FormattingState();
 		String newText = "";
 		
@@ -134,6 +134,74 @@ public class FormattedMessageProcessor {
 		
 		if (format.hasFormat()) {
 			throw new ProcessingException("Unclosed tag [" + format.topFormat().name + "] in text " + text);
+		}
+		
+		return newText;
+		
+	}
+	
+	/**
+	 * Same as {@link #formatText(FormattedMessage, String, Object...)}, but
+	 * does not apply chat styles (color, italic, bold)
+	 */
+	public static String formatPlaintext(FormattedMessage msg, String text, Object... formatValues) {
+		
+		MessageConfiguration cfg = msg.getConfig();
+		
+		// Apply format arguments
+		String[] translateArgs = msg.getTranslationArgs();
+		for (int i = 0; i < translateArgs.length; i++) {
+			text = text.replace("${" + translateArgs[i] + "}", formatValues[i].toString());
+		}
+		
+		// Apply constants from MessageConfiguration
+		Set<Map.Entry<String, String>> consts = cfg.getAllConstants();
+		for (Map.Entry<String, String> entry : consts) {
+			text = text.replace("${" + entry.getKey() + "}", entry.getValue());
+		}
+		
+		// Apply tags
+		String newText = "";
+		
+		// Separate the text by square brackets
+		// for demo, see http://regexr.com/, regex is: \\?\[?\/?[^\]\[\\]+\]?
+		Matcher matcher = Pattern.compile("\\\\?\\[?\\/?[^\\]\\[\\\\]+\\]?").matcher(text);
+		
+		while (matcher.find()) {
+			
+			// Found a new item - can be a tag to interpret or text to render
+			// E.g. the following text: [bold]Hello[/bold]
+			// yields items [bold], Hello, and [/bold]
+			String item = matcher.group();
+			
+			// TODO see if this is really necessary
+			if (item.equals("")) continue;
+			
+			if (item.startsWith("[") && item.endsWith("]")) {
+				
+				// Is a tag
+				String tag = item.substring(1, item.length() - 1);
+				
+				if (tag.startsWith("translate=")) {
+					String key = tag.substring("translate=".length());
+					item = formatPlaintext(msg, I18n.format(key), formatValues);
+				} else if (tag.startsWith("keybinding=")) {
+					String key = tag.substring("keybinding=".length());
+					item = GoreCore.proxy.getKeybindingDisplayName(key);
+				} else {
+					// Ignore formatting related tags (bold, italic, colors)
+					if (!tag.equals("bold") && !tag.equals("italic") && getTfColor(tag) == null) {
+						throw new ProcessingException(
+								"String has invalid tag: [" + item + "]; text is " + text);
+					}
+				}
+				
+			}
+			// remove backslash from escaped tags
+			if (item.startsWith("\\[") && item.endsWith("]")) item = item.substring(1);
+			
+			newText += item;
+			
 		}
 		
 		return newText;
