@@ -38,7 +38,7 @@ public class FormattedMessage {
 	}
 	
 	public void send(ICommandSender sender, Object... formattingArgs) {
-		ChatSender.send(sender, this, formattingArgs);
+		sender.addChatMessage(getChatMessage(formattingArgs));
 	}
 	
 	public String getTranslateKey() {

@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -81,7 +80,7 @@ public class ChatSender {
 			String result = "";
 			
 			for (ITextComponent chat : comps) {
-				String processed = formatChatComponent(chat);
+				String processed = formatChatComponent(chat, false);
 				if (processed != null) {
 					result += processed;
 				}
@@ -95,8 +94,9 @@ public class ChatSender {
 	/**
 	 * Formats the chat component by interpreting the tags. This is only done if
 	 * there is a registered FormattedMessage associated with the chat key.
+	 * Returns null if there isn't a FormattedMessage to use.
 	 */
-	private String formatChatComponent(ITextComponent chat) {
+	private String formatChatComponent(ITextComponent chat, boolean plaintext) {
 		
 		if (chat instanceof TextComponentTranslation) {
 			TextComponentTranslation translate = (TextComponentTranslation) chat;
@@ -106,8 +106,14 @@ public class ChatSender {
 			if (cm != null) {
 				
 				try {
-					return formatText(translate.getUnformattedText().replaceAll("%", "%%"), cm,
-							translate.getFormatArgs());
+					
+					String text = translate.getUnformattedText().replaceAll("%", "%%");
+					if (plaintext) {
+						return FormattedMessageProcessor.formatPlaintext(cm, text, translate.getFormatArgs());
+					} else {
+						return FormattedMessageProcessor.formatText(cm, text, translate.getFormatArgs());
+					}
+					
 				} catch (ProcessingException e) {
 					e.printStackTrace();
 					return "Error processing text; see log for details";
@@ -117,12 +123,8 @@ public class ChatSender {
 			
 		}
 		
-		return result;
+		return null;
 		
-	}
-	
-	static void send(ICommandSender sender, FormattedMessage message, Object... args) {
-		sender.addChatMessage(message.getChatMessage(args));
 	}
 	
 	static class ProcessingException extends RuntimeException {
