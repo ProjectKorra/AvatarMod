@@ -17,9 +17,7 @@
 package com.crowsofwar.gorecore.format;
 
 import static com.crowsofwar.gorecore.format.FormattedMessageProcessor.FormatSetting.TRUE;
-import static com.crowsofwar.gorecore.format.FormattedMessageProcessor.Setting.*;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -52,12 +50,6 @@ public class FormattedMessageProcessor {
 	public static String formatText(FormattedMessage msg, String text, Object... formatValues) {
 		
 		MessageConfiguration cfg = msg.getConfig();
-		ChatFormatSet formatSet = new ChatFormatSet();
-		
-		for (Map.Entry<String, TextFormatting> color : cfg.allColors().entrySet()) {
-			formatSet.addFormat(color.getKey(), color.getValue(), FormatSetting.UNAFFECTED,
-					FormatSetting.UNAFFECTED);
-		}
 		
 		// Apply format arguments
 		String[] translateArgs = msg.getTranslationArgs();
@@ -97,48 +89,33 @@ public class FormattedMessageProcessor {
 				
 				// Is a tag
 				String tag = item.substring(1, item.length() - 1);
-				refreshFormatting = true;
 				
 				if (tag.equals("bold")) {
 					format.pushFormat(new ChatFormat("bold").setBold(TRUE));
-				}
-				if (tag.equals("italic")) {
-					format.pushFormat(new ChatFormat("italic").setItalic(TRUE));
-				}
-				
-				if (formatSet.isFormatFor(tag)) {
-					
-					format.pushFormat(formatSet.lookup(tag));
 					refreshFormatting = true;
-					
+				} else if (tag.equals("italic")) {
+					format.pushFormat(new ChatFormat("italic").setItalic(TRUE));
+					refreshFormatting = true;
+				} else if (getTfColor(tag) != null) {
+					format.pushFormat(new ChatFormat(tag).setColor(getTfColor(tag)));
+					refreshFormatting = true;
 				} else if (tag.startsWith("/")) {
-					
 					if (tag.substring(1).equals(format.topFormat().name)) {
-						
 						format.popFormat();
-						
+						refreshFormatting = true;
 					} else {
 						throw new ProcessingException(
 								"Error processing message; closing tag does not match last opened tag: "
 										+ text);
 					}
-					
 				} else if (tag.startsWith("translate=")) {
-					
 					String key = tag.substring("translate=".length());
 					item = formatText(msg, I18n.format(key), formatValues);
-					refreshFormatting = false;
-					
 				} else if (tag.startsWith("keybinding=")) {
-					
 					String key = tag.substring("keybinding=".length());
 					item = GoreCore.proxy.getKeybindingDisplayName(key);
-					refreshFormatting = false;
-					
 				} else {
-					
 					throw new ProcessingException("String has invalid tag: [" + item + "]; text is " + text);
-					
 				}
 				
 			}
@@ -159,8 +136,7 @@ public class FormattedMessageProcessor {
 		}
 		
 		if (format.hasFormat()) {
-			throw new ProcessingException(
-					"Unclosed tag [" + format.topFormat().getName() + "] in text " + text);
+			throw new ProcessingException("Unclosed tag [" + format.topFormat().name + "] in text " + text);
 		}
 		
 		return newText;
@@ -313,51 +289,6 @@ public class FormattedMessageProcessor {
 		public ChatFormat setColor(TextFormatting color) {
 			this.color = color;
 			return this;
-		}
-		
-	}
-	
-	/**
-	 * A set of chat formats, which contains the default ones, but you can also
-	 * add more.
-	 * 
-	 * @author CrowsOfWar
-	 */
-	private static class ChatFormatSet {
-		
-		// set has better performance than list, and we don't need duplicate
-		// entries anyways
-		private final Set<ChatFormat> formats;
-		
-		public ChatFormatSet() {
-			formats = new HashSet<>();
-			
-			// add colors
-			for (TextFormatting tf : TextFormatting.values()) {
-				if (tf.isColor()) addFormat(tf.getFriendlyName(), tf, UNKNOWN, UNKNOWN);
-			}
-			// add special
-			addFormat("bold", null, TRUE, UNKNOWN);
-			addFormat("italic", null, UNKNOWN, TRUE);
-			addFormat("noformat", null, FALSE, FALSE);
-			
-		}
-		
-		public void addFormat(String name, TextFormatting color, FormatSetting bold, FormatSetting italic) {
-			formats.add(new ChatFormat(name, bold, italic, color));
-		}
-		
-		public ChatFormat lookup(String name) {
-			for (ChatFormat format : formats) {
-				if (format.name.equals(name)) {
-					return format;
-				}
-			}
-			return null;
-		}
-		
-		public boolean isFormatFor(String name) {
-			return lookup(name) != null;
 		}
 		
 	}
