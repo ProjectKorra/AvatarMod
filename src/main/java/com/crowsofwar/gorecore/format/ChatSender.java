@@ -21,19 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.format.FormattingState.ChatFormatSet;
-import com.crowsofwar.gorecore.format.FormattingState.Setting;
-
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -101,8 +92,12 @@ public class ChatSender {
 		
 	}
 	
+	/**
+	 * Formats the chat component by interpreting the tags. This is only done if
+	 * there is a registered FormattedMessage associated with the chat key.
+	 */
 	private String formatChatComponent(ITextComponent chat) {
-		String result = null;
+		
 		if (chat instanceof TextComponentTranslation) {
 			TextComponentTranslation translate = (TextComponentTranslation) chat;
 			String key = getKey(translate);
@@ -111,11 +106,11 @@ public class ChatSender {
 			if (cm != null) {
 				
 				try {
-					result = processText(translate.getUnformattedText().replaceAll("%", "%%"), cm,
+					return formatText(translate.getUnformattedText().replaceAll("%", "%%"), cm,
 							translate.getFormatArgs());
 				} catch (ProcessingException e) {
-					result = "Error processing text; see log for details";
 					e.printStackTrace();
+					return "Error processing text; see log for details";
 				}
 				
 			}
@@ -124,110 +119,6 @@ public class ChatSender {
 		
 		return result;
 		
-	}
-	
-	public String processText(String text, FormattedMessage cm, Object... formatArgs) {
-		MessageConfiguration cfg = cm.getConfig();
-		ChatFormatSet formatSet = new ChatFormatSet();
-		
-		for (Map.Entry<String, TextFormatting> color : cfg.allColors().entrySet()) {
-			formatSet.addFormat(color.getKey(), color.getValue(), Setting.UNKNOWN, Setting.UNKNOWN);
-		}
-		
-		String[] translateArgs = cm.getTranslationArgs();
-		for (int i = 0; i < translateArgs.length; i++) {
-			text = text.replace("${" + translateArgs[i] + "}", formatArgs[i].toString());
-		}
-		
-		Set<Map.Entry<String, String>> consts = cfg.getAllConstants();
-		for (Map.Entry<String, String> entry : consts) {
-			text = text.replace("${" + entry.getKey() + "}", entry.getValue());
-		}
-		
-		FormattingState format = new FormattingState();
-		
-		String newText = "";
-		
-		// Separate the text by square brackets
-		// for demo, see http://regexr.com/, regex is: \\?\[?\/?[^\]\[\\]+\]?
-		Matcher matcher = Pattern.compile("\\\\?\\[?\\/?[^\\]\\[\\\\]+\\]?").matcher(text);
-		
-		while (matcher.find()) {
-			
-			// Item may be a tag, may not be
-			String item = matcher.group();
-			
-			boolean recievedFormatInstruction = false;
-			
-			if (item.equals("")) continue;
-			
-			if (item.startsWith("[") && item.endsWith("]")) {
-				
-				// Is a tag
-				
-				String tag = item.substring(1, item.length() - 1);
-				recievedFormatInstruction = true;
-				
-				if (formatSet.isFormatFor(tag)) {
-					
-					format.pushFormat(formatSet.lookup(tag));
-					recievedFormatInstruction = true;
-					
-				} else if (tag.startsWith("/")) {
-					
-					if (tag.substring(1).equals(format.topFormat().getName())) {
-						
-						format.popFormat();
-						
-					} else {
-						throw new ProcessingException(
-								"Error processing message; closing tag does not match last opened tag: "
-										+ text);
-					}
-					
-				} else if (tag.startsWith("translate=")) {
-					
-					String key = tag.substring("translate=".length());
-					item = processText(I18n.format(key), cm, formatArgs);
-					recievedFormatInstruction = false;
-					
-				} else if (tag.startsWith("keybinding=")) {
-					
-					String key = tag.substring("keybinding=".length());
-					item = GoreCore.proxy.getKeybindingDisplayName(key);
-					recievedFormatInstruction = false;
-					
-				} else {
-					
-					throw new ProcessingException("String has invalid tag: [" + item + "]; text is " + text);
-					
-				}
-				
-			}
-			// remove backslash from escaped tags
-			if (item.startsWith("\\")) item = item.substring(1);
-			
-			// If any formats changed, must re add all chat formats
-			if (recievedFormatInstruction) {
-				newText += TextFormatting.RESET;
-				newText += format.getColor(); // For some reason, color must
-												// come before bold
-				newText += format.isBold() ? TextFormatting.BOLD : "";
-				newText += format.isItalic() ? TextFormatting.ITALIC : "";
-			} else {
-				newText += item;
-			}
-			
-		}
-		
-		if (format.hasFormat()) {
-			throw new ProcessingException(
-					"Unclosed tag [" + format.topFormat().getName() + "] in text " + text);
-		}
-		
-		text = newText;
-		
-		return newText;
 	}
 	
 	static void send(ICommandSender sender, FormattedMessage message, Object... args) {
