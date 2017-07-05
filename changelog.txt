@@ -15,3 +15,4 @@ AV2 Changelog :: version a4.2
 > Fix fire arc boomerang not working
 > Fix air jump XP not added
 > Fix fireballs remaining after firebender entity dies
+> Fix bison breeding too often (every 30-60 seconds)
