@@ -118,7 +118,7 @@ public class FormattedMessageProcessor {
 					String key = tag.substring("keybinding=".length());
 					item = GoreCore.proxy.getKeybindingDisplayName(key);
 				} else {
-					throw new ProcessingException("String has invalid tag: [" + item + "]; text is " + text);
+					throw new ProcessingException("String has invalid tag: [" + tag + "]; text is " + text);
 				}
 				
 			}
@@ -195,7 +195,7 @@ public class FormattedMessageProcessor {
 					// Ignore formatting related tags (bold, italic, colors)
 					if (!tag.equals("bold") && !tag.equals("italic") && getTfColor(tag) == null) {
 						throw new ProcessingException(
-								"String has invalid tag: [" + item + "]; text is " + text);
+								"String has invalid tag: [" + tag + "]; text is " + text);
 					}
 				}
 				
