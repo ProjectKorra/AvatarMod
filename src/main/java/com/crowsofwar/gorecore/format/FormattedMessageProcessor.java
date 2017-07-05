@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.gorecore.format;
 
+import static com.crowsofwar.gorecore.format.FormattedMessageProcessor.FormatSetting.TRUE;
 import static com.crowsofwar.gorecore.format.FormattedMessageProcessor.Setting.*;
 
 import java.util.HashSet;
@@ -54,7 +55,8 @@ public class FormattedMessageProcessor {
 		ChatFormatSet formatSet = new ChatFormatSet();
 		
 		for (Map.Entry<String, TextFormatting> color : cfg.allColors().entrySet()) {
-			formatSet.addFormat(color.getKey(), color.getValue(), Setting.UNKNOWN, Setting.UNKNOWN);
+			formatSet.addFormat(color.getKey(), color.getValue(), FormatSetting.UNAFFECTED,
+					FormatSetting.UNAFFECTED);
 		}
 		
 		// Apply format arguments
@@ -71,7 +73,6 @@ public class FormattedMessageProcessor {
 		
 		// Apply chat formats
 		FormattingState format = new FormattingState();
-		
 		String newText = "";
 		
 		// Separate the text by square brackets
@@ -80,28 +81,39 @@ public class FormattedMessageProcessor {
 		
 		while (matcher.find()) {
 			
-			// Item may be a tag, may not be
+			// Found a new item - can be a tag to interpret or text to render
+			// E.g. the following text: [bold]Hello[/bold]
+			// yields items [bold], Hello, and [/bold]
 			String item = matcher.group();
+			// Whether to re-apply formatting symbols
+			// True if this is a tag that affects formatting
+			// E.g. [bold] but not [translate]
+			boolean refreshFormatting = false;
 			
-			boolean recievedFormatInstruction = false;
-			
+			// TODO see if this is really necessary
 			if (item.equals("")) continue;
 			
 			if (item.startsWith("[") && item.endsWith("]")) {
 				
 				// Is a tag
-				
 				String tag = item.substring(1, item.length() - 1);
-				recievedFormatInstruction = true;
+				refreshFormatting = true;
+				
+				if (tag.equals("bold")) {
+					format.pushFormat(new ChatFormat("bold").setBold(TRUE));
+				}
+				if (tag.equals("italic")) {
+					format.pushFormat(new ChatFormat("italic").setItalic(TRUE));
+				}
 				
 				if (formatSet.isFormatFor(tag)) {
 					
 					format.pushFormat(formatSet.lookup(tag));
-					recievedFormatInstruction = true;
+					refreshFormatting = true;
 					
 				} else if (tag.startsWith("/")) {
 					
-					if (tag.substring(1).equals(format.topFormat().getName())) {
+					if (tag.substring(1).equals(format.topFormat().name)) {
 						
 						format.popFormat();
 						
@@ -115,13 +127,13 @@ public class FormattedMessageProcessor {
 					
 					String key = tag.substring("translate=".length());
 					item = formatText(msg, I18n.format(key), formatValues);
-					recievedFormatInstruction = false;
+					refreshFormatting = false;
 					
 				} else if (tag.startsWith("keybinding=")) {
 					
 					String key = tag.substring("keybinding=".length());
 					item = GoreCore.proxy.getKeybindingDisplayName(key);
-					recievedFormatInstruction = false;
+					refreshFormatting = false;
 					
 				} else {
 					
@@ -134,7 +146,7 @@ public class FormattedMessageProcessor {
 			if (item.startsWith("\\")) item = item.substring(1);
 			
 			// If any formats changed, must re add all chat formats
-			if (recievedFormatInstruction) {
+			if (refreshFormatting) {
 				newText += TextFormatting.RESET;
 				newText += format.getColor(); // For some reason, color must
 												// come before bold
@@ -153,6 +165,28 @@ public class FormattedMessageProcessor {
 		
 		return newText;
 		
+	}
+	
+	/**
+	 * Returns the corresponding TextFormatting if the name refers to a color
+	 * defined in TextFormatting, or null if there isn't one. Name is in
+	 * lowercase.
+	 * <p>
+	 * "blue" returns TextFormatting.BLUE because there that TF has name "BLUE"
+	 * <p>
+	 * "dog" returns null because there is no TextFormatting for dog
+	 * <p>
+	 * "bold" returns null because although there is TextFormatting.BOLD, it is
+	 * not a color
+	 * 
+	 */
+	private static TextFormatting getTfColor(String name) {
+		for (TextFormatting tf : TextFormatting.values()) {
+			if (tf.isColor() && tf.name().toLowerCase().equals(name)) {
+				return tf;
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -184,6 +218,8 @@ public class FormattedMessageProcessor {
 	 *              ^
 	 * </pre>
 	 * 
+	 * TODO Finish documentation
+	 * 
 	 * @author CrowsOfWar
 	 */
 	private static class FormattingState {
@@ -214,7 +250,7 @@ public class FormattedMessageProcessor {
 			boolean bold = false;
 			for (int i = 0; i < formats.size(); i++) {
 				ChatFormat format = formats.get(i);
-				if (!format.isBold.isUnknown()) bold = format.isBold.value();
+				if (!format.bold.isUnknown()) bold = format.bold.value();
 			}
 			return bold;
 		}
@@ -223,7 +259,7 @@ public class FormattedMessageProcessor {
 			boolean italic = false;
 			for (int i = 0; i < formats.size(); i++) {
 				ChatFormat format = formats.get(i);
-				if (!format.isItalic.isUnknown()) italic = format.isItalic.value();
+				if (!format.italic.isUnknown()) italic = format.italic.value();
 			}
 			return italic;
 		}
@@ -244,26 +280,39 @@ public class FormattedMessageProcessor {
 	}
 	
 	/**
-	 * Represents a set of chat formatting settings
+	 * Represents the formatting state at a specific point in the string. It is
+	 * a combination of color, bold, and italic.
 	 * 
 	 * @author CrowsOfWar
 	 */
 	private static class ChatFormat {
 		
 		private final String name;
-		private final Setting isBold;
-		private final Setting isItalic;
-		private final TextFormatting color;
+		private FormatSetting bold;
+		private FormatSetting italic;
+		private TextFormatting color; // null if color should be
+										// unaffected
 		
-		private ChatFormat(String name, Setting isBold, Setting isItalic, TextFormatting color) {
+		private ChatFormat(String name) {
 			this.name = name;
-			this.isBold = isBold;
-			this.isItalic = isItalic;
-			this.color = color;
+			bold = null;
+			italic = FormatSetting.UNAFFECTED;
+			color = null;
 		}
 		
-		public String getName() {
-			return name;
+		public ChatFormat setBold(FormatSetting bold) {
+			this.bold = bold;
+			return this;
+		}
+		
+		public ChatFormat setItalic(FormatSetting italic) {
+			this.italic = italic;
+			return this;
+		}
+		
+		public ChatFormat setColor(TextFormatting color) {
+			this.color = color;
+			return this;
 		}
 		
 	}
@@ -294,7 +343,7 @@ public class FormattedMessageProcessor {
 			
 		}
 		
-		public void addFormat(String name, TextFormatting color, Setting bold, Setting italic) {
+		public void addFormat(String name, TextFormatting color, FormatSetting bold, FormatSetting italic) {
 			formats.add(new ChatFormat(name, bold, italic, color));
 		}
 		
@@ -313,8 +362,18 @@ public class FormattedMessageProcessor {
 		
 	}
 	
-	public enum Setting {
-		UNKNOWN,
+	/**
+	 * The effect of a setting such as bolded on the {@link ChatFormat}:
+	 * <ul>
+	 * <li>True - set bolded
+	 * <li>False - set not bolded
+	 * <li>Unaffected - don't affect whether it is bolded - other ChatFormats in
+	 * the {@link FormattingState} determine the setting
+	 * 
+	 * @author CrowsOfWar
+	 */
+	public enum FormatSetting {
+		UNAFFECTED,
 		TRUE,
 		FALSE;
 		
@@ -323,7 +382,7 @@ public class FormattedMessageProcessor {
 		}
 		
 		public boolean isUnknown() {
-			return this == UNKNOWN;
+			return this == UNAFFECTED;
 		}
 		
 	}
