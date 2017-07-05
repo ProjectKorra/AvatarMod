@@ -105,8 +105,8 @@ public class FormattedMessageProcessor {
 						refreshFormatting = true;
 					} else {
 						throw new ProcessingException(
-								"Error processing message; closing tag does not match last opened tag: "
-										+ text);
+								"Error processing message; closing tag does not match last opened tag: ["
+										+ tag.substring(1) + "]; text is: " + text);
 					}
 				} else if (tag.startsWith("translate=")) {
 					String key = tag.substring("translate=".length());
@@ -120,15 +120,12 @@ public class FormattedMessageProcessor {
 				
 			}
 			// remove backslash from escaped tags
-			if (item.startsWith("\\")) item = item.substring(1);
+			if (item.startsWith("\\[") && item.endsWith("]")) item = item.substring(1);
 			
-			// If any formats changed, must re add all chat formats
+			// If any formats changed (i.e. refreshFormatting == true), then the
+			// item was a tag and shouldn't be added
 			if (refreshFormatting) {
-				newText += TextFormatting.RESET;
-				newText += format.getColor(); // For some reason, color must
-												// come before bold
-				newText += format.isBold() ? TextFormatting.BOLD : "";
-				newText += format.isItalic() ? TextFormatting.ITALIC : "";
+				newText += format.apply();
 			} else {
 				newText += item;
 			}
@@ -249,10 +246,30 @@ public class FormattedMessageProcessor {
 			return color;
 		}
 		
+		/**
+		 * Generates a string containing format instructions (symbol character)
+		 * to use in a string in chat.
+		 */
+		public String apply() {
+			String result = TextFormatting.RESET.toString();
+			
+			// for some reason, color must come before bold
+			result += getColor().toString();
+			if (isBold()) {
+				result += TextFormatting.BOLD.toString();
+			}
+			if (isItalic()) {
+				result += TextFormatting.ITALIC.toString();
+			}
+			
+			return result;
+		}
+		
 		@Override
 		public String toString() {
 			return "FormattingState " + formats;
 		}
+		
 	}
 	
 	/**
