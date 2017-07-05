@@ -41,7 +41,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.format.FormattedMessage;
-import com.crowsofwar.gorecore.format.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -56,8 +56,8 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class WindowAbility {
 	
-	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage.newChatMessage("avatar.ui.unlockDesc",
-			"bending");
+	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage
+			.newChatMessage("avatar.ui.unlockDesc", "bending");
 	
 	private final BendingAbility ability;
 	private final SkillsGui gui;
@@ -164,8 +164,8 @@ public class WindowAbility {
 		handler.add(unlockTitle);
 		
 		String bendingName = ability.getBendingType().name().toLowerCase();
-		String text = ChatSender.instance.processText(I18n.format("avatar.ui.unlockDesc"), MSG_UNLOCK_TEXT,
-				bendingName);
+		String text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT,
+				I18n.format("avatar.ui.unlockDesc"), bendingName);
 		unlockText = new ComponentLongText(text, frameRight.getDimensions());
 		unlockText.setFrame(frameRight);
 		unlockText.setZLevel(4);

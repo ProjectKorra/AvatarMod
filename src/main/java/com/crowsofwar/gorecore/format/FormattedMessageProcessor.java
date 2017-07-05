@@ -43,7 +43,7 @@ public class FormattedMessageProcessor {
 	 * @param msg
 	 *            Information about how to format the message
 	 * @param text
-	 *            Text to format
+	 *            Text to format - should be already translated
 	 * @param formatValues
 	 *            Values of the formatting arguments to use
 	 */

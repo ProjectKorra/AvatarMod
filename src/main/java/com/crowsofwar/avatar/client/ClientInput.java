@@ -50,7 +50,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.format.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -194,7 +194,7 @@ public class ClientInput implements IControlsHandler {
 			} else {
 				
 				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
-				message = ChatSender.instance.processText(message, MSG_DONT_HAVE_BENDING,
+				message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message,
 						mc.thePlayer.getName());
 				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
 				

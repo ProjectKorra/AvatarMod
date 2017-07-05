@@ -34,7 +34,7 @@ import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessage;
-import com.crowsofwar.gorecore.format.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -158,7 +158,7 @@ public class RadialMenu extends Gui {
 			}
 			String second = I18n.format(secondKey);
 			
-			second = ChatSender.instance.processText(second, MSG_RADIAL_XP,
+			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
 					(Object[]) ArrayUtils.addAll(secondArgs, abilityData.getLevel() + ""));
 			
 			drawCenteredString(mc.fontRendererObj, second, x,

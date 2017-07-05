@@ -46,7 +46,7 @@ import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.format.FormattedMessage;
-import com.crowsofwar.gorecore.format.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -127,8 +127,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
 		
-		title = new ComponentText(TextFormatting.BOLD + ChatSender.instance
-				.processText(I18n.format("avatar.ui.skillsMenu"), MSG_TITLE, type.name().toLowerCase()));
+		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
+				I18n.format("avatar.ui.skillsMenu"), type.name().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);
