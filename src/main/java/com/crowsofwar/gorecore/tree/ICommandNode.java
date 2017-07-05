@@ -19,7 +19,7 @@ package com.crowsofwar.gorecore.tree;
 
 import java.util.List;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 
 /**
  * A node in the Tree-Command model.
@@ -42,6 +42,6 @@ public interface ICommandNode {
 	
 	String getHelp();
 	
-	ChatMessage getInfoMessage();
+	FormattedMessage getInfoMessage();
 	
 }

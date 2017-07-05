@@ -40,8 +40,8 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -56,7 +56,7 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class WindowAbility {
 	
-	private static final ChatMessage MSG_UNLOCK_TEXT = ChatMessage.newChatMessage("avatar.ui.unlockDesc",
+	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage.newChatMessage("avatar.ui.unlockDesc",
 			"bending");
 	
 	private final BendingAbility ability;

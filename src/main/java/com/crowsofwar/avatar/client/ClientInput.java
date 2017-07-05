@@ -50,7 +50,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.format.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;

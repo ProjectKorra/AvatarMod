@@ -18,7 +18,7 @@ package com.crowsofwar.gorecore.tree.test;
 
 import static com.crowsofwar.gorecore.tree.test.GoreCoreChatMessages.*;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
@@ -56,7 +56,7 @@ public class GoreCoreCommand extends TreeCommand {
 						return;
 					}
 					
-					ChatMessage msg;
+					FormattedMessage msg;
 					if (AccountUUIDs.getId(username).isTemporary()) {
 						msg = AccountUUIDs.tryFixId(username) ? MSG_FIXID_SUCCESS : MSG_FIXID_FAILURE;
 					} else {

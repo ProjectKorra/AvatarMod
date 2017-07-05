@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.AvatarMod.proxy;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
+import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
@@ -33,8 +33,8 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -46,7 +46,7 @@ import net.minecraft.util.text.TextFormatting;
 
 public class RadialMenu extends Gui {
 	
-	private static final ChatMessage MSG_RADIAL_XP = newChatMessage("avatar.radial.xp", "level", "xp");
+	private static final FormattedMessage MSG_RADIAL_XP = newChatMessage("avatar.radial.xp", "level", "xp");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png

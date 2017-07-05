@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -34,9 +34,9 @@ import net.minecraft.util.text.TextComponentTranslation;
  */
 public abstract class NodeFunctional implements ICommandNode {
 	
-	private static final ChatMessage DEFAULT_INFO;
+	private static final FormattedMessage DEFAULT_INFO;
 	static {
-		DEFAULT_INFO = ChatMessage.newChatMessage("gc.tree.node.defaultInfo");
+		DEFAULT_INFO = FormattedMessage.newChatMessage("gc.tree.node.defaultInfo");
 	}
 	
 	private final String name;
@@ -98,7 +98,7 @@ public abstract class NodeFunctional implements ICommandNode {
 	protected abstract ICommandNode doFunction(CommandCall call, List<String> options);
 	
 	@Override
-	public ChatMessage getInfoMessage() {
+	public FormattedMessage getInfoMessage() {
 		return DEFAULT_INFO;
 	}
 	

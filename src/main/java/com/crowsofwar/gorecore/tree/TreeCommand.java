@@ -17,16 +17,16 @@
 
 package com.crowsofwar.gorecore.tree;
 
-import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
+import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.MessageConfiguration;
-import com.crowsofwar.gorecore.chat.MultiMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.MessageConfiguration;
+import com.crowsofwar.gorecore.format.MultiMessage;
 import com.crowsofwar.gorecore.tree.TreeCommandException.Reason;
 
 import net.minecraft.command.CommandException;
@@ -181,7 +181,7 @@ public abstract class TreeCommand implements ICommand {
 		for (int i = 0; i < allNodes.length; i++) {
 			multi.add(cmdHelpNodeItem, allNodes[i].getNodeName());
 			if (i < allNodes.length - 1) {
-				ChatMessage separator = cmdHelpSeparator;
+				FormattedMessage separator = cmdHelpSeparator;
 				if (i == allNodes.length - 2) separator = cmdHelpSeparatorLast;
 				multi.add(separator);
 			}
@@ -241,30 +241,30 @@ public abstract class TreeCommand implements ICommand {
 	 */
 	protected abstract ICommandNode[] addCommands();
 	
-	protected ChatMessage cmdHelpTop;
-	protected ChatMessage cmdHelpNodes;
-	protected ChatMessage cmdHelpNodeItem;
-	protected ChatMessage cmdHelpSeparator;
-	protected ChatMessage cmdHelpSeparatorLast;
-	protected ChatMessage cmdHelpCommandOverview;
+	protected FormattedMessage cmdHelpTop;
+	protected FormattedMessage cmdHelpNodes;
+	protected FormattedMessage cmdHelpNodeItem;
+	protected FormattedMessage cmdHelpSeparator;
+	protected FormattedMessage cmdHelpSeparatorLast;
+	protected FormattedMessage cmdHelpCommandOverview;
 	
-	protected ChatMessage branchHelpTop;
-	protected ChatMessage branchHelpNotice;
-	protected ChatMessage branchHelpInfo;
-	protected ChatMessage branchHelpOptions;
-	protected ChatMessage branchHelpOptionsItem;
-	protected ChatMessage branchHelpOptionsSeparator;
-	protected ChatMessage branchHelpOptionsSeparatorLast;
-	protected ChatMessage branchHelpExample;
-	protected ChatMessage branchHelpDefault;
+	protected FormattedMessage branchHelpTop;
+	protected FormattedMessage branchHelpNotice;
+	protected FormattedMessage branchHelpInfo;
+	protected FormattedMessage branchHelpOptions;
+	protected FormattedMessage branchHelpOptionsItem;
+	protected FormattedMessage branchHelpOptionsSeparator;
+	protected FormattedMessage branchHelpOptionsSeparatorLast;
+	protected FormattedMessage branchHelpExample;
+	protected FormattedMessage branchHelpDefault;
 	
-	protected ChatMessage nodeHelpTop;
-	protected ChatMessage nodeHelpDesc;
-	protected ChatMessage nodeHelpArgs;
-	protected ChatMessage nodeHelpArgsItem;
-	protected ChatMessage nodeHelpArgsNone;
-	protected ChatMessage nodeHelpAccepted;
-	protected ChatMessage nodeHelpAcceptedItem;
+	protected FormattedMessage nodeHelpTop;
+	protected FormattedMessage nodeHelpDesc;
+	protected FormattedMessage nodeHelpArgs;
+	protected FormattedMessage nodeHelpArgsItem;
+	protected FormattedMessage nodeHelpArgsNone;
+	protected FormattedMessage nodeHelpAccepted;
+	protected FormattedMessage nodeHelpAcceptedItem;
 	
 	private void initChatMessages(MessageConfiguration cfg) {
 		

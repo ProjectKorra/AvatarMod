@@ -19,7 +19,7 @@ package com.crowsofwar.gorecore.tree.test;
 
 import java.util.List;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
@@ -40,7 +40,7 @@ public class TestCakeFrost extends NodeFunctional {
 	}
 	
 	@Override
-	public ChatMessage getInfoMessage() {
+	public FormattedMessage getInfoMessage() {
 		return TestMessages.MSG_CAKE_FROST_HELP;
 	}
 	

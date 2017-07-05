@@ -20,8 +20,8 @@ package com.crowsofwar.gorecore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.crowsofwar.gorecore.chat.ChatSender;
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
+import com.crowsofwar.gorecore.format.ChatSender;
 import com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy;
 import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
 import com.crowsofwar.gorecore.tree.test.GoreCoreChatMessages;

@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.gorecore.chat;
+package com.crowsofwar.gorecore.format;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +25,21 @@ import net.minecraft.util.text.ITextComponent;
 
 public class MultiMessage {
 	
-	private final List<ChatMessage> chatMessages;
+	private final List<FormattedMessage> chatMessages;
 	private final List<Object[]> formattingArgs;
 	
 	MultiMessage() {
-		this.chatMessages = new ArrayList<ChatMessage>();
+		this.chatMessages = new ArrayList<FormattedMessage>();
 		this.formattingArgs = new ArrayList<Object[]>();
 	}
 	
-	public MultiMessage add(ChatMessage message, Object... formattingArgs) {
+	public MultiMessage add(FormattedMessage message, Object... formattingArgs) {
 		this.chatMessages.add(message);
 		this.formattingArgs.add(formattingArgs);
 		return this;
 	}
 	
-	public List<ChatMessage> getChatMessages() {
+	public List<FormattedMessage> getChatMessages() {
 		return chatMessages;
 	}
 	
@@ -47,7 +47,7 @@ public class MultiMessage {
 		if (chatMessages.isEmpty()) throw new IllegalArgumentException("Cannot send empty MultiMessage");
 		ITextComponent send = null;
 		for (int i = 0; i < chatMessages.size(); i++) {
-			ChatMessage message = chatMessages.get(i);
+			FormattedMessage message = chatMessages.get(i);
 			if (send == null) {
 				send = message.getChatMessage(formattingArgs.get(i));
 			} else {

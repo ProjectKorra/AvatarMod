@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.gorecore.chat;
+package com.crowsofwar.gorecore.format;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.chat.FormattingState.ChatFormatSet;
-import com.crowsofwar.gorecore.chat.FormattingState.Setting;
+import com.crowsofwar.gorecore.format.FormattingState.ChatFormatSet;
+import com.crowsofwar.gorecore.format.FormattingState.Setting;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
@@ -45,8 +45,8 @@ public class ChatSender {
 	
 	public static final ChatSender instance;
 	
-	private static final Map<String, ChatMessage> referenceToChatMessage;
-	static final Map<String, ChatMessage> translateKeyToChatMessage;
+	private static final Map<String, FormattedMessage> referenceToChatMessage;
+	static final Map<String, FormattedMessage> translateKeyToChatMessage;
 	
 	/**
 	 * Cause static block to be called
@@ -74,36 +74,39 @@ public class ChatSender {
 	@SubscribeEvent
 	public void processClientChat(ClientChatReceivedEvent e) {
 		if (e.getMessage() instanceof TextComponentTranslation) {
+			
 			TextComponentTranslation message = (TextComponentTranslation) e.getMessage();
+			
+			// Create a list containing the message and its siblings
+			// siblings are messages that appear next to it, but can have
+			// different formatting
+			List<ITextComponent> comps = new ArrayList();
+			Object[] formatArgs = getFormatArgs(message);
+			comps.add(new TextComponentTranslation(getKey(message), formatArgs));
+			comps.addAll(e.getMessage().getSiblings());
+			
+			// Format each chat component
 			
 			String result = "";
 			
-			List<ITextComponent> comps = new ArrayList();
-			
-			Object[] cloneFormatArgs = getFormatArgs(message);
-			comps.add(new TextComponentTranslation(getKey(message), cloneFormatArgs));
-			
-			comps.addAll(e.getMessage().getSiblings());
-			boolean changed = false;
-			
 			for (ITextComponent chat : comps) {
-				String processed = processChatComponent(chat);
+				String processed = formatChatComponent(chat);
 				if (processed != null) {
-					changed = true;
 					result += processed;
 				}
 			}
-			if (changed) e.setMessage(new TextComponentTranslation(result));
+			if (!result.isEmpty()) e.setMessage(new TextComponentTranslation(result));
+			
 		}
 		
 	}
 	
-	private String processChatComponent(ITextComponent chat) {
+	private String formatChatComponent(ITextComponent chat) {
 		String result = null;
 		if (chat instanceof TextComponentTranslation) {
 			TextComponentTranslation translate = (TextComponentTranslation) chat;
 			String key = getKey(translate);
-			ChatMessage cm = translateKeyToChatMessage.get(key);
+			FormattedMessage cm = translateKeyToChatMessage.get(key);
 			
 			if (cm != null) {
 				
@@ -123,7 +126,7 @@ public class ChatSender {
 		
 	}
 	
-	public String processText(String text, ChatMessage cm, Object... formatArgs) {
+	public String processText(String text, FormattedMessage cm, Object... formatArgs) {
 		MessageConfiguration cfg = cm.getConfig();
 		ChatFormatSet formatSet = new ChatFormatSet();
 		
@@ -227,7 +230,7 @@ public class ChatSender {
 		return newText;
 	}
 	
-	static void send(ICommandSender sender, ChatMessage message, Object... args) {
+	static void send(ICommandSender sender, FormattedMessage message, Object... args) {
 		sender.addChatMessage(message.getChatMessage(args));
 	}
 	

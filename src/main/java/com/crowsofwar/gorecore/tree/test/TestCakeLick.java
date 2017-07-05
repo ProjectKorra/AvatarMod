@@ -19,7 +19,7 @@ package com.crowsofwar.gorecore.tree.test;
 
 import java.util.List;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.IArgument;
@@ -47,7 +47,7 @@ public class TestCakeLick extends NodeFunctional {
 	}
 	
 	@Override
-	public ChatMessage getInfoMessage() {
+	public FormattedMessage getInfoMessage() {
 		return TestMessages.MSG_CAKE_LICK_HELP;
 	}
 	

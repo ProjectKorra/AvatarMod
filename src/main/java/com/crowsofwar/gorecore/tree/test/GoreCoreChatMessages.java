@@ -16,10 +16,10 @@
 */
 package com.crowsofwar.gorecore.tree.test;
 
-import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
+import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.MessageConfiguration;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.MessageConfiguration;
 
 import net.minecraft.util.text.TextFormatting;
 
@@ -34,11 +34,11 @@ public class GoreCoreChatMessages {
 	
 	public static final MessageConfiguration CFG = new MessageConfiguration().addColor("value",
 			TextFormatting.GOLD);
-	public static final ChatMessage MSG_FIXID_SUCCESS = newChatMessage(CFG, "gc.cmd.fixid.success", "player");
-	public static final ChatMessage MSG_FIXID_FAILURE = newChatMessage(CFG, "gc.cmd.fixid.failure", "player");
-	public static final ChatMessage MSG_FIXID_ONLINE = newChatMessage(CFG, "gc.cmd.fixid.online", "player");
-	public static final ChatMessage MSG_FIXID_CONFIRM = newChatMessage(CFG, "gc.cmd.fixid.confirm", "player");
-	public static final ChatMessage MSG_FIXID_CONFIRM2 = newChatMessage(CFG, "gc.cmd.fixid.confirm2",
+	public static final FormattedMessage MSG_FIXID_SUCCESS = newChatMessage(CFG, "gc.cmd.fixid.success", "player");
+	public static final FormattedMessage MSG_FIXID_FAILURE = newChatMessage(CFG, "gc.cmd.fixid.failure", "player");
+	public static final FormattedMessage MSG_FIXID_ONLINE = newChatMessage(CFG, "gc.cmd.fixid.online", "player");
+	public static final FormattedMessage MSG_FIXID_CONFIRM = newChatMessage(CFG, "gc.cmd.fixid.confirm", "player");
+	public static final FormattedMessage MSG_FIXID_CONFIRM2 = newChatMessage(CFG, "gc.cmd.fixid.confirm2",
 			"player");
 	
 }

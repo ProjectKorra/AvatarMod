@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.gorecore.chat;
+package com.crowsofwar.gorecore.format;
 
 import java.util.Collections;
 import java.util.HashMap;

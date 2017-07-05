@@ -15,9 +15,9 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.gorecore.chat;
+package com.crowsofwar.gorecore.format;
 
-import static com.crowsofwar.gorecore.chat.FormattingState.Setting.*;
+import static com.crowsofwar.gorecore.format.FormattingState.Setting.*;
 
 import java.util.HashSet;
 import java.util.Set;

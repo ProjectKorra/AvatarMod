@@ -14,38 +14,13 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-
-package com.crowsofwar.gorecore.tree.test;
-
-import java.util.List;
-
-import com.crowsofwar.gorecore.format.FormattedMessage;
-import com.crowsofwar.gorecore.tree.CommandCall;
-import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.NodeFunctional;
+package com.crowsofwar.gorecore.format;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class TestSendMessage extends NodeFunctional {
-	
-	private final FormattedMessage message;
-	
-	/**
-	 * @param name
-	 * @param op
-	 */
-	public TestSendMessage(String name, FormattedMessage message) {
-		super(name, false);
-		this.message = message;
-	}
-	
-	@Override
-	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		message.send(call.getFrom());
-		return null;
-	}
+public class FormattedMessageProcessor {
 	
 }

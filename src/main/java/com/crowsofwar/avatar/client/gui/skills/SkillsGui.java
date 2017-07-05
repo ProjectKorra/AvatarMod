@@ -45,8 +45,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.ChatSender;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -64,7 +64,7 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class SkillsGui extends GuiContainer implements AvatarGui {
 	
-	private static final ChatMessage MSG_TITLE = ChatMessage.newChatMessage("avatar.ui.skillsMenu",
+	private static final FormattedMessage MSG_TITLE = FormattedMessage.newChatMessage("avatar.ui.skillsMenu",
 			"bending");
 	
 	private AbilityCard[] cards;
