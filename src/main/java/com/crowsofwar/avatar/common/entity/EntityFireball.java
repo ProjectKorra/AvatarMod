@@ -98,6 +98,12 @@ public class EntityFireball extends AvatarEntity {
 			setDead();
 		}
 		
+		// TODO Temporary fix to avoid extra fireballs
+		// Add hook or something
+		if (getOwner() == null) {
+			setDead();
+		}
+		
 	}
 	
 	@Override
