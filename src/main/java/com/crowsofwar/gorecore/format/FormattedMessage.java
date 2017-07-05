@@ -18,7 +18,7 @@
 package com.crowsofwar.gorecore.format;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.network.rcon.RConConsoleSource;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -40,11 +40,14 @@ public class FormattedMessage {
 	}
 	
 	public void send(ICommandSender sender, Object... formatValues) {
-		if (sender instanceof RConConsoleSource) {
+		
+		// Format messages to server in plaintext
+		if (!(sender instanceof Entity)) {
 			
 			System.out.println("Sent from the server console");
 			ITextComponent message = getChatMessage(formatValues);
 			String unformatted = message.getUnformattedText().replaceAll("%", "%%");
+			System.out.println(config.getColorName("title"));
 			
 			String formatted = FormattedMessageProcessor.formatPlaintext(this, unformatted, formatValues);
 			sender.addChatMessage(new TextComponentString(formatted));

@@ -176,6 +176,8 @@ public class FormattedMessageProcessor {
 			// E.g. the following text: [bold]Hello[/bold]
 			// yields items [bold], Hello, and [/bold]
 			String item = matcher.group();
+			// format tags are ignored
+			boolean formattingTag = false;
 			
 			// TODO see if this is really necessary
 			if (item.equals("")) continue;
@@ -191,19 +193,23 @@ public class FormattedMessageProcessor {
 				} else if (tag.startsWith("keybinding=")) {
 					String key = tag.substring("keybinding=".length());
 					item = GoreCore.proxy.getKeybindingDisplayName(key);
+				} else if (tag.equals("bold") || tag.equals("italic") || getTfColor(tag) != null
+						|| cfg.hasColor(tag) || tag.startsWith("/")) {
+					formattingTag = true;
 				} else {
-					// Ignore formatting related tags (bold, italic, colors)
-					if (!tag.equals("bold") && !tag.equals("italic") && getTfColor(tag) == null) {
-						throw new ProcessingException(
-								"String has invalid tag: [" + tag + "]; text is " + text);
-					}
+					throw new ProcessingException("String has invalid tag: [" + tag + "]; text is " + text);
 				}
 				
 			}
+			
 			// remove backslash from escaped tags
 			if (item.startsWith("\\[") && item.endsWith("]")) item = item.substring(1);
 			
-			newText += item;
+			System.out.println(item + " , " + formattingTag);
+			if (!formattingTag) {
+				System.out.println("Add item " + item);
+				newText += item;
+			}
 			
 		}
 		
