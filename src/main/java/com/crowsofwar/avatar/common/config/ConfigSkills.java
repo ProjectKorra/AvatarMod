@@ -51,7 +51,8 @@ public class ConfigSkills {
 		wallRaised = 1f,
 		wallBlockedAttack = 3f,
 		airbubbleProtect = 6f,
-		litFire = 20;
+		litFire = 20,
+		createBubble = 15;
 	// @formatter:on
 	
 	public static void load() {
