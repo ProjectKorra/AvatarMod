@@ -90,6 +90,8 @@ public class EntityFlames extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		
+		super.onUpdate();
+		
 		velocity().mul(0.94);
 		
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
