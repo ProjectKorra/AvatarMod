@@ -1,5 +1,11 @@
 AV2 Changelog :: version a4.2
 
+!! --- PLEASE NOTE --- !!
+||  Sky bison controls ||
+|| have changed - left ||
+|| click to mount them ||
+!! --- --- --- --- --- !!
+
 * Water pouches can now hold up to 5 water
 * New bending tab icons from FavouriteDragon
 * Skills menu opens at current bending
