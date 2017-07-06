@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -60,9 +61,11 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 				this.ySize - 96 + 2, color);
 		
 		if (bison.getInventory().getSizeInventory() == 2) {
-			// this.fontRendererObj.drawString("Bison will have inventory slots
-			// when it reaches adult age", 0, 0,
-			// 0xffffff);
+			for (int i = 1; i <= 3; i++) {
+				String key = "avatar.bisonChestSlots" + i;
+				String msg = I18n.format(key);
+				fontRendererObj.drawString(msg, 80, fontRendererObj.FONT_HEIGHT * (i + 1), 0xffffff);
+			}
 		}
 		
 	}
