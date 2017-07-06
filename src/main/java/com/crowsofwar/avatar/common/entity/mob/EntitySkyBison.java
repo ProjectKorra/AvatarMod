@@ -574,15 +574,21 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 		if (stack.getItem() == AvatarItems.itemBisonSaddle && SaddleTier.isValidId(stack.getMetadata())) {
 			if (!worldObj.isRemote) {
-				chest.setInventorySlotContents(0, stack);
+				chest.setInventorySlotContents(0, stack.copy());
 				updateEquipment();
+			}
+			if (!player.capabilities.isCreativeMode) {
+				stack.func_190918_g(1);
 			}
 			return true;
 		}
 		if (stack.getItem() == AvatarItems.itemBisonArmor && ArmorTier.isValidId(stack.getMetadata())) {
 			if (!worldObj.isRemote) {
-				chest.setInventorySlotContents(1, stack);
+				chest.setInventorySlotContents(1, stack.copy());
 				updateEquipment();
+			}
+			if (!player.capabilities.isCreativeMode) {
+				stack.func_190918_g(1);
 			}
 			return true;
 		}

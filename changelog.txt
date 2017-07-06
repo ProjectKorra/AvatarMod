@@ -27,4 +27,5 @@ AV2 Changelog :: version a4.2
 > Fix bison breeding too often (every 30-60 seconds)
 > Fix chat formatting messed up on server console
 > Fix air bubble Undercurrent upgrade not working on leaves
+> Fix bison saddle duplication
 > Remove old "click to open" prompt in radial menu
