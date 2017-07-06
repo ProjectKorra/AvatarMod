@@ -205,9 +205,7 @@ public class FormattedMessageProcessor {
 			// remove backslash from escaped tags
 			if (item.startsWith("\\[") && item.endsWith("]")) item = item.substring(1);
 			
-			System.out.println(item + " , " + formattingTag);
 			if (!formattingTag) {
-				System.out.println("Add item " + item);
 				newText += item;
 			}
 			
