@@ -603,7 +603,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			return true;
 		}
 		
-		if (!worldObj.isRemote && player.isSneaking() && stack.getItem() == Items.ARROW) {
+		if (!worldObj.isRemote && stack.getItem() == Items.ARROW) {
 			
 			int food = (int) (100.0 * condition.getFoodPoints() / 30);
 			int health = (int) (100.0 * getHealth() / getMaxHealth());
@@ -639,11 +639,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			return true;
 		}
 		
-		if (!player.isSneaking() && !worldObj.isRemote) {
-			player.startRiding(this);
-			return true;
-		}
-		
 		if (player.isSneaking() && getOwner() == player) {
 			setSitting(!isSitting());
 			return true;
@@ -659,12 +654,22 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 * will attack as normal.
 	 */
 	public boolean onLeftClick(EntityPlayer player) {
-		if (player.isSneaking()) return false;
 		
 		if (player == getOwner()) {
-			// Send id as the x-coordinate; used by guiHandler to determine
-			// which bison is being opened
-			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, worldObj, getId(), 0, 0);
+			if (player.isSneaking()) {
+				// Open GUI
+				
+				// Send id as the x-coordinate; used by guiHandler to determine
+				// which bison is being opened
+				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, worldObj, getId(), 0,
+						0);
+			} else {
+				// Mount bison
+				if (!worldObj.isRemote) {
+					player.startRiding(this);
+				}
+			}
+			
 			return true;
 		}
 		

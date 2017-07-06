@@ -11,7 +11,8 @@ AV2 Changelog :: version a4.2
 * Message when bison has no chest slots yet
 * Feeding tall grass to in-love bison stops it from breeding
 * Bison only follow you if you are holding a whistle
-* Can left-click bison to open its inventory
+* Control change, left-click bison to ride it
+* Control change, sneak-left-click bison to access inventory
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username
