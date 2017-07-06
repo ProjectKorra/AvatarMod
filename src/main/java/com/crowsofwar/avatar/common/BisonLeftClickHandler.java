@@ -20,8 +20,9 @@ import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -38,11 +39,13 @@ public class BisonLeftClickHandler {
 	}
 	
 	@SubscribeEvent
-	public void onLeftClickBison(EntityInteract e) {
-		EntityPlayer player = e.getEntityPlayer();
-		Entity interacted = e.getTarget();
-		if (interacted instanceof EntitySkyBison) {
-			if (((EntitySkyBison) interacted).onLeftClick(player)) {
+	public void onLeftClickBison(LivingAttackEvent e) {
+		Entity interacted = e.getEntity();
+		DamageSource damage = e.getSource();
+		if (damage.getEntity() instanceof EntityPlayer && interacted instanceof EntitySkyBison) {
+			EntitySkyBison bison = (EntitySkyBison) interacted;
+			EntityPlayer player = (EntityPlayer) damage.getEntity();
+			if (bison.onLeftClick(player)) {
 				e.setCanceled(true);
 			}
 		}

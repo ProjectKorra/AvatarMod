@@ -653,7 +653,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 	}
 	
+	/**
+	 * Called whenever a player left-clicks (attacks) a sky bison. Return true
+	 * to cancel normal behavior and treat the interaction specially, otherwise
+	 * will attack as normal.
+	 */
 	public boolean onLeftClick(EntityPlayer player) {
+		if (player.isSneaking()) return false;
+		
 		if (player == getOwner()) {
 			// Send id as the x-coordinate; used by guiHandler to determine
 			// which bison is being opened
