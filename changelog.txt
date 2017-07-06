@@ -4,6 +4,10 @@ AV2 Changelog :: version a4.2
 ||  Sky bison controls ||
 || have changed - left ||
 || click to mount them ||
+||     ~  also  ~      ||
+|| Bison whistles can  ||
+||     be crafted      ||
+||    bit.ly/2stv3aA   ||
 !! --- --- --- --- --- !!
 
 * Water pouches can now hold up to 5 water
@@ -22,6 +26,7 @@ AV2 Changelog :: version a4.2
 * Air bubble Undercurrent upgrade floats the player up
 * Ravine Fissure upgrade won't destroy blocks under player
 * Nerf air bubble Undercurrent health
+* Bison whistles can be crafted
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username

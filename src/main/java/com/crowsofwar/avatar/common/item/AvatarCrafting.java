@@ -16,9 +16,11 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.avatar.common.item.AvatarItems.itemBisonSaddle;
+import static com.crowsofwar.avatar.common.item.AvatarItems.*;
 import static net.minecraft.init.Items.*;
 import static net.minecraftforge.fml.common.registry.GameRegistry.addRecipe;
+
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import net.minecraft.item.ItemStack;
 
@@ -50,6 +52,22 @@ public class AvatarCrafting {
 			'd', DIAMOND,
 			's', STRING,
 			'a', new ItemStack(itemBisonSaddle, 1, 0)
+		});
+		addRecipe(new ItemStack(itemBisonWhistle, 1, 0), new Object[] {
+			"dd ",
+			" sd",
+			"iii",
+			'i', IRON_INGOT,
+			'd', DIAMOND,
+			's', new ItemStack(itemScroll, 1, ScrollType.AIR.id())
+		});
+		addRecipe(new ItemStack(itemBisonWhistle, 1, 0), new Object[] {
+			"ii ",
+			" si",
+			"ddd",
+			'i', IRON_INGOT,
+			'd', DIAMOND,
+			's', new ItemStack(itemScroll, 1, ScrollType.AIR.id())
 		});
 		
 		// @formatter:on
