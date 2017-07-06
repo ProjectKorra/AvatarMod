@@ -22,6 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 
 public class FormattedMessage {
 	
@@ -35,26 +36,21 @@ public class FormattedMessage {
 		this.config = config;
 	}
 	
-	public ITextComponent getChatMessage(Object... formattingArgs) {
-		return new TextComponentTranslation(translateKey, formattingArgs);
+	public ITextComponent getChatMessage(boolean plaintext, Object... formatValues) {
+		
+		if (plaintext) {
+			@SuppressWarnings("deprecation")
+			String unformatted = I18n.translateToLocal(translateKey);
+			String formatted = FormattedMessageProcessor.formatPlaintext(this, unformatted, formatValues);
+			return new TextComponentString(formatted);
+		} else {
+			return new TextComponentTranslation(translateKey, formatValues);
+		}
+		
 	}
 	
 	public void send(ICommandSender sender, Object... formatValues) {
-		
-		// Format messages to server in plaintext
-		if (!(sender instanceof Entity)) {
-			
-			System.out.println("Sent from the server console");
-			ITextComponent message = getChatMessage(formatValues);
-			String unformatted = message.getUnformattedText().replaceAll("%", "%%");
-			System.out.println(config.getColorName("title"));
-			
-			String formatted = FormattedMessageProcessor.formatPlaintext(this, unformatted, formatValues);
-			sender.addChatMessage(new TextComponentString(formatted));
-			
-		} else {
-			sender.addChatMessage(getChatMessage(formatValues));
-		}
+		sender.addChatMessage(getChatMessage(!(sender instanceof Entity), formatValues));
 	}
 	
 	public String getTranslateKey() {
