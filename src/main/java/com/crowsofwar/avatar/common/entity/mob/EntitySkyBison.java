@@ -653,6 +653,17 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 	}
 	
+	public boolean onLeftClick(EntityPlayer player) {
+		if (player == getOwner()) {
+			// Send id as the x-coordinate; used by guiHandler to determine
+			// which bison is being opened
+			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, worldObj, getId(), 0, 0);
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public boolean canBeLeashedTo(EntityPlayer player) {
 		return condition.getDomestication() >= MOBS_CONFIG.bisonLeashTameness && super.canBeLeashedTo(player);
