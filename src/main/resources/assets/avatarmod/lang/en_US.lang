@@ -231,6 +231,8 @@ avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
 avatar.radial.max=Level IV, [translate=avatar.ui.path_${xp}]
 avatar.radial.locked1=Ability Locked
 avatar.radial.locked2=Press ${level} to unlock
+avatar.radial.lockedCreative1=Creative mode
+avatar.radial.lockedCreative2=Locked but on creative mode
 
 avatar.getBending.title=Unlock Bending
 avatar.getBending.incompatible=You can only use scrolls of the same or universal type

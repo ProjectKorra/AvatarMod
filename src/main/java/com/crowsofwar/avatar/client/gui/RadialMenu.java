@@ -148,11 +148,16 @@ public class RadialMenu extends Gui {
 					secondKey = "avatar.radial.max";
 					secondArgs[1] = abilityData.getPath().name().toLowerCase();
 				}
-				if (abilityData.isLocked()) {
+				boolean creative = mc.thePlayer.capabilities.isCreativeMode;
+				if (abilityData.isLocked() && !creative) {
 					secondKey = "avatar.radial.locked2";
 					secondArgs[0] = AvatarMod.proxy.getKeyHandler().getDisplayName(AvatarControl.KEY_SKILLS)
 							+ "";
 					nameKey = "avatar.radial.locked1";
+				}
+				if (abilityData.isLocked() && creative) {
+					secondKey = "avatar.radial.lockedCreative2";
+					nameKey = "avatar.radial.lockedCreative1";
 				}
 				
 			}

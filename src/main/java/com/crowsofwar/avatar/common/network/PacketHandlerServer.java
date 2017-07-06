@@ -166,7 +166,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			
 			BendingAbility ability = packet.getAbility();
 			if (data.hasBending(ability.getBendingType())) {
-				if (!data.getAbilityData(ability).isLocked()) {
+				if (!data.getAbilityData(ability).isLocked() || player.capabilities.isCreativeMode) {
 					if (data.getAbilityCooldown() == 0) {
 						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
 						ability.execute(abilityCtx);
