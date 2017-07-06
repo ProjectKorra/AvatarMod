@@ -19,10 +19,12 @@ package com.crowsofwar.avatar.common.entity.ai;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 /**
  * 
@@ -49,10 +51,20 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 		EntityPlayer owner = bison.getOwner();
 		if (owner != null) {
 			
-			double maxDist = bison.getAttackTarget() == null ? 6 : 20;
+			boolean holdingWhistle = false;
+			for (ItemStack stack : owner.getHeldEquipment()) {
+				if (stack.getItem() == AvatarItems.itemBisonWhistle) {
+					holdingWhistle = true;
+				}
+			}
 			
-			double distSq = bison.getDistanceSqToEntity(owner);
-			return distSq >= maxDist * maxDist && !bison.isSitting();
+			if (holdingWhistle) {
+				double maxDist = bison.getAttackTarget() == null ? 6 : 20;
+				double maxDistSq = maxDist * maxDist;
+				double distSq = bison.getDistanceSqToEntity(owner);
+				return distSq >= maxDistSq && !bison.isSitting();
+			}
+			
 		}
 		
 		return false;
