@@ -32,6 +32,8 @@ import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -84,7 +86,11 @@ public class AirbendingEvents {
 				EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
 						attacked);
 				if (bubble != null) {
-					bubble.attackEntityFrom(e.getSource(), e.getAmount());
+					if (bubble.attackEntityFrom(e.getSource(), e.getAmount())) {
+						e.setCanceled(true);
+						world.playSound(null, attacked.getPosition(), SoundEvents.BLOCK_CLOTH_HIT,
+								SoundCategory.PLAYERS, 1, 1);
+					}
 				}
 			}
 		}

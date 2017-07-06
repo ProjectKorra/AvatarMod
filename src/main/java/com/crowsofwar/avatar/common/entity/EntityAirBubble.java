@@ -241,6 +241,8 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		
+		if (2 + 2 == 4) return;
+		
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;
 		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
