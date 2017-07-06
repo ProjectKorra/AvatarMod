@@ -19,8 +19,8 @@ package com.crowsofwar.avatar.common.entity;
 import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static net.minecraft.util.EnumFacing.UP;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.crowsofwar.avatar.AvatarMod;
@@ -50,6 +50,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -130,13 +131,13 @@ public class EntityAirBubble extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		EntityLivingBase ownerEnt = getOwner();
-		if (ownerEnt == null) {
+		EntityLivingBase owner = getOwner();
+		if (owner == null) {
 			setDead();
 		}
-		if (ownerEnt != null) {
+		if (owner != null) {
 			
-			setPosition(ownerEnt.posX, ownerEnt.posY, ownerEnt.posZ);
+			setPosition(owner.posX, owner.posY, owner.posZ);
 			
 			Bender ownerBender = ownerAttr.getOwnerBender();
 			if (!worldObj.isRemote
@@ -146,48 +147,53 @@ public class EntityAirBubble extends AvatarEntity {
 				
 			}
 			
-			ItemStack chest = ownerEnt.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
 			if (!elytraOk && !worldObj.isRemote) {
 				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
-						(EntityPlayerMP) ownerEnt);
+						(EntityPlayerMP) owner);
 				dissipateSmall();
 			}
 			
-			if (ownerEnt.isDead) {
+			if (owner.isDead) {
 				dissipateSmall();
 			}
 			
 			if (!isDissipating()) {
-				IAttributeInstance attribute = ownerEnt
+				IAttributeInstance attribute = owner
 						.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 					attribute.applyModifier(SLOW_ATTR);
 				}
 				
-				if (!ownerEnt.onGround && !ownerEnt.isInWater() && !ownerBender.isFlying()
-						&& chest.getItem() != Items.ELYTRA) {
+				if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
 					
-					ownerEnt.motionY += .03;
+					owner.motionY += .03;
 					
-					if (doesAllowHovering() && !ownerEnt.isSneaking()) {
+					if (doesAllowHovering() && !owner.isSneaking()) {
 						
 						// Find the closest BlockPos below owner that has a
 						// block
-						BlockPos pos;
-						for (pos = ownerEnt.getPosition(); !worldObj.isSideSolid(pos, UP)
-								&& !(worldObj.getBlockState(pos).getBlock() instanceof BlockLiquid); pos = pos
-										.down())
-							
-							;
+						BlockPos pos = owner.getPosition().up();
+						boolean ground = false;
+						do {
+							List<AxisAlignedBB> collideWithGround = worldObj.getCollisionBoxes(null,
+									new AxisAlignedBB(pos).expand(0, 0.5, 0));
+							ground = !collideWithGround.isEmpty()
+									|| worldObj.getBlockState(pos).getBlock() instanceof BlockLiquid;
+							pos = pos.down();
+						} while (!ground);
 						
-						double distFromGround = ownerEnt.posY - (pos.getY() + 1);
+						double distFromGround = owner.posY - (pos.getY() + 2);
 						if (distFromGround >= 0.5 && distFromGround <= 2) {
-							ownerEnt.motionY += 0.02;
+							owner.motionY += 0.02;
 							
-							if (ownerEnt.motionY < 0) {
-								ownerEnt.motionY = 0;
+							if (owner.motionY < 0) {
+								owner.motionY = 0;
 							}
+						}
+						if (distFromGround < 0) {
+							owner.motionY += 0.08;
 						}
 						
 					}

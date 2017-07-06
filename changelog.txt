@@ -13,6 +13,7 @@ AV2 Changelog :: version a4.2
 * Bison only follow you if you are holding a whistle
 * Control change, left-click bison to ride it
 * Control change, sneak-left-click bison to access inventory
+* Air bubble Undercurrent upgrade floats the player up
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username
@@ -25,4 +26,5 @@ AV2 Changelog :: version a4.2
 > Fix fireballs remaining after firebender entity dies
 > Fix bison breeding too often (every 30-60 seconds)
 > Fix chat formatting messed up on server console
+> Fix air bubble Undercurrent upgrade not working on leaves
 > Remove old "click to open" prompt in radial menu
