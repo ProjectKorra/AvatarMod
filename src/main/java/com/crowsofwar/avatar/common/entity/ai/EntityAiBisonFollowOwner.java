@@ -58,6 +58,10 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 				}
 			}
 			
+			if (bison.getLeashedToEntity() == owner) {
+				return true;
+			}
+			
 			if (holdingWhistle) {
 				double maxDist = bison.getAttackTarget() == null ? 6 : 20;
 				double maxDistSq = maxDist * maxDist;
