@@ -7,6 +7,7 @@ AV2 Changelog :: version a4.2
 * Fire arc does additional damage & push on hit
 * Floating block boomerang requires additional chi
 * Creative mode allows bypass locked abilities
+* Level 4 upgrade name is displayed in radial menu
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username

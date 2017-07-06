@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -145,8 +146,8 @@ public class RadialMenu extends Gui {
 				secondArgs[1] = (int) (abilityData.getXp()) + "";
 				
 				if (abilityData.getLevel() == 3) {
-					secondKey = "avatar.radial.max";
-					secondArgs[1] = abilityData.getPath().name().toLowerCase();
+					String path = abilityData.getPath() == AbilityTreePath.FIRST ? "1" : "2";
+					secondKey = nameKey + ".lvl4_" + path;
 				}
 				boolean creative = mc.thePlayer.capabilities.isCreativeMode;
 				if (abilityData.isLocked() && !creative) {
@@ -162,6 +163,12 @@ public class RadialMenu extends Gui {
 				
 			}
 			String second = I18n.format(secondKey);
+			
+			// in the case of level 4 upgrades, the upgrade name is displayed
+			// cut out the second line
+			if (second.contains(" ;; ")) {
+				second = second.substring(0, second.indexOf(" ;; "));
+			}
 			
 			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
 					(Object[]) ArrayUtils.addAll(secondArgs, abilityData.getLevel() + ""));
