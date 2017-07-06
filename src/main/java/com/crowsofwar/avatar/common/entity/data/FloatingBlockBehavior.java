@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
@@ -212,13 +213,20 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			// Remove the floating block & spawn particles
 			entity.onCollideWithSolid();
+			
+			// boomerang upgrade handling
 			if (!entity.worldObj.isRemote) {
 				if (data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK)
 						.isMasterPath(AbilityTreePath.FIRST)) {
 					
-					data.addStatusControl(StatusControl.THROW_BLOCK);
-					data.addStatusControl(StatusControl.PLACE_BLOCK);
-					return new FloatingBlockBehavior.PlayerControlled();
+					Chi chi = data.chi();
+					if (chi.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+						data.addStatusControl(StatusControl.THROW_BLOCK);
+						data.addStatusControl(StatusControl.PLACE_BLOCK);
+						return new FloatingBlockBehavior.PlayerControlled();
+					} else {
+						entity.setDead();
+					}
 					
 				} else {
 					entity.setDead();

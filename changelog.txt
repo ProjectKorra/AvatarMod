@@ -5,6 +5,7 @@ AV2 Changelog :: version a4.2
 * Skills menu opens at current bending
 * Regen chi on sleep
 * Fire arc does additional damage & push on hit
+* Floating block boomerang requires additional chi
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username
