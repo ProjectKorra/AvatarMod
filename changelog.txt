@@ -14,6 +14,7 @@ AV2 Changelog :: version a4.2
 * Control change, left-click bison to ride it
 * Control change, sneak-left-click bison to access inventory
 * Air bubble Undercurrent upgrade floats the player up
+* Ravine Fissure upgrade won't destroy blocks under player
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username
