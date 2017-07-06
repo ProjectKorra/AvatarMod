@@ -524,38 +524,36 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 		boolean willBeOwned = condition.canHaveOwner() && stack.getItem() == Items.APPLE && !hasOwner();
 		
-		if (!condition.isFullyDomesticated() || true) {
-			if (stack != field_190927_a) {
+		if (stack != field_190927_a) {
+			
+			Item item = stack.getItem();
+			int domesticationValue = MOBS_CONFIG.getDomesticationValue(item);
+			
+			if (domesticationValue > 0) {
+				condition.addDomestication(domesticationValue);
 				
-				Item item = stack.getItem();
-				int domesticationValue = MOBS_CONFIG.getDomesticationValue(item);
-				
-				if (domesticationValue > 0) {
-					condition.addDomestication(domesticationValue);
-					
-					if (!condition.canHaveOwner() || item != Items.APPLE) {
-						playTameEffect(false);
-					}
+				if (!condition.canHaveOwner() || item != Items.APPLE) {
+					playTameEffect(false);
 				}
-				
-				if (item instanceof ItemFood) {
-					ItemFood food = (ItemFood) stack.getItem();
-					condition.addFood(food.getHealAmount(stack));
-				}
-				
-				if (domesticationValue > 0 || item instanceof ItemFood) {
-					condition.addAge(100);
-					// Consume food item
-					if (!player.capabilities.isCreativeMode) {
-						stack.func_190918_g(1);
-					}
-					// Don't stop now if we are about to be owned
-					if (!willBeOwned) {
-						return true;
-					}
-				}
-				
 			}
+			
+			if (item instanceof ItemFood) {
+				ItemFood food = (ItemFood) stack.getItem();
+				condition.addFood(food.getHealAmount(stack));
+			}
+			
+			if (domesticationValue > 0 || item instanceof ItemFood) {
+				condition.addAge(100);
+				// Consume food item
+				if (!player.capabilities.isCreativeMode) {
+					stack.func_190918_g(1);
+				}
+				// Don't stop now if we are about to be owned
+				if (!willBeOwned) {
+					return true;
+				}
+			}
+			
 		}
 		
 		if (willBeOwned) {
@@ -619,6 +617,19 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (stack.getItem() == Items.NAME_TAG) {
 			setAlwaysRenderNameTag(true);
 			return false;
+		}
+		
+		if (stack.getItem() == Item.getItemFromBlock(Blocks.TALLGRASS)) {
+			if (condition.getBreedTimer() == 0) {
+				float min = MOBS_CONFIG.bisonBreedMinMinutes;
+				float max = MOBS_CONFIG.bisonBreedMaxMinutes;
+				float minutes = min + rand.nextFloat() * (max - min);
+				condition.setBreedTimer((int) (minutes * 1200));
+				if (!player.capabilities.isCreativeMode) {
+					stack.func_190918_g(1);
+				}
+				return true;
+			}
 		}
 		
 		if (getOwner() == player && stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {

@@ -9,6 +9,7 @@ AV2 Changelog :: version a4.2
 * Creative mode allows bypass locked abilities
 * Level 4 upgrade name is displayed in radial menu
 * Message when bison has no chest slots yet
+* Feeding tall grass to in-love bison stops it from breeding
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username
