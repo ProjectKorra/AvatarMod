@@ -220,9 +220,6 @@ public class RadialMenu extends Gui {
 					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getControllerName()),
 					centerX, centerY - mc.fontRendererObj.FONT_HEIGHT, theme.getText());
 			
-			drawCenteredString(mc.fontRendererObj, I18n.format("avatar.ui.openSkillsMenu"), centerX,
-					centerY + mc.fontRendererObj.FONT_HEIGHT / 4, 0xffffff);
-			
 		}
 		
 		if (closeGui) {

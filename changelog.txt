@@ -19,3 +19,4 @@ AV2 Changelog :: version a4.2
 > Fix fireballs remaining after firebender entity dies
 > Fix bison breeding too often (every 30-60 seconds)
 > Fix chat formatting messed up on server console
+> Remove old "click to open" prompt in radial menu
