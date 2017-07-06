@@ -69,14 +69,16 @@ public class AbilityAirBubble extends AirAbility {
 			float xp = data.getAbilityData(this).getTotalXp();
 			
 			float size = 1.5f;
+			float health = 10 + ctx.getLevel() * 6;
 			if (ctx.getLevel() > 0) size = 2.5f;
 			if (ctx.isMasterLevel(FIRST)) size = 4f;
+			if (ctx.isMasterLevel(SECOND)) health = 10f;
 			
 			EntityAirBubble bubble = new EntityAirBubble(world);
 			bubble.setOwner(bender);
 			bubble.setPosition(bender.posX, bender.posY, bender.posZ);
-			bubble.setHealth(10 + ctx.getLevel() * 6);
-			bubble.setMaxHealth(10 + ctx.getLevel() * 6);
+			bubble.setHealth(health);
+			bubble.setMaxHealth(health);
 			bubble.setSize(size);
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
 			world.spawnEntityInWorld(bubble);
