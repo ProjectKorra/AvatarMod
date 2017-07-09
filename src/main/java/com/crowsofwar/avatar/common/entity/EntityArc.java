@@ -100,6 +100,8 @@ public abstract class EntityArc extends AvatarEntity {
 		
 		ignoreFrustumCheck = true;
 		
+		updateControlPoints();
+		
 	}
 	
 	private void updateControlPoints() {
