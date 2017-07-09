@@ -46,4 +46,5 @@ AV2 Changelog :: version a4.2
 > Fix airblade level II not faster
 > Fix air bubble not properly protecting from damage
 > Fix airblade chainblade issues
+> Fix crash in WAILA when looking at summoned sky bison
 > Remove old "click to open" prompt in radial menu

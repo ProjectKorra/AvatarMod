@@ -264,13 +264,20 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		originalPos.writeToNbt(nbt);
 		ownerAttr.save(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
 		nbt.setInteger("RiderTicks", riderTicks);
 		nbt.setBoolean("InLove", isLoveParticles());
 		nbt.setInteger("BisonId", getId());
+		
+		// originalPos is null when /summoned
+		// this method called by WAILA when you look at bison
+		if (originalPos != null) {
+			originalPos.writeToNbt(nbt);
+		} else {
+			Vector.getEntityPos(this).writeToNbt(nbt);
+		}
 		
 		writeInventory(chest, nbt, "Inventory");
 		
