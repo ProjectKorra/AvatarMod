@@ -10,6 +10,7 @@ AV2 Changelog :: version a4.2
 ||    bit.ly/2stv3aA   ||
 !! --- --- --- --- --- !!
 
+* New translations - notably Brazilian Portuguese (thanks Ferrujado)
 * Water pouches can now hold up to 5 water
 * New bending tab icons from FavouriteDragon
 * Skills menu opens at current bending
