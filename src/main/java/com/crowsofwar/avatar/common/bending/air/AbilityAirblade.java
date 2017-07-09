@@ -69,9 +69,18 @@ public class AbilityAirblade extends AirAbility {
 		airblade.velocity().set(look.times(ctx.getLevel() >= 1 ? 30 : 20));
 		airblade.setDamage(STATS_CONFIG.airbladeSettings.damage * (1 + xp * .015f));
 		airblade.setOwner(bender);
-		airblade.setChopBlocks(abilityData.getLevel() >= 2);
-		airblade.setPiercing(abilityData.getLevel() == 3 && abilityData.getPath() == SECOND);
-		airblade.setChainAttack(abilityData.getLevel() == 3 && abilityData.getPath() == FIRST);
+		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));
+		airblade.setChainAttack(abilityData.isMasterPath(FIRST));
+		
+		float chopBlocks = -1;
+		if (abilityData.getLevel() >= 1) {
+			chopBlocks = 0;
+		}
+		if (abilityData.isMasterPath(SECOND)) {
+			chopBlocks = 2;
+		}
+		airblade.setChopBlocksThreshold(chopBlocks);
+		
 		world.spawnEntityInWorld(airblade);
 		
 	}

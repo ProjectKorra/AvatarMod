@@ -54,44 +54,45 @@ public class EntityAirblade extends AvatarEntity {
 	private float damage;
 	
 	/**
-	 * Whether can chop blocks such as grass, wheat, etc.
+	 * Hardness threshold to chop blocks. For example, setting to 1.5 will allow
+	 * the airblade to chop stone.
+	 * <p>
+	 * Note: Threshold of 0 means that the airblade can chop grass and similar
+	 * blocks. Set to > 0 to avoid chopping blocks at all.
 	 */
-	private boolean chopBlocks;
-	
-	private boolean piercing;
-	
+	private float chopBlocksThreshold;
 	private boolean chainAttack;
+	private boolean pierceArmor;
 	
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(1.5f, .2f);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		this.chopBlocksThreshold = -1;
 	}
 	
 	@Override
 	public void onUpdate() {
+		
 		super.onUpdate();
-		
-		Vector v = velocity().mul(.96).dividedBy(20);
-		
-		boolean moveAsNormal = true;
 		
 		// Don't bounce off a block if piercing
 		// bouncing would prevent destroying the block
-		if (!worldObj.isRemote && piercing) {
-			moveAsNormal = false;
-			
-			// Check if the block is too strong
-			// If so, don't go through it since it can't be destroyed
-			// just bounce off as normal
-			IBlockState inBlockState = worldObj.getBlockState(getPosition());
-			Block inBlock = inBlockState.getBlock();
-			if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj, getPosition()) > 2f) {
-				position().add(v.times(-1));
-				moveAsNormal = true;
-			}
-			
-		}
+		// if (!worldObj.isRemote && piercing) {
+		// moveAsNormal = false;
+		//
+		// // Check if the block is too strong
+		// // If so, don't go through it since it can't be destroyed
+		// // just bounce off as normal
+		// IBlockState inBlockState = worldObj.getBlockState(getPosition());
+		// Block inBlock = inBlockState.getBlock();
+		// if (inBlock != Blocks.AIR && inBlockState.getBlockHardness(worldObj,
+		// getPosition()) > 2f) {
+		// position().add(v.times(-1));
+		// moveAsNormal = true;
+		// }
+		//
+		// }
 		
 		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
@@ -101,16 +102,16 @@ public class EntityAirblade extends AvatarEntity {
 		Block inBlock = inBlockState.getBlock();
 		if (inBlock == Blocks.WATER) setDead();
 		
-		if (!worldObj.isRemote) {
-			if (chopBlocks && inBlock != Blocks.AIR
-					&& inBlockState.getBlockHardness(worldObj, getPosition()) == 0) {
+		if (!worldObj.isRemote && chopBlocksThreshold >= 0 && inBlock != Blocks.AIR) {
+			float hardness = inBlockState.getBlockHardness(worldObj, getPosition());
+			if (hardness <= chopBlocksThreshold) {
 				breakBlock(getPosition());
-				velocity().mul(0.75);
-			}
-			if (piercing && inBlock != Blocks.AIR
-					&& inBlockState.getBlockHardness(worldObj, getPosition()) <= 2f) {
-				breakBlock(getPosition());
-				velocity().mul(0.6);
+				velocity().mul(0.1);
+			} else {
+				// get out of block
+				// moveEntity(MoverType.SELF, p_70091_2_, p_70091_4_,
+				// p_70091_6_);
+				noClip = true;
 			}
 		}
 		
@@ -122,12 +123,11 @@ public class EntityAirblade extends AvatarEntity {
 				
 				EntityLivingBase collided = collidedList.get(0);
 				
-				EntityLivingBase lb = collided;
-				DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner()), damage;
-				if (piercing) {
+				DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
+				if (pierceArmor) {
 					source.setDamageBypassesArmor();
 				}
-				lb.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
+				collided.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
 				
 				Vector motion = velocity().copy();
 				motion.mul(STATS_CONFIG.airbladeSettings.push);
@@ -168,20 +168,21 @@ public class EntityAirblade extends AvatarEntity {
 		this.damage = damage;
 	}
 	
-	public boolean canChopBlocks() {
-		return chopBlocks;
+	public float getChopBlocksThreshold() {
+		return chopBlocksThreshold;
 	}
 	
-	public void setChopBlocks(boolean chopBlocks) {
-		this.chopBlocks = chopBlocks;
+	public void setChopBlocksThreshold(float chopBlocksThreshold) {
+		this.chopBlocksThreshold = chopBlocksThreshold;
+		this.noClip = chopBlocksThreshold >= 0;
 	}
 	
-	public boolean isPiercing() {
-		return piercing;
+	public boolean getPierceArmor() {
+		return pierceArmor;
 	}
 	
-	public void setPiercing(boolean piercing) {
-		this.piercing = piercing;
+	public void setPierceArmor(boolean piercing) {
+		this.pierceArmor = piercing;
 	}
 	
 	public boolean isChainAttack() {
@@ -197,8 +198,8 @@ public class EntityAirblade extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		ownerAttr.load(nbt);
 		damage = nbt.getFloat("Damage");
-		chopBlocks = nbt.getBoolean("ChopBlocks");
-		piercing = nbt.getBoolean("Piercing");
+		chopBlocksThreshold = nbt.getFloat("ChopBlocksThreshold");
+		pierceArmor = nbt.getBoolean("Piercing");
 		chainAttack = nbt.getBoolean("ChainAttack");
 	}
 	
@@ -207,8 +208,8 @@ public class EntityAirblade extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		ownerAttr.save(nbt);
 		nbt.setFloat("Damage", damage);
-		nbt.setBoolean("ChopBlocks", chopBlocks);
-		nbt.setBoolean("Piercing", piercing);
+		nbt.setFloat("ChopBlocksThreshold", chopBlocksThreshold);
+		nbt.setBoolean("Piercing", pierceArmor);
 		nbt.setBoolean("ChainAttack", chainAttack);
 	}
 	
