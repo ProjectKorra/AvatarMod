@@ -101,7 +101,7 @@ public class EntityAirGust extends EntityArc {
 	
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return entity instanceof AvatarEntity;
+		return true;
 	}
 	
 	@Override
