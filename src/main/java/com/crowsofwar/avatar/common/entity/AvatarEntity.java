@@ -308,7 +308,7 @@ public abstract class AvatarEntity extends Entity {
 		} else {
 			sound = destroyed.getSoundType().getBreakSound();
 		}
-		worldObj.playSound(null, getPosition(), sound, SoundCategory.BLOCKS, 1, 1);
+		worldObj.playSound(null, position, sound, SoundCategory.BLOCKS, 1, 1);
 		
 		// Spawn particles
 		
@@ -317,7 +317,7 @@ public abstract class AvatarEntity extends Entity {
 					3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
 					3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
 		}
-		worldObj.setBlockToAir(getPosition());
+		worldObj.setBlockToAir(position);
 		
 		// Create drops
 		
