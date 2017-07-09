@@ -27,6 +27,7 @@ AV2 Changelog :: version a4.2
 * Ravine Fissure upgrade won't destroy blocks under player
 * Nerf air bubble Undercurrent health
 * Bison whistles can be crafted
+* Increase flamethrower chi requirements
 
 > Fix penguin, firebender, and airbender name tags being shown
 > Fix cracked account issues - gen fake account UUID based on username
@@ -44,4 +45,5 @@ AV2 Changelog :: version a4.2
 > Fix no XP gain for water bubble
 > Fix airblade level II not faster
 > Fix air bubble not properly protecting from damage
+> Fix airblade chainblade issues
 > Remove old "click to open" prompt in radial menu
