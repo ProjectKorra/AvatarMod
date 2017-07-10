@@ -16,12 +16,15 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.AvatarInfo;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -36,7 +39,8 @@ public class AvatarItems {
 			return stackScroll;
 		}
 	};
-	
+
+	public static List<Item> allItems;
 	public static ItemScroll itemScroll;
 	public static ItemWaterPouch itemWaterPouch;
 	public static ItemBisonWhistle itemBisonWhistle;
@@ -44,22 +48,27 @@ public class AvatarItems {
 	public static ItemBisonArmor itemBisonArmor;
 	
 	private static ItemStack stackScroll;
+
+	private AvatarItems() {}
 	
 	public static void init() {
-		registerItem(itemScroll = new ItemScroll());
-		registerItem(itemWaterPouch = new ItemWaterPouch());
-		registerItem(itemBisonWhistle = new ItemBisonWhistle());
-		registerItem(itemBisonSaddle = new ItemBisonSaddle());
-		registerItem(itemBisonArmor = new ItemBisonArmor());
+		allItems = new ArrayList<>();
+		allItems.add(itemScroll = new ItemScroll());
+		allItems.add(itemWaterPouch = new ItemWaterPouch());
+		allItems.add(itemBisonWhistle = new ItemBisonWhistle());
+		allItems.add(itemBisonSaddle = new ItemBisonSaddle());
+		allItems.add(itemBisonArmor = new ItemBisonArmor());
 		
 		stackScroll = new ItemStack(itemScroll);
-		
+
+		MinecraftForge.EVENT_BUS.register(new AvatarItems());
+
 	}
-	
-	private static void registerItem(Item item) {
-		item.setRegistryName(AvatarInfo.MOD_ID, item.getUnlocalizedName().substring(5));
-		item.setUnlocalizedName(item.getRegistryName().toString());
-		GameRegistry.register(item);
+
+	@SubscribeEvent
+	public void registerItems(RegistryEvent.Register<Item> e) {
+		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
+		e.getRegistry().registerAll(itemsArr);
 	}
-	
+
 }
