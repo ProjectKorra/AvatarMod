@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -61,7 +61,7 @@ public abstract class AvatarParticle extends Particle {
 	}
 	
 	@Override
-	public void renderParticle(VertexBuffer vb, Entity entity, float partialTicks, float rotationX,
+	public void renderParticle(BufferBuilder vb, Entity entity, float partialTicks, float rotationX,
 			float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 		
 		ParticleFrame frame = getTextureFrames()[getCurrentFrame()];

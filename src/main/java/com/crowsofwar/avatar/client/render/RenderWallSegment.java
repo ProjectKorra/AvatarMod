@@ -24,7 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -75,7 +75,7 @@ public class RenderWallSegment extends Render<EntityWallSegment> {
 				this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 				GlStateManager.pushMatrix();
 				GlStateManager.disableLighting();
-				VertexBuffer vb = tessellator.getBuffer();
+				BufferBuilder vb = tessellator.getBuffer();
 				
 				if (this.renderOutlines) {
 					GlStateManager.enableColorMaterial();

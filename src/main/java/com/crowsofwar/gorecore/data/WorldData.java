@@ -18,7 +18,7 @@
 package com.crowsofwar.gorecore.data;
 
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSavedData;
+import net.minecraft.world.storage.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.fml.common.FMLLog;
 
@@ -28,7 +28,7 @@ import net.minecraftforge.fml.common.FMLLog;
  * @author CrowsOfWar
  */
 public abstract class WorldData extends WorldSavedData implements DataSaver {
-	
+
 	/**
 	 * The world that this data belongs to.
 	 * <p>

@@ -29,7 +29,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -115,7 +115,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 			double v1, double u2, double v2) {
 		
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer vb = t.getBuffer();
+		BufferBuilder vb = t.getBuffer();
 		
 		if (normal == 0 || normal == 2) {
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

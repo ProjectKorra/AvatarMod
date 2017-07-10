@@ -30,7 +30,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -149,7 +149,8 @@ public abstract class RenderArc extends Render {
 			double v1, double u2, double v2) {
 		
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer vb = t.getBuffer();
+		BufferBuilder vb = t.getBuffer();
+		t.getBuffer();
 		
 		if (normal == 0 || normal == 2) {
 			
