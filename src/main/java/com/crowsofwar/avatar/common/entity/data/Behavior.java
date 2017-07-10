@@ -143,7 +143,12 @@ public abstract class Behavior<E extends Entity> {
 		public DataParameter<B> createKey(int id) {
 			return new DataParameter<>(id, this);
 		}
-		
+
+		@Override
+		public B func_192717_a(B behavior) {
+			return behavior;
+		}
+
 	}
 	
 }

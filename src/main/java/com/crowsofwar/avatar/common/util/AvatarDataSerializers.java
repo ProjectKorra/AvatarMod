@@ -17,18 +17,17 @@
 
 package com.crowsofwar.avatar.common.util;
 
-import java.io.IOException;
-
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
 import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+
+import java.io.IOException;
 
 /**
  * 
@@ -54,6 +53,11 @@ public class AvatarDataSerializers {
 		public DataParameter<Block> createKey(int id) {
 			return new DataParameter<>(id, this);
 		}
+
+		@Override
+		public Block func_192717_a(Block block) {
+			return block;
+		}
 	};
 	public static final DataSerializer<Vector> SERIALIZER_VECTOR = new AvatarSerializer<Vector>() {
 		
@@ -72,6 +76,11 @@ public class AvatarDataSerializers {
 		@Override
 		public DataParameter<Vector> createKey(int id) {
 			return new DataParameter<>(id, this);
+		}
+
+		@Override
+		public Vector func_192717_a(Vector vec) {
+			return vec.copy();
 		}
 	};
 	public static final DataSerializer<BenderInfo> SERIALIZER_BENDER = new AvatarSerializer<BenderInfo>() {
@@ -99,7 +108,12 @@ public class AvatarDataSerializers {
 		public DataParameter<BenderInfo> createKey(int id) {
 			return new DataParameter<>(id, this);
 		}
-		
+
+		@Override
+		public BenderInfo func_192717_a(BenderInfo benderInfo) {
+			return benderInfo;
+		}
+
 	};
 	public static final DataSerializer<SaddleTier> SERIALIZER_SADDLE = new AvatarSerializer<SaddleTier>() {
 		
@@ -118,6 +132,11 @@ public class AvatarDataSerializers {
 		public DataParameter<SaddleTier> createKey(int id) {
 			return new DataParameter<>(id, this);
 		}
+
+		@Override
+		public SaddleTier func_192717_a(SaddleTier tier) {
+			return tier;
+		}
 	};
 	public static final DataSerializer<ArmorTier> SERIALIZER_ARMOR = new AvatarSerializer<ArmorTier>() {
 		
@@ -135,6 +154,11 @@ public class AvatarDataSerializers {
 		@Override
 		public DataParameter<ArmorTier> createKey(int id) {
 			return new DataParameter<>(id, this);
+		}
+
+		@Override
+		public ArmorTier func_192717_a(ArmorTier tier) {
+			return tier;
 		}
 	};
 	
