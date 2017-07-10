@@ -12,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
         classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2"
     }
@@ -32,7 +32,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-    version = "1.11-13.19.0.2180"
+    version = "1.12-14.21.1.2387"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -95,3 +95,4 @@ task sourceZip(type: Zip, dependsOn: 'classes') {
 shadowJar {
   configurations = [project.configurations.compile]
 }
+idea { module { inheritOutputDirs = true } }

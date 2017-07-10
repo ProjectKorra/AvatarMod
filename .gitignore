@@ -33,3 +33,6 @@ Server.launch
 
 **/.sass-cache
 **/.sass-cache/*
+.idea/
+code.iml
+out/
