@@ -70,7 +70,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		Vector min = pos.minus(range / 2, range / 2, range / 2);
 		Vector max = pos.plus(range / 2, range / 2, range / 2);
 		
-		AxisAlignedBB aabb = new AxisAlignedBB(min.toMinecraft(), max.toMinecraft());
+		AxisAlignedBB aabb = new AxisAlignedBB(min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
 		
 		EntitySkyBison nearest = bison.worldObj.findNearestEntityWithinAABB(EntitySkyBison.class, aabb,
 				bison);
