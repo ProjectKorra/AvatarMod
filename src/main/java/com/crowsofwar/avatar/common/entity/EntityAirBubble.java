@@ -135,42 +135,43 @@ public class EntityAirBubble extends AvatarEntity {
 		if (owner == null) {
 			setDead();
 		}
-		if (owner != null) {
+		if (owner.isDead) {
+			dissipateSmall();
+		}
+		
+		setPosition(owner.posX, owner.posY, owner.posZ);
+		
+		Bender ownerBender = ownerAttr.getOwnerBender();
+		if (!worldObj.isRemote
+				&& !ownerBender.getData().chi().consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
 			
-			setPosition(owner.posX, owner.posY, owner.posZ);
+			dissipateSmall();
 			
-			Bender ownerBender = ownerAttr.getOwnerBender();
-			if (!worldObj.isRemote
-					&& !ownerBender.getData().chi().consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
-				
-				dissipateSmall();
-				
+		}
+		
+		ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+		if (!elytraOk && !worldObj.isRemote) {
+			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
+					(EntityPlayerMP) owner);
+			dissipateSmall();
+		}
+		
+		if (!isDissipating()) {
+			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
+				attribute.applyModifier(SLOW_ATTR);
 			}
 			
-			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-			if (!elytraOk && !worldObj.isRemote) {
-				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
-						(EntityPlayerMP) owner);
-				dissipateSmall();
-			}
-			
-			if (owner.isDead) {
-				dissipateSmall();
-			}
-			
-			if (!isDissipating()) {
-				IAttributeInstance attribute = owner
-						.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
-					attribute.applyModifier(SLOW_ATTR);
-				}
+			if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
 				
-				if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
+				owner.motionY += .03;
+				
+				if (doesAllowHovering()) {
 					
-					owner.motionY += .03;
+					owner.fallDistance = 0;
 					
-					if (doesAllowHovering() && !owner.isSneaking()) {
+					if (!owner.isSneaking()) {
 						
 						// Find the closest BlockPos below owner that has a
 						// block
@@ -197,7 +198,6 @@ public class EntityAirBubble extends AvatarEntity {
 						}
 						
 					}
-					
 				}
 				
 			}
@@ -240,8 +240,6 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		
-		if (2 + 2 == 4) return;
 		
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;

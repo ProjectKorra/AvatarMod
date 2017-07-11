@@ -1,3 +1,4 @@
-AV2 Changelog :: version a4.3
+AV2 Changelog :: version a4.4
 
-> Fix crash on server when near a flying bison
+> Fix air bubble not pushing enemies
+> Fix air bubble Undercurrent fall damage
