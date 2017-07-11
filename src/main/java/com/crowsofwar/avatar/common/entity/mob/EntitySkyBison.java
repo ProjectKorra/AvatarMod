@@ -852,6 +852,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		if (!worldObj.isRemote) {
 			setEatGrassTime(aiEatGrass.getEatGrassTime());
+			setLoveParticles(condition.isReadyToBreed());
 		}
 		if (worldObj.isRemote && isLoveParticles() && ticksExisted % 10 == 0) {
 			double d0 = this.rand.nextGaussian() * 0.02D;

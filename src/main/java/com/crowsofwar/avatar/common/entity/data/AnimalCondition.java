@@ -251,6 +251,13 @@ public class AnimalCondition {
 		setBreedTimer(getBreedTimer() + amount);
 	}
 	
+	/**
+	 * Get whether the bison is ready to breed right now.
+	 */
+	public boolean isReadyToBreed() {
+		return isAdult() && getBreedTimer() == 0;
+	}
+	
 	public boolean isSterile() {
 		return sterile;
 	}
