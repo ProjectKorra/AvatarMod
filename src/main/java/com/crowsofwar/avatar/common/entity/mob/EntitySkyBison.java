@@ -44,6 +44,7 @@ import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonBreeding;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonDefendOwner;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonEatGrass;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonFollowAttacker;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonFollowOwner;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonHelpOwnerTarget;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonLand;
@@ -200,10 +201,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 		
-		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
-		this.tasks.addTask(2, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
-		this.tasks.addTask(3, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
+		this.tasks.addTask(0, BendingAbility.ABILITY_AIR_BUBBLE.getAi(this, this));
+		this.tasks.addTask(1, BendingAbility.ABILITY_AIR_GUST.getAi(this, this));
+		this.tasks.addTask(2, BendingAbility.ABILITY_AIRBLADE.getAi(this, this));
 		
+		this.tasks.addTask(2, new EntityAiBisonFollowAttacker(this));
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
 		this.tasks.addTask(4, new EntityAiBisonBreeding(this));
 		this.tasks.addTask(5, new EntityAiBisonTempt(this, 10));
@@ -335,7 +337,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	public float getSpeedMultiplier() {
 		float armorSpeed = getArmor() == null ? 1 : getArmor().getSpeedMultiplier();
-		return condition.getSpeedMultiplier() * armorSpeed;
+		float attackSpeed = getAttackTarget() != null ? 1.25f : 1f;
+		return condition.getSpeedMultiplier() * armorSpeed * attackSpeed;
 	}
 	
 	public AnimalCondition getCondition() {
