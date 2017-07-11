@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.ai;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
+import java.util.List;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
@@ -69,19 +70,20 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		
 		AxisAlignedBB aabb = new AxisAlignedBB(min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
 		
-		EntitySkyBison nearest = bison.worldObj.findNearestEntityWithinAABB(EntitySkyBison.class, aabb,
-				bison);
+		List<EntitySkyBison> mates = bison.worldObj.getEntitiesWithinAABB(EntitySkyBison.class, aabb,
+				b -> b != bison && b.getCondition().isReadyToBreed());
 		
-		if (nearest != null) {
+		if (!mates.isEmpty()) {
+			EntitySkyBison mate = mates.get(0);
 			if (getNearbyBison() < 15) {
-				bison.getMoveHelper().setMoveTo(nearest.posX, nearest.posY, nearest.posZ, 1);
+				bison.getMoveHelper().setMoveTo(mate.posX, mate.posY, mate.posZ, 1);
 				// 7 obtained through real-world testing
-				if (bison.getDistanceSqToEntity(nearest) <= 7) {
+				if (bison.getDistanceSqToEntity(mate) <= 7) {
 					
-					spawnBaby(nearest);
+					spawnBaby(mate);
 					
 					bison.getCondition().setBreedTimer(generateBreedTimer());
-					nearest.getCondition().setBreedTimer(generateBreedTimer());
+					mate.getCondition().setBreedTimer(generateBreedTimer());
 					
 					return true;
 					
