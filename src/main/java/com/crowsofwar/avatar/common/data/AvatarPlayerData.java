@@ -231,7 +231,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		int chi = 0;
 		chi += getAllBending().size() * 15;
 		for (AbilityData aData : getAllAbilityData()) {
-			if (!aData.isLocked()) {
+			if (!aData.isLocked() && hasBending(aData.getAbility().getBendingType())) {
 				chi += 3;
 				chi += aData.getLevel();
 			}
@@ -240,7 +240,13 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 		// needed to avoid StackOverflowError
 		if (chi != chi().getMaxChi()) {
+			float old = chi().getMaxChi();
 			chi().setMaxChi(chi);
+			
+			// Don't need to wait for new chi to regen
+			if (chi > old) {
+				chi().changeTotalChi(chi - old);
+			}
 		}
 	}
 	
