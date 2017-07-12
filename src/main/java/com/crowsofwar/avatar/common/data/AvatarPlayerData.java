@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 import java.util.ArrayList;
@@ -228,15 +229,15 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	}
 	
 	private void updateMaxChi() {
-		int chi = 0;
-		chi += getAllBending().size() * 15;
+		float chi = 0;
+		chi += getAllBending().size() * CHI_CONFIG.bonusLearnedBending;
 		for (AbilityData aData : getAllAbilityData()) {
 			if (!aData.isLocked() && hasBending(aData.getAbility().getBendingType())) {
-				chi += 3;
-				chi += aData.getLevel();
+				chi += CHI_CONFIG.bonusAbility;
+				chi += aData.getLevel() * CHI_CONFIG.bonusAbilityLevel;
 			}
 		}
-		if (chi >= 50) chi = 50;
+		if (chi >= CHI_CONFIG.maxChiCap) chi = CHI_CONFIG.maxChiCap;
 		
 		// needed to avoid StackOverflowError
 		if (chi != chi().getMaxChi()) {
