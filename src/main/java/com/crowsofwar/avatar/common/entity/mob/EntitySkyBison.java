@@ -912,7 +912,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 	
 	@Override
-	public void moveEntityWithHeading(float strafe, float forward) {
+	public void moveEntityWithHeading(float strafe, float forward, float unknown) {
 		
 		if (isEatingGrass()) {
 			motionY -= 0.08;
