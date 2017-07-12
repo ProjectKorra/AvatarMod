@@ -1,6 +1,9 @@
 AV2 Changelog :: version a4.4
 
+* Maximum chi adjustable by learning new abilities
 * Air bubble prevents drowning, for a limited time
 
 > Fix air bubble not pushing enemies
 > Fix air bubble Undercurrent fall damage
+> Fix bison unethically breeding with unwilling partners
+> Fix bison related crash on server

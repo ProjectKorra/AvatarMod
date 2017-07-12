@@ -221,6 +221,29 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 	}
 	
+	@Override
+	protected void saveChanges() {
+		super.saveChanges();
+		updateMaxChi();
+	}
+	
+	private void updateMaxChi() {
+		int chi = 0;
+		chi += getAllBending().size() * 15;
+		for (AbilityData aData : getAllAbilityData()) {
+			if (!aData.isLocked()) {
+				chi += 3;
+				chi += aData.getLevel();
+			}
+		}
+		if (chi >= 50) chi = 50;
+		
+		// needed to avoid StackOverflowError
+		if (chi != chi().getMaxChi()) {
+			chi().setMaxChi(chi);
+		}
+	}
+	
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
 		fetcher = new PlayerDataFetcherSided<>(clientFetcher,
 				new PlayerDataFetcherServer<>(AvatarWorldData::getDataFromWorld));
