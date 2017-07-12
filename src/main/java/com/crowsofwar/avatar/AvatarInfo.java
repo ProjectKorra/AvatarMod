@@ -42,7 +42,7 @@ public class AvatarInfo {
 	/**
 	 * Incremented for minor bug fixes.
 	 */
-	public static final int VERSION_PATCH = 3;
+	public static final int VERSION_PATCH = 4;
 	/**
 	 * "a" for alpha.
 	 * <p>

@@ -8,11 +8,12 @@
     "a4.1": "Bugfixes and improvements - please see av2.io/a4.1-changelog",
     "a4.2": "Bugfixes and improvements - please see av2.io/a4.2-changelog",
     "a4.3": "Hotfix for servers, fixes flying bison crash"
+    "a4.4": "Bugfixes and improvements - please see av2.io/a4.4-changelog"
   },
   "promos": {
-    "1.11-latest": "a4.3",
-    "1.11-recommended": "a4.3",
-    "1.11.2-latest": "a4.3",
-    "1.11.2-recommended": "a4.3"
+    "1.11-latest": "a4.4",
+    "1.11-recommended": "a4.4",
+    "1.11.2-latest": "a4.4",
+    "1.11.2-recommended": "a4.4"
   }
 }
