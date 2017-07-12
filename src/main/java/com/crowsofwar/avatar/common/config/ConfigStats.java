@@ -58,12 +58,30 @@ public class ConfigStats {
 	@Load
 	public FireballSettings fireballSettings = new FireballSettings();
 	
+	// @formatter:off
 	@Load
-	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 3f,
-			chiAirBubbleTakeDamage = 0.5f, chiAirBubbleOneSecond = 0.25f, chiRavine = 3f, chiWall = 5f,
-			chiPickUpBlock = 2.5f, chiMining = 4f, chiMiningMaster = 1f, chiFireArc = 2f, chiFireball = 4f,
-			chiFlamethrowerSecond = 5f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
-			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.25f;
+	public float chiAirblade = 1f,
+			chiAirGust = 0.5f,
+			chiAirJump = 0.4f,
+			chiAirBubble = 1.5f,
+			chiAirBubbleTakeDamage = 0.25f,
+			chiAirBubbleOneSecond = 0.125f,
+			chiRavine = 1.5f,
+			chiWall = 2.5f,
+			chiPickUpBlock = 1.25f,
+			chiMining = 2f,
+			chiMiningMaster = 0.5f,
+			chiFireArc = 1f,
+			chiFireball = 2f,
+			chiFlamethrowerSecond = 2.5f,
+			chiLightFire = 2f,
+			chiWave = 2f,
+			chiWaterArc = 1f,
+			chiWaterBubble = 1.25f,
+			chiWaterSkateSecond = 0.5f,
+			chiWallOneSecond = 0.125f;
+
+	// @formatter:on
 	
 	@Load
 	public float sleepChiRegen = 99999;
