@@ -229,7 +229,7 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender(float p_70070_1_) {
+	public int getBrightnessForRender() {
 		return 15728880;
 	}
 	

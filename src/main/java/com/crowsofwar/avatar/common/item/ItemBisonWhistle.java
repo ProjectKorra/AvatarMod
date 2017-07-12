@@ -16,24 +16,14 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
-import static net.minecraft.util.EnumActionResult.PASS;
-import static net.minecraft.util.EnumActionResult.SUCCESS;
-
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
-
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -42,6 +32,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
+import static net.minecraft.util.EnumActionResult.PASS;
+import static net.minecraft.util.EnumActionResult.SUCCESS;
 
 /**
  * ItemBow
@@ -134,7 +133,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		
 		if (isBound(stack)) {
 			tooltip.add(I18n.format("avatar.bisonWhistle.tooltipBound", getBisonName(stack)));

@@ -36,9 +36,10 @@ public class GuiButtonScrolls extends GuiButton {
 		super(buttonId, x, y, 18, 18, "");
 		this.scrollSlot = container.inventorySlots.get(0);
 	}
-	
+
+	// drawButton
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+	public void func_191745_a(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		
 		this.enabled = scrollSlot.getHasStack();
 		

@@ -16,23 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
-import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.toRectangular;
-import static java.lang.Math.*;
-import static net.minecraft.entity.SharedMonsterAttributes.ARMOR;
-import static net.minecraft.init.Blocks.STONE;
-import static net.minecraft.item.ItemStack.field_190927_a;
-import static net.minecraft.util.SoundCategory.NEUTRAL;
-
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -41,15 +24,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonBreeding;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonDefendOwner;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonEatGrass;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonFollowOwner;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonHelpOwnerTarget;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonLand;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonSit;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonTempt;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBisonWander;
+import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
@@ -63,15 +38,9 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.IEntityOwnable;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -98,6 +67,22 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Type;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
+import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.toRectangular;
+import static java.lang.Math.*;
+import static net.minecraft.entity.SharedMonsterAttributes.ARMOR;
+import static net.minecraft.init.Blocks.STONE;
+import static net.minecraft.item.ItemStack.field_190927_a;
+import static net.minecraft.util.SoundCategory.NEUTRAL;
 
 /**
  * EntityGhast EntityTameable EntityHorse
@@ -910,9 +895,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		
 	}
-	
+
+	// moveEntityWithHeading
 	@Override
-	public void moveEntityWithHeading(float strafe, float forward, float unknown) {
+	public void func_191986_a(float strafe, float forward, float unknown) {
 		
 		if (isEatingGrass()) {
 			motionY -= 0.08;
@@ -970,7 +956,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 						.getAttributeValue();
 				setAIMoveSpeed(moveAttribute * condition.getSpeedMultiplier());
 				
-				moveEntityWithHeadingFlying(strafe, forward * speedMult);
+				moveEntityWithHeadingFlying(strafe, forward * speedMult, unknown);
 				motionY += look.y() * 0.02 * speedMult;
 				
 			} else if (driver instanceof EntityPlayer) {
@@ -992,7 +978,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			this.limbSwing += this.limbSwingAmount;
 		} else {
 			this.jumpMovementFactor = 0.02F;
-			moveEntityWithHeadingFlying(strafe, forward);
+			moveEntityWithHeadingFlying(strafe, forward, unknown);
 		}
 		
 	}
@@ -1007,15 +993,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {}
 	
-	private void moveEntityWithHeadingFlying(float strafe, float forward) {
+	private void moveEntityWithHeadingFlying(float strafe, float forward, float unknown) {
 		if (this.isInWater()) {
-			this.moveRelative(strafe, forward, 0.02F);
+			this.func_191958_b(strafe, forward, unknown, 0.02F); // moveRelative
 			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.800000011920929D;
 			this.motionY *= 0.800000011920929D;
 			this.motionZ *= 0.800000011920929D;
 		} else if (this.isInLava()) {
-			this.moveRelative(strafe, forward, 0.02F);
+			this.func_191958_b(strafe, forward, unknown, 0.02F); // moveRelative
 			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.5D;
 			this.motionY *= 0.5D;
@@ -1030,7 +1016,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			}
 			
 			float f1 = 0.16277136F / (f * f * f);
-			this.moveRelative(strafe, forward, this.onGround ? 0.1F * f1 : 0.02F);
+			this.func_191958_b(strafe, forward, unknown, this.onGround ? 0.1F * f1 : 0.02F);
 			f = 0.91F;
 			
 			if (this.onGround) {
