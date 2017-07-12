@@ -146,6 +146,9 @@ public class EntityAirBubble extends AvatarEntity {
 			owner.setAir(Math.min(airLeft, 300));
 			airLeft--;
 		}
+		if (owner.isBurning()) {
+			owner.extinguish();
+		}
 		
 		setPosition(owner.posX, owner.posY, owner.posZ);
 		

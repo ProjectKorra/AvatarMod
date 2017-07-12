@@ -3,6 +3,7 @@ AV2 Changelog :: version a4.4
 * Maximum chi adjustable by learning new abilities
 * Air bubble prevents drowning, for a limited time
 * Regenerate chi while sitting in bed
+* Air bubble extinguish
 
 > Fix air bubble not pushing enemies
 > Fix air bubble Undercurrent fall damage
