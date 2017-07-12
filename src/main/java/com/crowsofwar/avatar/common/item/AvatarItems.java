@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.item;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -53,17 +54,22 @@ public class AvatarItems {
 	
 	public static void init() {
 		allItems = new ArrayList<>();
-		allItems.add(itemScroll = new ItemScroll());
-		allItems.add(itemWaterPouch = new ItemWaterPouch());
-		allItems.add(itemBisonWhistle = new ItemBisonWhistle());
-		allItems.add(itemBisonSaddle = new ItemBisonSaddle());
-		allItems.add(itemBisonArmor = new ItemBisonArmor());
+		addItem(itemScroll = new ItemScroll());
+		addItem(itemWaterPouch = new ItemWaterPouch());
+		addItem(itemBisonWhistle = new ItemBisonWhistle());
+		addItem(itemBisonSaddle = new ItemBisonSaddle());
+		addItem(itemBisonArmor = new ItemBisonArmor());
 		
 		stackScroll = new ItemStack(itemScroll);
 
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());
 
 	}
+
+	private static void addItem(Item item) {
+        item.setRegistryName(new ResourceLocation("avatarmod", item.getUnlocalizedName()));
+        allItems.add(item);
+    }
 
 	@SubscribeEvent
 	public void registerItems(RegistryEvent.Register<Item> e) {
