@@ -35,6 +35,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -79,12 +80,14 @@ public class EntityAirBubble extends AvatarEntity {
 			"airbubble_slowness", -.3, 2);
 	
 	private final OwnerAttribute ownerAttr;
+	private int airLeft;
 	
 	public EntityAirBubble(World world) {
 		super(world);
 		// setSize(2.5f, 2.5f);
 		setSize(0, 0);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		this.airLeft = 600;
 	}
 	
 	@Override
@@ -137,6 +140,10 @@ public class EntityAirBubble extends AvatarEntity {
 		}
 		if (owner.isDead) {
 			dissipateSmall();
+		}
+		if (!worldObj.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
+			owner.setAir(Math.min(airLeft, 300));
+			airLeft--;
 		}
 		
 		setPosition(owner.posX, owner.posY, owner.posZ);
@@ -276,6 +283,7 @@ public class EntityAirBubble extends AvatarEntity {
 		setDissipateTime(nbt.getInteger("Dissipate"));
 		setHealth(nbt.getFloat("Health"));
 		setAllowHovering(nbt.getBoolean("AllowHovering"));
+		airLeft = nbt.getInteger("AirLeft");
 	}
 	
 	@Override
@@ -285,6 +293,7 @@ public class EntityAirBubble extends AvatarEntity {
 		nbt.setInteger("Dissipate", getDissipateTime());
 		nbt.setFloat("Health", getHealth());
 		nbt.setBoolean("AllowHovering", doesAllowHovering());
+		nbt.setInteger("AirLeft", airLeft);
 	}
 	
 	@Override
