@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.vecmath.Matrix4f;
@@ -34,7 +33,7 @@ import static net.minecraft.client.Minecraft.getMinecraft;
  * 
  * @author CrowsOfWar
  */
-public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
+public class ScrollsPerspectiveModel implements IBakedModel {
 	
 	private final ModelResourceLocation mrlRegular, mrlGlow;
 	private final ItemCameraTransforms cameraTransforms;
@@ -57,8 +56,7 @@ public class ScrollsPerspectiveModel implements IPerspectiveAwareModel {
 		ModelManager mm = getMinecraft().getRenderItem().getItemModelMesher().getModelManager();
 		ModelResourceLocation mrl = transform == TransformType.GUI ? mrlGlow : mrlRegular;
 		
-		Matrix4f mat = baseModel instanceof IPerspectiveAwareModel
-				? ((IPerspectiveAwareModel) baseModel).handlePerspective(transform).getRight() : null;
+		Matrix4f mat = baseModel.handlePerspective(transform).getRight();
 		
 		return Pair.of(mm.getModel(mrl), mat);
 	}
