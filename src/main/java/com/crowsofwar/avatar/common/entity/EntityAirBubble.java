@@ -137,6 +137,7 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
 			setDead();
+			return;
 		}
 		if (owner.isDead) {
 			dissipateSmall();
