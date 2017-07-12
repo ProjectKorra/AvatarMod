@@ -1,0 +1,23 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "lll",
+    "sas",
+    "d d"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "l": {
+      "item": "minecraft:leather"
+    },
+    "s": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "avatarmod:bison_saddle",
+    "data": 1
+  }
+}
