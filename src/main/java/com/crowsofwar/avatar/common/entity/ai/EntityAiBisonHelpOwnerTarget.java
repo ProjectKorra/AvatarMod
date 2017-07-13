@@ -44,12 +44,9 @@ public class EntityAiBisonHelpOwnerTarget extends EntityAITarget {
 		if (owner == null) {
 			return false;
 		} else {
-			
-			// getLastAttacker() is a misnomer
-			// really returns last entity that the owner attacked
-			
-			this.theTarget = owner.getLastAttacker();
-			int i = owner.getLastAttackerTime();
+			// getRevengeTarget() : entity that was last attacked
+			this.theTarget = owner.getRevengeTarget();
+			int i = owner.getRevengeTimer();
 			return i != this.timestamp && isSuitableTarget(this.theTarget, false);
 		}
 		
@@ -64,7 +61,7 @@ public class EntityAiBisonHelpOwnerTarget extends EntityAITarget {
 		EntityLivingBase entitylivingbase = this.bison.getOwner();
 		
 		if (entitylivingbase != null) {
-			this.timestamp = entitylivingbase.getLastAttackerTime();
+			this.timestamp = entitylivingbase.getRevengeTimer();
 		}
 		
 		super.startExecuting();

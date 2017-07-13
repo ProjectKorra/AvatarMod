@@ -79,7 +79,7 @@ public class EntityAiBisonTempt extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		if (!following.isDead && bison.getDistanceSqToEntity(following) <= maxDistSq
 				&& isHoldingFood(following)) {

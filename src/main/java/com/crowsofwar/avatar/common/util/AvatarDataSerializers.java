@@ -90,7 +90,7 @@ public class AvatarDataSerializers {
 			buf.writeBoolean(info.isPlayer());
 			buf.writeBoolean(info.getId() != null);
 			if (info.getId() != null) {
-				buf.writeUuid(info.getId());
+				buf.writeUniqueId(info.getId());
 			}
 		}
 		
@@ -98,7 +98,7 @@ public class AvatarDataSerializers {
 		public BenderInfo read(PacketBuffer buf) throws IOException {
 			boolean player = buf.readBoolean();
 			if (buf.readBoolean()) {
-				return new BenderInfo(player, buf.readUuid());
+				return new BenderInfo(player, buf.readUniqueId());
 			} else {
 				return new BenderInfo(player, null);
 			}

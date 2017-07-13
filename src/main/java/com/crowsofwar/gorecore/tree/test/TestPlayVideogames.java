@@ -36,7 +36,7 @@ public class TestPlayVideogames extends NodeFunctional {
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		String videogame = options.isEmpty() ? "" : options.get(0);
 		String send = options.isEmpty() ? "test.videogames.none" : "test.videogames";
-		call.getFrom().addChatMessage(new TextComponentTranslation(send, videogame));
+		call.getFrom().sendMessage(new TextComponentTranslation(send, videogame));
 		return null;
 	}
 	

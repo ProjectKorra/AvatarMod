@@ -81,7 +81,7 @@ public class AbilityCreateWave extends WaterAbility {
 						
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 						
-						world.spawnEntityInWorld(wave);
+						world.spawnEntity(wave);
 						
 					}
 					

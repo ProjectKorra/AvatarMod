@@ -74,9 +74,9 @@ public class ImmutableVector extends Vector {
 	 *            Vector to copy
 	 */
 	public ImmutableVector(Vec3d vec) {
-		this.x = vec.xCoord;
-		this.y = vec.yCoord;
-		this.z = vec.zCoord;
+		this.x = vec.x;
+		this.y = vec.y;
+		this.z = vec.z;
 	}
 	
 	/**

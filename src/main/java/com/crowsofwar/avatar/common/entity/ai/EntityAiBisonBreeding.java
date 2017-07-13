@@ -16,20 +16,19 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-
-import java.util.Random;
-
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+
+import java.util.Random;
+
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * 
@@ -57,7 +56,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		if (!shouldExecute()) {
 			bison.setLoveParticles(false);
@@ -111,7 +110,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 			child.setLocationAndAngles(bison.posX, bison.posY, bison.posZ, 0, 0);
 			child.onInitialSpawn(world.getDifficultyForLocation(bison.getPosition()),
 					new BisonSpawnData(true));
-			world.spawnEntityInWorld(child);
+			world.spawnEntity(child);
 			
 			// Spawn heart particles
 			Random random = bison.getRNG();
@@ -132,7 +131,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 			
 			// Spawn XP orbs
 			if (world.getGameRules().getBoolean("doMobLoot")) {
-				world.spawnEntityInWorld(
+				world.spawnEntity(
 						new EntityXPOrb(world, bison.posX, bison.posY, bison.posZ, random.nextInt(7) + 1));
 			}
 			

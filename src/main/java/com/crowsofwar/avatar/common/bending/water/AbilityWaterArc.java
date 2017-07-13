@@ -92,7 +92,7 @@ public class AbilityWaterArc extends WaterAbility {
 				
 				water.setBehavior(new WaterArcBehavior.PlayerControlled());
 				
-				world.spawnEntityInWorld(water);
+				world.spawnEntity(water);
 				
 				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
 				

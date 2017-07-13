@@ -81,7 +81,7 @@ public class AbilityAirBubble extends AirAbility {
 			bubble.setMaxHealth(health);
 			bubble.setSize(size);
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
-			world.spawnEntityInWorld(bubble);
+			world.spawnEntity(bubble);
 			
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.addStatusControl(StatusControl.BUBBLE_CONTRACT);

@@ -45,7 +45,7 @@ public class TestNode1 extends NodeFunctional {
 		ArgumentList args = call.popArguments(this);
 		String a = args.get(argA);
 		Integer b = args.get(argB);
-		call.getFrom().addChatMessage(new TextComponentTranslation(b + " " + a + "s"));
+		call.getFrom().sendMessage(new TextComponentTranslation(b + " " + a + "s"));
 		
 		return null;
 	}

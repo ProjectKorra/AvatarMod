@@ -42,7 +42,7 @@ public class TestCakeLick extends NodeFunctional {
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		double gallons = call.popArguments(this).get(argGallons);
-		call.getFrom().addChatMessage(new TextComponentTranslation("test.lickCake", gallons));
+		call.getFrom().sendMessage(new TextComponentTranslation("test.lickCake", gallons));
 		return null;
 	}
 	

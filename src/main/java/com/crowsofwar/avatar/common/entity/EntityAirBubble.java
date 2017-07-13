@@ -16,13 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -33,7 +26,6 @@ import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -53,6 +45,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -301,7 +300,7 @@ public class EntityAirBubble extends AvatarEntity {
 		if (owner != null) {
 			
 			if (!world.isRemote) {
-				Entity sourceEntity = source.getEntity();
+				Entity sourceEntity = source.getTrueSource();
 				if (sourceEntity != null) {
 					if (!owner.isEntityInvulnerable(source)) {
 						BendingData data = Bender.getData(owner);

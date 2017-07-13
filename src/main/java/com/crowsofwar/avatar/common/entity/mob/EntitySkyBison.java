@@ -968,7 +968,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			this.prevLimbSwingAmount = this.limbSwingAmount;
 			double moveX = this.posX - this.prevPosX;
 			double moveZ = this.posZ - this.prevPosZ;
-			float moveSinceLastTick = MathHelper.sqrt_double(moveX * moveX + moveZ * moveZ) * 4.0F;
+			float moveSinceLastTick = MathHelper.sqrt(moveX * moveX + moveZ * moveZ) * 4.0F;
 			
 			if (moveSinceLastTick > 1.0F) {
 				moveSinceLastTick = 1.0F;
@@ -1034,7 +1034,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.prevLimbSwingAmount = this.limbSwingAmount;
 		double d1 = this.posX - this.prevPosX;
 		double d0 = this.posZ - this.prevPosZ;
-		float f2 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+		float f2 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
 		
 		if (f2 > 1.0F) {
 			f2 = 1.0F;

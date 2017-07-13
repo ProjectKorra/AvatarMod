@@ -155,7 +155,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 			this.prevLimbSwingAmount = this.limbSwingAmount;
 			double d1 = this.posX - this.prevPosX;
 			double d0 = this.posZ - this.prevPosZ;
-			float f1 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+			float f1 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
 			
 			if (f1 > 1.0F) {
 				f1 = 1.0F;

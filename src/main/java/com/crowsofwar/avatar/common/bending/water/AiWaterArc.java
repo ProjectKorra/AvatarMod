@@ -57,7 +57,7 @@ public class AiWaterArc extends BendingAi {
 	protected void startExec() {}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target == null) return false;

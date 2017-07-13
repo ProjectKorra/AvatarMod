@@ -79,7 +79,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		// Once got close to grass, close enough
 		EntityMoveHelper mh = bison.getMoveHelper();
 		if (bison.getDistanceSq(mh.getX(), mh.getY(), mh.getZ()) <= 5) {
@@ -114,9 +114,9 @@ public class EntityAiBisonLand extends EntityAIBase {
 		double minZ = pos.z() - bison.width / 2;
 		double maxZ = pos.z() + bison.width / 2;
 		
-		for (int x = floor_double(minX); x <= maxX; x++) {
-			for (int y = floor_double(minY); y <= maxY; y++) {
-				for (int z = floor_double(minZ); z <= maxZ; z++) {
+		for (int x = floor(minX); x <= maxX; x++) {
+			for (int y = floor(minY); y <= maxY; y++) {
+				for (int z = floor(minZ); z <= maxZ; z++) {
 					if (isSolidBlock(new BlockPos(x, y, z))) {
 						return false;
 					}

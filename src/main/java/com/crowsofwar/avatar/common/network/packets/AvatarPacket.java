@@ -43,7 +43,7 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 		Handler<MSG> handler = getPacketHandler();
 		
 		IThreadListener mainThread = getRecievedSide().isServer()
-				? ctx.getServerHandler().playerEntity.getServerWorld()
+				? ctx.getServerHandler().player.getServerWorld()
 				: AvatarMod.proxy.getClientThreadListener();
 		
 		mainThread.addScheduledTask(() -> {
@@ -52,7 +52,7 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 				if (ctx.side.isClient()) {
 					AvatarMod.network.sendToServer(followup);
 				} else {
-					AvatarMod.network.sendTo(followup, ctx.getServerHandler().playerEntity);
+					AvatarMod.network.sendTo(followup, ctx.getServerHandler().player);
 				}
 			}
 		});

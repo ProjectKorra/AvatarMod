@@ -123,7 +123,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 					world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				}
 				
-				world.spawnEntityInWorld(floating);
+				world.spawnEntity(floating);
 				
 				SoundType sound = block.getSoundType();
 				if (sound != null) {

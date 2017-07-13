@@ -65,11 +65,11 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public void startExecuting() {
-		continueExecuting();
+		shouldContinueExecuting();
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		boolean keepExecuting = !bison.isFull() && isOnGround();
 		World world = bison.world;

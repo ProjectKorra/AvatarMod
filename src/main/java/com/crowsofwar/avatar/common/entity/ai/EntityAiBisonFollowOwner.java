@@ -76,7 +76,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		return false;
 	}
 	

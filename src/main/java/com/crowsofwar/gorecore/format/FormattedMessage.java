@@ -50,7 +50,7 @@ public class FormattedMessage {
 	}
 	
 	public void send(ICommandSender sender, Object... formatValues) {
-		sender.addChatMessage(getChatMessage(!(sender instanceof Entity), formatValues));
+		sender.sendMessage(getChatMessage(!(sender instanceof Entity), formatValues));
 	}
 	
 	public String getTranslateKey() {

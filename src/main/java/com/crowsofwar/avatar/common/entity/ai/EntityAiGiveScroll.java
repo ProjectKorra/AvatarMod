@@ -16,18 +16,17 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 /**
  * 
@@ -71,7 +70,7 @@ public class EntityAiGiveScroll extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
 				entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
@@ -90,7 +89,7 @@ public class EntityAiGiveScroll extends EntityAIBase {
 			entityItem.motionX = velocity.x();
 			entityItem.motionY = velocity.y();
 			entityItem.motionZ = velocity.z();
-			world.spawnEntityInWorld(entityItem);
+			world.spawnEntity(entityItem);
 			
 			target = null;
 			

@@ -64,7 +64,7 @@ public class AbilityAirGust extends AirAbility {
 		gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
 		gust.setAirGrab(ctx.isMasterLevel(SECOND));
 		
-		world.spawnEntityInWorld(gust);
+		world.spawnEntity(gust);
 	}
 	
 	@Override

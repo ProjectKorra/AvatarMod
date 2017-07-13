@@ -81,7 +81,7 @@ public class AbilityAirblade extends AirAbility {
 		}
 		airblade.setChopBlocksThreshold(chopBlocks);
 		
-		world.spawnEntityInWorld(airblade);
+		world.spawnEntity(airblade);
 		
 	}
 	

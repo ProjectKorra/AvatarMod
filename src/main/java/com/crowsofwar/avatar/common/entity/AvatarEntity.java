@@ -17,13 +17,9 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -37,14 +33,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * 
@@ -237,7 +232,7 @@ public abstract class AvatarEntity extends Entity {
 				}
 				
 				if (j > i - 1) {
-					this.attackEntityFrom(DamageSource.field_191291_g, 6.0F);
+					this.attackEntityFrom(DamageSource.CRAMMING, 6.0F);
 				}
 			}
 			
@@ -329,7 +324,7 @@ public abstract class AvatarEntity extends Entity {
 				item.motionX *= 2;
 				item.motionY *= 1.2;
 				item.motionZ *= 2;
-				world.spawnEntityInWorld(item);
+				world.spawnEntity(item);
 			}
 		}
 		

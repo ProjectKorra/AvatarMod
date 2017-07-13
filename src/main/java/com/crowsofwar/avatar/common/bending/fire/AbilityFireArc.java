@@ -72,7 +72,7 @@ public class AbilityFireArc extends FireAbility {
 			fire.setDamageMult(ctx.getLevel() >= 2 ? 2 : 1);
 			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			
-			world.spawnEntityInWorld(fire);
+			world.spawnEntity(fire);
 			
 			data.addStatusControl(StatusControl.THROW_FIRE);
 			

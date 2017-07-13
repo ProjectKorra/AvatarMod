@@ -43,7 +43,7 @@ public class TestNode2 extends NodeFunctional {
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		ArgumentList args = call.popArguments(this);
 		call.getFrom()
-				.addChatMessage(new TextComponentTranslation("The temperature is " + args.get(argTemp)));
+				.sendMessage(new TextComponentTranslation("The temperature is " + args.get(argTemp)));
 		return null;
 	}
 	

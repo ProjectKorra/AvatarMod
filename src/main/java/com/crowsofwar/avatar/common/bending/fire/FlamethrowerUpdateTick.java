@@ -105,7 +105,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				flames.velocity().set(look.times(speedMult).plus(getVelocityMpS(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setLightsFires(lightsFires);
-				world.spawnEntityInWorld(flames);
+				world.spawnEntity(flames);
 				
 				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
 						SoundCategory.PLAYERS, 0.2f, 0.8f);

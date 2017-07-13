@@ -17,12 +17,12 @@
 
 package com.crowsofwar.gorecore.format;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultiMessage {
 	
@@ -57,7 +57,7 @@ public class MultiMessage {
 			}
 		}
 		
-		sender.addChatMessage(send);
+		sender.sendMessage(send);
 	}
 	
 	public List<Object[]> getFormattingArgs() {

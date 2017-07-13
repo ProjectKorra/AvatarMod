@@ -17,13 +17,13 @@
 
 package com.crowsofwar.gorecore.proxy;
 
-import java.io.File;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.io.File;
 
 public class GoreCoreClientProxy extends GoreCoreCommonProxy {
 	
@@ -39,7 +39,7 @@ public class GoreCoreClientProxy extends GoreCoreCommonProxy {
 	
 	@Override
 	public boolean isPlayerWalking(EntityPlayer player) {
-		if (player == Minecraft.getMinecraft().thePlayer) {
+		if (player == Minecraft.getMinecraft().player) {
 			GameSettings gs = Minecraft.getMinecraft().gameSettings;
 			return gs.keyBindForward.isKeyDown() || gs.keyBindBack.isKeyDown() || gs.keyBindLeft.isKeyDown()
 					|| gs.keyBindRight.isKeyDown();
@@ -58,7 +58,7 @@ public class GoreCoreClientProxy extends GoreCoreCommonProxy {
 	
 	@Override
 	public EntityPlayer getClientSidePlayer() {
-		return Minecraft.getMinecraft().thePlayer;
+		return Minecraft.getMinecraft().player;
 	}
 	
 	@Override

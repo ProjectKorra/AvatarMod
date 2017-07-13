@@ -35,7 +35,7 @@ public class TestCakeFrost extends NodeFunctional {
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		String end = options.contains("fancy") ? ".fancy" : "";
-		call.getFrom().addChatMessage(new TextComponentTranslation("test.frostCake" + end));
+		call.getFrom().sendMessage(new TextComponentTranslation("test.frostCake" + end));
 		return null;
 	}
 	

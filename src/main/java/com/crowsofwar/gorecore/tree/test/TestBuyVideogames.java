@@ -43,7 +43,7 @@ public class TestBuyVideogames extends NodeFunctional {
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		ArgumentList args = call.popArguments(this);
 		int amount = args.get(argAmount);
-		call.getFrom().addChatMessage(new TextComponentTranslation("test.buyVideogames", amount));
+		call.getFrom().sendMessage(new TextComponentTranslation("test.buyVideogames", amount));
 		return null;
 	}
 	

@@ -16,11 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -29,7 +24,6 @@ import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -40,6 +34,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -127,7 +126,7 @@ public class EntityAirblade extends AvatarEntity {
 		// Hitbox expansion (in each direction) to destroy blocks before the
 		// airblade collides with them
 		double expansion = 0.1;
-		AxisAlignedBB hitbox = getEntityBoundingBox().expandXyz(expansion);
+		AxisAlignedBB hitbox = getEntityBoundingBox().expand(expansion, expansion, expansion);
 		
 		for (int ix = 0; ix <= 1; ix++) {
 			for (int iz = 0; iz <= 1; iz++) {

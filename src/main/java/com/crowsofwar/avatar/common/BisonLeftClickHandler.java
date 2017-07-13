@@ -42,9 +42,9 @@ public class BisonLeftClickHandler {
 	public void onLeftClickBison(LivingAttackEvent e) {
 		Entity interacted = e.getEntity();
 		DamageSource damage = e.getSource();
-		if (damage.getEntity() instanceof EntityPlayer && interacted instanceof EntitySkyBison) {
+		if (damage.getTrueSource() instanceof EntityPlayer && interacted instanceof EntitySkyBison) {
 			EntitySkyBison bison = (EntitySkyBison) interacted;
-			EntityPlayer player = (EntityPlayer) damage.getEntity();
+			EntityPlayer player = (EntityPlayer) damage.getTrueSource();
 			if (bison.onLeftClick(player)) {
 				e.setCanceled(true);
 			}

@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -30,13 +28,14 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * 
@@ -118,7 +117,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().expandXyz(0.9),
+					EntityLivingBase.class, entity.getEntityBoundingBox().expand(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {

@@ -298,7 +298,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
 			for (ItemStack is : drops) {
 				EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
-				world.spawnEntityInWorld(ei);
+				world.spawnEntity(ei);
 			}
 		}
 		AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
