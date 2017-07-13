@@ -74,7 +74,7 @@ public class SkyBisonMoveHelper extends EntityMoveHelper {
 		for (int i = 1; i < p_179926_7_; ++i) {
 			axisalignedbb = axisalignedbb.offset(d0, d1, d2);
 			
-			if (!this.entity.worldObj.getCollisionBoxes(this.entity, axisalignedbb).isEmpty()) {
+			if (!this.entity.world.getCollisionBoxes(this.entity, axisalignedbb).isEmpty()) {
 				return false;
 			}
 		}

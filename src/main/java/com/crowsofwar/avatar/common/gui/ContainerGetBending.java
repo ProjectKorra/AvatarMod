@@ -106,13 +106,8 @@ public class ContainerGetBending extends Container {
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
 		
-		if (!player.worldObj.isRemote) {
-			for (int i = 0; i < getSize(); i++) {
-				ItemStack stack = getSlot(i).getStack();
-				if (!stack.func_190926_b()) {
-					player.dropItem(stack, false);
-				}
-			}
+		if (!player.world.isRemote) {
+			clearContainer(player, player.world, inventory);
 		}
 		
 	}
@@ -198,7 +193,7 @@ public class ContainerGetBending extends Container {
 				
 				for (int i = 0; i <= 2; i++) {
 					ItemStack stack2 = getSlot(i).getStack();
-					if (!stack2.func_190926_b()) {
+					if (!stack2.isEmpty()) {
 						ScrollType type2 = getScrollType(stack2);
 						if (!type1.isCompatibleWith(type2)) {
 							incompatibleMsgTicks = 100;

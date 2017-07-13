@@ -57,20 +57,20 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	@Override
 	protected float componentWidth() {
-		int w1 = mc.fontRendererObj.getStringWidth(text1);
-		int w2 = mc.fontRendererObj.getStringWidth(text2);
+		int w1 = mc.fontRenderer.getStringWidth(text1);
+		int w2 = mc.fontRenderer.getStringWidth(text2);
 		return Math.max(w1, w2);
 	}
 	
 	@Override
 	protected float componentHeight() {
-		return mc.fontRendererObj.FONT_HEIGHT * 2;
+		return mc.fontRenderer.FONT_HEIGHT * 2;
 	}
 	
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		
-		FontRenderer fr = mc.fontRendererObj;
+		FontRenderer fr = mc.fontRenderer;
 		fr.drawString(text1, 0, 0, color);
 		fr.drawString(text2, 0, fr.FONT_HEIGHT, color);
 		

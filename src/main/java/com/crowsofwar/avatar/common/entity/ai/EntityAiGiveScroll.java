@@ -79,7 +79,7 @@ public class EntityAiGiveScroll extends EntityAIBase {
 		ticksExecuting++;
 		if (ticksExecuting >= 50) {
 			
-			World world = entity.worldObj;
+			World world = entity.world;
 			
 			Vector velocity = getEntityPos(target).minus(getEntityPos(entity)).normalize().times(0.3);
 			ItemStack scrollStack = new ItemStack(AvatarItems.itemScroll, 1, scrollType.id());

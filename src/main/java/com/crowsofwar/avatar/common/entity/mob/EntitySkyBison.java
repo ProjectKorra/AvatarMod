@@ -164,7 +164,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		dataManager.register(SYNC_AGE, 0);
 		dataManager.register(SYNC_LOVE_PARTICLES, false);
 		dataManager.register(SYNC_ID,
-				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+				world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
 		dataManager.register(SYNC_SADDLE, null);
 		dataManager.register(SYNC_ARMOR, null);
 		
@@ -214,7 +214,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		condition.setSterile(sterile);
 		condition.setBreedTimer((int) (MOBS_CONFIG.bisonBreedMaxMinutes * 1200));
 		
-		IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
+		IBlockState walkingOn = world.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
 		wasTouchingGround = walkingOn.getMaterial() != Material.AIR;
 		
 		condition.setAge(rand.nextInt(48000) + 40000);
@@ -237,7 +237,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		// id 0 is invalid; regenerate id if it is invalid
 		// this usually happens in /summon command
 		if (nbt.getInteger("BisonId") == 0) {
-			setId(AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+			setId(AvatarWorldData.getDataFromWorld(world).nextEntityId());
 		}
 		
 		// Update chest size based on just read data
@@ -432,7 +432,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	public void beginForceLoadingChunks() {
 		if (!isForceLoadingChunks()) {
-			ticket = ForgeChunkManager.requestTicket(AvatarMod.instance, worldObj, Type.ENTITY);
+			ticket = ForgeChunkManager.requestTicket(AvatarMod.instance, world, Type.ENTITY);
 			ticket.bindEntity(this);
 			ticket.getModData().setUniqueId("BisonId", getUniqueID());
 		}
@@ -565,7 +565,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		
 		if (stack.getItem() == AvatarItems.itemBisonSaddle && SaddleTier.isValidId(stack.getMetadata())) {
-			if (!worldObj.isRemote) {
+			if (!world.isRemote) {
 				chest.setInventorySlotContents(0, stack.copy());
 				updateEquipment();
 			}
@@ -575,7 +575,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			return true;
 		}
 		if (stack.getItem() == AvatarItems.itemBisonArmor && ArmorTier.isValidId(stack.getMetadata())) {
-			if (!worldObj.isRemote) {
+			if (!world.isRemote) {
 				chest.setInventorySlotContents(1, stack.copy());
 				updateEquipment();
 			}
@@ -585,7 +585,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			return true;
 		}
 		
-		if (!worldObj.isRemote && stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
+		if (!world.isRemote && stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
 			if (player == getOwner()) {
 				ItemBisonWhistle.setBoundTo(stack, getUniqueID());
 				ItemBisonWhistle.setBisonName(stack, getName());
@@ -601,7 +601,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			return true;
 		}
 		
-		if (!worldObj.isRemote && stack.getItem() == Items.ARROW) {
+		if (!world.isRemote && stack.getItem() == Items.ARROW) {
 			
 			int food = (int) (100.0 * condition.getFoodPoints() / 30);
 			int health = (int) (100.0 * getHealth() / getMaxHealth());
@@ -633,7 +633,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (getOwner() == player && stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
 			// Send id as the x-coordinate; used by guiHandler to determine
 			// which bison is being opened
-			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, worldObj, getId(), 0, 0);
+			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, world, getId(), 0, 0);
 			return true;
 		}
 		
@@ -659,11 +659,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				
 				// Send id as the x-coordinate; used by guiHandler to determine
 				// which bison is being opened
-				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, worldObj, getId(), 0,
+				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, world, getId(), 0,
 						0);
 			} else {
 				// Mount bison
-				if (!worldObj.isRemote) {
+				if (!world.isRemote) {
 					player.startRiding(this);
 				}
 			}
@@ -689,7 +689,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 	
 	private void onLand() {
-		worldObj.playSound(null, getPosition(), STONE.getSoundType().getBreakSound(), NEUTRAL, 1, 1);
+		world.playSound(null, getPosition(), STONE.getSoundType().getBreakSound(), NEUTRAL, 1, 1);
 	}
 	
 	@Override
@@ -749,7 +749,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private void updateEquipment() {
 		
 		// Update saddle
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			
 			ItemStack saddleStack = chest.getStackInSlot(0);
 			int saddleId = saddleStack.getMetadata();
@@ -808,7 +808,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			for (int i = 0; i < chest.getSizeInventory(); i++) {
 				ItemStack stack = chest.getStackInSlot(i);
 				if (!stack.func_190926_b()) {
@@ -828,22 +828,22 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 		// Client-side chest sometimes doesn't have enough slots, since when the
 		// # of slots changes, it doesn't necessarily re-init chest
-		if (worldObj.isRemote && chest.getSizeInventory() - 2 != getChestSlots()) {
+		if (world.isRemote && chest.getSizeInventory() - 2 != getChestSlots()) {
 			initChest();
 		}
 		
-		if (!worldObj.isRemote && !condition.canHaveOwner() && hasOwner()) {
+		if (!world.isRemote && !condition.canHaveOwner() && hasOwner()) {
 			setOwner(null);
 		}
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			setEatGrassTime(aiEatGrass.getEatGrassTime());
 		}
-		if (worldObj.isRemote && isLoveParticles() && ticksExisted % 10 == 0) {
+		if (world.isRemote && isLoveParticles() && ticksExisted % 10 == 0) {
 			double d0 = this.rand.nextGaussian() * 0.02D;
 			double d1 = this.rand.nextGaussian() * 0.02D;
 			double d2 = this.rand.nextGaussian() * 0.02D;
 			
-			this.worldObj.spawnParticle(EnumParticleTypes.HEART,
+			this.world.spawnParticle(EnumParticleTypes.HEART,
 					this.posX + this.rand.nextFloat() * this.width * 2 - this.width,
 					this.posY + 0.5D + this.rand.nextFloat() * this.height,
 					this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2, new int[0]);
@@ -870,9 +870,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			}
 		}
 		
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			
-			IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
+			IBlockState walkingOn = world.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
 			boolean touchingGround = walkingOn.getMaterial() != Material.AIR;
 			
 			if (!touchingGround && wasTouchingGround) {
@@ -905,7 +905,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		
 		// onGround apparently doesn't work client-side
-		IBlockState walkingOn = worldObj.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
+		IBlockState walkingOn = world.getBlockState(getEntityPos(this).setY(posY - 0.01).toBlockPos());
 		boolean touchingGround = walkingOn.getMaterial() != Material.AIR;
 		
 		if (this.isBeingRidden() && this.canBeSteered()) {
@@ -1010,7 +1010,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			float f = 0.91F;
 			
 			if (this.onGround) {
-				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
 						MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1,
 						MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
@@ -1020,7 +1020,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			f = 0.91F;
 			
 			if (this.onGround) {
-				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
 						MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1,
 						MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
@@ -1066,7 +1066,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			double mx = this.rand.nextGaussian() * 0.02D;
 			double my = this.rand.nextGaussian() * 0.02D;
 			double mz = this.rand.nextGaussian() * 0.02D;
-			this.worldObj.spawnParticle(particle,
+			this.world.spawnParticle(particle,
 					this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
 					this.posY + 0.5D + this.rand.nextFloat() * this.height,
 					this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, //

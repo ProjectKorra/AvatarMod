@@ -77,7 +77,7 @@ public class RenderAirblade extends Render<EntityAirblade> {
 		GlStateManager.enableLighting();
 		
 		if (entity.ticksExisted % 3 == 0) {
-			World world = entity.worldObj;
+			World world = entity.world;
 			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
 			double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);

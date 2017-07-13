@@ -188,7 +188,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 		
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().playerEntity.worldObj,
+		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().playerEntity.world,
 				id);
 		
 		if (player == null) {
@@ -233,7 +233,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleWallJump(PacketSWallJump packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-		World world = player.worldObj;
+		World world = player.world;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data.hasBending(BendingType.AIRBENDING) && !data.isWallJumping()
@@ -308,7 +308,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		if (el >= 1 && el <= 4) {
 			if (data.hasBending(BendingType.find(el))) {
-				player.openGui(AvatarMod.instance, el, player.worldObj, 0, 0, 0);
+				player.openGui(AvatarMod.instance, el, player.world, 0, 0, 0);
 			}
 		}
 		
@@ -370,7 +370,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (player.getRidingEntity() instanceof EntitySkyBison) {
 			EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
 			if (bison.canPlayerViewInventory(player)) {
-				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, player.worldObj,
+				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, player.world,
 						bison.getId(), 0, 0);
 			}
 		}
@@ -384,7 +384,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		BendingData data = AvatarPlayerData.fetcher().fetch(player);
 		
 		if (data.getAllBending().isEmpty()) {
-			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.worldObj, 0, 0, 0);
+			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.world, 0, 0, 0);
 		}
 		
 		return null;
@@ -410,7 +410,7 @@ public class PacketHandlerServer implements IPacketHandler {
 						container.getSlot(i).putStack(ItemStack.EMPTY);
 					}
 					
-					player.openGui(AvatarMod.instance, desired.id(), player.worldObj, 0, 0, 0);
+					player.openGui(AvatarMod.instance, desired.id(), player.world, 0, 0, 0);
 					
 				}
 				

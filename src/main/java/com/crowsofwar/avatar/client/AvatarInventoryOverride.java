@@ -41,7 +41,7 @@ public class AvatarInventoryOverride {
 	public void onInventoryOpen(KeyInputEvent e) {
 		
 		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayer player = mc.thePlayer;
+		EntityPlayer player = mc.player;
 		KeyBinding keybind = mc.gameSettings.keyBindInventory;
 		
 		// don't use isPressed() as that marks it as "not pressed" if it was

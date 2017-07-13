@@ -94,7 +94,7 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 	private T createPlayerData(Class<T> dataClass, UUID playerID) {
 		try {
 			
-			EntityPlayer player = AccountUUIDs.findEntityFromUUID(mc.theWorld, playerID);
+			EntityPlayer player = AccountUUIDs.findEntityFromUUID(mc.world, playerID);
 			return dataClass.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
 					.newInstance(new DataSaverDontSave(), playerID, player);
 			

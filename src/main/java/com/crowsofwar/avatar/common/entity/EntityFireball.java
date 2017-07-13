@@ -90,10 +90,10 @@ public class EntityFireball extends AvatarEntity {
 			removeStatCtrl();
 			int particles = rand.nextInt(4) + 5;
 			for (int i = 0; i < particles; i++) {
-				worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
+				world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
 						rand.nextDouble() * .2, rand.nextGaussian() * .05);
 			}
-			worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+			world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 					SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f, false);
 			setDead();
 		}
@@ -159,9 +159,9 @@ public class EntityFireball extends AvatarEntity {
 			}
 		}
 		
-		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, explosionSize,
-				!worldObj.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
-		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
+				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
+		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 			
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
@@ -171,8 +171,8 @@ public class EntityFireball extends AvatarEntity {
 		if (destroyObsidian) {
 			for (EnumFacing dir : EnumFacing.values()) {
 				BlockPos pos = getPosition().offset(dir);
-				if (worldObj.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
-					worldObj.destroyBlock(pos, true);
+				if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
+					world.destroyBlock(pos, true);
 				}
 			}
 		}

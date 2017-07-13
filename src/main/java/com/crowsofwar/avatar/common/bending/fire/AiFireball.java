@@ -98,7 +98,7 @@ public class AiFireball extends BendingAi {
 	@Override
 	public void resetTask() {
 		
-		EntityFireball fireball = AvatarEntity.lookupEntity(entity.worldObj, EntityFireball.class, //
+		EntityFireball fireball = AvatarEntity.lookupEntity(entity.world, EntityFireball.class, //
 				fire -> fire.getBehavior() instanceof FireballBehavior.PlayerControlled
 						&& fire.getOwner() == entity);
 		

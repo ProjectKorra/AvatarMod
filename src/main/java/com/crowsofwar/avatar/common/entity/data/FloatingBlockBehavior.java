@@ -104,14 +104,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			force.normalize();
 			force.mul(3);
 			entity.velocity().set(force);
-			if (!entity.worldObj.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
+			if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
 				
 				entity.setDead();
-				entity.worldObj.setBlockState(new BlockPos(entity), entity.getBlockState());
+				entity.world.setBlockState(new BlockPos(entity), entity.getBlockState());
 				
 				SoundType sound = entity.getBlock().getSoundType();
 				if (sound != null) {
-					entity.worldObj.playSound(null, entity.getPosition(), sound.getPlaceSound(),
+					entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 				
@@ -151,14 +151,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			
 			if (entity.isCollided) {
-				if (!entity.worldObj.isRemote) entity.setDead();
+				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
 				
-				World world = entity.worldObj;
+				World world = entity.world;
 				Block block = entity.getBlockState().getBlock();
 				SoundType sound = block.getSoundType();
 				if (sound != null) {
-					entity.worldObj.playSound(null, entity.getPosition(), sound.getBreakSound(),
+					entity.world.playSound(null, entity.getPosition(), sound.getBreakSound(),
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 				
@@ -166,7 +166,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			entity.velocity().add(0, -9.81 / 20, 0);
 			
-			World world = entity.worldObj;
+			World world = entity.world;
 			if (!entity.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
 						entity.getExpandedHitbox());
@@ -203,7 +203,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			// Add XP
 			BendingData data = Bender.create(entity.getOwner()).getData();
-			if (!collided.worldObj.isRemote && data != null) {
+			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.blockThrowHit;
 				if (collided.getHealth() <= 0) {
 					xp = SKILLS_CONFIG.blockKill;
@@ -215,7 +215,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			entity.onCollideWithSolid();
 			
 			// boomerang upgrade handling
-			if (!entity.worldObj.isRemote) {
+			if (!entity.world.isRemote) {
 				if (data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK)
 						.isMasterPath(AbilityTreePath.FIRST)) {
 					
@@ -325,7 +325,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			entity.velocity().add(0, -9.81 / 20, 0);
 			if (entity.isCollided) {
-				if (!entity.worldObj.isRemote) entity.setDead();
+				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
 			}
 			return this;

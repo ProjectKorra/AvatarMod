@@ -46,7 +46,7 @@ public class SmashGroundHandler extends TickHandler {
 				
 				double range = 3;
 				
-				World world = target.worldObj;
+				World world = target.world;
 				AxisAlignedBB box = new AxisAlignedBB(target.posX - range, target.posY - range,
 						target.posZ - range, target.posX + range, target.posY + range, target.posZ + range);
 				

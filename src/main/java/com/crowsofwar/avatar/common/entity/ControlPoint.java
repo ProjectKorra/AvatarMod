@@ -53,7 +53,7 @@ public class ControlPoint {
 		internalPosition = new Vector();
 		internalVelocity = new Vector();
 		this.arc = arc;
-		this.world = arc.worldObj;
+		this.world = arc.world;
 		this.size = size;
 		
 		double sizeHalfed = size / 2;

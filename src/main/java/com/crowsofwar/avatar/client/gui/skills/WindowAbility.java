@@ -198,7 +198,7 @@ public class WindowAbility {
 		int mouseX = Mouse.getX() * width / mc.displayWidth;
 		int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
 		
-		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer).getAbilityData(ability);
+		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.player).getAbilityData(ability);
 		
 		unlockTitle.setVisible(data.isLocked());
 		unlockText.setVisible(data.isLocked());
@@ -267,7 +267,7 @@ public class WindowAbility {
 	 */
 	public boolean canRenderTooltip(ItemStack stack) {
 		
-		AbilityData data = AvatarPlayerData.fetcher().fetch(getMinecraft().thePlayer).getAbilityData(ability);
+		AbilityData data = AvatarPlayerData.fetcher().fetch(getMinecraft().player).getAbilityData(ability);
 		if (data.isLocked()) {
 			return true;
 		}

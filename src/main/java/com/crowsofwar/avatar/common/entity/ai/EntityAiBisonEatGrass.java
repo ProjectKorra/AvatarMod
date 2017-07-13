@@ -59,7 +59,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		Block standingOn = bison.worldObj.getBlockState(bison.getPosition().down()).getBlock();
+		Block standingOn = bison.world.getBlockState(bison.getPosition().down()).getBlock();
 		return bison.wantsGrass() && isOnGround() && (!bison.isSitting() || standingOn == Blocks.GRASS);
 	}
 	
@@ -72,7 +72,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	public boolean continueExecuting() {
 		
 		boolean keepExecuting = !bison.isFull() && isOnGround();
-		World world = bison.worldObj;
+		World world = bison.world;
 		EntityMoveHelper mh = bison.getMoveHelper();
 		
 		if (!isEatingGrass()) {
@@ -101,7 +101,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		if (eatGrassTime % 30 == 29) {
 			
 			BlockPos downPos = bison.getPosition().down();
-			World world = bison.worldObj;
+			World world = bison.world;
 			
 			boolean mobGriefing = world.getGameRules().getBoolean("mobGriefing");
 			
@@ -145,7 +145,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 	}
 	
 	private boolean isSolidBlock(BlockPos pos) {
-		World world = bison.worldObj;
+		World world = bison.world;
 		return world.isBlockNormalCube(pos, false);
 	}
 	

@@ -76,7 +76,7 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 	 */
 	default T fetch(EntityPlayer player) {
 		if (player == null) throw new IllegalArgumentException("Cannot get Player-Data for null player");
-		return fetch(player.worldObj, player.getName());
+		return fetch(player.world, player.getName());
 	}
 	
 }

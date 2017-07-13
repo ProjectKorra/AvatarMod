@@ -64,7 +64,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		public WaterArcBehavior onUpdate(EntityWaterArc water) {
 			
 			EntityLivingBase owner = water.getOwner();
-			World world = owner.worldObj;
+			World world = owner.world;
 			
 			if (owner == null) return this;
 			
@@ -83,7 +83,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			motion.mul(.3 * 20);
 			water.velocity().set(motion);
 			
-			if (water.worldObj.isRemote && water.canPlaySplash()) {
+			if (water.world.isRemote && water.canPlaySplash()) {
 				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
 			}
 			
@@ -127,7 +127,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
 						6 * entity.getDamageMult());
 				
-				if (!entity.worldObj.isRemote) {
+				if (!entity.world.isRemote) {
 					
 					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
 					

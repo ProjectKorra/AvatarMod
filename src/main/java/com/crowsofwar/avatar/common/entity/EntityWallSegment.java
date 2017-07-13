@@ -172,7 +172,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
 			IBlockState state = getBlock(i);
 			if (state.getBlock() != Blocks.AIR)
-				worldObj.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
+				world.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
 		}
 	}
 	
@@ -188,7 +188,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand stack) {
-		if (!this.isDead && !worldObj.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
+		if (!this.isDead && !world.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
 			setDead();
 			dropBlocks();
 			setBeenAttacked();

@@ -55,7 +55,7 @@ public abstract class EntityArc extends AvatarEntity {
 			points[i] = createControlPoint(size);
 		}
 		
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			setId(nextId++);
 		}
 		

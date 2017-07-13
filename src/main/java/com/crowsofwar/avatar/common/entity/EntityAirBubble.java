@@ -140,7 +140,7 @@ public class EntityAirBubble extends AvatarEntity {
 			setPosition(owner.posX, owner.posY, owner.posZ);
 			
 			Bender ownerBender = ownerAttr.getOwnerBender();
-			if (!worldObj.isRemote
+			if (!world.isRemote
 					&& !ownerBender.getData().chi().consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
 				
 				dissipateSmall();
@@ -149,7 +149,7 @@ public class EntityAirBubble extends AvatarEntity {
 			
 			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-			if (!elytraOk && !worldObj.isRemote) {
+			if (!elytraOk && !world.isRemote) {
 				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
 						(EntityPlayerMP) owner);
 				dissipateSmall();
@@ -177,10 +177,10 @@ public class EntityAirBubble extends AvatarEntity {
 						BlockPos pos = owner.getPosition().up();
 						boolean ground = false;
 						do {
-							List<AxisAlignedBB> collideWithGround = worldObj.getCollisionBoxes(null,
+							List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(null,
 									new AxisAlignedBB(pos).expand(0, 0.5, 0));
 							ground = !collideWithGround.isEmpty()
-									|| worldObj.getBlockState(pos).getBlock() instanceof BlockLiquid;
+									|| world.getBlockState(pos).getBlock() instanceof BlockLiquid;
 							pos = pos.down();
 						} while (!ground);
 						
@@ -300,7 +300,7 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityLivingBase owner = getOwner();
 		if (owner != null) {
 			
-			if (!worldObj.isRemote) {
+			if (!world.isRemote) {
 				Entity sourceEntity = source.getEntity();
 				if (sourceEntity != null) {
 					if (!owner.isEntityInvulnerable(source)) {

@@ -78,7 +78,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		int particles = random.nextInt(packet.getMaximum() - packet.getMinimum() + 1) + packet.getMinimum();
 		
 		for (int i = 0; i < particles; i++) {
-			mc.theWorld.spawnParticle(particle, packet.getX(), packet.getY(), packet.getZ(),
+			mc.world.spawnParticle(particle, packet.getX(), packet.getY(), packet.getZ(),
 					packet.getMaxVelocityX() * random.nextGaussian(),
 					packet.getMaxVelocityY() * random.nextGaussian(),
 					packet.getMaxVelocityZ() * random.nextGaussian());

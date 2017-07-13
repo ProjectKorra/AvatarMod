@@ -67,7 +67,7 @@ public class AirbendingEvents {
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
 		EntityPlayer player = e.player;
-		World world = player.worldObj;
+		World world = player.world;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data.hasBending(BendingType.AIRBENDING)) {
 			tick(player, world, data);
@@ -76,7 +76,7 @@ public class AirbendingEvents {
 	
 	@SubscribeEvent
 	public void airBubbleShield(LivingAttackEvent e) {
-		World world = e.getEntity().worldObj;
+		World world = e.getEntity().world;
 		
 		EntityLivingBase attacked = (EntityLivingBase) e.getEntity();
 		

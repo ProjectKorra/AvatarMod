@@ -52,7 +52,7 @@ public class EntityAiBisonTempt extends EntityAIBase {
 		
 		if (bison.getCondition().getFoodPoints() >= 25) return false;
 		
-		List<EntityPlayer> players = bison.worldObj.getEntities(EntityPlayer.class, player -> {
+		List<EntityPlayer> players = bison.world.getEntities(EntityPlayer.class, player -> {
 			if (bison.getDistanceSqToEntity(player) > maxDistSq) return false;
 			return isHoldingFood(player);
 		});

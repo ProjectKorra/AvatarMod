@@ -56,7 +56,7 @@ public class AvatarScrollDrops {
 				ItemStack stack = new ItemStack(AvatarItems.itemScroll);
 				ItemScroll.setScrollType(stack, type);
 				
-				EntityItem entityItem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ,
+				EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
 						stack);
 				entityItem.setDefaultPickupDelay();
 				e.getDrops().add(entityItem);

@@ -76,7 +76,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 	
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable) {
-		return new EntityOtterPenguin(worldObj);
+		return new EntityOtterPenguin(world);
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		
-		if (!super.processInteract(player, hand) && !worldObj.isRemote) {
+		if (!super.processInteract(player, hand) && !world.isRemote) {
 			
 			if (!isBreedingItem(player.getHeldItemMainhand())
 					&& !isBreedingItem(player.getHeldItemOffhand())) {

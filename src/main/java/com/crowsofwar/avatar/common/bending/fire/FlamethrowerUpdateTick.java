@@ -65,7 +65,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			flamesPerSecond = 8;
 		}
 		
-		if (!entity.worldObj.isRemote && Math.random() < flamesPerSecond / 20.0) {
+		if (!entity.world.isRemote && Math.random() < flamesPerSecond / 20.0) {
 			
 			Chi chi = data.chi();
 			float required = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;

@@ -80,7 +80,7 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
-				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+				world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
 	}
 	
 	/**
@@ -201,9 +201,9 @@ public abstract class AvatarEntity extends Entity {
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-					if (worldObj.getBlockState(pos).getBlock() == Blocks.FIRE) {
-						worldObj.setBlockToAir(pos);
-						worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
 								SoundCategory.PLAYERS, 1, 1, false);
 					}
 				}
@@ -221,11 +221,11 @@ public abstract class AvatarEntity extends Entity {
 	
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
-		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
+		List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
 				EntitySelectors.<Entity>getTeamCollisionPredicate(this));
 		
 		if (!list.isEmpty()) {
-			int i = this.worldObj.getGameRules().getInt("maxEntityCramming");
+			int i = this.world.getGameRules().getInt("maxEntityCramming");
 			
 			if (i > 0 && list.size() > i - 1 && this.rand.nextInt(4) == 0) {
 				int j = 0;
@@ -299,7 +299,7 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	protected void breakBlock(BlockPos position) {
 		
-		IBlockState blockState = worldObj.getBlockState(position);
+		IBlockState blockState = world.getBlockState(position);
 		
 		Block destroyed = blockState.getBlock();
 		SoundEvent sound;
@@ -308,28 +308,28 @@ public abstract class AvatarEntity extends Entity {
 		} else {
 			sound = destroyed.getSoundType().getBreakSound();
 		}
-		worldObj.playSound(null, position, sound, SoundCategory.BLOCKS, 1, 1);
+		world.playSound(null, position, sound, SoundCategory.BLOCKS, 1, 1);
 		
 		// Spawn particles
 		
 		for (int i = 0; i < 7; i++) {
-			worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
+			world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
 					3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
 					3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
 		}
-		worldObj.setBlockToAir(position);
+		world.setBlockToAir(position);
 		
 		// Create drops
 		
-		if (!worldObj.isRemote) {
-			List<ItemStack> drops = blockState.getBlock().getDrops(worldObj, position, blockState, 0);
+		if (!world.isRemote) {
+			List<ItemStack> drops = blockState.getBlock().getDrops(world, position, blockState, 0);
 			for (ItemStack stack : drops) {
-				EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
+				EntityItem item = new EntityItem(world, posX, posY, posZ, stack);
 				item.setDefaultPickupDelay();
 				item.motionX *= 2;
 				item.motionY *= 1.2;
 				item.motionZ *= 2;
-				worldObj.spawnEntityInWorld(item);
+				world.spawnEntityInWorld(item);
 			}
 		}
 		

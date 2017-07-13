@@ -80,7 +80,7 @@ public class SyncableEntityReference<T extends AvatarEntity> {
 		// Cache may have an incorrect id; other side could have changed
 		// dataManager id, but not the cached entity id.
 		cache.setEntityId(using.getDataManager().get(sync));
-		return cache.getEntity(using.worldObj);
+		return cache.getEntity(using.world);
 	}
 	
 	public void setEntity(@Nullable T entity) {

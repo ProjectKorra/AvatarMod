@@ -124,7 +124,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 	
 	private void renderStatusControls(ScaledResolution resolution) {
-		List<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.thePlayer)
+		List<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.player)
 				.getAllStatusControls();
 		for (StatusControl statusControl : statusControls) {
 			mc.getTextureManager().bindTexture(AvatarUiTextures.STATUS_CONTROL_ICONS);
@@ -150,7 +150,7 @@ public class AvatarUiRenderer extends Gui {
 		
 		GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
 		
 		if (data.getAllBending().isEmpty()) return;
 		
@@ -186,7 +186,7 @@ public class AvatarUiRenderer extends Gui {
 		// Unavailable chi
 		drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
 		
-		drawString(mc.fontRendererObj, ((int) total) + "/" + ((int) max) + "," + ((int) available), 0, -20,
+		drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + "," + ((int) available), 0, -20,
 				0xffffff | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
 		
 		popMatrix();
@@ -206,9 +206,9 @@ public class AvatarUiRenderer extends Gui {
 			String text = TextFormatting.BOLD + I18n.format(errorMsg);
 			
 			//@formatter:off
-			drawString(mc.fontRendererObj, text,
-					(res.getScaledWidth() - mc.fontRendererObj.getStringWidth(text)) / 2,
-					res.getScaledHeight() - mc.fontRendererObj.FONT_HEIGHT - 40,
+			drawString(mc.fontRenderer, text,
+					(res.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2,
+					res.getScaledHeight() - mc.fontRenderer.FONT_HEIGHT - 40,
 					0xffffff | (alphaI << 24));
 			//@formatter:on
 			
@@ -220,7 +220,7 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderActiveBending(ScaledResolution res) {
 		
-		BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		BendingData data = AvatarPlayerData.fetcher().fetch(mc.player);
 		
 		if (data.getActiveBending() != null) {
 			
@@ -270,8 +270,8 @@ public class AvatarUiRenderer extends Gui {
 		mc.renderEngine.bindTexture(AvatarUiTextures.airBubbleHealth);
 		GlStateManager.color(1, 1, 1, 1);
 		
-		World world = mc.theWorld;
-		EntityPlayer player = mc.thePlayer;
+		World world = mc.world;
+		EntityPlayer player = mc.player;
 		BendingData data = Bender.getData(player);
 		
 		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
@@ -281,7 +281,7 @@ public class AvatarUiRenderer extends Gui {
 				
 				int x = res.getScaledWidth() / 2 - 91;
 				int y = res.getScaledHeight() - GuiIngameForge.left_height;
-				if (mc.thePlayer.getTotalArmorValue() == 0) {
+				if (mc.player.getTotalArmorValue() == 0) {
 					y += 10;
 				}
 				

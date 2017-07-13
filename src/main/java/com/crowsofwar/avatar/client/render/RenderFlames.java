@@ -51,14 +51,14 @@ public class RenderFlames extends Render<EntityFlames> {
 	public void doRender(EntityFlames entity, double x, double y, double z, float entityYaw,
 			float partialTicks) {
 		
-		particleSpawner.spawnParticles(entity.worldObj, AvatarParticles.getParticleFlames(), 1, 1,
+		particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 1, 1,
 				Vector.getEntityPos(entity), new Vector(0.02, 0.01, 0.02));
 		
-		// entity.worldObj.spawnParticle(AvatarParticles.getParticleFlames(),
+		// entity.world.spawnParticle(AvatarParticles.getParticleFlames(),
 		// entity.posX,
 		// entity.posY,
 		// entity.posZ,
-		// // entity.worldObj.spawnParticle(EnumParticleTypes.FLAME,
+		// // entity.world.spawnParticle(EnumParticleTypes.FLAME,
 		// entity.posX, entity.posY,
 		// // entity.posZ,
 		// (random.nextGaussian() - 0.5) * 0.02, random.nextGaussian() * 0.01,

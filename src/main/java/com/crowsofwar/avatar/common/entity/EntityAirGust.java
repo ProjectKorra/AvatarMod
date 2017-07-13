@@ -71,7 +71,7 @@ public class EntityAirGust extends EntityArc {
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		EntityLivingBase owner = getOwner();
-		if (!entity.worldObj.isRemote && entity != owner) {
+		if (!entity.world.isRemote && entity != owner) {
 			
 			BendingData data = Bender.create(owner).getData();
 			float xp = 0;

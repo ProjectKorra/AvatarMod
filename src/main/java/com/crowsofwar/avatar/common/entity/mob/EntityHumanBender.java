@@ -192,7 +192,7 @@ public abstract class EntityHumanBender extends EntityBender {
 					
 					if (this.rand.nextFloat() < f1) {
 						entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-						this.worldObj.setEntityState(entityplayer, (byte) 30);
+						this.world.setEntityState(entityplayer, (byte) 30);
 					}
 				}
 			}
@@ -210,7 +210,7 @@ public abstract class EntityHumanBender extends EntityBender {
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack.getItem() == Items.DIAMOND && !worldObj.isRemote) {
+		if (stack.getItem() == Items.DIAMOND && !world.isRemote) {
 			
 			if (scrollsLeft > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {

@@ -45,7 +45,7 @@ public class RenderAirGust extends RenderArc {
 	@Override
 	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
 		
-		World world = arc.worldObj;
+		World world = arc.world;
 		AxisAlignedBB boundingBox = first.getBoundingBox();
 		double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);

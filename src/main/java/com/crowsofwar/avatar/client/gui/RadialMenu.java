@@ -131,9 +131,9 @@ public class RadialMenu extends Gui {
 		
 		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
 		int x = resolution.getScaledWidth() / 2;
-		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
+		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT * 1.5);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
 		if (data != null) {
 			
 			AbilityData abilityData = data.getAbilityData(ability);
@@ -149,7 +149,7 @@ public class RadialMenu extends Gui {
 					String path = abilityData.getPath() == AbilityTreePath.FIRST ? "1" : "2";
 					secondKey = nameKey + ".lvl4_" + path;
 				}
-				boolean creative = mc.thePlayer.capabilities.isCreativeMode;
+				boolean creative = mc.player.capabilities.isCreativeMode;
 				if (abilityData.isLocked() && !creative) {
 					secondKey = "avatar.radial.locked2";
 					secondArgs[0] = AvatarMod.proxy.getKeyHandler().getDisplayName(AvatarControl.KEY_SKILLS)
@@ -173,13 +173,13 @@ public class RadialMenu extends Gui {
 			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
 					(Object[]) ArrayUtils.addAll(secondArgs, abilityData.getLevel() + ""));
 			
-			drawCenteredString(mc.fontRendererObj, second, x,
-					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),
+			drawCenteredString(mc.fontRenderer, second, x,
+					(int) (resolution.getScaledHeight() / 2 + mc.fontRenderer.FONT_HEIGHT * 0.5),
 					0xffffff);
 			
 		}
 		
-		drawCenteredString(mc.fontRendererObj, I18n.format(nameKey), x, y, 0xffffff);
+		drawCenteredString(mc.fontRenderer, I18n.format(nameKey), x, y, 0xffffff);
 		
 	}
 	
@@ -223,9 +223,9 @@ public class RadialMenu extends Gui {
 			int centerX = resolution.getScaledWidth() / 2, centerY = resolution.getScaledHeight() / 2;
 			MenuTheme theme = controller.getRadialMenu().getTheme();
 			
-			drawCenteredString(mc.fontRendererObj,
+			drawCenteredString(mc.fontRenderer,
 					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getControllerName()),
-					centerX, centerY - mc.fontRendererObj.FONT_HEIGHT, theme.getText());
+					centerX, centerY - mc.fontRenderer.FONT_HEIGHT, theme.getText());
 			
 		}
 		
@@ -235,7 +235,7 @@ public class RadialMenu extends Gui {
 				if (controls[i] == null) continue;
 				if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
 					
-					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer,
+					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player,
 							controls[i].getRaytrace());
 					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], raytrace));
 					AvatarUiRenderer.fade(segments[i]);

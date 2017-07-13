@@ -210,7 +210,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	public void setID(int id) {
-		if (!worldObj.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
+		if (!world.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
 	}
 	
 	public static EntityFloatingBlock getFromID(World world, int id) {
@@ -246,7 +246,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
-		worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
+		world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
 				Block.getStateId(getBlockState()));
 	}
 	
@@ -268,7 +268,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			
 		}
 		
-		if (!worldObj.isRemote) velocity().mul(getFriction());
+		if (!world.isRemote) velocity().mul(getFriction());
 		
 		prevPosX = posX;
 		prevPosY = posY;
@@ -294,18 +294,18 @@ public class EntityFloatingBlock extends AvatarEntity {
 					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
 		
-		if (!worldObj.isRemote && areItemDropsEnabled()) {
-			List<ItemStack> drops = getBlock().getDrops(worldObj, new BlockPos(this), getBlockState(), 0);
+		if (!world.isRemote && areItemDropsEnabled()) {
+			List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
 			for (ItemStack is : drops) {
-				EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
-				worldObj.spawnEntityInWorld(ei);
+				EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
+				world.spawnEntityInWorld(ei);
 			}
 		}
 		AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
 		if (data.isMasterPath(AbilityTreePath.SECOND)) {
 			
-			Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 2, false, false);
-			if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
+			if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 				explosion.doExplosionA();
 				explosion.doExplosionB(true);
 			}
@@ -321,7 +321,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	public void setFriction(float friction) {
-		if (!worldObj.isRemote) dataManager.set(SYNC_FRICTION, friction);
+		if (!world.isRemote) dataManager.set(SYNC_FRICTION, friction);
 	}
 	
 	public void drop() {

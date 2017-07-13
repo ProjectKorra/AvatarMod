@@ -73,13 +73,13 @@ public class EntityWaterArc extends EntityArc {
 	@Override
 	public void onCollideWithSolid() {
 		
-		if (!worldObj.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
+		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			if (tryDestroy()) {
 				setDead();
 			}
 		}
 		
-		if (worldObj.isRemote) {
+		if (world.isRemote) {
 			Random random = new Random();
 			
 			double xVel = 0, yVel = 0, zVel = 0;
@@ -112,7 +112,7 @@ public class EntityWaterArc extends EntityArc {
 			int particles = random.nextInt(3) + 4;
 			for (int i = 0; i < particles; i++) {
 				
-				worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX + random.nextGaussian() * offX,
+				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX + random.nextGaussian() * offX,
 						posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
 						random.nextGaussian() * xVel, random.nextGaussian() * yVel,
 						random.nextGaussian() * zVel);
@@ -148,7 +148,7 @@ public class EntityWaterArc extends EntityArc {
 			// try to go upwards
 			for (double i = 0.1; i <= 3; i += 0.05) {
 				BlockPos pos = new Vector(this).add(0, i, 0).toBlockPos();
-				if (worldObj.getBlockState(pos).getBlock() == Blocks.AIR) {
+				if (world.getBlockState(pos).getBlock() == Blocks.AIR) {
 					setPosition(posX, posY + i, posZ);
 					inWater = false;
 					break;
@@ -176,7 +176,7 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	public void playSplash() {
-		worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
+		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
 				1.5f, false);
 		lastPlayedSplash = 0;
 	}

@@ -102,7 +102,7 @@ public class Vector {
 	 */
 	public Vector(Entity entity) {
 		this(entity.posX, entity.posY, entity.posZ);
-		// if (entity instanceof EntityPlayer && entity.worldObj.isRemote)
+		// if (entity instanceof EntityPlayer && entity.world.isRemote)
 		// setY(y - 1.62);
 	}
 	

@@ -101,7 +101,7 @@ public class AbilityWaterArc extends WaterAbility {
 	}
 	
 	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
-		World world = entity.worldObj;
+		World world = entity.world;
 		
 		Vector eye = Vector.getEyePos(entity);
 		

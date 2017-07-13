@@ -54,7 +54,7 @@ public class RenderFloatingBlock extends Render {
 	 */
 	public void doRender(EntityFloatingBlock entity, double x, double y, double z, float entityYaw,
 			float lerp) {
-		World world = entity.worldObj;
+		World world = entity.world;
 		Block block = entity.getBlock();
 		int i = MathHelper.floor_double(entity.posX);
 		int j = MathHelper.floor_double(entity.posY);

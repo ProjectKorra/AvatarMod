@@ -116,7 +116,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 					float alphaFloat = ticks > 40 ? 1 : ticks / 40f;
 					int alpha = (int) (alphaFloat * 255);
 					if (alpha > 4) {
-						drawString(mc.fontRendererObj, getText(), 0, 0, 0xffffff | (alpha << 24));
+						drawString(mc.fontRenderer, getText(), 0, 0, 0xffffff | (alpha << 24));
 					}
 					container.decrementIncompatibleMsgTicks(partialTicks);
 					GlStateManager.disableBlend();

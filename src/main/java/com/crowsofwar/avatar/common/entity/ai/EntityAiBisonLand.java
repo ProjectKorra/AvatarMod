@@ -53,7 +53,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		
-		World world = bison.worldObj;
+		World world = bison.world;
 		
 		int tries = 0;
 		Vector landing;
@@ -135,13 +135,13 @@ public class EntityAiBisonLand extends EntityAIBase {
 		Vector current = Vector.getEntityPos(bison);
 		Vector direction = target.minus(current).normalize();
 		double range = current.dist(target);
-		Raytrace.Result raytrace = Raytrace.raytrace(bison.worldObj, current, direction, range + 1, false);
+		Raytrace.Result raytrace = Raytrace.raytrace(bison.world, current, direction, range + 1, false);
 		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos().up();
 		return blockPos == null || blockPos.equals(target.toBlockPos());
 	}
 	
 	private boolean isSolidBlock(BlockPos pos) {
-		World world = bison.worldObj;
+		World world = bison.world;
 		return world.isBlockNormalCube(pos, false);
 	}
 	

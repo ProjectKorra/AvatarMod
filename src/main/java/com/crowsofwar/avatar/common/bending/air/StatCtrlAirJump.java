@@ -105,7 +105,7 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.worldObj, AvatarParticles.getParticleAir(), 2, 6,
+			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6,
 					new Vector(entity), new Vector(1, 0, 1));
 			
 			float fallAbsorption = 0;
@@ -127,7 +127,7 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 			abilityData.addXp(STATS_CONFIG.chiAirJump);
 			
-			entity.worldObj.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
 			
 			return true;

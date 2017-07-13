@@ -195,11 +195,11 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 		PacketCPlayerData packet = new PacketCPlayerData(this, playerID, changed);
 		EntityPlayer player = this.getPlayerEntity();
-		if (player != null && !player.worldObj.isRemote) {
+		if (player != null && !player.world.isRemote) {
 			
 			// Look at who is tracking this player, to avoid unnecessarily
 			// sending packets to extra players
-			EntityTracker tracker = ((WorldServer) player.worldObj).getEntityTracker();
+			EntityTracker tracker = ((WorldServer) player.world).getEntityTracker();
 			
 			List<EntityPlayer> nearbyPlayers = new ArrayList<>();
 			nearbyPlayers.add(player);

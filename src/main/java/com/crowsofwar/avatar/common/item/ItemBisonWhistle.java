@@ -97,7 +97,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 			} else {
 				
 				EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
-				if (bison != null && !bison.worldObj.isRemote) {
+				if (bison != null && !bison.world.isRemote) {
 					
 					EntityPlayer oldOwner = bison.getOwner();
 					
@@ -198,7 +198,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 		
 		if (isBound(stack)) {
 			
-			World world = player.worldObj;
+			World world = player.world;
 			EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
 			if (bison != null) {
 				return bison.getOwner() == player;

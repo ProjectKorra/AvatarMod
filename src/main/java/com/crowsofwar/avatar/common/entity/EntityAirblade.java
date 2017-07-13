@@ -77,19 +77,19 @@ public class EntityAirblade extends AvatarEntity {
 		
 		super.onUpdate();
 		
-		if (!worldObj.isRemote && velocity().sqrMagnitude() <= .9) {
+		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
 		}
-		if (!worldObj.isRemote && inWater) {
+		if (!world.isRemote && inWater) {
 			setDead();
 		}
 		
-		if (!worldObj.isRemote && chopBlocksThreshold >= 0) {
+		if (!world.isRemote && chopBlocksThreshold >= 0) {
 			breakCollidingBlocks();
 		}
 		
-		if (!isDead && !worldObj.isRemote) {
-			List<EntityLivingBase> collidedList = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
+		if (!isDead && !world.isRemote) {
+			List<EntityLivingBase> collidedList = world.getEntitiesWithinAABB(EntityLivingBase.class,
 					getEntityBoundingBox());
 			
 			if (!collidedList.isEmpty()) {
@@ -137,7 +137,7 @@ public class EntityAirblade extends AvatarEntity {
 				double z = iz == 0 ? hitbox.minZ : hitbox.maxZ;
 				BlockPos pos = new BlockPos(x, y, z);
 				
-				tryBreakBlock(worldObj.getBlockState(pos), pos);
+				tryBreakBlock(world.getBlockState(pos), pos);
 				
 			}
 		}
@@ -151,7 +151,7 @@ public class EntityAirblade extends AvatarEntity {
 			return;
 		}
 		
-		float hardness = state.getBlockHardness(worldObj, pos);
+		float hardness = state.getBlockHardness(world, pos);
 		if (hardness <= chopBlocksThreshold) {
 			breakBlock(pos);
 			velocity().mul(0.5);

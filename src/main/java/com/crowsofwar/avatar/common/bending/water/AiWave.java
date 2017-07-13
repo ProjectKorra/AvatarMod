@@ -93,7 +93,7 @@ public class AiWave extends BendingAi {
 	
 	private boolean isAtEdgeOfWater() {
 		
-		World world = entity.worldObj;
+		World world = entity.world;
 		Vector look = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget())).setY(0);
 		
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).add(0, -1, 0),

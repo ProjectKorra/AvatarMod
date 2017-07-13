@@ -50,7 +50,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 		BendingController controller = BendingManager.getBending(BendingType.EARTHBENDING);
 		
 		EntityLivingBase entity = ctx.getBenderEntity();
-		World world = entity.worldObj;
+		World world = entity.world;
 		BendingData data = ctx.getData();
 		
 		EntityFloatingBlock floating = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class,

@@ -100,8 +100,8 @@ public class EntityWave extends Entity {
 		Vector newPos = getVecPosition().add(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
 		
-		if (!worldObj.isRemote) {
-			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
+		if (!world.isRemote) {
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
 				Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);
 				motion.setY(0.4);
@@ -119,7 +119,7 @@ public class EntityWave extends Entity {
 		if (ticksExisted > 7000) {
 			setDead();
 		}
-		if (!worldObj.isRemote && worldObj.getBlockState(getPosition()).getBlock() != Blocks.WATER) {
+		if (!world.isRemote && world.getBlockState(getPosition()).getBlock() != Blocks.WATER) {
 			timeOnLand++;
 			if (timeOnLand >= maxTimeOnLand()) {
 				setDead();

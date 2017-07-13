@@ -104,9 +104,9 @@ public abstract class AvatarParticle extends Particle {
 		if (this.particleAngle != 0.0F) {
 			float f8 = this.particleAngle + (this.particleAngle - this.prevParticleAngle) * partialTicks;
 			float f9 = MathHelper.cos(f8 * 0.5F);
-			float f10 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.xCoord;
-			float f11 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.yCoord;
-			float f12 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.zCoord;
+			float f10 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.x;
+			float f11 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.y;
+			float f12 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.z;
 			Vec3d vec3d = new Vec3d((double) f10, (double) f11, (double) f12);
 			
 			for (int l = 0; l < 4; ++l) {
@@ -116,19 +116,19 @@ public abstract class AvatarParticle extends Particle {
 			}
 		}
 		
-		vb.pos((double) f5 + avec3d[0].xCoord, (double) f6 + avec3d[0].yCoord, (double) f7 + avec3d[0].zCoord)
+		vb.pos((double) f5 + avec3d[0].x, (double) f6 + avec3d[0].y, (double) f7 + avec3d[0].z)
 				.tex((double) maxU, (double) maxV)
 				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha)
 				.lightmap(j, k).endVertex();
-		vb.pos((double) f5 + avec3d[1].xCoord, (double) f6 + avec3d[1].yCoord, (double) f7 + avec3d[1].zCoord)
+		vb.pos((double) f5 + avec3d[1].x, (double) f6 + avec3d[1].y, (double) f7 + avec3d[1].z)
 				.tex((double) maxU, (double) minV)
 				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha)
 				.lightmap(j, k).endVertex();
-		vb.pos((double) f5 + avec3d[2].xCoord, (double) f6 + avec3d[2].yCoord, (double) f7 + avec3d[2].zCoord)
+		vb.pos((double) f5 + avec3d[2].x, (double) f6 + avec3d[2].y, (double) f7 + avec3d[2].z)
 				.tex((double) minU, (double) minV)
 				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha)
 				.lightmap(j, k).endVertex();
-		vb.pos((double) f5 + avec3d[3].xCoord, (double) f6 + avec3d[3].yCoord, (double) f7 + avec3d[3].zCoord)
+		vb.pos((double) f5 + avec3d[3].x, (double) f6 + avec3d[3].y, (double) f7 + avec3d[3].z)
 				.tex((double) minU, (double) maxV)
 				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha)
 				.lightmap(j, k).endVertex();

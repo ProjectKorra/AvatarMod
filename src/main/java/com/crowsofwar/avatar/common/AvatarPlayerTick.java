@@ -42,12 +42,12 @@ public class AvatarPlayerTick {
 			
 			EntityPlayer player = e.player;
 			
-			if (!player.worldObj.isRemote && player.ticksExisted == 0) {
+			if (!player.world.isRemote && player.ticksExisted == 0) {
 				data.saveAll();
 			}
 			
 			data.decrementCooldown();
-			if (!player.worldObj.isRemote) {
+			if (!player.world.isRemote) {
 				Chi chi = data.chi();
 				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
 				

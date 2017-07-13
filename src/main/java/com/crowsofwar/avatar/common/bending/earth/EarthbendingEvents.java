@@ -47,7 +47,7 @@ public class EarthbendingEvents {
 	@SubscribeEvent
 	public void digSpeed(PlayerEvent.BreakSpeed e) {
 		EntityPlayer player = e.getEntityPlayer();
-		World world = player.worldObj;
+		World world = player.world;
 		
 		IBlockState state = e.getState();
 		if (STATS_CONFIG.bendableBlocks.contains(state.getBlock())) {

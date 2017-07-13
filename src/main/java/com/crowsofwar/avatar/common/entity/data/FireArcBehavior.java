@@ -69,7 +69,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			if (owner == null) {
 				return this;
 			}
-			World world = owner.worldObj;
+			World world = owner.world;
 			
 			Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 					Math.toRadians(owner.rotationPitch));
@@ -114,7 +114,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 						STATS_CONFIG.fireballSettings.damage * entity.getDamageMult());
 				collided.setFire(3);
 				
-				if (!entity.worldObj.isRemote) {
+				if (!entity.world.isRemote) {
 					BendingData data = Bender.create(entity.getOwner()).getData();
 					if (data != null) {
 						data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC)

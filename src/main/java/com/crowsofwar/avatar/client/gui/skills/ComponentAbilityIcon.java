@@ -35,7 +35,7 @@ public class ComponentAbilityIcon extends ComponentImage {
 	}
 	
 	private static int getCurrentLevel(BendingAbility ability) {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(Minecraft.getMinecraft().thePlayer);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(Minecraft.getMinecraft().player);
 		return data.getAbilityData(ability).getLevel();
 	}
 	

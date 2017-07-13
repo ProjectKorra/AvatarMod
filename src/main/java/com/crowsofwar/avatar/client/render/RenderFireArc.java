@@ -52,9 +52,9 @@ public class RenderFireArc extends RenderArc {
 		Vector velocity = new Vector(0, 0, 0);
 		
 		// TODO [1.10] Re-introduce flame particle
-		arc.worldObj.spawnParticle(EnumParticleTypes.FLAME, spawnAt.x(), spawnAt.y(), spawnAt.z(),
+		arc.world.spawnParticle(EnumParticleTypes.FLAME, spawnAt.x(), spawnAt.y(), spawnAt.z(),
 				velocity.x() / 20, 0.05, velocity.z() / 20);
-		// AvatarParticles.createParticle(arc.worldObj, spawnAt.xCoord,
+		// AvatarParticles.createParticle(arc.world, spawnAt.xCoord,
 		// spawnAt.yCoord,
 		// spawnAt.zCoord,
 		// velocity.xCoord / 20, 0.05, velocity.zCoord / 20);

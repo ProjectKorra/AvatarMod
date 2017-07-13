@@ -60,18 +60,18 @@ public class EntityFireArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (inWater || worldObj.isRainingAt(getPosition())) {
+		if (inWater || world.isRainingAt(getPosition())) {
 			setDead();
 			Random random = new Random();
-			if (worldObj.isRemote) {
+			if (world.isRemote) {
 				int particles = random.nextInt(3) + 4;
 				for (int i = 0; i < particles; i++) {
-					worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
+					world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
 							(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
 							(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
 				}
 			}
-			worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+			world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 					SoundCategory.PLAYERS, 1, random.nextFloat() * 0.3f + 1.1f, false);
 		}
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
@@ -88,7 +88,7 @@ public class EntityFireArc extends EntityArc {
 		if (getOwner() != null) {
 			BendingData data = Bender.create(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIRE);
-			if (!worldObj.isRemote) {
+			if (!world.isRemote) {
 				data.removeStatusControl(StatusControl.THROW_FIRE);
 			}
 		}
@@ -96,18 +96,18 @@ public class EntityFireArc extends EntityArc {
 	
 	@Override
 	public void onCollideWithSolid() {
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
 			BlockPos pos = new BlockPos(x, y, z);
-			worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 			
 			if (createBigFire) {
 				for (EnumFacing dir : EnumFacing.HORIZONTALS) {
 					BlockPos offsetPos = pos.offset(dir);
-					if (worldObj.isAirBlock(offsetPos)) {
-						worldObj.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
+					if (world.isAirBlock(offsetPos)) {
+						world.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
 					}
 				}
 			}

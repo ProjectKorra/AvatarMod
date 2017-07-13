@@ -54,7 +54,7 @@ public class RenderWaterArc extends RenderArc {
 		direction.normalize();
 		Vector spawnAt = offset.plus(direction.times(Math.random()));
 		Vector velocity = first.velocity();
-		arc.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, spawnAt.x(), spawnAt.y(), spawnAt.z(),
+		arc.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, spawnAt.x(), spawnAt.y(), spawnAt.z(),
 				velocity.x(), velocity.y(), velocity.z());
 	}
 	
