@@ -7,7 +7,7 @@ addons:
     token:
       secure: "56ccd1fce86e222096ed40dd886b2c3ab2700a81"
     branches:
-      - *
+      - /*/
 jdk:
   - oraclejdk8
 script:
