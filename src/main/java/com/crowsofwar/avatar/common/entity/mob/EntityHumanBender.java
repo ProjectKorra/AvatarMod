@@ -184,7 +184,7 @@ public abstract class EntityHumanBender extends EntityBender {
 				EntityPlayer entityplayer = (EntityPlayer) entityIn;
 				ItemStack itemstack = this.getHeldItemMainhand();
 				ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack()
-						: ItemStack.field_190927_a;
+						: ItemStack.EMPTY;
 				
 				if (!itemstack.func_190926_b() && !itemstack1.func_190926_b()
 						&& itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD) {

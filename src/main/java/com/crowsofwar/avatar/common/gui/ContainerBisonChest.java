@@ -96,7 +96,7 @@ public class ContainerBisonChest extends Container {
 	
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		ItemStack itemstack = ItemStack.field_190927_a;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
 		
 		if (slot != null && slot.getHasStack()) {
@@ -106,23 +106,23 @@ public class ContainerBisonChest extends Container {
 			if (index < this.bisonInventory.getSizeInventory()) {
 				if (!this.mergeItemStack(itemstack1, this.bisonInventory.getSizeInventory(),
 						this.inventorySlots.size(), true)) {
-					return ItemStack.field_190927_a;
+					return ItemStack.EMPTY;
 				}
 			} else if (this.getSlot(1).isItemValid(itemstack1) && !this.getSlot(1).getHasStack()) {
 				if (!this.mergeItemStack(itemstack1, 1, 2, false)) {
-					return ItemStack.field_190927_a;
+					return ItemStack.EMPTY;
 				}
 			} else if (this.getSlot(0).isItemValid(itemstack1)) {
 				if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
-					return ItemStack.field_190927_a;
+					return ItemStack.EMPTY;
 				}
 			} else if (this.bisonInventory.getSizeInventory() <= 2
 					|| !this.mergeItemStack(itemstack1, 2, this.bisonInventory.getSizeInventory(), false)) {
-				return ItemStack.field_190927_a;
+				return ItemStack.EMPTY;
 			}
 			
 			if (itemstack1.func_190926_b()) {
-				slot.putStack(ItemStack.field_190927_a);
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}

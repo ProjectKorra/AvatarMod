@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.entity.ai;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-import static net.minecraft.item.ItemStack.field_190927_a;
+import static net.minecraft.item.ItemStack.EMPTY;
 
 import java.util.List;
 
@@ -98,7 +98,7 @@ public class EntityAiBisonTempt extends EntityAIBase {
 	private boolean isHoldingFood(EntityPlayer player) {
 		for (EnumHand hand : EnumHand.values()) {
 			ItemStack stack = player.getHeldItem(hand);
-			if (stack != field_190927_a) {
+			if (stack != EMPTY) {
 				if (MOBS_CONFIG.isBisonFood(stack.getItem())) {
 					return true;
 				}

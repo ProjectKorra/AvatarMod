@@ -243,7 +243,7 @@ public class EntityRavine extends AvatarEntity {
 						double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
 						if (rand.nextDouble() * 100 <= chance) {
 							elb.entityDropItem(stack, 0);
-							elb.setItemStackToSlot(slot, ItemStack.field_190927_a);
+							elb.setItemStackToSlot(slot, ItemStack.EMPTY);
 						}
 					}
 					

@@ -81,7 +81,7 @@ import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.*;
 import static net.minecraft.entity.SharedMonsterAttributes.ARMOR;
 import static net.minecraft.init.Blocks.STONE;
-import static net.minecraft.item.ItemStack.field_190927_a;
+import static net.minecraft.item.ItemStack.EMPTY;
 import static net.minecraft.util.SoundCategory.NEUTRAL;
 
 /**
@@ -516,7 +516,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 		boolean willBeOwned = condition.canHaveOwner() && stack.getItem() == Items.APPLE && !hasOwner();
 		
-		if (stack != field_190927_a) {
+		if (stack != EMPTY) {
 			
 			Item item = stack.getItem();
 			int domesticationValue = MOBS_CONFIG.getDomesticationValue(item);

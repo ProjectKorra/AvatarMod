@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.gui;
 
 import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
-import static net.minecraft.item.ItemStack.field_190927_a;
+import static net.minecraft.item.ItemStack.EMPTY;
 
 import java.util.Arrays;
 import java.util.List;
@@ -87,11 +87,11 @@ public class ContainerGetBending extends Container {
 			
 			if (index >= 0 && index <= 2) {
 				if (!mergeItemStack(stack, 1, 37, true)) {
-					return field_190927_a;
+					return EMPTY;
 				}
 			} else {
 				if (!mergeItemStack(stack, 0, 3, true)) {
-					return field_190927_a;
+					return EMPTY;
 				}
 			}
 			
@@ -99,7 +99,7 @@ public class ContainerGetBending extends Container {
 			
 		}
 		
-		return field_190927_a;
+		return EMPTY;
 	}
 	
 	@Override

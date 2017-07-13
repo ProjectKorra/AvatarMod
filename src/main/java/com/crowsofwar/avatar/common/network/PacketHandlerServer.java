@@ -347,7 +347,7 @@ public class PacketHandlerServer implements IPacketHandler {
 						ScrollType type = ScrollType.fromId(stack.getMetadata());
 						if (type.accepts(packet.getAbility().getBendingType())) {
 							
-							activeSlot.putStack(ItemStack.field_190927_a);
+							activeSlot.putStack(ItemStack.EMPTY);
 							abilityData.addLevel();
 							abilityData.setXp(0);
 							
@@ -407,7 +407,7 @@ public class PacketHandlerServer implements IPacketHandler {
 					data.addBending(desired);
 					
 					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
-						container.getSlot(i).putStack(ItemStack.field_190927_a);
+						container.getSlot(i).putStack(ItemStack.EMPTY);
 					}
 					
 					player.openGui(AvatarMod.instance, desired.id(), player.worldObj, 0, 0, 0);

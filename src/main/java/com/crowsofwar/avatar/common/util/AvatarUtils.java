@@ -214,7 +214,7 @@ public class AvatarUtils {
 			int slot = slotNbt.getInteger("Slot");
 			
 			if (slotNbt.getBoolean("Empty")) {
-				inventory.setInventorySlotContents(slot, ItemStack.field_190927_a);
+				inventory.setInventorySlotContents(slot, ItemStack.EMPTY);
 			} else {
 				inventory.setInventorySlotContents(slot, new ItemStack(slotNbt));
 			}
