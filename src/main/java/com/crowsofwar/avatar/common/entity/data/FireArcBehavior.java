@@ -76,7 +76,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
 			Vector motion = lookPos.minus(new Vector(entity));
 			motion.mul(.3);
-			entity.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
+			entity.move(MoverType.SELF, motion.x(), motion.y(), motion.z());
 			
 			return this;
 			

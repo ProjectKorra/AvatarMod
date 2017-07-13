@@ -81,7 +81,7 @@ public class EntityAiBisonEatGrass extends EntityAIBase {
 		}
 		tryEatGrass();
 		if (!bison.isSitting()) {
-			bison.func_191986_a(0, 5, 0);
+			bison.travel(0, 5, 0);
 		}
 		addRotations(0, 4);
 		

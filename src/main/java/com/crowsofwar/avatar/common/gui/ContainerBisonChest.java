@@ -121,7 +121,7 @@ public class ContainerBisonChest extends Container {
 				return ItemStack.EMPTY;
 			}
 			
-			if (itemstack1.func_190926_b()) {
+			if (itemstack1.isEmpty()) {
 				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();

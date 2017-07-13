@@ -46,7 +46,7 @@ public class EntityAiBisonDefendOwner extends EntityAITarget {
 			return false;
 		} else {
 			// getAITarget() returns last entity that attacked the player
-			this.ownersTarget = owner.getAITarget();
+			this.ownersTarget = owner.getAttackingEntity();
 			int i = owner.getRevengeTimer();
 			return i != this.timestamp && this.isSuitableTarget(this.ownersTarget, false);
 		}

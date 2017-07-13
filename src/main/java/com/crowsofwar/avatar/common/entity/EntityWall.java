@@ -113,7 +113,7 @@ public class EntityWall extends AvatarEntity {
 		
 		velocity().set(Vector.ZERO);
 		this.noClip = true;
-		moveEntity(MoverType.SELF, 0, slowest / 20, 0);
+		move(MoverType.SELF, 0, slowest / 20, 0);
 	}
 	
 	/**

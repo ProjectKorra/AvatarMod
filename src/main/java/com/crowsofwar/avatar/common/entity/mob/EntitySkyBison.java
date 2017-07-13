@@ -538,7 +538,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				condition.addAge(100);
 				// Consume food item
 				if (!player.capabilities.isCreativeMode) {
-					stack.func_190918_g(1);
+					stack.shrink(1);
 				}
 				// Don't stop now if we are about to be owned
 				if (!willBeOwned) {
@@ -552,7 +552,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			playTameEffect(true);
 			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
 			if (!player.capabilities.isCreativeMode) {
-				stack.func_190918_g(1);
+				stack.shrink(1);
 			}
 			return true;
 		}
@@ -570,7 +570,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				updateEquipment();
 			}
 			if (!player.capabilities.isCreativeMode) {
-				stack.func_190918_g(1);
+				stack.shrink(1);
 			}
 			return true;
 		}
@@ -580,7 +580,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				updateEquipment();
 			}
 			if (!player.capabilities.isCreativeMode) {
-				stack.func_190918_g(1);
+				stack.shrink(1);
 			}
 			return true;
 		}
@@ -624,7 +624,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				float minutes = min + rand.nextFloat() * (max - min);
 				condition.setBreedTimer((int) (minutes * 1200));
 				if (!player.capabilities.isCreativeMode) {
-					stack.func_190918_g(1);
+					stack.shrink(1);
 				}
 				return true;
 			}
@@ -719,7 +719,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			int slots = Math.min(old.getSizeInventory(), chest.getSizeInventory());
 			for (int i = 0; i < slots; ++i) {
 				ItemStack stack = old.getStackInSlot(i);
-				if (!stack.func_190926_b()) {
+				if (!stack.isEmpty()) {
 					chest.setInventorySlotContents(i, stack.copy());
 				}
 			}
@@ -811,7 +811,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (!world.isRemote) {
 			for (int i = 0; i < chest.getSizeInventory(); i++) {
 				ItemStack stack = chest.getStackInSlot(i);
-				if (!stack.func_190926_b()) {
+				if (!stack.isEmpty()) {
 					entityDropItem(stack, 0);
 				}
 			}
@@ -896,9 +896,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 	}
 
-	// moveEntityWithHeading
+	// moveWithHeading
 	@Override
-	public void func_191986_a(float strafe, float forward, float unknown) {
+	public void travel(float strafe, float forward, float unknown) {
 		
 		if (isEatingGrass()) {
 			motionY -= 0.08;
@@ -956,7 +956,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 						.getAttributeValue();
 				setAIMoveSpeed(moveAttribute * condition.getSpeedMultiplier());
 				
-				moveEntityWithHeadingFlying(strafe, forward * speedMult, unknown);
+				travelFlying(strafe, forward * speedMult, unknown);
 				motionY += look.y() * 0.02 * speedMult;
 				
 			} else if (driver instanceof EntityPlayer) {
@@ -978,7 +978,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			this.limbSwing += this.limbSwingAmount;
 		} else {
 			this.jumpMovementFactor = 0.02F;
-			moveEntityWithHeadingFlying(strafe, forward, unknown);
+			travelFlying(strafe, forward, unknown);
 		}
 		
 	}
@@ -993,16 +993,16 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {}
 	
-	private void moveEntityWithHeadingFlying(float strafe, float forward, float unknown) {
+	private void travelFlying(float strafe, float forward, float unknown) {
 		if (this.isInWater()) {
-			this.func_191958_b(strafe, forward, unknown, 0.02F); // moveRelative
-			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.moveRelative(strafe, forward, unknown, 0.02F);
+			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.800000011920929D;
 			this.motionY *= 0.800000011920929D;
 			this.motionZ *= 0.800000011920929D;
 		} else if (this.isInLava()) {
-			this.func_191958_b(strafe, forward, unknown, 0.02F); // moveRelative
-			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.moveRelative(strafe, forward, unknown, 0.02F);
+			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.5D;
 			this.motionY *= 0.5D;
 			this.motionZ *= 0.5D;
@@ -1010,22 +1010,22 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			float f = 0.91F;
 			
 			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
-						MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1,
-						MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX),
+						MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
+						MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 			
 			float f1 = 0.16277136F / (f * f * f);
-			this.func_191958_b(strafe, forward, unknown, this.onGround ? 0.1F * f1 : 0.02F);
+			this.moveRelative(strafe, forward, unknown, this.onGround ? 0.1F * f1 : 0.02F);
 			f = 0.91F;
 			
 			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
-						MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1,
-						MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX),
+						MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
+						MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 			
-			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= f;
 			this.motionY *= f;
 			this.motionZ *= f;

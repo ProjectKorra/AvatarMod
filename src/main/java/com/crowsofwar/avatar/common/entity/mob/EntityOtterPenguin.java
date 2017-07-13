@@ -122,9 +122,9 @@ public class EntityOtterPenguin extends EntityAnimal {
 		return super.canPassengerSteer();
 	}
 
-	// moveEntityWithHeading
+	// moveWithHeading
 	@Override
-	public void func_191986_a(float strafe, float forward, float unknown) {
+	public void travel(float strafe, float forward, float unknown) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 		
 		if (this.isBeingRidden() && this.canBeSteered()) {
@@ -144,7 +144,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 				
 				setAIMoveSpeed((float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
 						.getAttributeValue());
-				super.func_191986_a(strafe, forward, unknown);
+				super.travel(strafe, forward, unknown);
 				
 			} else {
 				this.motionX = 0.0D;
@@ -166,7 +166,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
-			super.func_191986_a(strafe, forward, unknown);
+			super.travel(strafe, forward, unknown);
 		}
 	}
 	

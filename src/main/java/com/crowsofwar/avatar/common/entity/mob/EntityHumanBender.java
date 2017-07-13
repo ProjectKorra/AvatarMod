@@ -186,7 +186,7 @@ public abstract class EntityHumanBender extends EntityBender {
 				ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack()
 						: ItemStack.EMPTY;
 				
-				if (!itemstack.func_190926_b() && !itemstack1.func_190926_b()
+				if (!itemstack.isEmpty() && !itemstack1.isEmpty()
 						&& itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD) {
 					float f1 = 0.25F + EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
 					
@@ -217,7 +217,7 @@ public abstract class EntityHumanBender extends EntityBender {
 					// Take diamond
 					scrollsLeft--;
 					if (!player.capabilities.isCreativeMode) {
-						stack.func_190918_g(1);
+						stack.shrink(1);
 					}
 				}
 			} else {

@@ -215,7 +215,7 @@ public abstract class AvatarEntity extends Entity {
 		}
 		
 		Vector v = velocity().dividedBy(20);
-		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
+		move(MoverType.SELF, v.x(), v.y(), v.z());
 		
 	}
 	

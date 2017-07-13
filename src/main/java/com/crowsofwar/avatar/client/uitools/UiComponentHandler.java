@@ -81,7 +81,7 @@ public class UiComponentHandler {
 			int height = screenHeight() / scaleFactor();
 			
 			GuiUtils.drawHoveringText(tooltip, (int) mouseX, (int) mouseY, width, height, -1,
-					getMinecraft().fontRendererObj);
+					getMinecraft().fontRenderer);
 			GlStateManager.disableLighting();
 			
 		}

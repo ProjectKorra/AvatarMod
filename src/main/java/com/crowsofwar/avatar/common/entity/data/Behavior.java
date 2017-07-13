@@ -145,7 +145,7 @@ public abstract class Behavior<E extends Entity> {
 		}
 
 		@Override
-		public B func_192717_a(B behavior) {
+		public B copyValue(B behavior) {
 			return behavior;
 		}
 

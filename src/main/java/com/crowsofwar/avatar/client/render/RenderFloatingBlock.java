@@ -56,9 +56,9 @@ public class RenderFloatingBlock extends Render {
 			float lerp) {
 		World world = entity.world;
 		Block block = entity.getBlock();
-		int i = MathHelper.floor_double(entity.posX);
-		int j = MathHelper.floor_double(entity.posY);
-		int k = MathHelper.floor_double(entity.posZ);
+		int i = MathHelper.floor(entity.posX);
+		int j = MathHelper.floor(entity.posY);
+		int k = MathHelper.floor(entity.posZ);
 		
 		// x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) *
 		// ((lerp -

@@ -138,7 +138,7 @@ public class ControlPoint {
 	 * Move this control point by the designated offset, not checking for
 	 * collisions.
 	 * <p>
-	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}
+	 * Not to be confused with {@link Entity#move(double, double, double)}
 	 * .
 	 */
 	public void move(double x, double y, double z) {
@@ -149,7 +149,7 @@ public class ControlPoint {
 	 * Move this control point by the designated offset, not checking for
 	 * collisions.
 	 * <p>
-	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}
+	 * Not to be confused with {@link Entity#move(double, double, double)}
 	 * .
 	 */
 	public void move(Vector offset) {

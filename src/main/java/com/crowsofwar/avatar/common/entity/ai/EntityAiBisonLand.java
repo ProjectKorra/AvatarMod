@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import static net.minecraft.util.math.MathHelper.floor_double;
+import static net.minecraft.util.math.MathHelper.floor;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.util.Raytrace;

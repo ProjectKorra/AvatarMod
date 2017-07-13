@@ -55,7 +55,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public Block func_192717_a(Block block) {
+		public Block copyValue(Block block) {
 			return block;
 		}
 	};
@@ -79,7 +79,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public Vector func_192717_a(Vector vec) {
+		public Vector copyValue(Vector vec) {
 			return vec.copy();
 		}
 	};
@@ -110,7 +110,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public BenderInfo func_192717_a(BenderInfo benderInfo) {
+		public BenderInfo copyValue(BenderInfo benderInfo) {
 			return benderInfo;
 		}
 
@@ -134,7 +134,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public SaddleTier func_192717_a(SaddleTier tier) {
+		public SaddleTier copyValue(SaddleTier tier) {
 			return tier;
 		}
 	};
@@ -157,7 +157,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public ArmorTier func_192717_a(ArmorTier tier) {
+		public ArmorTier copyValue(ArmorTier tier) {
 			return tier;
 		}
 	};
