@@ -1,5 +1,6 @@
 .gradle/
 .settings/
+.metadata/
 bin/
 build/
 run/
