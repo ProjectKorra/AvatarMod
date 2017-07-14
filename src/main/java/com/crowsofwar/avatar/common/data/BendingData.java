@@ -16,13 +16,13 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import java.util.List;
-import java.util.Map;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -204,6 +204,14 @@ public interface BendingData {
 	int getPetSummonCooldown();
 	
 	void setPetSummonCooldown(int cooldown);
+
+	default boolean getBisonFollowMode() {
+		return getMiscData().getBisonFollowMode();
+	}
+
+	default void setBisonFollowMode(boolean followMode) {
+		getMiscData().setBisonFollowMode(followMode);
+	}
 	
 	/**
 	 * Save this BendingData

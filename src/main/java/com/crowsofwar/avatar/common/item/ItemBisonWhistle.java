@@ -62,25 +62,32 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft) {
 		
 		if (!world.isRemote) {
-			
-			EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
-			
-			if (bison != null) {
-				
-				double dist = entity.getDistanceToEntity(bison);
-				
-				double seconds = dist / 20;
-				
-				BendingData data = Bender.create(entity).getData();
-				data.setPetSummonCooldown((int) (seconds * 20));
-				data.addTickHandler(TickHandler.BISON_SUMMONER);
-				
-				MSG_BISON_WHISTLE_SUMMON.send(entity, (int) seconds);
-				
+
+			if (timeLeft >= 55) {
+				// Quick click - Toggle bison follow
+				BendingData data = Bender.getData(entity);
+				data.setBisonFollowMode(!data.getBisonFollowMode());
 			} else {
-				MSG_BISON_WHISTLE_NOT_FOUND.send(entity, getBisonName(stack));
+				// Long click - Summon bison
+				EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
+
+				if (bison != null) {
+
+					double dist = entity.getDistanceToEntity(bison);
+
+					double seconds = dist / 20;
+
+					BendingData data = Bender.create(entity).getData();
+					data.setPetSummonCooldown((int) (seconds * 20));
+					data.addTickHandler(TickHandler.BISON_SUMMONER);
+
+					MSG_BISON_WHISTLE_SUMMON.send(entity, (int) seconds);
+
+				} else {
+					MSG_BISON_WHISTLE_NOT_FOUND.send(entity, getBisonName(stack));
+				}
 			}
-			
+
 		}
 		
 	}

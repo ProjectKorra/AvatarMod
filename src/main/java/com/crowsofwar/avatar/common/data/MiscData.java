@@ -33,9 +33,11 @@ public class MiscData {
 	private int abilityCooldown;
 	private boolean wallJumping;
 	private int petSummonCooldown;
+	private boolean bisonFollowMode;
 	
 	public MiscData(Runnable save) {
 		this.save = save;
+		this.bisonFollowMode = true;
 	}
 	
 	public void toBytes(ByteBuf buf) {
@@ -44,6 +46,7 @@ public class MiscData {
 		buf.writeInt(abilityCooldown);
 		buf.writeBoolean(wallJumping);
 		buf.writeInt(petSummonCooldown);
+		buf.writeBoolean(bisonFollowMode);
 	}
 	
 	public void fromBytes(ByteBuf buf) {
@@ -52,6 +55,7 @@ public class MiscData {
 		abilityCooldown = buf.readInt();
 		wallJumping = buf.readBoolean();
 		petSummonCooldown = buf.readInt();
+		bisonFollowMode = buf.readBoolean();
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt) {
@@ -60,6 +64,7 @@ public class MiscData {
 		abilityCooldown = nbt.getInteger("AbilityCooldown");
 		wallJumping = nbt.getBoolean("WallJumping");
 		petSummonCooldown = nbt.getInteger("PetSummonCooldown");
+		bisonFollowMode = nbt.getBoolean("BisonFollowMode");
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -68,6 +73,7 @@ public class MiscData {
 		nbt.setInteger("AbilityCooldown", abilityCooldown);
 		nbt.setBoolean("WallJumping", wallJumping);
 		nbt.setInteger("PetSummonCooldown", petSummonCooldown);
+		nbt.setBoolean("BisonFollowMode", bisonFollowMode);
 	}
 	
 	public float getFallAbsorption() {
@@ -118,5 +124,13 @@ public class MiscData {
 	public void setPetSummonCooldown(int petSummonCooldown) {
 		this.petSummonCooldown = petSummonCooldown;
 	}
-	
+
+	public boolean getBisonFollowMode() {
+		return bisonFollowMode;
+	}
+
+	public void setBisonFollowMode(boolean followMode) {
+		bisonFollowMode = followMode;
+	}
+
 }

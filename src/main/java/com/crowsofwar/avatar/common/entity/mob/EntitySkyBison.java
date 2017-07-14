@@ -585,16 +585,18 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			return true;
 		}
 		
-		if (!world.isRemote && stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
-			if (player == getOwner()) {
-				ItemBisonWhistle.setBoundTo(stack, getUniqueID());
-				ItemBisonWhistle.setBisonName(stack, getName());
-				MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
-			} else {
-				if (getOwner() != null) {
-					MSG_BISON_WHISTLE_NOTOWNED.send(player);
+		if (stack.getItem() == AvatarItems.itemBisonWhistle && player.isSneaking()) {
+			if (!world.isRemote) {
+				if (player == getOwner()) {
+					ItemBisonWhistle.setBoundTo(stack, getUniqueID());
+					ItemBisonWhistle.setBisonName(stack, getName());
+					MSG_BISON_WHISTLE_ASSIGN.send(player, getName());
 				} else {
-					MSG_BISON_WHISTLE_UNTAMED.send(player);
+					if (getOwner() != null) {
+						MSG_BISON_WHISTLE_NOTOWNED.send(player);
+					} else {
+						MSG_BISON_WHISTLE_UNTAMED.send(player);
+					}
 				}
 			}
 			
