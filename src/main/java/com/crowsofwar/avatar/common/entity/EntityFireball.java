@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -29,7 +27,6 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -45,6 +42,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -175,6 +174,10 @@ public class EntityFireball extends AvatarEntity {
 					world.destroyBlock(pos, true);
 				}
 			}
+		}
+
+		if (tryDestroy()) {
+			setDead();
 		}
 		
 	}
