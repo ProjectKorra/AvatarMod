@@ -2,3 +2,5 @@ AV2 Changelog :: version a4.5
 
 * Reduced penguin spawning (to 1/3)
 * Reduced penguin drop rate (to 1/2)
+
+> Fix crash when killing entity without registered lang file name - FOR REAL THIS TIME
