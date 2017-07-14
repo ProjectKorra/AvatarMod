@@ -16,13 +16,13 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 
@@ -131,7 +131,14 @@ public interface BendingData {
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
 	AbilityData getAbilityData(UUID abilityId);
-	
+
+	/**
+	 * Retrieves data about the given ability. Will create data if necessary.
+	 */
+	default AbilityData getAbilityData(Ability ability) {
+		return getAbilityData(ability.getId());
+	}
+
 	void setAbilityData(UUID abilityId, AbilityData data);
 	
 	/**

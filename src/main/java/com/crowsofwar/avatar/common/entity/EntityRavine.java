@@ -17,13 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_RAVINE;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.List;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
@@ -201,7 +201,7 @@ public class EntityRavine extends AvatarEntity {
 		if (!world.isRemote && getOwner() != null) {
 			BendingData data = ownerAttr.getOwnerBender().getData();
 			if (data != null) {
-				data.getAbilityData(ABILITY_RAVINE).addXp(SKILLS_CONFIG.ravineHit * attacked);
+				data.getAbilityData(AbilityRavine.ID).addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}
 		}
 		

@@ -17,20 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_FIREBALL;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,6 +31,11 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -130,7 +128,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			BendingData data = Bender.create(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
-				data.getAbilityData(ABILITY_FIREBALL).addXp(xp);
+				data.getAbilityData(AbilityFireball.ID).addXp(xp);
 			}
 			
 			// Remove the fireball & spawn particles
@@ -173,7 +171,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			motion.mul(5);
 			entity.velocity().set(motion);
 			
-			if (data.getAbilityData(Ability.ABILITY_FIREBALL).isMasterPath(AbilityTreePath.SECOND)) {
+			if (data.getAbilityData(AbilityFireball.ID).isMasterPath(AbilityTreePath.SECOND)) {
 				int size = entity.getSize();
 				if (size < 60 && entity.ticksExisted % 4 == 0) {
 					entity.setSize(size + 1);

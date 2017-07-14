@@ -17,36 +17,24 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.data.DataSaver;
-import com.crowsofwar.gorecore.data.PlayerData;
-import com.crowsofwar.gorecore.data.PlayerDataFetcher;
-import com.crowsofwar.gorecore.data.PlayerDataFetcherServer;
-import com.crowsofwar.gorecore.data.PlayerDataFetcherSided;
-
+import com.crowsofwar.gorecore.data.*;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
+import java.util.*;
+
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 public class AvatarPlayerData extends PlayerData implements BendingData {
 	
@@ -118,8 +106,8 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		}
 		
 		Map<Ability, AbilityData> abilityData = new HashMap<>();
-		AvatarUtils.readMap(abilityData, nbt -> BendingManager.getAbility(nbt.getInteger("Id")), nbt -> {
-			Ability ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
+		AvatarUtils.readMap(abilityData, nbt -> Abilities.get(nbt.getUniqueId("Id")), nbt -> {
+			Ability ability = Abilities.get(nbt.getUniqueId("AbilityId"));
 			AbilityData data = new AbilityData(this, ability);
 			data.readFromNbt(nbt);
 			return data;
@@ -156,10 +144,10 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		
 		AvatarUtils.writeMap(getAbilityDataMap(), //
 				(nbt, ability) -> {
-					nbt.setInteger("Id", ability.getId());
+					nbt.setUniqueId("Id", ability.getId());
 					nbt.setString("_AbilityName", ability.getName());
 				}, (nbt, data) -> {
-					nbt.setInteger("AbilityId", data.getAbility().getId());
+					nbt.setUniqueId("AbilityId", data.getAbility().getId());
 					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");
 		

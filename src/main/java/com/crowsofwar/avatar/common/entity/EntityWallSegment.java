@@ -17,12 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_WALL;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-
-import java.util.UUID;
-
+import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -34,7 +29,6 @@ import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -52,6 +46,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 /**
  * 
@@ -285,7 +284,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				entity.setDead();
 				if (getOwner() != null) {
 					BendingData data = ownerAttribute.getOwnerBender().getData();
-					data.getAbilityData(ABILITY_WALL).addXp(SKILLS_CONFIG.wallBlockedAttack);
+					data.getAbilityData(AbilityWall.ID).addXp(SKILLS_CONFIG.wallBlockedAttack);
 				}
 			}
 			
@@ -300,7 +299,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		
 		boolean friendlyProjectile = false;
 		if (getOwner() != null) {
-			AbilityData data = Bender.create(getOwner()).getData().getAbilityData(ABILITY_WALL);
+			AbilityData data = Bender.create(getOwner()).getData().getAbilityData(AbilityWall.ID);
 			if (data.isMaxLevel() && data.getPath() == AbilityTreePath.FIRST) {
 				
 				friendlyProjectile = entity instanceof AvatarEntity

@@ -17,11 +17,13 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-
+import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.UUID;
 
 /**
  * Represents saveable data about an ability. These are not singletons; there is
@@ -217,7 +219,7 @@ public class AbilityData {
 	}
 	
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(ability.getId()); // ability ID read from createFromBytes
+		GoreCoreByteBufUtil.writeUUID(buf, ability.getId());
 		buf.writeFloat(xp);
 		buf.writeInt(level);
 		buf.writeInt(path.id());
@@ -243,8 +245,8 @@ public class AbilityData {
 	 *         ability ID (does not log errors)
 	 */
 	public static AbilityData createFromBytes(ByteBuf buf, BendingData data) {
-		int abilityId = buf.readInt();
-		Ability ability = BendingManager.getAbility(abilityId);
+		UUID abilityId = GoreCoreByteBufUtil.readUUID(buf);
+		Ability ability = Abilities.get(abilityId);
 		if (ability == null) {
 			return null;
 		} else {

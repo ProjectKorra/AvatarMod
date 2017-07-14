@@ -17,9 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_WALL;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
+import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -27,11 +25,12 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.util.Raytrace;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -134,7 +133,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
 			
 			BendingData data = Bender.getData(entity.getOwner());
-			AbilityData abilityData = data.getAbilityData(ABILITY_WALL);
+			AbilityData abilityData = data.getAbilityData(AbilityWall.ID);
 			if (abilityData.isMaxLevel() && abilityData.getPath() == AbilityTreePath.SECOND) {
 				
 				drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
