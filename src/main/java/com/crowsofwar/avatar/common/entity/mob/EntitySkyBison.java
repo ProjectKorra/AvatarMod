@@ -16,29 +16,14 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-<<<<<<< HEAD
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_AIR_JUMP;
-import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.toRectangular;
-import static java.lang.Math.*;
-import static net.minecraft.entity.SharedMonsterAttributes.ARMOR;
-import static net.minecraft.init.Blocks.STONE;
-import static net.minecraft.item.ItemStack.field_190927_a;
-import static net.minecraft.util.SoundCategory.NEUTRAL;
-
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
-=======
->>>>>>> 1.12
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
@@ -93,7 +78,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -205,9 +189,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 		
-		this.tasks.addTask(1, Ability.ABILITY_AIR_BUBBLE.getAi(this, this));
-		this.tasks.addTask(2, Ability.ABILITY_AIR_GUST.getAi(this, this));
-		this.tasks.addTask(3, Ability.ABILITY_AIRBLADE.getAi(this, this));
+		this.tasks.addTask(1, Abilities.get(AbilityAirBubble.ID).getAi(this, this));
+		this.tasks.addTask(2, Abilities.get(AbilityAirGust.ID).getAi(this, this));
+		this.tasks.addTask(3, Abilities.get(AbilityAirblade.ID).getAi(this, this));
 		
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
 		this.tasks.addTask(4, new EntityAiBisonBreeding(this));
@@ -702,7 +686,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private void onLiftoff() {
 		if (!isEatingGrass()) {
 			Raytrace.Result result = new Raytrace.Result();
-			ABILITY_AIR_JUMP.execute(new AbilityContext(getData(), this, this, result, ABILITY_AIR_JUMP));
+			Ability airJump = Abilities.get(AbilityAirJump.ID);
+			airJump.execute(new AbilityContext(getData(), this, this, result, airJump));
 			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
 			getData().removeStatusControl(StatusControl.AIR_JUMP);
 		}

@@ -17,18 +17,16 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.CachedEntity;
 import com.google.common.base.Optional;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Like {@link CachedEntity}, but allows access to the server/client
@@ -81,14 +79,9 @@ public class SyncableEntityReference<T extends Entity> {
 	public T getEntity() {
 		// Cache may have an incorrect id; other side could have changed
 		// dataManager id, but not the cached entity id.
-<<<<<<< HEAD
 		Optional<UUID> optional = using.getDataManager().get(sync);
 		cache.setEntityId(optional.orNull());
-		return cache.getEntity(using.worldObj);
-=======
-		cache.setEntityId(using.getDataManager().get(sync));
 		return cache.getEntity(using.world);
->>>>>>> 1.12
 	}
 	
 	public void setEntity(@Nullable T entity) {

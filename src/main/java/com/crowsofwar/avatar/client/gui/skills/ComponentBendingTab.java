@@ -18,14 +18,9 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-<<<<<<< HEAD
-import com.crowsofwar.avatar.client.uitools.ComponentImage;
-=======
 import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.common.bending.BendingType;
->>>>>>> 1.12
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -35,25 +30,17 @@ import net.minecraft.util.ResourceLocation;
  * @author CrowsOfWar
  */
 public class ComponentBendingTab extends UiComponent {
-	
-<<<<<<< HEAD
-	private final int type;
-	
-	public ComponentBendingTab(int type, boolean isFullTab, boolean isSelected) {
-		super(AvatarUiTextures.skillsGui, !isFullTab && isSelected ? 216 : 236, type * 20, 20,
-				isFullTab || isSelected ? 20 : 17);
-=======
-	private final BendingType type;
+
+	private final BendingStyle type;
 	private final boolean fullTab;
 	
 	private final ResourceLocation bendingIconLocation;
 	
-	public ComponentBendingTab(BendingType type, boolean fullTab) {
+	public ComponentBendingTab(BendingStyle type, boolean fullTab) {
 		
 		bendingIconLocation = new ResourceLocation(
-				"avatarmod:textures/gui/tab/" + type.name().toLowerCase() + ".png");
+				"avatarmod:textures/gui/tab/" + type.getName().toLowerCase() + ".png");
 		
->>>>>>> 1.12
 		this.type = type;
 		this.fullTab = fullTab;
 		
@@ -61,7 +48,7 @@ public class ComponentBendingTab extends UiComponent {
 	
 	@Override
 	protected void click(int button) {
-		AvatarMod.network.sendToServer(new PacketSSkillsMenu(type));
+		AvatarMod.network.sendToServer(new PacketSSkillsMenu(type.getId()));
 	}
 	
 	@Override

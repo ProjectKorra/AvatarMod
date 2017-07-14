@@ -16,15 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
-import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.toRectangular;
-import static java.lang.Math.toRadians;
-import static net.minecraft.init.Blocks.WATER;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -36,7 +27,6 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -47,6 +37,15 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
+import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.toRectangular;
+import static java.lang.Math.toRadians;
+import static net.minecraft.init.Blocks.WATER;
 
 /**
  * 
@@ -86,13 +85,8 @@ public class WaterSkateHandler extends TickHandler {
 	
 	private void tryStartSkating(BendingData data, EntityLivingBase player) {
 		
-<<<<<<< HEAD
-		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
-			if (shouldSkate(player, data.getAbilityData(AbilityWaterSkate.ID))) {
-=======
 		if (!player.world.isRemote && data.hasStatusControl(SKATING_START)) {
-			if (shouldSkate(player, data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE))) {
->>>>>>> 1.12
+			if (shouldSkate(player, data.getAbilityData(AbilityWaterSkate.ID))) {
 				data.removeStatusControl(SKATING_START);
 				data.addStatusControl(SKATING_JUMP);
 			}

@@ -159,42 +159,8 @@ public class EntityAirGust extends EntityArc {
 		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
-		
+
 		@Override
-<<<<<<< HEAD
-		protected void onCollision(Entity entity) {
-			if (!entity.worldObj.isRemote && entity != owner) {
-				
-				BendingData data = Bender.create(owner).getData();
-				float xp = 0;
-				if (data != null) {
-					AbilityData abilityData = data.getAbilityData(Ability.ABILITY_AIR_GUST);
-					xp = abilityData.getTotalXp();
-					abilityData.addXp(SKILLS_CONFIG.airGustHit);
-				}
-				
-				boolean airGrab = ((EntityAirGust) arc).airGrab;
-				Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
-				velocity.setY(airGrab ? -1 : 1);
-				velocity.mul(airGrab ? -0.8 : 1);
-				
-				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
-				afterVelocityAdded(entity);
-				
-				setDead();
-				
-				if (entity instanceof AvatarEntity) {
-					if (((AvatarEntity) entity).tryDestroy()) {
-						entity.setDead();
-					}
-				}
-				
-			}
-		}
-		
-		@Override
-=======
->>>>>>> 1.12
 		public void onUpdate() {
 			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {

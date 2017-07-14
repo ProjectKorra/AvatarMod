@@ -16,18 +16,10 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-<<<<<<< HEAD
-import static com.crowsofwar.avatar.common.bending.Ability.ABILITY_AIR_BUBBLE;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static net.minecraft.util.EnumFacing.UP;
-
-import java.util.UUID;
-
-=======
->>>>>>> 1.12
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
@@ -59,7 +51,6 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.UUID;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -315,8 +306,9 @@ public class EntityAirBubble extends AvatarEntity {
 					if (!owner.isEntityInvulnerable(source)) {
 						BendingData data = Bender.getData(owner);
 						if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
-							
-							data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
+
+							AbilityData aData = data.getAbilityData(AbilityAirBubble.ID);
+							aData.addXp(SKILLS_CONFIG.airbubbleProtect);
 							setHealth(getHealth() - amount);
 							return true;
 							

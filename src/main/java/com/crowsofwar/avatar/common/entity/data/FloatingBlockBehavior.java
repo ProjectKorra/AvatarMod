@@ -17,21 +17,15 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
@@ -43,6 +37,11 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -208,20 +207,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (collided.getHealth() <= 0) {
 					xp = SKILLS_CONFIG.blockKill;
 				}
-				data.getAbilityData(Ability.ABILITY_PICK_UP_BLOCK).addXp(xp);
+				data.getAbilityData(AbilityPickUpBlock.ID).addXp(xp);
 			}
 			
 			// Remove the floating block & spawn particles
 			entity.onCollideWithSolid();
-<<<<<<< HEAD
-			if (!entity.worldObj.isRemote) {
-				if (data.getAbilityData(Ability.ABILITY_PICK_UP_BLOCK)
-=======
-			
 			// boomerang upgrade handling
 			if (!entity.world.isRemote) {
-				if (data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK)
->>>>>>> 1.12
+				if (data.getAbilityData(AbilityPickUpBlock.ID)
 						.isMasterPath(AbilityTreePath.FIRST)) {
 					
 					Chi chi = data.chi();

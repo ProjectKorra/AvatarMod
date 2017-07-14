@@ -17,47 +17,20 @@
 
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-<<<<<<< HEAD
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-=======
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
->>>>>>> 1.12
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
-import com.crowsofwar.avatar.common.network.packets.PacketSCycleBending;
-import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
-import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
@@ -70,6 +43,14 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import java.util.*;
+
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 /**
  * Large class that manages input on the client-side. After input is received,
@@ -165,21 +146,12 @@ public class ClientInput implements IControlsHandler {
 		tryCycleBending();
 		
 		if (AvatarControl.KEY_SKILLS.isPressed()) {
-<<<<<<< HEAD
-			BendingData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
-			List<BendingStyle> controllers = data.getAllBending();
-			if (controllers.isEmpty()) {
-				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
-			} else {
-				AvatarMod.network.sendToServer(new PacketSSkillsMenu(controllers.get(0).getId()));
-=======
 			BendingData data = AvatarPlayerData.fetcher().fetch(mc.player);
-			BendingType active = data.getActiveBendingType();
+			BendingStyle active = data.getActiveBending();
 			if (active == null) {
 				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
 			} else {
-				AvatarMod.network.sendToServer(new PacketSSkillsMenu(active));
->>>>>>> 1.12
+				AvatarMod.network.sendToServer(new PacketSSkillsMenu(active.getId()));
 			}
 		}
 		if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {

@@ -16,29 +16,12 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
-import static net.minecraft.client.Minecraft.getMinecraft;
-import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
-
-import java.io.IOException;
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.ComponentText;
-import com.crowsofwar.avatar.client.uitools.Frame;
-import com.crowsofwar.avatar.client.uitools.Measurement;
-import com.crowsofwar.avatar.client.uitools.ScreenInfo;
-import com.crowsofwar.avatar.client.uitools.StartingPosition;
-import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
+import com.crowsofwar.avatar.client.uitools.*;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
@@ -46,7 +29,6 @@ import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
@@ -55,6 +37,17 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import java.io.IOException;
+import java.util.List;
+
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
+import static net.minecraft.client.Minecraft.getMinecraft;
+import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
 
 /**
  * 
@@ -77,14 +70,9 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private ComponentText title;
 	private UiComponentHandler handler;
 	
-<<<<<<< HEAD
 	public SkillsGui(int type) {
-		super(new ContainerSkillsGui(getMinecraft().thePlayer, type));
-=======
-	public SkillsGui(BendingType type) {
 		super(new ContainerSkillsGui(getMinecraft().player, type));
->>>>>>> 1.12
-		
+
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		BendingData data = AvatarPlayerData.fetcher().fetch(getMinecraft().player);
 		
@@ -116,7 +104,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
 			float scale = 1.4f;
-			tabs[i] = new ComponentBendingTab(types[i], types[i] == type);
+			BendingStyle style = BendingManager.getBending(i);
+			tabs[i] = new ComponentBendingTab(style, types[i] == type);
 			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
 			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2) * scale, 0));
 			tabs[i].setScale(scale);
@@ -135,14 +124,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
 		
-<<<<<<< HEAD
-		title = new ComponentText(
-				TextFormatting.BOLD + ChatSender.instance.processText(I18n.format("avatar.ui.skillsMenu"),
-						MSG_TITLE, BendingManager.getBending(type).getName().toLowerCase()));
-=======
 		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
-				I18n.format("avatar.ui.skillsMenu"), type.name().toLowerCase()));
->>>>>>> 1.12
+				I18n.format("avatar.ui.skillsMenu"), BendingManager.getBending(type).getName().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);
