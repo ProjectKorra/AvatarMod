@@ -16,15 +16,16 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.client.AvatarItemRenderRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,8 +58,8 @@ public class AvatarItems {
 		addItem(itemScroll = new ItemScroll());
 		addItem(itemWaterPouch = new ItemWaterPouch());
 		addItem(itemBisonWhistle = new ItemBisonWhistle());
-		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		addItem(itemBisonArmor = new ItemBisonArmor());
+		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		
 		stackScroll = new ItemStack(itemScroll);
 
@@ -67,14 +68,18 @@ public class AvatarItems {
 	}
 
 	private static void addItem(Item item) {
-        item.setRegistryName(new ResourceLocation("avatarmod", item.getUnlocalizedName()));
+		item.setRegistryName("avatarmod", item.getUnlocalizedName().substring(5));
+		item.setUnlocalizedName(item.getRegistryName().toString());
+        System.out.println(item + " -> " + item.getUnlocalizedName() + "," + item.getRegistryName());
         allItems.add(item);
     }
 
 	@SubscribeEvent
 	public void registerItems(RegistryEvent.Register<Item> e) {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
-		e.getRegistry().registerAll(itemsArr);
+		System.out.println(Arrays.toString(itemsArr));
+		e.getRegistry().registerAll(itemBisonSaddle, itemBisonWhistle, itemWaterPouch);
+		AvatarItemRenderRegister.register();;
 	}
 
 }

@@ -121,7 +121,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityWaterbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 1));
 		
-		AvatarItemRenderRegister.register();
+//		AvatarItemRenderRegister.register();
 		
 	}
 	
