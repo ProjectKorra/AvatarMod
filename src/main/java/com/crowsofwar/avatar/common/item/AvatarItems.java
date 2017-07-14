@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.client.AvatarItemRenderRegister;
+import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +25,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -62,7 +61,6 @@ public class AvatarItems {
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		
 		stackScroll = new ItemStack(itemScroll);
-
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());
 
 	}
@@ -70,16 +68,14 @@ public class AvatarItems {
 	private static void addItem(Item item) {
 		item.setRegistryName("avatarmod", item.getUnlocalizedName().substring(5));
 		item.setUnlocalizedName(item.getRegistryName().toString());
-        System.out.println(item + " -> " + item.getUnlocalizedName() + "," + item.getRegistryName());
         allItems.add(item);
     }
 
 	@SubscribeEvent
 	public void registerItems(RegistryEvent.Register<Item> e) {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
-		System.out.println(Arrays.toString(itemsArr));
-		e.getRegistry().registerAll(itemBisonSaddle, itemBisonWhistle, itemWaterPouch);
-		AvatarItemRenderRegister.register();;
+		e.getRegistry().registerAll(itemsArr);
+		AvatarMod.proxy.registerItemModels();
 	}
 
 }

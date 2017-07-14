@@ -121,10 +121,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityWaterbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 1));
 		
-//		AvatarItemRenderRegister.register();
-		
 	}
-	
+
 	@Override
 	public IControlsHandler getKeyHandler() {
 		return inputHandler;
@@ -226,7 +224,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		return kb == null ? new KeybindingWrapper() : new ClientKeybindWrapper(kb);
 		
 	}
-	
+
+	@Override
+	public void registerItemModels() {
+		AvatarItemRenderRegister.register();
+	}
+
 	/**
 	 * Finds all keybindings list via reflection. Performance-wise this is ok
 	 * since only supposed to be called once, after keybindings are registered

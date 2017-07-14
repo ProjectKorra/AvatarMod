@@ -82,5 +82,8 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	public KeybindingWrapper createKeybindWrapper(String keybindName) {
 		return new KeybindingWrapper();
 	}
-	
+
+	@Override
+	public void registerItemModels() {}
+
 }

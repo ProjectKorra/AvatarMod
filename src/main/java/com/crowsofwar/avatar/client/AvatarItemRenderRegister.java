@@ -26,6 +26,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
+
 /**
  * 
  * 
@@ -43,31 +45,31 @@ public class AvatarItemRenderRegister {
 		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
 		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
 		
-//		for (int i = 0; i < ScrollType.amount(); i++) {
-//
-//			ScrollType type = ScrollType.fromId(i);
-//
-//			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
-//					"inventory");
-//			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
-//					"inventory");
-//
-////			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsGlow[i]);
-////			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsRegular[i]);
-//
-//		}
+		for (int i = 0; i < ScrollType.amount(); i++) {
+
+			ScrollType type = ScrollType.fromId(i);
+
+			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
+					"inventory");
+			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
+					"inventory");
+
+			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsGlow[i]);
+			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsRegular[i]);
+
+		}
 		
 		for (int i = 0; i <= 5; i++) {
 			register(AvatarItems.itemWaterPouch, i);
 		}
 		register(AvatarItems.itemBisonWhistle);
 		for (int i = 0; i <= 3; i++) {
-//			register(AvatarItems.itemBisonArmor, i);
+			register(AvatarItems.itemBisonArmor, i);
 			register(AvatarItems.itemBisonSaddle, i);
 		}
 		
 	}
-	
+
 	/**
 	 * Registers the specified item with the given metadata(s). Maps it to
 	 * {unlocalizedName}.json. Note that if no metadata is specified, the item
@@ -84,9 +86,6 @@ public class AvatarItemRenderRegister {
 					"inventory");
 			
 			ModelLoader.setCustomModelResourceLocation(item.item(), meta, mrl);
-//			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item.item(), meta, mrl);
-
-			System.out.println(item + "#" + meta + " --> " + mrl);
 
 		}
 		
@@ -103,7 +102,7 @@ public class AvatarItemRenderRegister {
 			IBakedModel currentModel = e.getModelRegistry().getObject(mrlRegular);
 			ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
 					currentModel, e.getModelRegistry().getObject(mrlGlow));
-//			e.getModelRegistry().putObject(mrlRegular, customModel);
+			e.getModelRegistry().putObject(mrlRegular, customModel);
 
 		}
 		
