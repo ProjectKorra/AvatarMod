@@ -17,9 +17,6 @@
 
 package com.crowsofwar.avatar.common.command;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -27,6 +24,9 @@ import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeBranch;
 import com.crowsofwar.gorecore.tree.TreeCommand;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class AvatarCommand extends TreeCommand {
 	
@@ -64,7 +64,7 @@ public class AvatarCommand extends TreeCommand {
 	}
 	
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "avatar";
 	}
 	

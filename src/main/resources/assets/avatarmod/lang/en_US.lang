@@ -23,8 +23,6 @@ avatar.airbending=Airbending
 avatar.airbending.demonym=Airbender
 avatar.all=Universal
 
-avatar.ui.openSkillsMenu=Click to open
-
 avatar.cmd.bending=Manage a player's bending controllers.
 avatar.cmd.bending.list.noData=[error][error_value]${player}[/error_value] is not a registered account.[/error]
 avatar.cmd.bending.list.nonbender=[italic][value]${player}[/value] is a non-bender.[/italic]
@@ -67,6 +65,9 @@ avatar.airBubbleElytra=Cannot use air bubble with elytra
 avatar.bisonStats=Bison is at ${food}%% food, ${health}%% health, and ${domestication} domestication.
 avatar.outOfScrolls=This bender's pack is empty. They probably wouldn't have any scrolls to give you.
 avatar.abilityLocked=You need to unlock that ability before you can use it!
+avatar.bisonChestSlots1=Your bison does not have any
+avatar.bisonChestSlots2=inventory yet, but will gain
+avatar.bisonChestSlots3=more slots as it grows older.
 
 avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
@@ -231,6 +232,8 @@ avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
 avatar.radial.max=Level IV, [translate=avatar.ui.path_${xp}]
 avatar.radial.locked1=Ability Locked
 avatar.radial.locked2=Press ${level} to unlock
+avatar.radial.lockedCreative1=Creative mode
+avatar.radial.lockedCreative2=Locked but on creative mode
 
 avatar.getBending.title=Unlock Bending
 avatar.getBending.incompatible=You can only use scrolls of the same or universal type
@@ -262,7 +265,7 @@ entity.OtterPenguin.name=Otter Penguin
 
 itemGroup.avatar.items=Avatar Items
 
-item.avatarmod:scroll.all.name=Scroll 
+item.avatarmod:scroll.all.name=Scroll
 item.avatarmod:scroll.air.name=Airbending Scroll
 item.avatarmod:scroll.fire.name=Firebending Scroll
 item.avatarmod:scroll.earth.name=Earthbending Scroll

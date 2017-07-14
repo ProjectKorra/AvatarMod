@@ -81,9 +81,14 @@ public class SyncableEntityReference<T extends Entity> {
 	public T getEntity() {
 		// Cache may have an incorrect id; other side could have changed
 		// dataManager id, but not the cached entity id.
+<<<<<<< HEAD
 		Optional<UUID> optional = using.getDataManager().get(sync);
 		cache.setEntityId(optional.orNull());
 		return cache.getEntity(using.worldObj);
+=======
+		cache.setEntityId(using.getDataManager().get(sync));
+		return cache.getEntity(using.world);
+>>>>>>> 1.12
 	}
 	
 	public void setEntity(@Nullable T entity) {

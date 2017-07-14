@@ -105,12 +105,12 @@ public class ComponentInventorySlots extends UiComponent {
 			
 			int j = i - minIndex;
 			
-			slot.xDisplayPosition = 18 * scaleFactor() * (j % cols) + x;
-			slot.yDisplayPosition = 18 * scaleFactor() * (j / cols) + y;
-			slot.xDisplayPosition /= scaleFactor();
-			slot.yDisplayPosition /= scaleFactor();
-			slot.xDisplayPosition++;
-			slot.yDisplayPosition++;
+			slot.xPos = 18 * scaleFactor() * (j % cols) + x;
+			slot.yPos = 18 * scaleFactor() * (j / cols) + y;
+			slot.xPos /= scaleFactor();
+			slot.yPos /= scaleFactor();
+			slot.xPos++;
+			slot.yPos++;
 		}
 		
 		// Draw texture
@@ -128,8 +128,8 @@ public class ComponentInventorySlots extends UiComponent {
 		if (!isVisible()) {
 			for (int i = minIndex; i <= maxIndex; i++) {
 				Slot slot = container.getSlot(i);
-				slot.xDisplayPosition = -18;
-				slot.yDisplayPosition = -18;
+				slot.xPos = -18;
+				slot.yPos = -18;
 			}
 		}
 	}

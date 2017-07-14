@@ -17,8 +17,6 @@
 
 package com.crowsofwar.gorecore.util;
 
-import static java.util.UUID.randomUUID;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,6 +29,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import com.crowsofwar.gorecore.GoreCore;
@@ -224,7 +223,7 @@ public final class AccountUUIDs {
 			return idCache.get(username);
 		} else {
 			UUID found = requestId(username);
-			return cacheResults(username, found == null ? new AccountId() : new AccountId(found));
+			return cacheResults(username, found == null ? new AccountId(username) : new AccountId(found));
 		}
 	}
 	
@@ -396,10 +395,11 @@ public final class AccountUUIDs {
 		private final boolean temporary;
 		
 		/**
-		 * Creates a temporary ID using a randomly generated UUID
+		 * Creates a temporary ID using a generated UUID based on the username
 		 */
-		public AccountId() {
-			this.uuid = randomUUID();
+		public AccountId(String username) {
+			Random random = new Random(username.hashCode());
+			this.uuid = new UUID(random.nextLong(), random.nextLong());
 			this.temporary = true;
 		}
 		
@@ -432,7 +432,7 @@ public final class AccountUUIDs {
 		
 		/**
 		 * Returns whether this ID is temporary. If an error occurred when
-		 * accessing Mojang's API, a random UUID is generated and this will
+		 * accessing Mojang's API, an unofficial UUID is generated and this will
 		 * return true.
 		 * 
 		 * @return

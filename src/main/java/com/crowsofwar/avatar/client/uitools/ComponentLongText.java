@@ -52,19 +52,19 @@ public class ComponentLongText extends UiComponent {
 	
 	@Override
 	protected float componentHeight() {
-		return mc.fontRendererObj.FONT_HEIGHT * lines.size();
+		return mc.fontRenderer.FONT_HEIGHT * lines.size();
 	}
 	
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		for (int i = 0; i < lines.size(); i++) {
-			drawString(mc.fontRendererObj, lines.get(i), 0, i * mc.fontRendererObj.FONT_HEIGHT, 0xffffff);
+			drawString(mc.fontRenderer, lines.get(i), 0, i * mc.fontRenderer.FONT_HEIGHT, 0xffffff);
 		}
 	}
 	
 	private void calculateLines() {
 		
-		FontRenderer fr = mc.fontRendererObj;
+		FontRenderer fr = mc.fontRenderer;
 		lines = new ArrayList<>();
 		
 		String currentLine = "";

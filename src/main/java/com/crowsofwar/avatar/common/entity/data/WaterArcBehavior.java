@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -30,13 +28,14 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * 
@@ -64,7 +63,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		public WaterArcBehavior onUpdate(EntityWaterArc water) {
 			
 			EntityLivingBase owner = water.getOwner();
-			World world = owner.worldObj;
+			World world = owner.world;
 			
 			if (owner == null) return this;
 			
@@ -83,7 +82,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			motion.mul(.3 * 20);
 			water.velocity().set(motion);
 			
-			if (water.worldObj.isRemote && water.canPlaySplash()) {
+			if (water.world.isRemote && water.canPlaySplash()) {
 				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
 			}
 			
@@ -118,7 +117,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().expandXyz(0.9),
+					EntityLivingBase.class, entity.getEntityBoundingBox().expand(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {
@@ -127,7 +126,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
 						6 * entity.getDamageMult());
 				
-				if (!entity.worldObj.isRemote) {
+				if (!entity.world.isRemote) {
 					
 					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
 					

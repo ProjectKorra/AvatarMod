@@ -64,10 +64,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			flamesPerSecond = 8;
 		}
 		
-		if (!entity.worldObj.isRemote && Math.random() < flamesPerSecond / 20.0) {
+		if (!entity.world.isRemote && Math.random() < flamesPerSecond / 20.0) {
 			
 			Chi chi = data.chi();
-			float required = STATS_CONFIG.chiFlamethrowerSecond / 20f;
+			float required = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
 			if (level == 3 && path == AbilityTreePath.FIRST) {
 				required *= 1.5f;
 			}
@@ -77,12 +77,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			
 			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
 			
-			if (chi.getAvailableChi() >= required || infinite) {
-				
-				if (!infinite) {
-					chi.changeTotalChi(-required);
-					chi.changeAvailableChi(-required);
-				}
+			if (infinite || chi.consumeChi(required)) {
 				
 				Vector eye = getEyePos(entity);
 				
@@ -109,14 +104,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				flames.velocity().set(look.times(speedMult).plus(getVelocityMpS(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setLightsFires(lightsFires);
-				world.spawnEntityInWorld(flames);
+				world.spawnEntity(flames);
 				
-				if (entity.ticksExisted % 2 == 0) {
-					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
-							SoundCategory.PLAYERS, 0.2f, 0.8f);
-				}
+				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
+						SoundCategory.PLAYERS, 0.2f, 0.8f);
 				
 			} else {
+				// not enough chi
 				return true;
 			}
 		}

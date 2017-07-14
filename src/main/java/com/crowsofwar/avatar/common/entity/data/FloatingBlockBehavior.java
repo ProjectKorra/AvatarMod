@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
@@ -103,14 +104,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			force.normalize();
 			force.mul(3);
 			entity.velocity().set(force);
-			if (!entity.worldObj.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
+			if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
 				
 				entity.setDead();
-				entity.worldObj.setBlockState(new BlockPos(entity), entity.getBlockState());
+				entity.world.setBlockState(new BlockPos(entity), entity.getBlockState());
 				
 				SoundType sound = entity.getBlock().getSoundType();
 				if (sound != null) {
-					entity.worldObj.playSound(null, entity.getPosition(), sound.getPlaceSound(),
+					entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 				
@@ -150,14 +151,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			
 			if (entity.isCollided) {
-				if (!entity.worldObj.isRemote) entity.setDead();
+				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
 				
-				World world = entity.worldObj;
+				World world = entity.world;
 				Block block = entity.getBlockState().getBlock();
 				SoundType sound = block.getSoundType();
 				if (sound != null) {
-					entity.worldObj.playSound(null, entity.getPosition(), sound.getBreakSound(),
+					entity.world.playSound(null, entity.getPosition(), sound.getBreakSound(),
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 				
@@ -165,7 +166,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			entity.velocity().add(0, -9.81 / 20, 0);
 			
-			World world = entity.worldObj;
+			World world = entity.world;
 			if (!entity.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
 						entity.getExpandedHitbox());
@@ -202,7 +203,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			// Add XP
 			BendingData data = Bender.create(entity.getOwner()).getData();
-			if (!collided.worldObj.isRemote && data != null) {
+			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.blockThrowHit;
 				if (collided.getHealth() <= 0) {
 					xp = SKILLS_CONFIG.blockKill;
@@ -212,13 +213,25 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			// Remove the floating block & spawn particles
 			entity.onCollideWithSolid();
+<<<<<<< HEAD
 			if (!entity.worldObj.isRemote) {
 				if (data.getAbilityData(Ability.ABILITY_PICK_UP_BLOCK)
+=======
+			
+			// boomerang upgrade handling
+			if (!entity.world.isRemote) {
+				if (data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK)
+>>>>>>> 1.12
 						.isMasterPath(AbilityTreePath.FIRST)) {
 					
-					data.addStatusControl(StatusControl.THROW_BLOCK);
-					data.addStatusControl(StatusControl.PLACE_BLOCK);
-					return new FloatingBlockBehavior.PlayerControlled();
+					Chi chi = data.chi();
+					if (chi.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+						data.addStatusControl(StatusControl.THROW_BLOCK);
+						data.addStatusControl(StatusControl.PLACE_BLOCK);
+						return new FloatingBlockBehavior.PlayerControlled();
+					} else {
+						entity.setDead();
+					}
 					
 				} else {
 					entity.setDead();
@@ -317,7 +330,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			entity.velocity().add(0, -9.81 / 20, 0);
 			if (entity.isCollided) {
-				if (!entity.worldObj.isRemote) entity.setDead();
+				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
 			}
 			return this;

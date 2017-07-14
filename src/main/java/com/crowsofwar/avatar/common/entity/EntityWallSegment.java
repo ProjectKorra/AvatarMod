@@ -39,7 +39,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -175,7 +174,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
 			IBlockState state = getBlock(i);
 			if (state.getBlock() != Blocks.AIR)
-				worldObj.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
+				world.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
 		}
 	}
 	
@@ -185,15 +184,13 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		ignoreFrustumCheck = true;
 		velocity().setX(0);
 		velocity().setZ(0);
-		Vector vec = velocity().dividedBy(20);
-		moveEntity(MoverType.SELF, vec.x(), vec.y(), vec.z());
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
 	}
 	
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand stack) {
-		if (!this.isDead && !worldObj.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
+		if (!this.isDead && !world.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
 			setDead();
 			dropBlocks();
 			setBeenAttacked();

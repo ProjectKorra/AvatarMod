@@ -15,30 +15,42 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.gorecore.chat;
+package com.crowsofwar.gorecore.format;
 
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 
-public class ChatMessage {
+public class FormattedMessage {
 	
 	private final String translateKey;
 	private final String[] translateArgs;
 	private final MessageConfiguration config;
 	
-	private ChatMessage(MessageConfiguration config, String translateKey, String... translateArgs) {
+	private FormattedMessage(MessageConfiguration config, String translateKey, String... translateArgs) {
 		this.translateKey = translateKey;
 		this.translateArgs = translateArgs;
 		this.config = config;
 	}
 	
-	public ITextComponent getChatMessage(Object... formattingArgs) {
-		return new TextComponentTranslation(translateKey, formattingArgs);
+	public ITextComponent getChatMessage(boolean plaintext, Object... formatValues) {
+		
+		if (plaintext) {
+			@SuppressWarnings("deprecation")
+			String unformatted = I18n.translateToLocal(translateKey);
+			String formatted = FormattedMessageProcessor.formatPlaintext(this, unformatted, formatValues);
+			return new TextComponentString(formatted);
+		} else {
+			return new TextComponentTranslation(translateKey, formatValues);
+		}
+		
 	}
 	
-	public void send(ICommandSender sender, Object... formattingArgs) {
-		ChatSender.send(sender, this, formattingArgs);
+	public void send(ICommandSender sender, Object... formatValues) {
+		sender.sendMessage(getChatMessage(!(sender instanceof Entity), formatValues));
 	}
 	
 	public String getTranslateKey() {
@@ -65,7 +77,7 @@ public class ChatMessage {
 	 * @param translateArgs
 	 * @return
 	 */
-	public static ChatMessage newChatMessage(String translateKey, String... translateArgs) {
+	public static FormattedMessage newChatMessage(String translateKey, String... translateArgs) {
 		return newChatMessage(MessageConfiguration.DEFAULT, translateKey, translateArgs);
 	}
 	
@@ -78,9 +90,9 @@ public class ChatMessage {
 	 * @param translateArgs
 	 * @return
 	 */
-	public static ChatMessage newChatMessage(MessageConfiguration config, String translateKey,
+	public static FormattedMessage newChatMessage(MessageConfiguration config, String translateKey,
 			String... translateArgs) {
-		ChatMessage cm = new ChatMessage(config, translateKey, translateArgs);
+		FormattedMessage cm = new FormattedMessage(config, translateKey, translateArgs);
 		ChatSender.translateKeyToChatMessage.put(translateKey, cm);
 		return cm;
 	}

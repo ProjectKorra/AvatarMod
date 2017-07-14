@@ -73,7 +73,7 @@ public class Raytrace {
 		
 		if (!info.needsRaytrace()) return new Raytrace.Result();
 		
-		if (info.predicateRaytrace()) return predicateRaytrace(entity.worldObj, Vector.getEyePos(entity),
+		if (info.predicateRaytrace()) return predicateRaytrace(entity.world, Vector.getEyePos(entity),
 				Vector.getLookRectangular(entity), info.range, info.predicate);
 		
 		return getTargetBlock(entity, info.getRange(), info.raycastLiquids());
@@ -101,7 +101,7 @@ public class Raytrace {
 		Vector eyePos = Vector.getEyePos(entity);
 		Vector look = new Vector(entity.getLookVec());
 		Vector end = eyePos.plus(look.times(range));
-		RayTraceResult res = entity.worldObj.rayTraceBlocks(eyePos.toMinecraft(), end.toMinecraft(),
+		RayTraceResult res = entity.world.rayTraceBlocks(eyePos.toMinecraft(), end.toMinecraft(),
 				!raycastLiquids, raycastLiquids, true);
 		
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {

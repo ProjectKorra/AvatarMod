@@ -29,10 +29,8 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -88,18 +86,21 @@ public class EntityFireball extends AvatarEntity {
 		super.onUpdate();
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 		
-		Vector v = velocity().dividedBy(20);
-		moveEntity(MoverType.SELF, v.x(), v.y(), v.z());
-		
 		if (inWater) {
 			removeStatCtrl();
 			int particles = rand.nextInt(4) + 5;
 			for (int i = 0; i < particles; i++) {
-				worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
+				world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
 						rand.nextDouble() * .2, rand.nextGaussian() * .05);
 			}
-			worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+			world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 					SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f, false);
+			setDead();
+		}
+		
+		// TODO Temporary fix to avoid extra fireballs
+		// Add hook or something
+		if (getOwner() == null) {
 			setDead();
 		}
 		
@@ -158,9 +159,9 @@ public class EntityFireball extends AvatarEntity {
 			}
 		}
 		
-		Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, explosionSize,
-				!worldObj.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
-		if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
+				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
+		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 			
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
@@ -170,8 +171,8 @@ public class EntityFireball extends AvatarEntity {
 		if (destroyObsidian) {
 			for (EnumFacing dir : EnumFacing.values()) {
 				BlockPos pos = getPosition().offset(dir);
-				if (worldObj.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
-					worldObj.destroyBlock(pos, true);
+				if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
+					world.destroyBlock(pos, true);
 				}
 			}
 		}

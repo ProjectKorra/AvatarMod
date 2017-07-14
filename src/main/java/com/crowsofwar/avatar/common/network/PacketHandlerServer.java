@@ -17,13 +17,6 @@
 
 package com.crowsofwar.avatar.common.network;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarParticles;
@@ -45,23 +38,11 @@ import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
-import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
-import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
-import com.crowsofwar.avatar.common.network.packets.PacketSCycleBending;
-import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
-import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
-import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
-import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
-import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
+import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -79,6 +60,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * Implements IPacketHandler. Acts as a packet handler for integrated and
@@ -160,13 +148,13 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data != null) {
 			
 			Ability ability = packet.getAbility();
 			if (data.hasBending(ability.getBendingId())) {
-				if (!data.getAbilityData(ability).isLocked()) {
+				if (!data.getAbilityData(ability).isLocked() || player.capabilities.isCreativeMode) {
 					if (data.getAbilityCooldown() == 0) {
 						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
 						ability.execute(abilityCtx);
@@ -188,12 +176,12 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 		
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().playerEntity.worldObj,
+		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world,
 				id);
 		
 		if (player == null) {
 			
-			AvatarLog.warnHacking(ctx.getServerHandler().playerEntity.getName(),
+			AvatarLog.warnHacking(ctx.getServerHandler().player.getName(),
 					"Sent request data for a player with account '" + id
 							+ "', but that player is not in the world.");
 			return null;
@@ -213,7 +201,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	 * @return
 	 */
 	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		
@@ -232,8 +220,8 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleWallJump(PacketSWallJump packet, MessageContext ctx) {
 		
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-		World world = player.worldObj;
+		EntityPlayerMP player = ctx.getServerHandler().player;
+		World world = player.world;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data.hasBending(BendingManager.ID_AIRBENDING) && !data.isWallJumping()
@@ -302,14 +290,14 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
 		
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = AvatarPlayerData.fetcher().fetch(player);
 		int element = packet.getElement();
 		
 		if (BendingManager.hasBending(element)) {
 			if (data.hasBending(element)) {
 				int guiId = AvatarGuiHandler.getGuiId(element);
-				player.openGui(AvatarMod.instance, guiId, player.worldObj, 0, 0, 0);
+				player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
 			}
 		}
 		
@@ -317,7 +305,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleUseScroll(PacketSUseScroll packet, MessageContext ctx) {
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		AbilityData abilityData = data.getAbilityData(packet.getAbility());
@@ -348,7 +336,7 @@ public class PacketHandlerServer implements IPacketHandler {
 						ScrollType type = ScrollType.fromId(stack.getMetadata());
 						if (type.accepts(packet.getAbility().getBendingId())) {
 							
-							activeSlot.putStack(ItemStack.field_190927_a);
+							activeSlot.putStack(ItemStack.EMPTY);
 							abilityData.addLevel();
 							abilityData.setXp(0);
 							
@@ -366,12 +354,12 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleInventory(PacketSBisonInventory packet, MessageContext ctx) {
-		EntityPlayer player = ctx.getServerHandler().playerEntity;
+		EntityPlayer player = ctx.getServerHandler().player;
 		
 		if (player.getRidingEntity() instanceof EntitySkyBison) {
 			EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
 			if (bison.canPlayerViewInventory(player)) {
-				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, player.worldObj,
+				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, player.world,
 						bison.getId(), 0, 0);
 			}
 		}
@@ -381,11 +369,11 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleGetBending(PacketSOpenUnlockGui packet, MessageContext ctx) {
 		
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = AvatarPlayerData.fetcher().fetch(player);
 		
 		if (data.getAllBending().isEmpty()) {
-			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.worldObj, 0, 0, 0);
+			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.world, 0, 0, 0);
 		}
 		
 		return null;
@@ -394,7 +382,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleUnlockBending(PacketSUnlockBending packet, MessageContext ctx) {
 		
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = AvatarPlayerData.fetcher().fetch(player);
 		Container container = player.openContainer;
 		
@@ -408,12 +396,12 @@ public class PacketHandlerServer implements IPacketHandler {
 					data.addBending(bending);
 					
 					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
-						container.getSlot(i).putStack(ItemStack.field_190927_a);
+						container.getSlot(i).putStack(ItemStack.EMPTY);
 					}
 					
 					int guiId = AvatarGuiHandler.getGuiId(bending);
-					player.openGui(AvatarMod.instance, guiId, player.worldObj, 0, 0, 0);
-					
+					player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
+
 				}
 				
 			}
@@ -425,7 +413,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleConfirmTransfer(PacketSConfirmTransfer packet, MessageContext ctx) {
 		
-		EntityPlayer player = ctx.getServerHandler().playerEntity;
+		EntityPlayer player = ctx.getServerHandler().player;
 		TransferConfirmHandler.confirmTransfer(player);
 		
 		return null;
@@ -433,7 +421,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleCycleBending(PacketSCycleBending packet, MessageContext ctx) {
 		
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = Bender.getData(player);
 		
 		List<BendingStyle> controllers = data.getAllBending();

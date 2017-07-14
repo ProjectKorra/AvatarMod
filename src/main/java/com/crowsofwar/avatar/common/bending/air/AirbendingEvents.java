@@ -32,6 +32,8 @@ import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -65,7 +67,7 @@ public class AirbendingEvents {
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
 		EntityPlayer player = e.player;
-		World world = player.worldObj;
+		World world = player.world;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 		if (data.hasBending(BendingManager.ID_AIRBENDING)) {
 			tick(player, world, data);
@@ -74,7 +76,7 @@ public class AirbendingEvents {
 	
 	@SubscribeEvent
 	public void airBubbleShield(LivingAttackEvent e) {
-		World world = e.getEntity().worldObj;
+		World world = e.getEntity().world;
 		
 		EntityLivingBase attacked = (EntityLivingBase) e.getEntity();
 		
@@ -84,7 +86,11 @@ public class AirbendingEvents {
 				EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
 						attacked);
 				if (bubble != null) {
-					bubble.attackEntityFrom(e.getSource(), e.getAmount());
+					if (bubble.attackEntityFrom(e.getSource(), e.getAmount())) {
+						e.setCanceled(true);
+						world.playSound(null, attacked.getPosition(), SoundEvents.BLOCK_CLOTH_HIT,
+								SoundCategory.PLAYERS, 1, 1);
+					}
 				}
 			}
 		}

@@ -22,6 +22,7 @@ import static java.lang.Math.abs;
 import static net.minecraft.util.EnumFacing.NORTH;
 
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
+import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -110,8 +111,9 @@ public class EntityWall extends AvatarEntity {
 			seg.position().setY(lowest - seg.height);
 		}
 		
+		velocity().set(Vector.ZERO);
 		this.noClip = true;
-		moveEntity(MoverType.SELF, 0, slowest / 20, 0);
+		move(MoverType.SELF, 0, slowest / 20, 0);
 	}
 	
 	/**

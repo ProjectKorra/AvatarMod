@@ -75,7 +75,7 @@ public class OwnerAttribute {
 			Consumer<EntityLivingBase> setOwnerCallback) {
 		this.entity = entity;
 		this.sync = sync;
-		this.world = entity.worldObj;
+		this.world = entity.world;
 		this.setOwnerCallback = setOwnerCallback;
 		this.entity.getDataManager().register(sync, new NoBenderInfo());
 	}

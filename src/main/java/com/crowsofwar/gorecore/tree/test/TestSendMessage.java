@@ -19,7 +19,7 @@ package com.crowsofwar.gorecore.tree.test;
 
 import java.util.List;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.NodeFunctional;
@@ -31,13 +31,13 @@ import com.crowsofwar.gorecore.tree.NodeFunctional;
  */
 public class TestSendMessage extends NodeFunctional {
 	
-	private final ChatMessage message;
+	private final FormattedMessage message;
 	
 	/**
 	 * @param name
 	 * @param op
 	 */
-	public TestSendMessage(String name, ChatMessage message) {
+	public TestSendMessage(String name, FormattedMessage message) {
 		super(name, false);
 		this.message = message;
 	}

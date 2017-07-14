@@ -86,8 +86,13 @@ public class WaterSkateHandler extends TickHandler {
 	
 	private void tryStartSkating(BendingData data, EntityLivingBase player) {
 		
+<<<<<<< HEAD
 		if (!player.worldObj.isRemote && data.hasStatusControl(SKATING_START)) {
 			if (shouldSkate(player, data.getAbilityData(AbilityWaterSkate.ID))) {
+=======
+		if (!player.world.isRemote && data.hasStatusControl(SKATING_START)) {
+			if (shouldSkate(player, data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE))) {
+>>>>>>> 1.12
 				data.removeStatusControl(SKATING_START);
 				data.addStatusControl(SKATING_JUMP);
 			}
@@ -103,10 +108,10 @@ public class WaterSkateHandler extends TickHandler {
 		
 		AbilityData abilityData = data.getAbilityData(AbilityWaterSkate.ID);
 		
-		World world = player.worldObj;
+		World world = player.world;
 		int yPos = getSurfacePos(player);
 		
-		if (!player.worldObj.isRemote && !shouldSkate(player, abilityData)) {
+		if (!player.world.isRemote && !shouldSkate(player, abilityData)) {
 			return true;
 		} else {
 			
@@ -184,7 +189,7 @@ public class WaterSkateHandler extends TickHandler {
 	 * Determine if the player is in the ideal conditions to water-skate.
 	 */
 	private boolean shouldSkate(EntityLivingBase player, AbilityData data) {
-		IBlockState below = player.worldObj.getBlockState(new BlockPos(player.getPosition()).down());
+		IBlockState below = player.world.getBlockState(new BlockPos(player.getPosition()).down());
 		int surface = getSurfacePos(player);
 		
 		boolean allowWaterfallSkating = data.isMasterPath(AbilityTreePath.FIRST);
@@ -203,7 +208,7 @@ public class WaterSkateHandler extends TickHandler {
 	 */
 	private int getSurfacePos(EntityLivingBase player) {
 		
-		World world = player.worldObj;
+		World world = player.world;
 		if (!player.isInWater()) return (int) player.posY;
 		
 		Block in = world.getBlockState(player.getPosition()).getBlock();

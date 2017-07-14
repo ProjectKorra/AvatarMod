@@ -91,5 +91,10 @@ public interface AvatarCommonProxy {
 	 * Looks up keybinding by name
 	 */
 	KeybindingWrapper createKeybindWrapper(String keybindName);
-	
+
+	/**
+	 * Register the item models so they can be configured to use the correct textures
+	 */
+	public void registerItemModels();
+
 }

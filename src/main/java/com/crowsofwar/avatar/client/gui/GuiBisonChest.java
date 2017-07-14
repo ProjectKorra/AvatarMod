@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -43,7 +44,7 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	private float lastMouseY;
 	
 	public GuiBisonChest(IInventory playerInv, EntitySkyBison bison) {
-		super(new ContainerBisonChest(playerInv, bison.getInventory(), bison, getMinecraft().thePlayer));
+		super(new ContainerBisonChest(playerInv, bison.getInventory(), bison, getMinecraft().player));
 		this.playerInventory = playerInv;
 		this.bison = bison;
 		this.allowUserInput = false;
@@ -54,15 +55,17 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		int color = 0x404040;
-		this.fontRendererObj.drawString(bison.getInventory().getDisplayName().getUnformattedText(), 8, 6,
+		fontRenderer.drawString(bison.getInventory().getDisplayName().getUnformattedText(), 8, 6,
 				color);
-		this.fontRendererObj.drawString(playerInventory.getDisplayName().getUnformattedText(), 8,
+		fontRenderer.drawString(playerInventory.getDisplayName().getUnformattedText(), 8,
 				this.ySize - 96 + 2, color);
 		
 		if (bison.getInventory().getSizeInventory() == 2) {
-			// this.fontRendererObj.drawString("Bison will have inventory slots
-			// when it reaches adult age", 0, 0,
-			// 0xffffff);
+			for (int i = 1; i <= 3; i++) {
+				String key = "avatar.bisonChestSlots" + i;
+				String msg = I18n.format(key);
+				fontRenderer.drawString(msg, 80, fontRenderer.FONT_HEIGHT * (i + 1), 0xffffff);
+			}
 		}
 		
 	}

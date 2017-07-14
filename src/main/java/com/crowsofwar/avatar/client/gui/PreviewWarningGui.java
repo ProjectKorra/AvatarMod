@@ -69,8 +69,8 @@ public class PreviewWarningGui extends GuiScreen {
 		
 		int y = height / 6;
 		for (String ln : lines) {
-			drawString(fontRendererObj, ln, (width - fontRendererObj.getStringWidth(ln)) / 2, y, 0xffffff);
-			y += fontRendererObj.FONT_HEIGHT + 2;
+			drawString(fontRenderer, ln, (width - fontRenderer.getStringWidth(ln)) / 2, y, 0xffffff);
+			y += fontRenderer.FONT_HEIGHT + 2;
 		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);

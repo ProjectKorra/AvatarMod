@@ -17,35 +17,11 @@
 
 package com.crowsofwar.avatar;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static net.minecraft.init.Biomes.*;
-import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
-
-import java.util.List;
-
-import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.AvatarCommonProxy;
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.AvatarPlayerTick;
-import com.crowsofwar.avatar.common.AvatarScrollDrops;
-import com.crowsofwar.avatar.common.BisonInventoryPreventDismount;
-import com.crowsofwar.avatar.common.FallAbsorptionHandler;
-import com.crowsofwar.avatar.common.HumanBenderSpawner;
-import com.crowsofwar.avatar.common.PrisonActionCanceller;
-import com.crowsofwar.avatar.common.TemporaryWaterHandler;
-import com.crowsofwar.avatar.common.TransferConfirmHandler;
+import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
-import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
-import com.crowsofwar.avatar.common.bending.earth.AbilityMining;
-import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
-import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
-import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
+import com.crowsofwar.avatar.common.bending.air.*;
+import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
@@ -59,63 +35,18 @@ import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
-import com.crowsofwar.avatar.common.config.ConfigChi;
-import com.crowsofwar.avatar.common.config.ConfigClient;
-import com.crowsofwar.avatar.common.config.ConfigMobs;
-import com.crowsofwar.avatar.common.config.ConfigSkills;
-import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.config.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
-import com.crowsofwar.avatar.common.entity.EntityAirBubble;
-import com.crowsofwar.avatar.common.entity.EntityAirGust;
-import com.crowsofwar.avatar.common.entity.EntityAirblade;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
-import com.crowsofwar.avatar.common.entity.EntityFireball;
-import com.crowsofwar.avatar.common.entity.EntityFlames;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.entity.EntityIcePrison;
-import com.crowsofwar.avatar.common.entity.EntityIceShard;
-import com.crowsofwar.avatar.common.entity.EntityIceShield;
-import com.crowsofwar.avatar.common.entity.EntityRavine;
-import com.crowsofwar.avatar.common.entity.EntityWall;
-import com.crowsofwar.avatar.common.entity.EntityWallSegment;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
-import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
-import com.crowsofwar.avatar.common.entity.EntityWave;
-import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
-import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.avatar.common.entity.data.WallBehavior;
-import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
-import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
-import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
-import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
-import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
-import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.item.AvatarCrafting;
 import com.crowsofwar.avatar.common.item.AvatarDungeonLoot;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
-import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
-import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
-import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
-import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
-import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
-import com.crowsofwar.avatar.common.network.packets.PacketSCycleBending;
-import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
-import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
-import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
-import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
-import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
+import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
@@ -135,6 +66,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static net.minecraft.init.Biomes.*;
+import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
 		updateJSON = "http://av2.io/updates.json")
@@ -177,7 +114,10 @@ public class AvatarMod {
 		HumanBenderSpawner.register();
 		BisonInventoryPreventDismount.register();
 		PrisonActionCanceller.register();
-		
+
+		SleepChiRegenHandler.register();
+		BisonLeftClickHandler.register();
+
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 		
@@ -259,8 +199,7 @@ public class AvatarMod {
 		STATS_CONFIG.loadBlocks();
 		
 		proxy.init();
-		AvatarCrafting.register();
-		
+
 	}
 	
 	@EventHandler

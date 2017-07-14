@@ -19,7 +19,7 @@ package com.crowsofwar.gorecore.tree.test;
 
 import java.util.List;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.ArgumentList;
 import com.crowsofwar.gorecore.tree.CommandCall;
@@ -43,12 +43,12 @@ public class TestBuyVideogames extends NodeFunctional {
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		ArgumentList args = call.popArguments(this);
 		int amount = args.get(argAmount);
-		call.getFrom().addChatMessage(new TextComponentTranslation("test.buyVideogames", amount));
+		call.getFrom().sendMessage(new TextComponentTranslation("test.buyVideogames", amount));
 		return null;
 	}
 	
 	@Override
-	public ChatMessage getInfoMessage() {
+	public FormattedMessage getInfoMessage() {
 		return TestMessages.MSG_VIDEOGAME_HELP;
 	}
 	

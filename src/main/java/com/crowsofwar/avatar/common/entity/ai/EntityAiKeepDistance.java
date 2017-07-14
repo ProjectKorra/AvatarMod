@@ -51,11 +51,11 @@ public class EntityAiKeepDistance extends EntityAIBase {
 			
 			if (vec3d == null) {
 				return false;
-			} else if (entity.getDistanceSq(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord) < entity
+			} else if (entity.getDistanceSq(vec3d.x, vec3d.y, vec3d.z) < entity
 					.getDistanceSqToEntity(target)) {
 				return false;
 			} else {
-				path = entity.getNavigator().getPathToXYZ(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord);
+				path = entity.getNavigator().getPathToXYZ(vec3d.x, vec3d.y, vec3d.z);
 				return path != null;
 			}
 			

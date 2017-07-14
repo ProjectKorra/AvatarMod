@@ -1,0 +1,24 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "ii ",
+    " si",
+    "ddd"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "e": {
+      "item": "avatarmod:scroll",
+      "data": 4
+    }
+  },
+  "result": {
+    "item": "avatarmod:bison_whistle",
+    "data": 0
+  }
+}

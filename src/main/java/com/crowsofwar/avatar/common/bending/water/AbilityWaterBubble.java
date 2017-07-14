@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 import java.util.UUID;
@@ -80,9 +81,10 @@ public class AbilityWaterBubble extends WaterAbility {
 					bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
 					bubble.setOwner(entity);
 					bubble.setSourceBlock(ctx.getLevel() >= 2);
-					world.spawnEntityInWorld(bubble);
+					world.spawnEntity(bubble);
 					
 					data.addStatusControl(StatusControl.THROW_BUBBLE);
+					data.getAbilityData(this).addXp(SKILLS_CONFIG.createBubble);
 					
 					if (!ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 						world.setBlockToAir(lookPos);

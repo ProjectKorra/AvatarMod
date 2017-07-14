@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -65,6 +66,42 @@ public class EntityAirGust extends EntityArc {
 				|| ticksExisted > 80) {
 			setDead();
 		}
+	}
+	
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		EntityLivingBase owner = getOwner();
+		if (!entity.world.isRemote && entity != owner) {
+			
+			BendingData data = Bender.create(owner).getData();
+			float xp = 0;
+			if (data != null) {
+				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_GUST);
+				xp = abilityData.getTotalXp();
+				abilityData.addXp(SKILLS_CONFIG.airGustHit);
+			}
+			
+			Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
+			velocity.setY(airGrab ? -1 : 1);
+			velocity.mul(airGrab ? -0.8 : 1);
+			
+			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+			afterVelocityAdded(entity);
+			
+			setDead();
+			
+			if (entity instanceof AvatarEntity) {
+				if (((AvatarEntity) entity).tryDestroy()) {
+					entity.setDead();
+				}
+			}
+			
+		}
+	}
+	
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return true;
 	}
 	
 	@Override
@@ -124,6 +161,7 @@ public class EntityAirGust extends EntityArc {
 		}
 		
 		@Override
+<<<<<<< HEAD
 		protected void onCollision(Entity entity) {
 			if (!entity.worldObj.isRemote && entity != owner) {
 				
@@ -155,6 +193,8 @@ public class EntityAirGust extends EntityArc {
 		}
 		
 		@Override
+=======
+>>>>>>> 1.12
 		public void onUpdate() {
 			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {

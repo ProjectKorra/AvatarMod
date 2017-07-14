@@ -64,7 +64,7 @@ public class AiFireArc extends BendingAi {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		if (entity.getAttackTarget() == null) return false;
 		
@@ -126,7 +126,7 @@ public class AiFireArc extends BendingAi {
 	@Override
 	public void resetTask() {
 		
-		EntityFireArc fire = AvatarEntity.lookupEntity(entity.worldObj, EntityFireArc.class, //
+		EntityFireArc fire = AvatarEntity.lookupEntity(entity.world, EntityFireArc.class, //
 				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
 						&& arc.getOwner() == entity);
 		

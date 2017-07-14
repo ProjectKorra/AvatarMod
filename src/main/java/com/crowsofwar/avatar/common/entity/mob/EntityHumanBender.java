@@ -184,15 +184,15 @@ public abstract class EntityHumanBender extends EntityBender {
 				EntityPlayer entityplayer = (EntityPlayer) entityIn;
 				ItemStack itemstack = this.getHeldItemMainhand();
 				ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack()
-						: ItemStack.field_190927_a;
+						: ItemStack.EMPTY;
 				
-				if (!itemstack.func_190926_b() && !itemstack1.func_190926_b()
+				if (!itemstack.isEmpty() && !itemstack1.isEmpty()
 						&& itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD) {
 					float f1 = 0.25F + EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
 					
 					if (this.rand.nextFloat() < f1) {
 						entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-						this.worldObj.setEntityState(entityplayer, (byte) 30);
+						this.world.setEntityState(entityplayer, (byte) 30);
 					}
 				}
 			}
@@ -210,14 +210,14 @@ public abstract class EntityHumanBender extends EntityBender {
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack.getItem() == Items.DIAMOND && !worldObj.isRemote) {
+		if (stack.getItem() == Items.DIAMOND && !world.isRemote) {
 			
 			if (scrollsLeft > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {
 					// Take diamond
 					scrollsLeft--;
 					if (!player.capabilities.isCreativeMode) {
-						stack.func_190918_g(1);
+						stack.shrink(1);
 					}
 				}
 			} else {

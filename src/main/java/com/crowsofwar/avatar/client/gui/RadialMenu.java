@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.client.gui;
 
 import static com.crowsofwar.avatar.AvatarMod.proxy;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
+import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
@@ -29,12 +29,13 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -46,7 +47,7 @@ import net.minecraft.util.text.TextFormatting;
 
 public class RadialMenu extends Gui {
 	
-	private static final ChatMessage MSG_RADIAL_XP = newChatMessage("avatar.radial.xp", "level", "xp");
+	private static final FormattedMessage MSG_RADIAL_XP = newChatMessage("avatar.radial.xp", "level", "xp");
 	
 	/**
 	 * Center of rotation X position for radial_segment.png
@@ -130,9 +131,9 @@ public class RadialMenu extends Gui {
 		
 		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
 		int x = resolution.getScaledWidth() / 2;
-		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT * 1.5);
+		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT * 1.5);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
 		if (data != null) {
 			
 			AbilityData abilityData = data.getAbilityData(ability);
@@ -145,29 +146,40 @@ public class RadialMenu extends Gui {
 				secondArgs[1] = (int) (abilityData.getXp()) + "";
 				
 				if (abilityData.getLevel() == 3) {
-					secondKey = "avatar.radial.max";
-					secondArgs[1] = abilityData.getPath().name().toLowerCase();
+					String path = abilityData.getPath() == AbilityTreePath.FIRST ? "1" : "2";
+					secondKey = nameKey + ".lvl4_" + path;
 				}
-				if (abilityData.isLocked()) {
+				boolean creative = mc.player.capabilities.isCreativeMode;
+				if (abilityData.isLocked() && !creative) {
 					secondKey = "avatar.radial.locked2";
 					secondArgs[0] = AvatarMod.proxy.getKeyHandler().getDisplayName(AvatarControl.KEY_SKILLS)
 							+ "";
 					nameKey = "avatar.radial.locked1";
 				}
+				if (abilityData.isLocked() && creative) {
+					secondKey = "avatar.radial.lockedCreative2";
+					nameKey = "avatar.radial.lockedCreative1";
+				}
 				
 			}
 			String second = I18n.format(secondKey);
 			
-			second = ChatSender.instance.processText(second, MSG_RADIAL_XP,
+			// in the case of level 4 upgrades, the upgrade name is displayed
+			// cut out the second line
+			if (second.contains(" ;; ")) {
+				second = second.substring(0, second.indexOf(" ;; "));
+			}
+			
+			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
 					(Object[]) ArrayUtils.addAll(secondArgs, abilityData.getLevel() + ""));
 			
-			drawCenteredString(mc.fontRendererObj, second, x,
-					(int) (resolution.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 0.5),
+			drawCenteredString(mc.fontRenderer, second, x,
+					(int) (resolution.getScaledHeight() / 2 + mc.fontRenderer.FONT_HEIGHT * 0.5),
 					0xffffff);
 			
 		}
 		
-		drawCenteredString(mc.fontRendererObj, I18n.format(nameKey), x, y, 0xffffff);
+		drawCenteredString(mc.fontRenderer, I18n.format(nameKey), x, y, 0xffffff);
 		
 	}
 	
@@ -211,12 +223,18 @@ public class RadialMenu extends Gui {
 			int centerX = resolution.getScaledWidth() / 2, centerY = resolution.getScaledHeight() / 2;
 			MenuTheme theme = controller.getRadialMenu().getTheme();
 			
+<<<<<<< HEAD
 			drawCenteredString(mc.fontRendererObj,
 					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getName()),
 					centerX, centerY - mc.fontRendererObj.FONT_HEIGHT, theme.getText());
 			
 			drawCenteredString(mc.fontRendererObj, I18n.format("avatar.ui.openSkillsMenu"), centerX,
 					centerY + mc.fontRendererObj.FONT_HEIGHT / 4, 0xffffff);
+=======
+			drawCenteredString(mc.fontRenderer,
+					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getControllerName()),
+					centerX, centerY - mc.fontRenderer.FONT_HEIGHT, theme.getText());
+>>>>>>> 1.12
 			
 		}
 		
@@ -226,7 +244,7 @@ public class RadialMenu extends Gui {
 				if (controls[i] == null) continue;
 				if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
 					
-					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.thePlayer,
+					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player,
 							controls[i].getRaytrace());
 					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], raytrace));
 					AvatarUiRenderer.fade(segments[i]);

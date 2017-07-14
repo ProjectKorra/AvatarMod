@@ -59,10 +59,10 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		
 		for (int i = 0; i <= 3; i++) {
-			subItems.add(new ItemStack(item, 1, i));
+			subItems.add(new ItemStack(this, 1, i));
 		}
 		
 	}

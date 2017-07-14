@@ -20,8 +20,8 @@ package com.crowsofwar.gorecore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.crowsofwar.gorecore.chat.ChatSender;
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
+import com.crowsofwar.gorecore.format.ChatSender;
 import com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy;
 import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
 import com.crowsofwar.gorecore.tree.test.GoreCoreChatMessages;
@@ -41,7 +41,7 @@ public class GoreCore {
 	
 	public static final String MOD_ID = "gorecore";
 	public static final String MOD_NAME = "GoreCore";
-	public static final String MOD_VERSION = "1.11.2-0.4.1";
+	public static final String MOD_VERSION = "1.11.2-0.4.2";
 	
 	@SidedProxy(clientSide = "com.crowsofwar.gorecore.proxy.GoreCoreClientProxy", serverSide = "com.crowsofwar.gorecore.proxy.GoreCoreCommonProxy")
 	public static GoreCoreCommonProxy proxy;

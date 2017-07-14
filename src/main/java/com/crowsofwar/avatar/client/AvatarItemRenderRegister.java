@@ -16,18 +16,17 @@
 */
 package com.crowsofwar.avatar.client;
 
-import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
-
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
 /**
  * 
@@ -47,17 +46,17 @@ public class AvatarItemRenderRegister {
 		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
 		
 		for (int i = 0; i < ScrollType.amount(); i++) {
-			
+
 			ScrollType type = ScrollType.fromId(i);
-			
+
 			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
 					"inventory");
 			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
 					"inventory");
-			
+
 			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsGlow[i]);
 			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsRegular[i]);
-			
+
 		}
 		
 		for (int i = 0; i <= 5; i++) {
@@ -70,14 +69,14 @@ public class AvatarItemRenderRegister {
 		}
 		
 	}
-	
+
 	/**
 	 * Registers the specified item with the given metadata(s). Maps it to
 	 * {unlocalizedName}.json. Note that if no metadata is specified, the item
 	 * will not be registered.
 	 */
 	private static void register(AvatarItem item, int... metadata) {
-		
+
 		if (metadata.length == 0) {
 			metadata = new int[1];
 		}
@@ -87,7 +86,7 @@ public class AvatarItemRenderRegister {
 					"inventory");
 			
 			ModelLoader.setCustomModelResourceLocation(item.item(), meta, mrl);
-			
+
 		}
 		
 	}
@@ -99,15 +98,12 @@ public class AvatarItemRenderRegister {
 			
 			ModelResourceLocation mrlRegular = locationsRegular[i];
 			ModelResourceLocation mrlGlow = locationsGlow[i];
-			
-			Object obj = e.getModelRegistry().getObject(mrlRegular);
-			if (obj instanceof IBakedModel) {
-				IBakedModel currentModel = (IBakedModel) obj;
-				ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
-						currentModel, e.getModelRegistry().getObject(mrlGlow));
-				e.getModelRegistry().putObject(mrlRegular, customModel);
-			}
-			
+
+			IBakedModel currentModel = e.getModelRegistry().getObject(mrlRegular);
+			ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
+					currentModel, e.getModelRegistry().getObject(mrlGlow));
+			e.getModelRegistry().putObject(mrlRegular, customModel);
+
 		}
 		
 	}

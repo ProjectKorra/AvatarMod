@@ -62,7 +62,7 @@ public class ComponentAbilityTree extends UiComponent {
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		
-		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer).getAbilityData(ability);
+		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.player).getAbilityData(ability);
 		
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		

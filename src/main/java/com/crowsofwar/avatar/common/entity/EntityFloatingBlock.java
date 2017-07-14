@@ -40,7 +40,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -211,7 +210,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	public void setID(int id) {
-		if (!worldObj.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
+		if (!world.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
 	}
 	
 	public static EntityFloatingBlock getFromID(World world, int id) {
@@ -247,7 +246,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
-		worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
+		world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
 				Block.getStateId(getBlockState()));
 	}
 	
@@ -269,7 +268,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			
 		}
 		
-		if (!worldObj.isRemote) velocity().mul(getFriction());
+		if (!world.isRemote) velocity().mul(getFriction());
 		
 		prevPosX = posX;
 		prevPosY = posY;
@@ -277,11 +276,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		lastTickPosX = posX;
 		lastTickPosY = posY;
 		lastTickPosZ = posZ;
-		motionX = velocity().x() / 20;
-		motionY = velocity().y() / 20;
-		motionZ = velocity().z() / 20;
-		
-		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
@@ -300,23 +294,25 @@ public class EntityFloatingBlock extends AvatarEntity {
 					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
 		
-		if (!worldObj.isRemote && areItemDropsEnabled()) {
-			List<ItemStack> drops = getBlock().getDrops(worldObj, new BlockPos(this), getBlockState(), 0);
+		if (!world.isRemote && areItemDropsEnabled()) {
+			List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
 			for (ItemStack is : drops) {
-				EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, is);
-				worldObj.spawnEntityInWorld(ei);
+				EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
+				world.spawnEntity(ei);
 			}
 		}
 		AbilityData data = Bender.getData(getOwner()).getAbilityData(Ability.ABILITY_PICK_UP_BLOCK);
 		if (data.isMasterPath(AbilityTreePath.SECOND)) {
 			
-			Explosion explosion = new Explosion(worldObj, this, posX, posY, posZ, 2, false, false);
-			if (!ForgeEventFactory.onExplosionStart(worldObj, explosion)) {
+			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
+			if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 				explosion.doExplosionA();
 				explosion.doExplosionB(true);
 			}
 			
 		}
+		
+		setDead();
 		
 	}
 	
@@ -325,7 +321,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 	
 	public void setFriction(float friction) {
-		if (!worldObj.isRemote) dataManager.set(SYNC_FRICTION, friction);
+		if (!world.isRemote) dataManager.set(SYNC_FRICTION, friction);
 	}
 	
 	public void drop() {

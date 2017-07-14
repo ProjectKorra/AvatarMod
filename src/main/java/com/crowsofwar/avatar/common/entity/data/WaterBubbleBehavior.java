@@ -127,13 +127,13 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 				
 				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
 				
-				if (!entity.worldObj.isRemote) {
+				if (!entity.world.isRemote) {
 					
-					entity.worldObj.setBlockState(entity.getPosition(), state, 3);
+					entity.world.setBlockState(entity.getPosition(), state, 3);
 					entity.setDead();
 					
 					if (!entity.isSourceBlock()) {
-						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.worldObj);
+						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.world);
 						wd.addTemporaryWaterLocation(entity.getPosition());
 					}
 					

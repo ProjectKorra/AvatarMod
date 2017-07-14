@@ -17,12 +17,6 @@
 
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
-
-import java.lang.reflect.Field;
-import java.util.List;
-
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
@@ -34,6 +28,7 @@ import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
+<<<<<<< HEAD
 import com.crowsofwar.avatar.client.render.RenderAirBubble;
 import com.crowsofwar.avatar.client.render.RenderAirGust;
 import com.crowsofwar.avatar.client.render.RenderAirblade;
@@ -51,11 +46,15 @@ import com.crowsofwar.avatar.client.render.RenderWallSegment;
 import com.crowsofwar.avatar.client.render.RenderWaterArc;
 import com.crowsofwar.avatar.client.render.RenderWaterBubble;
 import com.crowsofwar.avatar.client.render.RenderWave;
+=======
+import com.crowsofwar.avatar.client.render.*;
+>>>>>>> 1.12
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+<<<<<<< HEAD
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
@@ -75,6 +74,10 @@ import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
 import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.entity.mob.EntityWaterbender;
+=======
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.mob.*;
+>>>>>>> 1.12
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
@@ -82,7 +85,6 @@ import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -97,6 +99,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
 @SideOnly(Side.CLIENT)
 public class AvatarClientProxy implements AvatarCommonProxy {
@@ -154,10 +164,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityWaterbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 1));
 		
-		AvatarItemRenderRegister.register();
-		
 	}
-	
+
 	@Override
 	public IControlsHandler getKeyHandler() {
 		return inputHandler;
@@ -258,7 +266,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		return kb == null ? new KeybindingWrapper() : new ClientKeybindWrapper(kb);
 		
 	}
-	
+
+	@Override
+	public void registerItemModels() {
+		AvatarItemRenderRegister.register();
+	}
+
 	/**
 	 * Finds all keybindings list via reflection. Performance-wise this is ok
 	 * since only supposed to be called once, after keybindings are registered
@@ -268,8 +281,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			
 			Field field = KeyBinding.class.getDeclaredFields()[0];
 			field.setAccessible(true);
-			List<KeyBinding> list = (List<KeyBinding>) field.get(null);
-			this.allKeybindings = list;
+			Map<String, KeyBinding> kbMap = (Map<String, KeyBinding>) field.get(null);
+			this.allKeybindings = kbMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
 			
 		} catch (Exception ex) {
 			AvatarLog.error(

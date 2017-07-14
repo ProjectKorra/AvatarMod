@@ -87,14 +87,14 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			
 			time++;
 			
-			if (entity.isCollided || (!entity.worldObj.isRemote && time > 100)) {
+			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
 			
 			entity.velocity().add(0, -9.81 / 40, 0);
 			
-			World world = entity.worldObj;
+			World world = entity.world;
 			if (!entity.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
 						entity.getExpandedHitbox());
@@ -128,13 +128,13 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			BendingData data = Bender.create(entity.getOwner()).getData();
-			if (!collided.worldObj.isRemote && data != null) {
+			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
 				data.getAbilityData(ABILITY_FIREBALL).addXp(xp);
 			}
 			
 			// Remove the fireball & spawn particles
-			if (!entity.worldObj.isRemote) entity.setDead();
+			if (!entity.world.isRemote) entity.setDead();
 			entity.onCollideWithSolid();
 		}
 		

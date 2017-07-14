@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.List;
+
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -34,11 +36,10 @@ import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -65,10 +66,11 @@ public class StatCtrlAirJump extends StatusControl {
 		boolean allowDoubleJump = abilityData.getLevel() == 3
 				&& abilityData.getPath() == AbilityTreePath.FIRST;
 		
-		BlockPos pos = entity.getPosition().add(0, -0.2, 0);
-		boolean onGround = world.isSideSolid(pos, EnumFacing.DOWN)
-				|| world.getBlockState(pos).getBlock() == Blocks.LEAVES
-				|| world.getBlockState(pos).getBlock() == Blocks.LEAVES2;
+		// Figure out whether entity is on ground by finding collisions with
+		// ground - if found a collision box, then is not on ground
+		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity,
+				entity.getEntityBoundingBox().expand(0, 0.5, 0));
+		boolean onGround = !collideWithGround.isEmpty();
 		
 		if (onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
 			
@@ -102,7 +104,7 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 			
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.worldObj, AvatarParticles.getParticleAir(), 2, 6,
+			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6,
 					new Vector(entity), new Vector(1, 0, 1));
 			
 			float fallAbsorption = 0;
@@ -122,8 +124,9 @@ public class StatCtrlAirJump extends StatusControl {
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
 				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}
+			abilityData.addXp(STATS_CONFIG.chiAirJump);
 			
-			entity.worldObj.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
 			
 			return true;

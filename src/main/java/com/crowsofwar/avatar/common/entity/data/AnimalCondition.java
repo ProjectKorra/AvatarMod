@@ -82,7 +82,7 @@ public class AnimalCondition {
 		
 		lastDistance = distance;
 		
-		if (!animal.worldObj.isRemote) {
+		if (!animal.world.isRemote) {
 			boolean enoughFood = getFoodPoints() >= foodRegenPoints;
 			boolean correctTime = animal.ticksExisted % 40 == 0;
 			if (enoughFood && correctTime) {

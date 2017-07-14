@@ -17,12 +17,12 @@
 
 package com.crowsofwar.gorecore.tree;
 
-import java.util.Arrays;
-
 import net.minecraft.command.ICommandSender;
 
+import java.util.Arrays;
+
 public class CommandCall {
-	
+
 	private ICommandSender from;
 	private boolean isOp;
 	private String[] passedArgs;
@@ -34,7 +34,7 @@ public class CommandCall {
 		this.argumentIndex = 0;
 		
 		// TODO find a better way to find out if Command sender is operator
-		isOp = from.canCommandSenderUseCommand(2, "gamemode");
+		isOp = from.canUseCommand(2, "gamemode");
 		
 	}
 	

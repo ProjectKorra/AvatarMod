@@ -57,7 +57,7 @@ public class AiWaterArc extends BendingAi {
 	protected void startExec() {}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target == null) return false;
@@ -104,7 +104,7 @@ public class AiWaterArc extends BendingAi {
 	@Override
 	public void resetTask() {
 		
-		EntityWaterArc water = AvatarEntity.lookupEntity(entity.worldObj, EntityWaterArc.class, //
+		EntityWaterArc water = AvatarEntity.lookupEntity(entity.world, EntityWaterArc.class, //
 				arc -> arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled
 						&& arc.getOwner() == entity);
 		

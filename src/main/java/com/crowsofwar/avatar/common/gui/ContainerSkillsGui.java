@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.gui;
 
-import static net.minecraft.item.ItemStack.field_190927_a;
+import static net.minecraft.item.ItemStack.EMPTY;
 
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
@@ -103,11 +103,11 @@ public class ContainerSkillsGui extends Container {
 			
 			if (index == 0) {
 				if (!mergeItemStack(stack, 1, 37, true)) {
-					return field_190927_a;
+					return EMPTY;
 				}
 			} else {
 				if (!mergeItemStack(stack, 0, 1, true)) {
-					return field_190927_a;
+					return EMPTY;
 				}
 			}
 			
@@ -115,22 +115,22 @@ public class ContainerSkillsGui extends Container {
 			
 		}
 		
-		return field_190927_a;
+		return EMPTY;
 	}
 	
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
 		ItemStack scroll = inventory.getStackInSlot(0);
-		if (scroll != field_190927_a) {
+		if (scroll != EMPTY) {
 			player.dropItem(scroll, false);
-			inventory.setInventorySlotContents(0, field_190927_a);
+			inventory.setInventorySlotContents(0, EMPTY);
 		}
 		
 		ItemStack scroll2 = inventory.getStackInSlot(1);
-		if (scroll2 != field_190927_a) {
+		if (scroll2 != EMPTY) {
 			player.dropItem(scroll2, false);
-			inventory.setInventorySlotContents(1, field_190927_a);
+			inventory.setInventorySlotContents(1, EMPTY);
 		}
 		
 	}

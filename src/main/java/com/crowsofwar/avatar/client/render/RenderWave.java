@@ -25,7 +25,7 @@ import com.crowsofwar.avatar.common.entity.EntityWave;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -59,7 +59,7 @@ public class RenderWave extends Render<EntityWave> {
 		float fz = (float) z;
 		
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer vb = t.getBuffer();
+		BufferBuilder vb = t.getBuffer();
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		
@@ -90,7 +90,7 @@ public class RenderWave extends Render<EntityWave> {
 	
 	private void drawFace(Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f pos4) {
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer vb = t.getBuffer();
+		BufferBuilder vb = t.getBuffer();
 		
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(pos1.x, pos1.y, pos1.z).tex(0, 0).endVertex();

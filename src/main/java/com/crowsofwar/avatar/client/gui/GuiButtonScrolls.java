@@ -36,19 +36,20 @@ public class GuiButtonScrolls extends GuiButton {
 		super(buttonId, x, y, 18, 18, "");
 		this.scrollSlot = container.inventorySlots.get(0);
 	}
-	
+
+	// drawButton
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		
 		this.enabled = scrollSlot.getHasStack();
 		
 		if (this.visible) {
 			
-			FontRenderer fontrenderer = mc.fontRendererObj;
+			FontRenderer fontrenderer = mc.fontRenderer;
 			mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition
-					&& mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+			this.hovered = mouseX >= x && mouseY >= y
+					&& mouseX < x + this.width && mouseY < y + this.height;
 			
 			int offset = this.getHoverState(this.hovered);
 			
@@ -61,7 +62,7 @@ public class GuiButtonScrolls extends GuiButton {
 			
 			//@formatter:off
 			
-			drawTexturedModalRect(xPosition, yPosition,
+			drawTexturedModalRect(x, y,
 					58 + offset * 18, 0,
 					width, height);
 			

@@ -36,7 +36,7 @@ public class FallAbsorptionHandler {
 	@SubscribeEvent
 	public void onFall(LivingFallEvent e) {
 		Entity entity = e.getEntity();
-		if (entity instanceof EntityPlayer && !entity.worldObj.isRemote) {
+		if (entity instanceof EntityPlayer && !entity.world.isRemote) {
 			EntityPlayer player = (EntityPlayer) entity;
 			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
 			if (data.getFallAbsorption() != 0) {

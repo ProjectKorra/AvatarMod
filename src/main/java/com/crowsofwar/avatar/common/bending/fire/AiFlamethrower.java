@@ -46,7 +46,7 @@ public class AiFlamethrower extends BendingAi {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		if (entity.getAttackTarget() == null) return false;
 		

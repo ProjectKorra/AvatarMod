@@ -16,10 +16,6 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -27,8 +23,8 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,6 +38,9 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * 
@@ -101,8 +100,8 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltips,
-			boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltips,
+							   ITooltipFlag advanced) {
 		
 		int bendingType = getScrollType(stack).getBendingId();
 		String bendingTypeName = bendingType == 0 ? "all" : BendingManager.getBending(bendingType).getName();
@@ -124,10 +123,10 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		
 		for (int meta = 0; meta < ScrollType.values().length; meta++) {
-			subItems.add(new ItemStack(item, 1, meta));
+			subItems.add(new ItemStack(this, 1, meta));
 		}
 		
 	}

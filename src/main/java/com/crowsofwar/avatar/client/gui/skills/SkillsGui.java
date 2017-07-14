@@ -44,8 +44,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -63,7 +63,7 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class SkillsGui extends GuiContainer implements AvatarGui {
 	
-	private static final ChatMessage MSG_TITLE = ChatMessage.newChatMessage("avatar.ui.skillsMenu",
+	private static final FormattedMessage MSG_TITLE = FormattedMessage.newChatMessage("avatar.ui.skillsMenu",
 			"bending");
 	
 	private AbilityCard[] cards;
@@ -77,11 +77,16 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private ComponentText title;
 	private UiComponentHandler handler;
 	
+<<<<<<< HEAD
 	public SkillsGui(int type) {
 		super(new ContainerSkillsGui(getMinecraft().thePlayer, type));
+=======
+	public SkillsGui(BendingType type) {
+		super(new ContainerSkillsGui(getMinecraft().player, type));
+>>>>>>> 1.12
 		
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
-		BendingData data = AvatarPlayerData.fetcher().fetch(getMinecraft().thePlayer);
+		BendingData data = AvatarPlayerData.fetcher().fetch(getMinecraft().player);
 		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
@@ -110,9 +115,11 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
-			tabs[i] = new ComponentBendingTab(types[i], false, types[i] == type);
+			float scale = 1.4f;
+			tabs[i] = new ComponentBendingTab(types[i], types[i] == type);
 			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
-			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2), 0));
+			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2) * scale, 0));
+			tabs[i].setScale(scale);
 			handler.add(tabs[i]);
 		}
 		
@@ -128,9 +135,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
 		
+<<<<<<< HEAD
 		title = new ComponentText(
 				TextFormatting.BOLD + ChatSender.instance.processText(I18n.format("avatar.ui.skillsMenu"),
 						MSG_TITLE, BendingManager.getBending(type).getName().toLowerCase()));
+=======
+		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
+				I18n.format("avatar.ui.skillsMenu"), type.name().toLowerCase()));
+>>>>>>> 1.12
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);
@@ -181,7 +193,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer);
+		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
 		
 		handler.draw(partialTicks, mouseX, mouseY);
 		

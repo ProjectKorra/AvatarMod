@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-
 import com.crowsofwar.gorecore.util.ImmutableVector;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -38,8 +36,6 @@ import net.minecraft.world.World;
  */
 public class ControlPoint {
 	
-	private static int nextId = 1;
-	
 	protected EntityArc arc;
 	protected EntityLivingBase owner;
 	
@@ -57,7 +53,7 @@ public class ControlPoint {
 		internalPosition = new Vector();
 		internalVelocity = new Vector();
 		this.arc = arc;
-		this.world = arc.worldObj;
+		this.world = arc.world;
 		this.size = size;
 		
 		double sizeHalfed = size / 2;
@@ -128,18 +124,7 @@ public class ControlPoint {
 		position().add(velocity().times(0.05));
 		velocity().mul(0.4);
 		
-		List<Entity> collisions = world.getEntitiesWithinAABBExcludingEntity(arc, hitbox);
-		if (!collisions.isEmpty()) {
-			Entity collidedWith = collisions.get(0);
-			onCollision(collisions.get(0));
-		}
-		
 	}
-	
-	/**
-	 * Called whenever the control point is in contact with this entity.
-	 */
-	protected void onCollision(Entity entity) {}
 	
 	/**
 	 * @deprecated Use {@link #position()}.{@link Vector#set(Vector) set(pos)}
@@ -153,7 +138,7 @@ public class ControlPoint {
 	 * Move this control point by the designated offset, not checking for
 	 * collisions.
 	 * <p>
-	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}
+	 * Not to be confused with {@link Entity#move(double, double, double)}
 	 * .
 	 */
 	public void move(double x, double y, double z) {
@@ -164,7 +149,7 @@ public class ControlPoint {
 	 * Move this control point by the designated offset, not checking for
 	 * collisions.
 	 * <p>
-	 * Not to be confused with {@link Entity#moveEntity(double, double, double)}
+	 * Not to be confused with {@link Entity#move(double, double, double)}
 	 * .
 	 */
 	public void move(Vector offset) {

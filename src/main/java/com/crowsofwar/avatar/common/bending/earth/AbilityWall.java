@@ -140,9 +140,9 @@ public class AbilityWall extends EarthAbility {
 					
 				}
 				
-				world.spawnEntityInWorld(seg);
+				world.spawnEntity(seg);
 			}
-			world.spawnEntityInWorld(wall);
+			world.spawnEntity(wall);
 			
 		}
 		

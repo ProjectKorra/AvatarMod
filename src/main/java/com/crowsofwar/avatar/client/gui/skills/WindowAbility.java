@@ -41,8 +41,8 @@ import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.ChatSender;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -57,8 +57,8 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class WindowAbility {
 	
-	private static final ChatMessage MSG_UNLOCK_TEXT = ChatMessage.newChatMessage("avatar.ui.unlockDesc",
-			"bending");
+	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage
+			.newChatMessage("avatar.ui.unlockDesc", "bending");
 	
 	private final Ability ability;
 	private final SkillsGui gui;
@@ -165,8 +165,9 @@ public class WindowAbility {
 		handler.add(unlockTitle);
 		
 		String bendingName = BendingManager.getBending(ability.getBendingId()).getName().toLowerCase();
-		String text = ChatSender.instance.processText(I18n.format("avatar.ui.unlockDesc"), MSG_UNLOCK_TEXT,
-				bendingName);
+		String text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT,
+				I18n.format("avatar.ui.unlockDesc"), bendingName);
+
 		unlockText = new ComponentLongText(text, frameRight.getDimensions());
 		unlockText.setFrame(frameRight);
 		unlockText.setZLevel(4);
@@ -199,7 +200,7 @@ public class WindowAbility {
 		int mouseX = Mouse.getX() * width / mc.displayWidth;
 		int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
 		
-		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.thePlayer).getAbilityData(ability);
+		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.player).getAbilityData(ability);
 		
 		unlockTitle.setVisible(data.isLocked());
 		unlockText.setVisible(data.isLocked());
@@ -268,7 +269,7 @@ public class WindowAbility {
 	 */
 	public boolean canRenderTooltip(ItemStack stack) {
 		
-		AbilityData data = AvatarPlayerData.fetcher().fetch(getMinecraft().thePlayer).getAbilityData(ability);
+		AbilityData data = AvatarPlayerData.fetcher().fetch(getMinecraft().player).getAbilityData(ability);
 		if (data.isLocked()) {
 			return true;
 		}

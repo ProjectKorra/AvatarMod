@@ -16,13 +16,11 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -36,6 +34,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 /**
  * 
@@ -64,8 +64,8 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltips,
-			boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltips,
+							   ITooltipFlag advanced) {
 		
 		int meta = stack.getMetadata();
 		tooltips.add(I18n.format("avatar.tooltip.water_pouch" + (meta == 0 ? ".empty" : ""), meta));
@@ -74,10 +74,10 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		
 		for (int meta = 0; meta <= 5; meta++) {
-			subItems.add(new ItemStack(item, 1, meta));
+			subItems.add(new ItemStack(this, 1, meta));
 		}
 		
 	}

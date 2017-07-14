@@ -24,7 +24,7 @@ import com.crowsofwar.gorecore.tree.TreeCommand;
 public class TreeTest extends TreeCommand {
 	
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "test";
 	}
 	

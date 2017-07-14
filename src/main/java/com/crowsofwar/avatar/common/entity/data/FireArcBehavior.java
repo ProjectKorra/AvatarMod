@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -29,7 +27,6 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,6 +34,10 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -67,14 +68,14 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			if (owner == null) {
 				return this;
 			}
-			World world = owner.worldObj;
+			World world = owner.world;
 			
 			Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 					Math.toRadians(owner.rotationPitch));
 			Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
 			Vector motion = lookPos.minus(new Vector(entity));
 			motion.mul(.3);
-			entity.moveEntity(MoverType.SELF, motion.x(), motion.y(), motion.z());
+			entity.move(MoverType.SELF, motion.x(), motion.y(), motion.z());
 			
 			return this;
 			
@@ -101,16 +102,18 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			entity.velocity().add(0, -9.81 / 60, 0);
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().expandXyz(0.9),
+					EntityLivingBase.class, entity.getEntityBoundingBox().expand(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {
-				if (collided != entity.getOwner()) return this;
-				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
-				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
-						6 * entity.getDamageMult());
 				
-				if (!entity.worldObj.isRemote) {
+				double push = STATS_CONFIG.fireballSettings.push;
+				collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
+				collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
+						STATS_CONFIG.fireballSettings.damage * entity.getDamageMult());
+				collided.setFire(3);
+				
+				if (!entity.world.isRemote) {
 					BendingData data = Bender.create(entity.getOwner()).getData();
 					if (data != null) {
 						data.getAbilityData(Ability.ABILITY_FIRE_ARC)

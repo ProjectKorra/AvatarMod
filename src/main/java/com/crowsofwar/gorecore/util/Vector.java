@@ -17,8 +17,6 @@
 
 package com.crowsofwar.gorecore.util;
 
-import static java.lang.Math.*;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +25,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+
+import static java.lang.Math.*;
 
 /**
  * A mutable 3-dimensional vector using doubles.
@@ -91,7 +91,7 @@ public class Vector {
 	 *            Vector to copy
 	 */
 	public Vector(Vec3d vec) {
-		this(vec.xCoord, vec.yCoord, vec.zCoord);
+		this(vec.x, vec.y, vec.z);
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class Vector {
 	 */
 	public Vector(Entity entity) {
 		this(entity.posX, entity.posY, entity.posZ);
-		// if (entity instanceof EntityPlayer && entity.worldObj.isRemote)
+		// if (entity instanceof EntityPlayer && entity.world.isRemote)
 		// setY(y - 1.62);
 	}
 	
@@ -648,7 +648,7 @@ public class Vector {
 		double d0 = x;
 		double d1 = y;
 		double d2 = z;
-		double d3 = MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+		double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
 		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
 		double rotX = -Math.atan2(d1, d3);
 		double rotZ = 0;

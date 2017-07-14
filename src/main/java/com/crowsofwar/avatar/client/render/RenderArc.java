@@ -30,7 +30,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -88,11 +88,6 @@ public abstract class RenderArc extends Render {
 		Vector from = new Vector();
 		Vector to = pointPos.minus(leaderPos);
 		
-		Vector diff = to.minus(from);
-		
-		double ySize = 1;
-		int textureRepeat = 2;
-		
 		Minecraft.getMinecraft().renderEngine.bindTexture(getTexture());
 		
 		GlStateManager.pushMatrix();
@@ -103,20 +98,8 @@ public abstract class RenderArc extends Render {
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		
-		// double size = arc.width / 2;
 		double sizeLeader = point.size() / 2;
 		double sizePoint = leader.size() / 2;
-		
-		double distance = to.sqrMagnitude();
-		// @formatter:off
-//		double sizeMultiplier = distance < 1 ? -.7 * distance + 1.7 : 1 / Math.sqrt(distance);
-//		if (this instanceof RenderAirGust) sizeMultiplier = 1; // FIX BAD CODE
-//																// AAARgh
-		double sizeMultiplier = 1;
-		// @formatter:on
-		
-		sizeLeader *= sizeMultiplier;
-		sizePoint *= sizeMultiplier;
 		
 		Vector lookingEuler = Vector.getRotationTo(from, to);
 		
@@ -166,7 +149,8 @@ public abstract class RenderArc extends Render {
 			double v1, double u2, double v2) {
 		
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer vb = t.getBuffer();
+		BufferBuilder vb = t.getBuffer();
+		t.getBuffer();
 		
 		if (normal == 0 || normal == 2) {
 			

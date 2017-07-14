@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.gui;
 
 import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
-import static net.minecraft.item.ItemStack.field_190927_a;
+import static net.minecraft.item.ItemStack.EMPTY;
 
 import java.util.Arrays;
 import java.util.List;
@@ -87,11 +87,11 @@ public class ContainerGetBending extends Container {
 			
 			if (index >= 0 && index <= 2) {
 				if (!mergeItemStack(stack, 1, 37, true)) {
-					return field_190927_a;
+					return EMPTY;
 				}
 			} else {
 				if (!mergeItemStack(stack, 0, 3, true)) {
-					return field_190927_a;
+					return EMPTY;
 				}
 			}
 			
@@ -99,20 +99,15 @@ public class ContainerGetBending extends Container {
 			
 		}
 		
-		return field_190927_a;
+		return EMPTY;
 	}
 	
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
 		
-		if (!player.worldObj.isRemote) {
-			for (int i = 0; i < getSize(); i++) {
-				ItemStack stack = getSlot(i).getStack();
-				if (!stack.func_190926_b()) {
-					player.dropItem(stack, false);
-				}
-			}
+		if (!player.world.isRemote) {
+			clearContainer(player, player.world, inventory);
 		}
 		
 	}
@@ -198,7 +193,7 @@ public class ContainerGetBending extends Container {
 				
 				for (int i = 0; i <= 2; i++) {
 					ItemStack stack2 = getSlot(i).getStack();
-					if (!stack2.func_190926_b()) {
+					if (!stack2.isEmpty()) {
 						ScrollType type2 = getScrollType(stack2);
 						if (!type1.isCompatibleWith(type2)) {
 							incompatibleMsgTicks = 100;

@@ -16,22 +16,12 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import java.util.Set;
-
 import com.google.common.collect.Sets;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIFollowParent;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMate;
-import net.minecraft.entity.ai.EntityAIPanic;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
-import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -42,6 +32,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
+
+import java.util.Set;
 
 /**
  * 
@@ -84,7 +76,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 	
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable) {
-		return new EntityOtterPenguin(worldObj);
+		return new EntityOtterPenguin(world);
 	}
 	
 	@Override
@@ -95,7 +87,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		
-		if (!super.processInteract(player, hand) && !worldObj.isRemote) {
+		if (!super.processInteract(player, hand) && !world.isRemote) {
 			
 			if (!isBreedingItem(player.getHeldItemMainhand())
 					&& !isBreedingItem(player.getHeldItemOffhand())) {
@@ -129,9 +121,10 @@ public class EntityOtterPenguin extends EntityAnimal {
 	public boolean canPassengerSteer() {
 		return super.canPassengerSteer();
 	}
-	
+
+	// moveWithHeading
 	@Override
-	public void moveEntityWithHeading(float strafe, float forward) {
+	public void travel(float strafe, float forward, float unknown) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 		
 		if (this.isBeingRidden() && this.canBeSteered()) {
@@ -151,7 +144,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 				
 				setAIMoveSpeed((float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
 						.getAttributeValue());
-				super.moveEntityWithHeading(strafe, forward);
+				super.travel(strafe, forward, unknown);
 				
 			} else {
 				this.motionX = 0.0D;
@@ -162,7 +155,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 			this.prevLimbSwingAmount = this.limbSwingAmount;
 			double d1 = this.posX - this.prevPosX;
 			double d0 = this.posZ - this.prevPosZ;
-			float f1 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+			float f1 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
 			
 			if (f1 > 1.0F) {
 				f1 = 1.0F;
@@ -173,7 +166,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
-			super.moveEntityWithHeading(strafe, forward);
+			super.travel(strafe, forward, unknown);
 		}
 	}
 	

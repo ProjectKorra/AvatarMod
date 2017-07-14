@@ -17,17 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -36,14 +33,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * 
@@ -79,7 +75,7 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
-				worldObj.isRemote ? -1 : AvatarWorldData.getDataFromWorld(worldObj).nextEntityId());
+				world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
 	}
 	
 	/**
@@ -200,24 +196,31 @@ public abstract class AvatarEntity extends Entity {
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-					if (worldObj.getBlockState(pos).getBlock() == Blocks.FIRE) {
-						worldObj.setBlockToAir(pos);
-						worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
 								SoundCategory.PLAYERS, 1, 1, false);
 					}
 				}
 			}
 		}
 		
+		if (isCollided) {
+			onCollideWithSolid();
+		}
+		
+		Vector v = velocity().dividedBy(20);
+		move(MoverType.SELF, v.x(), v.y(), v.z());
+		
 	}
 	
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
-		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
+		List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
 				EntitySelectors.<Entity>getTeamCollisionPredicate(this));
 		
 		if (!list.isEmpty()) {
-			int i = this.worldObj.getGameRules().getInt("maxEntityCramming");
+			int i = this.world.getGameRules().getInt("maxEntityCramming");
 			
 			if (i > 0 && list.size() > i - 1 && this.rand.nextInt(4) == 0) {
 				int j = 0;
@@ -229,7 +232,7 @@ public abstract class AvatarEntity extends Entity {
 				}
 				
 				if (j > i - 1) {
-					this.attackEntityFrom(DamageSource.field_191291_g, 6.0F);
+					this.attackEntityFrom(DamageSource.CRAMMING, 6.0F);
 				}
 			}
 			
@@ -291,7 +294,7 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	protected void breakBlock(BlockPos position) {
 		
-		IBlockState blockState = worldObj.getBlockState(position);
+		IBlockState blockState = world.getBlockState(position);
 		
 		Block destroyed = blockState.getBlock();
 		SoundEvent sound;
@@ -300,28 +303,28 @@ public abstract class AvatarEntity extends Entity {
 		} else {
 			sound = destroyed.getSoundType().getBreakSound();
 		}
-		worldObj.playSound(null, getPosition(), sound, SoundCategory.BLOCKS, 1, 1);
+		world.playSound(null, position, sound, SoundCategory.BLOCKS, 1, 1);
 		
 		// Spawn particles
 		
 		for (int i = 0; i < 7; i++) {
-			worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
+			world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
 					3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
 					3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
 		}
-		worldObj.setBlockToAir(getPosition());
+		world.setBlockToAir(position);
 		
 		// Create drops
 		
-		if (!worldObj.isRemote) {
-			List<ItemStack> drops = blockState.getBlock().getDrops(worldObj, position, blockState, 0);
+		if (!world.isRemote) {
+			List<ItemStack> drops = blockState.getBlock().getDrops(world, position, blockState, 0);
 			for (ItemStack stack : drops) {
-				EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
+				EntityItem item = new EntityItem(world, posX, posY, posZ, stack);
 				item.setDefaultPickupDelay();
 				item.motionX *= 2;
 				item.motionY *= 1.2;
 				item.motionZ *= 2;
-				worldObj.spawnEntityInWorld(item);
+				world.spawnEntity(item);
 			}
 		}
 		

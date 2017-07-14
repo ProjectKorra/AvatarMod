@@ -35,7 +35,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -91,29 +90,28 @@ public class EntityFlames extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		
-		Vector velocityPerTick = velocity().dividedBy(20);
-		moveEntity(MoverType.SELF, velocityPerTick.x(), velocityPerTick.y(), velocityPerTick.z());
+		super.onUpdate();
 		
 		velocity().mul(0.94);
 		
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
 		
-		Raytrace.Result raytrace = Raytrace.raytrace(worldObj, position(), velocity().copy().normalize(), 0.3,
+		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().copy().normalize(), 0.3,
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
 			velocity().set(velocity().reflect(new Vector(sideHit)).times(0.5));
 			
 			// Try to light firest
-			if (lightsFires && sideHit != EnumFacing.DOWN && !worldObj.isRemote) {
+			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {
 				
 				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(),
 						-sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());
 				
-				if (sideHit == EnumFacing.UP || worldObj.getBlockState(bouncingOff).getBlock()
-						.isFlammable(worldObj, bouncingOff, sideHit)) {
+				if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
+						.isFlammable(world, bouncingOff, sideHit)) {
 					
-					worldObj.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
+					world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
 					
 				}
 				
@@ -121,11 +119,11 @@ public class EntityFlames extends AvatarEntity {
 			
 		}
 		
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			BendingData data = Bender.create(owner).getData();
 			AbilityData abilityData = data.getAbilityData(Ability.ABILITY_FLAMETHROWER);
 			
-			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != owner && !(entity instanceof EntityFlames));
 			
 			for (Entity entity : collided) {
@@ -154,7 +152,7 @@ public class EntityFlames extends AvatarEntity {
 			setDead();
 			showExtinguished();
 		}
-		if (worldObj.isRainingAt(getPosition())) {
+		if (world.isRainingAt(getPosition())) {
 			setDead();
 			if (Math.random() < 0.3) showExtinguished();
 		}
@@ -166,12 +164,12 @@ public class EntityFlames extends AvatarEntity {
 	 */
 	private void showExtinguished() {
 		Random random = new Random();
-		if (worldObj.isRemote) {
-			worldObj.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
+		if (world.isRemote) {
+			world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
 					(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
 					(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
 		}
-		worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 				SoundCategory.PLAYERS, 0.3f, random.nextFloat() * 0.3f + 1.1f, false);
 	}
 	

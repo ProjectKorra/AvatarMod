@@ -47,7 +47,7 @@ public class EntityAiBisonSit extends EntityAIBase {
 	
 	@Override
 	public void startExecuting() {
-		World world = bison.worldObj;
+		World world = bison.world;
 		Vector bisonPos = Vector.getEntityPos(bison);
 		
 		int y;

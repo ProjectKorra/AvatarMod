@@ -29,7 +29,7 @@ public class ComponentText extends UiComponent {
 	private String text;
 	
 	public ComponentText(String text) {
-		this.fontRender = mc.fontRendererObj;
+		this.fontRender = mc.fontRenderer;
 		this.text = text;
 	}
 	

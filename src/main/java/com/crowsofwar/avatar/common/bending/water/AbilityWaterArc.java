@@ -95,7 +95,7 @@ public class AbilityWaterArc extends WaterAbility {
 				
 				water.setBehavior(new WaterArcBehavior.PlayerControlled());
 				
-				world.spawnEntityInWorld(water);
+				world.spawnEntity(water);
 				
 				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
 				
@@ -104,7 +104,7 @@ public class AbilityWaterArc extends WaterAbility {
 	}
 	
 	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
-		World world = entity.worldObj;
+		World world = entity.world;
 		
 		Vector eye = Vector.getEyePos(entity);
 		

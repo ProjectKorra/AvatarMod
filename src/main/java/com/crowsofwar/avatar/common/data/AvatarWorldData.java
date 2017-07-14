@@ -38,7 +38,7 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
 	public AvatarWorldData() {
 		super(WORLD_DATA_KEY);
-		nextEntityId = 0;
+		nextEntityId = 1;
 		scheduledDestroyBlocks = new ArrayList<>();
 		temporaryWater = new ArrayList<>();
 	}

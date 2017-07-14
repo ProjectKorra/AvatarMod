@@ -16,24 +16,22 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import static net.minecraft.client.renderer.GlStateManager.*;
-import static net.minecraft.util.math.MathHelper.cos;
-
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
-
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
+
+import static net.minecraft.client.renderer.GlStateManager.*;
+import static net.minecraft.util.math.MathHelper.cos;
 
 /**
  * 
@@ -131,7 +129,7 @@ public class RenderFireball extends Render<EntityFireball> {
 			double v1, double u2, double v2) {
 		
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer vb = t.getBuffer();
+		BufferBuilder vb = t.getBuffer();
 		
 		if (normal == 0 || normal == 2) {
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

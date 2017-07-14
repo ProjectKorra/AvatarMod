@@ -75,7 +75,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				
 				SoundType sound = floating.getBlock().getSoundType();
 				if (sound != null) {
-					floating.worldObj.playSound(null, floating.getPosition(), sound.getPlaceSound(),
+					floating.world.playSound(null, floating.getPosition(), sound.getPlaceSound(),
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 				

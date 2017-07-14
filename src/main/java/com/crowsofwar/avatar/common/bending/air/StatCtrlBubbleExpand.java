@@ -40,7 +40,7 @@ public class StatCtrlBubbleExpand extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		
-		List<EntityAirBubble> entities = entity.worldObj.getEntitiesWithinAABB(EntityAirBubble.class,
+		List<EntityAirBubble> entities = entity.world.getEntitiesWithinAABB(EntityAirBubble.class,
 				entity.getEntityBoundingBox(), bubble -> bubble.getOwner() == entity);
 		for (EntityAirBubble bubble : entities) {
 			bubble.dissipateLarge();

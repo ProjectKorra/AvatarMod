@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "gle",
+    "lll",
+    "s s"
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "l": {
+      "item": "minecraft:leather"
+    },
+    "e": {
+      "item": "minecraft:lead"
+    },
+    "s": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "avatarmod:bison_saddle",
+    "data": 0
+  }
+}

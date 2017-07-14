@@ -56,7 +56,7 @@ public class BisonSummonHandler extends TickHandler {
 	
 	private boolean trySummonBison(EntityLivingBase player) {
 		
-		List<EntitySkyBison> entities = player.worldObj.getEntities(EntitySkyBison.class,
+		List<EntitySkyBison> entities = player.world.getEntities(EntitySkyBison.class,
 				bison -> bison.getOwner() == player);
 		
 		if (!entities.isEmpty()) {

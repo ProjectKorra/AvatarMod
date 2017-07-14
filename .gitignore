@@ -1,8 +1,8 @@
 .gradle/
 .settings/
+.metadata/
 bin/
 build/
-gradle/
 run/
 eclipse/
 
@@ -11,9 +11,7 @@ eclipse/
 1.10_Client.launch
 1.10_Server.launch
 1.10_Client 2.launch
-gradlew
-gradlew.bat
-
+sonarqube.sh
 
 GoreCore_ClientUUIDCache.txt
 /config
@@ -35,3 +33,6 @@ Server.launch
 
 **/.sass-cache
 **/.sass-cache/*
+.idea/
+code.iml
+out/

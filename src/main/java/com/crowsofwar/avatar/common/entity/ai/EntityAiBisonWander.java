@@ -47,7 +47,6 @@ public class EntityAiBisonWander extends EntityAIBase {
 		if (entity.isSitting()) return false;
 		if (entity.getControllingPassenger() != null) return false;
 		if (entity.wantsGrass()) return false;
-		if (entity.getOwner() != null) return false;
 		
 		EntityMoveHelper moveHelper = entity.getMoveHelper();
 		
@@ -67,7 +66,7 @@ public class EntityAiBisonWander extends EntityAIBase {
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		return false;
 	}
 	

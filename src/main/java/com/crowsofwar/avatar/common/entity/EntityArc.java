@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -56,7 +55,7 @@ public abstract class EntityArc extends AvatarEntity {
 			points[i] = createControlPoint(size);
 		}
 		
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			setId(nextId++);
 		}
 		
@@ -101,23 +100,24 @@ public abstract class EntityArc extends AvatarEntity {
 		
 		ignoreFrustumCheck = true;
 		
-		Vector velPerTick = velocity().dividedBy(20);
-		moveEntity(MoverType.SELF, velPerTick.x(), velPerTick.y(), velPerTick.z());
+		updateControlPoints();
+		
+	}
+	
+	private void updateControlPoints() {
+		
+		// Set leader at the arc pos
+		
 		getLeader().position().set(posX, posY, posZ);
 		getLeader().velocity().set(velocity());
 		
-		for (ControlPoint cp : points)
-			cp.onUpdate();
-		
-		if (isCollided) {
-			onCollideWithSolid();
-		}
+		// Move control points to follow leader
 		
 		for (int i = 1; i < points.length; i++) {
 			
 			ControlPoint leader = points[i - 1];
 			ControlPoint p = points[i];
-			Vector leadPos = i == 0 ? velocity() : getLeader(i).position();
+			Vector leadPos = leader.position();
 			double sqrDist = p.position().sqrDist(leadPos);
 			
 			if (sqrDist > getControlPointTeleportDistanceSq()) {
@@ -132,11 +132,6 @@ public abstract class EntityArc extends AvatarEntity {
 				p.position().set(revisedOffset);
 				p.velocity().set(Vector.ZERO);
 				
-				// Vector diff = leader.position().minus(p.position());
-				// double speed = leader.velocity().magnitude();
-				//
-				// p.velocity().set(diff.normalize().times(speed));
-				
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 				
 				Vector diff = leader.position().minus(p.position());
@@ -146,6 +141,11 @@ public abstract class EntityArc extends AvatarEntity {
 				
 			}
 			
+		}
+		
+		// Update velocity
+		for (ControlPoint cp : points) {
+			cp.onUpdate();
 		}
 		
 	}
@@ -229,7 +229,7 @@ public abstract class EntityArc extends AvatarEntity {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender(float p_70070_1_) {
+	public int getBrightnessForRender() {
 		return 15728880;
 	}
 	

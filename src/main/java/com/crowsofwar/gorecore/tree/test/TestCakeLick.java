@@ -19,7 +19,7 @@ package com.crowsofwar.gorecore.tree.test;
 
 import java.util.List;
 
-import com.crowsofwar.gorecore.chat.ChatMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.ArgumentDirect;
 import com.crowsofwar.gorecore.tree.CommandCall;
 import com.crowsofwar.gorecore.tree.IArgument;
@@ -42,12 +42,12 @@ public class TestCakeLick extends NodeFunctional {
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		double gallons = call.popArguments(this).get(argGallons);
-		call.getFrom().addChatMessage(new TextComponentTranslation("test.lickCake", gallons));
+		call.getFrom().sendMessage(new TextComponentTranslation("test.lickCake", gallons));
 		return null;
 	}
 	
 	@Override
-	public ChatMessage getInfoMessage() {
+	public FormattedMessage getInfoMessage() {
 		return TestMessages.MSG_CAKE_LICK_HELP;
 	}
 	

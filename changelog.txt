@@ -1,26 +1,51 @@
-AV2 Changelog :: version a4.1
+AV2 Changelog :: version a4.2
 
-+ Added option to avoid blocks being destroyed by earthbenders in stats.yml : preventPickupBlockGriefing
-+ Added "/avatar xp" command to easily change ability level & path
+!! --- PLEASE NOTE --- !!
+||  Sky bison controls ||
+|| have changed - left ||
+|| click to mount them ||
+||     ~  also  ~      ||
+|| Bison whistles can  ||
+||     be crafted      ||
+||    bit.ly/2stv3aA   ||
+!! --- --- --- --- --- !!
 
-* Water pouches are no longer consumed in creative mode
-* Sky bison mating avoid overpopulation
-* Water arc "Boomerang" works when killed a mob
-* Airblade "Chainsaw" upgrade destroys harder blocks (up to hardness 2 vs 0.5)
-* Airblade "Chainsaw" can destroy multiple blocks
-* Special error message when trying to bind whistle to untamed bison
-* Flying bison have 50 instead of 10 hearts
-* Water pouches can hold up to 5 water instead of 3
+* New translations - notably Brazilian Portuguese (thanks Ferrujado)
+* Water pouches can now hold up to 5 water
+* New bending tab icons from FavouriteDragon
+* Skills menu opens at current bending
+* Regen chi on sleep
+* Fire arc does additional damage & push on hit
+* Floating block boomerang requires additional chi
+* Creative mode allows bypass locked abilities
+* Level 4 upgrade name is displayed in radial menu
+* Message when bison has no chest slots yet
+* Feeding tall grass to in-love bison stops it from breeding
+* Bison only follow you if you are holding a whistle
+* Control change, left-click bison to ride it
+* Control change, sneak-left-click bison to access inventory
+* Air bubble Undercurrent upgrade floats the player up
+* Ravine Fissure upgrade won't destroy blocks under player
+* Nerf air bubble Undercurrent health
+* Bison whistles can be crafted
+* Increase flamethrower chi requirements
 
-> Fix misspeilling of talhanation in mcmod.info (mods screen)
-> Fix glowing mobs w/ fireball bug
-> Fix sky bison not dropping the saddle and armor
-> Fix air jump on leaves block not working
-> Fix untamed bison are sitting
-> Fix firebenders don't watch/follow the player when aggressive
-> Fix ravine working on nonbendable blocks only, now only on bendable blocks
-> Fix skating jump's "Ground Pound" level IV upgrade not working
-> Fix fire arc "Boomerang" upgrade not working
-> Fix vanilla particles config option messes up vanilla particle sources (eg torch)
-> Fix air jump causing damage on landing
-> Fix wall not repelling mobs & players
+> Fix penguin, firebender, and airbender name tags being shown
+> Fix cracked account issues - gen fake account UUID based on username
+> Fix crash when killing entity without a registered lang file name
+> Fix wall w/ floating block causing item duplication
+> Fix issue w/ summoning sky bison (having to do with IDs)
+> Fix air jump not working issues (path block, on edge of block, etc)
+> Fix fire arc boomerang not working
+> Fix air jump XP not added
+> Fix fireballs remaining after firebender entity dies
+> Fix bison breeding too often (every 30-60 seconds)
+> Fix chat formatting messed up on server console
+> Fix air bubble Undercurrent upgrade not working on leaves
+> Fix bison saddle duplication
+> Fix no XP gain for water bubble
+> Fix airblade level II not faster
+> Fix air bubble not properly protecting from damage
+> Fix airblade chainblade issues
+> Fix crash in WAILA when looking at summoned sky bison
+> Remove old "click to open" prompt in radial menu

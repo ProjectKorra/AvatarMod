@@ -32,7 +32,6 @@ import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -80,7 +79,6 @@ public class EntityWaterBubble extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		
-		moveEntity(MoverType.SELF, velocity().x() / 20, velocity().y() / 20, velocity().z() / 20);
 		velocity().mul(0.9);
 		
 		WaterBubbleBehavior currentBehavior = getBehavior();
@@ -89,20 +87,20 @@ public class EntityWaterBubble extends AvatarEntity {
 		
 		if (ticksExisted % 5 == 0) {
 			BlockPos down = getPosition().down();
-			IBlockState downState = worldObj.getBlockState(down);
+			IBlockState downState = world.getBlockState(down);
 			if (downState.getBlock() == Blocks.FARMLAND) {
 				int moisture = downState.getValue(BlockFarmland.MOISTURE);
-				if (moisture < 7) worldObj.setBlockState(down,
+				if (moisture < 7) world.setBlockState(down,
 						Blocks.FARMLAND.getDefaultState().withProperty(BlockFarmland.MOISTURE, moisture + 1));
 			}
 		}
 		
 		boolean inWaterSource = false;
-		if (!worldObj.isRemote && ticksExisted % 2 == 1 && ticksExisted > 10) {
+		if (!world.isRemote && ticksExisted % 2 == 1 && ticksExisted > 10) {
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-					IBlockState state = worldObj.getBlockState(pos);
+					IBlockState state = world.getBlockState(pos);
 					if (state.getBlock() == Blocks.WATER && state.getValue(BlockLiquid.LEVEL) == 0) {
 						inWaterSource = true;
 						break;
@@ -111,7 +109,7 @@ public class EntityWaterBubble extends AvatarEntity {
 			}
 		}
 		
-		if (!worldObj.isRemote && inWaterSource) {
+		if (!world.isRemote && inWaterSource) {
 			setDead();
 			if (getOwner() != null) {
 				BendingData data = Bender.create(getOwner()).getData();

@@ -17,18 +17,10 @@
 
 package com.crowsofwar.gorecore.tree;
 
-import static com.crowsofwar.gorecore.chat.ChatMessage.newChatMessage;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.crowsofwar.gorecore.chat.ChatMessage;
-import com.crowsofwar.gorecore.chat.MessageConfiguration;
-import com.crowsofwar.gorecore.chat.MultiMessage;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.format.MessageConfiguration;
+import com.crowsofwar.gorecore.format.MultiMessage;
 import com.crowsofwar.gorecore.tree.TreeCommandException.Reason;
-
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -36,6 +28,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 public abstract class TreeCommand implements ICommand {
 	
@@ -51,7 +50,7 @@ public abstract class TreeCommand implements ICommand {
 	public TreeCommand(MessageConfiguration cfg) {
 		initChatMessages(cfg);
 		branchRoot = new NodeBranch(newChatMessage(cfg, "gc.tree.branchHelp.root", "command"),
-				getCommandName(), addCommands());
+				getName(), addCommands());
 		this.aliases = new ArrayList<>();
 	}
 	
@@ -61,12 +60,12 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	@Override
-	public String getCommandUsage(ICommandSender sender) {
+	public String getUsage(ICommandSender sender) {
 		return branchRoot.getHelp();
 	}
 	
 	@Override
-	public List getCommandAliases() {
+	public List getAliases() {
 		return aliases;
 	}
 	
@@ -86,7 +85,7 @@ public abstract class TreeCommand implements ICommand {
 			
 			CommandCall call = new CommandCall(sender, arguments);
 			
-			String path = "/" + getCommandName();
+			String path = "/" + getName();
 			
 			ICommandNode node = branchRoot;
 			while (node != null) {
@@ -117,7 +116,7 @@ public abstract class TreeCommand implements ICommand {
 			
 		} catch (TreeCommandException e) {
 			
-			sender.addChatMessage(new TextComponentTranslation(e.getMessage(), e.getFormattingArgs()));
+			sender.sendMessage(new TextComponentTranslation(e.getMessage(), e.getFormattingArgs()));
 		}
 		
 	}
@@ -133,7 +132,7 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender,
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender,
 			String[] sentArgs, BlockPos pos) {
 		
 		List<String> emptyList = Arrays.asList();
@@ -172,7 +171,7 @@ public abstract class TreeCommand implements ICommand {
 	}
 	
 	private void sendCommandHelp(ICommandSender sender) {
-		cmdHelpTop.send(sender, getCommandName());
+		cmdHelpTop.send(sender, getName());
 		cmdHelpCommandOverview.send(sender);
 		
 		MultiMessage multi = cmdHelpNodes.chain();
@@ -181,7 +180,7 @@ public abstract class TreeCommand implements ICommand {
 		for (int i = 0; i < allNodes.length; i++) {
 			multi.add(cmdHelpNodeItem, allNodes[i].getNodeName());
 			if (i < allNodes.length - 1) {
-				ChatMessage separator = cmdHelpSeparator;
+				FormattedMessage separator = cmdHelpSeparator;
 				if (i == allNodes.length - 2) separator = cmdHelpSeparatorLast;
 				multi.add(separator);
 			}
@@ -241,30 +240,30 @@ public abstract class TreeCommand implements ICommand {
 	 */
 	protected abstract ICommandNode[] addCommands();
 	
-	protected ChatMessage cmdHelpTop;
-	protected ChatMessage cmdHelpNodes;
-	protected ChatMessage cmdHelpNodeItem;
-	protected ChatMessage cmdHelpSeparator;
-	protected ChatMessage cmdHelpSeparatorLast;
-	protected ChatMessage cmdHelpCommandOverview;
+	protected FormattedMessage cmdHelpTop;
+	protected FormattedMessage cmdHelpNodes;
+	protected FormattedMessage cmdHelpNodeItem;
+	protected FormattedMessage cmdHelpSeparator;
+	protected FormattedMessage cmdHelpSeparatorLast;
+	protected FormattedMessage cmdHelpCommandOverview;
 	
-	protected ChatMessage branchHelpTop;
-	protected ChatMessage branchHelpNotice;
-	protected ChatMessage branchHelpInfo;
-	protected ChatMessage branchHelpOptions;
-	protected ChatMessage branchHelpOptionsItem;
-	protected ChatMessage branchHelpOptionsSeparator;
-	protected ChatMessage branchHelpOptionsSeparatorLast;
-	protected ChatMessage branchHelpExample;
-	protected ChatMessage branchHelpDefault;
+	protected FormattedMessage branchHelpTop;
+	protected FormattedMessage branchHelpNotice;
+	protected FormattedMessage branchHelpInfo;
+	protected FormattedMessage branchHelpOptions;
+	protected FormattedMessage branchHelpOptionsItem;
+	protected FormattedMessage branchHelpOptionsSeparator;
+	protected FormattedMessage branchHelpOptionsSeparatorLast;
+	protected FormattedMessage branchHelpExample;
+	protected FormattedMessage branchHelpDefault;
 	
-	protected ChatMessage nodeHelpTop;
-	protected ChatMessage nodeHelpDesc;
-	protected ChatMessage nodeHelpArgs;
-	protected ChatMessage nodeHelpArgsItem;
-	protected ChatMessage nodeHelpArgsNone;
-	protected ChatMessage nodeHelpAccepted;
-	protected ChatMessage nodeHelpAcceptedItem;
+	protected FormattedMessage nodeHelpTop;
+	protected FormattedMessage nodeHelpDesc;
+	protected FormattedMessage nodeHelpArgs;
+	protected FormattedMessage nodeHelpArgsItem;
+	protected FormattedMessage nodeHelpArgsNone;
+	protected FormattedMessage nodeHelpAccepted;
+	protected FormattedMessage nodeHelpAcceptedItem;
 	
 	private void initChatMessages(MessageConfiguration cfg) {
 		

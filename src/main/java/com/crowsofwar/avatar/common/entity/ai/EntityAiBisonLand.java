@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import static net.minecraft.util.math.MathHelper.floor_double;
+import static net.minecraft.util.math.MathHelper.floor;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -53,7 +53,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		
-		World world = bison.worldObj;
+		World world = bison.world;
 		
 		int tries = 0;
 		Vector landing;
@@ -79,7 +79,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		// Once got close to grass, close enough
 		EntityMoveHelper mh = bison.getMoveHelper();
 		if (bison.getDistanceSq(mh.getX(), mh.getY(), mh.getZ()) <= 5) {
@@ -114,9 +114,9 @@ public class EntityAiBisonLand extends EntityAIBase {
 		double minZ = pos.z() - bison.width / 2;
 		double maxZ = pos.z() + bison.width / 2;
 		
-		for (int x = floor_double(minX); x <= maxX; x++) {
-			for (int y = floor_double(minY); y <= maxY; y++) {
-				for (int z = floor_double(minZ); z <= maxZ; z++) {
+		for (int x = floor(minX); x <= maxX; x++) {
+			for (int y = floor(minY); y <= maxY; y++) {
+				for (int z = floor(minZ); z <= maxZ; z++) {
 					if (isSolidBlock(new BlockPos(x, y, z))) {
 						return false;
 					}
@@ -135,13 +135,13 @@ public class EntityAiBisonLand extends EntityAIBase {
 		Vector current = Vector.getEntityPos(bison);
 		Vector direction = target.minus(current).normalize();
 		double range = current.dist(target);
-		Raytrace.Result raytrace = Raytrace.raytrace(bison.worldObj, current, direction, range + 1, false);
+		Raytrace.Result raytrace = Raytrace.raytrace(bison.world, current, direction, range + 1, false);
 		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos().up();
 		return blockPos == null || blockPos.equals(target.toBlockPos());
 	}
 	
 	private boolean isSolidBlock(BlockPos pos) {
-		World world = bison.worldObj;
+		World world = bison.world;
 		return world.isBlockNormalCube(pos, false);
 	}
 	

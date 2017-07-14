@@ -140,28 +140,28 @@ public class EntityRavine extends AvatarEntity {
 		Vector nowPos = position.add(velocity.times(0.05));
 		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
 		
-		if (!worldObj.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
+		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
 			setDead();
 		}
 		
 		BlockPos above = getPosition().offset(EnumFacing.UP);
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = worldObj.getBlockState(below).getBlock();
+		Block belowBlock = world.getBlockState(below).getBlock();
 		
-		if (ticksExisted % 3 == 0) worldObj.playSound(posX, posY, posZ,
-				worldObj.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
+				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 				SoundCategory.PLAYERS, 1, 1, false);
 		
-		if (!worldObj.getBlockState(below).isNormalCube()) {
+		if (!world.getBlockState(below).isNormalCube()) {
 			setDead();
 		}
 		
-		if (!worldObj.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
+		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
 			setDead();
 		}
 		
 		// Destroy if in a block
-		IBlockState inBlock = worldObj.getBlockState(getPosition());
+		IBlockState inBlock = world.getBlockState(getPosition());
 		if (inBlock.isFullBlock()) {
 			setDead();
 		}
@@ -170,7 +170,7 @@ public class EntityRavine extends AvatarEntity {
 		BlockPos inPos = getPosition();
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 			
-			if (inBlock.getBlockHardness(worldObj, getPosition()) == 0) {
+			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
 				
 				breakBlock(getPosition());
 				
@@ -186,8 +186,8 @@ public class EntityRavine extends AvatarEntity {
 		int attacked = 0;
 		
 		// Push collided entities back
-		if (!worldObj.isRemote) {
-			List<Entity> collided = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+		if (!world.isRemote) {
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
@@ -198,25 +198,25 @@ public class EntityRavine extends AvatarEntity {
 			}
 		}
 		
-		if (!worldObj.isRemote && getOwner() != null) {
+		if (!world.isRemote && getOwner() != null) {
 			BendingData data = ownerAttr.getOwnerBender().getData();
 			if (data != null) {
 				data.getAbilityData(ABILITY_RAVINE).addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}
 		}
 		
-		if (!worldObj.isRemote && breakBlocks) {
+		if (!world.isRemote && breakBlocks) {
 			BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
-			if (!last.equals(getPosition())) {
+			if (!last.equals(getPosition()) && !last.equals(initialPosition.toBlockPos())) {
 				
-				worldObj.destroyBlock(last.down(), true);
+				world.destroyBlock(last.down(), true);
 				
 				double travel = Math.sqrt(getSqrDistanceTravelled() / maxTravelDistanceSq);
 				double chance = -(travel - 0.5) * (travel - 0.5) + 0.25;
 				chance *= 2;
 				
 				if (rand.nextDouble() <= chance) {
-					worldObj.destroyBlock(last.down(2), true);
+					world.destroyBlock(last.down(2), true);
 				}
 				
 			}
@@ -239,11 +239,11 @@ public class EntityRavine extends AvatarEntity {
 				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 					
 					ItemStack stack = elb.getItemStackFromSlot(slot);
-					if (!stack.func_190926_b()) {
+					if (!stack.isEmpty()) {
 						double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
 						if (rand.nextDouble() * 100 <= chance) {
 							elb.entityDropItem(stack, 0);
-							elb.setItemStackToSlot(slot, ItemStack.field_190927_a);
+							elb.setItemStackToSlot(slot, ItemStack.EMPTY);
 						}
 					}
 					

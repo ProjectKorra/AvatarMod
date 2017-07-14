@@ -25,7 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -54,11 +54,11 @@ public class RenderFloatingBlock extends Render {
 	 */
 	public void doRender(EntityFloatingBlock entity, double x, double y, double z, float entityYaw,
 			float lerp) {
-		World world = entity.worldObj;
+		World world = entity.world;
 		Block block = entity.getBlock();
-		int i = MathHelper.floor_double(entity.posX);
-		int j = MathHelper.floor_double(entity.posY);
-		int k = MathHelper.floor_double(entity.posZ);
+		int i = MathHelper.floor(entity.posX);
+		int j = MathHelper.floor(entity.posY);
+		int k = MathHelper.floor(entity.posZ);
 		
 		// x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) *
 		// ((lerp -
@@ -80,14 +80,14 @@ public class RenderFloatingBlock extends Render {
 					this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 					GlStateManager.pushMatrix();
 					GlStateManager.disableLighting();
-					VertexBuffer vertexbuffer = tessellator.getBuffer();
+					BufferBuilder BufferBuilder = tessellator.getBuffer();
 					
 					if (this.renderOutlines) {
 						GlStateManager.enableColorMaterial();
 						GlStateManager.enableOutlineMode(this.getTeamColor(entity));
 					}
 					
-					vertexbuffer.begin(7, DefaultVertexFormats.BLOCK);
+					BufferBuilder.begin(7, DefaultVertexFormats.BLOCK);
 					BlockPos blockpos = new BlockPos(entity.posX, entity.getEntityBoundingBox().maxY,
 							entity.posZ);
 					GlStateManager.translate(x - blockpos.getX() - 0.5, y - blockpos.getY(),
@@ -96,7 +96,7 @@ public class RenderFloatingBlock extends Render {
 							.getBlockRendererDispatcher();
 					blockrendererdispatcher.getBlockModelRenderer().renderModel(world,
 							blockrendererdispatcher.getModelForState(iblockstate), iblockstate, blockpos,
-							vertexbuffer, false, 0);
+							BufferBuilder, false, 0);
 					tessellator.draw();
 					
 					if (this.renderOutlines) {

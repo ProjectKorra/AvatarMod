@@ -103,7 +103,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			
 			// For some reason, the same entity instance is on server/client,
 			// but has different world reference when this is called...?
-			if (!entity.worldObj.isRemote) ticks++;
+			if (!entity.world.isRemote) ticks++;
 			
 			return ticks > 5 && entity.velocity().y() <= 0.2 ? new Waiting() : this;
 		}
@@ -142,7 +142,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				BendingContext ctx = new BendingContext(data, entity.getOwner(),
 						Bender.create(entity.getOwner()), new Raytrace.Result());
 				
-				if (!entity.worldObj.isRemote && !ctx.consumeChi(STATS_CONFIG.chiWallOneSecond / 20)) {
+				if (!entity.world.isRemote && !ctx.consumeChi(STATS_CONFIG.chiWallOneSecond / 20)) {
 					drop = true;
 				}
 				

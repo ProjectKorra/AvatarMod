@@ -43,7 +43,8 @@ public class ConfigStats {
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(6, 6), //
-			airbladeSettings = new AttackSettings(4, .03);
+			airbladeSettings = new AttackSettings(4, .03), //
+			fireArcSettings = new AttackSettings(4, 1);
 	
 	@Load
 	public List<String> bendableBlocksNames;
@@ -61,8 +62,16 @@ public class ConfigStats {
 	public float chiAirblade = 2f, chiAirGust = 1f, chiAirJump = .8f, chiAirBubble = 3f,
 			chiAirBubbleTakeDamage = 0.5f, chiAirBubbleOneSecond = 0.25f, chiRavine = 3f, chiWall = 5f,
 			chiPickUpBlock = 2.5f, chiMining = 4f, chiMiningMaster = 1f, chiFireArc = 2f, chiFireball = 4f,
+<<<<<<< HEAD
 			chiFlamethrowerSecond = 2f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
 			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.25f, chiPrison = 5;
+=======
+			chiFlamethrowerSecond = 5f, chiLightFire = 3.5f, chiWave = 4f, chiWaterArc = 2f,
+			chiWaterBubble = 2.5f, chiWaterSkateSecond = 1f, chiWallOneSecond = 0.25f;
+>>>>>>> 1.12
+	
+	@Load
+	public float sleepChiRegen = 99999;
 	
 	@Load
 	public boolean allowAirBubbleElytra = false;

@@ -58,6 +58,19 @@ public class AvatarDamageSource {
 	}
 	
 	/**
+	 * Create a DamageSource for damage caused by a fire arc.
+	 * 
+	 * @param hit
+	 *            Who was hit by the fire arc
+	 * @param owner
+	 *            Who created the fire arc
+	 * @return DamageSource for the fire arc
+	 */
+	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_fireArc", hit, owner);
+	}
+	
+	/**
 	 * Create a DamageSource for damage caused by a ravine.
 	 * 
 	 * @param hit

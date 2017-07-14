@@ -21,17 +21,21 @@ import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
 
 /**
  * 
@@ -62,11 +66,11 @@ public class AiWave extends BendingAi {
 	
 	@Override
 	protected void startExec() {
-		continueExecuting();
+		shouldContinueExecuting();
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
@@ -93,7 +97,7 @@ public class AiWave extends BendingAi {
 	
 	private boolean isAtEdgeOfWater() {
 		
-		World world = entity.worldObj;
+		World world = entity.world;
 		Vector look = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget())).setY(0);
 		
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).add(0, -1, 0),

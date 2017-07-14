@@ -67,7 +67,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
 		AvatarPlayerData data = AvatarPlayerData.fetcher()
-				.fetch(GoreCore.proxy.getClientSidePlayer().worldObj, playerId);
+				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId);
 		
 		if (data != null) {
 			

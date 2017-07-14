@@ -45,7 +45,7 @@ public class BisonInventoryPreventDismount {
 		if (e.isDismounting() && mounting instanceof EntityPlayer && mount instanceof EntitySkyBison) {
 			EntityPlayer player = (EntityPlayer) mounting;
 			EntitySkyBison bison = (EntitySkyBison) mount;
-			if (!player.worldObj.isRemote) {
+			if (!player.world.isRemote) {
 				if (player.openContainer instanceof ContainerBisonChest) {
 					e.setCanceled(true);
 				}

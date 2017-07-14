@@ -47,7 +47,7 @@ public interface Bender {
 	 * Get the world this entity is currently in
 	 */
 	default World getWorld() {
-		return getEntity().worldObj;
+		return getEntity().world;
 	}
 	
 	/**
