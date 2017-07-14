@@ -39,14 +39,19 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 public class AvatarPlayerData extends PlayerData implements BendingData {
 	
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
-	
+
 	private final AbstractBendingData bendingData;
 	
 	@Override
 	public BendingStyle getActiveBending() {
 		return bendingData.getActiveBending();
 	}
-	
+
+	@Override
+	public AbilityData getAbilityData(Ability ability) {
+		return bendingData.getAbilityData(ability);
+	}
+
 	@Override
 	public int getActiveBendingId() {
 		return bendingData.getActiveBendingId();
@@ -61,7 +66,177 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	public void setActiveint(int type) {
 		bendingData.setActiveint(type);
 	}
-	
+
+	@Override
+	public boolean hasStatusControl(StatusControl control) {
+		return bendingData.hasStatusControl(control);
+	}
+
+	@Override
+	public void addStatusControl(StatusControl control) {
+		bendingData.addStatusControl(control);
+	}
+
+	@Override
+	public void removeStatusControl(StatusControl control) {
+		bendingData.removeStatusControl(control);
+	}
+
+	@Override
+	public List<StatusControl> getAllStatusControls() {
+		return bendingData.getAllStatusControls();
+	}
+
+	@Override
+	public void setAllStatusControls(List<StatusControl> controls) {
+		bendingData.setAllStatusControls(controls);
+	}
+
+	@Override
+	public void clearStatusControls() {
+		bendingData.clearStatusControls();
+	}
+
+	@Override
+	public boolean hasAbilityData(UUID abilityId) {
+		return bendingData.hasAbilityData(abilityId);
+	}
+
+	@Override
+	public AbilityData getAbilityData(UUID abilityId) {
+		return bendingData.getAbilityData(abilityId);
+	}
+
+	@Override
+	public void setAbilityData(UUID abilityId, AbilityData data) {
+		bendingData.setAbilityData(abilityId, data);
+	}
+
+	@Override
+	public List<AbilityData> getAllAbilityData() {
+		return bendingData.getAllAbilityData();
+	}
+
+	@Override
+	public Map<UUID, AbilityData> getAbilityDataMap() {
+		return bendingData.getAbilityDataMap();
+	}
+
+	@Override
+	public void setAbilityDataMap(Map<UUID, AbilityData> map) {
+		bendingData.setAbilityDataMap(map);
+	}
+
+	@Override
+	public void clearAbilityData() {
+		bendingData.clearAbilityData();
+	}
+
+	@Override
+	public Chi chi() {
+		return bendingData.chi();
+	}
+
+	@Override
+	public void setChi(Chi chi) {
+		bendingData.setChi(chi);
+	}
+
+	@Override
+	public boolean hasTickHandler(TickHandler handler) {
+		return bendingData.hasTickHandler(handler);
+	}
+
+	@Override
+	public void addTickHandler(TickHandler handler) {
+		bendingData.addTickHandler(handler);
+	}
+
+	@Override
+	public void removeTickHandler(TickHandler handler) {
+		bendingData.removeTickHandler(handler);
+	}
+
+	@Override
+	public List<TickHandler> getAllTickHandlers() {
+		return bendingData.getAllTickHandlers();
+	}
+
+	@Override
+	public void setAllTickHandlers(List<TickHandler> handlers) {
+		bendingData.setAllTickHandlers(handlers);
+	}
+
+	@Override
+	public void clearTickHandlers() {
+		bendingData.clearTickHandlers();
+	}
+
+	@Override
+	public MiscData getMiscData() {
+		return bendingData.getMiscData();
+	}
+
+	@Override
+	public void setMiscData(MiscData md) {
+		bendingData.setMiscData(md);
+	}
+
+	@Override
+	public float getFallAbsorption() {
+		return bendingData.getFallAbsorption();
+	}
+
+	@Override
+	public void setFallAbsorption(float fallAbsorption) {
+		bendingData.setFallAbsorption(fallAbsorption);
+	}
+
+	@Override
+	public int getTimeInAir() {
+		return bendingData.getTimeInAir();
+	}
+
+	@Override
+	public void setTimeInAir(int time) {
+		bendingData.setTimeInAir(time);
+	}
+
+	@Override
+	public int getAbilityCooldown() {
+		return bendingData.getAbilityCooldown();
+	}
+
+	@Override
+	public void setAbilityCooldown(int cooldown) {
+		bendingData.setAbilityCooldown(cooldown);
+	}
+
+	@Override
+	public void decrementCooldown() {
+		bendingData.decrementCooldown();
+	}
+
+	@Override
+	public boolean isWallJumping() {
+		return bendingData.isWallJumping();
+	}
+
+	@Override
+	public void setWallJumping(boolean wallJumping) {
+		bendingData.setWallJumping(wallJumping);
+	}
+
+	@Override
+	public int getPetSummonCooldown() {
+		return bendingData.getPetSummonCooldown();
+	}
+
+	@Override
+	public void setPetSummonCooldown(int cooldown) {
+		bendingData.setPetSummonCooldown(cooldown);
+	}
+
 	/**
 	 * Changed DataCategories since last sent a packet
 	 */
@@ -114,7 +289,7 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 		}, readFrom, "AbilityData");
 		clearAbilityData();
 		for (Map.Entry<Ability, AbilityData> entry : abilityData.entrySet()) {
-			setAbilityData(entry.getKey(), entry.getValue());
+			setAbilityData(entry.getKey().getId(), entry.getValue());
 		}
 		
 		getMiscData().readFromNbt(nestedCompound(readFrom, "Misc"));
@@ -143,9 +318,9 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 				(nbtTag, control) -> nbtTag.setInteger("Id", control.id()), writeTo, "StatusControls");
 		
 		AvatarUtils.writeMap(getAbilityDataMap(), //
-				(nbt, ability) -> {
-					nbt.setUniqueId("Id", ability.getId());
-					nbt.setString("_AbilityName", ability.getName());
+				(nbt, abilityId) -> {
+					nbt.setUniqueId("Id", abilityId);
+					nbt.setString("_AbilityName", Abilities.getName(abilityId) + "");
 				}, (nbt, data) -> {
 					nbt.setUniqueId("AbilityId", data.getAbility().getId());
 					data.writeToNbt(nbt);
@@ -220,220 +395,50 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	// ================================================================================
 	// DELEGATES
 	// ================================================================================
-	
+
+
 	@Override
 	public boolean hasBending(BendingStyle bending) {
 		return bendingData.hasBending(bending);
 	}
-	
+
 	@Override
 	public boolean hasBending(int type) {
 		return bendingData.hasBending(type);
 	}
-	
+
 	@Override
 	public void addBending(BendingStyle bending) {
 		bendingData.addBending(bending);
 	}
-	
+
 	@Override
 	public void addBending(int type) {
 		bendingData.addBending(type);
 	}
-	
+
 	@Override
 	public void removeBending(BendingStyle bending) {
 		bendingData.removeBending(bending);
 	}
-	
+
 	@Override
 	public void removeBending(int type) {
 		bendingData.removeBending(type);
 	}
-	
+
 	@Override
 	public List<BendingStyle> getAllBending() {
 		return bendingData.getAllBending();
 	}
-	
-	@Override
-	public void clearBending() {
-		bendingData.clearBending();
-	}
-	
-	@Override
-	public boolean hasStatusControl(StatusControl control) {
-		return bendingData.hasStatusControl(control);
-	}
-	
-	@Override
-	public void addStatusControl(StatusControl control) {
-		bendingData.addStatusControl(control);
-	}
-	
-	@Override
-	public void removeStatusControl(StatusControl control) {
-		bendingData.removeStatusControl(control);
-	}
-	
-	@Override
-	public List<StatusControl> getAllStatusControls() {
-		return bendingData.getAllStatusControls();
-	}
-	
-	@Override
-	public void clearStatusControls() {
-		bendingData.clearStatusControls();
-	}
-	
-	@Override
-	public boolean hasAbilityData(Ability ability) {
-		return bendingData.hasAbilityData(ability);
-	}
-	
-	@Override
-	public AbilityData getAbilityData(Ability ability) {
-		return bendingData.getAbilityData(ability);
-	}
-	
-	@Override
-	public void setAbilityData(Ability ability, AbilityData data) {
-		bendingData.setAbilityData(ability, data);
-	}
-	
-	@Override
-	public List<AbilityData> getAllAbilityData() {
-		return bendingData.getAllAbilityData();
-	}
-	
-	@Override
-	public Map<Ability, AbilityData> getAbilityDataMap() {
-		return bendingData.getAbilityDataMap();
-	}
-	
-	@Override
-	public void clearAbilityData() {
-		bendingData.clearAbilityData();
-	}
-	
-	@Override
-	public Chi chi() {
-		return bendingData.chi();
-	}
-	
-	@Override
-	public void setChi(Chi chi) {
-		bendingData.setChi(chi);
-	}
-	
-	@Override
-	public boolean hasTickHandler(TickHandler handler) {
-		return bendingData.hasTickHandler(handler);
-	}
-	
-	@Override
-	public void addTickHandler(TickHandler handler) {
-		bendingData.addTickHandler(handler);
-	}
-	
-	@Override
-	public void removeTickHandler(TickHandler handler) {
-		bendingData.removeTickHandler(handler);
-	}
-	
-	@Override
-	public List<TickHandler> getAllTickHandlers() {
-		return bendingData.getAllTickHandlers();
-	}
-	
-	@Override
-	public void clearTickHandlers() {
-		bendingData.clearTickHandlers();
-	}
-	
-	@Override
-	public MiscData getMiscData() {
-		return bendingData.getMiscData();
-	}
-	
-	@Override
-	public void setMiscData(MiscData miscData) {
-		bendingData.setMiscData(miscData);
-	}
-	
-	@Override
-	public float getFallAbsorption() {
-		return bendingData.getFallAbsorption();
-	}
-	
-	@Override
-	public void setFallAbsorption(float fallAbsorption) {
-		bendingData.setFallAbsorption(fallAbsorption);
-	}
-	
-	@Override
-	public int getTimeInAir() {
-		return bendingData.getTimeInAir();
-	}
-	
-	@Override
-	public void setTimeInAir(int time) {
-		bendingData.setTimeInAir(time);
-	}
-	
-	@Override
-	public int getAbilityCooldown() {
-		return bendingData.getAbilityCooldown();
-	}
-	
-	@Override
-	public void setAbilityCooldown(int cooldown) {
-		bendingData.setAbilityCooldown(cooldown);
-	}
-	
-	@Override
-	public void decrementCooldown() {
-		bendingData.decrementCooldown();
-	}
-	
-	@Override
-	public boolean isWallJumping() {
-		return bendingData.isWallJumping();
-	}
-	
-	@Override
-	public void setWallJumping(boolean wallJumping) {
-		bendingData.setWallJumping(wallJumping);
-	}
-	
-	@Override
-	public int getPetSummonCooldown() {
-		return bendingData.getPetSummonCooldown();
-	}
-	
-	@Override
-	public void setPetSummonCooldown(int cooldown) {
-		bendingData.setPetSummonCooldown(cooldown);
-	}
-	
+
 	@Override
 	public void setAllBending(List<BendingStyle> bending) {
 		bendingData.setAllBending(bending);
 	}
-	
+
 	@Override
-	public void setAllStatusControls(List<StatusControl> controls) {
-		bendingData.setAllStatusControls(controls);
+	public void clearBending() {
+		bendingData.clearBending();
 	}
-	
-	@Override
-	public void setAbilityDataMap(Map<Ability, AbilityData> map) {
-		bendingData.setAbilityDataMap(map);
-	}
-	
-	@Override
-	public void setAllTickHandlers(List<TickHandler> handlers) {
-		bendingData.setAllTickHandlers(handlers);
-	}
-	
 }

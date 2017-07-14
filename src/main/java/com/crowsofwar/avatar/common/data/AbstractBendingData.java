@@ -16,17 +16,12 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+
+import java.util.*;
 
 /**
  * 
@@ -37,7 +32,7 @@ public abstract class AbstractBendingData implements BendingData {
 	
 	private final Set<BendingStyle> bendings;
 	private final Set<StatusControl> statusControls;
-	private final Map<Ability, AbilityData> abilityData;
+	private final Map<UUID, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
 	private BendingStyle activeBending;
 	private Chi chi;
@@ -215,19 +210,19 @@ public abstract class AbstractBendingData implements BendingData {
 	// ================================================================================
 	
 	@Override
-	public boolean hasAbilityData(Ability ability) {
-		return abilityData.get(ability) != null;
+	public boolean hasAbilityData(UUID abilityId) {
+		return abilityData.get(abilityId) != null;
 	}
 	
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
 	@Override
-	public AbilityData getAbilityData(Ability ability) {
-		AbilityData data = abilityData.get(ability);
+	public AbilityData getAbilityData(UUID abilityId) {
+		AbilityData data = abilityData.get(abilityId);
 		if (data == null) {
-			data = new AbilityData(this, ability);
-			abilityData.put(ability, data);
+			data = new AbilityData(this, Abilities.get(abilityId));
+			abilityData.put(abilityId, data);
 			save(DataCategory.BENDING_LIST);
 		}
 		
@@ -235,8 +230,8 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public void setAbilityData(Ability ability, AbilityData data) {
-		abilityData.put(ability, data);
+	public void setAbilityData(UUID abilityId, AbilityData data) {
+		abilityData.put(abilityId, data);
 	}
 	
 	/**
@@ -248,12 +243,12 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public Map<Ability, AbilityData> getAbilityDataMap() {
+	public Map<UUID, AbilityData> getAbilityDataMap() {
 		return new HashMap<>(abilityData);
 	}
 	
 	@Override
-	public void setAbilityDataMap(Map<Ability, AbilityData> map) {
+	public void setAbilityDataMap(Map<UUID, AbilityData> map) {
 		abilityData.clear();
 		abilityData.putAll(map);
 	}

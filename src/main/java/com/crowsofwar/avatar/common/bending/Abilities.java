@@ -16,13 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import net.minecraft.entity.EntityLiving;
 
 import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * 
@@ -44,7 +42,23 @@ public class Abilities {
 	public static Ability get(String name) {
 		return abilitiesByName.get(name);
 	}
-	
+
+	@Nullable
+	public static BendingAi getAi(UUID id, EntityLiving entity, Bender bender) {
+		Ability ability = get(id);
+		if (ability != null) {
+			return ability.getAi(entity, bender);
+		} else {
+			return null;
+		}
+	}
+
+	@Nullable
+	public static String getName(UUID id) {
+		Ability ability = get(id);
+		return ability != null ? ability.getName() : null;
+	}
+
 	public static List<Ability> all() {
 		return abilities;
 	}

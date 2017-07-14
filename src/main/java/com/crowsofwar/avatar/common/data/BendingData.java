@@ -146,9 +146,9 @@ public interface BendingData {
 	 */
 	List<AbilityData> getAllAbilityData();
 	
-	Map<Ability, AbilityData> getAbilityDataMap();
+	Map<UUID, AbilityData> getAbilityDataMap();
 	
-	void setAbilityDataMap(Map<Ability, AbilityData> map);
+	void setAbilityDataMap(Map<UUID, AbilityData> map);
 	
 	/**
 	 * Removes all ability data associations
