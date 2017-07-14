@@ -101,6 +101,7 @@ public class AvatarMod {
 		ConfigMobs.load();
 		
 		AvatarControl.initControls();
+		registerAbilities();
 		BendingManager.init();
 		AvatarItems.init();
 		AvatarDungeonLoot.register();
