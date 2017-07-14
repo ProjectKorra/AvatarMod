@@ -67,6 +67,13 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 				// Quick click - Toggle bison follow
 				BendingData data = Bender.getData(entity);
 				data.setBisonFollowMode(!data.getBisonFollowMode());
+
+				if (data.getBisonFollowMode()) {
+					MSG_BISON_WHISTLE_FOLLOW_ON.send(entity);
+				} else {
+					MSG_BISON_WHISTLE_FOLLOW_OFF.send(entity);
+				}
+
 			} else {
 				// Long click - Summon bison
 				EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
