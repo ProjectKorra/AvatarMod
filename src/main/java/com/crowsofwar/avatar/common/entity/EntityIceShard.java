@@ -16,11 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +26,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * 
@@ -50,7 +49,7 @@ public class EntityIceShard extends Entity {
 			shatter();
 		}
 		
-		moveEntity(MoverType.SELF, motionX, motionY, motionZ);
+		move(MoverType.SELF, motionX, motionY, motionZ);
 		
 		// Update rotation to match the velocity adjusted from gravity
 		Vector newRotation = Vector.getRotationTo(Vector.ZERO, new Vector(motionX, motionY, motionZ));
@@ -59,14 +58,14 @@ public class EntityIceShard extends Entity {
 		
 		// Perform raycast to find targets
 		Vector direction = Vector.toRectangular(Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
-		List<Entity> collidedEntities = Raytrace.entityRaytrace(worldObj, new Vector(this), direction, 4,
+		List<Entity> collidedEntities = Raytrace.entityRaytrace(world, new Vector(this), direction, 4,
 				entity -> !(entity instanceof EntityPlayer) && !(entity instanceof EntityIceShard));
 		
 		if (!collidedEntities.isEmpty()) {
 			
 			Entity collided = collidedEntities.get(0);
 			
-			DamageSource source = DamageSource.anvil;
+			DamageSource source = DamageSource.ANVIL;
 			collided.attackEntityFrom(source, 5);
 			
 			shatter();
@@ -83,10 +82,10 @@ public class EntityIceShard extends Entity {
 	 * Breaks the ice shard and plays particle/sound effects
 	 */
 	private void shatter() {
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			float volume = 0.3f + rand.nextFloat() * 0.3f;
 			float pitch = 1.1f + rand.nextFloat() * 0.2f;
-			worldObj.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS,
+			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS,
 					volume, pitch);
 		}
 		

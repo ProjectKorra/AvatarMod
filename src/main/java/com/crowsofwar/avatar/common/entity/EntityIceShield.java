@@ -16,13 +16,10 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -35,6 +32,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * 
@@ -56,7 +55,7 @@ public class EntityIceShield extends AvatarEntity {
 	
 	public void shatter() {
 		
-		worldObj.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1,
+		world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1,
 				1);
 		setDead();
 		
@@ -70,7 +69,7 @@ public class EntityIceShield extends AvatarEntity {
 		AxisAlignedBB aabb = new AxisAlignedBB(//
 				owner.posX - halfRange, owner.posY - halfRange, owner.posZ - halfRange, //
 				owner.posX + halfRange, owner.posY + halfRange, owner.posZ + halfRange);
-		List<EntityMob> targets = worldObj.getEntitiesWithinAABB(EntityMob.class, aabb);
+		List<EntityMob> targets = world.getEntitiesWithinAABB(EntityMob.class, aabb);
 		
 		int arrowsAtMobs = Math.min(targets.size(), 5);
 		for (int i = 0; i < arrowsAtMobs; i++) {
@@ -95,10 +94,10 @@ public class EntityIceShield extends AvatarEntity {
 		double vertDist = targetPos.y() - ownerPos.y();
 		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(30, 20, horizDist, vertDist));
 		
-		EntityIceShard shard = new EntityIceShard(worldObj);
+		EntityIceShard shard = new EntityIceShard(world);
 		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
 		shard.aim(yaw, pitch, 30);
-		worldObj.spawnEntityInWorld(shard);
+		world.spawnEntity(shard);
 		
 	}
 	
@@ -126,11 +125,11 @@ public class EntityIceShield extends AvatarEntity {
 				
 				float pitch = pitchAngles[j];
 				
-				EntityIceShard shard = new EntityIceShard(worldObj);
+				EntityIceShard shard = new EntityIceShard(world);
 				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ,
 						0, 0);
 				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
-				worldObj.spawnEntityInWorld(shard);
+				world.spawnEntity(shard);
 				
 				arrowsLeft--;
 				

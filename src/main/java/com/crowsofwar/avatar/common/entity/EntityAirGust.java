@@ -17,19 +17,18 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
-
-import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 public class EntityAirGust extends EntityArc {
 	
@@ -76,7 +75,7 @@ public class EntityAirGust extends EntityArc {
 			BendingData data = Bender.create(owner).getData();
 			float xp = 0;
 			if (data != null) {
-				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_GUST);
+				AbilityData abilityData = data.getAbilityData(AbilityAirGust.ID);
 				xp = abilityData.getTotalXp();
 				abilityData.addXp(SKILLS_CONFIG.airGustHit);
 			}

@@ -16,25 +16,21 @@
 */
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbstractBendingData;
 import com.crowsofwar.avatar.common.data.DataCategory;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.*;
+
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 /**
  * 
@@ -62,11 +58,11 @@ public class EntityBenderData extends AbstractBendingData {
 				(nbtTag, control) -> nbtTag.setInteger("Id", control.id()), writeTo, "StatusControls");
 		
 		AvatarUtils.writeMap(getAbilityDataMap(), //
-				(nbt, ability) -> {
-					nbt.setInteger("Id", ability.getId());
-					nbt.setString("_AbilityName", ability.getName());
+				(nbt, abilityId) -> {
+					nbt.setUniqueId("Id", abilityId);
+					nbt.setString("_AbilityName", Abilities.getName(abilityId));
 				}, (nbt, data) -> {
-					nbt.setInteger("AbilityId", data.getAbility().getId());
+					nbt.setUniqueId("AbilityId", data.getAbility().getId());
 					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");
 		
@@ -99,15 +95,15 @@ public class EntityBenderData extends AbstractBendingData {
 			addStatusControl(sc);
 		}
 		
-		Map<Ability, AbilityData> abilityData = new HashMap<>();
-		AvatarUtils.readMap(abilityData, nbt -> BendingManager.getAbility(nbt.getInteger("Id")), nbt -> {
-			Ability ability = BendingManager.getAbility(nbt.getInteger("AbilityId"));
+		Map<UUID, AbilityData> abilityData = new HashMap<>();
+		AvatarUtils.readMap(abilityData, nbt -> nbt.getUniqueId("Id"), nbt -> {
+			Ability ability = Abilities.get(nbt.getUniqueId("Id"));
 			AbilityData data = new AbilityData(this, ability);
 			data.readFromNbt(nbt);
 			return data;
 		}, readFrom, "AbilityData");
 		clearAbilityData();
-		for (Map.Entry<Ability, AbilityData> entry : abilityData.entrySet()) {
+		for (Map.Entry<UUID, AbilityData> entry : abilityData.entrySet()) {
 			setAbilityData(entry.getKey(), entry.getValue());
 		}
 		

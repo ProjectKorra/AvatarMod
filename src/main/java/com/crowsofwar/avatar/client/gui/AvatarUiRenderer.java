@@ -17,19 +17,8 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.common.entity.EntityIcePrison.IMPRISONED_TIME;
-import static net.minecraft.client.renderer.GlStateManager.*;
-
-import java.util.List;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -38,7 +27,6 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -53,6 +41,16 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.entity.EntityIcePrison.IMPRISONED_TIME;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
  * 
@@ -311,7 +309,7 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderPrisonCracks(ScaledResolution res) {
 		
-		EntityPlayer player = mc.thePlayer;
+		EntityPlayer player = mc.player;
 		EntityIcePrison prison = EntityIcePrison.getPrison(player);
 		if (prison != null) {
 			

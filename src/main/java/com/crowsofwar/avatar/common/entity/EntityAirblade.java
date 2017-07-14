@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
@@ -108,7 +108,7 @@ public class EntityAirblade extends AvatarEntity {
 				
 				if (getOwner() != null) {
 					BendingData data = getOwnerBender().getData();
-					data.getAbilityData(Ability.ABILITY_AIRBLADE).addXp(SKILLS_CONFIG.airbladeHit);
+					data.getAbilityData(AbilityAirblade.ID).addXp(SKILLS_CONFIG.airbladeHit);
 				}
 				
 				setDead();

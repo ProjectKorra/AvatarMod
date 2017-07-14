@@ -16,14 +16,14 @@
 */
 package com.crowsofwar.avatar.common.config;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.gorecore.config.ConfigLoader;
+import com.crowsofwar.gorecore.config.Load;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.gorecore.config.ConfigLoader;
-import com.crowsofwar.gorecore.config.Load;
 
 /**
  * 
@@ -61,7 +61,7 @@ public class ConfigClient {
 		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
 		for (Map.Entry<String, Integer> entry : entries) {
 			Ability ability = null;
-			for (Ability a : BendingManager.allAbilities()) {
+			for (Ability a : Abilities.all()) {
 				if (a.getName().equals(entry.getKey())) {
 					ability = a;
 					break;
@@ -75,7 +75,7 @@ public class ConfigClient {
 		Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
 		for (Map.Entry<String, Boolean> entry : entries2) {
 			Ability ability = null;
-			for (Ability a : BendingManager.allAbilities()) {
+			for (Ability a : Abilities.all()) {
 				if (a.getName().equals(entry.getKey())) {
 					ability = a;
 					break;

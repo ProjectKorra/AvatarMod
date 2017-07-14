@@ -17,13 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-import static net.minecraft.network.datasync.EntityDataManager.createKey;
-
-import java.util.List;
-import java.util.Random;
-
-import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -35,7 +29,6 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -56,6 +49,12 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
+import java.util.Random;
+
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
+import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 public class EntityFloatingBlock extends AvatarEntity {
 	
@@ -301,7 +300,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 				world.spawnEntity(ei);
 			}
 		}
-		AbilityData data = Bender.getData(getOwner()).getAbilityData(Ability.ABILITY_PICK_UP_BLOCK);
+		AbilityData data = Bender.getData(getOwner()).getAbilityData(AbilityPickUpBlock.ID);
 		if (data.isMasterPath(AbilityTreePath.SECOND)) {
 			
 			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);

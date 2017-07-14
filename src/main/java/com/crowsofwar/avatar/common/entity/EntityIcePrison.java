@@ -16,12 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.google.common.base.Optional;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -34,6 +30,9 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 
@@ -90,8 +89,8 @@ public class EntityIcePrison extends AvatarEntity {
 		if (ticksExisted >= IMPRISONED_TIME) {
 			setDead();
 			
-			if (!worldObj.isRemote && imprisoned != null) {
-				worldObj.playSound(null, imprisoned.posX, imprisoned.posY, imprisoned.posZ,
+			if (!world.isRemote && imprisoned != null) {
+				world.playSound(null, imprisoned.posX, imprisoned.posY, imprisoned.posZ,
 						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
 				imprisoned.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"),
 						60, 1, false, false));
@@ -136,7 +135,7 @@ public class EntityIcePrison extends AvatarEntity {
 	 */
 	public static EntityIcePrison getPrison(EntityLivingBase entity) {
 		
-		World world = entity.worldObj;
+		World world = entity.world;
 		List<EntityIcePrison> prisons = world.getEntities(EntityIcePrison.class,
 				prison -> prison.getImprisoned() == entity);
 		
@@ -145,11 +144,11 @@ public class EntityIcePrison extends AvatarEntity {
 	}
 	
 	public static void imprison(EntityLivingBase entity) {
-		World world = entity.worldObj;
+		World world = entity.world;
 		EntityIcePrison prison = new EntityIcePrison(world);
 		prison.setImprisoned(entity);
 		prison.copyLocationAndAnglesFrom(entity);
-		world.spawnEntityInWorld(prison);
+		world.spawnEntity(prison);
 	}
 	
 }

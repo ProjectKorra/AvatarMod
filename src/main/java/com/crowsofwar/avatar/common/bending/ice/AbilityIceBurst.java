@@ -16,17 +16,16 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityIceShield;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 /**
  * 
@@ -51,7 +50,7 @@ public class AbilityIceBurst extends Ability {
 		EntityIceShield shield = new EntityIceShield(world);
 		shield.copyLocationAndAnglesFrom(entity);
 		shield.setOwner(entity);
-		world.spawnEntityInWorld(shield);
+		world.spawnEntity(shield);
 		data.addStatusControl(StatusControl.SHIELD_SHATTER);
 		
 	}

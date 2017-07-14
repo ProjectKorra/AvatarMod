@@ -17,13 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -33,7 +28,6 @@ import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -42,6 +36,11 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWave extends Entity {
 	
@@ -111,7 +110,7 @@ public class EntityWave extends Entity {
 			if (!collided.isEmpty()) {
 				BendingData data = Bender.create(owner).getData();
 				if (data != null) {
-					data.getAbilityData(Ability.ABILITY_WAVE).addXp(SKILLS_CONFIG.waveHit);
+					data.getAbilityData(AbilityCreateWave.ID).addXp(SKILLS_CONFIG.waveHit);
 				}
 			}
 		}
@@ -130,7 +129,7 @@ public class EntityWave extends Entity {
 	
 	private int maxTimeOnLand() {
 		if (getOwner() != null) {
-			AbilityData data = Bender.getData(getOwner()).getAbilityData(Ability.ABILITY_WAVE);
+			AbilityData data = Bender.getData(getOwner()).getAbilityData(AbilityCreateWave.ID);
 			if (data.isMasterPath(AbilityTreePath.FIRST)) {
 				return 30;
 			}

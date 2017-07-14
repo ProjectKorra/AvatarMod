@@ -16,15 +16,14 @@
 */
 package com.crowsofwar.avatar.common.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.gorecore.tree.IArgument;
 import com.crowsofwar.gorecore.tree.TreeCommandException;
-
 import net.minecraft.command.ICommandSender;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Argument for an ability specified by its {@link Ability#getName()
@@ -53,7 +52,7 @@ public class ArgumentAbility implements IArgument<Ability> {
 	@Override
 	public Ability convert(String input) {
 		
-		for (Ability ability : BendingManager.allAbilities()) {
+		for (Ability ability : Abilities.all()) {
 			if (ability.getName().equals(input)) {
 				return ability;
 			}
@@ -71,7 +70,7 @@ public class ArgumentAbility implements IArgument<Ability> {
 	@Override
 	public String getHelpString() {
 		String out = "<";
-		for (Ability ability : BendingManager.allAbilities()) {
+		for (Ability ability : Abilities.all()) {
 			out += ability.getName() + "|";
 		}
 		return out.substring(0, out.length() - 1) + ">";
@@ -85,7 +84,7 @@ public class ArgumentAbility implements IArgument<Ability> {
 	@Override
 	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
 		List<String> out = new ArrayList<>();
-		for (Ability ability : BendingManager.allAbilities()) {
+		for (Ability ability : Abilities.all()) {
 			out.add(ability.getName());
 		}
 		return out;
