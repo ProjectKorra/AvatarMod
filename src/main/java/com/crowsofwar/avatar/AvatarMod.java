@@ -19,21 +19,17 @@ package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
-import com.crowsofwar.avatar.common.bending.fire.AbilityLightFire;
+import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIceWalk;
+import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningStrike;
-import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterBubble;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -102,7 +98,7 @@ public class AvatarMod {
 		
 		AvatarControl.initControls();
 		registerAbilities();
-		BendingManager.init();
+		registerBendingStyles();
 		AvatarItems.init();
 		AvatarDungeonLoot.register();
 		
@@ -248,6 +244,15 @@ public class AvatarMod {
 		Abilities.register(new AbilityIceWalk());
 		Abilities.register(new AbilityIceBurst());
 		Abilities.register(new AbilityIcePrison());
+	}
+
+	private static void registerBendingStyles() {
+		BendingStyles.register(new Earthbending());
+		BendingStyles.register(new Airbending());
+		BendingStyles.register(new Firebending());
+		BendingStyles.register(new Waterbending());
+		BendingStyles.register(new Icebending());
+		BendingStyles.register(new Lightningbending());
 	}
 	
 }

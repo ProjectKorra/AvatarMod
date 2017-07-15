@@ -32,7 +32,7 @@ public abstract class WaterAbility extends Ability {
 	 * @param name
 	 */
 	public WaterAbility(String name) {
-		super(BendingManager.ID_WATERBENDING, name);
+		super(Waterbending.ID, name);
 	}
 	
 }

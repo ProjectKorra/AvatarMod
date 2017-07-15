@@ -35,7 +35,7 @@ public class AbilityIceWalk extends Ability {
 	public static final UUID ID = UUID.fromString("ed4e5ba6-65b9-41b6-9b90-d2d169ae839e");
 	
 	public AbilityIceWalk() {
-		super(BendingManager.ID_ICEBENDING, "ice_walk");
+		super(Icebending.ID, "ice_walk");
 	}
 	
 	@Override

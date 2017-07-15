@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -65,6 +66,10 @@ public class BendingStyles {
 
     public static List<BendingStyle> all() {
         return bendingStyles;
+    }
+
+    public static List<UUID> allIds() {
+        return bendingStyles.stream().map(BendingStyle::getId).collect(Collectors.toList());
     }
 
     public static void register(BendingStyle bendingStyle) {

@@ -171,7 +171,7 @@ public class ContainerGetBending extends Container {
 		if (foundType == -1) {
 			// Didn't find scroll of a specific type
 			// all universal scrolls
-			return BendingManager.allBendingIds();
+			return BendingStyles.allIds();
 		} else {
 			// Found scroll of specific type
 			return Arrays.asList(foundType);

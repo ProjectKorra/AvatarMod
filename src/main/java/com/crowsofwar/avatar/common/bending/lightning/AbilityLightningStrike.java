@@ -38,7 +38,7 @@ public class AbilityLightningStrike extends Ability {
 	public static final UUID ID = UUID.fromString("67e9390e-38d5-4858-ab99-31b6a206eaf6");
 	
 	public AbilityLightningStrike() {
-		super(BendingManager.ID_LIGHTNINGBENDING, "lightning_strike");
+		super(LightningBending.ID, "lightning_strike");
 	}
 	
 	@Override

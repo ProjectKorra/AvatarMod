@@ -32,10 +32,10 @@ public class AvatarCommand extends TreeCommand {
 	
 	public static final List<BendingStyle>[] CONTROLLER_BENDING_OPTIONS;
 	static {
-		CONTROLLER_BENDING_OPTIONS = new List[BendingManager.allBending().size() + 1];
-		CONTROLLER_BENDING_OPTIONS[0] = BendingManager.allBending();
+		CONTROLLER_BENDING_OPTIONS = new List[BendingStyles.all().size() + 1];
+		CONTROLLER_BENDING_OPTIONS[0] = BendingStyles.all();
 		for (int i = 1; i < CONTROLLER_BENDING_OPTIONS.length; i++) {
-			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingManager.allBending().get(i - 1));
+			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingStyles.all().get(i - 1));
 		}
 	}
 	
@@ -43,13 +43,13 @@ public class AvatarCommand extends TreeCommand {
 		
 		@Override
 		public List<BendingStyle> convert(String str) {
-			return str.equals("all") ? BendingManager.allBending()
+			return str.equals("all") ? BendingStyles.all()
 					: Arrays.asList(BendingStyles.get(str.toLowerCase()));
 		}
 		
 		@Override
 		public String toString(List<BendingStyle> obj) {
-			return obj.equals(BendingManager.allBending()) ? "all" : obj.get(0).getName();
+			return obj.equals(BendingStyles.all()) ? "all" : obj.get(0).getName();
 		}
 		
 		@Override

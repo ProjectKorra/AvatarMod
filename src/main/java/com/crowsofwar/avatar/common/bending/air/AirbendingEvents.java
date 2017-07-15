@@ -69,7 +69,7 @@ public class AirbendingEvents {
 		EntityPlayer player = e.player;
 		World world = player.world;
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(BendingManager.ID_AIRBENDING)) {
+		if (data.hasBending(Airbending.ID)) {
 			tick(player, world, data);
 		}
 	}

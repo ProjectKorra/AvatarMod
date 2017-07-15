@@ -44,7 +44,7 @@ public class AbilityIcePrison extends Ability {
 	public static final UUID ID = UUID.fromString("54ca4e9c-4d77-4941-a3e0-9d33022a66e5");
 	
 	public AbilityIcePrison() {
-		super(BendingManager.ID_ICEBENDING, "ice_prison");
+		super(Icebending.ID, "ice_prison");
 	}
 	
 	@Override

@@ -62,7 +62,7 @@ public class ArgumentBendingController implements IArgument<BendingStyle> {
 	@Override
 	public String getHelpString() {
 		String out = "<";
-		for (BendingStyle bc : BendingManager.allBending()) {
+		for (BendingStyle bc : BendingStyles.all()) {
 			out += bc.getName() + "|";
 		}
 		return out.substring(0, out.length() - 1) + ">";
@@ -76,7 +76,7 @@ public class ArgumentBendingController implements IArgument<BendingStyle> {
 	@Override
 	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
 		List<String> out = new ArrayList<>();
-		for (BendingStyle bc : BendingManager.allBending())
+		for (BendingStyle bc : BendingStyles.all())
 			out.add(bc.getName());
 		return out;
 	}

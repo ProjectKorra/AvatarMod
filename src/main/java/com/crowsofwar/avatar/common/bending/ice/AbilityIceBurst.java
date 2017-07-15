@@ -17,7 +17,6 @@
 package com.crowsofwar.avatar.common.bending.ice;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -37,7 +36,7 @@ public class AbilityIceBurst extends Ability {
 	public static final UUID ID = UUID.fromString("c6bb814c-4808-4bc1-a6aa-fc01c871eedb");
 	
 	public AbilityIceBurst() {
-		super(BendingManager.ID_ICEBENDING, "ice_burst");
+		super(Icebending.ID, "ice_burst");
 	}
 	
 	@Override

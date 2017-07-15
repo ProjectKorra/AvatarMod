@@ -224,7 +224,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		World world = player.world;
 		
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(BendingManager.ID_AIRBENDING) && !data.isWallJumping()
+		if (data.hasBending(Airbending.ID) && !data.isWallJumping()
 				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			
 			data.setWallJumping(true);

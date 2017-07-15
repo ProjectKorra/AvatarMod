@@ -32,7 +32,7 @@ public abstract class AirAbility extends Ability {
 	 * @param name
 	 */
 	public AirAbility(String name) {
-		super(BendingManager.ID_AIRBENDING, name);
+		super(Airbending.ID, name);
 	}
 	
 }
