@@ -52,7 +52,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	private final ComponentInventorySlots scrollSlots;
 	private final ComponentInventorySlots inventoryComp, hotbarComp;
 	private final UiComponent[] bendingButtons;
-	
+
 	public GetBendingGui(EntityPlayer player) {
 		super(new ContainerGetBending(player));
 		this.container = (ContainerGetBending) inventorySlots;
@@ -160,18 +160,24 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		
+
+		drawDefaultBackground();
+
 		List<UUID> allowedTypes = container.getEligibleBending();
 		
 		int visibleBtns = 0;
 		for (int i = 0; i < bendingButtons.length; i++) {
-			UUID type = allowedTypes.get(i);
 			UiComponent btn = bendingButtons[i];
-			btn.setVisible(allowedTypes.contains(type)); // TODO i don't get this
-			btn.setOffset(Measurement.fromPixels(buttonsFrame, btn.width() * visibleBtns, 0));
-			if (btn.isVisible()) {
+			UUID btnBendingId = BendingStyles.allIds().get(i);
+
+			if (allowedTypes.contains(btnBendingId)) {
+				btn.setVisible(true);
+				btn.setOffset(Measurement.fromPixels(buttonsFrame, btn.width() * visibleBtns, 0));
 				visibleBtns++;
+			} else {
+				btn.setVisible(false);
 			}
+
 		}
 		
 		adjustButtonsPosition();

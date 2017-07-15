@@ -176,7 +176,9 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		
+
+		drawDefaultBackground();
+
 		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
 		
 		handler.draw(partialTicks, mouseX, mouseY);

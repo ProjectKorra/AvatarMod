@@ -27,6 +27,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -154,9 +155,9 @@ public class ContainerGetBending extends Container {
 			
 			// No possible unlocks if there aren't 3 scrolls
 			if (!slot.getHasStack()) {
-				return Arrays.asList();
+				return Collections.emptyList();
 			}
-			
+
 			// If the scroll isn't universal, then we found the scroll type used
 			// Possible since all scroll stacks in the inventory must all be
 			// compatible (or they couldn't be added)
