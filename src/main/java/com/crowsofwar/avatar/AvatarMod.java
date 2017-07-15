@@ -248,9 +248,9 @@ public class AvatarMod {
 
 	private static void registerBendingStyles() {
 		BendingStyles.register(new Earthbending());
-		BendingStyles.register(new Airbending());
 		BendingStyles.register(new Firebending());
 		BendingStyles.register(new Waterbending());
+		BendingStyles.register(new Airbending());
 		BendingStyles.register(new Icebending());
 		BendingStyles.register(new Lightningbending());
 	}
