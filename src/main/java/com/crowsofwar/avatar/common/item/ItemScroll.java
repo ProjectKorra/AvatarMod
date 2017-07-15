@@ -18,7 +18,11 @@ package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
@@ -41,6 +45,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 
@@ -103,10 +108,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void addInformation(ItemStack stack, World world, List<String> tooltips,
 							   ITooltipFlag advanced) {
 		
-		int bendingType = getScrollType(stack).getBendingId();
-		String bendingTypeName = bendingType == 0 ? "all" : BendingStyles.get(bendingType).getName();
-		
-		String tooltip = I18n.format("avatar." + bendingTypeName);
+		String tooltip = I18n.format("avatar." + getScrollType(stack).getBendingName());
 		tooltips.add(tooltip);
 		
 	}
@@ -148,12 +150,19 @@ public class ItemScroll extends Item implements AvatarItem {
 	}
 	
 	public enum ScrollType {
-		ALL,
-		EARTH,
-		FIRE,
-		WATER,
-		AIR;
-		
+
+		ALL(null),
+		EARTH(Earthbending.ID),
+		FIRE(Firebending.ID),
+		WATER(Waterbending.ID),
+		AIR(Airbending.ID);
+
+		private final UUID bendingId;
+
+		private ScrollType(UUID bendingId) {
+			this.bendingId = bendingId;
+		}
+
 		public boolean isCompatibleWith(ScrollType other) {
 			return other == this || this == ALL || other == ALL;
 		}
@@ -166,17 +175,21 @@ public class ItemScroll extends Item implements AvatarItem {
 			return ordinal();
 		}
 		
-		public boolean accepts(int type) {
-			return getBendingId() == 0 || getBendingId() == type;
+		public boolean accepts(UUID bendingId) {
+			return getBendingId() == null || getBendingId() == bendingId;
 		}
-		
+
+		public String getBendingName() {
+			return bendingId == null ? "all" : BendingStyles.get(bendingId).getName();
+		}
+
 		/**
-		 * Gets the corresponding bending ID from this scroll. Returns 0 in the
+		 * Gets the corresponding bending ID from this scroll. Returns null in the
 		 * case of ALL.
 		 */
 		@Nullable
-		public int getBendingId() {
-			return ordinal();
+		public UUID getBendingId() {
+			return bendingId;
 		}
 		
 		public static ScrollType fromId(int id) {

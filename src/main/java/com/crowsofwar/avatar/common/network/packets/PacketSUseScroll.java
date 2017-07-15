@@ -49,7 +49,7 @@ public class PacketSUseScroll extends AvatarPacket<PacketSUseScroll> {
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	

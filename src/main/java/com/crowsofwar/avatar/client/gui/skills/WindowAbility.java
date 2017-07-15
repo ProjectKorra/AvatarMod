@@ -16,39 +16,28 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getPlainCardTexture;
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
-import static net.minecraft.client.Minecraft.getMinecraft;
-
-import org.lwjgl.input.Mouse;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
-import com.crowsofwar.avatar.client.uitools.ComponentImage;
-import com.crowsofwar.avatar.client.uitools.ComponentLongText;
-import com.crowsofwar.avatar.client.uitools.ComponentOverlay;
-import com.crowsofwar.avatar.client.uitools.ComponentText;
-import com.crowsofwar.avatar.client.uitools.Frame;
-import com.crowsofwar.avatar.client.uitools.Measurement;
-import com.crowsofwar.avatar.client.uitools.StartingPosition;
-import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
+import com.crowsofwar.avatar.client.uitools.*;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.input.Mouse;
+
+import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getPlainCardTexture;
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static net.minecraft.client.Minecraft.getMinecraft;
 
 /**
  * 

@@ -16,22 +16,22 @@
 */
 package com.crowsofwar.avatar.common.gui;
 
-import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
-import static net.minecraft.item.ItemStack.EMPTY;
-
-import java.util.Arrays;
-import java.util.List;
-
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
+import static net.minecraft.item.ItemStack.EMPTY;
 
 /**
  * 
@@ -145,9 +145,9 @@ public class ContainerGetBending extends Container {
 	 * Returns the ints that can be unlocked by the scrolls which are currently
 	 * in the slots.
 	 */
-	public List<Integer> getEligibleTypes() {
+	public List<UUID> getEligibleBending() {
 		
-		int foundType = -1;
+		UUID foundId = null;
 		
 		for (int i = 0; i <= 2; i++) {
 			Slot slot = getSlot(i);
@@ -161,20 +161,20 @@ public class ContainerGetBending extends Container {
 			// Possible since all scroll stacks in the inventory must all be
 			// compatible (or they couldn't be added)
 			// Don't return here b/c didn't check if all slots aren't empty
-			int type = ItemScroll.getScrollType(slot.getStack()).getBendingId();
-			if (type != -1) {
-				foundType = type;
+			UUID bendingId = ItemScroll.getScrollType(slot.getStack()).getBendingId();
+			if (bendingId != null) {
+				foundId = bendingId;
 			}
 			
 		}
 		
-		if (foundType == -1) {
+		if (foundId == null) {
 			// Didn't find scroll of a specific type
 			// all universal scrolls
 			return BendingStyles.allIds();
 		} else {
 			// Found scroll of specific type
-			return Arrays.asList(foundType);
+			return Arrays.asList(foundId);
 		}
 		
 	}

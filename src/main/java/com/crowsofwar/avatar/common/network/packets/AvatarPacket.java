@@ -42,7 +42,7 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 		
 		Handler<MSG> handler = getPacketHandler();
 		
-		IThreadListener mainThread = getRecievedSide().isServer()
+		IThreadListener mainThread = getReceivedSide().isServer()
 				? ctx.getServerHandler().player.getServerWorld()
 				: AvatarMod.proxy.getClientThreadListener();
 		
@@ -88,7 +88,7 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 	/**
 	 * Returns the side that this packet is meant to be received on.
 	 */
-	protected abstract Side getRecievedSide();
+	protected abstract Side getReceivedSide();
 	
 	/**
 	 * Get a packet handler which contains the logic for when this packet is

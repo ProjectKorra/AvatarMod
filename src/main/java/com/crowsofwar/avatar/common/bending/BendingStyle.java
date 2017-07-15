@@ -17,18 +17,17 @@
 
 package com.crowsofwar.avatar.common.bending;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
-
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Base class for bending abilities. All bending classes extend this one. They
@@ -51,7 +50,7 @@ public abstract class BendingStyle implements ReadableWritable {
 	public static final CreateFromNBT<BendingStyle> creator = new CreateFromNBT<BendingStyle>() {
 		@Override
 		public BendingStyle create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
-			int id = nbt.getInteger("ControllerID");
+			UUID id = nbt.getUniqueId("ControllerID");
 			try {
 				BendingStyle bc = BendingStyles.get(id);
 				return bc;
@@ -98,7 +97,11 @@ public abstract class BendingStyle implements ReadableWritable {
 	public abstract String getName();
 	
 	public abstract UUID getId();
-	
+
+	public byte getNetworkId() {
+		return BendingStyles.getNetworkId(getId());
+	}
+
 	public List<Ability> getAllAbilities() {
 		return this.abilities;
 	}
@@ -108,19 +111,5 @@ public abstract class BendingStyle implements ReadableWritable {
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {}
-	
-	public static BendingStyle find(int id) {
-		
-		try {
-			BendingStyle bc = BendingStyles.get(id);
-			return bc;
-		} catch (Exception e) {
-			AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,
-					"Could not find bending controller from ID '" + id + "' - please check NBT data");
-			e.printStackTrace();
-			return null;
-		}
-		
-	}
-	
+
 }

@@ -35,7 +35,7 @@ public class PacketSOpenUnlockGui extends AvatarPacket<PacketSOpenUnlockGui> {
 	public void avatarToBytes(ByteBuf buf) {}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	

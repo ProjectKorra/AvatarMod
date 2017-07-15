@@ -43,7 +43,7 @@ public interface BendingData {
 	/**
 	 * Check if the player has that type of bending
 	 */
-	boolean hasBending(int type);
+	boolean hasBending(UUID id);
 	
 	/**
 	 * If the bending controller is not already present, adds the bending
@@ -57,7 +57,7 @@ public interface BendingData {
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
 	 */
-	void addBending(int type);
+	void addBending(UUID id);
 	
 	/**
 	 * Remove the specified bending controller and its associated state. Please
@@ -71,7 +71,7 @@ public interface BendingData {
 	 * 
 	 * @see #removeBending(BendingStyle)
 	 */
-	void removeBending(int type);
+	void removeBending(UUID id);
 	
 	List<BendingStyle> getAllBending();
 	
@@ -93,7 +93,7 @@ public interface BendingData {
 	 * Gets the type of the in-use bending controller. Null if the player has no
 	 * bending
 	 */
-	int getActiveBendingId();
+	UUID getActiveBendingId();
 	
 	/**
 	 * Set the currently in-use bending. If null, will be rejected
@@ -103,7 +103,7 @@ public interface BendingData {
 	/**
 	 * Set the currently in-use type. If null, will be rejected
 	 */
-	void setActiveint(int type);
+	void setActiveBending(UUID type);
 	
 	// ================================================================================
 	// STATUS CONTROLS

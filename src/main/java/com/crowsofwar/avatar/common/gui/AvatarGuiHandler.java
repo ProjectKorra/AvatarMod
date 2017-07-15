@@ -26,6 +26,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
+import java.util.UUID;
+
 public class AvatarGuiHandler implements IGuiHandler {
 	
 	public static final int GUI_ID_BISON_CHEST = 5;
@@ -62,12 +64,12 @@ public class AvatarGuiHandler implements IGuiHandler {
 		return AvatarMod.proxy.createClientGui(id, player, world, x, y, z);
 	}
 	
-	public static int getGuiId(int bendingId) {
-		return 100 + bendingId;
+	public static int getGuiId(UUID bendingId) {
+		return 100 + BendingStyles.getNetworkId(bendingId);
 	}
 	
-	public static int getBendingId(int guiId) {
-		return guiId - 100;
+	public static UUID getBendingId(int guiId) {
+		return BendingStyles.get((byte) (guiId - 100)).getId();
 	}
 	
 	public static boolean isBendingGui(int guiId) {

@@ -16,10 +16,12 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.UUID;
 
 /**
  * 
@@ -28,26 +30,26 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 	
-	private int element;
+	private byte element;
 	
 	public PacketSSkillsMenu() {}
 	
-	public PacketSSkillsMenu(int element) {
-		this.element = element;
+	public PacketSSkillsMenu(UUID element) {
+		this.element = BendingStyles.getNetworkId(element);
 	}
 	
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		element = buf.readInt();
+		element = buf.readByte();
 	}
 	
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		buf.writeInt(element);
+		buf.writeByte(element);
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	
@@ -56,8 +58,8 @@ public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 		return PacketRedirector::redirectMessage;
 	}
 	
-	public int getElement() {
-		return element;
+	public UUID getElement() {
+		return BendingStyles.get(element).getId();
 	}
 	
 }

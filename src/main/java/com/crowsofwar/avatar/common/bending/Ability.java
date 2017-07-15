@@ -17,13 +17,12 @@
 
 package com.crowsofwar.avatar.common.bending;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
-
 import net.minecraft.entity.EntityLiving;
+
+import java.util.UUID;
 
 /**
  * Encapsulates all logic required for a bending ability. There is 1 instance of
@@ -50,7 +49,7 @@ public abstract class Ability {
 	/**
 	 * Get the id of the bending style that this ability belongs to
 	 */
-	public final UUID getBendingStyle() {
+	public final UUID getBendingId() {
 		return type;
 	}
 

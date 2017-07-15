@@ -23,8 +23,9 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -292,8 +293,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = AvatarPlayerData.fetcher().fetch(player);
-		int element = packet.getElement();
-		
+		UUID element = packet.getElement();
+
 		if (BendingStyles.has(element)) {
 			if (data.hasBending(element)) {
 				int guiId = AvatarGuiHandler.getGuiId(element);
@@ -387,9 +388,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		Container container = player.openContainer;
 		
 		if (container instanceof ContainerGetBending) {
-			List<Integer> eligible = ((ContainerGetBending) container).getEligibleTypes();
+			List<UUID> eligible = ((ContainerGetBending) container).getEligibleBending();
 			
-			int bending = packet.getUnlockType();
+			UUID bending = packet.getUnlockType();
 			if (eligible.contains(bending)) {
 				
 				if (data.getAllBending().isEmpty()) {

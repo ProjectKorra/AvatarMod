@@ -110,7 +110,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.CLIENT;
 	}
 	

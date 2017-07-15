@@ -31,7 +31,7 @@ public class BendingStyles {
     private static final List<BendingStyle> bendingStyles = new ArrayList<>();
     private static final Map<UUID, BendingStyle> bendingStylesById = new HashMap<>();
     private static final Map<String, BendingStyle> bendingStylesByName = new HashMap<>();
-    private static final Map<UUID, Byte> networkId = new HashMap<>();
+    private static final Map<UUID, Byte> networkIdByStyle = new HashMap<>();
     private static final Map<Byte, UUID> networkIdToStyle = new HashMap<>();
 
     @Nullable
@@ -44,7 +44,7 @@ public class BendingStyles {
         return bendingStylesByName.get(name);
     }
 
-    public boolean has(UUID id) {
+    public static boolean has(UUID id) {
         return bendingStylesById.containsKey(id);
     }
 
@@ -55,11 +55,16 @@ public class BendingStyles {
     }
 
     @Nullable
-    public byte getNetworkId(UUID id) {
-        return networkId.get(id);
+    public static byte getNetworkId(UUID id) {
+        return networkIdByStyle.get(id);
     }
 
-    public BendingStyle get(byte networkId) {
+    @Nullable
+    public static byte getNetworkId(BendingStyle style) {
+        return getNetworkId(style.getId());
+    }
+
+    public static BendingStyle get(byte networkId) {
         UUID id = networkIdToStyle.get(networkId);
         return get(id);
     }
@@ -78,7 +83,7 @@ public class BendingStyles {
         bendingStylesByName.put(bendingStyle.getName(), bendingStyle);
 
         byte networkId = nextNetworkId++;
-        networkId.put(bendingStyle.getId(), networkId);
+        networkIdByStyle.put(bendingStyle.getId(), networkId);
         networkIdToStyle.put(networkId, bendingStyle.getId());
 
     }

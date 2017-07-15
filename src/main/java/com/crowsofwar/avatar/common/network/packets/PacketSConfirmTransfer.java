@@ -35,7 +35,7 @@ public class PacketSConfirmTransfer extends AvatarPacket<PacketSConfirmTransfer>
 	public void avatarToBytes(ByteBuf buf) {}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	

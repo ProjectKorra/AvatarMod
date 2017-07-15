@@ -17,8 +17,8 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 
 import java.util.*;
@@ -64,8 +64,8 @@ public abstract class AbstractBendingData implements BendingData {
 	 * Check if the player has that type of bending
 	 */
 	@Override
-	public boolean hasBending(int type) {
-		return hasBending(BendingStyles.get(type));
+	public boolean hasBending(UUID id) {
+		return hasBending(BendingStyles.get(id));
 	}
 	
 	/**
@@ -86,8 +86,8 @@ public abstract class AbstractBendingData implements BendingData {
 	 * controller.
 	 */
 	@Override
-	public void addBending(int type) {
-		addBending(BendingStyles.get(type));
+	public void addBending(UUID id) {
+		addBending(BendingStyles.get(id));
 	}
 	
 	/**
@@ -108,8 +108,8 @@ public abstract class AbstractBendingData implements BendingData {
 	 * @see #removeBending(BendingStyle)
 	 */
 	@Override
-	public void removeBending(int type) {
-		removeBending(BendingStyles.get(type));
+	public void removeBending(UUID id) {
+		removeBending(BendingStyles.get(id));
 	}
 	
 	@Override
@@ -147,7 +147,7 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public int getActiveBendingId() {
+	public UUID getActiveBendingId() {
 		BendingStyle controller = getActiveBending();
 		return controller == null ? null : controller.getId();
 	}
@@ -161,8 +161,8 @@ public abstract class AbstractBendingData implements BendingData {
 	}
 	
 	@Override
-	public void setActiveint(int type) {
-		BendingStyle controller = BendingStyles.get(type);
+	public void setActiveBending(UUID id) {
+		BendingStyle controller = BendingStyles.get(id);
 		setActiveBending(controller);
 	}
 	

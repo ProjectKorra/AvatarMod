@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
+
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;

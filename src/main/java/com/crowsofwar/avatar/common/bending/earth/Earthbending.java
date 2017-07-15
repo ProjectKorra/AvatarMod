@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.common.bending.earth;
 import java.awt.Color;
 import java.util.UUID;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
+
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;

@@ -16,10 +16,12 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.UUID;
 
 /**
  * 
@@ -28,26 +30,26 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
 	
-	private int type;
+	private byte type;
 	
 	public PacketSUnlockBending() {}
 	
-	public PacketSUnlockBending(int type) {
-		this.type = type;
+	public PacketSUnlockBending(UUID type) {
+		this.type = BendingStyles.getNetworkId(type);
 	}
 	
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		type = buf.readInt();
+		type = buf.readByte();
 	}
 	
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		buf.writeInt(type);
+		buf.writeByte(type);
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	
@@ -56,8 +58,8 @@ public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
 		return PacketRedirector::redirectMessage;
 	}
 	
-	public int getUnlockType() {
-		return type;
+	public UUID getUnlockType() {
+		return BendingStyles.get(type).getId();
 	}
 	
 }

@@ -17,8 +17,9 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import com.crowsofwar.avatar.common.bending.BendingManager;
+
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -45,12 +46,14 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.entity.EntityIcePrison.IMPRISONED_TIME;
 import static net.minecraft.client.renderer.GlStateManager.*;
+import static net.minecraft.client.renderer.GlStateManager.scale;
 
 /**
  * 
@@ -260,7 +263,7 @@ public class AvatarUiRenderer extends Gui {
 	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller) {
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
-		int u = 50 * (controller.getId() - 1);
+		int u = 50 * (BendingStyles.getNetworkId(controller.getId()) - 1); // TODO use individual texture for each bending
 		int v = 137;
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		drawTexturedModalRect(x, y, u, v, 50, 50);
@@ -344,7 +347,7 @@ public class AvatarUiRenderer extends Gui {
 		
 	}
 	
-	public static void openBendingGui(int bending) {
+	public static void openBendingGui(UUID bending) {
 		
 		BendingStyle controller = BendingStyles.get(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();

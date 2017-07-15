@@ -16,10 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbstractBendingData;
 import com.crowsofwar.avatar.common.data.DataCategory;
@@ -51,7 +48,7 @@ public class EntityBenderData extends AbstractBendingData {
 	public void writeToNbt(NBTTagCompound writeTo) {
 		
 		AvatarUtils.writeList(getAllBending(),
-				(compound, controller) -> compound.setInteger("ControllerID", controller.getId()), writeTo,
+				(compound, controller) -> compound.setUniqueId("ControllerID", controller.getId()), writeTo,
 				"BendingControllers");
 		
 		AvatarUtils.writeList(getAllStatusControls(),
@@ -80,7 +77,7 @@ public class EntityBenderData extends AbstractBendingData {
 		
 		List<BendingStyle> bendings = new ArrayList<>();
 		AvatarUtils.readList(bendings,
-				compound -> BendingStyle.find(compound.getInteger("ControllerID")), readFrom,
+				compound -> BendingStyles.get(compound.getUniqueId("ControllerID")), readFrom,
 				"BendingControllers");
 		clearBending();
 		for (BendingStyle bending : bendings) {

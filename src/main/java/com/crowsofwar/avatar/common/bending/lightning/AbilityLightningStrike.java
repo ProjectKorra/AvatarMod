@@ -16,17 +16,15 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 /**
  * 
@@ -38,7 +36,7 @@ public class AbilityLightningStrike extends Ability {
 	public static final UUID ID = UUID.fromString("67e9390e-38d5-4858-ab99-31b6a206eaf6");
 	
 	public AbilityLightningStrike() {
-		super(LightningBending.ID, "lightning_strike");
+		super(Lightningbending.ID, "lightning_strike");
 	}
 	
 	@Override

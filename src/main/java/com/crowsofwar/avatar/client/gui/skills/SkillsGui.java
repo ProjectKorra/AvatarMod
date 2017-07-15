@@ -20,8 +20,8 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.*;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
@@ -42,6 +42,7 @@ import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
@@ -70,8 +71,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private ComponentText title;
 	private UiComponentHandler handler;
 	
-	public SkillsGui(int type) {
-		super(new ContainerSkillsGui(getMinecraft().player, type));
+	public SkillsGui(UUID guiBending) {
+		super(new ContainerSkillsGui(getMinecraft().player, guiBending));
 
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		BendingData data = AvatarPlayerData.fetcher().fetch(getMinecraft().player);
@@ -83,7 +84,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		ScreenInfo.refreshDimensions();
 		
-		BendingStyle controller = BendingStyles.get(type);
+		BendingStyle controller = BendingStyles.get(guiBending);
 		List<Ability> abilities = controller.getAllAbilities();
 		cards = new AbilityCard[abilities.size()];
 		for (int i = 0; i < abilities.size(); i++) {
@@ -92,20 +93,20 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		handler = new UiComponentHandler();
 		
-		Integer[] types = data.getAllBending().stream()//
-				.map(c -> c.getId())//
+		UUID[] types = data.getAllBending().stream()//
+				.map(BendingStyle::getId)//
 				.sorted((id1, id2) -> {
 					BendingStyle c1 = BendingStyles.get(id1);
 					BendingStyle c2 = BendingStyles.get(id2);
 					return c1.getName().compareTo(c2.getName());
 				})//
-				.toArray(Integer[]::new);
+				.toArray(UUID[]::new);
 		
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
 			float scale = 1.4f;
-			BendingStyle style = BendingStyles.get(i);
-			tabs[i] = new ComponentBendingTab(style, types[i] == type);
+			BendingStyle style = BendingStyles.get(types[i]);
+			tabs[i] = new ComponentBendingTab(style, types[i] == guiBending);
 			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
 			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2) * scale, 0));
 			tabs[i].setScale(scale);
@@ -125,7 +126,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setVisible(false);
 		
 		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
-				I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(type).getName().toLowerCase()));
+				I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(guiBending).getName().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);

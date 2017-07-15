@@ -17,14 +17,13 @@
 
 package com.crowsofwar.avatar.common.command;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.gorecore.tree.IArgument;
+import net.minecraft.command.ICommandSender;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.gorecore.tree.IArgument;
-
-import net.minecraft.command.ICommandSender;
 
 /**
  * 

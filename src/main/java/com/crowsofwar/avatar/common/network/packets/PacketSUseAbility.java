@@ -61,7 +61,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	}
 	
 	@Override
-	public Side getRecievedSide() {
+	public Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	

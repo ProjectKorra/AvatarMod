@@ -16,26 +16,13 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.ComponentCustomButton;
-import com.crowsofwar.avatar.client.uitools.ComponentLongText;
-import com.crowsofwar.avatar.client.uitools.ComponentText;
-import com.crowsofwar.avatar.client.uitools.Frame;
-import com.crowsofwar.avatar.client.uitools.Measurement;
-import com.crowsofwar.avatar.client.uitools.ScreenInfo;
-import com.crowsofwar.avatar.client.uitools.StartingPosition;
-import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.client.uitools.*;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -43,6 +30,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.List;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
 /**
  * 
@@ -136,11 +128,11 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
 		handler.add(instructions);
 		
-		List<Integer> bendingIds = BendingStyles.allIds();
+		List<UUID> bendingIds = BendingStyles.allIds();
 		bendingButtons = new UiComponent[bendingIds.size() - 1];
 		for (int i = 0; i < bendingButtons.length; i++) {
 			
-			int bendingId = bendingIds.get(i);
+			UUID bendingId = bendingIds.get(i);
 			
 			int u = (i % 2) * 120;
 			int v = 124 + 60 * (i / 2);
@@ -169,13 +161,13 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		
-		List<Integer> allowedTypes = container.getEligibleTypes();
+		List<UUID> allowedTypes = container.getEligibleBending();
 		
 		int visibleBtns = 0;
 		for (int i = 0; i < bendingButtons.length; i++) {
-			int type = allowedTypes.get(i);
+			UUID type = allowedTypes.get(i);
 			UiComponent btn = bendingButtons[i];
-			btn.setVisible(allowedTypes.contains(type));
+			btn.setVisible(allowedTypes.contains(type)); // TODO i don't get this
 			btn.setOffset(Measurement.fromPixels(buttonsFrame, btn.width() * visibleBtns, 0));
 			if (btn.isVisible()) {
 				visibleBtns++;

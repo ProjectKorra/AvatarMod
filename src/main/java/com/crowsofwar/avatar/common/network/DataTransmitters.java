@@ -17,26 +17,16 @@
 
 package com.crowsofwar.avatar.common.network;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.DataCategory;
-import com.crowsofwar.avatar.common.data.MiscData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-
+import com.crowsofwar.avatar.common.data.*;
 import io.netty.buffer.ByteBuf;
+
+import java.util.*;
 
 /**
  * DataTransmitters are responsible for reading and writing certain parts of
@@ -52,8 +42,10 @@ public class DataTransmitters {
 		@Override
 		public void write(ByteBuf buf, List<BendingStyle> t) {
 			buf.writeInt(t.size());
-			for (BendingStyle controller : t)
-				buf.writeInt(controller.getId());
+			for (BendingStyle controller : t) {
+				byte networkId = BendingStyles.getNetworkId(controller);
+				buf.writeByte(networkId);
+			}
 		}
 		
 		@Override
@@ -61,7 +53,7 @@ public class DataTransmitters {
 			int size = buf.readInt();
 			List<BendingStyle> out = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
-				out.add(BendingStyles.get(buf.readInt()));
+				out.add(BendingStyles.get(buf.readByte()));
 			}
 			return out;
 		}
@@ -188,12 +180,12 @@ public class DataTransmitters {
 		
 		@Override
 		public void write(ByteBuf buf, BendingStyle t) {
-			buf.writeInt(t == null ? -1 : t.getId());
+			buf.writeByte(t == null ? -1 : t.getNetworkId());
 		}
 		
 		@Override
 		public BendingStyle read(ByteBuf buf, BendingData data) {
-			int id = buf.readInt();
+			byte id = buf.readByte();
 			if (id == -1) {
 				return null;
 			}

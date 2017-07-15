@@ -88,7 +88,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.CLIENT;
 	}
 	

@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.command;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeBranch;
@@ -35,7 +35,7 @@ public class AvatarCommand extends TreeCommand {
 		CONTROLLER_BENDING_OPTIONS = new List[BendingStyles.all().size() + 1];
 		CONTROLLER_BENDING_OPTIONS[0] = BendingStyles.all();
 		for (int i = 1; i < CONTROLLER_BENDING_OPTIONS.length; i++) {
-			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingStyles.all().get(i - 1));
+			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingStyles.all().get(i - 1));cma
 		}
 	}
 	
