@@ -22,13 +22,17 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
+import java.util.UUID;
+
 /**
  * 
  * 
  * @author CrowsOfWar
  */
 public class Icebending extends BendingStyle {
-	
+
+	public static UUID ID = UUID.fromString("a0e4e7d8-b7c0-4ff7-ba6e-5a279bc52848");
+
 	private final BendingMenuInfo menu;
 	
 	public Icebending() {
@@ -57,8 +61,8 @@ public class Icebending extends BendingStyle {
 	}
 	
 	@Override
-	public int getId() {
-		return BendingManager.ID_ICEBENDING;
+	public UUID getId() {
+		return ID;
 	}
 	
 }

@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import java.awt.Color;
+import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
@@ -28,7 +29,9 @@ import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Waterbending extends BendingStyle {
-	
+
+	public static UUID ID = UUID.fromString("33486f81-29cc-4f7e-84ee-972a73b03b95");
+
 	private BendingMenuInfo menu;
 	
 	public Waterbending() {
@@ -66,8 +69,8 @@ public class Waterbending extends BendingStyle {
 	}
 	
 	@Override
-	public int getId() {
-		return BendingManager.ID_WATERBENDING;
+	public UUID getId() {
+		return ID;
 	}
 	
 }

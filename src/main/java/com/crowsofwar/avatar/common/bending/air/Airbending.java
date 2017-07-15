@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import java.awt.Color;
+import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
@@ -28,7 +29,9 @@ import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Airbending extends BendingStyle {
-	
+
+	public static final UUID ID = UUID.fromString("231edc16-639e-4dc4-92f5-924e9102df0f");
+
 	private BendingMenuInfo menu;
 	
 	public Airbending() {
@@ -68,8 +71,8 @@ public class Airbending extends BendingStyle {
 	}
 	
 	@Override
-	public int getId() {
-		return BendingManager.ID_AIRBENDING;
+	public UUID getId() {
+		return ID;
 	}
 	
 }

@@ -22,13 +22,17 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
+import java.util.UUID;
+
 /**
  * 
  * 
  * @author CrowsOfWar
  */
 public class Lightningbending extends BendingStyle {
-	
+
+	public static UUID ID = UUID.fromString("a1e698cb-f945-4354-8e47-df13446d7da5");
+
 	private final BendingMenuInfo menu;
 	
 	public Lightningbending() {
@@ -55,8 +59,8 @@ public class Lightningbending extends BendingStyle {
 	}
 	
 	@Override
-	public int getId() {
-		return BendingManager.ID_LIGHTNINGBENDING;
+	public UUID getId() {
+		return ID;
 	}
 	
 }

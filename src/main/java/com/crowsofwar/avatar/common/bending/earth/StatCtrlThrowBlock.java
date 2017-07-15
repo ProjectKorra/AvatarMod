@@ -45,7 +45,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		
-		BendingStyle controller = BendingManager.getBending(BendingManager.ID_EARTHBENDING);
+		BendingStyle controller = BendingManager.getBending(Earthbending.ID);
 		
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.world;

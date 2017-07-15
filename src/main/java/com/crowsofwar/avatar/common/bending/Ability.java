@@ -33,11 +33,11 @@ import net.minecraft.entity.EntityLiving;
  */
 public abstract class Ability {
 	
-	private final int type;
+	private final UUID type;
 	private final String name;
 	private Raytrace.Info raytrace;
 	
-	public Ability(int bendingType, String name) {
+	public Ability(UUID bendingType, String name) {
 		this.type = bendingType;
 		this.name = name;
 		this.raytrace = new Raytrace.Info();
@@ -48,9 +48,9 @@ public abstract class Ability {
 	}
 	
 	/**
-	 * Get the bending type that this ability belongs to
+	 * Get the id of the bending style that this ability belongs to
 	 */
-	public final int getBendingId() {
+	public final UUID getBendingStyle() {
 		return type;
 	}
 	

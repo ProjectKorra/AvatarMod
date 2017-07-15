@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import java.awt.Color;
+import java.util.UUID;
 
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
@@ -26,7 +27,9 @@ import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
 public class Earthbending extends BendingStyle {
-	
+
+	public static UUID ID = UUID.fromString("82ad13b5-4bbe-4eaf-8aa0-00b36b33aed0");
+
 	private final BendingMenuInfo menu;
 	
 	public Earthbending() {
@@ -58,8 +61,8 @@ public class Earthbending extends BendingStyle {
 	}
 	
 	@Override
-	public int getId() {
-		return BendingManager.ID_EARTHBENDING;
+	public UUID getId() {
+		return ID;
 	}
 	
 }
