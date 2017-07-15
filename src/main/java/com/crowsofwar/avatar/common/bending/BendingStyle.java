@@ -45,9 +45,6 @@ import net.minecraft.nbt.NBTTagCompound;
  * *Optionally = the subclass must declare the method, but does not need to put
  * any code inside of it.
  *
- * @param <STATE>
- *            The BendingState this controller is using
- * 
  */
 public abstract class BendingStyle implements ReadableWritable {
 	
@@ -71,7 +68,7 @@ public abstract class BendingStyle implements ReadableWritable {
 		@Override
 		public void write(NBTTagCompound nbt, BendingStyle object, Object[] methodsExtraData,
 				Object[] extraData) {
-			nbt.setInteger("ControllerID", object.getId());
+			nbt.setUniqueId("ControllerID", object.getId());
 		}
 	};
 	
@@ -100,7 +97,7 @@ public abstract class BendingStyle implements ReadableWritable {
 	 */
 	public abstract String getName();
 	
-	public abstract int getId();
+	public abstract UUID getId();
 	
 	public List<Ability> getAllAbilities() {
 		return this.abilities;
