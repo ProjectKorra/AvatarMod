@@ -20,9 +20,8 @@ package com.crowsofwar.avatar.common.gui;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -72,7 +71,7 @@ public class AvatarGuiHandler implements IGuiHandler {
 	}
 	
 	public static boolean isBendingGui(int guiId) {
-		return guiId > 100 && BendingManager.hasBending(getBendingId(guiId));
+		return guiId > 100 && BendingStyles.has(getBendingId(guiId));
 	}
 	
 }

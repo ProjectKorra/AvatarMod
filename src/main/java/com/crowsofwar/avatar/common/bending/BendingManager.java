@@ -90,17 +90,6 @@ public class BendingManager {
 	}
 	
 	/**
-	 * Get the BendingController with the given name. Returns null if the name
-	 * is invalid.
-	 * 
-	 * @param name
-	 *            The name of the bending controller
-	 */
-	public static BendingStyle getBending(String name) {
-		return bendingByName.get(name);
-	}
-	
-	/**
 	 * Check whether a BendingController under that ID exists.
 	 */
 	public static boolean hasBending(int id) {

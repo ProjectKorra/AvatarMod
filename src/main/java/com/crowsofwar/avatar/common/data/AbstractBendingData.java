@@ -65,7 +65,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 */
 	@Override
 	public boolean hasBending(int type) {
-		return hasBending(BendingManager.getBending(type));
+		return hasBending(BendingStyles.get(type));
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 */
 	@Override
 	public void addBending(int type) {
-		addBending(BendingManager.getBending(type));
+		addBending(BendingStyles.get(type));
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public abstract class AbstractBendingData implements BendingData {
 	 */
 	@Override
 	public void removeBending(int type) {
-		removeBending(BendingManager.getBending(type));
+		removeBending(BendingStyles.get(type));
 	}
 	
 	@Override
@@ -162,7 +162,7 @@ public abstract class AbstractBendingData implements BendingData {
 	
 	@Override
 	public void setActiveint(int type) {
-		BendingStyle controller = BendingManager.getBending(type);
+		BendingStyle controller = BendingStyles.get(type);
 		setActiveBending(controller);
 	}
 	

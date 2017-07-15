@@ -164,7 +164,7 @@ public class WindowAbility {
 		unlockTitle.setZLevel(4);
 		handler.add(unlockTitle);
 		
-		String bendingName = BendingManager.getBending(ability.getBendingId()).getName().toLowerCase();
+		String bendingName = BendingStyles.get(ability.getBendingId()).getName().toLowerCase();
 		String text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT,
 				I18n.format("avatar.ui.unlockDesc"), bendingName);
 

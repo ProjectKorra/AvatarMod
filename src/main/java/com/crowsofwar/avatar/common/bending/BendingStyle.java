@@ -53,7 +53,7 @@ public abstract class BendingStyle implements ReadableWritable {
 		public BendingStyle create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
 			int id = nbt.getInteger("ControllerID");
 			try {
-				BendingStyle bc = BendingManager.getBending(id);
+				BendingStyle bc = BendingStyles.get(id);
 				return bc;
 			} catch (Exception e) {
 				AvatarLog.error(
@@ -112,7 +112,7 @@ public abstract class BendingStyle implements ReadableWritable {
 	public static BendingStyle find(int id) {
 		
 		try {
-			BendingStyle bc = BendingManager.getBending(id);
+			BendingStyle bc = BendingStyles.get(id);
 			return bc;
 		} catch (Exception e) {
 			AvatarLog.warn(AvatarLog.WarningType.INVALID_SAVE,

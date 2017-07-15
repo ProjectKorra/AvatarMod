@@ -44,7 +44,7 @@ public class AvatarCommand extends TreeCommand {
 		@Override
 		public List<BendingStyle> convert(String str) {
 			return str.equals("all") ? BendingManager.allBending()
-					: Arrays.asList(BendingManager.getBending(str.toLowerCase()));
+					: Arrays.asList(BendingStyles.get(str.toLowerCase()));
 		}
 		
 		@Override

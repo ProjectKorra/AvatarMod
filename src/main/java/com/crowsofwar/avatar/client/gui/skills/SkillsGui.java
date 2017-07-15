@@ -83,7 +83,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		ScreenInfo.refreshDimensions();
 		
-		BendingStyle controller = BendingManager.getBending(type);
+		BendingStyle controller = BendingStyles.get(type);
 		List<Ability> abilities = controller.getAllAbilities();
 		cards = new AbilityCard[abilities.size()];
 		for (int i = 0; i < abilities.size(); i++) {
@@ -95,8 +95,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		Integer[] types = data.getAllBending().stream()//
 				.map(c -> c.getId())//
 				.sorted((id1, id2) -> {
-					BendingStyle c1 = BendingManager.getBending(id1);
-					BendingStyle c2 = BendingManager.getBending(id2);
+					BendingStyle c1 = BendingStyles.get(id1);
+					BendingStyle c2 = BendingStyles.get(id2);
 					return c1.getName().compareTo(c2.getName());
 				})//
 				.toArray(Integer[]::new);
@@ -104,7 +104,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
 			float scale = 1.4f;
-			BendingStyle style = BendingManager.getBending(i);
+			BendingStyle style = BendingStyles.get(i);
 			tabs[i] = new ComponentBendingTab(style, types[i] == type);
 			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
 			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2) * scale, 0));
@@ -125,7 +125,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setVisible(false);
 		
 		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
-				I18n.format("avatar.ui.skillsMenu"), BendingManager.getBending(type).getName().toLowerCase()));
+				I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(type).getName().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);

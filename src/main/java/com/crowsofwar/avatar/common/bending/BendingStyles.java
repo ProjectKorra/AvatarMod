@@ -16,9 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import net.minecraft.entity.EntityLiving;
-
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -29,10 +26,12 @@ import java.util.*;
  */
 public class BendingStyles {
 
-
+    private static byte nextNetworkId = 1;
     private static final List<BendingStyle> bendingStyles = new ArrayList<>();
     private static final Map<UUID, BendingStyle> bendingStylesById = new HashMap<>();
     private static final Map<String, BendingStyle> bendingStylesByName = new HashMap<>();
+    private static final Map<UUID, Byte> networkId = new HashMap<>();
+    private static final Map<Byte, UUID> networkIdToStyle = new HashMap<>();
 
     @Nullable
     public static BendingStyle get(UUID id) {
@@ -44,10 +43,24 @@ public class BendingStyles {
         return bendingStylesByName.get(name);
     }
 
+    public boolean has(UUID id) {
+        return bendingStylesById.containsKey(id);
+    }
+
     @Nullable
     public static String getName(UUID id) {
         BendingStyle bendingStyle = get(id);
         return bendingStyle != null ? bendingStyle.getName() : null;
+    }
+
+    @Nullable
+    public byte getNetworkId(UUID id) {
+        return networkId.get(id);
+    }
+
+    public BendingStyle get(byte networkId) {
+        UUID id = networkIdToStyle.get(networkId);
+        return get(id);
     }
 
     public static List<BendingStyle> all() {
@@ -58,6 +71,11 @@ public class BendingStyles {
         bendingStyles.add(bendingStyle);
         bendingStylesById.put(bendingStyle.getId(), bendingStyle);
         bendingStylesByName.put(bendingStyle.getName(), bendingStyle);
+
+        byte networkId = nextNetworkId++;
+        networkId.put(bendingStyle.getId(), networkId);
+        networkIdToStyle.put(networkId, bendingStyle.getId());
+
     }
 
 

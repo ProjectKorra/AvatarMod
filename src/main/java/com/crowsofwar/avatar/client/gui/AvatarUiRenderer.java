@@ -346,7 +346,7 @@ public class AvatarUiRenderer extends Gui {
 	
 	public static void openBendingGui(int bending) {
 		
-		BendingStyle controller = BendingManager.getBending(bending);
+		BendingStyle controller = BendingStyles.get(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
 		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getButtons());

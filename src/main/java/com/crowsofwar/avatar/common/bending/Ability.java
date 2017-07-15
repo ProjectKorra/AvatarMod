@@ -36,50 +36,50 @@ public abstract class Ability {
 	private final UUID type;
 	private final String name;
 	private Raytrace.Info raytrace;
-	
+
 	public Ability(UUID bendingType, String name) {
 		this.type = bendingType;
 		this.name = name;
 		this.raytrace = new Raytrace.Info();
 	}
-	
+
 	protected BendingStyle controller() {
-		return BendingManager.getBending(type);
+		return BendingStyles.get(type);
 	}
-	
+
 	/**
 	 * Get the id of the bending style that this ability belongs to
 	 */
 	public final UUID getBendingStyle() {
 		return type;
 	}
-	
+
 	/**
 	 * Execute this ability. Only called on server.
-	 * 
+	 *
 	 * @param ctx
 	 *            Information for the ability
 	 */
 	public abstract void execute(AbilityContext ctx);
-	
+
 	/**
 	 * Get cooldown after the ability is activated.
 	 */
 	public int getCooldown(AbilityContext ctx) {
 		return 15;
 	}
-	
+
 	/**
 	 * Get the Id of this ability. It is unique from all other abilities, and is
 	 * the same every time Minecraft runs (i.e. is not dynamically generated)
 	 */
 	public abstract UUID getId();
-	
+
 	/**
 	 * Require that a raycast be sent prior to {@link #execute(AbilityContext)}.
 	 * Information for the raytrace will then be available through the
 	 * {@link AbilityContext}.
-	 * 
+	 *
 	 * @param range
 	 *            Range to raycast. -1 for player's reach.
 	 * @param raycastLiquids
@@ -88,26 +88,26 @@ public abstract class Ability {
 	protected void requireRaytrace(double range, boolean raycastLiquids) {
 		this.raytrace = new Raytrace.Info(range, raycastLiquids);
 	}
-	
+
 	/**
 	 * Get the request raytrace requirements for when the ability is activated.
 	 */
 	public final Raytrace.Info getRaytrace() {
 		return raytrace;
 	}
-	
+
 	/**
 	 * Gets the name of this ability. Will be all lowercase with no spaces.
 	 */
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Creates a new instance of AI for the given entity/bender.
 	 */
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new DefaultAbilityAi(this, entity, bender);
 	}
-	
+
 }

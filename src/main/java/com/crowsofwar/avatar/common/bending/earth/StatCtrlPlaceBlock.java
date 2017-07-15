@@ -53,7 +53,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		
-		BendingStyle controller = BendingManager.getBending(Earthbending.ID);
+		BendingStyle controller = BendingStyles.get(Earthbending.ID);
 		
 		BendingData data = ctx.getData();
 		

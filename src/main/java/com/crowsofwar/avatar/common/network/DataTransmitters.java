@@ -61,7 +61,7 @@ public class DataTransmitters {
 			int size = buf.readInt();
 			List<BendingStyle> out = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
-				out.add(BendingManager.getBending(buf.readInt()));
+				out.add(BendingStyles.get(buf.readInt()));
 			}
 			return out;
 		}
@@ -197,7 +197,7 @@ public class DataTransmitters {
 			if (id == -1) {
 				return null;
 			}
-			return BendingManager.getBending(id);
+			return BendingStyles.get(id);
 		}
 	};
 	

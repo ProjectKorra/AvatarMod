@@ -51,7 +51,7 @@ public class ArgumentBendingController implements IArgument<BendingStyle> {
 	
 	@Override
 	public BendingStyle convert(String input) {
-		return BendingManager.getBending(input.toLowerCase());
+		return BendingStyles.get(input.toLowerCase());
 	}
 	
 	@Override

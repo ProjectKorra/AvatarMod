@@ -294,7 +294,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		BendingData data = AvatarPlayerData.fetcher().fetch(player);
 		int element = packet.getElement();
 		
-		if (BendingManager.hasBending(element)) {
+		if (BendingStyles.has(element)) {
 			if (data.hasBending(element)) {
 				int guiId = AvatarGuiHandler.getGuiId(element);
 				player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
