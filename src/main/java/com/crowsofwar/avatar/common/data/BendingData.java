@@ -31,8 +31,6 @@ import java.util.function.Consumer;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class BendingData {
@@ -69,8 +67,9 @@ public class BendingData {
 
 	/**
 	 * Create a new BendingData
+	 *
 	 * @param saveCategory Function to save data in one category
-	 * @param saveAll Function to save all data
+	 * @param saveAll      Function to save all data
 	 */
 	public BendingData(Consumer<DataCategory> saveCategory, Runnable saveAll) {
 		this.saveCategory = saveCategory;
@@ -92,7 +91,7 @@ public class BendingData {
 	/**
 	 * Check if the player has that bending controller
 	 */
-	
+
 	public boolean hasBending(BendingStyle bending) {
 		return bendings.contains(bending);
 	}
@@ -100,7 +99,7 @@ public class BendingData {
 	/**
 	 * Check if the player has that type of bending
 	 */
-	
+
 	public boolean hasBending(UUID id) {
 		return hasBending(BendingStyles.get(id));
 	}
@@ -111,7 +110,7 @@ public class BendingData {
 	 * <p>
 	 * Also adds the state if it isn't present.
 	 */
-	
+
 	public void addBending(BendingStyle bending) {
 		if (bendings.add(bending)) {
 			save(DataCategory.BENDING_LIST);
@@ -122,7 +121,7 @@ public class BendingData {
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
 	 */
-	
+
 	public void addBending(UUID id) {
 		addBending(BendingStyles.get(id));
 	}
@@ -132,7 +131,7 @@ public class BendingData {
 	 * note, this will be saved, so is permanent (unless another bending
 	 * controller is added).
 	 */
-	
+
 	public void removeBending(BendingStyle bending) {
 		if (bendings.remove(bending)) {
 			save(DataCategory.BENDING_LIST);
@@ -144,23 +143,20 @@ public class BendingData {
 	 *
 	 * @see #removeBending(BendingStyle)
 	 */
-	
+
 	public void removeBending(UUID id) {
 		removeBending(BendingStyles.get(id));
 	}
 
-	
 	public List<BendingStyle> getAllBending() {
 		return new ArrayList<>(bendings);
 	}
 
-	
 	public void setAllBending(List<BendingStyle> bending) {
 		bendings.clear();
 		bendings.addAll(bending);
 	}
 
-	
 	public void clearBending() {
 		bendings.clear();
 	}
@@ -169,7 +165,6 @@ public class BendingData {
 	// ACTIVE BENDING
 	// ================================================================================
 
-	
 	public BendingStyle getActiveBending() {
 		if (!bendings.isEmpty() && activeBending == null) {
 			activeBending = bendings.iterator().next();
@@ -183,13 +178,11 @@ public class BendingData {
 		return activeBending;
 	}
 
-	
 	public UUID getActiveBendingId() {
 		BendingStyle controller = getActiveBending();
 		return controller == null ? null : controller.getId();
 	}
 
-	
 	public void setActiveBending(BendingStyle controller) {
 		if (!bendings.isEmpty() && bendings.contains(controller)) {
 			activeBending = controller;
@@ -197,7 +190,6 @@ public class BendingData {
 		}
 	}
 
-	
 	public void setActiveBending(UUID id) {
 		BendingStyle controller = BendingStyles.get(id);
 		setActiveBending(controller);
@@ -207,37 +199,31 @@ public class BendingData {
 	// STATUS CONTROLS
 	// ================================================================================
 
-	
 	public boolean hasStatusControl(StatusControl control) {
 		return statusControls.contains(control);
 	}
 
-	
 	public void addStatusControl(StatusControl control) {
 		if (statusControls.add(control)) {
 			save(DataCategory.STATUS_CONTROLS);
 		}
 	}
 
-	
 	public void removeStatusControl(StatusControl control) {
 		if (statusControls.remove(control)) {
 			save(DataCategory.STATUS_CONTROLS);
 		}
 	}
 
-	
 	public List<StatusControl> getAllStatusControls() {
 		return new ArrayList<>(statusControls);
 	}
 
-	
 	public void setAllStatusControls(List<StatusControl> controls) {
 		statusControls.clear();
 		statusControls.addAll(controls);
 	}
 
-	
 	public void clearStatusControls() {
 		statusControls.clear();
 	}
@@ -246,7 +232,6 @@ public class BendingData {
 	// ABILITY DATA
 	// ================================================================================
 
-	
 	public boolean hasAbilityData(UUID abilityId) {
 		return abilityData.get(abilityId) != null;
 	}
@@ -258,7 +243,7 @@ public class BendingData {
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
-	
+
 	public AbilityData getAbilityData(UUID abilityId) {
 		AbilityData data = abilityData.get(abilityId);
 		if (data == null) {
@@ -285,7 +270,7 @@ public class BendingData {
 	/**
 	 * Gets a list of all ability data contained in this player data.
 	 */
-	
+
 	public List<AbilityData> getAllAbilityData() {
 		return new ArrayList<>(abilityData.values());
 	}
@@ -294,7 +279,6 @@ public class BendingData {
 		return new HashMap<>(abilityData);
 	}
 
-	
 	public void setAbilityDataMap(Map<UUID, AbilityData> map) {
 		abilityData.clear();
 		abilityData.putAll(map);
@@ -303,7 +287,7 @@ public class BendingData {
 	/**
 	 * Removes all ability data associations
 	 */
-	
+
 	public void clearAbilityData() {
 		abilityData.clear();
 	}
@@ -315,12 +299,11 @@ public class BendingData {
 	/**
 	 * Gets the chi information about the bender
 	 */
-	
+
 	public Chi chi() {
 		return chi;
 	}
 
-	
 	public void setChi(Chi chi) {
 		this.chi = chi;
 		save(DataCategory.CHI);
@@ -330,37 +313,31 @@ public class BendingData {
 	// TICK HANDLERS
 	// ================================================================================
 
-	
 	public boolean hasTickHandler(TickHandler handler) {
 		return tickHandlers.contains(handler);
 	}
 
-	
 	public void addTickHandler(TickHandler handler) {
 		if (tickHandlers.add(handler)) {
 			save(DataCategory.TICK_HANDLERS);
 		}
 	}
 
-	
 	public void removeTickHandler(TickHandler handler) {
 		if (tickHandlers.remove(handler)) {
 			save(DataCategory.TICK_HANDLERS);
 		}
 	}
 
-	
 	public List<TickHandler> getAllTickHandlers() {
 		return new ArrayList<>(tickHandlers);
 	}
 
-	
 	public void setAllTickHandlers(List<TickHandler> handlers) {
 		tickHandlers.clear();
 		tickHandlers.addAll(handlers);
 	}
 
-	
 	public void clearTickHandlers() {
 		tickHandlers.clear();
 	}
@@ -369,67 +346,54 @@ public class BendingData {
 	// MISC
 	// ================================================================================
 
-	
 	public MiscData getMiscData() {
 		return miscData;
 	}
 
-	
 	public void setMiscData(MiscData md) {
 		this.miscData = md;
 	}
 
-	
 	public float getFallAbsorption() {
 		return miscData.getFallAbsorption();
 	}
 
-	
 	public void setFallAbsorption(float fallAbsorption) {
 		miscData.setFallAbsorption(fallAbsorption);
 	}
 
-	
 	public int getTimeInAir() {
 		return miscData.getTimeInAir();
 	}
 
-	
 	public void setTimeInAir(int time) {
 		miscData.setTimeInAir(time);
 	}
 
-	
 	public int getAbilityCooldown() {
 		return miscData.getAbilityCooldown();
 	}
 
-	
 	public void setAbilityCooldown(int cooldown) {
 		miscData.setAbilityCooldown(cooldown);
 	}
 
-	
 	public void decrementCooldown() {
 		miscData.decrementCooldown();
 	}
 
-	
 	public boolean isWallJumping() {
 		return miscData.isWallJumping();
 	}
 
-	
 	public void setWallJumping(boolean wallJumping) {
 		miscData.setWallJumping(wallJumping);
 	}
 
-	
 	public int getPetSummonCooldown() {
 		return miscData.getPetSummonCooldown();
 	}
 
-	
 	public void setPetSummonCooldown(int cooldown) {
 		miscData.setPetSummonCooldown(cooldown);
 	}
@@ -508,11 +472,10 @@ public class BendingData {
 
 	}
 
-
 	/**
 	 * Save this BendingData
 	 */
-	
+
 	public void save(DataCategory category) {
 		saveCategory.accept(category);
 	}

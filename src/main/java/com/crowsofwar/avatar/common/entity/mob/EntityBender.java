@@ -37,7 +37,7 @@ public abstract class EntityBender extends EntityCreature implements Bender {
 	 */
 	public EntityBender(World world) {
 		super(world);
-		data = new BendingData(category -> {}, () -> {}); // mc automatically saves
+		data = new BendingData(category -> {}, () -> {}); // mc automatically saves entity
 	}
 	
 	@Override
