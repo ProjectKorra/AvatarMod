@@ -16,25 +16,21 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public interface BendingData {
+public class BendingData {
 
 	// static methods
 	public static BendingData get(EntityLivingBase entity) {
@@ -55,196 +51,373 @@ public interface BendingData {
 		return get(world, id.getUUID());
 	}
 
+	private final Set<BendingStyle> bendings;
+	private final Set<StatusControl> statusControls;
+	private final Map<UUID, AbilityData> abilityData;
+	private final Set<TickHandler> tickHandlers;
+	private BendingStyle activeBending;
+	private Chi chi;
+	private MiscData miscData;
+
+	public BendingData() {
+		bendings = new HashSet<>();
+		statusControls = new HashSet<>();
+		abilityData = new HashMap<>();
+		tickHandlers = new HashSet<>();
+		activeBending = null;
+		chi = new Chi(this);
+		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
+	}
+
 	// ================================================================================
-	// BENDING CONTROLLERS
+	// BENDINGS METHODS
 	// ================================================================================
-	
+
 	/**
 	 * Check if the player has that bending controller
 	 */
-	boolean hasBending(BendingStyle bending);
 	
+	public boolean hasBending(BendingStyle bending) {
+		return bendings.contains(bending);
+	}
+
 	/**
 	 * Check if the player has that type of bending
 	 */
-	boolean hasBending(UUID id);
 	
+	public boolean hasBending(UUID id) {
+		return hasBending(BendingStyles.get(id));
+	}
+
 	/**
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
 	 * <p>
 	 * Also adds the state if it isn't present.
 	 */
-	void addBending(BendingStyle bending);
 	
+	public void addBending(BendingStyle bending) {
+		if (bendings.add(bending)) {
+			save(DataCategory.BENDING_LIST);
+		}
+	}
+
 	/**
 	 * If the bending controller is not already present, adds the bending
 	 * controller.
 	 */
-	void addBending(UUID id);
 	
+	public void addBending(UUID id) {
+		addBending(BendingStyles.get(id));
+	}
+
 	/**
 	 * Remove the specified bending controller and its associated state. Please
 	 * note, this will be saved, so is permanent (unless another bending
 	 * controller is added).
 	 */
-	void removeBending(BendingStyle bending);
 	
+	public void removeBending(BendingStyle bending) {
+		if (bendings.remove(bending)) {
+			save(DataCategory.BENDING_LIST);
+		}
+	}
+
 	/**
 	 * Remove the bending controller and its state with that type.
-	 * 
+	 *
 	 * @see #removeBending(BendingStyle)
 	 */
-	void removeBending(UUID id);
 	
-	List<BendingStyle> getAllBending();
+	public void removeBending(UUID id) {
+		removeBending(BendingStyles.get(id));
+	}
+
 	
-	void setAllBending(List<BendingStyle> controller);
+	public List<BendingStyle> getAllBending() {
+		return new ArrayList<>(bendings);
+	}
+
 	
-	void clearBending();
+	public void setAllBending(List<BendingStyle> bending) {
+		bendings.clear();
+		bendings.addAll(bending);
+	}
+
 	
+	public void clearBending() {
+		bendings.clear();
+	}
+
 	// ================================================================================
 	// ACTIVE BENDING
 	// ================================================================================
+
 	
-	/**
-	 * Gets the currently in-use bending controller. Null if player has no
-	 * bending
-	 */
-	BendingStyle getActiveBending();
+	public BendingStyle getActiveBending() {
+		if (!bendings.isEmpty() && activeBending == null) {
+			activeBending = bendings.iterator().next();
+		}
+		if (activeBending != null && !bendings.isEmpty() && !bendings.contains(activeBending)) {
+			activeBending = bendings.iterator().next();
+		}
+		if (bendings.isEmpty() && activeBending != null) {
+			activeBending = null;
+		}
+		return activeBending;
+	}
+
 	
-	/**
-	 * Gets the type of the in-use bending controller. Null if the player has no
-	 * bending
-	 */
-	UUID getActiveBendingId();
+	public UUID getActiveBendingId() {
+		BendingStyle controller = getActiveBending();
+		return controller == null ? null : controller.getId();
+	}
+
 	
-	/**
-	 * Set the currently in-use bending. If null, will be rejected
-	 */
-	void setActiveBending(BendingStyle controller);
+	public void setActiveBending(BendingStyle controller) {
+		if (!bendings.isEmpty() && bendings.contains(controller)) {
+			activeBending = controller;
+			save(DataCategory.ACTIVE_BENDING);
+		}
+	}
+
 	
-	/**
-	 * Set the currently in-use type. If null, will be rejected
-	 */
-	void setActiveBending(UUID type);
-	
+	public void setActiveBending(UUID id) {
+		BendingStyle controller = BendingStyles.get(id);
+		setActiveBending(controller);
+	}
+
 	// ================================================================================
 	// STATUS CONTROLS
 	// ================================================================================
+
 	
-	boolean hasStatusControl(StatusControl control);
+	public boolean hasStatusControl(StatusControl control) {
+		return statusControls.contains(control);
+	}
+
 	
-	void addStatusControl(StatusControl control);
+	public void addStatusControl(StatusControl control) {
+		if (statusControls.add(control)) {
+			save(DataCategory.STATUS_CONTROLS);
+		}
+	}
+
 	
-	void removeStatusControl(StatusControl control);
+	public void removeStatusControl(StatusControl control) {
+		if (statusControls.remove(control)) {
+			save(DataCategory.STATUS_CONTROLS);
+		}
+	}
+
 	
-	List<StatusControl> getAllStatusControls();
+	public List<StatusControl> getAllStatusControls() {
+		return new ArrayList<>(statusControls);
+	}
+
 	
-	void setAllStatusControls(List<StatusControl> controls);
+	public void setAllStatusControls(List<StatusControl> controls) {
+		statusControls.clear();
+		statusControls.addAll(controls);
+	}
+
 	
-	void clearStatusControls();
-	
+	public void clearStatusControls() {
+		statusControls.clear();
+	}
+
 	// ================================================================================
 	// ABILITY DATA
 	// ================================================================================
-	
-	boolean hasAbilityData(UUID abilityId);
-	
-	/**
-	 * Retrieves data about the given ability. Will create data if necessary.
-	 */
-	AbilityData getAbilityData(UUID abilityId);
 
-	/**
-	 * Retrieves data about the given ability. Will create data if necessary.
-	 */
-	default AbilityData getAbilityData(Ability ability) {
-		return getAbilityData(ability.getId());
+	
+	public boolean hasAbilityData(UUID abilityId) {
+		return abilityData.get(abilityId) != null;
 	}
 
-	void setAbilityData(UUID abilityId, AbilityData data);
+	/**
+	 * Retrieves data about the given ability. Will create data if necessary.
+	 */
 	
+	public AbilityData getAbilityData(UUID abilityId) {
+		AbilityData data = abilityData.get(abilityId);
+		if (data == null) {
+			data = new AbilityData(this, Abilities.get(abilityId));
+			abilityData.put(abilityId, data);
+			save(DataCategory.BENDING_LIST);
+		}
+
+		return data;
+	}
+
+	
+	public void setAbilityData(UUID abilityId, AbilityData data) {
+		abilityData.put(abilityId, data);
+	}
+
 	/**
 	 * Gets a list of all ability data contained in this player data.
 	 */
-	List<AbilityData> getAllAbilityData();
 	
-	Map<UUID, AbilityData> getAbilityDataMap();
+	public List<AbilityData> getAllAbilityData() {
+		return new ArrayList<>(abilityData.values());
+	}
+
 	
-	void setAbilityDataMap(Map<UUID, AbilityData> map);
+	public Map<UUID, AbilityData> getAbilityDataMap() {
+		return new HashMap<>(abilityData);
+	}
+
 	
+	public void setAbilityDataMap(Map<UUID, AbilityData> map) {
+		abilityData.clear();
+		abilityData.putAll(map);
+	}
+
 	/**
 	 * Removes all ability data associations
 	 */
-	void clearAbilityData();
 	
+	public void clearAbilityData() {
+		abilityData.clear();
+	}
+
 	// ================================================================================
 	// CHI
 	// ================================================================================
-	
+
 	/**
 	 * Gets the chi information about the bender
 	 */
-	Chi chi();
 	
-	void setChi(Chi chi);
+	public Chi chi() {
+		return chi;
+	}
+
 	
+	public void setChi(Chi chi) {
+		this.chi = chi;
+		save(DataCategory.CHI);
+	}
+
 	// ================================================================================
 	// TICK HANDLERS
 	// ================================================================================
+
 	
-	boolean hasTickHandler(TickHandler handler);
+	public boolean hasTickHandler(TickHandler handler) {
+		return tickHandlers.contains(handler);
+	}
+
 	
-	void addTickHandler(TickHandler handler);
+	public void addTickHandler(TickHandler handler) {
+		if (tickHandlers.add(handler)) {
+			save(DataCategory.TICK_HANDLERS);
+		}
+	}
+
 	
-	void removeTickHandler(TickHandler handler);
+	public void removeTickHandler(TickHandler handler) {
+		if (tickHandlers.remove(handler)) {
+			save(DataCategory.TICK_HANDLERS);
+		}
+	}
+
 	
-	List<TickHandler> getAllTickHandlers();
+	public List<TickHandler> getAllTickHandlers() {
+		return new ArrayList<>(tickHandlers);
+	}
+
 	
-	void setAllTickHandlers(List<TickHandler> handlers);
+	public void setAllTickHandlers(List<TickHandler> handlers) {
+		tickHandlers.clear();
+		tickHandlers.addAll(handlers);
+	}
+
 	
-	void clearTickHandlers();
-	
+	public void clearTickHandlers() {
+		tickHandlers.clear();
+	}
+
 	// ================================================================================
 	// MISC
 	// ================================================================================
+
 	
-	MiscData getMiscData();
+	public MiscData getMiscData() {
+		return miscData;
+	}
+
 	
-	void setMiscData(MiscData miscData);
+	public void setMiscData(MiscData md) {
+		this.miscData = md;
+	}
+
 	
-	float getFallAbsorption();
+	public float getFallAbsorption() {
+		return miscData.getFallAbsorption();
+	}
+
 	
-	void setFallAbsorption(float fallAbsorption);
+	public void setFallAbsorption(float fallAbsorption) {
+		miscData.setFallAbsorption(fallAbsorption);
+	}
+
 	
-	int getTimeInAir();
+	public int getTimeInAir() {
+		return miscData.getTimeInAir();
+	}
+
 	
-	void setTimeInAir(int time);
+	public void setTimeInAir(int time) {
+		miscData.setTimeInAir(time);
+	}
+
 	
-	int getAbilityCooldown();
+	public int getAbilityCooldown() {
+		return miscData.getAbilityCooldown();
+	}
+
 	
-	void setAbilityCooldown(int cooldown);
+	public void setAbilityCooldown(int cooldown) {
+		miscData.setAbilityCooldown(cooldown);
+	}
+
 	
-	void decrementCooldown();
+	public void decrementCooldown() {
+		miscData.decrementCooldown();
+	}
+
 	
-	boolean isWallJumping();
+	public boolean isWallJumping() {
+		return miscData.isWallJumping();
+	}
+
 	
-	void setWallJumping(boolean wallJumping);
+	public void setWallJumping(boolean wallJumping) {
+		miscData.setWallJumping(wallJumping);
+	}
+
 	
-	int getPetSummonCooldown();
+	public int getPetSummonCooldown() {
+		return miscData.getPetSummonCooldown();
+	}
+
 	
-	void setPetSummonCooldown(int cooldown);
-	
+	public void setPetSummonCooldown(int cooldown) {
+		miscData.setPetSummonCooldown(cooldown);
+	}
+
 	/**
 	 * Save this BendingData
 	 */
-	void save(DataCategory category);
+	
+	public void save(DataCategory category) {
+		// TODO
+	}
 
-	default void saveAll() {
-		for (DataCategory category : DataCategory.values()) {
-			save(category);
-		}
+	public void saveAll() {
+
 	}
 
 }
