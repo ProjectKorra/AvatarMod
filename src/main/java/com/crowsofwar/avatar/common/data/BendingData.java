@@ -19,6 +19,11 @@ package com.crowsofwar.avatar.common.data;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.ctx.Bender;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.WorldGenWaterlily;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +35,21 @@ import java.util.UUID;
  * @author CrowsOfWar
  */
 public interface BendingData {
-	
+
+	// static methods
+	public static BendingData get(EntityLivingBase entity) {
+		if (entity instanceof EntityPlayer) {
+			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
+		} else {
+			return Bender.create(entity).getData();
+		}
+	}
+
+	public static BendingData get(World world, UUID playerId) {
+		AvatarWorldData worldData = AvatarWorldData.getDataFromWorld(world);
+		return worldData.getPlayerData(playerId).getData();
+	}
+
 	// ================================================================================
 	// BENDING CONTROLLERS
 	// ================================================================================
