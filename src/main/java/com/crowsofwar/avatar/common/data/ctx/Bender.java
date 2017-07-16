@@ -88,12 +88,7 @@ public interface Bender {
 			throw new IllegalArgumentException("Unsure how to get bender for entity " + entity);
 		}
 	}
-	
-	public static BendingData getData(EntityLivingBase entity) {
-		Bender bender = get(entity);
-		return bender == null ? null : bender.getData();
-	}
-	
+
 	public static boolean isBenderSupported(EntityLivingBase entity) {
 		return entity == null || entity instanceof EntityPlayer || entity instanceof Bender;
 	}

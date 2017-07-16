@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
@@ -300,7 +300,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 				world.spawnEntity(ei);
 			}
 		}
-		AbilityData data = Bender.getData(getOwner()).getAbilityData(AbilityPickUpBlock.ID);
+		AbilityData data = BendingData.get(getOwner()).getAbilityData(AbilityPickUpBlock.ID);
 		if (data.isMasterPath(AbilityTreePath.SECOND)) {
 			
 			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);

@@ -422,7 +422,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleCycleBending(PacketSCycleBending packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = Bender.getData(player);
+		BendingData data = BendingData.get(player);
 		
 		List<BendingStyle> controllers = data.getAllBending();
 		if (controllers.size() > 1) {

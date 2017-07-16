@@ -132,7 +132,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			
 			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
 			
-			BendingData data = Bender.getData(entity.getOwner());
+			BendingData data = BendingData.get(entity.getOwner());
 			AbilityData abilityData = data.getAbilityData(AbilityWall.ID);
 			if (abilityData.isMaxLevel() && abilityData.getPath() == AbilityTreePath.SECOND) {
 				

@@ -152,7 +152,7 @@ public class EntityFireball extends AvatarEntity {
 		boolean destroyObsidian = false;
 		
 		if (getOwner() != null) {
-			AbilityData abilityData = Bender.getData(getOwner())
+			AbilityData abilityData = BendingData.get(getOwner())
 					.getAbilityData(AbilityFireball.ID);
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 				destroyObsidian = true;

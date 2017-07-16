@@ -129,7 +129,7 @@ public class EntityWave extends Entity {
 	
 	private int maxTimeOnLand() {
 		if (getOwner() != null) {
-			AbilityData data = Bender.getData(getOwner()).getAbilityData(AbilityCreateWave.ID);
+			AbilityData data = BendingData.get(getOwner()).getAbilityData(AbilityCreateWave.ID);
 			if (data.isMasterPath(AbilityTreePath.FIRST)) {
 				return 30;
 			}

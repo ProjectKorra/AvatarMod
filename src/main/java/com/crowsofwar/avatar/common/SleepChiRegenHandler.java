@@ -44,7 +44,7 @@ public class SleepChiRegenHandler {
 	@SubscribeEvent
 	public void onSlept(PlayerWakeUpEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
-		BendingData data = Bender.getData(player);
+		BendingData data = BendingData.get(player);
 		Chi chi = data.chi();
 		
 		chi.setAvailableChi(chi.getMaxChi() * CHI_CONFIG.availableThreshold);

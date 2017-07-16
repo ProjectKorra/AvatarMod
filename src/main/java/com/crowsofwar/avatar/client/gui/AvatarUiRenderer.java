@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -274,7 +273,7 @@ public class AvatarUiRenderer extends Gui {
 		
 		World world = mc.world;
 		EntityPlayer player = mc.player;
-		BendingData data = Bender.getData(player);
+		BendingData data = BendingData.get(player);
 		
 		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 			EntityAirBubble bubble = EntityAirBubble.lookupControlledEntity(world, EntityAirBubble.class,
