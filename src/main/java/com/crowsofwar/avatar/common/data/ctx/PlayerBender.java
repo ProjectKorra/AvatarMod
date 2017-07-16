@@ -16,10 +16,8 @@
 */
 package com.crowsofwar.avatar.common.data.ctx;
 
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -45,7 +43,7 @@ public class PlayerBender implements Bender {
 	
 	@Override
 	public BendingData getData() {
-		return AvatarPlayerData.fetcher().fetch(player);
+		return BendingData.get(player);
 	}
 	
 	@Override

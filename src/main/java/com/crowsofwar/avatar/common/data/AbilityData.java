@@ -21,7 +21,9 @@ import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -255,7 +257,19 @@ public class AbilityData {
 			return abilityData;
 		}
 	}
-	
+
+	public static AbilityData get(EntityLivingBase entity, UUID abilityId) {
+		return BendingData.get(entity).getAbilityData(abilityId);
+	}
+
+	public static AbilityData get(World world, UUID playerId, UUID abilityId) {
+		return BendingData.get(world, playerId).getAbilityData(abilityId);
+	}
+
+	public static AbilityData get(World world, String playerName, UUID abilityId) {
+		return BendingData.get(world, playerName).getAbilityData(abilityId);
+	}
+
 	/**
 	 * Describes which path the abilityData is currently taking. Main path is
 	 * for levels 1, 2, and 3. For level 4, either FIRST or SECOND path can be

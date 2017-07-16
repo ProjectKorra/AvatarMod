@@ -21,7 +21,6 @@ package com.crowsofwar.avatar.client.gui;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -128,8 +127,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 	
 	private void renderStatusControls(ScaledResolution resolution) {
-		List<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.player)
-				.getAllStatusControls();
+		List<StatusControl> statusControls = BendingData.get(mc.player).getAllStatusControls();
 		for (StatusControl statusControl : statusControls) {
 			mc.getTextureManager().bindTexture(AvatarUiTextures.STATUS_CONTROL_ICONS);
 			int centerX = resolution.getScaledWidth() / 2;

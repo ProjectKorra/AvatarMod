@@ -17,22 +17,21 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
-import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.DataCategory;
+import com.crowsofwar.gorecore.GoreCore;
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.DataCategory;
-import com.crowsofwar.gorecore.GoreCore;
-
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
 
 /**
  * 
@@ -45,7 +44,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	 * Used server-side to find what to write<br />
 	 * Used client-side to write to
 	 */
-	private AvatarPlayerData data;
+	private BendingData data;
 	private UUID playerId;
 	
 	// We need a SortedSet since the order of writing/reading the data is
@@ -57,7 +56,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	public PacketCPlayerData() {}
 	
-	public PacketCPlayerData(AvatarPlayerData data, UUID player, SortedSet<DataCategory> changed) {
+	public PacketCPlayerData(BendingData data, UUID player, SortedSet<DataCategory> changed) {
 		this.data = data;
 		this.playerId = player;
 		this.changed = changed;
@@ -66,8 +65,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
-		AvatarPlayerData data = AvatarPlayerData.fetcher()
-				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId);
+		BendingData data = BendingData.get(GoreCore.proxy.getClientSidePlayer().world, playerId);
 		
 		if (data != null) {
 			

@@ -16,21 +16,19 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-
-import java.util.Arrays;
-import java.util.List;
-
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-
 import net.minecraft.client.resources.I18n;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
 /**
  * 
@@ -62,7 +60,7 @@ public class ComponentAbilityTree extends UiComponent {
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		
-		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.player).getAbilityData(ability);
+		AbilityData data = AbilityData.get(mc.player, ability.getId());
 		
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		

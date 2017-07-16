@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.client.uitools.*;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
@@ -37,7 +36,6 @@ import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getPlainCardText
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
-import static net.minecraft.client.Minecraft.getMinecraft;
 
 /**
  * 
@@ -48,7 +46,9 @@ public class WindowAbility {
 	
 	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage
 			.newChatMessage("avatar.ui.unlockDesc", "bending");
-	
+
+	private final Minecraft mc;
+
 	private final Ability ability;
 	private final SkillsGui gui;
 	private final UiComponentHandler handler;
@@ -63,6 +63,7 @@ public class WindowAbility {
 	private ComponentCustomButton unlockButton;
 	
 	public WindowAbility(Ability ability, SkillsGui gui) {
+		this.mc = Minecraft.getMinecraft();
 		this.ability = ability;
 		this.gui = gui;
 		this.handler = new UiComponentHandler();
@@ -183,13 +184,12 @@ public class WindowAbility {
 		button.setEnabled(
 				gui.inventorySlots.getSlot(0).getHasStack() || gui.inventorySlots.getSlot(1).getHasStack());
 		
-		Minecraft mc = Minecraft.getMinecraft();
 		int width = screenWidth() / scaleFactor();
 		int height = screenHeight() / scaleFactor();
 		int mouseX = Mouse.getX() * width / mc.displayWidth;
 		int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
 		
-		AbilityData data = AvatarPlayerData.fetcher().fetch(mc.player).getAbilityData(ability);
+		AbilityData data = AbilityData.get(mc.player, ability.getId());
 		
 		unlockTitle.setVisible(data.isLocked());
 		unlockText.setVisible(data.isLocked());
@@ -258,7 +258,7 @@ public class WindowAbility {
 	 */
 	public boolean canRenderTooltip(ItemStack stack) {
 		
-		AbilityData data = AvatarPlayerData.fetcher().fetch(getMinecraft().player).getAbilityData(ability);
+		AbilityData data = AbilityData.get(mc.player, ability.getId());
 		if (data.isLocked()) {
 			return true;
 		}

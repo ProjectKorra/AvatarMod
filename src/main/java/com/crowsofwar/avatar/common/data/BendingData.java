@@ -21,11 +21,9 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
-import com.sun.jna.platform.win32.Advapi32Util;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenWaterlily;
 
 import java.util.List;
 import java.util.Map;
