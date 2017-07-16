@@ -45,7 +45,7 @@ public class BendingMenuInfo {
 	public BendingMenuInfo(MenuTheme theme, BendingStyle bending) {
 		List<Ability> buttons = bending.getAllAbilities();
 		if (buttons.size() > 8) throw new IllegalArgumentException(
-				"Cannot create BendingMenuInfo with buttons being larger than 8");
+				"Cannot get BendingMenuInfo with buttons being larger than 8");
 		this.theme = theme;
 		this.buttons = new Ability[8];
 		for (int i = 0; i < 8; i++)

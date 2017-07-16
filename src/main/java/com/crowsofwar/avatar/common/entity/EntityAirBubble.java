@@ -383,7 +383,7 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
-			BendingData data = Bender.create(getOwner()).getData();
+			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
 			

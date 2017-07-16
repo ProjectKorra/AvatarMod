@@ -47,7 +47,7 @@ public class BenderInfo {
 	}
 	
 	public BenderInfo(EntityLivingBase entity) {
-		this(Bender.create(entity));
+		this(Bender.get(entity));
 	}
 	
 	public BenderInfo(Bender bender) {

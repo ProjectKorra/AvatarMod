@@ -202,7 +202,7 @@ public class EntityWaterArc extends EntityArc {
 	@Override
 	public boolean tryDestroy() {
 		if (getOwner() != null) {
-			BendingData data = Bender.create(getOwner()).getData();
+			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(THROW_WATER);
 		}
 		return true;

@@ -71,7 +71,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 				
 				double seconds = dist / 20;
 				
-				BendingData data = Bender.create(entity).getData();
+				BendingData data = Bender.get(entity).getData();
 				data.setPetSummonCooldown((int) (seconds * 20));
 				data.addTickHandler(TickHandler.BISON_SUMMONER);
 				

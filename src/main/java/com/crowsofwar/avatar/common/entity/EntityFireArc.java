@@ -86,7 +86,7 @@ public class EntityFireArc extends EntityArc {
 	public void setDead() {
 		super.setDead();
 		if (getOwner() != null) {
-			BendingData data = Bender.create(getOwner()).getData();
+			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIRE);
 			if (!world.isRemote) {
 				data.removeStatusControl(StatusControl.THROW_FIRE);

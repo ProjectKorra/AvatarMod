@@ -108,7 +108,7 @@ public class EntityWave extends Entity {
 				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), STATS_CONFIG.waveSettings.damage * damageMult);
 			}
 			if (!collided.isEmpty()) {
-				BendingData data = Bender.create(owner).getData();
+				BendingData data = Bender.get(owner).getData();
 				if (data != null) {
 					data.getAbilityData(AbilityCreateWave.ID).addXp(SKILLS_CONFIG.waveHit);
 				}

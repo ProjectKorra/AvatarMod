@@ -21,7 +21,6 @@ import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -66,7 +65,7 @@ public class BendingContext {
 	 */
 	public BendingContext(BendingData data, EntityPlayer player, Raytrace.Result raytrace) {
 		this.data = data;
-		this.bender = Bender.create(player);
+		this.bender = Bender.get(player);
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
 		this.lookPos = raytrace.getPosPrecise();

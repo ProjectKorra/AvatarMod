@@ -76,7 +76,7 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 	/**
 	 * Creates new GC player data.
 	 * <p>
-	 * Please note, the subclass must create a constructor identical to this
+	 * Please note, the subclass must get a constructor identical to this
 	 * one, passing the arguments to <code>super</code>. This is because
 	 * GoreCore player data is created with reflection.
 	 * 

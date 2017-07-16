@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.entity;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -213,7 +212,7 @@ public class EntityFireball extends AvatarEntity {
 	
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
-			BendingData data = Bender.create(getOwner()).getData();
+			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIREBALL);
 		}
 	}

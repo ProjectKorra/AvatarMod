@@ -78,7 +78,7 @@ public class AirbendingEvents {
 		EntityLivingBase attacked = (EntityLivingBase) e.getEntity();
 		
 		if (Bender.isBenderSupported(attacked)) {
-			BendingData data = Bender.create(attacked).getData();
+			BendingData data = Bender.get(attacked).getData();
 			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 				EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
 						attacked);

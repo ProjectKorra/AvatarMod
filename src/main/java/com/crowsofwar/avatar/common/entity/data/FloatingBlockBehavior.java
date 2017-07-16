@@ -201,7 +201,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			// Add XP
-			BendingData data = Bender.create(entity.getOwner()).getData();
+			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.blockThrowHit;
 				if (collided.getHealth() <= 0) {
@@ -289,7 +289,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			if (owner == null) return this;
 			
-			BendingData data = Bender.create(owner).getData();
+			BendingData data = Bender.get(owner).getData();
 			
 			double yaw = Math.toRadians(owner.rotationYaw);
 			double pitch = Math.toRadians(owner.rotationPitch);

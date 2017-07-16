@@ -139,7 +139,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
 				
 				BendingContext ctx = new BendingContext(data, entity.getOwner(),
-						Bender.create(entity.getOwner()), new Raytrace.Result());
+						Bender.get(entity.getOwner()), new Raytrace.Result());
 				
 				if (!entity.world.isRemote && !ctx.consumeChi(STATS_CONFIG.chiWallOneSecond / 20)) {
 					drop = true;

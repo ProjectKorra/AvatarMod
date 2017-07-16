@@ -77,7 +77,7 @@ public interface Bender {
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */
-	public static Bender create(EntityLivingBase entity) {
+	public static Bender get(EntityLivingBase entity) {
 		if (entity == null) {
 			return null;
 		} else if (entity instanceof Bender) {
@@ -85,12 +85,12 @@ public interface Bender {
 		} else if (entity instanceof EntityPlayer) {
 			return new PlayerBender((EntityPlayer) entity);
 		} else {
-			throw new IllegalArgumentException("Unsure how to create bender for entity " + entity);
+			throw new IllegalArgumentException("Unsure how to get bender for entity " + entity);
 		}
 	}
 	
 	public static BendingData getData(EntityLivingBase entity) {
-		Bender bender = create(entity);
+		Bender bender = get(entity);
 		return bender == null ? null : bender.getData();
 	}
 	

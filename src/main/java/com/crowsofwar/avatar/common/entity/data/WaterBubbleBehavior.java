@@ -83,7 +83,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			
 			if (owner == null) return this;
 			
-			BendingData data = Bender.create(owner).getData();
+			BendingData data = Bender.get(owner).getData();
 			
 			Vector target;
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 3, false);

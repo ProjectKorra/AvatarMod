@@ -72,7 +72,7 @@ public class EntityAirGust extends EntityArc {
 		EntityLivingBase owner = getOwner();
 		if (!entity.world.isRemote && entity != owner) {
 			
-			BendingData data = Bender.create(owner).getData();
+			BendingData data = Bender.get(owner).getData();
 			float xp = 0;
 			if (data != null) {
 				AbilityData abilityData = data.getAbilityData(AbilityAirGust.ID);

@@ -119,7 +119,7 @@ public class EntityFlames extends AvatarEntity {
 		}
 		
 		if (!world.isRemote) {
-			BendingData data = Bender.create(owner).getData();
+			BendingData data = Bender.get(owner).getData();
 			AbilityData abilityData = data.getAbilityData(AbilityFlamethrower.ID);
 			
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),

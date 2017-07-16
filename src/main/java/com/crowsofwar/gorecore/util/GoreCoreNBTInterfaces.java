@@ -29,10 +29,10 @@ public class GoreCoreNBTInterfaces {
 	
 	public interface CreateFromNBT<T> {
 		/**
-		 * Called to create a new <code>T</code> from the NBTTagCompound.
+		 * Called to get a new <code>T</code> from the NBTTagCompound.
 		 * 
 		 * @param nbt
-		 *            The NBTTagCompound to create it from
+		 *            The NBTTagCompound to get it from
 		 * @param methodsExtraData
 		 *            Method-specific extra data provided by the method, the
 		 *            details should be provided in a javadoc

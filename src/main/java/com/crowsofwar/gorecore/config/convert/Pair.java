@@ -37,7 +37,7 @@ public class Pair {
 	 */
 	public static Pair of(Class<?> clsA, Class<?> clsB) {
 		if (clsA == null || clsB == null) {
-			throw new ConversionException("Cannot create a pair with a null class");
+			throw new ConversionException("Cannot get a pair with a null class");
 		}
 		return new Pair(Type.of(clsA), Type.of(clsB));
 	}

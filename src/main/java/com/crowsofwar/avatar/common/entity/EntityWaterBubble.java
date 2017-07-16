@@ -54,7 +54,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	private final OwnerAttribute ownerAttrib;
 	
 	/**
-	 * Whether the water bubble will create a water source upon landing. Only
+	 * Whether the water bubble will get a water source upon landing. Only
 	 * set on server-side.
 	 */
 	private boolean sourceBlock;
@@ -112,7 +112,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		if (!world.isRemote && inWaterSource) {
 			setDead();
 			if (getOwner() != null) {
-				BendingData data = Bender.create(getOwner()).getData();
+				BendingData data = Bender.get(getOwner()).getData();
 				if (data != null) {
 					data.removeStatusControl(StatusControl.THROW_BUBBLE);
 				}
@@ -178,7 +178,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	public boolean tryDestroy() {
 		setBehavior(new WaterBubbleBehavior.Drop());
 		if (getOwner() != null) {
-			Bender.create(getOwner()).getData().removeStatusControl(THROW_BUBBLE);
+			Bender.get(getOwner()).getData().removeStatusControl(THROW_BUBBLE);
 		}
 		return false;
 	}

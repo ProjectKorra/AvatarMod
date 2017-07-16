@@ -125,7 +125,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			motion.setY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
-			BendingData data = Bender.create(entity.getOwner()).getData();
+			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
 				data.getAbilityData(AbilityFireball.ID).addXp(xp);
@@ -160,7 +160,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			
 			if (owner == null) return this;
 			
-			BendingData data = Bender.create(owner).getData();
+			BendingData data = Bender.get(owner).getData();
 			
 			double yaw = Math.toRadians(owner.rotationYaw);
 			double pitch = Math.toRadians(owner.rotationPitch);

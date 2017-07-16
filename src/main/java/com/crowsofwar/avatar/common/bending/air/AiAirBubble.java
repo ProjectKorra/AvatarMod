@@ -58,7 +58,7 @@ public class AiAirBubble extends BendingAi {
 				bubble -> bubble.getOwner() == entity) != null;
 		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.25f || entity.getHealth() < 10;
 		
-		// 2% chance to create air bubble every tick
+		// 2% chance to get air bubble every tick
 		return !already && underAttack && lowHealth && random.nextDouble() <= 0.02;
 		
 	}

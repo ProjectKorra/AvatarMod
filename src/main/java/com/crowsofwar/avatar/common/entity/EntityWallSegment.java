@@ -299,7 +299,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		
 		boolean friendlyProjectile = false;
 		if (getOwner() != null) {
-			AbilityData data = Bender.create(getOwner()).getData().getAbilityData(AbilityWall.ID);
+			AbilityData data = Bender.get(getOwner()).getData().getAbilityData(AbilityWall.ID);
 			if (data.isMaxLevel() && data.getPath() == AbilityTreePath.FIRST) {
 				
 				friendlyProjectile = entity instanceof AvatarEntity

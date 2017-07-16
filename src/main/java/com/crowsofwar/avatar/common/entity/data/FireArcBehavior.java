@@ -114,7 +114,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				collided.setFire(3);
 				
 				if (!entity.world.isRemote) {
-					BendingData data = Bender.create(entity.getOwner()).getData();
+					BendingData data = Bender.get(entity.getOwner()).getData();
 					if (data != null) {
 						data.getAbilityData(AbilityFireArc.ID)
 								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);

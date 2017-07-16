@@ -36,7 +36,7 @@ public @interface HasCustomLoader {
 	 * Get the class of the loader, which is called to actually load from
 	 * configuration.
 	 * <p>
-	 * Since we can't use lambdas in members, anything using this will create a
+	 * Since we can't use lambdas in members, anything using this will get a
 	 * new instance of that CustomObjectLoader (reflection).
 	 */
 	Class<? extends CustomObjectLoader> loaderClass();

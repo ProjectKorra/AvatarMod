@@ -40,7 +40,7 @@ public class BendingData {
 		if (entity instanceof EntityPlayer) {
 			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
 		} else {
-			return Bender.create(entity).getData();
+			return Bender.get(entity).getData();
 		}
 	}
 
@@ -241,7 +241,7 @@ public class BendingData {
 	}
 
 	/**
-	 * Retrieves data about the given ability. Will create data if necessary.
+	 * Retrieves data about the given ability. Will get data if necessary.
 	 */
 
 	public AbilityData getAbilityData(UUID abilityId) {

@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * A vector which is adds Consumers in a way that allows clients to create a
+ * A vector which is adds Consumers in a way that allows clients to get a
  * view of another vector.
  * <p>
  * In a backed vector, the vector's fields x, y, and z have become obsolete.

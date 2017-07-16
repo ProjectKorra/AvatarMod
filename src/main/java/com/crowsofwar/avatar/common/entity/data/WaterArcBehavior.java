@@ -109,7 +109,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			
-			BendingData data = Bender.create(entity.getOwner()).getData();
+			BendingData data = Bender.get(entity.getOwner()).getData();
 			AbilityData abilityData = data.getAbilityData(AbilityWaterArc.ID);
 			
 			if (!abilityData.isMasterPath(AbilityTreePath.SECOND) || entity.ticksExisted >= 40) {

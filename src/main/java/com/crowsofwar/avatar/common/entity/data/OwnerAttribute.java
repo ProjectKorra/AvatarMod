@@ -143,7 +143,7 @@ public class OwnerAttribute {
 		if (owner == null) {
 			return null;
 		} else {
-			return Bender.create(owner);
+			return Bender.get(owner);
 		}
 	}
 	

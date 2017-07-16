@@ -64,7 +64,7 @@ public abstract class EntityArc extends AvatarEntity {
 	}
 	
 	/**
-	 * Called from the EntityArc constructor to create a new control point
+	 * Called from the EntityArc constructor to get a new control point
 	 * entity.
 	 * 
 	 * @param size
