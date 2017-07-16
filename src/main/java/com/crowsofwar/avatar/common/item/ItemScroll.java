@@ -64,7 +64,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		if (data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
 		} else {

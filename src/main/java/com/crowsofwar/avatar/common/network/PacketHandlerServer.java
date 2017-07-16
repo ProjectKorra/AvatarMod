@@ -150,7 +150,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		if (data != null) {
 			
 			Ability ability = packet.getAbility();
@@ -189,7 +189,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			
 		}
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		
 		if (data != null) data.saveAll();
 		return null;
@@ -204,7 +204,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
@@ -224,7 +224,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		World world = player.world;
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		if (data.hasBending(Airbending.ID) && !data.isWallJumping()
 				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			
@@ -292,7 +292,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		UUID element = packet.getElement();
 
 		if (BendingStyles.has(element)) {
@@ -308,7 +308,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseScroll(PacketSUseScroll packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		AbilityData abilityData = data.getAbilityData(packet.getAbility());
 		
 		if (!abilityData.isMaxLevel() && (abilityData.getXp() == 100 || abilityData.isLocked())) {
@@ -371,7 +371,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleGetBending(PacketSOpenUnlockGui packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		
 		if (data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.world, 0, 0, 0);
@@ -384,7 +384,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUnlockBending(PacketSUnlockBending packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		Container container = player.openContainer;
 		
 		if (container instanceof ContainerGetBending) {

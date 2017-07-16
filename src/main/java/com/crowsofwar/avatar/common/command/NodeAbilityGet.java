@@ -56,7 +56,7 @@ public class NodeAbilityGet extends NodeFunctional {
 		String player = args.get(argPlayer);
 		Ability ability = args.get(argAbility);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(call.getFrom().getEntityWorld(), player);
+		BendingData data = BendingData.get(call.getFrom().getEntityWorld(), player);
 		if (data != null) {
 			
 			float xp = data.getAbilityData(ability).getTotalXp();

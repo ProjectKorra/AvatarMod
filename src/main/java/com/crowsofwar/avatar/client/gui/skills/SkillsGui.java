@@ -75,7 +75,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		super(new ContainerSkillsGui(getMinecraft().player, guiBending));
 
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
-		BendingData data = AvatarPlayerData.fetcher().fetch(getMinecraft().player);
+		BendingData data = BendingData.get(getMinecraft().player);
 		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
@@ -179,7 +179,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 
 		drawDefaultBackground();
 
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		
 		handler.draw(partialTicks, mouseX, mouseY);
 		

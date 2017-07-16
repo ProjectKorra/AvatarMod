@@ -17,27 +17,26 @@
 
 package com.crowsofwar.avatar.common;
 
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-
-import java.util.List;
-
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
 public class AvatarPlayerTick {
 	
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
 		// Also forces loading of data on client
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(e.player);
+		BendingData data = BendingData.get(e.player);
 		if (data != null) {
 			
 			EntityPlayer player = e.player;

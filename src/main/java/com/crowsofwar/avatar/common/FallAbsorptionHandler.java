@@ -38,7 +38,7 @@ public class FallAbsorptionHandler {
 		Entity entity = e.getEntity();
 		if (entity instanceof EntityPlayer && !entity.world.isRemote) {
 			EntityPlayer player = (EntityPlayer) entity;
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = BendingData.get(player);
 			if (data.getFallAbsorption() != 0) {
 				e.setDistance(e.getDistance() - data.getFallAbsorption());
 				if (e.getDistance() < 0) e.setDistance(0);

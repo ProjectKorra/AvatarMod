@@ -51,7 +51,7 @@ public class NodeBendingList extends NodeFunctional {
 		ArgumentList args = call.popArguments(this);
 		String playerName = args.get(argPlayerName);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName);
+		BendingData data = BendingData.get(world, playerName);
 		if (data == null) {
 			
 			AvatarChatMessages.MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);

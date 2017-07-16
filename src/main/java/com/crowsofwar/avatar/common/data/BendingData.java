@@ -235,5 +235,11 @@ public interface BendingData {
 	 * Save this BendingData
 	 */
 	void save(DataCategory category);
-	
+
+	default void saveAll() {
+		for (DataCategory category : DataCategory.values()) {
+			save(category);
+		}
+	}
+
 }

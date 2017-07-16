@@ -154,7 +154,7 @@ public class AvatarUiRenderer extends Gui {
 		
 		GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		
 		if (data.getAllBending().isEmpty()) return;
 		
@@ -224,7 +224,7 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderActiveBending(ScaledResolution res) {
 		
-		BendingData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		
 		if (data.getActiveBending() != null) {
 			

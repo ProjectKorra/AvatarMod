@@ -26,7 +26,6 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -146,7 +145,7 @@ public class ClientInput implements IControlsHandler {
 		tryCycleBending();
 		
 		if (AvatarControl.KEY_SKILLS.isPressed()) {
-			BendingData data = AvatarPlayerData.fetcher().fetch(mc.player);
+			BendingData data = BendingData.get(mc.player);
 			BendingStyle active = data.getActiveBending();
 			if (active == null) {
 				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
@@ -173,7 +172,7 @@ public class ClientInput implements IControlsHandler {
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void tryOpenBendingMenu() {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_USE_BENDING.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			
 			if (data.getActiveBending() != null) {
@@ -192,7 +191,7 @@ public class ClientInput implements IControlsHandler {
 	}
 	
 	private void tryCycleBending() {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_BENDING_CYCLE_LEFT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			AvatarMod.network.sendToServer(new PacketSCycleBending(false));
 		}
@@ -222,7 +221,7 @@ public class ClientInput implements IControlsHandler {
 		
 		if (player != null && player.world != null) {
 			// Send any input to the server
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = BendingData.get(player);
 			
 			if (data != null) {
 				

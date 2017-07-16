@@ -64,7 +64,7 @@ public class BendingContext {
 	 * @param raytrace
 	 *            Result of the raytrace, from client
 	 */
-	public BendingContext(AvatarPlayerData data, Raytrace.Result raytrace) {
+	public BendingContext(BendingData data, Raytrace.Result raytrace) {
 		this.data = data;
 		this.bender = new PlayerBender(data.getPlayerEntity());
 		this.clientLookBlock = raytrace.getPos();

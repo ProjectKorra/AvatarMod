@@ -63,7 +63,7 @@ public class NodeBendingRemove extends NodeFunctional {
 		List<BendingStyle> controllers = args.get(argBendingController);
 		
 		for (BendingStyle controller : controllers) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName);
+			BendingData data = BendingData.get(world, playerName);
 			if (data == null) {
 				MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
 			} else {

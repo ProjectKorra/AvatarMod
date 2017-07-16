@@ -69,7 +69,7 @@ public class NodeXpSet extends NodeFunctional {
 		String specification = args.get(argSpecification);
 		float xp = args.get(argNewXp);
 		
-		BendingData data = AvatarPlayerData.fetcher().fetch(call.getFrom().getEntityWorld(), playerName);
+		BendingData data = BendingData.get(call.getFrom().getEntityWorld(), playerName);
 		AbilityData abilityData = data.getAbilityData(ability);
 		
 		int level;

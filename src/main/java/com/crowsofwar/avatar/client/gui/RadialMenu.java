@@ -17,26 +17,18 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import static com.crowsofwar.avatar.AvatarMod.proxy;
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.lwjgl.input.Keyboard;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
@@ -44,6 +36,12 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
+import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.input.Keyboard;
+
+import static com.crowsofwar.avatar.AvatarMod.proxy;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 public class RadialMenu extends Gui {
 	
@@ -133,7 +131,7 @@ public class RadialMenu extends Gui {
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT * 1.5);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		if (data != null) {
 
 			int level = 0;
