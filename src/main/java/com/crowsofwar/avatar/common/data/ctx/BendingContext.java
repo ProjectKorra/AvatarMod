@@ -64,9 +64,9 @@ public class BendingContext {
 	 * @param raytrace
 	 *            Result of the raytrace, from client
 	 */
-	public BendingContext(BendingData data, Raytrace.Result raytrace) {
+	public BendingContext(BendingData data, EntityPlayer player, Raytrace.Result raytrace) {
 		this.data = data;
-		this.bender = new PlayerBender(data.getPlayerEntity());
+		this.bender = Bender.create(player);
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
 		this.lookPos = raytrace.getPosPrecise();

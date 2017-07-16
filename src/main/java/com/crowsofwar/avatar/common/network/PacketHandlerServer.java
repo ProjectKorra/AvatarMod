@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
@@ -100,7 +99,7 @@ public class PacketHandlerServer implements IPacketHandler {
 				ProcessAbilityRequest par = iterator.next();
 				par.ticks--;
 				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0) {
-					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability));
+					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability, par.player));
 					iterator.remove();
 				}
 			}
@@ -157,7 +156,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			if (data.hasBending(ability.getBendingId())) {
 				if (!data.getAbilityData(ability).isLocked() || player.capabilities.isCreativeMode) {
 					if (data.getAbilityCooldown() == 0) {
-						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
+						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability, player);
 						ability.execute(abilityCtx);
 						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
 					} else {
@@ -209,7 +208,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
 			if (data.hasStatusControl(sc)) {
-				if (sc.execute(new BendingContext(data, packet.getRaytrace()))) {
+				if (sc.execute(new BendingContext(data, player, packet.getRaytrace()))) {
 					data.removeStatusControl(packet.getStatusControl());
 				}
 			}
@@ -446,11 +445,11 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		private int ticks;
 		private final EntityPlayer player;
-		private final AvatarPlayerData data;
+		private final BendingData data;
 		private final Ability ability;
 		private final Raytrace.Result raytrace;
 		
-		public ProcessAbilityRequest(int ticks, EntityPlayer player, AvatarPlayerData data,
+		public ProcessAbilityRequest(int ticks, EntityPlayer player, BendingData data,
 				Ability ability, Raytrace.Result raytrace) {
 			this.ticks = ticks;
 			this.player = player;

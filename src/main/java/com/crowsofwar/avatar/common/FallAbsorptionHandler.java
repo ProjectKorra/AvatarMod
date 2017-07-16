@@ -16,8 +16,7 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-
+import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;

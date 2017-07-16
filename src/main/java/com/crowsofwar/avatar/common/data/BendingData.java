@@ -20,6 +20,8 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
+import com.sun.jna.platform.win32.Advapi32Util;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -48,6 +50,11 @@ public interface BendingData {
 	public static BendingData get(World world, UUID playerId) {
 		AvatarWorldData worldData = AvatarWorldData.getDataFromWorld(world);
 		return worldData.getPlayerData(playerId).getData();
+	}
+
+	public static BendingData get(World world, String playerName) {
+		AccountUUIDs.AccountId id = AccountUUIDs.getId(playerName);
+		return get(world, id.getUUID());
 	}
 
 	// ================================================================================

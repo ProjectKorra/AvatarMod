@@ -59,7 +59,7 @@ public class AvatarPlayerTick {
 			if (e.phase == Phase.START) {
 				List<TickHandler> tickHandlers = data.getAllTickHandlers();
 				if (tickHandlers != null) {
-					BendingContext ctx = new BendingContext(data, new Raytrace.Result());
+					BendingContext ctx = new BendingContext(data, player, new Raytrace.Result());
 					for (TickHandler handler : tickHandlers) {
 						if (handler.tick(ctx)) {
 							// Can use this since the list is a COPY of the

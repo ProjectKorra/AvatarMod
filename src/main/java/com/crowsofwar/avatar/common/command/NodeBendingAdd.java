@@ -17,22 +17,15 @@
 
 package com.crowsofwar.avatar.common.command;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.gorecore.tree.*;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.world.World;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.tree.ArgumentList;
-import com.crowsofwar.gorecore.tree.ArgumentOptions;
-import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
-import com.crowsofwar.gorecore.tree.CommandCall;
-import com.crowsofwar.gorecore.tree.IArgument;
-import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.NodeFunctional;
-
-import net.minecraft.command.ICommandSender;
-import net.minecraft.world.World;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 public class NodeBendingAdd extends NodeFunctional {
 	

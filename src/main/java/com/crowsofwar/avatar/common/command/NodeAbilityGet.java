@@ -17,17 +17,12 @@
 
 package com.crowsofwar.avatar.common.command;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.tree.ArgumentList;
-import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
-import com.crowsofwar.gorecore.tree.CommandCall;
-import com.crowsofwar.gorecore.tree.IArgument;
-import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.NodeFunctional;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.gorecore.tree.*;
+
+import java.util.List;
 
 /**
  * 
