@@ -24,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * 
@@ -51,6 +52,9 @@ public class BendingData {
 		return get(world, id.getUUID());
 	}
 
+	private final Consumer<DataCategory> saveCategory;
+	private final Runnable saveAll;
+
 	private final Set<BendingStyle> bendings;
 	private final Set<StatusControl> statusControls;
 	private final Map<UUID, AbilityData> abilityData;
@@ -59,7 +63,15 @@ public class BendingData {
 	private Chi chi;
 	private MiscData miscData;
 
-	public BendingData() {
+	/**
+	 * Create a new BendingData
+	 * @param saveCategory Function to save data in one category
+	 * @param saveAll Function to save all data
+	 */
+	public BendingData(Consumer<DataCategory> saveCategory, Runnable saveAll) {
+		this.saveCategory = saveCategory;
+		this.saveAll = saveAll;
+
 		bendings = new HashSet<>();
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
@@ -413,11 +425,11 @@ public class BendingData {
 	 */
 	
 	public void save(DataCategory category) {
-		// TODO
+		saveCategory.accept(category);
 	}
 
 	public void saveAll() {
-
+		saveAll.run();
 	}
 
 }
