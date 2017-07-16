@@ -18,8 +18,6 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.entity.data.EntityBenderData;
-
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,14 +30,14 @@ import net.minecraft.world.World;
  */
 public abstract class EntityBender extends EntityCreature implements Bender {
 	
-	private EntityBenderData data;
+	private BendingData data;
 	
 	/**
 	 * @param world
 	 */
 	public EntityBender(World world) {
 		super(world);
-		data = new EntityBenderData(this);
+		data = new BendingData(category -> {}, () -> {}); // mc automatically saves
 	}
 	
 	@Override

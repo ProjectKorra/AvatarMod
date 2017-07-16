@@ -251,6 +251,10 @@ public class BendingData {
 		return abilityData.get(abilityId) != null;
 	}
 
+	public boolean hasAbilityData(Ability ability) {
+		return hasAbilityData(ability.getId());
+	}
+
 	/**
 	 * Retrieves data about the given ability. Will create data if necessary.
 	 */
@@ -266,9 +270,16 @@ public class BendingData {
 		return data;
 	}
 
-	
+	public AbilityData getAbilityData(Ability ability) {
+		return getAbilityData(ability.getId());
+	}
+
 	public void setAbilityData(UUID abilityId, AbilityData data) {
 		abilityData.put(abilityId, data);
+	}
+
+	public void setAbilityData(Ability ability, AbilityData data) {
+		setAbilityData(ability.getId(), data);
 	}
 
 	/**
@@ -279,7 +290,6 @@ public class BendingData {
 		return new ArrayList<>(abilityData.values());
 	}
 
-	
 	public Map<UUID, AbilityData> getAbilityDataMap() {
 		return new HashMap<>(abilityData);
 	}
