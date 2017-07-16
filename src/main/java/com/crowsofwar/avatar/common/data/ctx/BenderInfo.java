@@ -16,79 +16,61 @@
 */
 package com.crowsofwar.avatar.common.data.ctx;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
+import com.crowsofwar.avatar.common.data.BenderInfoPlayer;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
+
+import static sun.audio.AudioPlayer.player;
 
 /**
  * Stores information about a {@link Bender} so that he/she can be found later.
  * 
  * @author CrowsOfWar
  */
-public class BenderInfo {
-	
-	private final boolean player;
-	private final UUID id;
+public abstract class BenderInfo {
 	
 	/**
 	 * Creates bender info with null info, should only be used by NoBenderInfo
 	 */
 	protected BenderInfo() {
-		player = false;
-		id = null;
 	}
-	
-	public BenderInfo(EntityLivingBase entity) {
-		this(Bender.get(entity));
-	}
-	
-	public BenderInfo(Bender bender) {
-		player = bender.isPlayer();
-		if (player) {
-			id = AccountUUIDs.getId(bender.getName()).getUUID();
-		} else {
-			id = bender.getEntity().getPersistentID();
-		}
-	}
-	
-	public BenderInfo(boolean player, UUID id) {
-		this.player = player;
-		this.id = id;
-	}
-	
-	public boolean isPlayer() {
-		return player;
-	}
+
+	public abstract boolean isPlayer();
 	
 	@Nullable
-	public UUID getId() {
-		return id;
-	}
-	
-	public Bender find(World world) {
-		if (id == null) return null;
+	public abstract UUID getId();
+
+	@Nullable
+	public abstract Bender find(World world);
+
+	/**
+	 * Gets a String to help identify which type of BenderInfo this is when being read from NBT.
+	 */
+	protected abstract String getNbtTag();
+
+	public void writeToNbt(NBTTagCompound nbt) {
 		
-		if (player) {
-			return new PlayerBender(AccountUUIDs.findEntityFromUUID(world, id));
+	}
+
+	protected abstract void write(NBTTagCompound nbt);
+
+	public static BenderInfo readFromNbt(NBTTagCompound nbt) {
+		if (nbt.getBoolean("Player")) {
+			return new BenderInfoPlayer(nbt.getUniqueId("Id"));
+		} else if (nbt.getBoolean("None")) {
+			return new NoBenderInfo();
 		} else {
-			List<Entity> entities = world.loadedEntityList;
-			for (Entity entity : entities) {
-				if (entity.getPersistentID().equals(id)) {
-					return (Bender) entity;
-				}
-			}
-			return null;
+			return new BenderInfoMob(nbt.getUniqueId("Mob"));
 		}
 	}
-	
+
 	/**
 	 * Writes to the NBT tag. Values are written directly onto the NBT.
 	 */

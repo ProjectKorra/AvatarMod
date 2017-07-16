@@ -22,6 +22,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * A wrapper for any mob/player that can bend to provide greater abstraction
  * over useful methods.
@@ -77,7 +79,8 @@ public interface Bender {
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */
-	public static Bender get(EntityLivingBase entity) {
+	@Nullable
+	public static Bender get(@Nullable EntityLivingBase entity) {
 		if (entity == null) {
 			return null;
 		} else if (entity instanceof Bender) {
