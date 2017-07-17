@@ -87,21 +87,12 @@ public class AvatarDataSerializers {
 		
 		@Override
 		public void write(PacketBuffer buf, BenderInfo info) {
-			buf.writeBoolean(info.isPlayer());
-			buf.writeBoolean(info.getId() != null);
-			if (info.getId() != null) {
-				buf.writeUniqueId(info.getId());
-			}
+			info.writeToBytes(buf);
 		}
 		
 		@Override
 		public BenderInfo read(PacketBuffer buf) throws IOException {
-			boolean player = buf.readBoolean();
-			if (buf.readBoolean()) {
-				return new BenderInfo(player, buf.readUniqueId());
-			} else {
-				return new BenderInfo(player, null);
-			}
+			return BenderInfo.readFromBytes(buf);
 		}
 		
 		@Override
