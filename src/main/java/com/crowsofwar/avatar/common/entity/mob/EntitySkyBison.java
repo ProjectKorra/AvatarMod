@@ -25,10 +25,9 @@ import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
@@ -297,8 +296,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		return ownerAttr.getId();
 	}
 	
-	public void setOwnerId(UUID id) {
-		ownerAttr.setOwnerInfo(id == null ? new NoBenderInfo() : new BenderInfo(true, id));
+	public void setOwnerId(@Nullable UUID id) {
+		ownerAttr.setOwnerInfo(BenderInfo.get(true, id));
 	}
 	
 	public boolean hasOwner() {

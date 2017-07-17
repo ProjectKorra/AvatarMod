@@ -17,19 +17,18 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import java.util.UUID;
-import java.util.function.Consumer;
-
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Designed to use with an entity. Manages a synchronized owner property,
@@ -103,7 +102,7 @@ public class OwnerAttribute {
 	 * <p>
 	 * Detail: If the cached owner is null, but owner name is not, attempts to
 	 * look for a player in the world with that name. Will then call
-	 * {@link #setOwner(EntityPlayer)}.
+	 * {@link #setOwner(EntityLivingBase)}.
 	 */
 	public EntityLivingBase getOwner() {
 		
@@ -123,11 +122,11 @@ public class OwnerAttribute {
 	 * Also sets owner's BendingState FloatingBlock to this one.
 	 * 
 	 * @param owner
-	 *            Owner to set to. Can set to null...
+	 *            Owner to set to.
 	 */
-	public void setOwner(EntityLivingBase owner) {
+	public void setOwner(@Nullable EntityLivingBase owner) {
 		this.ownerCached = owner;
-		setOwnerInfo(owner == null ? new NoBenderInfo() : new BenderInfo(owner));
+		setOwnerInfo(BenderInfo.get(owner));
 		
 		if (owner != null) {
 			setOwnerCallback.accept(owner);

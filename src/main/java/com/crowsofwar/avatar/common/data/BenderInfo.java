@@ -19,7 +19,8 @@ package com.crowsofwar.avatar.common.data;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -111,6 +112,28 @@ public abstract class BenderInfo {
 			return new BenderInfoPlayer(bender.getName());
 		} else {
 			return new BenderInfoEntity(bender.getEntity().getUniqueID());
+		}
+	}
+
+	public static BenderInfo get(boolean player, @Nullable UUID id) {
+		if (id == null) {
+			return new NoBenderInfo();
+		}
+		if (player) {
+			return new BenderInfoPlayer(id);
+		} else {
+			return new BenderInfoEntity(id);
+		}
+	}
+
+	public static BenderInfo get(@Nullable EntityLivingBase entity) {
+		if (entity == null) {
+			return new NoBenderInfo();
+		}
+		if (entity instanceof EntityPlayer) {
+			return new BenderInfoPlayer(entity.getName());
+		} else {
+			return new BenderInfoEntity(entity.getUniqueID());
 		}
 	}
 
