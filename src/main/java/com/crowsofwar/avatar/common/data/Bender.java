@@ -59,7 +59,7 @@ public interface Bender {
 	}
 	
 	default BenderInfo getInfo() {
-		return new BenderInfo(this);
+		return BenderInfo.get(this);
 	}
 	
 	BendingData getData();
