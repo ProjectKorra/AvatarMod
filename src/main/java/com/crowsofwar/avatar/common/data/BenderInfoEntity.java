@@ -1,10 +1,11 @@
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.gorecore.util.AccountUUIDs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -32,6 +33,8 @@ public class BenderInfoEntity extends BenderInfo {
 	@Nullable
 	@Override
 	public Bender find(World world) {
-		return Bender.get(AccountUUIDs.findEntityFromUUID(world, entityId));
+		List<EntityLivingBase> entities = world.getEntities(EntityLivingBase.class,
+				ent -> ent.getUniqueID().equals(entityId));
+		return !entities.isEmpty() ? Bender.get(entities.get(0)) : null;
 	}
 }
