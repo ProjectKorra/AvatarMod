@@ -35,7 +35,7 @@ import static sun.audio.AudioPlayer.player;
  * @author CrowsOfWar
  */
 public abstract class BenderInfo {
-	
+
 	/**
 	 * Creates bender info with null info, should only be used by NoBenderInfo
 	 */
@@ -51,38 +51,38 @@ public abstract class BenderInfo {
 	public abstract Bender find(World world);
 
 	/**
-	 * Gets a String to help identify which type of BenderInfo this is when being read from NBT.
+	 * Gets the type of this BenderInfo (according to class hierarchy) to be used in NBT compounds
 	 */
-	protected abstract String getNbtTag();
-
-	public void writeToNbt(NBTTagCompound nbt) {
-		
+	private String getType() {
+		// this isn't an instance method since it would be a bit overcomplicated for something like this
+		// Only using getType() wouldn't work for static method readFromNbt, which means a registry would be needed
+		// ... which isn't necessary if BenderInfo only has 2-3 subclasses and will not add more in the future
+		if (this instanceof BenderInfoPlayer) {
+			return "Player";
+		}
+		if (this instanceof BenderInfoEntity) {
+			return "Entity";
+		}
+		return "None";
 	}
 
-	protected abstract void write(NBTTagCompound nbt);
-
-	public static BenderInfo readFromNbt(NBTTagCompound nbt) {
-		if (nbt.getBoolean("Player")) {
-			return new BenderInfoPlayer(nbt.getUniqueId("Id"));
-		} else if (nbt.getBoolean("None")) {
-			return new NoBenderInfo();
-		} else {
-			return new BenderInfoMob(nbt.getUniqueId("Mob"));
+	public void writeToNbt(NBTTagCompound nbt) {
+		nbt.setString("Type", getType());
+		if (getId() != null) {
+			nbt.setUniqueId("Id", getId());
 		}
 	}
 
-	/**
-	 * Writes to the NBT tag. Values are written directly onto the NBT.
-	 */
-	public void writeToNbt(NBTTagCompound nbt) {
-		nbt.setBoolean("Player", player);
-		nbt.setUniqueId("Id", id == null ? new UUID(0, 0) : id);
-	}
-	
 	public static BenderInfo readFromNbt(NBTTagCompound nbt) {
+		String type = nbt.getString("Type");
 		UUID id = nbt.getUniqueId("Id");
-		id = id.getLeastSignificantBits() == 0 && id.getMostSignificantBits() == 0 ? null : id;
-		return new BenderInfo(nbt.getBoolean("Player"), id);
+		if (type.equals("Player")) {
+			return new BenderInfoPlayer(id);
+		} else if (type.equals("Entity")) {
+			return new BenderInfoEntity(id);
+		} else {
+			return new NoBenderInfo();
+		}
 	}
-	
+
 }
