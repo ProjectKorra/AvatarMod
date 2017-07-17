@@ -24,17 +24,18 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * Stores information about a {@link Bender} so that he/she can be found later.
- * 
+ * BenderInfo are immutable objects that store information about a {@link Bender} so that he/she can
+ * be found later. A reference to BenderInfo should never be null, instead the subclass
+ * {@link NoBenderInfo} should be used.
+ * <p>
+ * Since there are different ways to identify a Bender based on what type it is (players
+ * use account Id, entities use entity Id), BenderInfo has subclasses which determine the
+ * behavior. For players, uses {@link BenderInfoPlayer}; for entities, uses
+ * {@link BenderInfoEntity}.
+ *
  * @author CrowsOfWar
  */
 public abstract class BenderInfo {
-
-	/**
-	 * Creates bender info with null info, should only be used by NoBenderInfo
-	 */
-	protected BenderInfo() {
-	}
 
 	public abstract boolean isPlayer();
 	

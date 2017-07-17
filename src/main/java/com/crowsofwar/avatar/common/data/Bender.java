@@ -57,7 +57,11 @@ public interface Bender {
 	default boolean isPlayer() {
 		return getEntity() instanceof EntityPlayer;
 	}
-	
+
+	/**
+	 * Get a BenderInfo object, a way to store the Bender's lookup information on disk so it can be
+	 * found again later.
+	 */
 	default BenderInfo getInfo() {
 		return BenderInfo.get(this);
 	}
