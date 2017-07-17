@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.util;
 
-import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
 import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.gorecore.util.Vector;

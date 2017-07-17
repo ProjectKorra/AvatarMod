@@ -20,8 +20,8 @@ package com.crowsofwar.avatar.common.entity.data;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 
 import net.minecraft.entity.Entity;

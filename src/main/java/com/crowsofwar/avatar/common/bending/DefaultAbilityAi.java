@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 
 import net.minecraft.entity.EntityLiving;
 

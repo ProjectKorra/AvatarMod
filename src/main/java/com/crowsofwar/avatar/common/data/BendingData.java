@@ -17,7 +17,6 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.*;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.entity.EntityLivingBase;

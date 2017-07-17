@@ -22,7 +22,7 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 import java.util.Random;
 
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 

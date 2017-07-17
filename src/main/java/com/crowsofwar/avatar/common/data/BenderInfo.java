@@ -14,20 +14,14 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.data.ctx;
+package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.data.BenderInfoPlayer;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.UUID;
-
-import static sun.audio.AudioPlayer.player;
 
 /**
  * Stores information about a {@link Bender} so that he/she can be found later.
