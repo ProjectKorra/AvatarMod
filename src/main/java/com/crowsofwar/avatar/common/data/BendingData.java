@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
@@ -56,7 +57,7 @@ public class BendingData {
 	private final Consumer<DataCategory> saveCategory;
 	private final Runnable saveAll;
 
-	private final Set<BendingStyle> bendings;
+	private final Set<UUID> bendings;
 	private final Set<StatusControl> statusControls;
 	private final Map<UUID, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
@@ -88,72 +89,68 @@ public class BendingData {
 	// ================================================================================
 
 	/**
-	 * Check if the player has that bending controller
+	 * Checks if the player has that bending style.
 	 */
+	public boolean hasBending(UUID bendingId) {
+		return bendings.contains(bendingId);
+	}
 
+	/**
+	 * @see #hasBending(UUID)
+	 */
 	public boolean hasBending(BendingStyle bending) {
-		return bendings.contains(bending);
+		return hasBending(bending.getId());
 	}
 
 	/**
-	 * Check if the player has that type of bending
+	 * Adds a new bending style to the BendingData.
 	 */
-
-	public boolean hasBending(UUID id) {
-		return hasBending(BendingStyles.get(id));
-	}
-
-	/**
-	 * If the bending controller is not already present, adds the bending
-	 * controller.
-	 * <p>
-	 * Also adds the state if it isn't present.
-	 */
-
-	public void addBending(BendingStyle bending) {
-		if (bendings.add(bending)) {
+	public void addBending(UUID bendingId) {
+		if (bendings.add(bendingId)) {
 			save(DataCategory.BENDING_LIST);
 		}
 	}
 
 	/**
-	 * If the bending controller is not already present, adds the bending
-	 * controller.
+	 * @see #addBending(UUID)
 	 */
-
-	public void addBending(UUID id) {
-		addBending(BendingStyles.get(id));
+	public void addBending(BendingStyle bending) {
+		addBending(bending.getId());
 	}
 
 	/**
-	 * Remove the specified bending controller and its associated state. Please
-	 * note, this will be saved, so is permanent (unless another bending
-	 * controller is added).
+	 * Remove the specified bending style.
+	 */
+	public void removeBending(UUID bendingId) {
+		if (bendings.remove(bendingId)) {
+			save(DataCategory.BENDING_LIST);
+		}
+	}
+
+	/**
+	 * @see #removeBending(UUID)
 	 */
 
 	public void removeBending(BendingStyle bending) {
-		if (bendings.remove(bending)) {
-			save(DataCategory.BENDING_LIST);
-		}
-	}
-
-	/**
-	 * Remove the bending controller and its state with that type.
-	 *
-	 * @see #removeBending(BendingStyle)
-	 */
-
-	public void removeBending(UUID id) {
-		removeBending(BendingStyles.get(id));
+		removeBending(bending.getId());
 	}
 
 	public List<BendingStyle> getAllBending() {
+		return bendings.stream().map(BendingStyles::get).collect(Collectors.toList());
+	}
+
+	public List<UUID> getAllBendingIds() {
 		return new ArrayList<>(bendings);
 	}
 
 	public void setAllBending(List<BendingStyle> bending) {
+		List<UUID> bendingIds = bending.stream().map(BendingStyle::getId).collect(Collectors.toList());
+		setAllBendingIds(bendingIds);
+	}
+
+	public void setAllBendingIds(List<UUID> bendingIds) {
 		bendings.clear();
-		bendings.addAll(bending);
+		bendings.addAll(bendingIds);
 	}
 
 	public void clearBending() {
