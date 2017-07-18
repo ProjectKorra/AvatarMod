@@ -119,9 +119,6 @@ public class EntityOstrichHorse extends EntityAnimal {
 				updateRideSpeed(driver.moveForward);
 				setAIMoveSpeed(getRideSpeed());
 
-//				forward = getRideSpeed() > 0 ? 0.98f : 0;
-				strafe = driver.moveStrafing * 0.3f;
-
 				super.travel(strafe, jump, forward);
 				
 			} else {
@@ -225,7 +222,7 @@ public class EntityOstrichHorse extends EntityAnimal {
 			next += (target - next) * 0.05f;
 		}
 		setRideSpeed(next);
-		
+
 	}
 	
 }
