@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -46,13 +45,11 @@ public class BendingData {
 	}
 
 	public static BendingData get(World world, UUID playerId) {
-		AvatarWorldData worldData = AvatarWorldData.getDataFromWorld(world);
-		return worldData.getPlayerData(playerId).getData();
+		return AvatarPlayerData.fetcher().fetch(world, playerId).getData();
 	}
 
 	public static BendingData get(World world, String playerName) {
-		AccountUUIDs.AccountId id = AccountUUIDs.getId(playerName);
-		return get(world, id.getUUID());
+		return AvatarPlayerData.fetcher().fetch(world, playerName).getData();
 	}
 
 	private final Consumer<DataCategory> saveCategory;
