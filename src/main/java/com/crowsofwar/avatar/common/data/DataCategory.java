@@ -39,13 +39,13 @@ import java.util.function.Function;
 public enum DataCategory {
 	
 	//@formatter:off
-	BENDING_LIST(	data -> data.getAllBendingIds(),		(data, obj) -> data.setAllBendingIds(obj),		DataTransmitters.BENDING_LIST),
-	STATUS_CONTROLS(data -> data.getAllStatusControls(),	(data, obj) -> data.setAllStatusControls(obj),	DataTransmitters.STATUS_CONTROLS),
-	ABILITY_DATA(	data -> data.getAbilityDataMap(),		(data, obj) -> data.setAbilityDataMap(obj),		DataTransmitters.ABILITY_DATA),
-	CHI(			data -> data.chi(),						(data, obj) -> data.setChi(obj),				DataTransmitters.CHI),
-	MISC_DATA(		data -> data.getMiscData(),				(data, obj) -> data.setMiscData(obj),			DataTransmitters.MISC_DATA),
-	TICK_HANDLERS(	data -> data.getAllTickHandlers(),		(data, obj) -> data.setAllTickHandlers(obj),	DataTransmitters.TICK_HANDLERS),
-	ACTIVE_BENDING(	data -> data.getActiveBending(),		(data, obj) -> data.setActiveBending(obj),		DataTransmitters.ACTIVE_BENDING);
+	BENDING_LIST(	BendingData::getAllBendingIds,		BendingData::setAllBendingIds,		DataTransmitters.BENDING_LIST),
+	STATUS_CONTROLS(BendingData::getAllStatusControls,	BendingData::setAllStatusControls,	DataTransmitters.STATUS_CONTROLS),
+	ABILITY_DATA(	BendingData::getAbilityDataMap,		BendingData::setAbilityDataMap,		DataTransmitters.ABILITY_DATA),
+	CHI(			BendingData::chi,					BendingData::setChi,				DataTransmitters.CHI),
+	MISC_DATA(		BendingData::getMiscData,			BendingData::setMiscData,			DataTransmitters.MISC_DATA),
+	TICK_HANDLERS(	BendingData::getAllTickHandlers,	BendingData::setAllTickHandlers,	DataTransmitters.TICK_HANDLERS),
+	ACTIVE_BENDING(	BendingData::getActiveBending, 		BendingData::setActiveBending,		DataTransmitters.ACTIVE_BENDING);
 	//@formatter:on
 	
 	private final Function<BendingData, ?> getter;
