@@ -98,7 +98,7 @@ public class AvatarPlayerData extends PlayerData {
 			
 			AvatarMod.network.sendToAllAround(packet,
 					new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range));
-			
+
 		}
 		
 	}

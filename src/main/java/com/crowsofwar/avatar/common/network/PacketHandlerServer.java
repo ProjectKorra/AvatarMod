@@ -293,6 +293,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		BendingData data = BendingData.get(player);
 		UUID element = packet.getElement();
 
+		System.out.println(element);
+
 		if (BendingStyles.has(element)) {
 			if (data.hasBending(element)) {
 				int guiId = AvatarGuiHandler.getGuiId(element);

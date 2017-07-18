@@ -25,6 +25,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -38,7 +39,7 @@ public class AbilityData {
 	public static final int MAX_LEVEL = 3;
 	
 	private final BendingData data;
-	private final Ability ability;
+	private final UUID abilityId;
 	private float xp;
 	/**
 	 * The current level. -1 for locked
@@ -49,17 +50,26 @@ public class AbilityData {
 	private AbilityTreePath path;
 	
 	public AbilityData(BendingData data, Ability ability) {
+		this(data, ability.getId());
+	}
+
+	public AbilityData(BendingData data, UUID abilityId) {
 		this.data = data;
-		this.ability = ability;
+		this.abilityId = abilityId;
 		this.xp = 0;
 		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
 	}
-	
+
+	@Nullable
 	public Ability getAbility() {
-		return ability;
+		return Abilities.get(abilityId);
 	}
-	
+
+	public UUID getAbilityId() {
+		return abilityId;
+	}
+
 	/**
 	 * Get the current level of this ability. A value of -1 indicates this
 	 * ability is {@link #isLocked() locked}.
@@ -221,7 +231,7 @@ public class AbilityData {
 	}
 	
 	public void toBytes(ByteBuf buf) {
-		GoreCoreByteBufUtil.writeUUID(buf, ability.getId());
+		GoreCoreByteBufUtil.writeUUID(buf, abilityId);
 		buf.writeFloat(xp);
 		buf.writeInt(level);
 		buf.writeInt(path.id());

@@ -82,7 +82,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 					category.read(buf, data);
 				}
 			});
-			
+
 		} else {
 			AvatarLog.warn(WarningType.WEIRD_PACKET, "Server sent a packet about data for player " + playerId
 					+ " but data couldn't be found for them");

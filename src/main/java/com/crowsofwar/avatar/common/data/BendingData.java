@@ -411,7 +411,7 @@ public class BendingData {
 					nbt.setUniqueId("Id", abilityId);
 					nbt.setString("_AbilityName", Abilities.getName(abilityId));
 				}, (nbt, data) -> {
-					nbt.setUniqueId("AbilityId", data.getAbility().getId());
+					nbt.setUniqueId("AbilityId", data.getAbilityId());
 					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");
 
@@ -446,8 +446,8 @@ public class BendingData {
 
 		Map<UUID, AbilityData> abilityData = new HashMap<>();
 		AvatarUtils.readMap(abilityData, nbt -> nbt.getUniqueId("Id"), nbt -> {
-			Ability ability = Abilities.get(nbt.getUniqueId("Id"));
-			AbilityData data = new AbilityData(this, ability);
+			UUID abilityId = nbt.getUniqueId("Id");
+			AbilityData data = new AbilityData(this, abilityId);
 			data.readFromNbt(nbt);
 			return data;
 		}, readFrom, "AbilityData");
