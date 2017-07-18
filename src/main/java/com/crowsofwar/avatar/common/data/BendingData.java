@@ -24,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class BendingData {
 	private final Set<StatusControl> statusControls;
 	private final Map<UUID, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
-	private BendingStyle activeBending;
+	private UUID activeBending;
 	private Chi chi;
 	private MiscData miscData;
 
@@ -161,7 +162,8 @@ public class BendingData {
 	// ACTIVE BENDING
 	// ================================================================================
 
-	public BendingStyle getActiveBending() {
+	@Nullable
+	public UUID getActiveBendingId() {
 		if (!bendings.isEmpty() && activeBending == null) {
 			activeBending = bendings.iterator().next();
 		}
@@ -174,21 +176,20 @@ public class BendingData {
 		return activeBending;
 	}
 
-	public UUID getActiveBendingId() {
-		BendingStyle controller = getActiveBending();
-		return controller == null ? null : controller.getId();
+	@Nullable
+	public BendingStyle getActiveBending() {
+		return BendingStyles.get(getActiveBendingId());
 	}
 
-	public void setActiveBending(BendingStyle controller) {
-		if (!bendings.isEmpty() && bendings.contains(controller)) {
-			activeBending = controller;
+	public void setActiveBending(UUID id) {
+		if (bendings.contains(id)) {
+			activeBending = id;
 			save(DataCategory.ACTIVE_BENDING);
 		}
 	}
 
-	public void setActiveBending(UUID id) {
-		BendingStyle controller = BendingStyles.get(id);
-		setActiveBending(controller);
+	public void setActiveBending(BendingStyle bending) {
+		setActiveBending(bending.getId());
 	}
 
 	// ================================================================================
