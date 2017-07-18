@@ -152,7 +152,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			
 			Ability ability = packet.getAbility();
-			if (data.hasBending(ability.getBendingId())) {
+			if (data.hasBendingId(ability.getBendingId())) {
 				if (!data.getAbilityData(ability).isLocked() || player.capabilities.isCreativeMode) {
 					if (data.getAbilityCooldown() == 0) {
 						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability, player);
@@ -223,7 +223,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		World world = player.world;
 		
 		BendingData data = BendingData.get(player);
-		if (data.hasBending(Airbending.ID) && !data.isWallJumping()
+		if (data.hasBendingId(Airbending.ID) && !data.isWallJumping()
 				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			
 			data.setWallJumping(true);
@@ -296,7 +296,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		System.out.println(element);
 
 		if (BendingStyles.has(element)) {
-			if (data.hasBending(element)) {
+			if (data.hasBendingId(element)) {
 				int guiId = AvatarGuiHandler.getGuiId(element);
 				player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
 			}
@@ -394,7 +394,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			if (eligible.contains(bending)) {
 				
 				if (data.getAllBending().isEmpty()) {
-					data.addBending(bending);
+					data.addBendingId(bending);
 					
 					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
 						container.getSlot(i).putStack(ItemStack.EMPTY);

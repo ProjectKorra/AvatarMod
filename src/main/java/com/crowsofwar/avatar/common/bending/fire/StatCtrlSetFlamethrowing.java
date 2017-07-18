@@ -52,7 +52,7 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		
-		if (data.hasBending(Firebending.ID)) {
+		if (data.hasBendingId(Firebending.ID)) {
 			if (setting) {
 				data.addStatusControl(STOP_FLAMETHROW);
 				data.addTickHandler(TickHandler.FLAMETHROWER);

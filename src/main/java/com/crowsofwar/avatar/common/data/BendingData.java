@@ -92,48 +92,48 @@ public class BendingData {
 	/**
 	 * Checks if the player has that bending style.
 	 */
-	public boolean hasBending(UUID bendingId) {
+	public boolean hasBendingId(UUID bendingId) {
 		return bendings.contains(bendingId);
 	}
 
 	/**
-	 * @see #hasBending(UUID)
+	 * @see #hasBendingId(UUID)
 	 */
 	public boolean hasBending(BendingStyle bending) {
-		return hasBending(bending.getId());
+		return hasBendingId(bending.getId());
 	}
 
 	/**
 	 * Adds a new bending style to the BendingData.
 	 */
-	public void addBending(UUID bendingId) {
+	public void addBendingId(UUID bendingId) {
 		if (bendings.add(bendingId)) {
 			save(DataCategory.BENDING_LIST);
 		}
 	}
 
 	/**
-	 * @see #addBending(UUID)
+	 * @see #addBendingId(UUID)
 	 */
 	public void addBending(BendingStyle bending) {
-		addBending(bending.getId());
+		addBendingId(bending.getId());
 	}
 
 	/**
 	 * Remove the specified bending style.
 	 */
-	public void removeBending(UUID bendingId) {
+	public void removeBendingId(UUID bendingId) {
 		if (bendings.remove(bendingId)) {
 			save(DataCategory.BENDING_LIST);
 		}
 	}
 
 	/**
-	 * @see #removeBending(UUID)
+	 * @see #removeBendingId(UUID)
 	 */
 
 	public void removeBending(BendingStyle bending) {
-		removeBending(bending.getId());
+		removeBendingId(bending.getId());
 	}
 
 	public List<BendingStyle> getAllBending() {
@@ -181,7 +181,7 @@ public class BendingData {
 		return BendingStyles.get(getActiveBendingId());
 	}
 
-	public void setActiveBending(UUID id) {
+	public void setActiveBendingId(UUID id) {
 		if (bendings.contains(id)) {
 			activeBending = id;
 			save(DataCategory.ACTIVE_BENDING);
@@ -189,7 +189,7 @@ public class BendingData {
 	}
 
 	public void setActiveBending(BendingStyle bending) {
-		setActiveBending(bending.getId());
+		setActiveBendingId(bending.getId());
 	}
 
 	// ================================================================================

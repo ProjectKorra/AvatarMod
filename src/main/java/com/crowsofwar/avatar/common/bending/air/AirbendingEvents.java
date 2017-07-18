@@ -66,7 +66,7 @@ public class AirbendingEvents {
 		EntityPlayer player = e.player;
 		World world = player.world;
 		BendingData data = BendingData.get(player);
-		if (data.hasBending(Airbending.ID)) {
+		if (data.hasBendingId(Airbending.ID)) {
 			tick(player, world, data);
 		}
 	}
