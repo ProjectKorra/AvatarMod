@@ -45,7 +45,7 @@ public enum DataCategory {
 	CHI(			BendingData::chi,					BendingData::setChi,				DataTransmitters.CHI),
 	MISC_DATA(		BendingData::getMiscData,			BendingData::setMiscData,			DataTransmitters.MISC_DATA),
 	TICK_HANDLERS(	BendingData::getAllTickHandlers,	BendingData::setAllTickHandlers,	DataTransmitters.TICK_HANDLERS),
-	ACTIVE_BENDING(	BendingData::getActiveBending, 		BendingData::setActiveBending,		DataTransmitters.ACTIVE_BENDING);
+	ACTIVE_BENDING(	BendingData::getActiveBendingId, 	BendingData::setActiveBendingId,	DataTransmitters.ACTIVE_BENDING);
 	//@formatter:on
 	
 	private final Function<BendingData, ?> getter;

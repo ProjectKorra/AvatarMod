@@ -252,20 +252,12 @@ public class AbilityData {
 	
 	/**
 	 * Reads ability data from the network.
-	 * 
-	 * @return The ability data with correct ability and XP, but null if invalid
-	 *         ability ID (does not log errors)
 	 */
 	public static AbilityData createFromBytes(ByteBuf buf, BendingData data) {
 		UUID abilityId = GoreCoreByteBufUtil.readUUID(buf);
-		Ability ability = Abilities.get(abilityId);
-		if (ability == null) {
-			return null;
-		} else {
-			AbilityData abilityData = new AbilityData(data, ability);
-			abilityData.fromBytes(buf);
-			return abilityData;
-		}
+		AbilityData abilityData = new AbilityData(data, abilityId);
+		abilityData.fromBytes(buf);
+		return abilityData;
 	}
 
 	public static AbilityData get(EntityLivingBase entity, UUID abilityId) {

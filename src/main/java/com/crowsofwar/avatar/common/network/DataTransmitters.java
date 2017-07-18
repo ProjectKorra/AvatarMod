@@ -19,9 +19,6 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.*;
 import io.netty.buffer.ByteBuf;
@@ -62,27 +59,28 @@ public class DataTransmitters {
 		}
 	};
 	
-	public static final DataTransmitter<Map<Ability, AbilityData>> ABILITY_DATA = new DataTransmitter<Map<Ability, AbilityData>>() {
+	public static final DataTransmitter<Map<UUID, AbilityData>> ABILITY_DATA = new
+			DataTransmitter<Map<UUID, AbilityData>>() {
 		
 		@Override
-		public void write(ByteBuf buf, Map<Ability, AbilityData> t) {
-			Set<Map.Entry<Ability, AbilityData>> entries = t.entrySet();
+		public void write(ByteBuf buf, Map<UUID, AbilityData> t) {
+			Set<Map.Entry<UUID, AbilityData>> entries = t.entrySet();
 			buf.writeInt(entries.size());
-			for (Map.Entry<Ability, AbilityData> entry : entries) {
+			for (Map.Entry<UUID, AbilityData> entry : entries) {
 				entry.getValue().toBytes(buf);
 			}
 		}
 		
 		@Override
-		public Map<Ability, AbilityData> read(ByteBuf buf, BendingData data) {
-			Map<Ability, AbilityData> out = new HashMap<>();
+		public Map<UUID, AbilityData> read(ByteBuf buf, BendingData data) {
+			Map<UUID, AbilityData> out = new HashMap<>();
 			int size = buf.readInt();
 			for (int i = 0; i < size; i++) {
 				AbilityData abilityData = AbilityData.createFromBytes(buf, data);
 				if (abilityData == null) {
 					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
 				} else {
-					out.put(abilityData.getAbility(), abilityData);
+					out.put(abilityData.getAbilityId(), abilityData);
 				}
 			}
 			return out;
@@ -179,20 +177,20 @@ public class DataTransmitters {
 		}
 	};
 	
-	public static final DataTransmitter<BendingStyle> ACTIVE_BENDING = new DataTransmitter<BendingStyle>() {
+	public static final DataTransmitter<UUID> ACTIVE_BENDING = new DataTransmitter<UUID>() {
 		
 		@Override
-		public void write(ByteBuf buf, BendingStyle t) {
-			buf.writeByte(t == null ? -1 : t.getNetworkId());
+		public void write(ByteBuf buf, UUID t) {
+			writeUUID(buf, t == null ? new UUID(0, 0) : t);
 		}
 		
 		@Override
-		public BendingStyle read(ByteBuf buf, BendingData data) {
-			byte id = buf.readByte();
-			if (id == -1) {
+		public UUID read(ByteBuf buf, BendingData data) {
+			UUID id = readUUID(buf);
+			if (id.equals(new UUID(0, 0))) {
 				return null;
 			}
-			return BendingStyles.get(id);
+			return id;
 		}
 	};
 	
