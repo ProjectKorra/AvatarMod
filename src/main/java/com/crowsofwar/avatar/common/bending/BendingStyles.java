@@ -34,8 +34,15 @@ public class BendingStyles {
     private static final Map<UUID, Byte> networkIdByStyle = new HashMap<>();
     private static final Map<Byte, UUID> networkIdToStyle = new HashMap<>();
 
+    /**
+     * Get the BendingStyle from the given id. Can return null under two conditions:
+     * <p>
+ *     <ul>
+ *     <li>No bending style is loaded with that Id - in the case of downgrading or removing addons
+     * <li>The provided id is null
+     */
     @Nullable
-    public static BendingStyle get(UUID id) {
+    public static BendingStyle get(@Nullable UUID id) {
         return bendingStylesById.get(id);
     }
 
