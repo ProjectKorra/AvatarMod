@@ -28,6 +28,9 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.*;
 
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
+
 /**
  * DataTransmitters are responsible for reading and writing certain parts of
  * player data to the network. For example, there is a transmitter for the
@@ -37,23 +40,23 @@ import java.util.*;
  */
 public class DataTransmitters {
 	
-	public static final DataTransmitter<List<BendingStyle>> BENDING_LIST = new DataTransmitter<List<BendingStyle>>() {
+	public static final DataTransmitter<List<UUID>> BENDING_LIST = new
+			DataTransmitter<List<UUID>>() {
 		
 		@Override
-		public void write(ByteBuf buf, List<BendingStyle> t) {
+		public void write(ByteBuf buf, List<UUID> t) {
 			buf.writeInt(t.size());
-			for (BendingStyle controller : t) {
-				byte networkId = BendingStyles.getNetworkId(controller);
-				buf.writeByte(networkId);
+			for (UUID bendingId : t) {
+				writeUUID(buf, bendingId);
 			}
 		}
 		
 		@Override
-		public List<BendingStyle> read(ByteBuf buf, BendingData data) {
+		public List<UUID> read(ByteBuf buf, BendingData data) {
 			int size = buf.readInt();
-			List<BendingStyle> out = new ArrayList<>(size);
+			List<UUID> out = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
-				out.add(BendingStyles.get(buf.readByte()));
+				out.add(readUUID(buf));
 			}
 			return out;
 		}

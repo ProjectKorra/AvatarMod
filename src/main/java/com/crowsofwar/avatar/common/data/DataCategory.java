@@ -16,13 +16,12 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-
 import com.crowsofwar.avatar.common.network.DataTransmitter;
 import com.crowsofwar.avatar.common.network.DataTransmitters;
-
 import io.netty.buffer.ByteBuf;
+
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * Separates all of the methods of BendingData into different categories. This
@@ -39,15 +38,15 @@ import io.netty.buffer.ByteBuf;
 
 public enum DataCategory {
 	
-	// @formatter:off
-	BENDING_LIST(	data -> data.getAllBending(),			(data, obj) -> data.setAllBending(obj),			DataTransmitters.BENDING_LIST),
+	//@formatter:off
+	BENDING_LIST(	data -> data.getAllBendingIds(),		(data, obj) -> data.setAllBendingIds(obj),		DataTransmitters.BENDING_LIST),
 	STATUS_CONTROLS(data -> data.getAllStatusControls(),	(data, obj) -> data.setAllStatusControls(obj),	DataTransmitters.STATUS_CONTROLS),
 	ABILITY_DATA(	data -> data.getAbilityDataMap(),		(data, obj) -> data.setAbilityDataMap(obj),		DataTransmitters.ABILITY_DATA),
 	CHI(			data -> data.chi(),						(data, obj) -> data.setChi(obj),				DataTransmitters.CHI),
 	MISC_DATA(		data -> data.getMiscData(),				(data, obj) -> data.setMiscData(obj),			DataTransmitters.MISC_DATA),
 	TICK_HANDLERS(	data -> data.getAllTickHandlers(),		(data, obj) -> data.setAllTickHandlers(obj),	DataTransmitters.TICK_HANDLERS),
 	ACTIVE_BENDING(	data -> data.getActiveBending(),		(data, obj) -> data.setActiveBending(obj),		DataTransmitters.ACTIVE_BENDING);
-	// @formatter:on
+	//@formatter:on
 	
 	private final Function<BendingData, ?> getter;
 	private final BiConsumer<BendingData, ?> setter;
