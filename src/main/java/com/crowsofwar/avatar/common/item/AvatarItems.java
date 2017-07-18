@@ -66,10 +66,10 @@ public class AvatarItems {
 	}
 
 	private static void addItem(Item item) {
-		item.setRegistryName("avatarmod", item.getUnlocalizedName().substring(5));
-		item.setUnlocalizedName(item.getRegistryName().toString());
-        allItems.add(item);
-    }
+		item.setRegistryName("avatarmod", item.getUnlocalizedName());
+		item.setUnlocalizedName("avatarmod:" + item.getUnlocalizedName().substring(5));
+		allItems.add(item);
+	}
 
 	@SubscribeEvent
 	public void registerItems(RegistryEvent.Register<Item> e) {
