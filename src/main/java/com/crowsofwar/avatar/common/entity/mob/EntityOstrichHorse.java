@@ -77,7 +77,7 @@ public class EntityOstrichHorse extends EntityAnimal {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5);
 	}
 	
 	@Override
@@ -104,6 +104,8 @@ public class EntityOstrichHorse extends EntityAnimal {
 	public void travel(float strafe, float jump, float forward) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 
+		double moveSpeed = 0.2;
+
 		if (isBeingRidden() && canBeSteered()) {
 			this.rotationYaw = driver.rotationYaw;
 			this.prevRotationYaw = this.rotationYaw;
@@ -120,7 +122,8 @@ public class EntityOstrichHorse extends EntityAnimal {
 				setAIMoveSpeed(getRideSpeed());
 
 				super.travel(strafe, jump, forward);
-				
+				moveSpeed = 0.5;
+
 			} else {
 				this.motionX = 0.0D;
 				this.motionY = 0.0D;
@@ -155,6 +158,8 @@ public class EntityOstrichHorse extends EntityAnimal {
 
 			super.travel(strafe, jump, forward);
 		}
+
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(moveSpeed);
 	}
 	
 	/**
@@ -197,6 +202,9 @@ public class EntityOstrichHorse extends EntityAnimal {
 			if (current < target) {
 				next += moveSpeedAttr * 0.02f;
 			}
+			if (next < 0.1) {
+				next = 0.1f;
+			}
 			
 		}
 		if (instructions < 0) {
@@ -215,7 +223,7 @@ public class EntityOstrichHorse extends EntityAnimal {
 		}
 		
 		// Update to dataManager
-		if (next < 0) {
+		if (next < 0.1) {
 			next = 0;
 		}
 		if (next > target) {
