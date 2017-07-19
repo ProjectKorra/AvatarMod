@@ -17,10 +17,10 @@
 
 package com.crowsofwar.gorecore.proxy;
 
-import java.io.File;
-
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.translation.I18n;
+
+import java.io.File;
 
 public class GoreCoreCommonProxy {
 	
@@ -61,8 +61,7 @@ public class GoreCoreCommonProxy {
 	}
 	
 	public String translate(String key, Object... args) {
-		// TODO [1.10] find out way to translate server side
-		return I18n.format(key, args);
+		return String.format(I18n.translateToLocal(key), args);
 	}
 	
 	public EntityPlayer getClientSidePlayer() {

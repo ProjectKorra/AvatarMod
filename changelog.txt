@@ -7,3 +7,4 @@ AV2 Changelog :: version a4.5
 
 > Fix crash when killing entity without registered lang file name - FOR REAL THIS TIME
 > Fix bug where fireball keeps exploding when held on ground
+> Fix issue when executing certain commands on server

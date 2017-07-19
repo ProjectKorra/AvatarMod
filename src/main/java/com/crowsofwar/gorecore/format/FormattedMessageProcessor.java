@@ -16,7 +16,9 @@
 */
 package com.crowsofwar.gorecore.format;
 
-import static com.crowsofwar.gorecore.format.FormattedMessageProcessor.FormatSetting.TRUE;
+import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.format.ChatSender.ProcessingException;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,11 +26,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.format.ChatSender.ProcessingException;
-
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextFormatting;
+import static com.crowsofwar.gorecore.format.FormattedMessageProcessor.FormatSetting.TRUE;
 
 /**
  * 
@@ -113,7 +111,7 @@ public class FormattedMessageProcessor {
 					}
 				} else if (tag.startsWith("translate=")) {
 					String key = tag.substring("translate=".length());
-					item = formatText(msg, I18n.format(key), formatValues);
+					item = formatText(msg, GoreCore.proxy.translate(key), formatValues);
 				} else if (tag.startsWith("keybinding=")) {
 					String key = tag.substring("keybinding=".length());
 					item = GoreCore.proxy.getKeybindingDisplayName(key);
@@ -189,7 +187,7 @@ public class FormattedMessageProcessor {
 				
 				if (tag.startsWith("translate=")) {
 					String key = tag.substring("translate=".length());
-					item = formatPlaintext(msg, I18n.format(key), formatValues);
+					item = formatPlaintext(msg, GoreCore.proxy.translate(key), formatValues);
 				} else if (tag.startsWith("keybinding=")) {
 					String key = tag.substring("keybinding=".length());
 					item = GoreCore.proxy.getKeybindingDisplayName(key);
