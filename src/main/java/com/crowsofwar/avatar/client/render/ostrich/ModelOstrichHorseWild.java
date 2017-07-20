@@ -358,4 +358,14 @@ public class ModelOstrichHorseWild extends ModelOstrichHorse {
 	protected ModelRenderer getNeck() {
 		return neck1;
 	}
+
+	@Override
+	protected ModelRenderer getLeftLeg() {
+		return Lleg;
+	}
+
+	@Override
+	protected ModelRenderer getRightLeg() {
+		return Rleg;
+	}
 }
