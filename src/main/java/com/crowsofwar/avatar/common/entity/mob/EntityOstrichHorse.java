@@ -101,7 +101,7 @@ public class EntityOstrichHorse extends EntityAnimal {
 	}
 	
 	@Override
-	public void travel(float strafe, float forward, float unknown) {
+	public void travel(float strafe, float jump, float forward) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 
 		if (isBeingRidden() && canBeSteered()) {
@@ -119,11 +119,10 @@ public class EntityOstrichHorse extends EntityAnimal {
 				updateRideSpeed(driver.moveForward);
 				setAIMoveSpeed(getRideSpeed());
 
-
 //				forward = getRideSpeed() > 0 ? 0.98f : 0;
 //				strafe = driver.moveStrafing * 0.3f;
 
-				super.travel(strafe, forward, unknown);
+				super.travel(strafe, jump, forward);
 				
 			} else {
 				this.motionX = 0.0D;
@@ -153,11 +152,11 @@ public class EntityOstrichHorse extends EntityAnimal {
 				rideSpeed -= 0.006f;
 				setRideSpeed(Math.max(rideSpeed, 0));
 				setAIMoveSpeed(getRideSpeed());
-				unknown = getRideSpeed() * 10;
-				System.out.println(unknown + "");
+				forward = getRideSpeed() * 10;
+				System.out.println(forward + "");
 			}
 
-			super.travel(strafe, forward, unknown);
+			super.travel(strafe, jump, forward);
 		}
 	}
 	
