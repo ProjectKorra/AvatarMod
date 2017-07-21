@@ -115,12 +115,12 @@ public class EntityOstrichHorse extends EntityAnimal {
 			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
 			
 			if (this.canPassengerSteer()) {
-				
+
 				updateRideSpeed(driver.moveForward);
 				setAIMoveSpeed(getRideSpeed());
 				
-				forward = getRideSpeed() > 0 ? 0.98f : 0;
-				strafe = driver.moveStrafing * 0.3f;
+//				forward = getRideSpeed() > 0 ? 0.98f : 0;
+//				strafe = driver.moveStrafing * 0.3f;
 
 				super.travel(strafe, forward, unknown);
 				
@@ -144,7 +144,15 @@ public class EntityOstrichHorse extends EntityAnimal {
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
-			setRideSpeed(0);
+
+			// Slow down ride speed
+			float rideSpeed = getRideSpeed();
+			if (rideSpeed > 0) {
+				forward = 1;
+				rideSpeed -= 0.006f;
+				setRideSpeed(Math.max(rideSpeed, 0));
+			}
+
 			super.travel(strafe, forward, unknown);
 		}
 	}
