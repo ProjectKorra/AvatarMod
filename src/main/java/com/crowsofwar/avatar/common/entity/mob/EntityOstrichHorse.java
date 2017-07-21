@@ -97,13 +97,13 @@ public class EntityOstrichHorse extends EntityAnimal {
 	
 	@Override
 	public boolean canBeSteered() {
-		return getControllingPassenger() != null;
+		return getControllingPassenger() instanceof  EntityLivingBase;
 	}
 	
 	@Override
 	public void travel(float strafe, float forward, float unknown) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
-		
+
 		if (isBeingRidden() && canBeSteered()) {
 			this.rotationYaw = driver.rotationYaw;
 			this.prevRotationYaw = this.rotationYaw;
@@ -118,7 +118,8 @@ public class EntityOstrichHorse extends EntityAnimal {
 
 				updateRideSpeed(driver.moveForward);
 				setAIMoveSpeed(getRideSpeed());
-				
+
+
 //				forward = getRideSpeed() > 0 ? 0.98f : 0;
 //				strafe = driver.moveStrafing * 0.3f;
 
@@ -148,9 +149,12 @@ public class EntityOstrichHorse extends EntityAnimal {
 			// Slow down ride speed
 			float rideSpeed = getRideSpeed();
 			if (rideSpeed > 0) {
-				forward = 1;
+//				unknown = rideSpeed;
 				rideSpeed -= 0.006f;
 				setRideSpeed(Math.max(rideSpeed, 0));
+				setAIMoveSpeed(getRideSpeed());
+				unknown = getRideSpeed() * 10;
+				System.out.println(unknown + "");
 			}
 
 			super.travel(strafe, forward, unknown);
