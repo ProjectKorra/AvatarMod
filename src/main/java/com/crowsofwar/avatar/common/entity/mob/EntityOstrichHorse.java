@@ -82,7 +82,7 @@ public class EntityOstrichHorse extends EntityAnimal {
 	
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		if (!super.processInteract(player, hand)) {
+		if (!super.processInteract(player, hand) && !world.isRemote) {
 			player.startRiding(this);
 			return true;
 		}
@@ -148,11 +148,11 @@ public class EntityOstrichHorse extends EntityAnimal {
 			// Slow down ride speed
 			float rideSpeed = getRideSpeed();
 			if (rideSpeed > 0) {
-//				unknown = rideSpeed;
 				rideSpeed -= 0.006f;
 				setRideSpeed(Math.max(rideSpeed, 0));
 				setAIMoveSpeed(getRideSpeed());
-				forward = getRideSpeed() * 10;
+//				forward = getRideSpeed() * 10;
+				moveForward = getRideSpeed();
 				System.out.println(forward + "");
 			}
 
