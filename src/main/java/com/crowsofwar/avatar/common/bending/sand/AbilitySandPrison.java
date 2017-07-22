@@ -10,6 +10,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -45,6 +47,8 @@ public class AbilitySandPrison extends Ability {
 				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
 				if (canImprison(prisoner)) {
 					EntitySandPrison.imprison(prisoner);
+					world.playSound(null, prisoner.getPosition(), SoundEvents.BLOCK_SAND_STEP,
+							SoundCategory.PLAYERS, 1, 1);
 				}
 			}
 

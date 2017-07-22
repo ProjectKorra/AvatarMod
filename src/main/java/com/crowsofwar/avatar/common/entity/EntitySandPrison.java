@@ -26,8 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
@@ -90,10 +88,8 @@ public class EntitySandPrison extends AvatarEntity {
 			setDead();
 
 			if (!world.isRemote && imprisoned != null) {
-				world.playSound(null, imprisoned.posX, imprisoned.posY, imprisoned.posZ,
-						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
-				imprisoned.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"),
-						60, 1, false, false));
+				world.playSound(null, imprisoned.getPosition(),
+						SoundEvents.BLOCK_SAND_BREAK, SoundCategory.PLAYERS, 1, 1);
 			}
 
 		}
