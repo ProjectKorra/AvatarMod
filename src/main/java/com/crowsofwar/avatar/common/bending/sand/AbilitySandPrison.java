@@ -6,10 +6,11 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntitySandPrison;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -42,18 +43,20 @@ public class AbilitySandPrison extends Ability {
 
 			if (!hit.isEmpty()) {
 				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
-				EntitySandPrison.imprison(prisoner);
-
-				world.playSound(null, prisoner.posX, prisoner.posY, prisoner.posZ,
-						SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.PLAYERS, 2, 2);
-
-				world.playSound(null, prisoner.posX, prisoner.posY, prisoner.posZ,
-						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
-
+				if (canImprison(prisoner)) {
+					EntitySandPrison.imprison(prisoner);
+				}
 			}
 
 		}
 
+	}
+
+	private boolean canImprison(EntityLivingBase target) {
+		BlockPos pos = target.getPosition().down();
+		World world = target.world;
+		Block standingOn = world.getBlockState(pos).getBlock();
+		return standingOn == Blocks.SAND; // TODO configurable sand blocks
 	}
 
 	@Override
