@@ -53,7 +53,7 @@ public class EntitySandPrison extends AvatarEntity {
 	public EntitySandPrison(World world) {
 		super(world);
 		imprisonedAttr = new SyncableEntityReference<>(this, SYNC_IMPRISONED);
-		setSize(3, 4);
+		setSize(3, 0.5f);
 	}
 
 	@Override
