@@ -16,35 +16,31 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -85,19 +81,7 @@ public class EntityFireball extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
-		
-		if (inWater) {
-			removeStatCtrl();
-			int particles = rand.nextInt(4) + 5;
-			for (int i = 0; i < particles; i++) {
-				world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
-						rand.nextDouble() * .2, rand.nextGaussian() * .05);
-			}
-			world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-					SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f, false);
-			setDead();
-		}
-		
+
 		// TODO Temporary fix to avoid extra fireballs
 		// Add hook or something
 		if (getOwner() == null) {
@@ -105,7 +89,19 @@ public class EntityFireball extends AvatarEntity {
 		}
 		
 	}
-	
+
+	@Override
+	public void onWaterContact() {
+		spawnExtinguishIndicators();
+		removeStatCtrl();
+		setDead();
+	}
+
+	@Override
+	public void onRaining() {
+		spawnExtinguishIndicators();
+	}
+
 	@Override
 	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();

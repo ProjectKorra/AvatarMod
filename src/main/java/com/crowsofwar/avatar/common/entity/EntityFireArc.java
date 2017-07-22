@@ -17,14 +17,11 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.Random;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -35,6 +32,8 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class EntityFireArc extends EntityArc {
 	
@@ -60,24 +59,31 @@ public class EntityFireArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (inWater || world.isRainingAt(getPosition())) {
-			setDead();
-			Random random = new Random();
-			if (world.isRemote) {
-				int particles = random.nextInt(3) + 4;
-				for (int i = 0; i < particles; i++) {
-					world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
-							(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
-							(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
-				}
-			}
-			world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-					SoundCategory.PLAYERS, 1, random.nextFloat() * 0.3f + 1.1f, false);
-		}
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != newBehavior) setBehavior(newBehavior);
 	}
-	
+
+	@Override
+	public void onWaterContact() {
+		setDead();
+		Random random = new Random();
+		if (world.isRemote) {
+			int particles = random.nextInt(3) + 4;
+			for (int i = 0; i < particles; i++) {
+				world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
+						(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
+						(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
+			}
+		}
+		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+				SoundCategory.PLAYERS, 1, random.nextFloat() * 0.3f + 1.1f, false);
+	}
+
+	@Override
+	public void onRaining() {
+		onWaterContact();
+	}
+
 	public static EntityFireArc findFromId(World world, int id) {
 		return (EntityFireArc) EntityArc.findFromId(world, id);
 	}

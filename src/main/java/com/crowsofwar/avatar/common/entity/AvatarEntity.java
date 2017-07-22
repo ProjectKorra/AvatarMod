@@ -208,6 +208,12 @@ public abstract class AvatarEntity extends Entity {
 		if (isCollided) {
 			onCollideWithSolid();
 		}
+		if (inWater) {
+			onWaterContact();
+		}
+		if (world.isRainingAt(getPosition())) {
+			onRaining();
+		}
 		
 		Vector v = velocity().dividedBy(20);
 		move(MoverType.SELF, v.x(), v.y(), v.z());
@@ -277,7 +283,18 @@ public abstract class AvatarEntity extends Entity {
 	 * Called when the entity collides with blocks or a wall
 	 */
 	public void onCollideWithSolid() {}
-	
+
+	/**
+	 * Called when rain or other small droplets of water hits the entity
+	 */
+	public void onRaining() {}
+
+	/**
+	 * Called when the entity comes into contact with water blocks or other large sources of
+	 * water. Not called for raining, which should be handled in {@link #onRaining()}.
+	 */
+	public void onWaterContact() {}
+
 	/**
 	 * Called when another entity destroys this AvatarEntity. If it is
 	 * considered to be destroyable, this is where things should be "cleaned up"
@@ -329,7 +346,20 @@ public abstract class AvatarEntity extends Entity {
 		}
 		
 	}
-	
+
+	/**
+	 * Spawns smoke particles and plays sounds to indicate that the entity is being extinguished
+	 */
+	protected void spawnExtinguishIndicators() {
+		int particles = rand.nextInt(4) + 5;
+		for (int i = 0; i < particles; i++) {
+			world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
+					rand.nextDouble() * .2, rand.nextGaussian() * .05);
+		}
+		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+				SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f, false);
+	}
+
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {
 		return getEntityBoundingBox();
