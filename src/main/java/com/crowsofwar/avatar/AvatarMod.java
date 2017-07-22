@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.bending.ice.AbilityIceWalk;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningStrike;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
@@ -253,6 +254,7 @@ public class AvatarMod {
 		BendingStyles.register(new Airbending());
 		BendingStyles.register(new Icebending());
 		BendingStyles.register(new Lightningbending());
+		BendingStyles.register(new Sandbending());
 	}
 	
 }
