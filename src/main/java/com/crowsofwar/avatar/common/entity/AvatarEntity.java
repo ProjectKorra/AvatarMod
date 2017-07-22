@@ -62,12 +62,22 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	public AvatarEntity(World world) {
 		super(world);
-		this.internalVelocity = createInternalVelocity();
+
+		//@formatter:off
+		this.internalVelocity = new BackedVector(
+				x -> this.motionX = x / 20,
+				y -> this.motionY = y / 20,
+				z -> this.motionZ = z / 20,
+				() -> this.motionX * 20,
+				() -> this.motionY * 20,
+				() -> this.motionZ * 20);
 		this.internalPosition = new BackedVector(//
 				x -> setPosition(x, posY, posZ), //
 				y -> setPosition(posX, y, posZ), //
 				z -> setPosition(posX, posY, z), //
 				() -> posX, () -> posY, () -> posZ);
+		//@formatter:on
+
 		this.putsOutFires = false;
 		this.flammable = false;
 	}
@@ -126,27 +136,13 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setAvId(nbt.getInteger("AvId"));
-		// Not necessary to check hidden
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("AvId", getAvId());
-		// Not necessary to check hidden
 	}
-	
-	//@formatter:off
-	protected Vector createInternalVelocity() {
-		return new BackedVector(
-				x -> this.motionX = x / 20,
-				y -> this.motionY = y / 20,
-				z -> this.motionZ = z / 20,
-				() -> this.motionX * 20,
-				() -> this.motionY * 20,
-				() -> this.motionZ * 20);
-	}
-	//@formatter:on
-	
+
 	/**
 	 * Looks up an entity from the world, given its {@link #getAvId() synced id}
 	 * . Returns null if not found.

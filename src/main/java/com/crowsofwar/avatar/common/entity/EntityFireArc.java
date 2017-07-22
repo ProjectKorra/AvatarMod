@@ -84,10 +84,6 @@ public class EntityFireArc extends EntityArc {
 		}
 	}
 
-	public static EntityFireArc findFromId(World world, int id) {
-		return (EntityFireArc) EntityArc.findFromId(world, id);
-	}
-	
 	@Override
 	public void setDead() {
 		super.setDead();
