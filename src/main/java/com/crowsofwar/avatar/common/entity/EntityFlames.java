@@ -20,26 +20,21 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
@@ -145,36 +140,25 @@ public class EntityFlames extends AvatarEntity {
 			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
 			if (!collided.isEmpty()) setDead();
 		}
-		
-		handleWaterMovement();
-		if (inWater) {
-			setDead();
-			showExtinguished();
-		}
-		if (world.isRainingAt(getPosition())) {
-			setDead();
-			if (Math.random() < 0.3) showExtinguished();
-		}
-		
+
 	}
-	
-	/**
-	 * Plays an extinguishing sound and particles
-	 */
-	private void showExtinguished() {
-		Random random = new Random();
-		if (world.isRemote) {
-			world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
-					(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
-					(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
-		}
-		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-				SoundCategory.PLAYERS, 0.3f, random.nextFloat() * 0.3f + 1.1f, false);
-	}
-	
+
 	@Override
-	protected void playStepSound(BlockPos pos, Block blockIn) {}
-	
+	public void onWaterContact() {
+		setDead();
+		spawnExtinguishIndicators();
+	}
+
+	@Override
+	public void onRaining() {
+		setDead();
+
+		// Spawn less extinguish indicators in the rain to prevent spamming
+		if (rand.nextDouble() < 0.3) {
+			spawnExtinguishIndicators();
+		}
+	}
+
 	public boolean doesLightFires() {
 		return lightsFires;
 	}
