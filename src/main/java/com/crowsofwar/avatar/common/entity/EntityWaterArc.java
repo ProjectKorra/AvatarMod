@@ -71,12 +71,12 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	public void onCollideWithSolid() {
+	public boolean onCollideWithSolid() {
 		
 		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
-			if (tryDestroy()) {
-				setDead();
-			}
+			setDead();
+			cleanup();
+			return true;
 		}
 		
 		if (world.isRemote) {
@@ -120,6 +120,8 @@ public class EntityWaterArc extends EntityArc {
 			}
 			
 		}
+
+		return false;
 		
 	}
 
@@ -206,13 +208,11 @@ public class EntityWaterArc extends EntityArc {
 		return 9;
 	}
 	
-	@Override
-	public boolean tryDestroy() {
+	private void cleanup() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(THROW_WATER);
 		}
-		return true;
 	}
 	
 	public static class WaterControlPoint extends ControlPoint {

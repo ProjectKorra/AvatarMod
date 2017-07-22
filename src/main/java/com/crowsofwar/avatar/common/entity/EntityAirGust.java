@@ -90,7 +90,8 @@ public class EntityAirGust extends EntityArc {
 			setDead();
 			
 			if (entity instanceof AvatarEntity) {
-				if (((AvatarEntity) entity).tryDestroy()) {
+				if (((AvatarEntity) entity).onMinorWaterContact()) {// TODO think of a hook for
+					// air gust contact
 					entity.setDead();
 				}
 			}
@@ -104,10 +105,9 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	public void onCollideWithSolid() {
-		if (tryDestroy()) {
-			setDead();
-		}
+	public boolean onCollideWithSolid() {
+		setDead();
+		return true;
 	}
 	
 	@Override

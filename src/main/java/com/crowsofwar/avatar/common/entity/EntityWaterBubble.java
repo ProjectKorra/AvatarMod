@@ -37,8 +37,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_BUBBLE;
-
 /**
  * 
  * 
@@ -180,14 +178,5 @@ public class EntityWaterBubble extends AvatarEntity {
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
 	}
-	
-	@Override
-	public boolean tryDestroy() {
-		setBehavior(new WaterBubbleBehavior.Drop());
-		if (getOwner() != null) {
-			Bender.get(getOwner()).getData().removeStatusControl(THROW_BUBBLE);
-		}
-		return false;
-	}
-	
+
 }

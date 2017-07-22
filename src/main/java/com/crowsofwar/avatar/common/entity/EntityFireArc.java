@@ -24,16 +24,11 @@ import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 public class EntityFireArc extends EntityArc {
 	
@@ -64,24 +59,29 @@ public class EntityFireArc extends EntityArc {
 	}
 
 	@Override
-	public void onMajorWaterContact() {
+	public boolean onMajorWaterContact() {
+		spawnExtinguishIndicators();
 		setDead();
-		Random random = new Random();
-		if (world.isRemote) {
-			int particles = random.nextInt(3) + 4;
-			for (int i = 0; i < particles; i++) {
-				world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
-						(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
-						(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
-			}
-		}
-		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-				SoundCategory.PLAYERS, 1, random.nextFloat() * 0.3f + 1.1f, false);
+		cleanup();
+		return true;
 	}
 
 	@Override
-	public void onMinorWaterContact() {
-		onMajorWaterContact();
+	public boolean onMinorWaterContact() {
+		spawnExtinguishIndicators();
+		setDead();
+		cleanup();
+		return true;
+	}
+
+	private void cleanup() {
+		if (getOwner() != null) {
+			BendingData data = Bender.get(getOwner()).getData();
+			data.removeStatusControl(StatusControl.THROW_FIRE);
+			if (!world.isRemote) {
+				data.removeStatusControl(StatusControl.THROW_FIRE);
+			}
+		}
 	}
 
 	public static EntityFireArc findFromId(World world, int id) {
@@ -91,17 +91,16 @@ public class EntityFireArc extends EntityArc {
 	@Override
 	public void setDead() {
 		super.setDead();
-		if (getOwner() != null) {
-			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.THROW_FIRE);
-			if (!world.isRemote) {
-				data.removeStatusControl(StatusControl.THROW_FIRE);
-			}
-		}
+		cleanup();
 	}
 	
 	@Override
-	public void onCollideWithSolid() {
+	public boolean onCollideWithSolid() {
+
+		if (!(getBehavior() instanceof FireArcBehavior.Thrown)) {
+			return false;
+		}
+
 		if (!world.isRemote) {
 			int x = (int) Math.floor(posX);
 			int y = (int) Math.floor(posY);
@@ -117,11 +116,11 @@ public class EntityFireArc extends EntityArc {
 					}
 				}
 			}
-			
-			if (tryDestroy()) {
-				setDead();
-			}
+
+			setDead();
+
 		}
+		return true;
 	}
 	
 	@Override
