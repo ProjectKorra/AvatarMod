@@ -91,14 +91,14 @@ public class EntityFireball extends AvatarEntity {
 	}
 
 	@Override
-	public void onWaterContact() {
+	public void onMajorWaterContact() {
 		spawnExtinguishIndicators();
 		removeStatCtrl();
 		setDead();
 	}
 
 	@Override
-	public void onRaining() {
+	public void onMinorWaterContact() {
 		spawnExtinguishIndicators();
 	}
 

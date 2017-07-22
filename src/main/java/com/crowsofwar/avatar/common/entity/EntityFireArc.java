@@ -64,7 +64,7 @@ public class EntityFireArc extends EntityArc {
 	}
 
 	@Override
-	public void onWaterContact() {
+	public void onMajorWaterContact() {
 		setDead();
 		Random random = new Random();
 		if (world.isRemote) {
@@ -80,8 +80,8 @@ public class EntityFireArc extends EntityArc {
 	}
 
 	@Override
-	public void onRaining() {
-		onWaterContact();
+	public void onMinorWaterContact() {
+		onMajorWaterContact();
 	}
 
 	public static EntityFireArc findFromId(World world, int id) {

@@ -209,10 +209,10 @@ public abstract class AvatarEntity extends Entity {
 			onCollideWithSolid();
 		}
 		if (inWater) {
-			onWaterContact();
+			onMajorWaterContact();
 		}
 		if (world.isRainingAt(getPosition())) {
-			onRaining();
+			onMinorWaterContact();
 		}
 		
 		Vector v = velocity().dividedBy(20);
@@ -285,15 +285,16 @@ public abstract class AvatarEntity extends Entity {
 	public void onCollideWithSolid() {}
 
 	/**
-	 * Called when rain or other small droplets of water hits the entity
+	 * Called when small sources of water hit the entity, such as rain. Larger sources, like
+	 * hitting a water block, should be handled in {@link #onMajorWaterContact()}.
 	 */
-	public void onRaining() {}
+	public void onMinorWaterContact() {}
 
 	/**
-	 * Called when the entity comes into contact with water blocks or other large sources of
-	 * water. Not called for raining, which should be handled in {@link #onRaining()}.
+	 * Called when the entity comes into contact with large sources of water, like water blocks.
+	 * Other sources of wetness, like rain, should be handled in {@link #onMinorWaterContact()}.
 	 */
-	public void onWaterContact() {}
+	public void onMajorWaterContact() {}
 
 	/**
 	 * Called when another entity destroys this AvatarEntity. If it is
