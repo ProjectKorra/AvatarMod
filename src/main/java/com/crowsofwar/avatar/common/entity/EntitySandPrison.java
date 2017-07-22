@@ -53,7 +53,7 @@ public class EntitySandPrison extends AvatarEntity {
 	public EntitySandPrison(World world) {
 		super(world);
 		imprisonedAttr = new SyncableEntityReference<>(this, SYNC_IMPRISONED);
-		setSize(3, 0.5f);
+		setSize(1, 0.25f);
 	}
 
 	@Override
@@ -83,6 +83,7 @@ public class EntitySandPrison extends AvatarEntity {
 			imprisoned.posX = this.posX;
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
+			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
 		}
 		if (ticksExisted >= IMPRISONED_TIME) {
 			setDead();
