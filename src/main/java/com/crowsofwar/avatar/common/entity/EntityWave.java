@@ -126,7 +126,14 @@ public class EntityWave extends Entity {
 		}
 		
 	}
-	
+
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onMajorWaterContact();
+		}
+	}
+
 	private int maxTimeOnLand() {
 		if (getOwner() != null) {
 			AbilityData data = BendingData.get(getOwner()).getAbilityData(AbilityCreateWave.ID);

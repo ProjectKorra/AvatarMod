@@ -17,15 +17,11 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
-
-import java.util.Random;
-
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -35,6 +31,10 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
+
+import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 
 public class EntityWaterArc extends EntityArc {
 	
@@ -121,6 +121,13 @@ public class EntityWaterArc extends EntityArc {
 			
 		}
 		
+	}
+
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onMinorWaterContact();
+		}
 	}
 	
 	@Override

@@ -17,20 +17,18 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_BUBBLE;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,6 +36,8 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_BUBBLE;
 
 /**
  * 
@@ -120,7 +120,14 @@ public class EntityWaterBubble extends AvatarEntity {
 		}
 		
 	}
-	
+
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onMajorWaterContact();
+		}
+	}
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
