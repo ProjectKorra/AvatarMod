@@ -21,12 +21,11 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,15 +41,13 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class EntityWave extends Entity {
+public class EntityWave extends AvatarEntity {
 	
 	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager.createKey(EntityWave.class,
 			AvatarDataSerializers.SERIALIZER_BENDER);
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
 			DataSerializers.FLOAT);
 	
-	private final Vector internalVelocity;
-	private final Vector internalPosition;
 	private final OwnerAttribute ownerAttr;
 	
 	private float damageMult;
@@ -58,17 +55,9 @@ public class EntityWave extends Entity {
 	
 	public EntityWave(World world) {
 		super(world);
-		//@formatter:off
-		this.internalVelocity = new BackedVector(x -> this.motionX = x / 20, y -> this.motionY = y / 20, z -> this.motionZ = z / 20,
-				() -> this.motionX * 20, () -> this.motionY * 20, () -> this.motionZ * 20);
-		this.internalPosition = new Vector();
-		
 		setSize(2, 2);
-		
 		damageMult = 1;
-		
 		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		
 	}
 	
 	@Override
@@ -90,13 +79,15 @@ public class EntityWave extends Entity {
 	
 	@Override
 	public void onUpdate() {
-		
+
+		super.onUpdate();
+
 		setSize(getWaveSize() * 0.75f, 2);
 		
 		EntityLivingBase owner = getOwner();
 		
 		Vector move = velocity().dividedBy(20);
-		Vector newPos = getVecPosition().add(move);
+		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
 		
 		if (!world.isRemote) {
@@ -143,18 +134,7 @@ public class EntityWave extends Entity {
 		}
 		return 0;
 	}
-	
-	public Vector getVecPosition() {
-		return internalPosition.set(posX, posY, posZ);
-	}
-	
-	/**
-	 * Get velocity in m/s. Any modifications to this vector will modify the entity motion fields.
-	 */
-	public Vector velocity() {
-		return internalVelocity;
-	}
-	
+
 	public EntityLivingBase getOwner() {
 		return ownerAttr.getOwner();
 	}
@@ -170,7 +150,6 @@ public class EntityWave extends Entity {
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		// TODO Save/load waves??
 		setDead();
 	}
 	
