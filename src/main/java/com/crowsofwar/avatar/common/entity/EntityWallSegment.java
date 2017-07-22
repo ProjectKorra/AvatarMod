@@ -280,7 +280,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			AvatarEntity avEnt = (AvatarEntity) entity;
 			avEnt.onCollideWithSolid();
 			
-			if (avEnt.tryDestroy()) {
+			if (avEnt.onCollideWithSolid()) {
 				entity.setDead();
 				if (getOwner() != null) {
 					BendingData data = ownerAttribute.getOwnerBender().getData();

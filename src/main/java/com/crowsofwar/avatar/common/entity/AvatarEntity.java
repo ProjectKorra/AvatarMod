@@ -280,30 +280,29 @@ public abstract class AvatarEntity extends Entity {
 	protected void onCollideWithEntity(Entity entity) {}
 	
 	/**
-	 * Called when the entity collides with blocks or a wall
+	 * Called when the entity collides with blocks or a wall. Returns whether the entity was
+	 * destroyed.
 	 */
-	public void onCollideWithSolid() {}
+	public boolean onCollideWithSolid() {
+		return false;
+	}
 
 	/**
 	 * Called when small sources of water hit the entity, such as rain. Larger sources, like
-	 * hitting a water block, should be handled in {@link #onMajorWaterContact()}.
+	 * hitting a water block, should be handled in {@link #onMajorWaterContact()}. Returns
+	 * whether the entity was destroyed.
 	 */
-	public void onMinorWaterContact() {}
+	public boolean onMinorWaterContact() {
+		return false;
+	}
 
 	/**
 	 * Called when the entity comes into contact with large sources of water, like water blocks.
 	 * Other sources of wetness, like rain, should be handled in {@link #onMinorWaterContact()}.
+	 * Returns whether the entity was destroyed.
 	 */
-	public void onMajorWaterContact() {}
-
-	/**
-	 * Called when another entity destroys this AvatarEntity. If it is
-	 * considered to be destroyable, this is where things should be "cleaned up"
-	 * (eg remove status control). Returns true if it was destroyed. Some
-	 * entities are too strong to destroy, such as an air bubble.
-	 */
-	public boolean tryDestroy() {
-		return true;
+	public boolean onMajorWaterContact() {
+		return false;
 	}
 	
 	/**
