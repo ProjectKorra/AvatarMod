@@ -29,15 +29,8 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * Like {@link CachedEntity}, but allows access to the server/client
- * counterparts of an AvatarEntity, on both sides.
- * <p>
- * Designed for use to have 2 entities having synced references to each other.
- * Uses DataManager to sync the entities' IDs and then performs lookup/caching.
- * <p>
- * NOTE: By default, if the entity is being loaded and the reference is null,
- * the SyncableEntityReference will setDead() the entity to prevent a NPE crash.
- * This can be disabled by calling {@link #allowNullSaving()}.
+ * Like {@link CachedEntity}, but allows access to an Entity on both sides (synchronized). It can
+ * only be used by another Entity since it uses the DataManager.
  * 
  * @author CrowsOfWar
  */
@@ -63,16 +56,15 @@ public class SyncableEntityReference<T extends Entity> {
 		this.using = entity;
 		this.sync = sync;
 		this.cache = new CachedEntity<>(null);
-		this.allowNullSaving = false;
+		this.allowNullSaving = true;
 	}
 	
 	/**
-	 * Enable saving a null reference. Normally, if the reference is null while
-	 * being loaded, the entity is setDead() to try to prevent erroring entities
-	 * from causing crashes.
+	 * Intended for references which need to be set. If the referenced entity is not found on
+	 * loading, destroys the using entity to avoid crashes.
 	 */
-	public void allowNullSaving() {
-		allowNullSaving = true;
+	public void preventNullSaving() {
+		allowNullSaving = false;
 	}
 	
 	@Nullable

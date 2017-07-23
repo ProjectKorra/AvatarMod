@@ -89,6 +89,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public EntityWallSegment(World world) {
 		super(world);
 		this.wallReference = new SyncableEntityReference<>(this, SYNC_WALL);
+		this.wallReference.preventNullSaving();
 		this.setSize(.9f, 5);
 		this.ownerAttribute = new OwnerAttribute(this, SYNC_OWNER);
 	}

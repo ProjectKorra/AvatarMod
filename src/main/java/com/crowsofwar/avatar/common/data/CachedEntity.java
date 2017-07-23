@@ -39,7 +39,7 @@ public class CachedEntity<T extends Entity> {
 	private T cachedEntity;
 	private UUID entityId;
 	
-	public CachedEntity(UUID id) {
+	public CachedEntity(@Nullable UUID id) {
 		this.entityId = id;
 	}
 

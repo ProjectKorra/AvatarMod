@@ -65,6 +65,7 @@ public class EntityWall extends AvatarEntity {
 		this.segments = new SyncableEntityReference[5];
 		for (int i = 0; i < segments.length; i++) {
 			segments[i] = new SyncableEntityReference(this, SYNC_SEGMENTS[i]);
+			segments[i].preventNullSaving();
 		}
 		setSize(0, 0);
 	}
