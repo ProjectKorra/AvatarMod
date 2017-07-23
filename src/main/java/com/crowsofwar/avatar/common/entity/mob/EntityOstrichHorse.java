@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.common.gui.InventoryOstrichChest;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemOstrichEquipment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
@@ -25,6 +27,9 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -39,7 +44,7 @@ import javax.annotation.Nullable;
  * 
  * @author CrowsOfWar
  */
-public class EntityOstrichHorse extends EntityAnimal {
+public class EntityOstrichHorse extends EntityAnimal implements IInventoryChangedListener {
 	
 	private static final DataParameter<Float> SYNC_RIDE_SPEED = EntityDataManager
 			.createKey(EntityOstrichHorse.class, DataSerializers.FLOAT);
@@ -47,12 +52,15 @@ public class EntityOstrichHorse extends EntityAnimal {
 	private static final DataParameter<Integer> SYNC_EQUIPMENT = EntityDataManager.createKey
 			(EntityOstrichHorse.class, DataSerializers.VARINT);
 
+	private InventoryOstrichChest chest;
+
 	/**
 	 * @param world
 	 */
 	public EntityOstrichHorse(World world) {
 		super(world);
 		setSize(1, 2);
+		initChest();
 	}
 	
 	@Override
@@ -166,7 +174,62 @@ public class EntityOstrichHorse extends EntityAnimal {
 
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(moveSpeed);
 	}
-	
+
+	/**
+	 * Updates the chest
+	 * TODO: figure out if this is really necessary
+	 */
+	private void initChest() {
+
+		InventoryOstrichChest old = chest;
+		chest = new InventoryOstrichChest();
+		if (hasCustomName()) {
+			chest.setCustomName(getName());
+		}
+
+		if (old != null) {
+			old.removeInventoryChangeListener(this);
+
+			// Transfer old stacks into new inventory
+			for (int i = 0; i < chest.getSizeInventory(); ++i) {
+				ItemStack stack = old.getStackInSlot(i);
+				if (!stack.isEmpty()) {
+					chest.setInventorySlotContents(i, stack.copy());
+				}
+			}
+
+		}
+
+		chest.addInventoryChangeListener(this);
+		updateEquipment();
+
+	}
+
+	@Override
+	public void onInventoryChanged(IInventory invBasic) {
+		updateEquipment();
+	}
+
+	/**
+	 * Updates equipment based on inventory contents
+	 */
+	private void updateEquipment() {
+
+		// Update saddle
+		if (!world.isRemote) {
+
+			ItemOstrichEquipment.EquipmentTier tier = null;
+
+			ItemStack equipmentStack = chest.getStackInSlot(0);
+			if (equipmentStack.getItem() == AvatarItems.itemOstrichEquipment) {
+				tier = ItemOstrichEquipment.EquipmentTier.getTier(equipmentStack.getMetadata());
+			}
+			setEquipment(tier);
+
+		}
+
+	}
+
 	/**
 	 * Get ride speed.
 	 * <p>
@@ -248,5 +311,5 @@ public class EntityOstrichHorse extends EntityAnimal {
 		setRideSpeed(next);
 
 	}
-	
+
 }
