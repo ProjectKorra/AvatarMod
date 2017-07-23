@@ -63,6 +63,16 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 			return values()[index].name().toLowerCase();
 		}
 
+		/**
+		 * Get the equipment specified by the index, or null if there isn't any tier with that
+		 * index.
+		 */
+		@Nullable
+		public static EquipmentTier getTier(int index) {
+			if (!isValidIndex(index)) return null;
+			return values()[index];
+		}
+
 		private static boolean isValidIndex(int index) {
 			return index >= 0 && index < values().length;
 		}

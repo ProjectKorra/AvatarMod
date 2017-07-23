@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.common.item.ItemOstrichEquipment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,7 +43,10 @@ public class EntityOstrichHorse extends EntityAnimal {
 	
 	private static final DataParameter<Float> SYNC_RIDE_SPEED = EntityDataManager
 			.createKey(EntityOstrichHorse.class, DataSerializers.FLOAT);
-	
+
+	private static final DataParameter<Integer> SYNC_EQUIPMENT = EntityDataManager.createKey
+			(EntityOstrichHorse.class, DataSerializers.VARINT);
+
 	/**
 	 * @param world
 	 */
@@ -55,6 +59,7 @@ public class EntityOstrichHorse extends EntityAnimal {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_RIDE_SPEED, 0f);
+		dataManager.register(SYNC_EQUIPMENT, -1);
 	}
 	
 	@Override
@@ -178,7 +183,18 @@ public class EntityOstrichHorse extends EntityAnimal {
 	private void setRideSpeed(float rideSpeed) {
 		dataManager.set(SYNC_RIDE_SPEED, rideSpeed);
 	}
-	
+
+	@Nullable
+	public ItemOstrichEquipment.EquipmentTier getEquipment() {
+		int index = dataManager.get(SYNC_EQUIPMENT);
+		return ItemOstrichEquipment.EquipmentTier.getTier(index);
+	}
+
+	public void setEquipment(@Nullable ItemOstrichEquipment.EquipmentTier equipment) {
+		int index = equipment == null ? -1 : equipment.ordinal();
+		dataManager.set(SYNC_EQUIPMENT, index);
+	}
+
 	/**
 	 * Assuming that the ostrich is currently ridden, update ride speed to the
 	 * driver's specifications
