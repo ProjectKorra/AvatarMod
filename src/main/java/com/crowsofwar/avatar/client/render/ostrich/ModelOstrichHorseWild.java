@@ -1,13 +1,13 @@
 package com.crowsofwar.avatar.client.render.ostrich;
 
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 /**
- * OstrichHorse Wild - talhanation Created using Tabula 5.1.0
+ * OstrichHorse Wild - talhanation
+ * Created using Tabula 5.1.0
  */
-public class ModelOstrichHorseWild extends ModelBase {
+public class ModelOstrichHorseWild extends ModelOstrichHorse {
 	public ModelRenderer BodyMain;
 	public ModelRenderer Body1;
 	public ModelRenderer Body2;
@@ -353,17 +353,19 @@ public class ModelOstrichHorseWild extends ModelBase {
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
 	}
-	
-	/**
-	 * @author CrowsOfWar
-	 */
+
 	@Override
-	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
-			float headPitch, float scaleFactor, Entity ostrich) {
-		
-		neck1.rotateAngleY = (float) Math.toRadians(netHeadYaw);
-		neck1.rotateAngleX = (float) Math.toRadians(headPitch);
-		
+	protected ModelRenderer getNeck() {
+		return neck1;
 	}
-	
+
+	@Override
+	protected ModelRenderer getLeftLeg() {
+		return Lleg;
+	}
+
+	@Override
+	protected ModelRenderer getRightLeg() {
+		return Rleg;
+	}
 }

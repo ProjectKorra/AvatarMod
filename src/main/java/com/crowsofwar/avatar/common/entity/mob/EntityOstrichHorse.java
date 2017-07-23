@@ -77,12 +77,12 @@ public class EntityOstrichHorse extends EntityAnimal {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2);
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5);
 	}
 	
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		if (!super.processInteract(player, hand)) {
+		if (!super.processInteract(player, hand) && !world.isRemote) {
 			player.startRiding(this);
 			return true;
 		}
@@ -97,13 +97,15 @@ public class EntityOstrichHorse extends EntityAnimal {
 	
 	@Override
 	public boolean canBeSteered() {
-		return getControllingPassenger() != null;
+		return getControllingPassenger() instanceof  EntityLivingBase;
 	}
 	
 	@Override
-	public void travel(float strafe, float forward, float unknown) {
+	public void travel(float strafe, float jump, float forward) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
-		
+
+		double moveSpeed = 0.2;
+
 		if (isBeingRidden() && canBeSteered()) {
 			this.rotationYaw = driver.rotationYaw;
 			this.prevRotationYaw = this.rotationYaw;
@@ -115,15 +117,13 @@ public class EntityOstrichHorse extends EntityAnimal {
 			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
 			
 			if (this.canPassengerSteer()) {
-				
+
 				updateRideSpeed(driver.moveForward);
 				setAIMoveSpeed(getRideSpeed());
-				
-				forward = getRideSpeed() > 0 ? 0.98f : 0;
-				strafe = driver.moveStrafing * 0.3f;
 
-				super.travel(strafe, forward, unknown);
-				
+				super.travel(strafe, jump, forward);
+				moveSpeed = 0.5;
+
 			} else {
 				this.motionX = 0.0D;
 				this.motionY = 0.0D;
@@ -144,9 +144,22 @@ public class EntityOstrichHorse extends EntityAnimal {
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
-			setRideSpeed(0);
-			super.travel(strafe, forward, unknown);
+
+			// Slow down ride speed
+			float rideSpeed = getRideSpeed();
+			if (rideSpeed > 0) {
+				rideSpeed -= 0.006f;
+				setRideSpeed(Math.max(rideSpeed, 0));
+				setAIMoveSpeed(getRideSpeed());
+//				forward = getRideSpeed() * 10;
+				moveForward = getRideSpeed();
+				System.out.println(forward + "");
+			}
+
+			super.travel(strafe, jump, forward);
 		}
+
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(moveSpeed);
 	}
 	
 	/**
@@ -189,6 +202,9 @@ public class EntityOstrichHorse extends EntityAnimal {
 			if (current < target) {
 				next += moveSpeedAttr * 0.02f;
 			}
+			if (next < 0.1) {
+				next = 0.1f;
+			}
 			
 		}
 		if (instructions < 0) {
@@ -207,14 +223,14 @@ public class EntityOstrichHorse extends EntityAnimal {
 		}
 		
 		// Update to dataManager
-		if (next < 0) {
+		if (next < 0.1) {
 			next = 0;
 		}
 		if (next > target) {
 			next += (target - next) * 0.05f;
 		}
 		setRideSpeed(next);
-		
+
 	}
 	
 }

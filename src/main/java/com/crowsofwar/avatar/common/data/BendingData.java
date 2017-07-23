@@ -404,7 +404,7 @@ public class BendingData {
 		AvatarUtils.writeMap(getAbilityDataMap(), //
 				(nbt, abilityId) -> {
 					nbt.setUniqueId("Id", abilityId);
-					nbt.setString("_AbilityName", Abilities.getName(abilityId));
+					nbt.setString("_AbilityName", Abilities.getName(abilityId) + "");
 				}, (nbt, data) -> {
 					nbt.setUniqueId("AbilityId", data.getAbilityId());
 					data.writeToNbt(nbt);

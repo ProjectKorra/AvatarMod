@@ -902,7 +902,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	// moveWithHeading
 	@Override
-	public void travel(float strafe, float forward, float unknown) {
+	public void travel(float strafe, float jump, float forward) {
 		
 		if (isEatingGrass()) {
 			motionY -= 0.08;
@@ -960,7 +960,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 						.getAttributeValue();
 				setAIMoveSpeed(moveAttribute * condition.getSpeedMultiplier());
 				
-				travelFlying(strafe, forward * speedMult, unknown);
+				travelFlying(strafe, jump * speedMult, forward);
 				motionY += look.y() * 0.02 * speedMult;
 				
 			} else if (driver instanceof EntityPlayer) {
@@ -982,7 +982,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			this.limbSwing += this.limbSwingAmount;
 		} else {
 			this.jumpMovementFactor = 0.02F;
-			travelFlying(strafe, forward, unknown);
+			travelFlying(strafe, jump, forward);
 		}
 		
 	}
@@ -997,15 +997,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {}
 	
-	private void travelFlying(float strafe, float forward, float unknown) {
+	private void travelFlying(float strafe, float jump, float forward) {
 		if (this.isInWater()) {
-			this.moveRelative(strafe, forward, unknown, 0.02F);
+			this.moveRelative(strafe, jump, forward, 0.02F);
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.800000011920929D;
 			this.motionY *= 0.800000011920929D;
 			this.motionZ *= 0.800000011920929D;
 		} else if (this.isInLava()) {
-			this.moveRelative(strafe, forward, unknown, 0.02F);
+			this.moveRelative(strafe, jump, forward, 0.02F);
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.5D;
 			this.motionY *= 0.5D;
@@ -1020,7 +1020,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			}
 			
 			float f1 = 0.16277136F / (f * f * f);
-			this.moveRelative(strafe, forward, unknown, this.onGround ? 0.1F * f1 : 0.02F);
+			this.moveRelative(strafe, jump, forward, this.onGround ? 0.1F * f1 : 0.02F);
 			f = 0.91F;
 			
 			if (this.onGround) {
