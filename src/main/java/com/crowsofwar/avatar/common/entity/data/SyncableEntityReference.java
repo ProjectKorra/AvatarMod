@@ -88,6 +88,15 @@ public class SyncableEntityReference<T extends Entity> {
 		cache.setEntity(entity);
 		using.getDataManager().set(sync, Optional.of(cache.getEntityId()));
 	}
+
+	@Nullable
+	public UUID getEntityId() {
+		return cache.getEntityId();
+	}
+
+	public void setEntityId(@Nullable UUID entityId) {
+		cache.setEntityId(null);
+	}
 	
 	/**
 	 * Reads this reference from NBT. Please note, reads values directly from
