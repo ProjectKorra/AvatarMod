@@ -110,30 +110,38 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		System.out.println("processInteract");
 		if (!super.processInteract(player, hand) && !world.isRemote) {
 
 			// Put on some equipment?
-			for (ItemStack stack : player.getHeldEquipment()) {
-				if (stack.getItem() == AvatarItems.itemOstrichEquipment) {
-					chest.setInventorySlotContents(0, stack.copy());
-					if (!player.capabilities.isCreativeMode) {
-						stack.shrink(1);
-					}
+			ItemStack heldStack = player.getHeldItem(hand);
+			if (heldStack.getItem() == AvatarItems.itemOstrichEquipment) {
+				chest.setInventorySlotContents(0, heldStack.copy());
+				if (!player.capabilities.isCreativeMode) {
+					heldStack.shrink(1);
+				}
+				return true;
+			}
+
+			// This method called twice per right-click - one for each hand
+			// these interactions only need to be processed 1x / interact...
+
+			if (hand == EnumHand.MAIN_HAND) {
+
+				// Take off equipment?
+				if (player.isSneaking() && getEquipment() != null) {
+					int index = getEquipment().ordinal();
+					ItemStack stack = new ItemStack(AvatarItems.itemOstrichEquipment, 1, index);
+					entityDropItem(stack, getEyeHeight());
+					chest.setInventorySlotContents(0, ItemStack.EMPTY);
 					return true;
 				}
-			}
 
-			// Take off equipment?
-			if (player.isSneaking() && getEquipment() != null) {
-				int index = getEquipment().ordinal();
-				ItemStack stack = new ItemStack(AvatarItems.itemOstrichEquipment, 1, index);
-				entityDropItem(stack, getEyeHeight());
-				chest.setInventorySlotContents(0, ItemStack.EMPTY);
-			}
+				// Default: ride ostrich
+				player.startRiding(this);
+				return true;
 
-			// Default: ride ostrich
-			player.startRiding(this);
-			return true;
+			}
 
 		}
 		return false;
