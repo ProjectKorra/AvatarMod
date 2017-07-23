@@ -216,6 +216,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	 * Initializes the the chest for the first time
 	 */
 	private void setupChest() {
+		chest = new InventoryOstrichChest();
 		if (hasCustomName()) {
 			chest.setCustomName(getName());
 		}
