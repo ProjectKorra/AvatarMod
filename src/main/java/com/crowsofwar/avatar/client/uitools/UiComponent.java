@@ -16,15 +16,15 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-import static net.minecraft.client.renderer.GlStateManager.*;
-
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
  * Components are a part of a ui. They can be text, images, etc. They have a
@@ -106,7 +106,6 @@ public abstract class UiComponent extends Gui {
 	 * correct position.
 	 * 
 	 * @param mouseHover
-	 *            TODO
 	 */
 	protected abstract void componentDraw(float partialTicks, boolean mouseHover);
 	
