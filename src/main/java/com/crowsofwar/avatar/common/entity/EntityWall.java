@@ -17,13 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-import static java.lang.Math.abs;
-import static net.minecraft.util.EnumFacing.NORTH;
-
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,6 +27,10 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
+import static java.lang.Math.abs;
+import static net.minecraft.util.EnumFacing.NORTH;
 
 /**
  * 
@@ -170,11 +169,6 @@ public class EntityWall extends AvatarEntity {
 	protected boolean canCollideWith(Entity entity) {
 		return super.canCollideWith(entity) && !(entity instanceof EntityWall)
 				&& !(entity instanceof EntityWallSegment);
-	}
-	
-	@Override
-	public boolean tryDestroy() {
-		return false;
 	}
 	
 }

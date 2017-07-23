@@ -20,13 +20,12 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
@@ -121,20 +120,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		this(world, blockState);
 		setOwner(owner);
 	}
-	
-	@Override
-	protected Vector createInternalVelocity() {
-		//@formatter:off
-		return new BackedVector(
-				x -> dataManager.set(SYNC_VELOCITY, velocity().copy().setX(x)),
-				y -> dataManager.set(SYNC_VELOCITY, velocity().copy().setY(y)),
-				z -> dataManager.set(SYNC_VELOCITY, velocity().copy().setZ(z)),
-				() -> dataManager.get(SYNC_VELOCITY).x(),
-				() -> dataManager.get(SYNC_VELOCITY).y(),
-				() -> dataManager.get(SYNC_VELOCITY).z());
-		//@formatter:on
-	}
-	
+
 	// Called from constructor of Entity class
 	@Override
 	protected void entityInit() {
@@ -285,7 +271,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 * Called when the block collides with the ground as well as other entities
 	 */
 	@Override
-	public void onCollideWithSolid() {
+	public boolean onCollideWithSolid() {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
@@ -312,7 +298,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		}
 		
 		setDead();
-		
+		return true;
+
 	}
 	
 	public float getFriction() {
@@ -374,11 +361,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return false;
-	}
-	
-	@Override
-	public boolean tryDestroy() {
 		return false;
 	}
 	

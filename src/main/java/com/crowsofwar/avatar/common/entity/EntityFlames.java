@@ -144,19 +144,21 @@ public class EntityFlames extends AvatarEntity {
 	}
 
 	@Override
-	public void onMajorWaterContact() {
+	public boolean onMajorWaterContact() {
 		setDead();
 		spawnExtinguishIndicators();
+		return true;
 	}
 
 	@Override
-	public void onMinorWaterContact() {
+	public boolean onMinorWaterContact() {
 		setDead();
 
 		// Spawn less extinguish indicators in the rain to prevent spamming
 		if (rand.nextDouble() < 0.3) {
 			spawnExtinguishIndicators();
 		}
+		return true;
 	}
 
 	public boolean doesLightFires() {

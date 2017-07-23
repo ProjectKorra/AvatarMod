@@ -328,11 +328,6 @@ public class EntityAirBubble extends AvatarEntity {
 		
 	}
 	
-	@Override
-	public boolean tryDestroy() {
-		return false;
-	}
-	
 	public int getDissipateTime() {
 		return dataManager.get(SYNC_DISSIPATE);
 	}

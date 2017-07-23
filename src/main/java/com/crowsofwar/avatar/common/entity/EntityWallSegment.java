@@ -312,9 +312,4 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		
 	}
 	
-	@Override
-	public boolean tryDestroy() {
-		return false;
-	}
-	
 }

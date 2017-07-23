@@ -91,15 +91,17 @@ public class EntityFireball extends AvatarEntity {
 	}
 
 	@Override
-	public void onMajorWaterContact() {
+	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
 		removeStatCtrl();
 		setDead();
+		return true;
 	}
 
 	@Override
-	public void onMinorWaterContact() {
+	public boolean onMinorWaterContact() {
 		spawnExtinguishIndicators();
+		return false;
 	}
 
 	@Override
@@ -141,7 +143,7 @@ public class EntityFireball extends AvatarEntity {
 	}
 	
 	@Override
-	public void onCollideWithSolid() {
+	public boolean onCollideWithSolid() {
 		
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 		explosionSize *= getSize() / 30f;
@@ -172,7 +174,10 @@ public class EntityFireball extends AvatarEntity {
 				}
 			}
 		}
-		
+
+		setDead();
+		return true;
+
 	}
 	
 	@Override
@@ -212,11 +217,5 @@ public class EntityFireball extends AvatarEntity {
 			data.removeStatusControl(StatusControl.THROW_FIREBALL);
 		}
 	}
-	
-	@Override
-	public boolean tryDestroy() {
-		removeStatCtrl();
-		return true;
-	}
-	
+
 }
