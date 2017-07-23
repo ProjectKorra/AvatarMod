@@ -111,8 +111,30 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		if (!super.processInteract(player, hand) && !world.isRemote) {
+
+			// Put on some equipment?
+			for (ItemStack stack : player.getHeldEquipment()) {
+				if (stack.getItem() == AvatarItems.itemOstrichEquipment) {
+					chest.setInventorySlotContents(0, stack.copy());
+					if (!player.capabilities.isCreativeMode) {
+						stack.shrink(1);
+					}
+					return true;
+				}
+			}
+
+			// Take off equipment?
+			if (player.isSneaking() && getEquipment() != null) {
+				int index = getEquipment().ordinal();
+				ItemStack stack = new ItemStack(AvatarItems.itemOstrichEquipment, 1, index);
+				entityDropItem(stack, getEyeHeight());
+				chest.setInventorySlotContents(0, ItemStack.EMPTY);
+			}
+
+			// Default: ride ostrich
 			player.startRiding(this);
 			return true;
+
 		}
 		return false;
 	}
