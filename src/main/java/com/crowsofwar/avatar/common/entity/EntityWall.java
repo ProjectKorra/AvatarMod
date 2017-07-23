@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
+import com.crowsofwar.avatar.common.entity.data.SyncedCachedEntity;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -53,7 +53,7 @@ public class EntityWall extends AvatarEntity {
 	 * All the segments in this wall. MUST be fixed-length, as the data
 	 * parameters must be same for both sides.
 	 */
-	private final SyncableEntityReference<EntityWallSegment>[] segments;
+	private final SyncedCachedEntity<EntityWallSegment>[] segments;
 	
 	private int nextSegment = 0;
 	
@@ -62,9 +62,9 @@ public class EntityWall extends AvatarEntity {
 	 */
 	public EntityWall(World world) {
 		super(world);
-		this.segments = new SyncableEntityReference[5];
+		this.segments = new SyncedCachedEntity[5];
 		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new SyncableEntityReference(this, SYNC_SEGMENTS[i]);
+			segments[i] = new SyncedCachedEntity(this, SYNC_SEGMENTS[i]);
 			segments[i].preventNullSaving();
 		}
 		setSize(0, 0);
@@ -85,7 +85,7 @@ public class EntityWall extends AvatarEntity {
 		
 		// Sync y-velocity with slowest moving wall segment
 		double slowest = Integer.MAX_VALUE;
-		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+		for (SyncedCachedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
 			if (abs(seg.velocity().y()) < abs(slowest)) {
 				slowest = seg.velocity().y();
@@ -93,20 +93,20 @@ public class EntityWall extends AvatarEntity {
 		}
 		
 		// Now sync all wall segment speeds
-		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+		for (SyncedCachedEntity<EntityWallSegment> ref : segments) {
 			ref.getEntity().velocity().setY(slowest);
 		}
 		
 		// Lowest top pos of all the segments
 		double lowest = Integer.MAX_VALUE;
-		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+		for (SyncedCachedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
 			double topPos = seg.position().y() + seg.height;
 			if (topPos < lowest) {
 				lowest = topPos;
 			}
 		}
-		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+		for (SyncedCachedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
 			seg.position().setY(lowest - seg.height);
 		}
@@ -140,7 +140,7 @@ public class EntityWall extends AvatarEntity {
 	
 	@Override
 	public void setDead() {
-		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+		for (SyncedCachedEntity<EntityWallSegment> ref : segments) {
 			// don't use setDead() as that will trigger this being called again
 			EntityWallSegment entity = ref.getEntity();
 			if (entity != null) {
