@@ -113,9 +113,12 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 		System.out.println("processInteract");
 		if (!super.processInteract(player, hand) && !world.isRemote) {
 
-			// Put on some equipment?
+			// Put on equipment?
 			ItemStack heldStack = player.getHeldItem(hand);
 			if (heldStack.getItem() == AvatarItems.itemOstrichEquipment) {
+				if (getEquipment() != null) {
+					dropEquipment();
+				}
 				chest.setInventorySlotContents(0, heldStack.copy());
 				if (!player.capabilities.isCreativeMode) {
 					heldStack.shrink(1);
@@ -130,10 +133,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 
 				// Take off equipment?
 				if (player.isSneaking() && getEquipment() != null) {
-					int index = getEquipment().ordinal();
-					ItemStack stack = new ItemStack(AvatarItems.itemOstrichEquipment, 1, index);
-					entityDropItem(stack, getEyeHeight());
-					chest.setInventorySlotContents(0, ItemStack.EMPTY);
+					dropEquipment();
 					return true;
 				}
 
@@ -283,6 +283,18 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	public void setEquipment(@Nullable ItemOstrichEquipment.EquipmentTier equipment) {
 		int index = equipment == null ? -1 : equipment.ordinal();
 		dataManager.set(SYNC_EQUIPMENT, index);
+	}
+
+	/**
+	 * Drops the current equipment onto the ground, emptying the current equipment
+	 */
+	private void dropEquipment() {
+		if (getEquipment() != null) {
+			int index = getEquipment().ordinal();
+			ItemStack stack = new ItemStack(AvatarItems.itemOstrichEquipment, 1, index);
+			entityDropItem(stack, getEyeHeight());
+			chest.setInventorySlotContents(0, ItemStack.EMPTY);
+		}
 	}
 
 	/**
