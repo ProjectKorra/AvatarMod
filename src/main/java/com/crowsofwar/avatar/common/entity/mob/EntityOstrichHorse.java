@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 import com.crowsofwar.avatar.common.gui.InventoryOstrichChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemOstrichEquipment;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +31,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -60,7 +62,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	public EntityOstrichHorse(World world) {
 		super(world);
 		setSize(1, 2);
-		initChest();
+		setupChest();
 	}
 	
 	@Override
@@ -92,7 +94,20 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 		super.applyEntityAttributes();
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5);
 	}
-	
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound compound) {
+		super.writeEntityToNBT(compound);
+		AvatarUtils.writeInventory(chest, compound, "Inventory");
+	}
+
+	@Override
+	public void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(compound);
+		AvatarUtils.readInventory(chest, compound, "Inventory");
+		updateEquipment();
+	}
+
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		if (!super.processInteract(player, hand) && !world.isRemote) {
@@ -176,33 +191,14 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	}
 
 	/**
-	 * Updates the chest
-	 * TODO: figure out if this is really necessary
+	 * Initializes the the chest for the first time
 	 */
-	private void initChest() {
-
-		InventoryOstrichChest old = chest;
-		chest = new InventoryOstrichChest();
+	private void setupChest() {
 		if (hasCustomName()) {
 			chest.setCustomName(getName());
 		}
-
-		if (old != null) {
-			old.removeInventoryChangeListener(this);
-
-			// Transfer old stacks into new inventory
-			for (int i = 0; i < chest.getSizeInventory(); ++i) {
-				ItemStack stack = old.getStackInSlot(i);
-				if (!stack.isEmpty()) {
-					chest.setInventorySlotContents(i, stack.copy());
-				}
-			}
-
-		}
-
 		chest.addInventoryChangeListener(this);
 		updateEquipment();
-
 	}
 
 	@Override
