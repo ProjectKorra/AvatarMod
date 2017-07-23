@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -79,7 +78,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
-		return super.getUnlocalizedName(stack) + "." + ScrollType.fromId(metadata).displayName();
+		return super.getUnlocalizedName(stack) + "." + ScrollType.get(metadata).displayName();
 	}
 	
 	@Override
@@ -120,7 +119,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	public String getModelName(int meta) {
-		return "scroll_" + ScrollType.fromId(meta).displayName();
+		return "scroll_" + ScrollType.get(meta).displayName();
 	}
 	
 	@Override
@@ -142,7 +141,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	public static ScrollType getScrollType(ItemStack stack) {
 		int meta = stack.getMetadata();
 		if (meta < 0 || meta >= ScrollType.values().length) return ScrollType.ALL;
-		return ScrollType.fromId(meta);
+		return ScrollType.get(meta);
 	}
 	
 	public static void setScrollType(ItemStack stack, ScrollType type) {
@@ -191,9 +190,10 @@ public class ItemScroll extends Item implements AvatarItem {
 		public UUID getBendingId() {
 			return bendingId;
 		}
-		
-		public static ScrollType fromId(int id) {
-			if (id < 0 || id >= values().length) throw new IllegalArgumentException("Invalid id: " + id);
+
+		@Nullable
+		public static ScrollType get(int id) {
+			if (id < 0 || id >= values().length) return null;
 			return values()[id];
 		}
 		

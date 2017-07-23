@@ -758,7 +758,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			ItemStack saddleStack = chest.getStackInSlot(0);
 			int saddleId = saddleStack.getMetadata();
 			if (saddleStack.getItem() == AvatarItems.itemBisonSaddle && SaddleTier.isValidId(saddleId)) {
-				setSaddle(SaddleTier.fromId(saddleId));
+				setSaddle(SaddleTier.get(saddleId));
 			} else {
 				setSaddle(null);
 			}
@@ -766,7 +766,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			ItemStack armorStack = chest.getStackInSlot(1);
 			int armorId = armorStack.getMetadata();
 			if (armorStack.getItem() == AvatarItems.itemBisonArmor && ArmorTier.isValidId(armorId)) {
-				setArmor(ArmorTier.fromId(armorId));
+				setArmor(ArmorTier.get(armorId));
 			} else {
 				setArmor(null);
 			}

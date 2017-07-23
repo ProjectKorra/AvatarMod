@@ -116,7 +116,7 @@ public class AvatarDataSerializers {
 		@Override
 		public SaddleTier read(PacketBuffer buf) throws IOException {
 			int id = buf.readInt();
-			return id == -1 ? null : SaddleTier.fromId(id);
+			return id == -1 ? null : SaddleTier.get(id);
 		}
 		
 		@Override
@@ -139,7 +139,7 @@ public class AvatarDataSerializers {
 		@Override
 		public ArmorTier read(PacketBuffer buf) throws IOException {
 			int id = buf.readInt();
-			return id == -1 ? null : ArmorTier.fromId(id);
+			return id == -1 ? null : ArmorTier.get(id);
 		}
 		
 		@Override

@@ -334,7 +334,7 @@ public class PacketHandlerServer implements IPacketHandler {
 					if (stack.getItem() == AvatarItems.itemScroll) {
 						
 						// Try to use this scroll
-						ScrollType type = ScrollType.fromId(stack.getMetadata());
+						ScrollType type = ScrollType.get(stack.getMetadata());
 						if (type.accepts(packet.getAbility().getBendingId())) {
 							
 							activeSlot.putStack(ItemStack.EMPTY);

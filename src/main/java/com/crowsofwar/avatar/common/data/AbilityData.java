@@ -221,7 +221,7 @@ public class AbilityData {
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
 		level = nbt.getInteger("Level");
-		path = AbilityTreePath.fromId(nbt.getInteger("Path"));
+		path = AbilityTreePath.get(nbt.getInteger("Path"));
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -240,7 +240,7 @@ public class AbilityData {
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
 		level = buf.readInt();
-		path = AbilityTreePath.fromId(buf.readInt());
+		path = AbilityTreePath.get(buf.readInt());
 	}
 	
 	/**
@@ -286,11 +286,12 @@ public class AbilityData {
 		public int id() {
 			return ordinal();
 		}
-		
-		public static AbilityTreePath fromId(int id) {
-			if (id < 0 || id >= values().length)
-				throw new IllegalArgumentException("No AbilityTreePath for id: " + id);
-			
+
+		@Nullable
+		public static AbilityTreePath get(int id) {
+			if (id < 0 || id >= values().length) {
+				return null;
+			}
 			return values()[id];
 		}
 		

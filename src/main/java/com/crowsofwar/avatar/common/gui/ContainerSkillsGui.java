@@ -48,7 +48,7 @@ public class ContainerSkillsGui extends Container {
 		addSlotToContainer(new Slot(inventory, 0, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				ScrollType scrollType = ScrollType.fromId(stack.getMetadata());
+				ScrollType scrollType = ScrollType.get(stack.getMetadata());
 				Item item = stack.getItem();
 				Slot other = getSlot(1);
 				return item == AvatarItems.itemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
@@ -58,7 +58,7 @@ public class ContainerSkillsGui extends Container {
 		addSlotToContainer(new Slot(inventory, 1, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				ScrollType scrollType = ScrollType.fromId(stack.getMetadata());
+				ScrollType scrollType = ScrollType.get(stack.getMetadata());
 				Item item = stack.getItem();
 				Slot other = getSlot(0);
 				return item == AvatarItems.itemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
