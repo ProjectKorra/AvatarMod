@@ -47,6 +47,7 @@ public class AvatarItems {
 	public static ItemBisonWhistle itemBisonWhistle;
 	public static ItemBisonSaddle itemBisonSaddle;
 	public static ItemBisonArmor itemBisonArmor;
+	public static ItemOstrichEquipment itemOstrichEquipment;
 	
 	private static ItemStack stackScroll;
 
@@ -59,6 +60,7 @@ public class AvatarItems {
 		addItem(itemBisonWhistle = new ItemBisonWhistle());
 		addItem(itemBisonArmor = new ItemBisonArmor());
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
+		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
 		
 		stackScroll = new ItemStack(itemScroll);
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());
