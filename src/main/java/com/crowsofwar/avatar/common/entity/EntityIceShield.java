@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.BenderInfo;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,8 +24,6 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -40,16 +36,11 @@ import java.util.List;
  * @author CrowsOfWar
  */
 public class EntityIceShield extends AvatarEntity {
-	
-	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityIceShield.class, AvatarDataSerializers.SERIALIZER_BENDER);
-	
-	private final OwnerAttribute ownerAttr;
+
 	private double normalBaseValue;
 	
 	public EntityIceShield(World world) {
 		super(world);
-		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 	}
 	
 	public void shatter() {
@@ -135,16 +126,7 @@ public class EntityIceShield extends AvatarEntity {
 			}
 		}
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setOwner(owner);
-	}
-	
+
 	@Override
 	public EntityLivingBase getController() {
 		return getOwner();
@@ -181,14 +163,12 @@ public class EntityIceShield extends AvatarEntity {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		ownerAttr.load(nbt);
 		normalBaseValue = nbt.getDouble("NormalBaseValue");
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		ownerAttr.save(nbt);
 		nbt.setDouble("NormalBaseValue", normalBaseValue);
 	}
 	

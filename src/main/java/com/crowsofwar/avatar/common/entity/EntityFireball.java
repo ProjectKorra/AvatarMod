@@ -21,11 +21,9 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,14 +46,12 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityFireball extends AvatarEntity {
 	
-	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityFireball.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	public static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
 			DataSerializers.VARINT);
 	
-	private final OwnerAttribute ownerAttr;
 	private AxisAlignedBB expandedHitbox;
 	
 	private float damage;
@@ -65,7 +61,6 @@ public class EntityFireball extends AvatarEntity {
 	 */
 	public EntityFireball(World world) {
 		super(world);
-		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 		setSize(.8f, .8f);
 	}
 	
@@ -101,15 +96,6 @@ public class EntityFireball extends AvatarEntity {
 	public boolean onMinorWaterContact() {
 		spawnExtinguishIndicators();
 		return false;
-	}
-
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setOwner(owner);
 	}
 	
 	public FireballBehavior getBehavior() {
@@ -182,7 +168,6 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		ownerAttr.load(nbt);
 		setDamage(nbt.getFloat("Damage"));
 		setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
@@ -190,7 +175,6 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		ownerAttr.save(nbt);
 		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}

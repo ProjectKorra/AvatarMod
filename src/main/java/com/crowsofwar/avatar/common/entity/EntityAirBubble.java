@@ -22,11 +22,9 @@ import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Optional;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -60,8 +58,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityAirBubble extends AvatarEntity {
 	
-	public static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager
-			.createKey(EntityAirBubble.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityAirBubble.class,
@@ -77,13 +73,10 @@ public class EntityAirBubble extends AvatarEntity {
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
 			"airbubble_slowness", -.3, 2);
 	
-	private final SyncedEntity<EntityLivingBase> ownerAttr;
-	
 	public EntityAirBubble(World world) {
 		super(world);
 		// setSize(2.5f, 2.5f);
 		setSize(0, 0);
-		this.ownerAttr = new SyncedEntity<>(this, SYNC_OWNER);
 	}
 	
 	@Override
@@ -95,16 +88,7 @@ public class EntityAirBubble extends AvatarEntity {
 		dataManager.register(SYNC_HOVERING, false);
 		dataManager.register(SYNC_SIZE, 2.5f);
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getEntity();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setEntity(owner);
-	}
-	
+
 	@Override
 	public EntityLivingBase getController() {
 		return !isDissipating() ? getOwner() : null;
@@ -273,7 +257,6 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		ownerAttr.readFromNBT(nbt);
 		setDissipateTime(nbt.getInteger("Dissipate"));
 		setHealth(nbt.getFloat("Health"));
 		setAllowHovering(nbt.getBoolean("AllowHovering"));
@@ -282,7 +265,6 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		ownerAttr.writeToNBT(nbt);
 		nbt.setInteger("Dissipate", getDissipateTime());
 		nbt.setFloat("Health", getHealth());
 		nbt.setBoolean("AllowHovering", doesAllowHovering());

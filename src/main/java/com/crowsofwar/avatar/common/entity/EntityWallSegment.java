@@ -20,12 +20,10 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import io.netty.buffer.ByteBuf;
@@ -64,8 +62,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			.createKey(EntityWallSegment.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
-	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityWallSegment.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
 	static {
@@ -83,14 +79,11 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	private EnumFacing direction;
 	private int offset;
 	
-	private final OwnerAttribute ownerAttribute;
-	
 	public EntityWallSegment(World world) {
 		super(world);
 		this.wallReference = new SyncedEntity<>(this, SYNC_WALL);
 		this.wallReference.preventNullSaving();
 		this.setSize(.9f, 5);
-		this.ownerAttribute = new OwnerAttribute(this, SYNC_OWNER);
 	}
 	
 	@Override
@@ -114,16 +107,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		wallReference.setEntity(wall);
 		wall.addSegment(this);
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttribute.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttribute.setOwner(owner);
-	}
-	
+
 	public IBlockState getBlock(int i) {
 		IBlockState state = dataManager.get(SYNC_BLOCKS_DATA[i]).orNull();
 		return state == null ? Blocks.AIR.getDefaultState() : state;
@@ -202,14 +186,12 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		wallReference.readFromNBT(nestedCompound(nbt, "Parent"));
-		ownerAttribute.load(nbt);
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		wallReference.writeToNBT(nestedCompound(nbt, "Parent"));
-		ownerAttribute.save(nbt);
 	}
 	
 	@Override
@@ -282,8 +264,9 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			
 			if (avEnt.onCollideWithSolid()) {
 				entity.setDead();
-				if (getOwner() != null) {
-					BendingData data = ownerAttribute.getOwnerBender().getData();
+				EntityLivingBase owner = getOwner();
+				if (owner != null) {
+					BendingData data = BendingData.get(owner);
 					data.getAbilityData(AbilityWall.ID).addXp(SKILLS_CONFIG.wallBlockedAttack);
 				}
 			}

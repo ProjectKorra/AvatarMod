@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
@@ -70,9 +69,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
 			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
 	
-	private static final DataParameter<BenderInfo> SYNC_OWNER = createKey(EntityFloatingBlock.class,
-			AvatarDataSerializers.SERIALIZER_BENDER);
-	
 	private static int nextBlockID = 0;
 	
 	/**
@@ -95,8 +91,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	private float damageMult;
 	
-	private final OwnerAttribute ownerAttrib;
-	
 	public EntityFloatingBlock(World world) {
 		super(world);
 		float size = .9f;
@@ -105,7 +99,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 			setID(nextBlockID++);
 		}
 		this.enableItemDrops = true;
-		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
 		this.damageMult = 1;
 		
 	}
@@ -144,7 +137,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
 		damageMult = nbt.getFloat("DamageMultiplier");
-		ownerAttrib.load(nbt);
 	}
 	
 	@Override
@@ -160,7 +152,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setInteger("Behavior", getBehavior().getId());
 		getBehavior().save(nestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
-		ownerAttrib.save(nbt);
 	}
 	
 	@Override
@@ -312,16 +303,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public void drop() {
 		setBehavior(new FloatingBlockBehavior.Fall());
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttrib.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttrib.setOwner(owner);
-	}
-	
+
 	public FloatingBlockBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}

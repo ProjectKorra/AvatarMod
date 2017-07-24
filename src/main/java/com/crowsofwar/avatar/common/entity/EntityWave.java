@@ -22,9 +22,7 @@ import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,12 +40,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWave extends AvatarEntity {
 	
-	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager.createKey(EntityWave.class,
-			AvatarDataSerializers.SERIALIZER_BENDER);
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
 			DataSerializers.FLOAT);
-	
-	private final OwnerAttribute ownerAttr;
 	
 	private float damageMult;
 	private int timeOnLand;
@@ -56,7 +50,6 @@ public class EntityWave extends AvatarEntity {
 		super(world);
 		setSize(2, 2);
 		damageMult = 1;
-		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 	}
 	
 	@Override
@@ -134,14 +127,6 @@ public class EntityWave extends AvatarEntity {
 		return 0;
 	}
 
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setOwner(owner);
-	}
-	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setDead();

@@ -17,9 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -29,20 +27,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class EntityArc extends AvatarEntity {
 
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityArc.class,
 			DataSerializers.VARINT);
-	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager.createKey
-			(EntityArc.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
 	private static int nextId = 1;
 	private ControlPoint[] points;
-
-	private final SyncedEntity<EntityLivingBase> ownerAttrib;
 
 	public EntityArc(World world) {
 		super(world);
@@ -57,8 +50,6 @@ public abstract class EntityArc extends AvatarEntity {
 		if (!world.isRemote) {
 			setId(nextId++);
 		}
-
-		ownerAttrib = new SyncedEntity<>(this, SYNC_OWNER);
 
 	}
 
@@ -233,12 +224,8 @@ public abstract class EntityArc extends AvatarEntity {
 	}
 
 	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttrib.getEntity();
-	}
-
 	public void setOwner(EntityLivingBase owner) {
-		this.ownerAttrib.setEntity(owner);
+		super.setOwner(owner);
 		for (ControlPoint cp : points) {
 			cp.setOwner(owner);
 		}

@@ -17,22 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
 import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -43,13 +35,16 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -57,14 +52,10 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class EntityRavine extends AvatarEntity {
-	
-	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityRavine.class, AvatarDataSerializers.SERIALIZER_BENDER);
-	
+
 	private final IEntityProperty<Vector> propVelocity;
 	private Vector initialPosition;
-	private final OwnerAttribute ownerAttr;
-	
+
 	private float damageMult;
 	private double maxTravelDistanceSq;
 	private boolean breakBlocks;
@@ -80,8 +71,7 @@ public class EntityRavine extends AvatarEntity {
 		setSize(1, 1);
 		
 		this.damageMult = 1;
-		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		
+
 	}
 	
 	public void setDamageMult(float mult) {
@@ -99,16 +89,7 @@ public class EntityRavine extends AvatarEntity {
 	public void setDropEquipment(boolean dropEquipment) {
 		this.dropEquipment = dropEquipment;
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setOwner(owner);
-	}
-	
+
 	public double getSqrDistanceTravelled() {
 		return position().sqrDist(initialPosition);
 	}
@@ -198,7 +179,7 @@ public class EntityRavine extends AvatarEntity {
 		}
 		
 		if (!world.isRemote && getOwner() != null) {
-			BendingData data = ownerAttr.getOwnerBender().getData();
+			BendingData data = BendingData.get(getOwner());
 			if (data != null) {
 				data.getAbilityData(AbilityRavine.ID).addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}

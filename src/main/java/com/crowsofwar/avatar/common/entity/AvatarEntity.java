@@ -166,11 +166,13 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setAvId(nbt.getInteger("AvId"));
+		ownerRef.readFromNBT(nbt);
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("AvId", getAvId());
+		ownerRef.writeToNBT(nbt);
 	}
 
 	/**

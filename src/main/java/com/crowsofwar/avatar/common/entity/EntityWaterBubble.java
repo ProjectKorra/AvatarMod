@@ -19,11 +19,9 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -45,11 +43,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
-	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityWaterBubble.class, AvatarDataSerializers.SERIALIZER_BENDER);
-	
-	private final OwnerAttribute ownerAttrib;
-	
+
 	/**
 	 * Whether the water bubble will get a water source upon landing. Only
 	 * set on server-side.
@@ -61,7 +55,6 @@ public class EntityWaterBubble extends AvatarEntity {
 	 */
 	public EntityWaterBubble(World world) {
 		super(world);
-		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
 		setSize(.8f, .8f);
 		this.putsOutFires = true;
 	}
@@ -128,7 +121,6 @@ public class EntityWaterBubble extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
-		ownerAttrib.load(compound);
 		setBehavior((WaterBubbleBehavior) Behavior.lookup(compound.getInteger("Behavior"), this));
 		getBehavior().load(compound);
 		setSourceBlock(compound.getBoolean("SourceBlock"));
@@ -137,7 +129,6 @@ public class EntityWaterBubble extends AvatarEntity {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound) {
 		super.writeEntityToNBT(compound);
-		ownerAttrib.save(compound);
 		compound.setInteger("Behavior", getBehavior().getId());
 		getBehavior().save(compound);
 		compound.setBoolean("SourceBlock", sourceBlock);
@@ -150,16 +141,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	public void setBehavior(WaterBubbleBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttrib.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase player) {
-		ownerAttrib.setOwner(player);
-	}
-	
+
 	public boolean isSourceBlock() {
 		return sourceBlock;
 	}
