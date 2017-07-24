@@ -82,11 +82,12 @@ public class EntityIceShield extends AvatarEntity {
 		
 		double horizDist = targetPos.copy().setY(0).dist(ownerPos.copy().setY(0));
 		double vertDist = targetPos.y() - ownerPos.y();
-		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(30, 20, horizDist, vertDist));
+		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(20, 20, horizDist,
+				vertDist));
 		
 		EntityIceShard shard = new EntityIceShard(world);
 		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
-		shard.aim(yaw, pitch, 30);
+		shard.aim(yaw, pitch, 20);
 		world.spawnEntity(shard);
 		
 	}
