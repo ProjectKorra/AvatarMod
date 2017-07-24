@@ -161,7 +161,7 @@ public class EntityAirBubble extends AvatarEntity {
 						boolean ground = false;
 						do {
 							List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(null,
-									new AxisAlignedBB(pos).expand(0, 0.5, 0));
+									new AxisAlignedBB(pos).expand(0, -0.5, 0));
 							ground = !collideWithGround.isEmpty()
 									|| world.getBlockState(pos).getBlock() instanceof BlockLiquid;
 							pos = pos.down();
