@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +28,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static java.lang.Math.abs;
@@ -41,11 +44,12 @@ public class EntityWall extends AvatarEntity {
 	
 	private static final DataParameter<Integer> SYNC_DIRECTION = EntityDataManager.createKey(EntityWall.class,
 			DataSerializers.VARINT);
-	private static final DataParameter<Integer>[] SYNC_SEGMENTS;
+	private static final DataParameter<Optional<UUID>>[] SYNC_SEGMENTS;
+
 	static {
 		SYNC_SEGMENTS = new DataParameter[5];
 		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
-			SYNC_SEGMENTS[i] = EntityDataManager.createKey(EntityWall.class, DataSerializers.VARINT);
+			SYNC_SEGMENTS[i] = EntityDataManager.createKey(EntityWall.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 		}
 	}
 	
@@ -60,6 +64,7 @@ public class EntityWall extends AvatarEntity {
 	/**
 	 * @param world
 	 */
+	@SuppressWarnings("unchecked")
 	public EntityWall(World world) {
 		super(world);
 		this.segments = new SyncedEntity[5];
@@ -75,7 +80,7 @@ public class EntityWall extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_DIRECTION, NORTH.ordinal());
 		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
-			dataManager.register(SYNC_SEGMENTS[i], -1);
+			dataManager.register(SYNC_SEGMENTS[i], Optional.absent());
 		}
 	}
 	
