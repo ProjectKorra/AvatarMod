@@ -24,7 +24,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
-import com.crowsofwar.avatar.common.entity.data.SyncedCachedEntity;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
@@ -77,7 +77,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		}
 	}
 	
-	private final SyncedCachedEntity<EntityWall> wallReference;
+	private final SyncedEntity<EntityWall> wallReference;
 	/**
 	 * direction that all wall-segments are facing towards. Only set on server.
 	 */
@@ -88,7 +88,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	
 	public EntityWallSegment(World world) {
 		super(world);
-		this.wallReference = new SyncedCachedEntity<>(this, SYNC_WALL);
+		this.wallReference = new SyncedEntity<>(this, SYNC_WALL);
 		this.wallReference.preventNullSaving();
 		this.setSize(.9f, 5);
 		this.ownerAttribute = new OwnerAttribute(this, SYNC_OWNER);

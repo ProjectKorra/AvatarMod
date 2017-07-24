@@ -34,7 +34,7 @@ import java.util.UUID;
  * 
  * @author CrowsOfWar
  */
-public class SyncedCachedEntity<T extends Entity> {
+public class SyncedEntity<T extends Entity> {
 	
 	private final Entity using;
 	private final DataParameter<Optional<UUID>> sync;
@@ -49,10 +49,10 @@ public class SyncedCachedEntity<T extends Entity> {
 	 *            <code>this</code>. Not the entity being referenced
 	 * @param sync
 	 *            DataParameter used to sync. Should NOT be created specifically
-	 *            for this SyncedCachedEntity - use a constant. Will not
+	 *            for this SyncedEntity - use a constant. Will not
 	 *            register to entity DataManager.
 	 */
-	public SyncedCachedEntity(Entity entity, DataParameter<Optional<UUID>> sync) {
+	public SyncedEntity(Entity entity, DataParameter<Optional<UUID>> sync) {
 		this.using = entity;
 		this.sync = sync;
 		this.cache = new CachedEntity<>(null);

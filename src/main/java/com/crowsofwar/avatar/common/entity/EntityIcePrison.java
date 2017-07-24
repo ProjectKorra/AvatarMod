@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.entity.data.SyncedCachedEntity;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -47,14 +47,14 @@ public class EntityIcePrison extends AvatarEntity {
 	public static final int IMPRISONED_TIME = 100;
 	
 	private double normalBaseValue;
-	private SyncedCachedEntity<EntityLivingBase> imprisonedAttr;
+	private SyncedEntity<EntityLivingBase> imprisonedAttr;
 	
 	/**
 	 * @param world
 	 */
 	public EntityIcePrison(World world) {
 		super(world);
-		imprisonedAttr = new SyncedCachedEntity<>(this, SYNC_IMPRISONED);
+		imprisonedAttr = new SyncedEntity<>(this, SYNC_IMPRISONED);
 		setSize(3, 4);
 	}
 	
