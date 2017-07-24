@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
@@ -379,13 +382,19 @@ public abstract class AvatarEntity extends Entity {
 	 * Spawns smoke particles and plays sounds to indicate that the entity is being extinguished
 	 */
 	protected void spawnExtinguishIndicators() {
-		int particles = rand.nextInt(4) + 5;
-		for (int i = 0; i < particles; i++) {
-			world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, rand.nextGaussian() * .05,
-					rand.nextDouble() * .2, rand.nextGaussian() * .05);
+
+		ParticleSpawner particleSpawner;
+		if (world.isRemote) {
+			particleSpawner = new ClientParticleSpawner();
+		} else {
+			particleSpawner = new NetworkParticleSpawner();
 		}
-		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-				SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f, false);
+		particleSpawner.spawnParticles(world, EnumParticleTypes.CLOUD, 4, 8, posX, posY, posZ,
+				0.05, 0.2, 0.05);
+
+		world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+				SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f);
+
 	}
 
 	@Override
