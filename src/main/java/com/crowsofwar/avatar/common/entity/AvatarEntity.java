@@ -18,8 +18,10 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -38,7 +40,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 /**
@@ -50,18 +54,25 @@ public abstract class AvatarEntity extends Entity {
 	
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
 			DataSerializers.VARINT);
-	
+
+	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager.createKey
+			(AvatarEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+
 	private final Vector internalVelocity;
 	private final Vector internalPosition;
 	
 	protected boolean putsOutFires;
 	protected boolean flammable;
-	
+
+	private SyncedEntity<EntityLivingBase> ownerRef;
+
 	/**
 	 * @param world
 	 */
 	public AvatarEntity(World world) {
 		super(world);
+
+		this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
 
 		//@formatter:off
 		this.internalVelocity = new BackedVector(
@@ -80,22 +91,41 @@ public abstract class AvatarEntity extends Entity {
 
 		this.putsOutFires = false;
 		this.flammable = false;
+
 	}
 	
 	@Override
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
 				world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
+		dataManager.register(SYNC_OWNER, Optional.absent());
 	}
 	
 	/**
 	 * Get the "owner", or the creator, of this entity. Most AvatarEntities have
 	 * an owner, though some do not.
 	 */
+	@Nullable
 	public EntityLivingBase getOwner() {
-		return null;
+		return ownerRef.getEntity();
 	}
-	
+
+	/**
+	 * Set the owner of the entity. Passing null will cause the entity to have no owner.
+	 */
+	public void setOwner(@Nullable EntityLivingBase owner) {
+		ownerRef.setEntity(owner);
+	}
+
+	/**
+	 * Get whether an owner is set. Note that {@link #getOwner()} can sometimes return null while
+	 * this returns true; that's because there was no owner entity found but the entity still has
+	 * its owner set to something that couldn't be found.
+	 */
+	public boolean hasOwner() {
+		return ownerRef.getEntityId() != null;
+	}
+
 	/**
 	 * Get whoever is currently controlling the movement of this entity, or null
 	 * if nobody is controlling it.
