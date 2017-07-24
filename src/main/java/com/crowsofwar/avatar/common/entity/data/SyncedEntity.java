@@ -81,6 +81,9 @@ public class SyncedEntity<T extends Entity> {
 		using.getDataManager().set(sync, Optional.of(cache.getEntityId()));
 	}
 
+	/**
+	 * Get the UUID of the entity. For players, returns their account Id.
+	 */
 	@Nullable
 	public UUID getEntityId() {
 		return cache.getEntityId();

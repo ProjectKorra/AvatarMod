@@ -25,12 +25,12 @@ import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.InventoryBisonChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -41,6 +41,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -93,8 +94,8 @@ import static net.minecraft.util.SoundCategory.NEUTRAL;
  */
 public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInventoryChangedListener {
 	
-	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_BENDER);
+	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager
+			.createKey(EntitySkyBison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	
 	private static final DataParameter<Boolean> SYNC_SITTING = EntityDataManager
 			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
@@ -123,7 +124,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private static final DataParameter<ArmorTier> SYNC_ARMOR = EntityDataManager
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_ARMOR);
 	
-	private final OwnerAttribute ownerAttr;
+	private final SyncedEntity<EntityLivingBase> ownerAttr;
 	private Vector originalPos;
 	private final AnimalCondition condition;
 	/**
@@ -144,7 +145,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		super(world);
 		
 		moveHelper = new SkyBisonMoveHelper(this);
-		ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		ownerAttr = new SyncedEntity<>(this, SYNC_OWNER);
 		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
 		setSize(2.5f, 2);
 		
@@ -158,7 +159,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		
 		int domestication = MOBS_CONFIG.bisonMinDomestication
 				+ rand.nextInt(MOBS_CONFIG.bisonMaxDomestication - MOBS_CONFIG.bisonMinDomestication);
-		
+
+		dataManager.register(SYNC_OWNER, Optional.absent());
 		dataManager.register(SYNC_SITTING, false);
 		dataManager.register(SYNC_FOOD, 20f);
 		dataManager.register(SYNC_DOMESTICATION, domestication);
@@ -230,7 +232,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		originalPos = Vector.readFromNbt(nbt);
-		ownerAttr.load(nbt);
+		ownerAttr.readFromNBT(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
 		riderTicks = nbt.getInteger("RiderTicks");
@@ -251,7 +253,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		ownerAttr.save(nbt);
+		ownerAttr.writeToNBT(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
 		nbt.setInteger("RiderTicks", riderTicks);
@@ -292,11 +294,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	
 	@Override
 	public UUID getOwnerId() {
-		return ownerAttr.getId();
+		return ownerAttr.getEntityId();
 	}
 	
 	public void setOwnerId(@Nullable UUID id) {
-		ownerAttr.setOwnerInfo(BenderInfo.get(true, id));
+		ownerAttr.setEntityId(id);
 	}
 	
 	public boolean hasOwner() {
@@ -304,12 +306,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 	
 	@Override
+	@Nullable
 	public EntityPlayer getOwner() {
-		return (EntityPlayer) ownerAttr.getOwner();
+		return (EntityPlayer) ownerAttr.getEntity();
 	}
 	
-	public void setOwner(EntityPlayer owner) {
-		ownerAttr.setOwner(owner);
+	public void setOwner(@Nullable EntityPlayer owner) {
+		ownerAttr.setEntity(owner);
 	}
 	
 	public boolean isSitting() {
