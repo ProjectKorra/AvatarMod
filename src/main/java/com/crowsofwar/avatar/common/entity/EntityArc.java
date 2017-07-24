@@ -20,9 +20,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,10 +28,6 @@ import java.util.function.Consumer;
 
 public abstract class EntityArc extends AvatarEntity {
 
-	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntityArc.class,
-			DataSerializers.VARINT);
-
-	private static int nextId = 1;
 	private ControlPoint[] points;
 
 	public EntityArc(World world) {
@@ -45,10 +38,6 @@ public abstract class EntityArc extends AvatarEntity {
 		this.points = new ControlPoint[getAmountOfControlPoints()];
 		for (int i = 0; i < points.length; i++) {
 			points[i] = createControlPoint(size);
-		}
-
-		if (!world.isRemote) {
-			setId(nextId++);
 		}
 
 	}
@@ -70,12 +59,6 @@ public abstract class EntityArc extends AvatarEntity {
 	protected Consumer<EntityLivingBase> getNewOwnerCallback() {
 		return newOwner -> {
 		};
-	}
-
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		dataManager.register(SYNC_ID, 0);
 	}
 
 	@Override
@@ -183,32 +166,6 @@ public abstract class EntityArc extends AvatarEntity {
 	 */
 	public ControlPoint getLeader(int index) {
 		return points[index == 0 ? index : index - 1];
-	}
-
-	/**
-	 * Get the id of this arc<br />
-	 * NOT TO BE CONFUSED WITH {@link #getAvId()}
-	 */
-	public int getId() {
-		return dataManager.get(SYNC_ID);
-	}
-
-	/**
-	 * Set the id of this arc<br />
-	 * NOT TO BE CONFUSED WITH {@link #setAvId(int)}
-	 */
-	public void setId(int id) {
-		dataManager.set(SYNC_ID, id);
-	}
-
-	/**
-	 * Uses id from {@link #getId()} not {@link #getAvId()}
-	 */
-	public static EntityArc findFromId(World world, int id) {
-		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityArc && ((EntityArc) obj).getId() == id) return (EntityArc) obj;
-		}
-		return null;
 	}
 
 	@Override

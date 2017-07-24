@@ -166,15 +166,7 @@ public class EntityWaterArc extends EntityArc {
 		}
 		
 	}
-	
-	public static EntityWaterArc findFromId(World world, int id) {
-		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id)
-				return (EntityWaterArc) obj;
-		}
-		return null;
-	}
-	
+
 	@Override
 	protected ControlPoint createControlPoint(float size) {
 		return new WaterControlPoint(this, size, 0, 0, 0);
