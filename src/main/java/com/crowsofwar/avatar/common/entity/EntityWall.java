@@ -156,14 +156,14 @@ public class EntityWall extends AvatarEntity {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
-			segments[i].readFromNBT(nestedCompound(nbt, "Wall" + i));
+			segments[i].readFromNbt(nestedCompound(nbt, "Wall" + i));
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
-			segments[i].writeToNBT(nestedCompound(nbt, "Wall" + i));
+			segments[i].writeToNbt(nestedCompound(nbt, "Wall" + i));
 	}
 	
 	@Override

@@ -97,8 +97,8 @@ public class SyncedEntity<T extends Entity> {
 	 * Reads this reference from NBT. Please note, reads values directly from
 	 * this compound (no sub-compound).
 	 */
-	public void readFromNBT(NBTTagCompound nbt) {
-		cache.readFromNBT(nbt);
+	public void readFromNbt(NBTTagCompound nbt) {
+		cache.readFromNbt(nbt);
 		using.getDataManager().set(sync, Optional.of(cache.getEntityId()));
 		if (!allowNullSaving && getEntity() == null) {
 			using.setDead();
@@ -111,8 +111,8 @@ public class SyncedEntity<T extends Entity> {
 	 * Writes this reference from NBT. Please note, writes values directly from
 	 * this compound (no sub-compound).
 	 */
-	public void writeToNBT(NBTTagCompound nbt) {
-		cache.writeToNBT(nbt);
+	public void writeToNbt(NBTTagCompound nbt) {
+		cache.writeToNbt(nbt);
 	}
 	
 }

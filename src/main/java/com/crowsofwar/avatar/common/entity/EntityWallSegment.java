@@ -185,13 +185,13 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		wallReference.readFromNBT(nestedCompound(nbt, "Parent"));
+		wallReference.readFromNbt(nestedCompound(nbt, "Parent"));
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		wallReference.writeToNBT(nestedCompound(nbt, "Parent"));
+		wallReference.writeToNbt(nestedCompound(nbt, "Parent"));
 	}
 	
 	@Override

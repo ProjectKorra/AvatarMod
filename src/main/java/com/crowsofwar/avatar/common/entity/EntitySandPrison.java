@@ -109,14 +109,14 @@ public class EntitySandPrison extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		imprisonedAttr.readFromNBT(nbt);
+		imprisonedAttr.readFromNbt(nbt);
 		normalBaseValue = nbt.getDouble("NormalSpeed");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		imprisonedAttr.writeToNBT(nbt);
+		imprisonedAttr.writeToNbt(nbt);
 		nbt.setDouble("NormalSpeed", normalBaseValue);
 	}
 

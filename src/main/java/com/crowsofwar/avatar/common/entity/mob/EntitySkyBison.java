@@ -232,7 +232,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		originalPos = Vector.readFromNbt(nbt);
-		ownerAttr.readFromNBT(nbt);
+		ownerAttr.readFromNbt(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
 		riderTicks = nbt.getInteger("RiderTicks");
@@ -253,7 +253,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		ownerAttr.writeToNBT(nbt);
+		ownerAttr.writeToNbt(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
 		nbt.setInteger("RiderTicks", riderTicks);

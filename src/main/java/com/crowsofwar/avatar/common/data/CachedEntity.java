@@ -43,11 +43,11 @@ public class CachedEntity<T extends Entity> {
 		this.entityId = id;
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNbt(NBTTagCompound nbt) {
 		entityId = nbt.getBoolean("NoEntity") ? null : nbt.getUniqueId("EntityUuid");
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setBoolean("NoEntity", entityId == null);
 		if (entityId != null) {
 			nbt.setUniqueId("EntityUuid", entityId);
