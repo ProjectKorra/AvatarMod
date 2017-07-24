@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
-import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
