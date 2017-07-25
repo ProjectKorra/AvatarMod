@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.gorecore.util.ImmutableVector;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -40,7 +39,7 @@ public class ControlPoint {
 	private Vector internalVelocity;
 	private Vector internalPosition;
 	
-	private ImmutableVector lastPos;
+	private Vector lastPos;
 	
 	private final World world;
 	private AxisAlignedBB hitbox;
@@ -59,7 +58,7 @@ public class ControlPoint {
 				position().z() - sizeHalfed, position().x() + sizeHalfed, position().y() + sizeHalfed,
 				position().z() + sizeHalfed);
 		
-		lastPos = new ImmutableVector();
+		lastPos = new Vector();
 		
 	}
 	
@@ -121,8 +120,7 @@ public class ControlPoint {
 				position().z() - sizeHalfed, position().x() + sizeHalfed, position().y() + sizeHalfed,
 				position().z() + sizeHalfed);
 		
-		lastPos = new ImmutableVector(position());
-
+		lastPos = position();
 		move(velocity().times(0.05));
 		setVelocity(velocity().times(0.4));
 

@@ -22,8 +22,6 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
-import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -45,8 +43,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
  */
 public class EntityFlames extends AvatarEntity {
 	
-	private final IEntityProperty<Vector> propVelocity;
-	
 	/**
 	 * The owner, null client side
 	 */
@@ -59,7 +55,6 @@ public class EntityFlames extends AvatarEntity {
 	 */
 	public EntityFlames(World worldIn) {
 		super(worldIn);
-		this.propVelocity = new EntityPropertyMotion(this);
 		setSize(0.1f, 0.1f);
 	}
 	

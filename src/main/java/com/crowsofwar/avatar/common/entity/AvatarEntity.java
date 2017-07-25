@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
@@ -61,9 +60,6 @@ public abstract class AvatarEntity extends Entity {
 	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager.createKey
 			(AvatarEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
-	private final Vector internalVelocity;
-	private final Vector internalPosition;
-	
 	protected boolean putsOutFires;
 	protected boolean flammable;
 
@@ -76,22 +72,6 @@ public abstract class AvatarEntity extends Entity {
 		super(world);
 
 		this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
-
-		//@formatter:off
-		this.internalVelocity = new BackedVector(
-				x -> this.motionX = x / 20,
-				y -> this.motionY = y / 20,
-				z -> this.motionZ = z / 20,
-				() -> this.motionX * 20,
-				() -> this.motionY * 20,
-				() -> this.motionZ * 20);
-		this.internalPosition = new BackedVector(//
-				x -> setPosition(x, posY, posZ), //
-				y -> setPosition(posX, y, posZ), //
-				z -> setPosition(posX, posY, z), //
-				() -> posX, () -> posY, () -> posZ);
-		//@formatter:on
-
 		this.putsOutFires = false;
 		this.flammable = false;
 
@@ -143,11 +123,10 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	/**
-	 * Get the velocity of this entity in m/s. Changes to this vector will be
-	 * reflected in the entity's actual velocity.
+	 * Get the velocity of this entity in m/s.
 	 */
 	public Vector velocity() {
-		return internalVelocity;
+		return Vector.getVelocityMpS(this);
 	}
 
 	public void setVelocity(Vector velocity) {
@@ -178,7 +157,7 @@ public abstract class AvatarEntity extends Entity {
 	 * in the entity's actual position.
 	 */
 	public Vector position() {
-		return internalPosition;
+		return Vector.getEntityPos(this);
 	}
 
 	public void setPosition(Vector position) {

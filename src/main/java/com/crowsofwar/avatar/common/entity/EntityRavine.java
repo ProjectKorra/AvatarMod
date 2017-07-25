@@ -21,8 +21,6 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.earth.AbilityRavine;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
-import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -53,7 +51,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityRavine extends AvatarEntity {
 
-	private final IEntityProperty<Vector> propVelocity;
 	private Vector initialPosition;
 
 	private float damageMult;
@@ -66,12 +63,8 @@ public class EntityRavine extends AvatarEntity {
 	 */
 	public EntityRavine(World world) {
 		super(world);
-		
-		this.propVelocity = new EntityPropertyMotion(this);
 		setSize(1, 1);
-		
 		this.damageMult = 1;
-
 	}
 	
 	public void setDamageMult(float mult) {
