@@ -174,7 +174,7 @@ public class Raytrace {
 		
 		if (range == -1) range = 3;
 		
-		Vector currentPosition = start.copy();
+		Vector currentPosition = start;
 		Vector increment = direction.times(0.2);
 		while (currentPosition.sqrDist(start) <= range * range) {
 			

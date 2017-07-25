@@ -91,7 +91,7 @@ public class EntityAirblade extends AvatarEntity {
 				}
 				collided.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
 				
-				Vector motion = velocity().copy();
+				Vector motion = velocity();
 				motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 				

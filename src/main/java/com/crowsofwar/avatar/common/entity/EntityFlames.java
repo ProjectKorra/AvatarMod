@@ -90,7 +90,7 @@ public class EntityFlames extends AvatarEntity {
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
 		
-		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().copy().normalize(), 0.3,
+		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();

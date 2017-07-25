@@ -111,7 +111,7 @@ public class EntityRavine extends AvatarEntity {
 		super.onEntityUpdate();
 		
 		if (initialPosition == null) {
-			initialPosition = position().copy();
+			initialPosition = position();
 		}
 		
 		Vector position = position();

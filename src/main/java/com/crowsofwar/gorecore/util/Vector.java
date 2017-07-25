@@ -139,13 +139,6 @@ public class Vector {
 	}
 
 	/**
-	 * Returns a new vector with the same coordinates as this one.
-	 */
-	public Vector copy() {
-		return new Vector(this);
-	}
-
-	/**
 	 * Returns a new vector with the same coordinates as this one, but with the specified
 	 * x-coordinate.
 	 */

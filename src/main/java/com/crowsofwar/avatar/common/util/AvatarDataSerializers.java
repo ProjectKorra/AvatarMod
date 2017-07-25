@@ -80,7 +80,7 @@ public class AvatarDataSerializers {
 
 		@Override
 		public Vector copyValue(Vector vec) {
-			return vec.copy();
+			return vec;
 		}
 	};
 	public static final DataSerializer<BenderInfo> SERIALIZER_BENDER = new AvatarSerializer<BenderInfo>() {

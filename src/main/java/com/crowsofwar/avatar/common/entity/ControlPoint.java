@@ -130,7 +130,7 @@ public class ControlPoint {
 	}
 	
 	public void setPosition(Vector pos) {
-		internalPosition = pos.copy();
+		internalPosition = pos;
 	}
 	
 	/**
