@@ -81,9 +81,8 @@ public class EntityAirGust extends EntityArc {
 			}
 			
 			Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
-			velocity.setY(airGrab ? -1 : 1);
-			velocity.mul(airGrab ? -0.8 : 1);
-			
+			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.8 : 1);
+
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			afterVelocityAdded(entity);
 			

@@ -50,6 +50,7 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 /**
  * 
@@ -228,22 +229,16 @@ public class EntityAirBubble extends AvatarEntity {
 		
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;
-		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
-		vel.normalize();
-		vel.mul(mult);
-		vel.add(0, .3f, 0);
-		
-		double velX = vel.x(), velY = vel.y(), velZ = vel.z();
-		
-		// Need to use addVelocity() so avatar entities can detect it
-		entity.motionX = entity.motionY = entity.motionZ = 0;
-		// entity.addVelocity(velX, velY, velZ);
-		entity.motionY = velY;
-		entity.motionX = velX;
-		entity.motionZ = velZ;
+		Vector vel = position().minus(getEntityPos(entity));
+		vel = vel.normalize().times(mult).plusY(0.3f);
+
+		entity.motionX = vel.x();
+		entity.motionY = vel.y();
+		entity.motionZ = vel.z();
+
 		if (entity instanceof AvatarEntity) {
 			AvatarEntity avent = (AvatarEntity) entity;
-			avent.velocity().set(velX, velY, velZ);
+			avent.setVelocity(vel);
 		}
 		entity.isAirBorne = true;
 		AvatarUtils.afterVelocityAdded(entity);

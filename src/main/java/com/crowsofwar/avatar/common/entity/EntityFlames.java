@@ -85,16 +85,16 @@ public class EntityFlames extends AvatarEntity {
 	public void onUpdate() {
 		
 		super.onUpdate();
-		
-		velocity().mul(0.94);
-		
+
+		setVelocity(velocity().times(0.94));
+
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
 		
 		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().copy().normalize(), 0.3,
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
-			velocity().set(velocity().reflect(new Vector(sideHit)).times(0.5));
+			setVelocity(velocity().reflect(new Vector(sideHit)).times(0.5));
 			
 			// Try to light firest
 			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {

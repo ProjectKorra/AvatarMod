@@ -56,8 +56,8 @@ public class StatCtrlThrowFire extends StatusControl {
 			
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
-			force.mul(abilityData.getLevel() >= 1 ? 12 : 8);
-			fire.velocity().add(force);
+			force = force.times(abilityData.getLevel() >= 1 ? 12 : 8);
+			fire.addVelocity(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
 			
 			return true;

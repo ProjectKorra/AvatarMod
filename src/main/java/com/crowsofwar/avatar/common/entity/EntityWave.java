@@ -86,7 +86,7 @@ public class EntityWave extends AvatarEntity {
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
 				Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);
-				motion.setY(0.4);
+				motion = motion.withY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
 				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), STATS_CONFIG.waveSettings.damage * damageMult);
 			}

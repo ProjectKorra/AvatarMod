@@ -89,10 +89,10 @@ public class StatCtrlAirJump extends StatusControl {
 					Math.toRadians(entity.rotationYaw), 0);
 			
 			Vector velocity = rotations.toRectangular();
-			velocity.setY(Math.pow(velocity.y(), .1));
-			velocity.mul(multiplier);
+			velocity = velocity.withY(Math.pow(velocity.y(), .1));
+			velocity = velocity.times(multiplier);
 			if (!onGround) {
-				velocity.mul(0.6);
+				velocity = velocity.times(0.6);
 				entity.motionX = 0;
 				entity.motionY = 0;
 				entity.motionZ = 0;

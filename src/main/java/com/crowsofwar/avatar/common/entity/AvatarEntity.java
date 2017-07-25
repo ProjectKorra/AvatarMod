@@ -149,7 +149,19 @@ public abstract class AvatarEntity extends Entity {
 	public Vector velocity() {
 		return internalVelocity;
 	}
-	
+
+	public void setVelocity(Vector velocity) {
+		motionX = velocity.x();
+		motionY = velocity.y();
+		motionZ = velocity.z();
+	}
+
+	public void addVelocity(Vector velocity) {
+		motionX += velocity.x();
+		motionY += velocity.y();
+		motionZ += velocity.z();
+	}
+
 	/**
 	 * Get the position of this entity. Changes to this vector will be reflected
 	 * in the entity's actual position.
@@ -157,7 +169,11 @@ public abstract class AvatarEntity extends Entity {
 	public Vector position() {
 		return internalPosition;
 	}
-	
+
+	public void setPosition(Vector position) {
+		setPosition(position.x(), position.y(), position.z());
+	}
+
 	public int getAvId() {
 		return dataManager.get(SYNC_ID);
 	}

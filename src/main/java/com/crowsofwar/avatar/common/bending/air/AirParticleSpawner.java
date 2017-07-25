@@ -40,9 +40,8 @@ public class AirParticleSpawner extends TickHandler {
 		EntityLivingBase target = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		
-		Vector pos = Vector.getEntityPos(target);
-		pos.setY(pos.y() + 1.3);
-		
+		Vector pos = Vector.getEntityPos(target).plus(0, 1.3, 0);
+
 		particles.spawnParticles(target.world, AvatarParticles.getParticleAir(), 1, 1, pos,
 				new Vector(0.7, 0.2, 0.7));
 		

@@ -68,9 +68,9 @@ public class EntityWaterBubble extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
-		velocity().mul(0.9);
-		
+
+		setVelocity(velocity().times(0.9));
+
 		WaterBubbleBehavior currentBehavior = getBehavior();
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate(this);
 		if (currentBehavior != nextBehavior) setBehavior(nextBehavior);

@@ -117,9 +117,8 @@ public class EntityRavine extends AvatarEntity {
 		Vector position = position();
 		Vector velocity = velocity();
 		
-		Vector nowPos = position.add(velocity.times(0.05));
-		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
-		
+		setPosition(position.plus(velocity.times(0.05)));
+
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
 			setDead();
 		}
@@ -208,7 +207,7 @@ public class EntityRavine extends AvatarEntity {
 		
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
 			
-			Vector push = velocity().copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
+			Vector push = velocity().withY(1).times(STATS_CONFIG.ravineSettings.push);
 			entity.addVelocity(push.x(), push.y(), push.z());
 			AvatarUtils.afterVelocityAdded(entity);
 			

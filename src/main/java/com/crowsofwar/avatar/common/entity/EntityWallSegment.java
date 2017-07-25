@@ -50,20 +50,19 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityWallSegment extends AvatarEntity implements IEntityAdditionalSpawnData {
-	
+
 	public static final int SEGMENT_HEIGHT = 5;
-	
+
 	private static final DataParameter<Optional<UUID>> SYNC_WALL = EntityDataManager
 			.createKey(EntityWallSegment.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
-	
+
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
+
 	static {
 		SYNC_BLOCKS_DATA = new DataParameter[SEGMENT_HEIGHT];
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
@@ -71,21 +70,21 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 					DataSerializers.OPTIONAL_BLOCK_STATE);
 		}
 	}
-	
+
 	private final SyncedEntity<EntityWall> wallReference;
 	/**
 	 * direction that all wall-segments are facing towards. Only set on server.
 	 */
 	private EnumFacing direction;
 	private int offset;
-	
+
 	public EntityWallSegment(World world) {
 		super(world);
 		this.wallReference = new SyncedEntity<>(this, SYNC_WALL);
 		this.wallReference.preventNullSaving();
 		this.setSize(.9f, 5);
 	}
-	
+
 	@Override
 	public void entityInit() {
 		super.entityInit();
@@ -94,11 +93,11 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			dataManager.register(sync, Optional.of(Blocks.STONE.getDefaultState()));
 		dataManager.register(SYNC_BEHAVIOR, new WallBehavior.Rising());
 	}
-	
+
 	public EntityWall getWall() {
 		return wallReference.getEntity();
 	}
-	
+
 	/**
 	 * Allows this segment to reference the wall, and allows the wall to
 	 * reference this segment.
@@ -112,44 +111,44 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		IBlockState state = dataManager.get(SYNC_BLOCKS_DATA[i]).orNull();
 		return state == null ? Blocks.AIR.getDefaultState() : state;
 	}
-	
+
 	public void setBlock(int i, IBlockState block) {
 		dataManager.set(SYNC_BLOCKS_DATA[i],
 				block == null ? Optional.of(Blocks.AIR.getDefaultState()) : Optional.of(block));
 	}
-	
+
 	public WallBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
-	
+
 	public void setBehavior(WallBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
-	
+
 	public void setDirection(EnumFacing dir) {
 		this.direction = dir;
 	}
-	
+
 	public int getBlocksOffset() {
 		return offset;
 	}
-	
+
 	public void setBlocksOffset(int offset) {
 		this.offset = offset;
 	}
-	
+
 	// Expose setSize method so AbilityWall can call it
 	@Override
 	public void setSize(float width, float height) {
 		super.setSize(width, height);
 	}
-	
+
 	@Override
 	public void setDead() {
 		super.setDead();
 		if (getWall() != null) getWall().setDead();
 	}
-	
+
 	/**
 	 * Drops any blocks contained by this segment
 	 */
@@ -160,17 +159,19 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				world.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
 		}
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		ignoreFrustumCheck = true;
-		velocity().setX(0);
-		velocity().setZ(0);
+
+		// restrict to only vertical movement
+		setVelocity(velocity().withX(0).withZ(0));
+
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next) setBehavior(next);
 	}
-	
+
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand stack) {
 		if (!this.isDead && !world.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
@@ -181,45 +182,46 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		wallReference.readFromNbt(nestedCompound(nbt, "Parent"));
 	}
-	
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		wallReference.writeToNbt(nestedCompound(nbt, "Parent"));
 	}
-	
+
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
 		return true;
 	}
-	
+
 	@Override
 	public void writeSpawnData(ByteBuf buf) {
 		buf.writeFloat(height);
 		buf.writeInt(offset);
 	}
-	
+
 	@Override
 	public void readSpawnData(ByteBuf buf) {
 		setSize(width, buf.readFloat());
 		offset = buf.readInt();
 	}
-	
+
 	@Override
-	public void addVelocity(double x, double y, double z) {}
-	
+	public void addVelocity(double x, double y, double z) {
+	}
+
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		
+
 		// Note... only called server-side
 		double amt = 0.4;
-		
+
 		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
 		if (ns) {
 			if (entity.posZ > this.posZ) {
@@ -236,32 +238,33 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				entity.posX = this.posX - 1.1;
 			}
 		}
-		
+
 		if (ns) {
 			entity.motionZ = amt;
 		} else {
 			entity.motionX = amt;
 		}
-		
+
 		entity.motionY = .25;
-		
+
 		entity.isAirBorne = true;
 		if (entity instanceof EntityPlayerMP) {
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 		}
 		if (entity instanceof AvatarEntity) {
 			Vector velocity = ((AvatarEntity) entity).velocity();
-			if (ns)
-				velocity.setZ(amt);
-			else
-				velocity.setX(amt);
+			if (ns) {
+				velocity = velocity.withZ(amt);
+			} else {
+				velocity = velocity.withX(amt);
+			}
 		}
-		
+
 		if (entity instanceof AvatarEntity) {
-			
+
 			AvatarEntity avEnt = (AvatarEntity) entity;
 			avEnt.onCollideWithSolid();
-			
+
 			if (avEnt.onCollideWithSolid()) {
 				entity.setDead();
 				EntityLivingBase owner = getOwner();
@@ -270,29 +273,29 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 					data.getAbilityData(AbilityWall.ID).addXp(SKILLS_CONFIG.wallBlockedAttack);
 				}
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		
+
 		boolean notWall = !(entity instanceof EntityWall) && !(entity instanceof EntityWallSegment);
-		
+
 		boolean friendlyProjectile = false;
 		if (getOwner() != null) {
 			AbilityData data = Bender.get(getOwner()).getData().getAbilityData(AbilityWall.ID);
 			if (data.isMaxLevel() && data.getPath() == AbilityTreePath.FIRST) {
-				
+
 				friendlyProjectile = entity instanceof AvatarEntity
 						&& ((AvatarEntity) entity).getOwner() == this.getOwner();
-				
+
 			}
 		}
-		
+
 		return notWall && !friendlyProjectile;
-		
+
 	}
-	
+
 }

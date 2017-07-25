@@ -16,23 +16,22 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityAirblade;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
+
+import java.util.UUID;
+
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 import static java.lang.Math.abs;
-
-import java.util.UUID;
-
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.entity.EntityAirblade;
-import com.crowsofwar.gorecore.util.Vector;
-
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 
 /**
  * 
@@ -62,15 +61,14 @@ public class AbilityAirblade extends AirAbility {
 		float pitch = (float) Math.toRadians(pitchDeg);
 		
 		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw), pitch);
-		Vector spawnAt = Vector.getEntityPos(bender).add(look).add(0, 1, 0);
-		spawnAt.add(look);
-		
+		Vector spawnAt = Vector.getEntityPos(bender).plus(look.times(2)).plus(0, 1, 0);
+
 		AbilityData abilityData = ctx.getData().getAbilityData(ID);
 		float xp = abilityData.getTotalXp();
 		
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-		airblade.velocity().set(look.times(ctx.getLevel() >= 1 ? 30 : 20));
+		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 30 : 20));
 		airblade.setDamage(STATS_CONFIG.airbladeSettings.damage * (1 + xp * .015f));
 		airblade.setOwner(bender);
 		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));

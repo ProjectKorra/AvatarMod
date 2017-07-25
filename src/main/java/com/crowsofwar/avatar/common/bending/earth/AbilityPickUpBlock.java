@@ -17,22 +17,16 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.Random;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -42,6 +36,11 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -115,7 +114,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 				
 				double dist = 2.5;
 				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
-				floating.velocity().add(force);
+				floating.setVelocity(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
 				floating.setDamageMult(abilityData.getLevel() >= 2 ? 2 : 1);

@@ -16,25 +16,24 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
-
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEyePos;
+import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 /**
  * 
@@ -74,7 +73,7 @@ public class AbilityFireball extends FireAbility {
 			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
 			
 			EntityFireball fireball = new EntityFireball(world);
-			fireball.position().set(target);
+			fireball.setPosition(target);
 			fireball.setOwner(entity);
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			fireball.setDamage(damage);

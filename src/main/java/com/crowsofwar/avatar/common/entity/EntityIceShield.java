@@ -80,7 +80,7 @@ public class EntityIceShield extends AvatarEntity {
 		Vector direction = Vector.getRotationTo(ownerPos, targetPos);
 		float yaw = (float) Math.toDegrees(direction.y());
 		
-		double horizDist = targetPos.copy().setY(0).dist(ownerPos.copy().setY(0));
+		double horizDist = targetPos.withY(0).dist(ownerPos.withY(0));
 		double vertDist = targetPos.y() - ownerPos.y();
 		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(20, 20, horizDist,
 				vertDist));

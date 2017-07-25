@@ -67,7 +67,7 @@ public abstract class EntityArc extends AvatarEntity {
 
 		if (this.ticksExisted == 1) {
 			for (int i = 0; i < points.length; i++) {
-				points[i].position().set(position());
+				points[i].setPosition(position());
 			}
 		}
 
@@ -81,8 +81,8 @@ public abstract class EntityArc extends AvatarEntity {
 
 		// Set leader at the arc pos
 
-		getLeader().position().set(posX, posY, posZ);
-		getLeader().velocity().set(velocity());
+		getLeader().setPosition(new Vector(posX, posY, posZ));
+		getLeader().setVelocity(velocity());
 
 		// Move control points to follow leader
 
@@ -101,16 +101,16 @@ public abstract class EntityArc extends AvatarEntity {
 				if (idealDist > 1) idealDist -= 1; // Make sure there is some
 				// room
 
-				Vector revisedOffset = leader.position().add(toFollowerDir.times(idealDist));
-				p.position().set(revisedOffset);
-				p.velocity().set(Vector.ZERO);
+				Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
+				p.setPosition(revisedOffset);
+				leader.setPosition(revisedOffset);
+				p.setVelocity(Vector.ZERO);
 
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 
 				Vector diff = leader.position().minus(p.position());
-				diff.normalize();
-				diff.mul(3);
-				p.velocity().add(diff);
+				diff = diff.normalize().times(3);
+				p.setVelocity(p.velocity().plus(diff));
 
 			}
 
@@ -142,7 +142,7 @@ public abstract class EntityArc extends AvatarEntity {
 		// Set position - called from entity constructor, so points might be
 		// null
 		if (points != null) {
-			points[0].position().set(x, y, z);
+			points[0].setPosition(new Vector(x, y, z));
 		}
 	}
 

@@ -146,6 +146,30 @@ public class Vector {
 	}
 
 	/**
+	 * Returns a new vector with the same coordinates as this one, but with the specified
+	 * x-coordinate.
+	 */
+	public Vector withX(double x) {
+		return new Vector(x, this.y, this.z);
+	}
+
+	/**
+	 * Returns a new vector with the same coordinates as this one, but with the specified
+	 * y-coordinate.
+	 */
+	public Vector withY(double y) {
+		return new Vector(this.x, y, this.z);
+	}
+
+	/**
+	 * Returns a new vector with the same coordinates as this one, but with the specified
+	 * z-coordinate.
+	 */
+	public Vector withZ(double z) {
+		return new Vector(this.x, this.y, z);
+	}
+
+	/**
 	 * Creates a new vector from the sum of this vector and the given vector.
 	 *
 	 * @param vec Vector for sum
@@ -164,6 +188,18 @@ public class Vector {
 	 */
 	public Vector plus(double x, double y, double z) {
 		return new Vector(this.x + x, this.y + y, this.z + z);
+	}
+
+	public Vector plusX(double x) {
+		return plus(x, 0, 0);
+	}
+
+	public Vector plusY(double y) {
+		return plus(0, y, 0);
+	}
+
+	public Vector plusZ(double z) {
+		return plus(0, 0, z);
 	}
 
 	/**
@@ -185,6 +221,18 @@ public class Vector {
 	 */
 	public Vector minus(double x, double y, double z) {
 		return new Vector(this.x - x, this.y - y, this.z - z);
+	}
+
+	public Vector minusX(double x) {
+		return minus(x, 0, 0);
+	}
+
+	public Vector minusY(double y) {
+		return minus(0, y, 0);
+	}
+
+	public Vector minusZ(double z) {
+		return minus(0, 0, z);
 	}
 
 	/**

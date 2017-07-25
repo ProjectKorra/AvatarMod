@@ -92,8 +92,7 @@ public class EntityAirblade extends AvatarEntity {
 				collided.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
 				
 				Vector motion = velocity().copy();
-				motion.mul(STATS_CONFIG.airbladeSettings.push);
-				motion.setY(0.08);
+				motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 				
 				if (getOwner() != null) {
@@ -143,7 +142,7 @@ public class EntityAirblade extends AvatarEntity {
 		float hardness = state.getBlockHardness(world, pos);
 		if (hardness <= chopBlocksThreshold) {
 			breakBlock(pos);
-			velocity().mul(0.5);
+			setVelocity(velocity().times(0.5));
 		}
 	}
 	

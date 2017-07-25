@@ -62,7 +62,7 @@ public class AbilityAirGust extends AirAbility {
 		Vector pos = Vector.getEyePos(bender);
 		
 		EntityAirGust gust = new EntityAirGust(world);
-		gust.velocity().set(look.times(25));
+		gust.setVelocity(look.times(25));
 		gust.setPosition(pos.x(), pos.y(), pos.z());
 		gust.setOwner(bender);
 		gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));

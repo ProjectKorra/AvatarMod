@@ -243,8 +243,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 			
 		}
 		
-		if (!world.isRemote) velocity().mul(getFriction());
-		
+		setVelocity(velocity().times(getFriction()));
+
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
