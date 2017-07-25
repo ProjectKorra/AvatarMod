@@ -60,7 +60,7 @@ public class StatCtrlThrowBubble extends StatusControl {
 			}
 			
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
-			bubble.velocity().set(Vector.getLookRectangular(ctx.getBenderEntity()).mul(mult));
+			bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(mult));
 		}
 		
 		return true;

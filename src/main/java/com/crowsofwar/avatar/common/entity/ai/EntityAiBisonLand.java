@@ -16,12 +16,9 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import static net.minecraft.util.math.MathHelper.floor;
-
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
@@ -29,6 +26,8 @@ import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static net.minecraft.util.math.MathHelper.floor;
 
 /**
  * Bison lands when he is hungry. This allows the bison to eat grass and to
@@ -60,7 +59,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 		boolean isValidPosition;
 		do {
 			
-			landing = findLandingPoint().add(0, 1, 0);
+			landing = findLandingPoint().plusY(1);
 			tries++;
 			
 			Block block = world.getBlockState(landing.toBlockPos().down()).getBlock();
@@ -71,7 +70,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 		
 		if (isValidPosition) {
 			
-			landing.add(0, 1, 0);
+			landing = landing.plusY(1);
 			bison.getMoveHelper().setMoveTo(landing.x(), landing.y() - 1, landing.z(), 1);
 			
 		}

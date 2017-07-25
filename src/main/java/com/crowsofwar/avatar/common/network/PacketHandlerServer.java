@@ -263,11 +263,11 @@ public class PacketHandlerServer implements IPacketHandler {
 			if (normal != Vector.UP) {
 				
 				Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
-				Vector n = velocity.reflect(normal).mul(4).subtract(normal.times(0.5)).setY(0.5);
-				n.add(Vector.getLookRectangular(player).mul(.8));
+				Vector n = velocity.reflect(normal).times(4).minus(normal.times(0.5)).withY(0.5);
+				n = n.plus(Vector.getLookRectangular(player).times(.8));
 				
 				if (n.sqrMagnitude() > 1) {
-					n.normalize().mul(1);
+					n = n.normalize().times(1);
 				}
 				
 				player.setVelocity(n.x(), n.y(), n.z());

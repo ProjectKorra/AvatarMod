@@ -52,7 +52,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			entity.velocity().add(0, -7.0 / 20, 0);
+			entity.addVelocity(0, -7.0 / 20, 0);
 			if (entity.onGround) {
 				entity.dropBlocks();
 				entity.setDead();
@@ -94,10 +94,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 					if (seg.height > maxHeight) maxHeight = (int) seg.height;
 				}
 				
-				entity.velocity().set(0, STATS_CONFIG.wallMomentum / 5 * maxHeight, 0);
+				entity.setVelocity(0, STATS_CONFIG.wallMomentum / 5 * maxHeight, 0);
 				
 			} else {
-				entity.velocity().setY(entity.velocity().y() * 0.9);
+				entity.motionY *= 0.9;
 			}
 			
 			// For some reason, the same entity instance is on server/client,
@@ -127,7 +127,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			entity.velocity().set(0, 0, 0);
+			entity.setVelocity(0, 0, 0);
 			ticks++;
 			
 			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;

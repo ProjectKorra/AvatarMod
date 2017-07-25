@@ -73,8 +73,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 					Math.toRadians(owner.rotationPitch));
 			Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
-			Vector motion = lookPos.minus(new Vector(entity));
-			motion.mul(.3);
+			Vector motion = lookPos.minus(new Vector(entity)).times(0.3);
 			entity.move(MoverType.SELF, motion.x(), motion.y(), motion.z());
 			
 			return this;
@@ -99,7 +98,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 		
 		@Override
 		public FireArcBehavior onUpdate(EntityFireArc entity) {
-			entity.velocity().add(0, -9.81 / 60, 0);
+			entity.addVelocity(0, -9.81 / 60, 0);
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().expand(0.9, 0.9, 0.9),

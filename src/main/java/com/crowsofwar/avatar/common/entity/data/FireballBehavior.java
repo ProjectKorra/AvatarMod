@@ -90,7 +90,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				entity.onCollideWithSolid();
 			}
 			
-			entity.velocity().add(0, -9.81 / 40, 0);
+			entity.addVelocity(0, -9.81 / 40, 0);
 			
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -102,8 +102,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 						collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion.mul(0.3);
-						motion.setY(0.08);
+						motion = motion.times(0.3).withY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 					}
 					
@@ -121,8 +120,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 			
 			Vector motion = entity.velocity().dividedBy(20);
-			motion.mul(STATS_CONFIG.fireballSettings.push);
-			motion.setY(0.08);
+			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			BendingData data = Bender.get(entity.getOwner()).getData();
@@ -167,9 +165,8 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector forward = Vector.toRectangular(yaw, pitch);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(new Vector(entity));
-			motion.mul(5);
-			entity.velocity().set(motion);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
+			entity.setVelocity(motion);
 			
 			if (data.getAbilityData(AbilityFireball.ID).isMasterPath(AbilityTreePath.SECOND)) {
 				int size = entity.getSize();

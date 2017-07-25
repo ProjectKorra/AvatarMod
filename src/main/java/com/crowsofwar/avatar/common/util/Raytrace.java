@@ -17,15 +17,9 @@
 
 package com.crowsofwar.avatar.common.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -37,6 +31,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class Raytrace {
 	
@@ -185,7 +184,7 @@ public class Raytrace {
 				return new Result(new VectorI(pos), EnumFacing.DOWN, currentPosition);
 			}
 			
-			currentPosition.add(increment);
+			currentPosition = currentPosition.plus(increment);
 			
 		}
 		return new Result();

@@ -63,10 +63,10 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		public WaterArcBehavior onUpdate(EntityWaterArc water) {
 			
 			EntityLivingBase owner = water.getOwner();
-			World world = owner.world;
-			
 			if (owner == null) return this;
-			
+
+			World world = owner.world;
+
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 			
 			Vector target;
@@ -79,8 +79,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			
 			Vector motion = target.minus(water.position());
-			motion.mul(.3 * 20);
-			water.velocity().set(motion);
+			motion = motion.times(0.3 * 20);
+			water.setVelocity(motion);
 			
 			if (water.world.isRemote && water.canPlaySplash()) {
 				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
@@ -113,7 +113,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			AbilityData abilityData = data.getAbilityData(AbilityWaterArc.ID);
 			
 			if (!abilityData.isMasterPath(AbilityTreePath.SECOND) || entity.ticksExisted >= 40) {
-				entity.velocity().add(0, -9.81 / 60, 0);
+				entity.addVelocity(0, -9.81 / 60, 0);
 			}
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(

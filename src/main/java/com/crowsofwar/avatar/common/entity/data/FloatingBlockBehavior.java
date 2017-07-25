@@ -100,9 +100,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY() + 0.25, placeAt.getZ() + 0.5);
 			Vector thisPos = new Vector(entity);
 			Vector force = placeAtVec.minus(thisPos);
-			force.normalize();
-			force.mul(3);
-			entity.velocity().set(force);
+			force = force.normalize().times(3);
+			entity.setVelocity(force);
 			if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
 				
 				entity.setDead();
@@ -163,7 +162,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				
 			}
 			
-			entity.velocity().add(0, -9.81 / 20, 0);
+			entity.addVelocity(0, -9.81 / 20, 0);
 			
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -175,8 +174,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 						return collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion.mul(0.3);
-						motion.setY(0.08);
+						motion = motion.times(0.3).withY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 					}
 					
@@ -196,8 +194,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			// Push entity
 			Vector motion = new Vector(collided).minus(new Vector(entity));
-			motion.mul(STATS_CONFIG.floatingBlockSettings.push);
-			motion.setY(0.08);
+			motion = motion.times(STATS_CONFIG.floatingBlockSettings.push).withY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			// Add XP
@@ -253,12 +250,11 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			entity.velocity().add(0, -9.81 / 20, 0);
+			entity.addVelocity(0, -9.81 / 20, 0);
 			
 			Vector velocity = entity.velocity();
 			if (velocity.y() <= 0) {
-				velocity.setY(0);
-				entity.velocity().set(velocity);
+				entity.setVelocity(velocity.withY(0));
 				return new PlayerControlled();
 			}
 			
@@ -297,8 +293,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(entity));
-			motion.mul(5);
-			entity.velocity().set(motion);
+			motion = motion.times(5);
+			entity.setVelocity(motion);
 			
 			return this;
 		}
@@ -321,7 +317,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			entity.velocity().add(0, -9.81 / 20, 0);
+			entity.addVelocity(0, -9.81 / 20, 0);
 			if (entity.isCollided) {
 				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();

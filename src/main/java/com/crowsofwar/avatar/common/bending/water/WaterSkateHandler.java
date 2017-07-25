@@ -133,22 +133,22 @@ public class WaterSkateHandler extends TickHandler {
 				
 				player.setPosition(player.posX, yPos + .2, player.posZ);
 				Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);
-				Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).mul(targetSpeed);
+				Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).times(targetSpeed);
 				
 				double targetWeight = 0.1;
-				currentVelocity.mul(1 - targetWeight);
-				targetVelocity.mul(targetWeight);
+				currentVelocity = currentVelocity.times(1 - targetWeight);
+				targetVelocity = targetVelocity.times(targetWeight);
 				
 				double targetSpeedWeight = 0.2;
 				double speed = currentVelocity.magnitude() * (1 - targetSpeedWeight)
 						+ targetSpeed * targetSpeedWeight;
 				
-				Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().mul(speed);
+				Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().times(speed);
 				
 				Vector playerMovement = toRectangular(toRadians(player.rotationYaw - 90),
-						toRadians(player.rotationPitch)).mul(player.moveStrafing * 0.02);
+						toRadians(player.rotationPitch)).times(player.moveStrafing * 0.02);
 				
-				newVelocity.add(playerMovement);
+				newVelocity = newVelocity.plus(playerMovement);
 				
 				player.motionX = newVelocity.x();
 				player.motionY = 0;
@@ -158,7 +158,7 @@ public class WaterSkateHandler extends TickHandler {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 0.4f, 2f);
 					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 2, 4,
-							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
+							Vector.getEntityPos(player).plus(0, .4, 0), new Vector(.2, 1, .2));
 				}
 				
 				if (player.ticksExisted % 10 == 0) {
