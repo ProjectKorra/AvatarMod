@@ -29,7 +29,7 @@ import net.minecraft.util.math.Vec3i;
 import static java.lang.Math.*;
 
 /**
- * A mutable 3-dimensional vector using doubles.
+ * An immutable 3-dimensional vector using doubles.
  * 
  * @author CrowsOfWar
  */
@@ -49,14 +49,13 @@ public class Vector {
 	
 	public static final Vector[] DIRECTION_VECTORS = { UP, DOWN, EAST, WEST, NORTH, SOUTH };
 	
-	private double cachedMagnitude;
-	private double x, y, z;
+	private final double x, y, z;
 	
 	/**
 	 * Creates a new vector at the origin point.
 	 */
 	public Vector() {
-		
+		this(0, 0, 0);
 	}
 	
 	/**
@@ -70,7 +69,9 @@ public class Vector {
 	 *            Z-position of the new vector
 	 */
 	public Vector(double x, double y, double z) {
-		set(x, y, z);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
 	/**
@@ -80,8 +81,7 @@ public class Vector {
 	 *            Vector to copy
 	 */
 	public Vector(Vector vec) {
-		set(vec);
-		this.cachedMagnitude = vec.cachedMagnitude;
+		this(vec.x(), vec.y(), vec.z());
 	}
 	
 	/**
@@ -102,8 +102,6 @@ public class Vector {
 	 */
 	public Vector(Entity entity) {
 		this(entity.posX, entity.posY, entity.posZ);
-		// if (entity instanceof EntityPlayer && entity.world.isRemote)
-		// setY(y - 1.62);
 	}
 	
 	/**
@@ -130,88 +128,19 @@ public class Vector {
 	public double x() {
 		return x;
 	}
-	
-	/**
-	 * Set the x-coordinate of this vector. Returns <code>this</code> for method
-	 * chaining.
-	 * 
-	 * @param x
-	 *            X-coordinate
-	 */
-	public Vector setX(double x) {
-		this.x = x;
-		recalcMagnitude();
-		return this;
-	}
-	
+
 	/**
 	 * Get the y-coordinate of this vector.
 	 */
 	public double y() {
 		return y;
 	}
-	
-	/**
-	 * Set the y-coordinate of this vector. Returns <code>this</code> for method
-	 * chaining.
-	 * 
-	 * @param y
-	 *            Y-coordinate
-	 */
-	public Vector setY(double y) {
-		this.y = y;
-		recalcMagnitude();
-		return this;
-	}
-	
+
 	/**
 	 * Get the z-coordinate of this vector.
 	 */
 	public double z() {
 		return z;
-	}
-	
-	/**
-	 * Set the z-coordinate of this vector. Returns <code>this</code> for method
-	 * chaining.
-	 * 
-	 * @param z
-	 *            Z-coordinate
-	 */
-	public Vector setZ(double z) {
-		this.z = z;
-		recalcMagnitude();
-		return this;
-	}
-	
-	/**
-	 * Set this vector to the vector defined by (x, y, z).
-	 * 
-	 * @param x
-	 *            X-coordinate to set to
-	 * @param y
-	 *            Y-coordinate to set to
-	 * @param z
-	 *            Z-coordinate to set to
-	 * @return this
-	 */
-	public Vector set(double x, double y, double z) {
-		setX(x);
-		setY(y);
-		setZ(z);
-		return this;
-	}
-	
-	/**
-	 * Set this vector to the given vector.
-	 * 
-	 * @param vec
-	 *            Vector to set to
-	 * @return this
-	 */
-	public Vector set(Vector vec) {
-		set(vec.x(), vec.y(), vec.z());
-		return this;
 	}
 	
 	/**
