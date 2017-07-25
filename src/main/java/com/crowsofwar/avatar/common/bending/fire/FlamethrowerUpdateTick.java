@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getVelocityMpS;
+import static com.crowsofwar.gorecore.util.Vector.getVelocity;
 import static java.lang.Math.toRadians;
 
 /**
@@ -96,7 +96,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 				
 				EntityFlames flames = new EntityFlames(world, entity);
-				flames.setVelocity(look.times(speedMult).plus(getVelocityMpS(entity)));
+				flames.setVelocity(look.times(speedMult).plus(getVelocity(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setLightsFires(lightsFires);
 				world.spawnEntity(flames);

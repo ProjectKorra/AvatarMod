@@ -126,7 +126,7 @@ public abstract class AvatarEntity extends Entity {
 	 * Get the velocity of this entity in m/s.
 	 */
 	public Vector velocity() {
-		return Vector.getVelocityMpS(this);
+		return Vector.getVelocity(this);
 	}
 
 	public void setVelocity(Vector velocity) {
