@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "dmd",
     "ses",
@@ -13,11 +13,8 @@
       "item": "minecraft:emerald"
     },
     "e": {
-      "item": "minecraft:ostrich_equip",
+      "item": "avatarmod:ostrich_equip",
       "data": 0
-    },
-    "l": {
-      "item": "minecraft:leather"
     },
     "s": {
       "item": "minecraft:string"
