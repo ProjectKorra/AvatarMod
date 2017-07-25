@@ -491,8 +491,7 @@ public class Vector {
 	 * @param pos2 Where to look at
 	 */
 	public static Vector getRotationTo(Vector pos1, Vector pos2) {
-		Vector diff = pos2.minus(pos1);
-		diff.normalize();
+		Vector diff = pos2.minus(pos1).normalize();
 		double x = diff.x();
 		double y = diff.y();
 		double z = diff.z();

@@ -68,8 +68,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				looking.offset(lookingSide);
 				
 				floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
-				Vector force = looking.precision().minus(new Vector(floating));
-				force.normalize();
+				Vector force = looking.precision().minus(new Vector(floating)).normalize();
 				floating.addVelocity(force);
 				
 				SoundType sound = floating.getBlock().getSoundType();
