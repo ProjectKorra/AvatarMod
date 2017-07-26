@@ -50,10 +50,9 @@ public class RenderIcePrison extends Render<EntityIcePrison> {
 
 		GlStateManager.pushMatrix();
 		GlStateManager.disableCull();
-		GlStateManager.translate((float) x, (float) y, (float) z);
-		float f = 0.0625F;
+		GlStateManager.translate(x, y, z);
 		GlStateManager.enableRescaleNormal();
-		GlStateManager.scale(-1.0F, -1.0F, 1.0F);
+//		GlStateManager.scale(-1.0F, -1.0F, 1.0F);
 		GlStateManager.enableAlpha();
 		this.bindEntityTexture(entity);
 
