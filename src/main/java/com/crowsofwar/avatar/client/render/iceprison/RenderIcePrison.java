@@ -24,8 +24,8 @@ public class RenderIcePrison extends Render<EntityIcePrison> {
 		prisonModels = new ModelBase[] {
 				new IcePrisonlvl1(),
 				new IcePrisonlvl2(),
-				new IcePrisonlvl2v2(),
-				new IcePrisonlvl3()
+				new IcePrisonlvl3(),
+				new IcePrisonlvl4()
 		};
 	}
 
@@ -36,12 +36,12 @@ public class RenderIcePrison extends Render<EntityIcePrison> {
 	}
 
 	private ModelBase getModel(EntityIcePrison entity) {
-		double percent = entity.ticksExisted / EntityIcePrison.IMPRISONED_TIME;
+		double percent = (double) entity.ticksExisted / EntityIcePrison.IMPRISONED_TIME;
 		int index = prisonModels.length - (int) (percent * prisonModels.length);
 		if (index == prisonModels.length) {
 			index--;
 		}
-		return prisonModels[1];
+		return prisonModels[index];
 	}
 
 	@Override
