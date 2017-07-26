@@ -41,7 +41,7 @@ public class RenderIcePrison extends Render<EntityIcePrison> {
 		if (index == prisonModels.length) {
 			index--;
 		}
-		return prisonModels[index];
+		return prisonModels[1];
 	}
 
 	@Override
@@ -52,21 +52,15 @@ public class RenderIcePrison extends Render<EntityIcePrison> {
 		GlStateManager.disableCull();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.enableRescaleNormal();
-//		GlStateManager.scale(-1.0F, -1.0F, 1.0F);
 		GlStateManager.enableAlpha();
-		this.bindEntityTexture(entity);
+		GlStateManager.enableBlend();
 
-		if (this.renderOutlines) {
-			GlStateManager.enableColorMaterial();
-			GlStateManager.enableOutlineMode(this.getTeamColor(entity));
-		}
+		// Model is upside-down - fix by flipping the model in code
+		GlStateManager.scale(1, -1, 1);
+		GlStateManager.translate(0, -1.5, 0);
 
+		bindEntityTexture(entity);
 		getModel(entity).render(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-
-		if (this.renderOutlines) {
-			GlStateManager.disableOutlineMode();
-			GlStateManager.disableColorMaterial();
-		}
 
 		GlStateManager.popMatrix();
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
