@@ -22,10 +22,10 @@ public class RenderIcePrison extends Render<EntityIcePrison> {
 	public RenderIcePrison(RenderManager renderManager) {
 		super(renderManager);
 		prisonModels = new ModelBase[] {
-				new IcePrisonlvl1(),
-				new IcePrisonlvl2(),
-				new IcePrisonlvl3(),
-				new IcePrisonlvl4()
+				new ModelIcePrison1(),
+				new ModelIcePrison2(),
+				new ModelIcePrison3(),
+				new ModelIcePrison4()
 		};
 	}
 
