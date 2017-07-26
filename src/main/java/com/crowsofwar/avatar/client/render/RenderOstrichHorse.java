@@ -16,9 +16,14 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseTier1;
+import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseTier2;
+import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseTier3;
 import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseWild;
 import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
 
+import com.crowsofwar.avatar.common.item.ItemOstrichEquipment;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -32,14 +37,40 @@ public class RenderOstrichHorse extends RenderLiving<EntityOstrichHorse> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/mob/ostrich.png");
-	
+
+	private final ModelBase[] models;
+
 	public RenderOstrichHorse(RenderManager rendermanagerIn) {
-		super(rendermanagerIn, new ModelOstrichHorseWild(), 0.5f);
+		super(rendermanagerIn, new ModelOstrichHorseWild(), 0.5f); // pass in a dummy model ot
+		// avoid NPEs
+
+		models = new ModelBase[] {
+				new ModelOstrichHorseWild(),
+				new ModelOstrichHorseTier1(),
+				new ModelOstrichHorseTier2(),
+				new ModelOstrichHorseTier3()
+		};
+
 	}
-	
+
+	private ModelBase getOstrichModel(EntityOstrichHorse entity) {
+		ItemOstrichEquipment.EquipmentTier equipmentTier = entity.getEquipment();
+		int modelIndex = equipmentTier == null ? 0 : equipmentTier.ordinal() + 1;
+		return models[modelIndex];
+	}
+
+	@Override
+	public void doRender(EntityOstrichHorse entity, double x, double y, double z, float entityYaw, float
+			partialTicks) {
+
+		mainModel = getOstrichModel(entity);
+		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+
+	}
+
 	@Override
 	protected ResourceLocation getEntityTexture(EntityOstrichHorse entity) {
 		return TEXTURE;
 	}
-	
+
 }
