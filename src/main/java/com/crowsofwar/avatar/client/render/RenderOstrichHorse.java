@@ -29,16 +29,15 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class RenderOstrichHorse extends RenderLiving<EntityOstrichHorse> {
-	
+
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/mob/ostrich.png");
 
 	private final ModelBase[] models;
+	private final ResourceLocation[] textures;
 
 	public RenderOstrichHorse(RenderManager rendermanagerIn) {
 		super(rendermanagerIn, new ModelOstrichHorseWild(), 0.5f); // pass in a dummy model ot
@@ -50,27 +49,35 @@ public class RenderOstrichHorse extends RenderLiving<EntityOstrichHorse> {
 				new ModelOstrichHorseTier2(),
 				new ModelOstrichHorseTier3()
 		};
+		textures = new ResourceLocation[models.length];
+		for (int i = 0; i < textures.length; i++) {
+			textures[i] = new ResourceLocation("avatarmod", "textures/mob/ostrich_tier" + i +
+					".png");
+		}
 
 	}
 
-	private ModelBase getOstrichModel(EntityOstrichHorse entity) {
+	/**
+	 * For retrieving a model or texture based on the ostrich's equipment. Gets the index of the
+	 * ostrich assets to be used in either {@link #models} or {@link #textures}.
+	 */
+	private int getAssetIndex(EntityOstrichHorse entity) {
 		ItemOstrichEquipment.EquipmentTier equipmentTier = entity.getEquipment();
-		int modelIndex = equipmentTier == null ? 0 : equipmentTier.ordinal() + 1;
-		return models[modelIndex];
+		return equipmentTier == null ? 0 : equipmentTier.ordinal() + 1;
 	}
 
 	@Override
 	public void doRender(EntityOstrichHorse entity, double x, double y, double z, float entityYaw, float
 			partialTicks) {
 
-		mainModel = getOstrichModel(entity);
+		mainModel = models[getAssetIndex(entity)];
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityOstrichHorse entity) {
-		return TEXTURE;
+		return textures[getAssetIndex(entity)];
 	}
 
 }
