@@ -51,7 +51,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 
 		WOVEN,
 		CHAIN,
-		PLATEMAIL;
+		PLATE;
 
 		/**
 		 * Get the lowercase of the equipment tier specified by the index, or null if there isn't
