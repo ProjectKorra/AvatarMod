@@ -110,43 +110,57 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		System.out.println("processInteract");
 		if (!super.processInteract(player, hand) && !world.isRemote) {
-
-			// Put on equipment?
-			ItemStack heldStack = player.getHeldItem(hand);
-			if (heldStack.getItem() == AvatarItems.itemOstrichEquipment) {
-				if (getEquipment() != null) {
-					dropEquipment(!player.isCreative());
-				}
-				chest.setInventorySlotContents(0, heldStack.copy());
-				if (!player.capabilities.isCreativeMode) {
-					heldStack.shrink(1);
-				}
-				return true;
-			}
-
-			// This method called twice per right-click - one for each hand
-			// these interactions only need to be processed 1x / interact...
-
 			if (hand == EnumHand.MAIN_HAND) {
-
-				// Take off equipment?
-				if (player.isSneaking() && getEquipment() != null) {
-					dropEquipment(!player.isCreative());
-					return true;
-				}
-
-				// Default: ride ostrich
-				player.startRiding(this);
-				return true;
-
+				return processInteractOnce(player);
 			}
-
 		}
 		return false;
 	}
-	
+
+	/**
+	 * {@link #processInteract(EntityPlayer, EnumHand)} is called twice per interaction, once for
+	 * each hand. This method is only called once
+	 */
+	private boolean processInteractOnce(EntityPlayer player) {
+
+		// Try to put on equipment
+		for (EnumHand hand : EnumHand.values()) {
+			ItemStack heldStack = player.getHeldItem(hand);
+			if (heldStack.getItem() == AvatarItems.itemOstrichEquipment) {
+
+				ItemOstrichEquipment.EquipmentTier proposed = ItemOstrichEquipment.EquipmentTier
+						.getTier(heldStack.getMetadata());
+
+				// Don't put on new equipment if it's just the same as the old one
+				// The player might be trying to perform a different action
+
+				if (getEquipment() != proposed) {
+					if (getEquipment() != null) {
+						dropEquipment(!player.isCreative());
+					}
+					chest.setInventorySlotContents(0, heldStack.copy());
+					if (!player.capabilities.isCreativeMode) {
+						heldStack.shrink(1);
+					}
+					return true;
+				}
+
+			}
+		}
+
+		// Take off equipment
+		if (player.isSneaking() && getEquipment() != null) {
+			dropEquipment(!player.isCreative());
+			return true;
+		}
+
+		// Default: ride ostrich
+		player.startRiding(this);
+		return true;
+
+	}
+
 	@Override
 	@Nullable
 	public Entity getControllingPassenger() {
