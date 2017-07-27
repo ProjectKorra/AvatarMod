@@ -4,9 +4,13 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 /**
+ * Ostrich horse model for woven armor. Model originally created by talhanation; generated code
+ * cleanup by CrowsOfWar
+ * <p>
  * OstrichHorse Tier1 - talhanation
  * Created using Tabula 5.1.0
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ModelOstrichHorseTier1 extends ModelOstrichHorse {
 	
 	private ModelRenderer BodyMain;

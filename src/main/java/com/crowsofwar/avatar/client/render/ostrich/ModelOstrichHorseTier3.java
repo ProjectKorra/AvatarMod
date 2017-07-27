@@ -4,9 +4,13 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 /**
+ * Ostrich horse model for plate armor. Model originally created by talhanation; generated code
+ * cleanup by CrowsOfWar
+ * <p>
  * OstrichHorse Tier3 - talhanation
  * Created using Tabula 5.1.0
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ModelOstrichHorseTier3 extends ModelOstrichHorse {
 
 	private ModelRenderer BodyMain;
