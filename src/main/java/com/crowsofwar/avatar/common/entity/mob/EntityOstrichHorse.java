@@ -216,18 +216,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
-
-			// Slow down ride speed
-			float rideSpeed = getRideSpeed();
-			if (rideSpeed > 0) {
-				rideSpeed -= 0.006f;
-				setRideSpeed(Math.max(rideSpeed, 0));
-				setAIMoveSpeed(getRideSpeed());
-//				forward = getRideSpeed() * 10;
-				moveForward = getRideSpeed();
-				System.out.println(forward + "");
-			}
-
+			setRideSpeed(0);
 			super.travel(strafe, jump, forward);
 		}
 
