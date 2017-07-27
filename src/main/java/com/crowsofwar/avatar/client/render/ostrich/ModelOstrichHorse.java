@@ -31,10 +31,10 @@ public abstract class ModelOstrichHorse extends ModelBase {
 		getNeck().rotateAngleY = (float) (toRadians(netHeadYaw));
 		getNeck().rotateAngleX = (float) (toRadians(headPitch) + sin(limbSwing * 0.2) * 0.05);
 
-		getLeftLeg().rotateAngleX = (float) (sin(limbSwing * 0.4) * limbSwingAmount * 0.5 +
-				0.1);
-		getRightLeg().rotateAngleX = (float) (sin(limbSwing * 0.4 + Math.PI) * limbSwingAmount
-				* 0.5 + 0.1);
+		getLeftLeg().rotateAngleX = (float) (sin(limbSwing * 0.6) * limbSwingAmount * 0.5 +
+				0.35);
+		getRightLeg().rotateAngleX = (float) (sin(limbSwing * 0.6 + Math.PI) * limbSwingAmount
+				* 0.5 + 0.35);
 
 	}
 
