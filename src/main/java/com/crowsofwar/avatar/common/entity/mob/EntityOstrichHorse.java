@@ -117,7 +117,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 			ItemStack heldStack = player.getHeldItem(hand);
 			if (heldStack.getItem() == AvatarItems.itemOstrichEquipment) {
 				if (getEquipment() != null) {
-					dropEquipment();
+					dropEquipment(!player.isCreative());
 				}
 				chest.setInventorySlotContents(0, heldStack.copy());
 				if (!player.capabilities.isCreativeMode) {
@@ -133,7 +133,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 
 				// Take off equipment?
 				if (player.isSneaking() && getEquipment() != null) {
-					dropEquipment();
+					dropEquipment(!player.isCreative());
 					return true;
 				}
 
@@ -287,13 +287,18 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 
 	/**
 	 * Drops the current equipment onto the ground, emptying the current equipment
+	 *
+	 * @param dropItem Whether to drop an item on the ground, useful for preventing creative
+	 *                    players from getting extra items
 	 */
-	private void dropEquipment() {
+	private void dropEquipment(boolean dropItem) {
 		if (getEquipment() != null) {
-			int index = getEquipment().ordinal();
-			ItemStack stack = new ItemStack(AvatarItems.itemOstrichEquipment, 1, index);
-			entityDropItem(stack, getEyeHeight());
 			chest.setInventorySlotContents(0, ItemStack.EMPTY);
+			if (dropItem) {
+				int index = getEquipment().ordinal();
+				ItemStack stack = new ItemStack(AvatarItems.itemOstrichEquipment, 1, index);
+				entityDropItem(stack, getEyeHeight());
+			}
 		}
 	}
 
