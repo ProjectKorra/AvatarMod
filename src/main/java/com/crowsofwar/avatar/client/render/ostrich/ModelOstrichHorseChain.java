@@ -11,7 +11,7 @@ import net.minecraft.entity.Entity;
  * Created using Tabula 5.1.0
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ModelOstrichHorseTier2 extends ModelOstrichHorse {
+public class ModelOstrichHorseChain extends ModelOstrichHorse {
 
 	private ModelRenderer BodyMain;
 	private ModelRenderer Body2;
@@ -104,7 +104,7 @@ public class ModelOstrichHorseTier2 extends ModelOstrichHorse {
 	private ModelRenderer Armortier2lags3;
 	private ModelRenderer Armortier2lags4;
 
-	public ModelOstrichHorseTier2() {
+	public ModelOstrichHorseChain() {
 		this.textureWidth = 256;
 		this.textureHeight = 128;
 		this.Body2 = new ModelRenderer(this, 205, 111);

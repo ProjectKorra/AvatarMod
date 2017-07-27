@@ -16,9 +16,9 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseTier1;
-import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseTier2;
-import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseTier3;
+import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseWoven;
+import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseChain;
+import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorsePlate;
 import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseWild;
 import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
 
@@ -45,13 +45,17 @@ public class RenderOstrichHorse extends RenderLiving<EntityOstrichHorse> {
 
 		models = new ModelBase[] {
 				new ModelOstrichHorseWild(),
-				new ModelOstrichHorseTier1(),
-				new ModelOstrichHorseTier2(),
-				new ModelOstrichHorseTier3()
+				new ModelOstrichHorseWoven(),
+				new ModelOstrichHorseChain(),
+				new ModelOstrichHorsePlate()
 		};
 		textures = new ResourceLocation[models.length];
 		for (int i = 0; i < textures.length; i++) {
-			textures[i] = new ResourceLocation("avatarmod", "textures/mob/ostrich_tier" + i +
+			String tier = ItemOstrichEquipment.EquipmentTier.getTierName(i - 1);
+			if (tier == null) {
+				tier = "wild";
+			}
+			textures[i] = new ResourceLocation("avatarmod", "textures/mob/ostrich_" + tier +
 					".png");
 		}
 
