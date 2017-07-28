@@ -41,20 +41,24 @@ import net.minecraft.util.ResourceLocation;
 public abstract class RenderArc extends Render {
 	
 	private final RenderManager renderManager;
-	
-	/**
-	 * @param renderManager
-	 */
-	protected RenderArc(RenderManager renderManager) {
-		super(renderManager);
-		this.renderManager = renderManager;
-	}
-	
+
 	/**
 	 * Whether to render with full brightness.
 	 */
 	private boolean renderBright;
+	private boolean enableInterpolation;
+
+	protected RenderArc(RenderManager renderManager) {
+		this(renderManager, true);
+	}
+
+	protected RenderArc(RenderManager renderManager, boolean enableInterpolation) {
+		super(renderManager);
+		this.renderManager = renderManager;
+		this.enableInterpolation = enableInterpolation;
+	}
 	
+
 	@Override
 	public final void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_,
 			float partialTicks) {
@@ -75,12 +79,16 @@ public abstract class RenderArc extends Render {
 	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point, double renderPosX,
 			double renderPosY, double renderPosZ, float partialTicks) {
 		
-		// Interpolated positions
-		//@formatter:off
-		Vector leaderPos = leader.lastPosition() .plus (  (leader.position() .minus (leader.lastPosition()) ) .times(partialTicks)  );
-		Vector pointPos = point.lastPosition() .plus (  (point.position() .minus (point.lastPosition()) ) .times(partialTicks)  );
-		//@formatter:on
-		
+		Vector leaderPos = leader.position();
+		Vector pointPos = point.position();
+
+		if (enableInterpolation) {
+			//@formatter:off
+			leaderPos = leader.lastPosition() .plus (  (leader.position() .minus (leader.lastPosition()) ) .times(partialTicks)  );
+			pointPos = point.lastPosition() .plus (  (point.position() .minus (point.lastPosition()) ) .times(partialTicks)  );
+			//@formatter:on
+		}
+
 		double x = leaderPos.x() - TileEntityRendererDispatcher.staticPlayerX;
 		double y = leaderPos.y() - TileEntityRendererDispatcher.staticPlayerY;
 		double z = leaderPos.z() - TileEntityRendererDispatcher.staticPlayerZ;

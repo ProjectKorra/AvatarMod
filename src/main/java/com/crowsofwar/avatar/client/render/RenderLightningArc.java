@@ -30,7 +30,7 @@ public class RenderLightningArc extends RenderArc {
 	private final ParticleSpawner particleSpawner;
 
 	public RenderLightningArc(RenderManager renderManager) {
-		super(renderManager);
+		super(renderManager, false);
 		enableFullBrightness();
 		particleSpawner = new ClientParticleSpawner();
 	}
