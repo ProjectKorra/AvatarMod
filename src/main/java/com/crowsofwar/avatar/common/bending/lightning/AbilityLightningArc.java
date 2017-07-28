@@ -34,6 +34,7 @@ public class AbilityLightningArc extends Ability {
 
 			EntityLightningArc lightning = new EntityLightningArc(world);
 			lightning.copyLocationAndAnglesFrom(entity);
+			lightning.posY += entity.getEyeHeight();
 			lightning.setOwner(entity);
 			lightning.setEndPos(hitPos);
 
@@ -58,7 +59,7 @@ public class AbilityLightningArc extends Ability {
 
 		final double maxRange = 20;
 
-		Vector pos = Vector.getEntityPos(ctx.getBenderEntity());
+		Vector pos = Vector.getEyePos(ctx.getBenderEntity());
 		Vector look = Vector.getLookRectangular(ctx.getBenderEntity());
 
 		List<Entity> hitEntity = Raytrace.entityRaytrace(ctx.getWorld(), pos, look, maxRange, ent
