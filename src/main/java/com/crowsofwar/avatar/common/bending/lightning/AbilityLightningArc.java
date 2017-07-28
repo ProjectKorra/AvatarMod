@@ -3,10 +3,13 @@ package com.crowsofwar.avatar.common.bending.lightning;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,21 +28,53 @@ public class AbilityLightningArc extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.world;
 
-		Vector position = Vector.getEntityPos(entity);
-		Vector look = Vector.getLookRectangular(entity);
+		Vector hitPos = performRaytrace(ctx);
 
-		EntityLightningArc lightning = new EntityLightningArc(world);
-		lightning.copyLocationAndAnglesFrom(entity);
-		lightning.setOwner(entity);
-		lightning.setVelocity(look.times(20));
+		if (!hitPos.equals(Vector.ZERO)) {
 
-		world.spawnEntity(lightning);
+			EntityLightningArc lightning = new EntityLightningArc(world);
+			lightning.copyLocationAndAnglesFrom(entity);
+			lightning.setOwner(entity);
+			lightning.setEndPos(hitPos);
+
+			world.spawnEntity(lightning);
+
+		}
 
 	}
 
 	@Override
 	public UUID getId() {
 		return ID;
+	}
+
+	/**
+	 * Performs a raytrace to find the closest hit block or entity. Returns Vector.ZERO if
+	 * nothing is hit
+	 */
+	private Vector performRaytrace(AbilityContext ctx) {
+
+		final double maxRange = 20;
+
+		Vector pos = Vector.getEntityPos(ctx.getBenderEntity());
+		Vector look = Vector.getLookRectangular(ctx.getBenderEntity());
+
+		List<Entity> hitEntity = Raytrace.entityRaytrace(ctx.getWorld(), pos, look, maxRange, ent
+				-> ent != ctx
+				.getBenderEntity());
+
+		if (!hitEntity.isEmpty()) {
+			return Vector.getEntityPos(hitEntity.get(0));
+		}
+
+		Raytrace.Result raytrace = Raytrace.raytrace(ctx.getWorld(), pos, look, maxRange, false);
+
+		if (raytrace.hitSomething()) {
+			return raytrace.getPosPrecise();
+		} else {
+			return Vector.ZERO;
+		}
+
 	}
 
 }
