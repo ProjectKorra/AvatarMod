@@ -81,10 +81,19 @@ public abstract class EntityArc extends AvatarEntity {
 
 	private void updateControlPoints() {
 
-		// Set leader at the arc pos
-
-		getLeader().setPosition(new Vector(posX, posY, posZ));
+		getLeader().setPosition(position());
 		getLeader().setVelocity(velocity());
+
+		updateCpBehavior();
+
+		// Update velocity
+		for (ControlPoint cp : points) {
+			cp.onUpdate();
+		}
+
+	}
+
+	protected void updateCpBehavior() {
 
 		// Move control points to follow leader
 
@@ -116,11 +125,6 @@ public abstract class EntityArc extends AvatarEntity {
 
 			}
 
-		}
-
-		// Update velocity
-		for (ControlPoint cp : points) {
-			cp.onUpdate();
 		}
 
 	}

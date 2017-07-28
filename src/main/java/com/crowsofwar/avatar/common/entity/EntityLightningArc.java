@@ -20,7 +20,10 @@ public class EntityLightningArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+	}
 
+	@Override
+	protected void updateCpBehavior() {
 		if (ticksExisted % 30 == 0) {
 			for (int i = 1; i < getControlPoints().size(); i++) {
 
@@ -36,7 +39,6 @@ public class EntityLightningArc extends EntityArc {
 
 			}
 		}
-
 	}
 
 }
