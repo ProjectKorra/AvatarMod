@@ -35,7 +35,15 @@ public class EntityLightningArc extends EntityArc {
 	public void onUpdate() {
 		super.onUpdate();
 		if (getOwner() != null) {
-			Vector position = Vector.getEyePos(getOwner());
+			Vector ownerPosition = Vector.getEyePos(getOwner());
+			Vector endPosition = getEndPos();
+			Vector position = ownerPosition;
+
+			// position slightly below eye height
+			position = position.minusY(0.3);
+			// position slightly away from owner
+			position = position.plus(endPosition.minus(position).dividedBy(10));
+
 			setPosition(position);
 
 			Vector newRotations = Vector.getRotationTo(position(), getEndPos());
