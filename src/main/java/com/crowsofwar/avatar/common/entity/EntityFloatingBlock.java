@@ -131,7 +131,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		setBlockState(
 				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
-		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
+		setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble
+				("VelocityZ")));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));

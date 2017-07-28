@@ -130,26 +130,15 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	public void setVelocity(Vector velocity) {
-		motionX = velocity.x();
-		motionY = velocity.y();
-		motionZ = velocity.z();
-	}
-
-	/**
-	 * Prevents crash on server because {@link Entity#setVelocity(double, double, double)} is
-	 * SideOnly.CLIENT
-	 */
-	@Override
-	public void setVelocity(double x, double y, double z) {
-		motionX = x;
-		motionY = y;
-		motionZ = z;
+		motionX = velocity.x() / 20;
+		motionY = velocity.y() / 20;
+		motionZ = velocity.z() / 20;
 	}
 
 	public void addVelocity(Vector velocity) {
-		motionX += velocity.x();
-		motionY += velocity.y();
-		motionZ += velocity.z();
+		motionX += velocity.x() / 20;
+		motionY += velocity.y() / 20;
+		motionZ += velocity.z() / 20;
 	}
 
 	/**

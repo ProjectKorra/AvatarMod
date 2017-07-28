@@ -270,7 +270,9 @@ public class PacketHandlerServer implements IPacketHandler {
 					n = n.normalize().times(1);
 				}
 				
-				player.setVelocity(n.x(), n.y(), n.z());
+				player.motionX = n.x();
+				player.motionY = n.y();
+				player.motionZ = n.z();
 				player.connection.sendPacket(new SPacketEntityVelocity(player));
 				
 				new NetworkParticleSpawner().spawnParticles(world, AvatarParticles.getParticleAir(), 4, 10,

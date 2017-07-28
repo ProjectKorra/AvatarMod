@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
@@ -94,7 +95,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 					if (seg.height > maxHeight) maxHeight = (int) seg.height;
 				}
 				
-				entity.setVelocity(0, STATS_CONFIG.wallMomentum / 5 * maxHeight, 0);
+				entity.motionY = STATS_CONFIG.wallMomentum / 5 * maxHeight;
 				
 			} else {
 				entity.motionY *= 0.9;
@@ -127,7 +128,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			entity.setVelocity(0, 0, 0);
+			entity.setVelocity(Vector.ZERO);
 			ticks++;
 			
 			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
