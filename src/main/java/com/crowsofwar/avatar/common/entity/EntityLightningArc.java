@@ -26,8 +26,9 @@ public class EntityLightningArc extends EntityArc {
 
 	@Override
 	protected void updateCpBehavior() {
+
 		if (ticksExisted % 10 == 1) {
-			for (int i = 1; i < getControlPoints().size(); i++) {
+			for (int i = 0; i < getControlPoints().size(); i++) {
 
 				ControlPoint controlPoint = getControlPoint(i);
 				double targetDist = 1;
@@ -35,13 +36,17 @@ public class EntityLightningArc extends EntityArc {
 
 				Vector normalPosition = position().minus(dir.times(targetDist).times(i));
 
-				Matrix4d matrix = new Matrix4d();
-				matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
-				matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
-				Vector4d randomJoml = new Vector4d(rand.nextGaussian(), rand.nextGaussian(), 0, 1);
-				randomJoml.mul(matrix);
+				Vector randomize = Vector.ZERO;
 
-				Vector randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+				if (i != getControlPoints().size() - 1) {
+					Matrix4d matrix = new Matrix4d();
+					matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
+					matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+					Vector4d randomJoml = new Vector4d(rand.nextGaussian(), rand.nextGaussian(), 0, 1);
+					randomJoml.mul(matrix);
+
+					randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+				}
 
 				controlPoint.setPosition(normalPosition.plus(randomize));
 
