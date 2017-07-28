@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
 import com.crowsofwar.avatar.client.render.*;
+import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
@@ -114,6 +115,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityOtterPenguin.class, RenderOtterPenguin::new);
 		registerEntityRenderingHandler(EntityIceShard.class, RenderIceShard::new);
 		registerEntityRenderingHandler(EntityOstrichHorse.class, RenderOstrichHorse::new);
+		registerEntityRenderingHandler(EntityIcePrison.class, RenderIcePrison::new);
 		
 		registerEntityRenderingHandler(EntityAirbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 7));
