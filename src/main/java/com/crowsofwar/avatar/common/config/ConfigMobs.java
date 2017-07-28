@@ -16,18 +16,17 @@
 */
 package com.crowsofwar.avatar.common.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -154,9 +153,9 @@ public class ConfigMobs {
 	 * Get the default scroll drop chance for that entity in percentage (0-100)
 	 */
 	public double getScrollDropChance(Entity entity) {
-		String key = EntityList.getEntityString(entity);
-		if (key != null) {
-			key = key.toLowerCase();
+		String entityName = EntityList.getEntityString(entity);
+		if (entityName != null) {
+			String key = entityName.toLowerCase();
 			return scrollDropChance.get(key) != null ? scrollDropChance.get(key) : 0;
 		}
 		return 0;
@@ -167,24 +166,27 @@ public class ConfigMobs {
 	 * ScrollType.ALL.
 	 */
 	public ScrollType getScrollType(Entity entity) {
-		
-		String key = EntityList.getEntityString(entity).toLowerCase();
-		String typeName = scrollType.get(key);
-		
-		if (typeName != null) {
-			
-			ScrollType type = ScrollType.ALL;
-			for (ScrollType t : ScrollType.values()) {
-				if (t.name().toLowerCase().equals(typeName.toLowerCase())) {
-					type = t;
-					break;
+
+		String entityName = EntityList.getEntityString(entity);
+		if (entityName != null) {
+			String key = entityName.toLowerCase();
+			String typeName = scrollType.get(key);
+
+			if (typeName != null) {
+
+				ScrollType type = ScrollType.ALL;
+				for (ScrollType t : ScrollType.values()) {
+					if (t.name().toLowerCase().equals(typeName.toLowerCase())) {
+						type = t;
+						break;
+					}
 				}
+
+				return type;
+
 			}
-			
-			return type;
-			
 		}
-		
+
 		return ScrollType.ALL;
 		
 	}

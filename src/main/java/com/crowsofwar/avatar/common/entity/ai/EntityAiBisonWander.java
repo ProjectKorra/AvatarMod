@@ -16,13 +16,13 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import java.util.Random;
-
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.Random;
 
 /**
  * 
@@ -76,10 +76,17 @@ public class EntityAiBisonWander extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		Random random = entity.getRNG();
-		Vector original = entity.getOriginalPos();
-		double x = original.x() + (random.nextFloat() * 2 - 1) * 32;
-		double y = original.y() + (random.nextFloat() * 2 - 1) * 32;
-		double z = original.z() + (random.nextFloat() * 2 - 1) * 32;
+		EntityPlayer owner = entity.getOwner();
+		Vector centerPoint;
+		if (owner != null) {
+			centerPoint = Vector.getEntityPos(owner);
+		} else {
+			centerPoint = entity.getOriginalPos();
+		}
+
+		double x = centerPoint.x() + (random.nextFloat() * 2 - 1) * 32;
+		double y = centerPoint.y() + (random.nextFloat() * 2 - 1) * 32;
+		double z = centerPoint.z() + (random.nextFloat() * 2 - 1) * 32;
 		
 		this.entity.getMoveHelper().setMoveTo(x, y, z, 1.0D);
 	}

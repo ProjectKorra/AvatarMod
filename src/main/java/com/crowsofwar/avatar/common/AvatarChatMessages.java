@@ -17,12 +17,11 @@
 
 package com.crowsofwar.avatar.common;
 
-import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
-
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.MessageConfiguration;
-
 import net.minecraft.util.text.TextFormatting;
+
+import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 public class AvatarChatMessages {
 	
@@ -75,7 +74,10 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_BISON_WHISTLE_NOT_FOUND = newChatMessage(CFG, "avatar.bisonWhistle.notFound", "bison");
 	public static final FormattedMessage MSG_BISON_WHISTLE_NOTOWNED = newChatMessage(CFG, "avatar.bisonWhistle.notOwned");
 	public static final FormattedMessage MSG_BISON_WHISTLE_UNTAMED = newChatMessage(CFG, "avatar.bisonWhistle.untamed");
-	
+
+	public static final FormattedMessage MSG_BISON_WHISTLE_FOLLOW_ON = newChatMessage(CFG, "avatar.bisonWhistle.followOn");
+	public static final FormattedMessage MSG_BISON_WHISTLE_FOLLOW_OFF = newChatMessage(CFG, "avatar.bisonWhistle.followOff");
+
 	public static final FormattedMessage MSG_SKY_BISON_STATS = newChatMessage(CFG, "avatar.bisonStats", "food", "health", "domestication");
 	public static final FormattedMessage MSG_BISON_TRANSFER_OLD = newChatMessage(CFG, "avatar.bisonWhistle.transferAway", "bison", "newOwner");
 	public static final FormattedMessage MSG_BISON_TRANSFER_NEW = newChatMessage(CFG, "avatar.bisonWhistle.transferTo", "bison", "oldOwner");

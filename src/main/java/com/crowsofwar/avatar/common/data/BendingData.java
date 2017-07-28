@@ -29,6 +29,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author CrowsOfWar
@@ -390,6 +394,14 @@ public class BendingData {
 
 	public void setPetSummonCooldown(int cooldown) {
 		miscData.setPetSummonCooldown(cooldown);
+	}
+
+	public boolean getBisonFollowMode() {
+		return getMiscData().getBisonFollowMode();
+	}
+
+	public void setBisonFollowMode(boolean followMode) {
+		getMiscData().setBisonFollowMode(followMode);
 	}
 
 	public void writeToNbt(NBTTagCompound writeTo) {

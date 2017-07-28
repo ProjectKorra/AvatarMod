@@ -48,7 +48,6 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -62,10 +61,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
@@ -187,13 +183,9 @@ public class AvatarMod {
 		
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
-		EntityRegistry.addSpawn(EntityOtterPenguin.class, 14, 4, 10, EnumCreatureType.CREATURE, //
+		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
 				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
-		
-		List<Biome> allBiomesList = ForgeRegistries.BIOMES.getValues();
-		Biome[] allBiomes = new Biome[allBiomesList.size()];
-		allBiomes = allBiomesList.toArray(allBiomes);
-		
+
 		// Second loading required since other mods blocks might not be
 		// registered
 		STATS_CONFIG.loadBlocks();

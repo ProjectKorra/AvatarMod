@@ -16,6 +16,10 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+<<<<<<< HEAD
+=======
+import com.crowsofwar.avatar.common.bending.BendingAbility;
+>>>>>>> a4.5
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -24,6 +28,11 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+<<<<<<< HEAD
+=======
+import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+>>>>>>> a4.5
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
