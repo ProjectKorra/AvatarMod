@@ -49,7 +49,7 @@ public class EntityLightningArc extends EntityArc {
 				double targetDist = position().dist(getEndPos()) / getControlPoints().size();
 				Vector dir = Vector.getLookRectangular(this);
 
-				Vector normalPosition = position().minus(dir.times(targetDist).times(i));
+				Vector normalPosition = position().plus(dir.times(targetDist).times(i));
 
 				Vector randomize = Vector.ZERO;
 
