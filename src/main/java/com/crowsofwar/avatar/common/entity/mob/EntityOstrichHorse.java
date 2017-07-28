@@ -16,6 +16,10 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.common.gui.InventoryOstrichChest;
+import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemOstrichEquipment;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,6 +28,10 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -38,23 +46,30 @@ import javax.annotation.Nullable;
  * 
  * @author CrowsOfWar
  */
-public class EntityOstrichHorse extends EntityAnimal {
+public class EntityOstrichHorse extends EntityAnimal implements IInventoryChangedListener {
 	
 	private static final DataParameter<Float> SYNC_RIDE_SPEED = EntityDataManager
 			.createKey(EntityOstrichHorse.class, DataSerializers.FLOAT);
-	
+
+	private static final DataParameter<Integer> SYNC_EQUIPMENT = EntityDataManager.createKey
+			(EntityOstrichHorse.class, DataSerializers.VARINT);
+
+	private InventoryOstrichChest chest;
+
 	/**
 	 * @param world
 	 */
 	public EntityOstrichHorse(World world) {
 		super(world);
 		setSize(1, 2);
+		setupChest();
 	}
 	
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_RIDE_SPEED, 0f);
+		dataManager.register(SYNC_EQUIPMENT, -1);
 	}
 	
 	@Override
@@ -79,16 +94,73 @@ public class EntityOstrichHorse extends EntityAnimal {
 		super.applyEntityAttributes();
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5);
 	}
-	
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound compound) {
+		super.writeEntityToNBT(compound);
+		AvatarUtils.writeInventory(chest, compound, "Inventory");
+	}
+
+	@Override
+	public void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(compound);
+		AvatarUtils.readInventory(chest, compound, "Inventory");
+		updateEquipment();
+	}
+
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		if (!super.processInteract(player, hand) && !world.isRemote) {
-			player.startRiding(this);
-			return true;
+			if (hand == EnumHand.MAIN_HAND) {
+				return processInteractOnce(player);
+			}
 		}
 		return false;
 	}
-	
+
+	/**
+	 * {@link #processInteract(EntityPlayer, EnumHand)} is called twice per interaction, once for
+	 * each hand. This method is only called once
+	 */
+	private boolean processInteractOnce(EntityPlayer player) {
+
+		// Try to put on equipment
+		for (EnumHand hand : EnumHand.values()) {
+			ItemStack heldStack = player.getHeldItem(hand);
+			if (heldStack.getItem() == AvatarItems.itemOstrichEquipment) {
+
+				ItemOstrichEquipment.EquipmentTier proposed = ItemOstrichEquipment.EquipmentTier
+						.getTier(heldStack.getMetadata());
+
+				// Don't put on new equipment if it's just the same as the old one
+				// The player might be trying to perform a different action
+
+				if (getEquipment() != proposed) {
+					if (getEquipment() != null) {
+						dropEquipment(!player.isCreative());
+					}
+					chest.setInventorySlotContents(0, heldStack.copy());
+					if (!player.capabilities.isCreativeMode) {
+						heldStack.shrink(1);
+					}
+					return true;
+				}
+
+			}
+		}
+
+		// Take off equipment
+		if (player.isSneaking() && getEquipment() != null) {
+			dropEquipment(!player.isCreative());
+			return true;
+		}
+
+		// Default: ride ostrich
+		player.startRiding(this);
+		return true;
+
+	}
+
 	@Override
 	@Nullable
 	public Entity getControllingPassenger() {
@@ -144,24 +216,50 @@ public class EntityOstrichHorse extends EntityAnimal {
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
-
-			// Slow down ride speed
-			float rideSpeed = getRideSpeed();
-			if (rideSpeed > 0) {
-				rideSpeed -= 0.006f;
-				setRideSpeed(Math.max(rideSpeed, 0));
-				setAIMoveSpeed(getRideSpeed());
-//				forward = getRideSpeed() * 10;
-				moveForward = getRideSpeed();
-				System.out.println(forward + "");
-			}
-
+			setRideSpeed(0);
 			super.travel(strafe, jump, forward);
 		}
 
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(moveSpeed);
 	}
-	
+
+	/**
+	 * Initializes the the chest for the first time
+	 */
+	private void setupChest() {
+		chest = new InventoryOstrichChest();
+		if (hasCustomName()) {
+			chest.setCustomName(getName());
+		}
+		chest.addInventoryChangeListener(this);
+		updateEquipment();
+	}
+
+	@Override
+	public void onInventoryChanged(IInventory invBasic) {
+		updateEquipment();
+	}
+
+	/**
+	 * Updates equipment based on inventory contents
+	 */
+	private void updateEquipment() {
+
+		// Update saddle
+		if (!world.isRemote) {
+
+			ItemOstrichEquipment.EquipmentTier tier = null;
+
+			ItemStack equipmentStack = chest.getStackInSlot(0);
+			if (equipmentStack.getItem() == AvatarItems.itemOstrichEquipment) {
+				tier = ItemOstrichEquipment.EquipmentTier.getTier(equipmentStack.getMetadata());
+			}
+			setEquipment(tier);
+
+		}
+
+	}
+
 	/**
 	 * Get ride speed.
 	 * <p>
@@ -178,7 +276,35 @@ public class EntityOstrichHorse extends EntityAnimal {
 	private void setRideSpeed(float rideSpeed) {
 		dataManager.set(SYNC_RIDE_SPEED, rideSpeed);
 	}
-	
+
+	@Nullable
+	public ItemOstrichEquipment.EquipmentTier getEquipment() {
+		int index = dataManager.get(SYNC_EQUIPMENT);
+		return ItemOstrichEquipment.EquipmentTier.getTier(index);
+	}
+
+	public void setEquipment(@Nullable ItemOstrichEquipment.EquipmentTier equipment) {
+		int index = equipment == null ? -1 : equipment.ordinal();
+		dataManager.set(SYNC_EQUIPMENT, index);
+	}
+
+	/**
+	 * Drops the current equipment onto the ground, emptying the current equipment
+	 *
+	 * @param dropItem Whether to drop an item on the ground, useful for preventing creative
+	 *                    players from getting extra items
+	 */
+	private void dropEquipment(boolean dropItem) {
+		if (getEquipment() != null) {
+			chest.setInventorySlotContents(0, ItemStack.EMPTY);
+			if (dropItem) {
+				int index = getEquipment().ordinal();
+				ItemStack stack = new ItemStack(AvatarItems.itemOstrichEquipment, 1, index);
+				entityDropItem(stack, getEyeHeight());
+			}
+		}
+	}
+
 	/**
 	 * Assuming that the ostrich is currently ridden, update ride speed to the
 	 * driver's specifications
@@ -232,5 +358,5 @@ public class EntityOstrichHorse extends EntityAnimal {
 		setRideSpeed(next);
 
 	}
-	
+
 }

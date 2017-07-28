@@ -1,24 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ii ",
-    " si",
-    "ddd"
+    "iii",
+    "s s",
+    "l l"
   ],
   "key": {
     "i": {
       "item": "minecraft:iron_ingot"
     },
-    "d": {
-      "item": "minecraft:diamond"
+    "l": {
+      "item": "minecraft:leather"
     },
     "s": {
-      "item": "avatarmod:scroll",
-      "data": 4
+      "item": "minecraft:string"
     }
   },
   "result": {
-    "item": "avatarmod:bison_whistle",
+    "item": "avatarmod:ostrich_equip",
     "data": 0
   }
 }

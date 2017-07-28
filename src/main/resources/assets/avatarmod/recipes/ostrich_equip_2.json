@@ -1,27 +1,27 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "lll",
-    "sas",
+    "dmd",
+    "ses",
     "d d"
   ],
   "key": {
     "d": {
       "item": "minecraft:diamond"
     },
-    "l": {
-      "item": "minecraft:leather"
+    "m": {
+      "item": "minecraft:emerald"
+    },
+    "e": {
+      "item": "avatarmod:ostrich_equip",
+      "data": 0
     },
     "s": {
       "item": "minecraft:string"
-    },
-    "a": {
-      "item": "avatarmod:bison_saddle",
-      "data": 0
     }
   },
   "result": {
-    "item": "avatarmod:bison_saddle",
+    "item": "avatarmod:ostrich_equip",
     "data": 1
   }
 }
