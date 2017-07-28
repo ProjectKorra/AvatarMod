@@ -65,7 +65,7 @@ public abstract class RenderArc extends Render {
 		
 		EntityArc arc = (EntityArc) entity;
 		
-		for (int i = 1; i < arc.getControlPoints().length; i++) {
+		for (int i = 1; i < arc.getControlPoints().size(); i++) {
 			renderSegment(arc, arc.getLeader(i), arc.getControlPoint(i), renderPosX, renderPosY, renderPosZ,
 					partialTicks);
 		}

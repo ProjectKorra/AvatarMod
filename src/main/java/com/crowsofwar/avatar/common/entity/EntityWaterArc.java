@@ -133,12 +133,6 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vector getGravityVector() {
-		// Gravity is added in Behavior
-		return Vector.ZERO;
-	}
-	
-	@Override
 	public void onUpdate() {
 		
 		super.onUpdate();

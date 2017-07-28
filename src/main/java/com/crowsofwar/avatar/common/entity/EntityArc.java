@@ -24,20 +24,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class EntityArc extends AvatarEntity {
 
-	private ControlPoint[] points;
+	private List<ControlPoint> points;
 
 	public EntityArc(World world) {
 		super(world);
 		float size = .2f;
 		setSize(size, size);
 
-		this.points = new ControlPoint[getAmountOfControlPoints()];
-		for (int i = 0; i < points.length; i++) {
-			points[i] = createControlPoint(size);
+		this.points = new ArrayList<>();
+		for (int i = 0; i < getAmountOfControlPoints(); i++) {
+			points.add(createControlPoint(size));
 		}
 
 	}
@@ -66,8 +68,8 @@ public abstract class EntityArc extends AvatarEntity {
 		super.onUpdate();
 
 		if (this.ticksExisted == 1) {
-			for (int i = 0; i < points.length; i++) {
-				points[i].setPosition(position());
+			for (ControlPoint point : points) {
+				point.setPosition(position());
 			}
 		}
 
@@ -86,10 +88,10 @@ public abstract class EntityArc extends AvatarEntity {
 
 		// Move control points to follow leader
 
-		for (int i = 1; i < points.length; i++) {
+		for (int i = 1; i < points.size(); i++) {
 
-			ControlPoint leader = points[i - 1];
-			ControlPoint p = points[i];
+			ControlPoint leader = points.get(i - 1);
+			ControlPoint p = points.get(i);
 			Vector leadPos = leader.position();
 			double sqrDist = p.position().sqrDist(leadPos);
 
@@ -140,30 +142,27 @@ public abstract class EntityArc extends AvatarEntity {
 		// Set position - called from entity constructor, so points might be
 		// null
 		if (points != null) {
-			points[0].setPosition(new Vector(x, y, z));
+			getLeader().setPosition(new Vector(x, y, z));
 		}
 	}
 
-	public ControlPoint[] getControlPoints() {
+	public List<ControlPoint> getControlPoints() {
 		return points;
 	}
 
 	public ControlPoint getControlPoint(int index) {
-		return points[index];
+		return points.get(index);
 	}
 
-	/**
-	 * Get the first control point in this arc.
-	 */
 	public ControlPoint getLeader() {
-		return points[0];// EntityDragon
+		return getControlPoint(0);
 	}
 
 	/**
 	 * Get the leader of the specified control point.
 	 */
 	public ControlPoint getLeader(int index) {
-		return points[index == 0 ? index : index - 1];
+		return getControlPoint(index == 0 ? index : index - 1);
 	}
 
 	@Override
