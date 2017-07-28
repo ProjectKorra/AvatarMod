@@ -523,7 +523,7 @@ public class Vector {
 	 * Get velocity of the entity in m/s.
 	 */
 	public static Vector getVelocity(Entity entity) {
-		return new Vector(entity.motionX / 20, entity.motionY / 20, entity.motionZ / 20);
+		return new Vector(entity.motionX * 20, entity.motionY * 20, entity.motionZ * 20);
 	}
 
 	/**
