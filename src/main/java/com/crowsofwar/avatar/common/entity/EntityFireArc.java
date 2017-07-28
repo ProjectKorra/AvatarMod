@@ -120,11 +120,6 @@ public class EntityFireArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vector getGravityVector() {
-		return GRAVITY;
-	}
-	
-	@Override
 	public ControlPoint createControlPoint(float size) {
 		return new FireControlPoint(this, size, 0, 0, 0);
 	}

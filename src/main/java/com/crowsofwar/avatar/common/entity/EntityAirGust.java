@@ -108,12 +108,7 @@ public class EntityAirGust extends EntityArc {
 		setDead();
 		return true;
 	}
-	
-	@Override
-	protected Vector getGravityVector() {
-		return ZERO;
-	}
-	
+
 	@Override
 	protected ControlPoint createControlPoint(float size) {
 		return new AirGustControlPoint(this, 0.5f, 0, 0, 0);

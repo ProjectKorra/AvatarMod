@@ -123,8 +123,6 @@ public abstract class EntityArc extends AvatarEntity {
 
 	}
 
-	protected abstract Vector getGravityVector();
-
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
