@@ -1,6 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import org.joml.Matrix4d;
 import org.joml.Vector4d;
@@ -10,8 +13,16 @@ import org.joml.Vector4d;
  */
 public class EntityLightningArc extends EntityArc {
 
+	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
+			(EntityLightningArc.class, AvatarDataSerializers.SERIALIZER_VECTOR);
+
 	public EntityLightningArc(World world) {
 		super(world);
+	}
+
+	@Override
+	protected void entityInit() {
+		dataManager.register(SYNC_ENDPOS, Vector.ZERO);
 	}
 
 	@Override
@@ -27,7 +38,7 @@ public class EntityLightningArc extends EntityArc {
 	@Override
 	protected void updateCpBehavior() {
 
-		if (ticksExisted % 10 == 1) {
+		if (ticksExisted % 3 == 1) {
 			for (int i = 0; i < getControlPoints().size(); i++) {
 
 				ControlPoint controlPoint = getControlPoint(i);
@@ -52,6 +63,14 @@ public class EntityLightningArc extends EntityArc {
 
 			}
 		}
+	}
+
+	public Vector getEndPos() {
+		return dataManager.get(SYNC_ENDPOS);
+	}
+
+	public void setEndPos(Vector endPos) {
+		dataManager.set(SYNC_ENDPOS, endPos);
 	}
 
 }
