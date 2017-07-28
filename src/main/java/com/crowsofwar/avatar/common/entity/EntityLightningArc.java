@@ -33,6 +33,9 @@ public class EntityLightningArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (ticksExisted > 40) {
+			setDead();
+		}
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class EntityLightningArc extends EntityArc {
 			for (int i = 0; i < getControlPoints().size(); i++) {
 
 				ControlPoint controlPoint = getControlPoint(i);
-				double targetDist = 1;
+				double targetDist = position().dist(getEndPos()) / getControlPoints().size();
 				Vector dir = Vector.getLookRectangular(this);
 
 				Vector normalPosition = position().minus(dir.times(targetDist).times(i));
