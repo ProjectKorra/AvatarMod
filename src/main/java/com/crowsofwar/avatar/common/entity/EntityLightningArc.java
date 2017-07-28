@@ -34,6 +34,14 @@ public class EntityLightningArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (getOwner() != null) {
+			Vector position = Vector.getEyePos(getOwner());
+			setPosition(position);
+
+			Vector newRotations = Vector.getRotationTo(position(), getEndPos());
+			rotationYaw = (float) Math.toDegrees(newRotations.y());
+			rotationPitch = (float) Math.toDegrees(newRotations.x());
+		}
 		if (ticksExisted > 40) {
 			setDead();
 		}
@@ -43,6 +51,7 @@ public class EntityLightningArc extends EntityArc {
 	protected void updateCpBehavior() {
 
 		if (ticksExisted % 3 == 1) {
+
 			for (int i = 0; i < getControlPoints().size(); i++) {
 
 				ControlPoint controlPoint = getControlPoint(i);
