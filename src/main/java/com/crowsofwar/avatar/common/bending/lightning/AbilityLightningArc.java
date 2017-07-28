@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +30,7 @@ public class AbilityLightningArc extends Ability {
 		World world = entity.world;
 
 		Vector hitPos = performRaytrace(ctx);
-
-		if (!hitPos.equals(Vector.ZERO)) {
+		if (hitPos != null) {
 
 			EntityLightningArc lightning = new EntityLightningArc(world);
 			lightning.copyLocationAndAnglesFrom(entity);
@@ -40,6 +40,7 @@ public class AbilityLightningArc extends Ability {
 			world.spawnEntity(lightning);
 
 		}
+
 
 	}
 
@@ -52,6 +53,7 @@ public class AbilityLightningArc extends Ability {
 	 * Performs a raytrace to find the closest hit block or entity. Returns Vector.ZERO if
 	 * nothing is hit
 	 */
+	@Nullable
 	private Vector performRaytrace(AbilityContext ctx) {
 
 		final double maxRange = 20;
@@ -69,11 +71,7 @@ public class AbilityLightningArc extends Ability {
 
 		Raytrace.Result raytrace = Raytrace.raytrace(ctx.getWorld(), pos, look, maxRange, false);
 
-		if (raytrace.hitSomething()) {
-			return raytrace.getPosPrecise();
-		} else {
-			return Vector.ZERO;
-		}
+		return raytrace.getPosPrecise();
 
 	}
 

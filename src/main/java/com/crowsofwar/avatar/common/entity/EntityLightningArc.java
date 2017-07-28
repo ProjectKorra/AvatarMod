@@ -22,6 +22,7 @@ public class EntityLightningArc extends EntityArc {
 
 	@Override
 	protected void entityInit() {
+		super.entityInit();
 		dataManager.register(SYNC_ENDPOS, Vector.ZERO);
 	}
 
