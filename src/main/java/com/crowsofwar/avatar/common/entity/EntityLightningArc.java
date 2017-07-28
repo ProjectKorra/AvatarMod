@@ -11,4 +11,9 @@ public class EntityLightningArc extends EntityArc {
 		super(world);
 	}
 
+	@Override
+	public int getAmountOfControlPoints() {
+		return 2;
+	}
+
 }
