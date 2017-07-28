@@ -19,6 +19,7 @@ public class EntityLightningArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
 	}
 
 }
