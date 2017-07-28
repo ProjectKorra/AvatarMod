@@ -181,7 +181,8 @@ public class AvatarMod {
 		registerEntity(EntityIcePrison.class, "iceprison");
 		registerEntity(EntityOstrichHorse.class, "OstrichHorse");
 		registerEntity(EntitySandPrison.class, "sandprison");
-		
+		registerEntity(EntityLightningArc.class, "lightningarc");
+
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
