@@ -116,8 +116,7 @@ public class EntityLightningArc extends EntityArc {
 //				controlPoint.setPosition(normalPosition.plus(randomize));
 
 				controlPoint.setPosition(((LightningControlPoint) controlPoint).getPosition
-						(ticksExisted /
-						5f));
+						(ticksExisted));
 
 			}
 		}
@@ -177,8 +176,8 @@ public class EntityLightningArc extends EntityArc {
 
 			Vector normalPosition = arc.position().plus(dir.times(targetDist).times(index));
 
-			double actualOffX = SimplexNoise.noise(ticks / 5f, index) * 0.4;
-			double actualOffY = SimplexNoise.noise(ticks / 5f, index + 100) * 0.4;
+			double actualOffX = SimplexNoise.noise(ticks / 15f, index) * 0.6;
+			double actualOffY = SimplexNoise.noise(ticks / 15f, index + 100) * 0.6;
 
 			Matrix4d matrix = new Matrix4d();
 			matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
@@ -193,7 +192,7 @@ public class EntityLightningArc extends EntityArc {
 
 		@Override
 		public Vector getInterpolatedPosition(float partialTicks) {
-			return getPosition(arc.ticksExisted / 5f + partialTicks);
+			return getPosition(arc.ticksExisted + partialTicks);
 		}
 
 	}
