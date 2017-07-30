@@ -84,8 +84,8 @@ public abstract class RenderArc extends Render {
 
 		if (enableInterpolation) {
 			//@formatter:off
-			leaderPos = leader.lastPosition() .plus (  (leader.position() .minus (leader.lastPosition()) ) .times(partialTicks)  );
-			pointPos = point.lastPosition() .plus (  (point.position() .minus (point.lastPosition()) ) .times(partialTicks)  );
+			leaderPos = leader.getInterpolatedPosition(partialTicks);
+			pointPos = point.getInterpolatedPosition(partialTicks);
 			//@formatter:on
 		}
 
