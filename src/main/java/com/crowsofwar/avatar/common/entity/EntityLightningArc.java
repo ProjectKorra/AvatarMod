@@ -77,43 +77,47 @@ public class EntityLightningArc extends EntityArc {
 				Vector randomize = Vector.ZERO;
 
 //				if (i != getControlPoints().size() - 1) {
-				Matrix4d matrix = new Matrix4d();
-				matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
-				matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+//				Matrix4d matrix = new Matrix4d();
+//				matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
+//				matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+//
+//					/*
+//					0  1 2  3 4
+//					0 .5 1 .5 0
+//
+//					distFromCenter/maxDistFromCenter		// 1/2 = 0.5
+//					distFromCenter = abs(center - pos)			// 3-2 = 1
+//					maxDistFromCenter = abs(center - size - 1)
+//
+//					0   1   2   3
+//					0   1   1   0
+//					 */
+//
+//				double centerIndex = (getControlPoints().size() - 1) / 2.0;
+//				double distFromCenter = Math.abs(centerIndex - i);
+//				double maxDistFromCenter = centerIndex;
+//
+//				double interpolate = 1 - distFromCenter / maxDistFromCenter;
+//
+////				double actualOffX = offsetX * interpolate + rand.nextGaussian() * 0.2;
+////				double actualOffY = offsetY * interpolate + rand.nextGaussian() * 0.2;
+//
+//				double actualOffX = SimplexNoise.noise(ticksExisted / 5f, i) * 0.4;
+//				double actualOffY = SimplexNoise.noise(ticksExisted / 5f, i + 100) * 0.4;
+//
+//				System.out.println(ticksExisted + " -> " + actualOffX);
+//
+//				Vector4d randomJoml = new Vector4d(actualOffX, actualOffY, 0, 1);
+//				randomJoml.mul(matrix);
+//
+//				randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+////				}
 
-					/*
-					0  1 2  3 4
-					0 .5 1 .5 0
+//				controlPoint.setPosition(normalPosition.plus(randomize));
 
-					distFromCenter/maxDistFromCenter		// 1/2 = 0.5
-					distFromCenter = abs(center - pos)			// 3-2 = 1
-					maxDistFromCenter = abs(center - size - 1)
-
-					0   1   2   3
-					0   1   1   0
-					 */
-
-				double centerIndex = (getControlPoints().size() - 1) / 2.0;
-				double distFromCenter = Math.abs(centerIndex - i);
-				double maxDistFromCenter = centerIndex;
-
-				double interpolate = 1 - distFromCenter / maxDistFromCenter;
-
-//				double actualOffX = offsetX * interpolate + rand.nextGaussian() * 0.2;
-//				double actualOffY = offsetY * interpolate + rand.nextGaussian() * 0.2;
-
-				double actualOffX = SimplexNoise.noise(ticksExisted / 5f, i) * 0.4;
-				double actualOffY = SimplexNoise.noise(ticksExisted / 5f, i + 100) * 0.4;
-
-				System.out.println(ticksExisted + " -> " + actualOffX);
-
-				Vector4d randomJoml = new Vector4d(actualOffX, actualOffY, 0, 1);
-				randomJoml.mul(matrix);
-
-				randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
-//				}
-
-				controlPoint.setPosition(normalPosition.plus(randomize));
+				controlPoint.setPosition(((LightningControlPoint) controlPoint).getPosition
+						(ticksExisted /
+						5f));
 
 			}
 		}
@@ -164,6 +168,32 @@ public class EntityLightningArc extends EntityArc {
 				setPosition(next.position());
 			}
 
+		}
+
+		public Vector getPosition(float ticks) {
+			ControlPoint controlPoint = getControlPoint(index);
+			double targetDist = position().dist(getEndPos()) / getControlPoints().size();
+			Vector dir = Vector.getLookRectangular(arc);
+
+			Vector normalPosition = position().plus(dir.times(targetDist).times(index));
+
+			double actualOffX = SimplexNoise.noise(ticks / 5f, index) * 0.4;
+			double actualOffY = SimplexNoise.noise(ticks / 5f, index + 100) * 0.4;
+
+			Matrix4d matrix = new Matrix4d();
+			matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
+			matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+			Vector4d randomJoml = new Vector4d(actualOffX, actualOffY, 0, 1);
+			randomJoml.mul(matrix);
+
+			Vector randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+
+			return normalPosition.plus(randomize);
+		}
+
+		@Override
+		public Vector getInterpolatedPosition(float partialTicks) {
+			return getPosition(arc.ticksExisted / 5f + partialTicks);
 		}
 
 	}
