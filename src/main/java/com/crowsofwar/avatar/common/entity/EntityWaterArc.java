@@ -162,7 +162,7 @@ public class EntityWaterArc extends EntityArc {
 	}
 
 	@Override
-	protected ControlPoint createControlPoint(float size) {
+	protected ControlPoint createControlPoint(float size, int index) {
 		return new WaterControlPoint(this, size, 0, 0, 0);
 	}
 	

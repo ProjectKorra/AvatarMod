@@ -39,7 +39,7 @@ public abstract class EntityArc extends AvatarEntity {
 
 		this.points = new ArrayList<>();
 		for (int i = 0; i < getAmountOfControlPoints(); i++) {
-			points.add(createControlPoint(size));
+			points.add(createControlPoint(size, i));
 		}
 
 	}
@@ -51,7 +51,7 @@ public abstract class EntityArc extends AvatarEntity {
 	 * @param size
 	 * @return
 	 */
-	protected ControlPoint createControlPoint(float size) {
+	protected ControlPoint createControlPoint(float size, int index) {
 		return new ControlPoint(this, size, 0, 0, 0);
 	}
 

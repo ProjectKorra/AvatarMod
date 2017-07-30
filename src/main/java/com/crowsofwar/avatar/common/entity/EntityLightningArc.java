@@ -62,28 +62,35 @@ public class EntityLightningArc extends EntityArc {
 
 			for (int i = 0; i < getControlPoints().size(); i++) {
 
-				ControlPoint controlPoint = getControlPoint(i);
-				double targetDist = position().dist(getEndPos()) / getControlPoints().size();
-				Vector dir = Vector.getLookRectangular(this);
+				((LightningControlPoint) getControlPoint(i)).gotoNextPosition();
 
-				Vector normalPosition = position().plus(dir.times(targetDist).times(i));
-
-				Vector randomize = Vector.ZERO;
-
-				if (i != getControlPoints().size() - 1) {
-					Matrix4d matrix = new Matrix4d();
-					matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
-					matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
-					Vector4d randomJoml = new Vector4d(rand.nextGaussian(), rand.nextGaussian(), 0, 1);
-					randomJoml.mul(matrix);
-
-					randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
-				}
-
-				controlPoint.setPosition(normalPosition.plus(randomize));
+//				ControlPoint controlPoint = getControlPoint(i);
+//				double targetDist = position().dist(getEndPos()) / getControlPoints().size();
+//				Vector dir = Vector.getLookRectangular(this);
+//
+//				Vector normalPosition = position().plus(dir.times(targetDist).times(i));
+//
+//				Vector randomize = Vector.ZERO;
+//
+//				if (i != getControlPoints().size() - 1) {
+//					Matrix4d matrix = new Matrix4d();
+//					matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
+//					matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+//					Vector4d randomJoml = new Vector4d(rand.nextGaussian(), rand.nextGaussian(), 0, 1);
+//					randomJoml.mul(matrix);
+//
+//					randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+//				}
+//
+//				controlPoint.setPosition(normalPosition.plus(randomize));
 
 			}
 		}
+	}
+
+	@Override
+	protected ControlPoint createControlPoint(float size, int index) {
+		return new LightningControlPoint(this, index);
 	}
 
 	public Vector getEndPos() {
@@ -92,6 +99,42 @@ public class EntityLightningArc extends EntityArc {
 
 	public void setEndPos(Vector endPos) {
 		dataManager.set(SYNC_ENDPOS, endPos);
+	}
+
+	public class LightningControlPoint extends ControlPoint {
+
+		private final int index;
+
+		public LightningControlPoint(EntityArc arc, int index) {
+			super(arc, 0.5f, 0, 0, 0);
+			this.index = index;
+		}
+
+		/**
+		 * Moves the ControlPoint to the randomized position
+		 */
+		public void gotoNextPosition() {
+			ControlPoint next = arc.getLeader(index);
+
+			if (index == 0) {
+				// If leader, go to a new randomized position
+
+				Matrix4d matrix = new Matrix4d();
+				matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
+				matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+				Vector4d randomJoml = new Vector4d(rand.nextGaussian(), rand.nextGaussian(), 0, 1);
+				randomJoml.mul(matrix);
+
+				Vector randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+				setPosition(arc.position().plus(randomize));
+
+			} else {
+				// Other control points just go to leader pos
+				setPosition(next.position());
+			}
+
+		}
+
 	}
 
 }
