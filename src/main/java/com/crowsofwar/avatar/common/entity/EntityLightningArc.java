@@ -44,7 +44,7 @@ public class EntityLightningArc extends EntityArc {
 			// position slightly away from owner
 			position = position.plus(endPosition.minus(position).dividedBy(10));
 
-			setPosition(position);
+			setEndPos(position);
 
 			Vector newRotations = Vector.getRotationTo(position(), getEndPos());
 			rotationYaw = (float) Math.toDegrees(newRotations.y());
@@ -58,7 +58,7 @@ public class EntityLightningArc extends EntityArc {
 	@Override
 	protected void updateCpBehavior() {
 
-		if (ticksExisted % 1 == 0) {
+		if (ticksExisted % 3 == 0) {
 
 			for (int i = 0; i < getControlPoints().size(); i++) {
 
