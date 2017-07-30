@@ -68,8 +68,8 @@ public abstract class RenderArc extends Render {
 		double renderPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 		
 		EntityArc arc = (EntityArc) entity;
-		
-		for (int i = 1; i < arc.getControlPoints().size(); i++) {
+
+		for (int i = arc.getControlPoints().size() - 1; i > 0; i--) {
 			renderSegment(arc, arc.getLeader(i), arc.getControlPoint(i), renderPosX, renderPosY, renderPosZ,
 					partialTicks);
 		}
