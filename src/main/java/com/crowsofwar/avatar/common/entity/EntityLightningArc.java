@@ -172,10 +172,10 @@ public class EntityLightningArc extends EntityArc {
 
 		public Vector getPosition(float ticks) {
 			ControlPoint controlPoint = getControlPoint(index);
-			double targetDist = position().dist(getEndPos()) / getControlPoints().size();
+			double targetDist = arc.position().dist(getEndPos()) / getControlPoints().size();
 			Vector dir = Vector.getLookRectangular(arc);
 
-			Vector normalPosition = position().plus(dir.times(targetDist).times(index));
+			Vector normalPosition = arc.position().plus(dir.times(targetDist).times(index));
 
 			double actualOffX = SimplexNoise.noise(ticks / 5f, index) * 0.4;
 			double actualOffY = SimplexNoise.noise(ticks / 5f, index + 100) * 0.4;
