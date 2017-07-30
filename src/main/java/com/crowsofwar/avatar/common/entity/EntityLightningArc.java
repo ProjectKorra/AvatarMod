@@ -6,6 +6,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import org.joml.Matrix4d;
+import org.joml.SimplexNoise;
 import org.joml.Vector4d;
 
 /**
@@ -58,7 +59,7 @@ public class EntityLightningArc extends EntityArc {
 	@Override
 	protected void updateCpBehavior() {
 
-		if (ticksExisted % 3 == 0) {
+		if (ticksExisted % 3 == 0 || true) {
 
 			double offsetX = rand.nextGaussian();
 			double offsetY = rand.nextGaussian();
@@ -76,9 +77,9 @@ public class EntityLightningArc extends EntityArc {
 				Vector randomize = Vector.ZERO;
 
 //				if (i != getControlPoints().size() - 1) {
-					Matrix4d matrix = new Matrix4d();
-					matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
-					matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+				Matrix4d matrix = new Matrix4d();
+				matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
+				matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
 
 					/*
 					0  1 2  3 4
@@ -92,21 +93,24 @@ public class EntityLightningArc extends EntityArc {
 					0   1   1   0
 					 */
 
-					double centerIndex = (getControlPoints().size() - 1) / 2.0;
-					double distFromCenter = Math.abs(centerIndex - i);
-					double maxDistFromCenter = centerIndex;
+				double centerIndex = (getControlPoints().size() - 1) / 2.0;
+				double distFromCenter = Math.abs(centerIndex - i);
+				double maxDistFromCenter = centerIndex;
 
-					double interpolate = 1 - distFromCenter / maxDistFromCenter;
+				double interpolate = 1 - distFromCenter / maxDistFromCenter;
 
-					System.out.println(i + " -> " + interpolate);
-					System.out.println(" dst " + distFromCenter);
-					System.out.println(" cen " + centerIndex);
+//				double actualOffX = offsetX * interpolate + rand.nextGaussian() * 0.2;
+//				double actualOffY = offsetY * interpolate + rand.nextGaussian() * 0.2;
 
-					Vector4d randomJoml = new Vector4d(offsetX * interpolate, offsetY * interpolate, 0,
-							1);
-					randomJoml.mul(matrix);
+				double actualOffX = SimplexNoise.noise(ticksExisted / 5f, i) * 0.4;
+				double actualOffY = SimplexNoise.noise(ticksExisted / 5f, i + 100) * 0.4;
 
-					randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+				System.out.println(ticksExisted + " -> " + actualOffX);
+
+				Vector4d randomJoml = new Vector4d(actualOffX, actualOffY, 0, 1);
+				randomJoml.mul(matrix);
+
+				randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
 //				}
 
 				controlPoint.setPosition(normalPosition.plus(randomize));
