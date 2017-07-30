@@ -58,31 +58,31 @@ public class EntityLightningArc extends EntityArc {
 	@Override
 	protected void updateCpBehavior() {
 
-		if (ticksExisted % 3 == 1) {
+		if (ticksExisted % 1 == 0) {
 
 			for (int i = 0; i < getControlPoints().size(); i++) {
 
-				((LightningControlPoint) getControlPoint(i)).gotoNextPosition();
+//				((LightningControlPoint) getControlPoint(i)).gotoNextPosition();
 
-//				ControlPoint controlPoint = getControlPoint(i);
-//				double targetDist = position().dist(getEndPos()) / getControlPoints().size();
-//				Vector dir = Vector.getLookRectangular(this);
-//
-//				Vector normalPosition = position().plus(dir.times(targetDist).times(i));
-//
-//				Vector randomize = Vector.ZERO;
-//
-//				if (i != getControlPoints().size() - 1) {
-//					Matrix4d matrix = new Matrix4d();
-//					matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
-//					matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
-//					Vector4d randomJoml = new Vector4d(rand.nextGaussian(), rand.nextGaussian(), 0, 1);
-//					randomJoml.mul(matrix);
-//
-//					randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
-//				}
-//
-//				controlPoint.setPosition(normalPosition.plus(randomize));
+				ControlPoint controlPoint = getControlPoint(i);
+				double targetDist = position().dist(getEndPos()) / getControlPoints().size();
+				Vector dir = Vector.getLookRectangular(this);
+
+				Vector normalPosition = position().plus(dir.times(targetDist).times(i));
+
+				Vector randomize = Vector.ZERO;
+
+				if (i != getControlPoints().size() - 1) {
+					Matrix4d matrix = new Matrix4d();
+					matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
+					matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+					Vector4d randomJoml = new Vector4d(rand.nextGaussian(), rand.nextGaussian(), 0, 1);
+					randomJoml.mul(matrix);
+
+					randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+				}
+
+				controlPoint.setPosition(normalPosition.plus(randomize));
 
 			}
 		}
@@ -106,7 +106,7 @@ public class EntityLightningArc extends EntityArc {
 		private final int index;
 
 		public LightningControlPoint(EntityArc arc, int index) {
-			super(arc, 0.5f, 0, 0, 0);
+			super(arc, 0.15f, 0, 0, 0);
 			this.index = index;
 		}
 
