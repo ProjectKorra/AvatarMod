@@ -6,6 +6,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -21,6 +22,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
 			(EntityLightningArc.class, AvatarDataSerializers.SERIALIZER_VECTOR);
 
+	private static final DataParameter<Float> SYNC_TURBULENCE = EntityDataManager.createKey
+			(EntityLightningArc.class, DataSerializers.FLOAT);
+
 	public EntityLightningArc(World world) {
 		super(world);
 	}
@@ -29,6 +33,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_ENDPOS, Vector.ZERO);
+		dataManager.register(SYNC_TURBULENCE, 0.6f);
 	}
 
 	@Override
@@ -110,6 +115,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		dataManager.set(SYNC_ENDPOS, endPos);
 	}
 
+	public float getTurbulence() {
+		return dataManager.get(SYNC_TURBULENCE);
+	}
+
+	public void setTurbulence(float turbulence) {
+		dataManager.set(SYNC_TURBULENCE, turbulence);
+	}
+
 	public class LightningControlPoint extends ControlPoint {
 
 		private final int index;
@@ -125,10 +138,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 			Vector normalPosition = arc.position().plus(dir.times(targetDist).times(index));
 
-			double actualOffX = SimplexNoise.noise(ticks / 15f + index / 1f, getEntityId() *
-					1000) * 0.6;
-			double actualOffY = SimplexNoise.noise(ticks / 15f + index / 1f, getEntityId() *
-					2000) * 0.6;
+			double actualOffX = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
+					getEntityId
+					() *
+					1000) * getTurbulence();
+			double actualOffY = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
+					getEntityId() *
+					2000) * getTurbulence();
 
 			Matrix4d matrix = new Matrix4d();
 			matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);

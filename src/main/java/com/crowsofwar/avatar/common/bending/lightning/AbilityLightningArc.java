@@ -32,17 +32,24 @@ public class AbilityLightningArc extends Ability {
 		Vector hitPos = performRaytrace(ctx);
 		if (hitPos != null) {
 
-			EntityLightningArc lightning = new EntityLightningArc(world);
-			lightning.setOwner(entity);
+			float[] turbulenceValues = { 0.6f, 0.8f, 1.4f };
 
-			lightning.setPosition(Vector.getEyePos(entity));
-			lightning.setEndPos(Vector.getEyePos(entity));
+			for (float turbulence : turbulenceValues) {
 
-			Vector velocity = hitPos.minus(lightning.position());
-			velocity = velocity.normalize().times(15);
-			lightning.setVelocity(velocity);
+				EntityLightningArc lightning = new EntityLightningArc(world);
+				lightning.setOwner(entity);
+				lightning.setTurbulence(turbulence);
 
-			world.spawnEntity(lightning);
+				lightning.setPosition(Vector.getEyePos(entity));
+				lightning.setEndPos(Vector.getEyePos(entity));
+
+				Vector velocity = hitPos.minus(lightning.position());
+				velocity = velocity.normalize().times(15);
+				lightning.setVelocity(velocity);
+
+				world.spawnEntity(lightning);
+
+			}
 
 		}
 
