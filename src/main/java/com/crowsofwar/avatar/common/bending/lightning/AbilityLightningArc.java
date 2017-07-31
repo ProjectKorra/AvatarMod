@@ -44,7 +44,7 @@ public class AbilityLightningArc extends Ability {
 				lightning.setEndPos(Vector.getEyePos(entity));
 
 				Vector velocity = hitPos.minus(lightning.position());
-				velocity = velocity.normalize().times(15);
+				velocity = velocity.normalize().times(30);
 				lightning.setVelocity(velocity);
 
 				world.spawnEntity(lightning);
