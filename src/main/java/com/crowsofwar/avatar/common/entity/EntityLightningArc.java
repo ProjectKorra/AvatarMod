@@ -111,7 +111,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 8)) {
 				entity.setFire(4);
 
-				Vector velocity = velocity().normalize().times(3);
+				Vector velocity = velocity().normalize();
 				entity.addVelocity(velocity.x(), 0.6, velocity.z());
 				AvatarUtils.afterVelocityAdded(entity);
 
