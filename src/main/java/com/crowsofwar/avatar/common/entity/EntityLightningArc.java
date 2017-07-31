@@ -77,7 +77,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			rotationPitch = (float) Math.toDegrees(newRotations.x());
 		}
 		if (stuckTo != null) {
-			setPosition(Vector.getEntityPos(stuckTo));
+			setPosition(Vector.getEyePos(stuckTo));
 			setVelocity(Vector.ZERO);
 		}
 
