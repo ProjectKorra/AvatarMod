@@ -33,13 +33,12 @@ public class AbilityLightningArc extends Ability {
 		if (hitPos != null) {
 
 			EntityLightningArc lightning = new EntityLightningArc(world);
-			lightning.copyLocationAndAnglesFrom(entity);
-			lightning.posY += entity.getEyeHeight();
 			lightning.setOwner(entity);
 //			lightning.setEndPos(hitPos);
-			lightning.setPosition(hitPos);
+//			lightning.setPosition(hitPos);
+			lightning.setPosition(Vector.getEyePos(entity));
 			lightning.setEndPos(Vector.getEntityPos(entity));
-//			lightning.setVelocity(hitPos.minus(lightning.position()).dividedBy(2));
+			lightning.setVelocity(hitPos.minus(lightning.position()).dividedBy(2));
 
 			world.spawnEntity(lightning);
 

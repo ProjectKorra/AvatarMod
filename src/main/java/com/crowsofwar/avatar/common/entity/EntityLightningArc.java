@@ -81,7 +81,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return true;
+		return entity != getOwner();
 	}
 
 	@Override
