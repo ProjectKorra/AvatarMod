@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -13,6 +14,8 @@ import net.minecraft.world.World;
 import org.joml.Matrix4d;
 import org.joml.SimplexNoise;
 import org.joml.Vector4d;
+
+import javax.annotation.Nullable;
 
 /**
  * @author CrowsOfWar
@@ -24,6 +27,19 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private static final DataParameter<Float> SYNC_TURBULENCE = EntityDataManager.createKey
 			(EntityLightningArc.class, DataSerializers.FLOAT);
+
+	/**
+	 * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
+	 * damage it.
+	 */
+	@Nullable
+	private EntityLivingBase stuckTo;
+
+	/**
+	 * If the lightning hits an entity or the ground, the lightning "sticks to" that position and
+	 * will die after some time after getting stuck.
+	 */
+	private int stuckTime;
 
 	public EntityLightningArc(World world) {
 		super(world);
@@ -60,9 +76,17 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			rotationYaw = (float) Math.toDegrees(newRotations.y());
 			rotationPitch = (float) Math.toDegrees(newRotations.x());
 		}
-		if (ticksExisted > 80) {
+		if (stuckTo != null) {
+			setPosition(Vector.getEntityPos(stuckTo));
+		}
+
+		if (velocity().equals(Vector.ZERO)) {
+			stuckTime++;
+		}
+		if (stuckTime >= 40 || ticksExisted >= 200) {
 			setDead();
 		}
+
 	}
 
 	@Override
@@ -77,14 +101,21 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 8)) {
-			entity.setFire(4);
+		if (stuckTo != null && entity instanceof EntityLivingBase) {
 
-			Vector velocity = velocity().normalize().times(3);
-			entity.addVelocity(velocity.x(), 0.6, velocity.z());
-			AvatarUtils.afterVelocityAdded(entity);
+			stuckTo = (EntityLivingBase) entity;
 
-			setDead();
+			if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 8)) {
+				entity.setFire(4);
+
+				Vector velocity = velocity().normalize().times(3);
+				entity.addVelocity(velocity.x(), 0.6, velocity.z());
+				AvatarUtils.afterVelocityAdded(entity);
+
+				setVelocity(Vector.ZERO);
+
+			}
+
 		}
 	}
 
