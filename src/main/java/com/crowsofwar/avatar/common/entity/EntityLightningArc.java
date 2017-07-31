@@ -6,10 +6,12 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import org.joml.Matrix4d;
 import org.joml.SimplexNoise;
@@ -83,6 +85,10 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 		if (velocity().equals(Vector.ZERO)) {
 			stuckTime++;
+			if (stuckTime == 1) {
+				world.playSound(null, getPosition(), SoundEvents.ENTITY_LIGHTNING_THUNDER,
+						SoundCategory.PLAYERS, 1, 2);
+			}
 		}
 		boolean existTooLong = stuckTime >= 40 || ticksExisted >= 200;
 		boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
