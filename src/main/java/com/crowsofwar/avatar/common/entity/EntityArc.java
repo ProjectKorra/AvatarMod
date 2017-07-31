@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class EntityArc extends AvatarEntity {
+public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
-	private List<ControlPoint> points;
+	private List<T> points;
 
 	public EntityArc(World world) {
 		super(world);
@@ -47,12 +47,9 @@ public abstract class EntityArc extends AvatarEntity {
 	/**
 	 * Called from the EntityArc constructor to get a new control point
 	 * entity.
-	 *
-	 * @param size
-	 * @return
 	 */
-	protected ControlPoint createControlPoint(float size, int index) {
-		return new ControlPoint(this, size, 0, 0, 0);
+	protected T createControlPoint(float size, int index) {
+		return (T) new ControlPoint(this, size, 0, 0, 0);
 	}
 
 	/**
@@ -68,7 +65,7 @@ public abstract class EntityArc extends AvatarEntity {
 		super.onUpdate();
 
 		if (this.ticksExisted == 1) {
-			for (ControlPoint point : points) {
+			for (T point : points) {
 				point.setPosition(position());
 			}
 		}
@@ -84,7 +81,7 @@ public abstract class EntityArc extends AvatarEntity {
 		updateCpBehavior();
 
 		// Update velocity
-		for (ControlPoint cp : points) {
+		for (T cp : points) {
 			cp.onUpdate();
 		}
 
@@ -150,22 +147,22 @@ public abstract class EntityArc extends AvatarEntity {
 		}
 	}
 
-	public List<ControlPoint> getControlPoints() {
+	public List<T> getControlPoints() {
 		return points;
 	}
 
-	public ControlPoint getControlPoint(int index) {
+	public T getControlPoint(int index) {
 		return points.get(index);
 	}
 
-	public ControlPoint getLeader() {
+	public T getLeader() {
 		return getControlPoint(0);
 	}
 
 	/**
 	 * Get the leader of the specified control point.
 	 */
-	public ControlPoint getLeader(int index) {
+	public T getLeader(int index) {
 		return getControlPoint(index == 0 ? index : index - 1);
 	}
 
@@ -184,7 +181,7 @@ public abstract class EntityArc extends AvatarEntity {
 	@Override
 	public void setOwner(EntityLivingBase owner) {
 		super.setOwner(owner);
-		for (ControlPoint cp : points) {
+		for (T cp : points) {
 			cp.setOwner(owner);
 		}
 	}

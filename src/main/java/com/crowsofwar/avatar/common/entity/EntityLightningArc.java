@@ -12,7 +12,7 @@ import org.joml.Vector4d;
 /**
  * @author CrowsOfWar
  */
-public class EntityLightningArc extends EntityArc {
+public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> {
 
 	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
 			(EntityLightningArc.class, AvatarDataSerializers.SERIALIZER_VECTOR);
@@ -58,16 +58,16 @@ public class EntityLightningArc extends EntityArc {
 
 	@Override
 	protected void updateCpBehavior() {
-		for (ControlPoint controlPoint : getControlPoints()) {
+		for (LightningControlPoint controlPoint : getControlPoints()) {
 
-			controlPoint.setPosition(((LightningControlPoint) controlPoint).getPosition
+			controlPoint.setPosition(controlPoint.getPosition
 					(ticksExisted));
 
 		}
 	}
 
 	@Override
-	protected ControlPoint createControlPoint(float size, int index) {
+	protected LightningControlPoint createControlPoint(float size, int index) {
 		return new LightningControlPoint(this, index);
 	}
 

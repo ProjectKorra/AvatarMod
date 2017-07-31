@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
-public class EntityAirGust extends EntityArc {
+public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> {
 	
 	public static final Vector ZERO = new Vector(0, 0, 0);
 	
@@ -110,7 +110,7 @@ public class EntityAirGust extends EntityArc {
 	}
 
 	@Override
-	protected ControlPoint createControlPoint(float size, int index) {
+	protected AirGustControlPoint createControlPoint(float size, int index) {
 		return new AirGustControlPoint(this, 0.5f, 0, 0, 0);
 	}
 	
