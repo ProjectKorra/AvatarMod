@@ -167,10 +167,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		}
 
 		public Vector getPosition(float ticks) {
-			double targetDist = arc.position().dist(getEndPos()) / getControlPoints().size();
+
+			float partialTicks = ticks - (int) ticks;
+			Vector arcPos = arc.position().plus(arc.velocity().dividedBy(20).times(partialTicks));
+
+			double targetDist = arcPos.dist(getEndPos()) / getControlPoints().size();
 			Vector dir = Vector.getLookRectangular(arc);
 
-			Vector normalPosition = arc.position().plus(dir.times(targetDist).times(index));
+			Vector normalPosition = arcPos.plus(dir.times(targetDist).times(index));
 			Vector randomize = Vector.ZERO;
 
 			if (index != arc.getControlPoints().size() - 1 && index != 0) {
