@@ -34,11 +34,13 @@ public class AbilityLightningArc extends Ability {
 
 			EntityLightningArc lightning = new EntityLightningArc(world);
 			lightning.setOwner(entity);
-//			lightning.setEndPos(hitPos);
-//			lightning.setPosition(hitPos);
+
 			lightning.setPosition(Vector.getEyePos(entity));
-			lightning.setEndPos(Vector.getEntityPos(entity));
-			lightning.setVelocity(hitPos.minus(lightning.position()).dividedBy(2));
+			lightning.setEndPos(Vector.getEyePos(entity));
+
+			Vector velocity = hitPos.minus(lightning.position());
+			velocity = velocity.normalize().times(15);
+			lightning.setVelocity(velocity);
 
 			world.spawnEntity(lightning);
 
