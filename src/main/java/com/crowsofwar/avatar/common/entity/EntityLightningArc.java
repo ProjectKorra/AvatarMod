@@ -78,6 +78,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		}
 		if (stuckTo != null) {
 			setPosition(Vector.getEntityPos(stuckTo));
+			setVelocity(Vector.ZERO);
 		}
 
 		if (velocity().equals(Vector.ZERO)) {
@@ -101,7 +102,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (stuckTo != null && entity instanceof EntityLivingBase) {
+		if (stuckTo == null && entity instanceof EntityLivingBase) {
 
 			stuckTo = (EntityLivingBase) entity;
 
@@ -111,8 +112,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 				Vector velocity = velocity().normalize().times(3);
 				entity.addVelocity(velocity.x(), 0.6, velocity.z());
 				AvatarUtils.afterVelocityAdded(entity);
-
-				setVelocity(Vector.ZERO);
 
 			}
 
