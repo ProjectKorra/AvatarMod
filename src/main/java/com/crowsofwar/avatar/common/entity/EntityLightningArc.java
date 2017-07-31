@@ -84,7 +84,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (velocity().equals(Vector.ZERO)) {
 			stuckTime++;
 		}
-		if (stuckTime >= 40 || ticksExisted >= 200) {
+		boolean existTooLong = stuckTime >= 40 || ticksExisted >= 200;
+		boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
+		if (existTooLong || stuckIsDead) {
 			setDead();
 		}
 
