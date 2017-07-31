@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
@@ -77,12 +78,23 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			Vector velocity = velocity().normalize().times(3);
 			entity.addVelocity(velocity.x(), 0.6, velocity.z());
 			AvatarUtils.afterVelocityAdded(entity);
+
+			setDead();
 		}
 	}
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
 		return entity != getOwner();
+	}
+
+	@Override
+	public boolean onCollideWithSolid() {
+		setDead();
+		if (!world.isRemote) {
+			world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
+		}
+		return true;
 	}
 
 	@Override
