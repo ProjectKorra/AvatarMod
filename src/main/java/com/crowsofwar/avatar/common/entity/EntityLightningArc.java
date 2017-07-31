@@ -71,12 +71,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 8);
-		entity.setFire(4);
+		if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 8)) {
+			entity.setFire(4);
 
-		Vector velocity = Vector.getLookRectangular(this).times(3);
-		entity.addVelocity(velocity.x(), 0.6, velocity.z());
-		AvatarUtils.afterVelocityAdded(entity);
+			Vector velocity = velocity().normalize().times(3);
+			entity.addVelocity(velocity.x(), 0.6, velocity.z());
+			AvatarUtils.afterVelocityAdded(entity);
+		}
 	}
 
 	@Override
