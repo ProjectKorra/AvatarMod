@@ -32,7 +32,7 @@ public class AbilityLightningArc extends Ability {
 		Vector hitPos = performRaytrace(ctx);
 		if (hitPos != null) {
 
-			float[] turbulenceValues = { 0.6f, 0.8f, 1.4f };
+			float[] turbulenceValues = { 0.6f, 1.2f };
 
 			for (float turbulence : turbulenceValues) {
 

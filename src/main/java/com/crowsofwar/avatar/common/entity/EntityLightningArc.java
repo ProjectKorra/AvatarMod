@@ -60,7 +60,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			rotationYaw = (float) Math.toDegrees(newRotations.y());
 			rotationPitch = (float) Math.toDegrees(newRotations.x());
 		}
-		if (ticksExisted > 40) {
+		if (ticksExisted > 80) {
 			setDead();
 		}
 	}
@@ -95,11 +95,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	public boolean onCollideWithSolid() {
-		setDead();
+//		setDead();
+		setVelocity(Vector.ZERO);
 		if (!world.isRemote) {
 			world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
 		}
-		return true;
+		return false;
+//		return true;
 	}
 
 	@Override
@@ -128,7 +130,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		private final int index;
 
 		public LightningControlPoint(EntityArc arc, int index) {
-			super(arc, 0.15f, 0, 0, 0);
+			super(arc, 0.1f, 0, 0, 0);
 			this.index = index;
 		}
 
