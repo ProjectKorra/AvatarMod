@@ -1,9 +1,12 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import org.joml.Matrix4d;
 import org.joml.SimplexNoise;
@@ -64,6 +67,21 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 					(ticksExisted));
 
 		}
+	}
+
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 8);
+		entity.setFire(4);
+
+		Vector velocity = Vector.getLookRectangular(this).times(3);
+		entity.addVelocity(velocity.x(), 0.6, velocity.z());
+		AvatarUtils.afterVelocityAdded(entity);
+	}
+
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return true;
 	}
 
 	@Override
