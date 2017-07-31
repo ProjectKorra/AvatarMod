@@ -87,7 +87,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			stuckTime++;
 			if (stuckTime == 1) {
 				world.playSound(null, getPosition(), SoundEvents.ENTITY_LIGHTNING_THUNDER,
-						SoundCategory.PLAYERS, 1, 2);
+						SoundCategory.PLAYERS, 1, 1);
 			}
 		}
 		boolean existTooLong = stuckTime >= 40 || ticksExisted >= 200;
