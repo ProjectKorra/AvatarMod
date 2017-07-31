@@ -90,6 +90,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			setDead();
 		}
 
+		// Lightning flash
+		if (world.isRemote && stuckTime > 0) {
+			if (SimplexNoise.noise(ticksExisted * 2, 0) >= 0.2) {
+				world.setLastLightningBolt(2);
+			}
+		}
+
 	}
 
 	@Override
