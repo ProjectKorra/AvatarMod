@@ -139,22 +139,25 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			Vector dir = Vector.getLookRectangular(arc);
 
 			Vector normalPosition = arc.position().plus(dir.times(targetDist).times(index));
+			Vector randomize = Vector.ZERO;
 
-			double actualOffX = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
-					getEntityId
-					() *
-					1000) * getTurbulence();
-			double actualOffY = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
-					getEntityId() *
-					2000) * getTurbulence();
+			if (index != arc.getControlPoints().size() - 1 && index != 0) {
+				double actualOffX = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
+						getEntityId
+								() *
+								1000) * getTurbulence();
+				double actualOffY = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
+						getEntityId() *
+								2000) * getTurbulence();
 
-			Matrix4d matrix = new Matrix4d();
-			matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
-			matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
-			Vector4d randomJoml = new Vector4d(actualOffX, actualOffY, 0, 1);
-			randomJoml.mul(matrix);
+				Matrix4d matrix = new Matrix4d();
+				matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
+				matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
+				Vector4d randomJoml = new Vector4d(actualOffX, actualOffY, 0, 1);
+				randomJoml.mul(matrix);
 
-			Vector randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+				randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
+			}
 
 			return normalPosition.plus(randomize);
 		}
