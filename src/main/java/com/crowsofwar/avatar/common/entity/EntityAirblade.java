@@ -131,7 +131,7 @@ public class EntityAirblade extends AvatarEntity {
 							EntityLivingBase nextTarget = nextTargets.get(0);
 							Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
 							velocity().set(direction.normalize().times(velocity().magnitude() *
-									0.8));
+									0.5));
 						}
 
 					}

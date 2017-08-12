@@ -13,3 +13,5 @@ AV2 Changelog :: version a4.5
 > Fix fire arc making fires when player-controlled
 > Fix fire/water arc StatCtrls not removed on relog
 > Fix floating block destroyed on place
+> Fix issue when trying to place/thrown floating block when just picked up
+> Fix airblade chainblade not working
