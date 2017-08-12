@@ -17,24 +17,20 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.Random;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class EntityFireArc extends EntityArc {
 	
@@ -93,31 +89,7 @@ public class EntityFireArc extends EntityArc {
 			}
 		}
 	}
-	
-	@Override
-	public void onCollideWithSolid() {
-		if (!world.isRemote) {
-			int x = (int) Math.floor(posX);
-			int y = (int) Math.floor(posY);
-			int z = (int) Math.floor(posZ);
-			BlockPos pos = new BlockPos(x, y, z);
-			world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-			
-			if (createBigFire) {
-				for (EnumFacing dir : EnumFacing.HORIZONTALS) {
-					BlockPos offsetPos = pos.offset(dir);
-					if (world.isAirBlock(offsetPos)) {
-						world.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
-					}
-				}
-			}
-			
-			if (tryDestroy()) {
-				setDead();
-			}
-		}
-	}
-	
+
 	@Override
 	protected Vector getGravityVector() {
 		return GRAVITY;
@@ -148,11 +120,15 @@ public class EntityFireArc extends EntityArc {
 	public void setDamageMult(float damageMult) {
 		this.damageMult = damageMult;
 	}
-	
+
+	public boolean getCreateBigFire() {
+		return createBigFire;
+	}
+
 	public void setCreateBigFire(boolean createBigFire) {
 		this.createBigFire = createBigFire;
 	}
-	
+
 	public static class FireControlPoint extends ControlPoint {
 		
 		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {

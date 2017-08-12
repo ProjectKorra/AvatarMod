@@ -29,10 +29,13 @@ import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -131,7 +134,28 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					return new FireArcBehavior.PlayerControlled();
 				}
 			}
-			
+
+
+			// Light fire at ground position
+			if (entity.isCollided) {
+				World world = entity.world;
+				BlockPos pos = entity.getPosition();
+				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+
+				if (entity.getCreateBigFire()) {
+					for (EnumFacing dir : EnumFacing.HORIZONTALS) {
+						BlockPos offsetPos = pos.offset(dir);
+						if (world.isAirBlock(offsetPos)) {
+							world.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
+						}
+					}
+				}
+
+				if (entity.tryDestroy()) {
+					entity.setDead();
+				}
+			}
+
 			return this;
 		}
 		
