@@ -16,18 +16,9 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.crowsofwar.avatar.common.bending.*;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import java.util.*;
 
 /**
  * 
@@ -398,5 +389,14 @@ public abstract class AbstractBendingData implements BendingData {
 	 */
 	@Override
 	public abstract void save(DataCategory category);
-	
+
+	@Override
+	public boolean getCanUseAbilities() {
+		return miscData.getCanUseAbilities();
+	}
+
+	@Override
+	public void setCanUseAbilities(boolean canUseAbilities) {
+		miscData.setCanUseAbilities(canUseAbilities);
+	}
 }

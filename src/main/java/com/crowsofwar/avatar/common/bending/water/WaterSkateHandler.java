@@ -16,15 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
-import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.toRectangular;
-import static java.lang.Math.toRadians;
-import static net.minecraft.init.Blocks.WATER;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -37,7 +28,6 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -48,6 +38,15 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
+import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.toRectangular;
+import static java.lang.Math.toRadians;
+import static net.minecraft.init.Blocks.WATER;
 
 /**
  * 
@@ -78,6 +77,7 @@ public class WaterSkateHandler extends TickHandler {
 		
 		if (data.hasStatusControl(SKATING_JUMP) && skate(data, entity, ctx.getBender())) {
 			data.removeStatusControl(StatusControl.SKATING_JUMP);
+			data.setCanUseAbilities(true);
 			return true;
 		} else {
 			return false;
@@ -166,8 +166,8 @@ public class WaterSkateHandler extends TickHandler {
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
 				}
-				if (abilityData.getLevel() == 0 && data.getAbilityCooldown() == 0) {
-					data.setAbilityCooldown(1);
+				if (abilityData.getLevel() < 1) {
+					data.setCanUseAbilities(false);
 				}
 				
 			}

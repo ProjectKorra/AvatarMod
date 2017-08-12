@@ -196,6 +196,10 @@ public interface BendingData {
 	void setAbilityCooldown(int cooldown);
 	
 	void decrementCooldown();
+
+	boolean getCanUseAbilities();
+
+	void setCanUseAbilities(boolean canUseAbilities);
 	
 	boolean isWallJumping();
 	

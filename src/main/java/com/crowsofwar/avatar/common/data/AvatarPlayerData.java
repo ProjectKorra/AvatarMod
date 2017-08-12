@@ -17,37 +17,21 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.data.DataSaver;
-import com.crowsofwar.gorecore.data.PlayerData;
-import com.crowsofwar.gorecore.data.PlayerDataFetcher;
-import com.crowsofwar.gorecore.data.PlayerDataFetcherServer;
-import com.crowsofwar.gorecore.data.PlayerDataFetcherSided;
-
+import com.crowsofwar.gorecore.data.*;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
+import java.util.*;
+
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 public class AvatarPlayerData extends PlayerData implements BendingData {
 	
@@ -408,7 +392,17 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 	public void decrementCooldown() {
 		bendingData.decrementCooldown();
 	}
-	
+
+	@Override
+	public boolean getCanUseAbilities() {
+		return bendingData.getCanUseAbilities();
+	}
+
+	@Override
+	public void setCanUseAbilities(boolean canUseAbilities) {
+		bendingData.setCanUseAbilities(canUseAbilities);
+	}
+
 	@Override
 	public boolean isWallJumping() {
 		return bendingData.isWallJumping();
