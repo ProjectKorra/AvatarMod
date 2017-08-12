@@ -401,7 +401,16 @@ public class Vector {
 	public Vector normalize() {
 		return divide(magnitude());
 	}
-	
+
+	/**
+	 * Checks whether the vector is normalized - you should NOT use <code>vec.sqrMagnitude()
+	 * == 1</code> because there may be small mathematical errors that makes magnitude 0.001 off
+	 */
+	public boolean isNormalized() {
+		double length = sqrMagnitude();
+		return Math.abs(length - 1) <= 0.001;
+	}
+
 	/**
 	 * Get the square distance from the given vector.
 	 * 
@@ -521,8 +530,9 @@ public class Vector {
 	 *            Must be normalized
 	 */
 	public Vector reflect(Vector normal) {
-		if (normal.sqrMagnitude() != 1)
+		if (!normal.isNormalized()) {
 			throw new IllegalArgumentException("Normal vector must be normalized");
+		}
 		return this.minus(normal.times(2).times(this.dot(normal)));
 	}
 	
