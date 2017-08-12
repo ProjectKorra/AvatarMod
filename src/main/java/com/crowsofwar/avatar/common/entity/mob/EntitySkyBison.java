@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -817,6 +818,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 					entityDropItem(stack, 0);
 				}
 			}
+
+			// Log bison kills
+			if (cause.getTrueSource() instanceof EntityPlayer) {
+				AvatarLog.info("Bison " + getName() + " (owned by " + getOwner() + ") was just killed" +
+						" by " + cause.getTrueSource().getName());
+			}
+
 		}
 	}
 	
