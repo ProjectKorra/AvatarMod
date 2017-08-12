@@ -17,16 +17,11 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.Random;
-
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,6 +29,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityWall extends EarthAbility {
 	
@@ -137,7 +137,9 @@ public class AbilityWall extends EarthAbility {
 				world.spawnEntity(seg);
 			}
 			world.spawnEntity(wall);
-			
+
+			ctx.getData().addStatusControl(StatusControl.DROP_WALL);
+
 		}
 		
 	}
