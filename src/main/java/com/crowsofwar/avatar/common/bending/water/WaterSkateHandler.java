@@ -166,9 +166,7 @@ public class WaterSkateHandler extends TickHandler {
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
 				}
-				if (abilityData.getLevel() < 1) {
-					data.setCanUseAbilities(false);
-				}
+				data.setCanUseAbilities(abilityData.getLevel() >= 1);
 				
 			}
 			
