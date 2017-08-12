@@ -23,7 +23,9 @@ import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
 import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Predicate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -99,7 +101,8 @@ public class EntityAirblade extends AvatarEntity {
 				if (pierceArmor) {
 					source.setDamageBypassesArmor();
 				}
-				collided.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
+				boolean successfulHit = collided.attackEntityFrom(source, STATS_CONFIG
+						.airbladeSettings.damage);
 				
 				Vector motion = velocity().copy();
 				motion.mul(STATS_CONFIG.airbladeSettings.push);
@@ -110,8 +113,31 @@ public class EntityAirblade extends AvatarEntity {
 					BendingData data = getOwnerBender().getData();
 					data.getAbilityData(BendingAbility.ABILITY_AIRBLADE).addXp(SKILLS_CONFIG.airbladeHit);
 				}
-				
-				setDead();
+
+				if (chainAttack) {
+					if (successfulHit) {
+
+						AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
+						Predicate<EntityLivingBase> notFriendly =//
+								entity -> entity != collided && entity != getOwner();
+
+						List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB
+								(EntityLivingBase.class, aabb, notFriendly);
+
+						nextTargets.sort(AvatarUtils.getSortByDistanceComparator
+								(this::getDistanceToEntity));
+
+						if (!nextTargets.isEmpty()) {
+							EntityLivingBase nextTarget = nextTargets.get(0);
+							Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
+							velocity().set(direction.normalize().times(velocity().magnitude() *
+									0.8));
+						}
+
+					}
+				} else if (!world.isRemote) {
+					setDead();
+				}
 				
 			}
 		}
