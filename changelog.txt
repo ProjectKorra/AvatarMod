@@ -16,3 +16,4 @@ AV2 Changelog :: version a4.5
 > Fix floating block destroyed on place
 > Fix issue when trying to place/thrown floating block when just picked up
 > Fix airblade chainblade not working
+> Fix water skate level 1 not preventing bending
