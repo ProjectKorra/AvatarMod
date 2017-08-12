@@ -155,6 +155,7 @@ public abstract class EntityArc extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
+		tryDestroy();
 		setDead();
 	}
 	
