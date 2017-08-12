@@ -16,13 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
@@ -32,9 +25,15 @@ import com.crowsofwar.avatar.common.data.AbstractBendingData;
 import com.crowsofwar.avatar.common.data.DataCategory;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 /**
  * 
@@ -48,7 +47,7 @@ public class EntityBenderData extends AbstractBendingData {
 	public EntityBenderData(EntityLivingBase entity) {
 		this.entity = entity;
 	}
-	
+
 	@Override
 	public void save(DataCategory category) {}
 	

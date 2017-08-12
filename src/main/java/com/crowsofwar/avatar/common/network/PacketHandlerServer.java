@@ -98,7 +98,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			while (iterator.hasNext()) {
 				ProcessAbilityRequest par = iterator.next();
 				par.ticks--;
-				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0) {
+				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0 && par.data.getCanUseAbilities()) {
 					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability));
 					iterator.remove();
 				}
@@ -156,9 +156,11 @@ public class PacketHandlerServer implements IPacketHandler {
 			if (data.hasBending(ability.getBendingType())) {
 				if (!data.getAbilityData(ability).isLocked() || player.capabilities.isCreativeMode) {
 					if (data.getAbilityCooldown() == 0) {
-						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
-						ability.execute(abilityCtx);
-						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+						if (data.getCanUseAbilities()) {
+							AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
+							ability.execute(abilityCtx);
+							data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+						}
 					} else {
 						unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
 								player, data, ability, packet.getRaytrace()));
