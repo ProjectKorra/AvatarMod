@@ -5,6 +5,7 @@ AV2 Changelog :: version a4.5
 * Wandering bison wanders near owner
 * Bison toggles following via bison whistle
 * Log bison deaths when killed by another player
+* Mobs drop scrolls more often
 
 > Fix crash when killing entity without registered lang file name - FOR REAL THIS TIME
 > Fix bug where fireball keeps exploding when held on ground

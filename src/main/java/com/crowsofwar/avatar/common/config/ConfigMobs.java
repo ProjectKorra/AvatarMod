@@ -59,42 +59,42 @@ public class ConfigMobs {
 		DEFAULT_FOODS.put("minecraft:cake", 45);
 		DEFAULT_FOODS.put("minecraft:sugar", 2);
 		
-		DEFAULT_SCROLL_DROP.put("polar_bear", 5.0);
+		DEFAULT_SCROLL_DROP.put("polar_bear", 15.0);
 		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
-		DEFAULT_SCROLL_DROP.put("squid", 1.0);
+		DEFAULT_SCROLL_DROP.put("squid", 2.0);
 		DEFAULT_SCROLL_TYPE.put("squid", "water");
-		DEFAULT_SCROLL_DROP.put("guardian", 8.0);
+		DEFAULT_SCROLL_DROP.put("guardian", 10.0);
 		DEFAULT_SCROLL_TYPE.put("guardian", "water");
-		DEFAULT_SCROLL_DROP.put("elder_guardian", 15.0);
+		DEFAULT_SCROLL_DROP.put("elder_guardian", 20.0);
 		DEFAULT_SCROLL_TYPE.put("elder_guardian", "water");
 		
-		DEFAULT_SCROLL_DROP.put("zombie_pigman", 3.0);
+		DEFAULT_SCROLL_DROP.put("zombie_pigman", 5.0);
 		DEFAULT_SCROLL_TYPE.put("zombie_pigman", "fire");
-		DEFAULT_SCROLL_DROP.put("magma_cube", 8.0);
+		DEFAULT_SCROLL_DROP.put("magma_cube", 4.0);
 		DEFAULT_SCROLL_TYPE.put("magma_cube", "fire");
-		DEFAULT_SCROLL_DROP.put("wither_skeleton", 8.0);
+		DEFAULT_SCROLL_DROP.put("wither_skeleton", 15.0);
 		DEFAULT_SCROLL_TYPE.put("wither_skeleton", "fire");
 		DEFAULT_SCROLL_DROP.put("ghast", 30.0);
 		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
-		DEFAULT_SCROLL_DROP.put("blaze", 5.0);
+		DEFAULT_SCROLL_DROP.put("blaze", 8.0);
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
 		
-		DEFAULT_SCROLL_DROP.put("bat", 5.0);
+		DEFAULT_SCROLL_DROP.put("bat", 25.0);
 		DEFAULT_SCROLL_TYPE.put("bat", "earth");
-		DEFAULT_SCROLL_DROP.put("mooshroom", 3.0);
+		DEFAULT_SCROLL_DROP.put("mooshroom", 10.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
-		DEFAULT_SCROLL_DROP.put("cave_spider", 3.0);
+		DEFAULT_SCROLL_DROP.put("cave_spider", 5.0);
 		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
-		DEFAULT_SCROLL_DROP.put("silverfish", 8.0);
+		DEFAULT_SCROLL_DROP.put("silverfish", 10.0);
 		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
 		
 		DEFAULT_SCROLL_DROP.put("creeper", 3.0);
-		DEFAULT_SCROLL_DROP.put("skeleton", 2.0);
-		DEFAULT_SCROLL_DROP.put("zombie", 2.0);
-		DEFAULT_SCROLL_DROP.put("spider", 2.0);
-		DEFAULT_SCROLL_DROP.put("witch", 8.0);
-		DEFAULT_SCROLL_DROP.put("husk", 4.0);
-		DEFAULT_SCROLL_DROP.put("stray", 4.0);
+		DEFAULT_SCROLL_DROP.put("skeleton", 4.0);
+		DEFAULT_SCROLL_DROP.put("zombie", 3.0);
+		DEFAULT_SCROLL_DROP.put("spider", 4.0);
+		DEFAULT_SCROLL_DROP.put("witch", 10.0);
+		DEFAULT_SCROLL_DROP.put("husk", 6.0);
+		DEFAULT_SCROLL_DROP.put("stray", 6.0);
 		
 	}
 	
