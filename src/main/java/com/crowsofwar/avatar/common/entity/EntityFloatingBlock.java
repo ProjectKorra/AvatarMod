@@ -17,12 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-import static net.minecraft.network.datasync.EntityDataManager.createKey;
-
-import java.util.List;
-import java.util.Random;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -35,7 +29,6 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -56,6 +49,12 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
+import java.util.Random;
+
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
+import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 public class EntityFloatingBlock extends AvatarEntity {
 	
@@ -273,9 +272,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
-		lastTickPosX = posX;
-		lastTickPosY = posY;
-		lastTickPosZ = posZ;
 		
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
