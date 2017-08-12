@@ -24,7 +24,7 @@ public class StatCtrlDropWall extends StatusControl {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		EntityWall wall = AvatarEntity.lookupControlledEntity(world, EntityWall.class, entity);
+		EntityWall wall = AvatarEntity.lookupOwnedEntity(world, EntityWall.class, entity);
 		if (wall != null) {
 
 			for (int i = 0; i < 5; i++) {
