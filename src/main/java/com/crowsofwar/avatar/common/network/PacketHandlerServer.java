@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
@@ -160,6 +161,9 @@ public class PacketHandlerServer implements IPacketHandler {
 							AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
 							ability.execute(abilityCtx);
 							data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+						} else {
+							// TODO make bending disabled available for multiple things
+							AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(player);
 						}
 					} else {
 						unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
