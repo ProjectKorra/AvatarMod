@@ -17,12 +17,10 @@
 
 package com.crowsofwar.avatar.common.bending;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleContract;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleExpand;
+import com.crowsofwar.avatar.common.bending.earth.StatCtrlDropWall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlSetFlamethrowing;
@@ -35,6 +33,9 @@ import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Describes a temporary effect where a callback listener is added to a control
@@ -66,7 +67,8 @@ public abstract class StatusControl {
 			SKATING_START = new StatCtrlSkateStart(),
 			THROW_FIREBALL = new StatCtrlThrowFireball(),
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
-			BUBBLE_CONTRACT = new StatCtrlBubbleContract();
+			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
+			DROP_WALL = new StatCtrlDropWall();
 	// @formatter:on
 	
 	private static int nextId = 0;
