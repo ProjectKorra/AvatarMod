@@ -272,7 +272,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
-		
+
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
 		
@@ -283,6 +283,15 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 */
 	@Override
 	public void onCollideWithSolid() {
+
+		FloatingBlockBehavior behavior = getBehavior();
+		if (!(behavior instanceof FloatingBlockBehavior.Fall || behavior instanceof
+				FloatingBlockBehavior.Thrown)) {
+
+			return;
+
+		}
+
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
