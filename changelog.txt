@@ -12,3 +12,4 @@ AV2 Changelog :: version a4.5
 > Fix issue when executing certain commands on server
 > Fix fire arc making fires when player-controlled
 > Fix fire/water arc StatCtrls not removed on relog
+> Fix floating block destroyed on place
