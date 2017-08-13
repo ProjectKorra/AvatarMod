@@ -62,10 +62,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -429,6 +426,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		BendingData data = Bender.getData(player);
 		
 		List<BendingController> controllers = data.getAllBending();
+		controllers.sort(Comparator.comparing(BendingController::getControllerName));
 		if (controllers.size() > 1) {
 			
 			int index = controllers.indexOf(data.getActiveBending());

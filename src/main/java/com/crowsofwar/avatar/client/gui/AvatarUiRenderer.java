@@ -17,15 +17,6 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static net.minecraft.client.renderer.GlStateManager.*;
-
-import java.util.List;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import com.crowsofwar.avatar.common.bending.BendingController;
 import com.crowsofwar.avatar.common.bending.BendingManager;
 import com.crowsofwar.avatar.common.bending.BendingType;
@@ -36,7 +27,6 @@ import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -51,6 +41,15 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.util.Comparator;
+import java.util.List;
+
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
  * 
@@ -229,7 +228,8 @@ public class AvatarUiRenderer extends Gui {
 			
 			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
 			List<BendingController> allBending = data.getAllBending();
-			
+			allBending.sort(Comparator.comparing(BendingController::getControllerName));
+
 			// Draw next
 			int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
 			if (indexNext == allBending.size()) indexNext = 0;

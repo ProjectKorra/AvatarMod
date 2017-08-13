@@ -22,3 +22,4 @@ AV2 Changelog :: version a4.5
 > Fix airblade not doing more damage when levelled up
 > Fix ability to create many fire arcs at once
 > Fix bison always wanting to breed upon world reload
+> Fix weirdness with bending switch order (z/c); bending in alphabetical order
