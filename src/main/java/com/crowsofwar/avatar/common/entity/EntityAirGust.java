@@ -17,19 +17,18 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 public class EntityAirGust extends EntityArc {
 	
@@ -39,7 +38,7 @@ public class EntityAirGust extends EntityArc {
 	
 	public EntityAirGust(World world) {
 		super(world);
-		setSize(0.5f, 0.5f);
+		setSize(1.5f, 1.5f);
 		putsOutFires = true;
 	}
 	
