@@ -101,8 +101,7 @@ public class EntityAirblade extends AvatarEntity {
 				if (pierceArmor) {
 					source.setDamageBypassesArmor();
 				}
-				boolean successfulHit = collided.attackEntityFrom(source, STATS_CONFIG
-						.airbladeSettings.damage);
+				boolean successfulHit = collided.attackEntityFrom(source, damage);
 				
 				Vector motion = velocity().copy();
 				motion.mul(STATS_CONFIG.airbladeSettings.push);
