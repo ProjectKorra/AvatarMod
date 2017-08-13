@@ -20,3 +20,4 @@ AV2 Changelog :: version a4.5
 > Fix water skate level 1 not preventing bending
 > Fix airblade not doing more damage when levelled up
 > Fix ability to create many fire arcs at once
+> Fix bison always wanting to breed upon world reload

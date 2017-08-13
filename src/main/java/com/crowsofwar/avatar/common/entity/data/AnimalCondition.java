@@ -16,11 +16,11 @@
 */
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * 
@@ -67,8 +67,9 @@ public class AnimalCondition {
 		setFoodPoints(nbt.getFloat("FoodPoints"));
 		setDomestication(nbt.getInteger("Domestication"));
 		setAge(nbt.getInteger("Age"));
-		setBreedTimer(nbt.getInteger("BreedTimer"));
 		setSterile(nbt.getBoolean("Sterile"));
+		// must call setBreedTimer after setSterile because sterile affects sbt
+		setBreedTimer(nbt.getInteger("BreedTimer"));
 	}
 	
 	public void onUpdate() {
