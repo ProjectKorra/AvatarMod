@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -64,18 +65,19 @@ public class AbilityFireArc extends FireAbility {
 				Vector look = Vector.getLookRectangular(entity);
 				lookPos = Vector.getEyePos(entity).plus(look.times(3));
 			}
-			
+
+			removeExisting(ctx);
+
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
 			fire.setBehavior(new FireArcBehavior.PlayerControlled());
 			fire.setOwner(entity);
 			fire.setDamageMult(ctx.getLevel() >= 2 ? 2 : 1);
 			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
-			
 			world.spawnEntity(fire);
-			
+
 			data.addStatusControl(StatusControl.THROW_FIRE);
-			
+
 		}
 		
 	}
@@ -84,5 +86,19 @@ public class AbilityFireArc extends FireAbility {
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFireArc(this, entity, bender);
 	}
-	
+
+	/**
+	 * Kills already existing fire arc if there is one
+	 */
+	private void removeExisting(AbilityContext ctx) {
+
+		EntityFireArc fire = AvatarEntity.lookupControlledEntity(ctx.getWorld(), EntityFireArc
+				.class, ctx.getBenderEntity());
+
+		if (fire != null) {
+			fire.setBehavior(new FireArcBehavior.Thrown());
+		}
+
+	}
+
 }
