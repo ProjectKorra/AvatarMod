@@ -17,10 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WALL;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -32,7 +29,6 @@ import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -50,6 +46,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WALL;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 /**
  * 
@@ -139,6 +139,14 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	
 	public void setBehavior(WallBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+
+		// Remove "drop wall" statCtrl if the wall is dropping
+		if (behavior instanceof WallBehavior.Drop) {
+			if (getOwner() != null) {
+				Bender.create(getOwner()).getData().removeStatusControl(StatusControl.DROP_WALL);
+			}
+		}
+		
 	}
 	
 	public void setDirection(EnumFacing dir) {

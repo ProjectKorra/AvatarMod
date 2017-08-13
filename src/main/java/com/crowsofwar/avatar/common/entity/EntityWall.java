@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -149,9 +147,6 @@ public class EntityWall extends AvatarEntity {
 				entity.isDead = true;
 				entity.dropBlocks();
 			}
-		}
-		if (getOwner() != null) {
-			Bender.create(getOwner()).getData().removeStatusControl(StatusControl.DROP_WALL);
 		}
 		super.setDead();
 	}
