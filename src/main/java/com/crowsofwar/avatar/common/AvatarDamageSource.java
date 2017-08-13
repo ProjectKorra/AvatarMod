@@ -17,11 +17,11 @@
 
 package com.crowsofwar.avatar.common;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+
+import javax.annotation.Nullable;
 
 /**
  * Contains static methods used to acquire custom DamageSources for various
@@ -41,7 +41,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the floating block
 	 */
 	public static DamageSource causeFloatingBlockDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_earthbendBlock", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_earthbendBlock", hit, owner).setProjectile();
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the water arc
 	 */
 	public static DamageSource causeWaterDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_waterArc", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_waterArc", hit, owner).setProjectile();
 	}
 	
 	/**
@@ -67,7 +67,8 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the fire arc
 	 */
 	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_fireArc", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_fireArc", hit, owner).setProjectile()
+				.setFireDamage();
 	}
 	
 	/**
@@ -103,7 +104,8 @@ public class AvatarDamageSource {
 	 *            Who created the fireball
 	 */
 	public static DamageSource causeFireballDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner).setProjectile()
+				.setFireDamage().setExplosion();
 	}
 	
 	/**
@@ -115,7 +117,7 @@ public class AvatarDamageSource {
 	 *            Who created the airblade
 	 */
 	public static DamageSource causeAirbladeDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_airblade", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_airblade", hit, owner).setProjectile();
 	}
 	
 	/**
@@ -127,7 +129,8 @@ public class AvatarDamageSource {
 	 *            Who created the flames
 	 */
 	public static DamageSource causeFlamethrowerDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_flamethrower", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_flamethrower", hit, owner).setProjectile()
+				.setFireDamage();
 	}
 	
 	/**
