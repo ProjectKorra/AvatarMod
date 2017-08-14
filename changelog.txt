@@ -27,3 +27,4 @@ AV2 Changelog :: version a4.5
 > Fix attacking bison in any way (bow, floating block, etc) will make you mount it
 > Fix rare crash when creating wall
 > Fix crash when water arc's owner dies and water arc is thrown
+> Fix airblade not stopping

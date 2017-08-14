@@ -77,7 +77,8 @@ public class EntityAirblade extends AvatarEntity {
 	public void onUpdate() {
 		
 		super.onUpdate();
-		
+
+		velocity().mul(0.96);
 		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
 		}
