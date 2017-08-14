@@ -108,11 +108,19 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
-			
-			BendingData data = Bender.create(entity.getOwner()).getData();
-			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_ARC);
-			
-			if (!abilityData.isMasterPath(AbilityTreePath.SECOND) || entity.ticksExisted >= 40) {
+
+			boolean waterSpear = false;
+			BendingData data = null;
+			AbilityData abilityData = null;
+
+			Bender bender = Bender.create(entity.getOwner());
+			if (bender != null) {
+				data = bender.getData();
+				abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_ARC);
+				waterSpear = abilityData.isMasterPath(AbilityTreePath.SECOND);
+			}
+
+			if (waterSpear || entity.ticksExisted >= 40) {
 				entity.velocity().add(0, -9.81 / 60, 0);
 			}
 			
@@ -126,7 +134,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
 						6 * entity.getDamageMult());
 				
-				if (!entity.world.isRemote) {
+				if (!entity.world.isRemote && data != null) {
 					
 					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
 					
