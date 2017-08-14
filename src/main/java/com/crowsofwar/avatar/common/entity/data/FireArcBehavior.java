@@ -105,7 +105,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			entity.velocity().add(0, -9.81 / 60, 0);
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().expand(0.9, 0.9, 0.9),
+					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {
