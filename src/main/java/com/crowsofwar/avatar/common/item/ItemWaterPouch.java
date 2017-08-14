@@ -73,11 +73,12 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		
-		for (int meta = 0; meta <= 5; meta++) {
-			subItems.add(new ItemStack(this, 1, meta));
+
+		if (isInCreativeTab(tab)) {
+			for (int meta = 0; meta <= 5; meta++) {
+				subItems.add(new ItemStack(this, 1, meta));
+			}
 		}
 		
 	}
