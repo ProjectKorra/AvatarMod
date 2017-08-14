@@ -26,7 +26,6 @@ import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -43,7 +42,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -171,29 +169,7 @@ public class EntityAirBubble extends AvatarEntity {
 					
 					if (doesAllowHovering() && !owner.isSneaking()) {
 						
-						// Find the closest BlockPos below owner that has a
-						// block
-						BlockPos pos = owner.getPosition().up();
-						boolean ground = false;
-						do {
-							List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(null,
-									new AxisAlignedBB(pos).expand(0, 0.5, 0));
-							ground = !collideWithGround.isEmpty()
-									|| world.getBlockState(pos).getBlock() instanceof BlockLiquid;
-							pos = pos.down();
-						} while (!ground);
-						
-						double distFromGround = owner.posY - (pos.getY() + 2);
-						if (distFromGround >= 0.5 && distFromGround <= 2) {
-							owner.motionY += 0.02;
-							
-							if (owner.motionY < 0) {
-								owner.motionY = 0;
-							}
-						}
-						if (distFromGround < 0) {
-							owner.motionY += 0.08;
-						}
+						handleHovering();
 						
 					}
 					
@@ -223,6 +199,61 @@ public class EntityAirBubble extends AvatarEntity {
 			setSize(size, size);
 		}
 		
+	}
+
+	/**
+	 * Handles hovering logic to make the owner hover. Preconditions (not in water, owner
+	 * present, etc) are handled by the caller
+	 */
+	private void handleHovering() {
+
+		// Min/max acceptable hovering distance
+		// Hovering is allowed between these two values
+		// Hover distance doesn't need to be EXACT
+		final double minFloatHeight = 1.8;
+		final double maxFloatHeight = 2.2;
+
+		EntityLivingBase owner = getOwner();
+
+		// Find whether there are blocks under the owner
+		// Done by making a hitbox around the owner's feet and checking if there are blocks
+		// colliding with that hitbox
+
+		double x = owner.posX;
+		double y = owner.posY;
+		double z = owner.posZ;
+		AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
+		hitbox = hitbox.grow(0.2, 0, 0.2);
+		hitbox = hitbox.expand(0, -maxFloatHeight, 0);
+
+		List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
+
+		if (!blockCollisions.isEmpty()) {
+
+			// Calculate the top-of-ground ground y position
+			// Performed by finding the maximum ypos of each collided block
+			double groundPosition = Double.MIN_VALUE;
+			for (AxisAlignedBB blockHitbox : blockCollisions) {
+				if (blockHitbox.maxY > groundPosition) {
+					groundPosition = blockHitbox.maxY;
+				}
+			}
+			// Now calculate the distance from ground
+			// and use that to determine whether owner should float
+			double distanceFromGround = owner.posY - groundPosition;
+
+			if (distanceFromGround < minFloatHeight) {
+				owner.motionY += 0.06;
+			}
+			if (distanceFromGround >= minFloatHeight) {
+				owner.motionY *= 0.7;
+			}
+			if (distanceFromGround >= maxFloatHeight) {
+				owner.motionY += 0.08;
+			}
+
+		}
+
 	}
 	
 	@Override
