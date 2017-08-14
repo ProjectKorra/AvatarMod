@@ -66,7 +66,7 @@ public class AvatarItems {
 	}
 
 	private static void addItem(Item item) {
-		item.setRegistryName("avatarmod", item.getUnlocalizedName());
+		item.setRegistryName("avatarmod", item.getUnlocalizedName().substring(5));
 		item.setUnlocalizedName("avatarmod:" + item.getUnlocalizedName().substring(5));
 		allItems.add(item);
 	}

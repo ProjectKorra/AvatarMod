@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "ii ",
     " si",
@@ -12,7 +12,7 @@
     "d": {
       "item": "minecraft:diamond"
     },
-    "e": {
+    "s": {
       "item": "avatarmod:scroll",
       "data": 4
     }
