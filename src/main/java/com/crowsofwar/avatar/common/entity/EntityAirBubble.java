@@ -165,12 +165,10 @@ public class EntityAirBubble extends AvatarEntity {
 				
 				if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
 					
-					owner.motionY += .03;
-					
 					if (doesAllowHovering() && !owner.isSneaking()) {
-						
 						handleHovering();
-						
+					} else {
+						owner.motionY += 0.03;
 					}
 					
 				}
@@ -242,14 +240,22 @@ public class EntityAirBubble extends AvatarEntity {
 			// and use that to determine whether owner should float
 			double distanceFromGround = owner.posY - groundPosition;
 
+			// Tweak motion based on distance to ground, and target distance
+			// Minecraft gravity is 0.08 blocks/tick
+
 			if (distanceFromGround < minFloatHeight) {
-				owner.motionY += 0.06;
+				owner.motionY += 0.11;
 			}
-			if (distanceFromGround >= minFloatHeight) {
+			if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
 				owner.motionY *= 0.7;
 			}
 			if (distanceFromGround >= maxFloatHeight) {
-				owner.motionY += 0.08;
+				owner.motionY += 0.07;
+
+				// Avoid falling at over 3 m/s
+				if (owner.motionY < -3.0 / 20) {
+					owner.motionY = 0;
+				}
 			}
 
 		}
