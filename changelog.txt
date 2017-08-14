@@ -10,6 +10,7 @@ AV2 Changelog :: version a4.5
 * Air gust has 3x bigger radius
 * Rebalance air bubble health
 * Properly flag damage from AV2 as fire, projectile, etc when necessary
+* Tweak air bubble undercurrent
 
 > Fix crash when killing entity without registered lang file name - FOR REAL THIS TIME
 > Fix bug where fireball keeps exploding when held on ground
@@ -28,3 +29,4 @@ AV2 Changelog :: version a4.5
 > Fix rare crash when creating wall
 > Fix crash when water arc's owner dies and water arc is thrown
 > Fix airblade not stopping
+> Fix AirBubble Undercurrent exploit where you can scale South/East sides of walls
