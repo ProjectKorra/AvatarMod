@@ -11,7 +11,9 @@
     "attacked": {
       "trigger": "minecraft:item_durability_changed",
       "conditions": {
-        "item": "avatarmod:bison_whistle"
+        "item": {
+          "item": "avatarmod:bison_whistle"
+        }
       }
     }
   }
