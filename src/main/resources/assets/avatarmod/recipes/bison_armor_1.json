@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " hh",
+    "hch",
+    "s s"
+  ],
+  "key": {
+    "h": {
+      "item": "minecraft:hay_bale"
+    },
+    "c": {
+      "item": "minecraft:scroll",
+      "data": 4
+    },
+    "s": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "avatarmod:bison_armor",
+    "data": 0
+  }
+}
