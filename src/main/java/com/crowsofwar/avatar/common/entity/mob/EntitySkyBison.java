@@ -39,6 +39,7 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -47,6 +48,7 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -555,6 +557,21 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			if (!player.capabilities.isCreativeMode) {
 				stack.shrink(1);
 			}
+
+			// Hacky hack to have own CriteriaTrigger for bison taming, without actually making a
+			// legit one because Criterion system is an overcomplicated bloated mess of bullcrap
+
+			// (Animal taming trigger doesn't work since this isn't a subclass of EntityAnimal)
+
+			if (!world.isRemote) {
+
+				// This would never trigger normally since bison whistle doesn't have durability
+
+				CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger((EntityPlayerMP) player, new
+						ItemStack(AvatarItems.itemBisonWhistle), 0);
+
+			}
+
 			return true;
 		}
 		
