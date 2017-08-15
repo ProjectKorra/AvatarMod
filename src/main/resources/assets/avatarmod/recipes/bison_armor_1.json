@@ -10,7 +10,7 @@
       "item": "minecraft:hay_block"
     },
     "c": {
-      "item": "minecraft:scroll",
+      "item": "avatarmod:scroll",
       "data": 4
     },
     "s": {
