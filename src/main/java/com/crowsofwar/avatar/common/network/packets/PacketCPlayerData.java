@@ -17,22 +17,23 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
-import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.data.AbstractBendingData;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.DataCategory;
+import com.crowsofwar.gorecore.GoreCore;
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.DataCategory;
-import com.crowsofwar.gorecore.GoreCore;
-
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
 
 /**
  * 
@@ -66,7 +67,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
-		AvatarPlayerData data = AvatarPlayerData.fetcher()
+		final BendingData data = AvatarPlayerData.fetcher()
 				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId);
 		
 		if (data != null) {
@@ -88,6 +89,25 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		} else {
 			AvatarLog.warn(WarningType.WEIRD_PACKET, "Server sent a packet about data for player " + playerId
 					+ " but data couldn't be found for them");
+
+			// Get rid of bytes from ByteBuf which were unread
+			// They aren't used, but this is necessary since read/write need to use same number
+			// of bytes (or there will be big problems)
+
+			BendingData trashData = new AbstractBendingData() {
+				@Override
+				public void save(DataCategory category) {}
+			};
+
+			changed = new TreeSet<>();
+			int size = buf.readInt();
+			for (int i = 0; i < size; i++) {
+				changed.add(DataCategory.values()[buf.readInt()]);
+			}
+			for (DataCategory category : changed) {
+				category.read(buf, trashData);
+			}
+
 		}
 		
 	}
