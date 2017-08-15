@@ -30,3 +30,4 @@ AV2 Changelog :: version a4.5
 > Fix crash when water arc's owner dies and water arc is thrown
 > Fix airblade not stopping
 > Fix AirBubble Undercurrent exploit where you can scale South/East sides of walls
+> Fix airbending wall jump not working on servers

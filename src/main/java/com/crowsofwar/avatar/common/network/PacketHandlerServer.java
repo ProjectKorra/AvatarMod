@@ -273,8 +273,12 @@ public class PacketHandlerServer implements IPacketHandler {
 				if (n.sqrMagnitude() > 1) {
 					n.normalize().mul(1);
 				}
-				
-				player.setVelocity(n.x(), n.y(), n.z());
+
+				// can't use setVelocity since that is Client SideOnly
+				player.motionX = n.x();
+				player.motionY = n.y();
+				player.motionZ = n.z();
+
 				player.connection.sendPacket(new SPacketEntityVelocity(player));
 				
 				new NetworkParticleSpawner().spawnParticles(world, AvatarParticles.getParticleAir(), 4, 10,
