@@ -24,7 +24,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "a4.2"
+version = "a4.5"
 group= "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
 
