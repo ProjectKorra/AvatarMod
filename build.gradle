@@ -77,12 +77,6 @@ shadowJar.classifier = ""
 reobf { shadowJar { mappingType = "SEARGE" } }
 tasks.reobfShadowJar.mustRunAfter shadowJar
 
-
-task deobfJar(type: Jar, dependsOn: 'jar') {
-    from sourceSets.main.output
-    classifier "deobf"
-}
-
 task sourceZip(type: Zip, dependsOn: 'classes') {
   classifier "src"
   from projectDir
