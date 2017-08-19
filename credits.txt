@@ -1,0 +1,18 @@
+AvatarMod2 Credits
+------------------
+
+Code by CrowsOfWar
+All models animated by CrowsOfWar
+Sky bison armor/saddle item texture by CrowsOfWar
+
+Otter penguin models & textures by talhanation
+
+Radial menu, ability icons by EduMC
+Airbender/firebender skins by EduMC
+
+Sky bison model/texture by Captn_Dubz
+
+Skill menu tabs by FavouriteDragon
+ adjusted for practical use by CrowsOfWar
+
+Translations by Ferrujado, Madwrist, SporYou, ExterMiner
