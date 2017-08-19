@@ -98,7 +98,7 @@ public class EntityAiBisonLand extends EntityAIBase {
 		double z = bison.posZ + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
 		
 		int y = (int) bison.posY;
-		while (!isSolidBlock(new BlockPos(x, y, z))) {
+		while (!isSolidBlock(new BlockPos(x, y, z)) && y >= 0) {
 			y--;
 		}
 		return new Vector(x, y, z);

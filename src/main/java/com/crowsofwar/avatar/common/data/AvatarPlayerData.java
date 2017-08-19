@@ -17,6 +17,18 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.UUID;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
@@ -203,6 +215,35 @@ public class AvatarPlayerData extends PlayerData implements BendingData {
 			
 		}
 		
+	}
+	
+	@Override
+	protected void saveChanges() {
+		super.saveChanges();
+		updateMaxChi();
+	}
+	
+	private void updateMaxChi() {
+		float chi = 0;
+		chi += getAllBending().size() * CHI_CONFIG.bonusLearnedBending;
+		for (AbilityData aData : getAllAbilityData()) {
+			if (!aData.isLocked() && hasBending(aData.getAbility().getBendingType())) {
+				chi += CHI_CONFIG.bonusAbility;
+				chi += aData.getLevel() * CHI_CONFIG.bonusAbilityLevel;
+			}
+		}
+		if (chi >= CHI_CONFIG.maxChiCap) chi = CHI_CONFIG.maxChiCap;
+		
+		// needed to avoid StackOverflowError
+		if (chi != chi().getMaxChi()) {
+			float old = chi().getMaxChi();
+			chi().setMaxChi(chi);
+			
+			// Don't need to wait for new chi to regen
+			if (chi > old) {
+				chi().changeTotalChi(chi - old);
+			}
+		}
 	}
 	
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {

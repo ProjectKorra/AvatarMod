@@ -31,7 +31,13 @@ public class ConfigChi {
 	private ConfigChi() {}
 	
 	@Load
-	public float regenPerSecond = .2f, availablePerSecond = .4f, availableThreshold = .4f;
+	public float regenPerSecond = .05f, availablePerSecond = .4f, availableThreshold = .4f, regenInBed = 1f;
+	
+	@Load
+	public float bonusLearnedBending = 16, bonusAbility = 6, bonusAbilityLevel = 3;
+	
+	@Load
+	public float maxChiCap = 76;
 	
 	@Load
 	public boolean infiniteInCreative = true;

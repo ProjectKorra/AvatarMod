@@ -49,7 +49,12 @@ public class AvatarPlayerTick {
 			data.decrementCooldown();
 			if (!player.world.isRemote) {
 				Chi chi = data.chi();
-				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
+				
+				if (player.isPlayerSleeping()) {
+					chi.changeTotalChi(CHI_CONFIG.regenInBed / 20f);
+				} else {
+					chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
+				}
 				
 				if (chi.getAvailableChi() < chi.getMaxChi() * CHI_CONFIG.availableThreshold) {
 					chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);

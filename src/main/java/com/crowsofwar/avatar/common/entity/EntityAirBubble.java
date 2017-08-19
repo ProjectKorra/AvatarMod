@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -76,12 +77,14 @@ public class EntityAirBubble extends AvatarEntity {
 			"airbubble_slowness", -.3, 2);
 	
 	private final OwnerAttribute ownerAttr;
+	private int airLeft;
 	
 	public EntityAirBubble(World world) {
 		super(world);
 		// setSize(2.5f, 2.5f);
 		setSize(0, 0);
 		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+		this.airLeft = 600;
 	}
 	
 	@Override
@@ -131,46 +134,56 @@ public class EntityAirBubble extends AvatarEntity {
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
 			setDead();
+			return;
 		}
-		if (owner != null) {
-			
-			setPosition(owner.posX, owner.posY, owner.posZ);
-			
-			Bender ownerBender = ownerAttr.getOwnerBender();
-			if (!world.isRemote
-					&& !ownerBender.getData().chi().consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
-				
-				dissipateSmall();
-				
+		if (owner.isDead) {
+			dissipateSmall();
+			return;
+		}
+
+		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
+			owner.setAir(Math.min(airLeft, 300));
+			airLeft--;
+		}
+		if (owner.isBurning()) {
+			owner.extinguish();
+		}
+		
+		setPosition(owner.posX, owner.posY, owner.posZ);
+
+		Bender ownerBender = ownerAttr.getOwnerBender();
+		if (!world.isRemote
+				&& !ownerBender.getData().chi().consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
+
+			dissipateSmall();
+
+		}
+		
+		ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+		if (!elytraOk && !world.isRemote) {
+			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
+					(EntityPlayerMP) owner);
+			dissipateSmall();
+		}
+		
+		if (!isDissipating()) {
+			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
+				attribute.applyModifier(SLOW_ATTR);
 			}
 			
-			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-			if (!elytraOk && !world.isRemote) {
-				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
-						(EntityPlayerMP) owner);
-				dissipateSmall();
-			}
-			
-			if (owner.isDead) {
-				dissipateSmall();
-			}
-			
-			if (!isDissipating()) {
-				IAttributeInstance attribute = owner
-						.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
-					attribute.applyModifier(SLOW_ATTR);
-				}
+			if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
 				
-				if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
+				owner.motionY += .03;
+				
+				if (doesAllowHovering()) {
 					
 					if (doesAllowHovering() && !owner.isSneaking()) {
 						handleHovering();
 					} else {
 						owner.motionY += 0.03;
 					}
-					
 				}
 				
 			}
@@ -204,6 +217,10 @@ public class EntityAirBubble extends AvatarEntity {
 	 * present, etc) are handled by the caller
 	 */
 	private void handleHovering() {
+
+		if (getOwner() != null) {
+			getOwner().fallDistance = 0;
+		}
 
 		// Min/max acceptable hovering distance
 		// Hovering is allowed between these two values
@@ -277,8 +294,6 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		
-		if (2 + 2 == 4) return;
-		
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;
 		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
@@ -314,6 +329,7 @@ public class EntityAirBubble extends AvatarEntity {
 		setDissipateTime(nbt.getInteger("Dissipate"));
 		setHealth(nbt.getFloat("Health"));
 		setAllowHovering(nbt.getBoolean("AllowHovering"));
+		airLeft = nbt.getInteger("AirLeft");
 	}
 	
 	@Override
@@ -323,6 +339,7 @@ public class EntityAirBubble extends AvatarEntity {
 		nbt.setInteger("Dissipate", getDissipateTime());
 		nbt.setFloat("Health", getHealth());
 		nbt.setBoolean("AllowHovering", doesAllowHovering());
+		nbt.setInteger("AirLeft", airLeft);
 	}
 	
 	@Override
