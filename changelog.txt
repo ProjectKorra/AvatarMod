@@ -1,5 +1,8 @@
 AV2 Changelog :: version a4.5
 
++ Move to MC 1.12 / 1.12.1
++ French translation by ExterMiner
+
 * Reduced penguin spawning (to 1/3)
 * Reduced penguin drop rate (to 1/2)
 * Wandering bison wanders near owner
