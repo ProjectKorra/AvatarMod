@@ -89,5 +89,3 @@ task sourceZip(type: Zip, dependsOn: 'classes') {
 shadowJar {
   configurations = [project.configurations.compile]
 }
-idea { module { inheritOutputDirs = true } }
-sourceSets { main { output.resourcesDir = output.classesDir } }
