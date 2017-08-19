@@ -43,7 +43,7 @@ public class EntityAiBisonFollowAttacker extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		
 		EntityLivingBase target = bison.getAttackTarget();
 		if (target == null || target.isDead) {
