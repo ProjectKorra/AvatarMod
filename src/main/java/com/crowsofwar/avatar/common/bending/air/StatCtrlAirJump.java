@@ -68,7 +68,7 @@ public class StatCtrlAirJump extends StatusControl {
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity,
-				entity.getEntityBoundingBox().expand(0, -0.5, 0));
+				entity.getEntityBoundingBox().grow(0, 0.5, 0));
 		boolean onGround = !collideWithGround.isEmpty();
 
 		if (onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {

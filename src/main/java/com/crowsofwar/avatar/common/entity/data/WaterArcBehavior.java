@@ -23,8 +23,8 @@ import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -33,7 +33,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -64,8 +63,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			
 			EntityLivingBase owner = water.getOwner();
 			if (owner == null) return this;
-
-			World world = owner.world;
 
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 			
@@ -108,16 +105,24 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
-			
-			BendingData data = Bender.get(entity.getOwner()).getData();
-			AbilityData abilityData = data.getAbilityData(AbilityWaterArc.ID);
-			
-			if (!abilityData.isMasterPath(AbilityTreePath.SECOND) || entity.ticksExisted >= 40) {
-				entity.addVelocity(0, -9.81 / 60, 0);
+
+			boolean waterSpear = false;
+			BendingData data = null;
+			AbilityData abilityData = null;
+
+			Bender bender = Bender.get(entity.getOwner());
+			if (bender != null) {
+				data = bender.getData();
+				abilityData = data.getAbilityData(AbilityWaterArc.ID);
+				waterSpear = abilityData.isMasterPath(AbilityTreePath.SECOND);
+			}
+
+			if (waterSpear || entity.ticksExisted >= 40) {
+				entity.setVelocity(entity.velocity().minusY(9.81 / 60));
 			}
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().expand(0.9, 0.9, 0.9),
+					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {
@@ -126,7 +131,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
 						6 * entity.getDamageMult());
 				
-				if (!entity.world.isRemote) {
+				if (!entity.world.isRemote && data != null) {
 					
 					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
 					

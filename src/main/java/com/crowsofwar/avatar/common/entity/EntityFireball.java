@@ -186,7 +186,7 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public void setEntityBoundingBox(AxisAlignedBB bb) {
 		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.expand(0.35, 0.35, 0.35);
+		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
 	}
 	
 	@Override

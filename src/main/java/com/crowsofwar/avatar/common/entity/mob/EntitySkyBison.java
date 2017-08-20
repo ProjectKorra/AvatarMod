@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
@@ -42,6 +43,7 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -50,6 +52,7 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -193,6 +196,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.tasks.addTask(2, Abilities.get(AbilityAirGust.ID).getAi(this, this));
 		this.tasks.addTask(3, Abilities.get(AbilityAirblade.ID).getAi(this, this));
 
+		this.tasks.addTask(2, new EntityAiBisonFollowAttacker(this));
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
 		this.tasks.addTask(4, new EntityAiBisonBreeding(this));
 		this.tasks.addTask(5, new EntityAiBisonTempt(this, 10));
@@ -326,7 +330,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	public float getSpeedMultiplier() {
 		float armorSpeed = getArmor() == null ? 1 : getArmor().getSpeedMultiplier();
-		return condition.getSpeedMultiplier() * armorSpeed;
+		float attackSpeed = getAttackTarget() != null ? 1.25f : 1f;
+		return condition.getSpeedMultiplier() * armorSpeed * attackSpeed;
 	}
 
 	public AnimalCondition getCondition() {
@@ -560,6 +565,21 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			if (!player.capabilities.isCreativeMode) {
 				stack.shrink(1);
 			}
+
+			// Hacky hack to have own CriteriaTrigger for bison taming, without actually making a
+			// legit one because Criterion system is an overcomplicated bloated mess of bullcrap
+
+			// (Animal taming trigger doesn't work since this isn't a subclass of EntityAnimal)
+
+			if (!world.isRemote) {
+
+				// This would never trigger normally since bison whistle doesn't have durability
+
+				CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger((EntityPlayerMP) player, new
+						ItemStack(AvatarItems.itemBisonWhistle), 0);
+
+			}
+
 			return true;
 		}
 
@@ -822,6 +842,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 					entityDropItem(stack, 0);
 				}
 			}
+
+			// Log bison kills
+			if (cause.getTrueSource() instanceof EntityPlayer) {
+				AvatarLog.info("Bison " + getName() + " (owned by " + getOwner() + ") was just killed" +
+						" by " + cause.getTrueSource().getName());
+			}
+
 		}
 	}
 
@@ -844,6 +871,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 		if (!world.isRemote) {
 			setEatGrassTime(aiEatGrass.getEatGrassTime());
+			setLoveParticles(condition.isReadyToBreed());
 		}
 		if (world.isRemote && isLoveParticles() && ticksExisted % 10 == 0) {
 			double d0 = this.rand.nextGaussian() * 0.02D;

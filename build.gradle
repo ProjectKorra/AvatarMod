@@ -24,7 +24,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "a4.2"
+version = "a4.5"
 group= "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
 
@@ -32,7 +32,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-    version = "1.12-14.21.1.2387"
+    version = "1.12.1-14.22.0.2459"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -77,12 +77,6 @@ shadowJar.classifier = ""
 reobf { shadowJar { mappingType = "SEARGE" } }
 tasks.reobfShadowJar.mustRunAfter shadowJar
 
-
-task deobfJar(type: Jar, dependsOn: 'jar') {
-    from sourceSets.main.output
-    classifier "deobf"
-}
-
 task sourceZip(type: Zip, dependsOn: 'classes') {
   classifier "src"
   from projectDir
@@ -95,5 +89,3 @@ task sourceZip(type: Zip, dependsOn: 'classes') {
 shadowJar {
   configurations = [project.configurations.compile]
 }
-idea { module { inheritOutputDirs = true } }
-sourceSets { main { output.resourcesDir = output.classesDir } }

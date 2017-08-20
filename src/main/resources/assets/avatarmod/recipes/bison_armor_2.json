@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " id",
+    "iab",
+    "s s"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "b": {
+      "item": "minecraft:iron_block"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "a": {
+      "item": "avatarmod:bison_armor",
+      "data": 0
+    },
+    "s": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "avatarmod:bison_armor",
+    "data": 1
+  }
+}

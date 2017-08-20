@@ -19,8 +19,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,7 +38,7 @@ public class EntityAirGust extends EntityArc {
 	
 	public EntityAirGust(World world) {
 		super(world);
-		setSize(0.5f, 0.5f);
+		setSize(1.5f, 1.5f);
 		putsOutFires = true;
 	}
 	

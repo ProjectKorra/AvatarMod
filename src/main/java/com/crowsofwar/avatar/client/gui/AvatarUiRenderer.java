@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -43,6 +42,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,7 +51,6 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.entity.EntityIcePrison.IMPRISONED_TIME;
 import static net.minecraft.client.renderer.GlStateManager.*;
-import static net.minecraft.client.renderer.GlStateManager.scale;
 
 /**
  * 
@@ -229,8 +228,10 @@ public class AvatarUiRenderer extends Gui {
 			drawBendingIcon(0, 0, data.getActiveBending());
 			
 			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
+
 			List<BendingStyle> allBending = data.getAllBending();
-			
+			allBending.sort(Comparator.comparing(BendingStyle::getName));
+
 			// Draw next
 			int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
 			if (indexNext == allBending.size()) indexNext = 0;

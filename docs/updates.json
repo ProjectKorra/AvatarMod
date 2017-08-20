@@ -6,12 +6,18 @@
     "a3.1": "Various bugfixes and tweaks. Full changelog available at: av2.io/a3.1-changelog",
     "a4.0": "HUGE UPDATE!!\n\n- Better progression: ability levels, level 4 choices, new GUIs\n- Get bending in survival, scrolls\n- Flying bison, otter penguins, human benders\n- And much more!!\n\nFull changelog available at: av2.io/a4.0-changelog"
     "a4.1": "Bugfixes and improvements - please see av2.io/a4.1-changelog",
-    "a4.2": "Bugfixes and improvements - please see av2.io/a4.2-changelog"
+    "a4.2": "Bugfixes and improvements - please see av2.io/a4.2-changelog",
+    "a4.3": "Hotfix for servers, fixes flying bison crash"
+    "a4.4": "Bugfixes and improvements - please see av2.io/a4.4-changelog"
   },
   "promos": {
-    "1.11-latest": "a4.2",
-    "1.11-recommended": "a4.2",
-    "1.11.2-latest": "a4.2",
-    "1.11.2-recommended": "a4.2"
+    "1.11-latest": "a4.4",
+    "1.11-recommended": "a4.4",
+    "1.11.2-latest": "a4.4",
+    "1.11.2-recommended": "a4.4",
+
+    "1.12-latest": "a4.5",
+    "1.12-recommended": "a4.5",
+    "1.12.1-latest": "a4.5"
   }
 }

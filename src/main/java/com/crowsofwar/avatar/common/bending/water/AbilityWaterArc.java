@@ -17,29 +17,27 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static java.lang.Math.toRadians;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.function.BiPredicate;
-
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.UUID;
+import java.util.function.BiPredicate;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.toRadians;
 
 /**
  * 
@@ -50,9 +48,6 @@ public class AbilityWaterArc extends WaterAbility {
 	
 	public static final UUID ID = UUID.fromString("577c67ea-9e7c-4797-b100-c62d37e7d946");
 	
-	/**
-	 * @param controller
-	 */
 	public AbilityWaterArc() {
 		super("water_arc");
 		requireRaytrace(-1, true);
@@ -72,29 +67,14 @@ public class AbilityWaterArc extends WaterAbility {
 			}
 			
 			if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
-				
-				// Remove existing water arc
-				
-				AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5,
-						entity.posZ - 5, entity.posX + 5, entity.posY + 5, entity.posZ + 5);
-				
-				List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
-						arc -> arc.getOwner() == entity
-								&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
-				
-				for (EntityWaterArc arc : existing) {
-					arc.setBehavior(new WaterArcBehavior.Thrown());
-				}
-				
-				// Spawn new water arc
-				
+
+				removeExisting(ctx);
+
 				EntityWaterArc water = new EntityWaterArc(world);
 				water.setOwner(entity);
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setDamageMult(1 + ctx.getData().getAbilityData(ID).getXp() / 200);
-				
 				water.setBehavior(new WaterArcBehavior.PlayerControlled());
-				
 				world.spawnEntity(water);
 				
 				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
@@ -136,12 +116,26 @@ public class AbilityWaterArc extends WaterAbility {
 		return null;
 		
 	}
-	
+
+	/**
+	 * Kills already existing water arc if there is one
+	 */
+	private void removeExisting(AbilityContext ctx) {
+
+		EntityWaterArc water = AvatarEntity.lookupControlledEntity(ctx.getWorld(), EntityWaterArc
+				.class, ctx.getBenderEntity());
+
+		if (water != null) {
+			water.setBehavior(new WaterArcBehavior.Thrown());
+		}
+
+	}
+
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiWaterArc(this, entity, bender);
 	}
-	
+
 	@Override
 	public UUID getId() {
 		return ID;

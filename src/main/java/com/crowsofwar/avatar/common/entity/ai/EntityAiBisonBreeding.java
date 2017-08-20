@@ -26,6 +26,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
@@ -47,19 +48,16 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		AnimalCondition cond = bison.getCondition();
-		return !cond.isSterile() && cond.getBreedTimer() == 0 && cond.isAdult();
+		return cond.isReadyToBreed() && getNearbyBison() > 0;
 	}
 	
 	@Override
-	public void startExecuting() {
-		bison.setLoveParticles(true);
-	}
+	public void startExecuting() {}
 	
 	@Override
 	public boolean shouldContinueExecuting() {
 		
 		if (!shouldExecute()) {
-			bison.setLoveParticles(false);
 			return false;
 		}
 		
@@ -69,23 +67,22 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		Vector min = pos.minus(range / 2, range / 2, range / 2);
 		Vector max = pos.plus(range / 2, range / 2, range / 2);
 		
-		AxisAlignedBB aabb = new AxisAlignedBB(min.toMinecraft(), max.toMinecraft());
+		AxisAlignedBB aabb = new AxisAlignedBB(min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
 		
-		EntitySkyBison nearest = bison.world.findNearestEntityWithinAABB(EntitySkyBison.class, aabb,
-				bison);
-		
-		if (nearest != null) {
-			if (getNearbyBison(nearest) < 15) {
-				bison.getMoveHelper().setMoveTo(nearest.posX, nearest.posY, nearest.posZ, 1);
+		List<EntitySkyBison> mates = bison.world.getEntitiesWithinAABB(EntitySkyBison.class, aabb,
+				b -> b != bison && b.getCondition().isReadyToBreed());
+
+		if (!mates.isEmpty()) {
+			EntitySkyBison mate = mates.get(0);
+			if (getNearbyBison() < 15) {
+				bison.getMoveHelper().setMoveTo(mate.posX, mate.posY, mate.posZ, 1);
 				// 7 obtained through real-world testing
-				if (bison.getDistanceSqToEntity(nearest) <= 7) {
+				if (bison.getDistanceSqToEntity(mate) <= 7) {
 					
-					spawnBaby(nearest);
+					spawnBaby(mate);
 					
 					bison.getCondition().setBreedTimer(generateBreedTimer());
-					nearest.getCondition().setBreedTimer(generateBreedTimer());
-					bison.setLoveParticles(false);
-					nearest.setLoveParticles(false);
+					mate.getCondition().setBreedTimer(generateBreedTimer());
 					
 					return true;
 					
@@ -146,15 +143,17 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		return (int) (minutes * 1200);
 	}
 	
-	private int getNearbyBison(EntitySkyBison otherBison) {
+	/**
+	 * Get the number of nearby other bison, excluding this bison.
+	 */
+	private int getNearbyBison() {
 		
 		World world = bison.world;
 		
 		AxisAlignedBB aabb = new AxisAlignedBB(bison.posX - 32, 0, bison.posZ - 32, bison.posX + 32, 255,
 				bison.posZ + 32);
 		
-		return world.getEntitiesWithinAABB(EntitySkyBison.class, aabb, b -> b != bison && b != otherBison)
-				.size();
+		return world.getEntitiesWithinAABB(EntitySkyBison.class, aabb, b -> b != bison).size();
 		
 	}
 	

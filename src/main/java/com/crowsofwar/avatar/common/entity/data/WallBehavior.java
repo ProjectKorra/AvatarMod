@@ -20,8 +20,8 @@ package com.crowsofwar.avatar.common.entity.data;
 import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -135,8 +135,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			
 			BendingData data = BendingData.get(entity.getOwner());
 			AbilityData abilityData = data.getAbilityData(AbilityWall.ID);
-			if (abilityData.isMaxLevel() && abilityData.getPath() == AbilityTreePath.SECOND) {
-				
+			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+
 				drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
 				
 				BendingContext ctx = new BendingContext(data, entity.getOwner(),

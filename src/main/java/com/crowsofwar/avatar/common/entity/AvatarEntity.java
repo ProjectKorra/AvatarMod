@@ -201,7 +201,16 @@ public abstract class AvatarEntity extends Entity {
 		List<T> list = world.getEntities(cls, ent -> ent.getController() == controller);
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
+
+	/**
+	 * Find the entity owned by the given entity.
+	 */
+	public static <T extends AvatarEntity> T lookupOwnedEntity(World world, Class<T> cls,
+																	EntityLivingBase owner) {
+		List<T> list = world.getEntities(cls, ent -> ent.getOwner() == owner);
+		return list.isEmpty() ? null : list.get(0);
+	}
+
 	@Override
 	public boolean canBeCollidedWith() {
 		return true;

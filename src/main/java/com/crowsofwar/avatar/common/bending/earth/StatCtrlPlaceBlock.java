@@ -86,7 +86,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 			return false;
 		}
 		
-		return true;
+		return false;
 		
 	}
 	

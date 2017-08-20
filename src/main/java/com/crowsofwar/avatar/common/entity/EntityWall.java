@@ -89,34 +89,40 @@ public class EntityWall extends AvatarEntity {
 		super.onUpdate();
 		
 		// Sync y-velocity with slowest moving wall segment
+		// Also calculate lowest top pos of each segment
 		double slowest = Integer.MAX_VALUE;
+		double lowest = Integer.MAX_VALUE;
 		for (SyncedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
-			if (abs(seg.velocity().y()) < abs(slowest)) {
-				slowest = seg.velocity().y();
+			if (seg != null) {
+
+				if (abs(seg.velocity().y()) < abs(slowest)) {
+					slowest = seg.velocity().y();
+				}
+
+				double topPos = seg.position().y() + seg.height;
+				if (topPos < lowest) {
+					lowest = topPos;
+				}
+
 			}
 		}
 		
 		// Now sync all wall segment speeds
+		// Also sync all segment pos to the lowest height
 		for (SyncedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
-			seg.setVelocity(seg.velocity().withY(slowest));
-		}
-		
-		// Lowest top pos of all the segments
-		double lowest = Integer.MAX_VALUE;
-		for (SyncedEntity<EntityWallSegment> ref : segments) {
-			EntityWallSegment seg = ref.getEntity();
-			double topPos = seg.position().y() + seg.height;
-			if (topPos < lowest) {
-				lowest = topPos;
+			if (seg != null) {
+
+				Vector vel = seg.velocity();
+				Vector pos = seg.position();
+
+				seg.setVelocity(vel.withY(slowest));
+				seg.setPosition(pos.withY(lowest - seg.height));
+
 			}
 		}
-		for (SyncedEntity<EntityWallSegment> ref : segments) {
-			EntityWallSegment seg = ref.getEntity();
-			seg.setPosition(seg.position().withY(lowest - seg.height));
-		}
-		
+
 		setVelocity(Vector.ZERO);
 		this.noClip = true;
 		move(MoverType.SELF, 0, slowest / 20, 0);

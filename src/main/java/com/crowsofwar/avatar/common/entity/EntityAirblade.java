@@ -20,7 +20,9 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Predicate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -65,7 +67,8 @@ public class EntityAirblade extends AvatarEntity {
 	public void onUpdate() {
 		
 		super.onUpdate();
-		
+
+		setVelocity(velocity().times(0.96));
 		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
 		}
@@ -89,7 +92,7 @@ public class EntityAirblade extends AvatarEntity {
 				if (pierceArmor) {
 					source.setDamageBypassesArmor();
 				}
-				collided.attackEntityFrom(source, STATS_CONFIG.airbladeSettings.damage);
+				boolean successfulHit = collided.attackEntityFrom(source, damage);
 				
 				Vector motion = velocity();
 				motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
@@ -99,8 +102,31 @@ public class EntityAirblade extends AvatarEntity {
 					BendingData data = getOwnerBender().getData();
 					data.getAbilityData(AbilityAirblade.ID).addXp(SKILLS_CONFIG.airbladeHit);
 				}
-				
-				setDead();
+
+				if (chainAttack) {
+					if (successfulHit) {
+
+						AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
+						Predicate<EntityLivingBase> notFriendly =//
+								entity -> entity != collided && entity != getOwner();
+
+						List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB
+								(EntityLivingBase.class, aabb, notFriendly);
+
+						nextTargets.sort(AvatarUtils.getSortByDistanceComparator
+								(this::getDistanceToEntity));
+
+						if (!nextTargets.isEmpty()) {
+							EntityLivingBase nextTarget = nextTargets.get(0);
+							Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
+							setVelocity(direction.normalize().times(velocity().magnitude() *
+									0.5));
+						}
+
+					}
+				} else if (!world.isRemote) {
+					setDead();
+				}
 				
 			}
 		}
@@ -115,7 +141,7 @@ public class EntityAirblade extends AvatarEntity {
 		// Hitbox expansion (in each direction) to destroy blocks before the
 		// airblade collides with them
 		double expansion = 0.1;
-		AxisAlignedBB hitbox = getEntityBoundingBox().expand(expansion, expansion, expansion);
+		AxisAlignedBB hitbox = getEntityBoundingBox().grow(expansion, expansion, expansion);
 		
 		for (int ix = 0; ix <= 1; ix++) {
 			for (int iz = 0; iz <= 1; iz++) {

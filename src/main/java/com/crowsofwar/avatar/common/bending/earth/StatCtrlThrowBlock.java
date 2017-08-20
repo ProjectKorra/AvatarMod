@@ -55,7 +55,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 				entity);
 		
 		if (floating != null) {
-			
+
 			float yaw = (float) Math.toRadians(entity.rotationYaw);
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
 			
@@ -65,12 +65,14 @@ public class StatCtrlThrowBlock extends StatusControl {
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
 			floating.addVelocity(lookDir.times(forceMult));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
-			
+
 			data.removeStatusControl(PLACE_BLOCK);
-			
+
+			return true;
+
 		}
-		
-		return true;
+
+		return false;
 		
 	}
 	

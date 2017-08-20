@@ -42,7 +42,7 @@ public class AvatarInfo {
 	/**
 	 * Incremented for minor bug fixes.
 	 */
-	public static final int VERSION_PATCH = 2;
+	public static final int VERSION_PATCH = 5;
 	/**
 	 * "a" for alpha.
 	 * <p>
@@ -69,7 +69,7 @@ public class AvatarInfo {
 	public static final boolean IS_DEVELOPMENT = VERSION_TYPE == 1;
 	public static final boolean IS_PREVIEW = VERSION_TYPE >= 2;
 	
-	public static final String MC_VERSION = "1.11.2";
+	public static final String MC_VERSION = "1.12.1";
 	public static final String VERSION = DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
 			+ (IS_PRODUCTION ? "" : (IS_PREVIEW ? "_preview" + (VERSION_TYPE - 1) : "_dev"));
 	

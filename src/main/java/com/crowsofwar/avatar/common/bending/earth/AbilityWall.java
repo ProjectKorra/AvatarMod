@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -142,7 +143,9 @@ public class AbilityWall extends EarthAbility {
 				world.spawnEntity(seg);
 			}
 			world.spawnEntity(wall);
-			
+
+			ctx.getData().addStatusControl(StatusControl.DROP_WALL);
+
 		}
 		
 	}

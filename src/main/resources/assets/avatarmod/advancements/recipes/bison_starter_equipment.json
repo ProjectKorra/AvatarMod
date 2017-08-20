@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "avatarmod:bison_saddle_1",
+      "avatarmod:bison_armor_1",
+      "avatarmod:bison_whistle_1",
+      "avatarmod:bison_whistle_2"
+    ]
+  },
+  "criteria": {
+    "attacked": {
+      "trigger": "minecraft:item_durability_changed",
+      "conditions": {
+        "item": {
+          "item": "avatarmod:bison_whistle"
+        }
+      }
+    }
+  }
+}

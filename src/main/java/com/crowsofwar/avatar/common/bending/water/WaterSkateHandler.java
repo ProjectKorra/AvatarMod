@@ -17,12 +17,8 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -76,6 +72,7 @@ public class WaterSkateHandler extends TickHandler {
 		
 		if (data.hasStatusControl(SKATING_JUMP) && skate(data, entity, ctx.getBender())) {
 			data.removeStatusControl(StatusControl.SKATING_JUMP);
+			data.setCanUseAbilities(true);
 			return true;
 		} else {
 			return false;
@@ -164,9 +161,7 @@ public class WaterSkateHandler extends TickHandler {
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
 				}
-				if (abilityData.getLevel() == 0 && data.getAbilityCooldown() == 0) {
-					data.setAbilityCooldown(1);
-				}
+				data.setCanUseAbilities(abilityData.getLevel() >= 1);
 				
 			}
 			

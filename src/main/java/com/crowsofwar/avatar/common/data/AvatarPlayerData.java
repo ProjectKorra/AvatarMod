@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import java.util.*;
 
 public class AvatarPlayerData extends PlayerData {
-	
+
 	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 
 	private final BendingData bendingData;
@@ -105,6 +105,13 @@ public class AvatarPlayerData extends PlayerData {
 
 	public BendingData getData() {
 		return bendingData;
+	}
+
+
+	@Override
+	protected void saveChanges() {
+		super.saveChanges();
+		bendingData.updateMaxChi();
 	}
 
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {

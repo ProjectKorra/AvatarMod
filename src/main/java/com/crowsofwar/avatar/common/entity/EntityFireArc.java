@@ -62,7 +62,6 @@ public class EntityFireArc extends EntityArc {
 	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
 		setDead();
-		cleanup();
 		return true;
 	}
 
@@ -70,7 +69,6 @@ public class EntityFireArc extends EntityArc {
 	public boolean onMinorWaterContact() {
 		spawnExtinguishIndicators();
 		setDead();
-		cleanup();
 		return true;
 	}
 
@@ -149,11 +147,15 @@ public class EntityFireArc extends EntityArc {
 	public void setDamageMult(float damageMult) {
 		this.damageMult = damageMult;
 	}
-	
+
+	public boolean getCreateBigFire() {
+		return createBigFire;
+	}
+
 	public void setCreateBigFire(boolean createBigFire) {
 		this.createBigFire = createBigFire;
 	}
-	
+
 	public static class FireControlPoint extends ControlPoint {
 		
 		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {

@@ -17,23 +17,23 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -44,9 +44,6 @@ public class AbilityFireArc extends FireAbility {
 	
 	public static final UUID ID = UUID.fromString("48a755a4-5d4f-4b32-b299-093786dd93f3");
 	
-	/**
-	 * @param controller
-	 */
 	public AbilityFireArc() {
 		super("fire_arc");
 		requireRaytrace(-1, false);
@@ -68,27 +65,42 @@ public class AbilityFireArc extends FireAbility {
 				Vector look = Vector.getLookRectangular(entity);
 				lookPos = Vector.getEyePos(entity).plus(look.times(3));
 			}
-			
+
+			removeExisting(ctx);
+
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
 			fire.setBehavior(new FireArcBehavior.PlayerControlled());
 			fire.setOwner(entity);
 			fire.setDamageMult(ctx.getLevel() >= 2 ? 2 : 1);
 			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
-			
 			world.spawnEntity(fire);
-			
+
 			data.addStatusControl(StatusControl.THROW_FIRE);
-			
+
 		}
 		
 	}
-	
+
+	/**
+	 * Kills already existing fire arc if there is one
+	 */
+	private void removeExisting(AbilityContext ctx) {
+
+		EntityFireArc fire = AvatarEntity.lookupControlledEntity(ctx.getWorld(), EntityFireArc
+				.class, ctx.getBenderEntity());
+
+		if (fire != null) {
+			fire.setBehavior(new FireArcBehavior.Thrown());
+		}
+
+	}
+
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFireArc(this, entity, bender);
 	}
-	
+
 	@Override
 	public UUID getId() {
 		return ID;

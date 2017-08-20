@@ -16,16 +16,16 @@
 */
 package com.crowsofwar.avatar.common;
 
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -45,9 +45,13 @@ public class SleepChiRegenHandler {
 		EntityPlayer player = e.getEntityPlayer();
 		BendingData data = BendingData.get(player);
 		Chi chi = data.chi();
+		World world = player.world;
 		
-		chi.setAvailableChi(chi.getMaxChi() * CHI_CONFIG.availableThreshold);
-		chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
+		if (world.getWorldTime() % 24000 <= 2) {
+			chi.setAvailableChi(chi.getMaxChi() * CHI_CONFIG.availableThreshold);
+			chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
+		}
+
 	}
 	
 }

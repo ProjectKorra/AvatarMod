@@ -28,11 +28,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author CrowsOfWar
@@ -307,6 +304,29 @@ public class BendingData {
 		save(DataCategory.CHI);
 	}
 
+	public void updateMaxChi() {
+		float chi = 0;
+		chi += getAllBending().size() * CHI_CONFIG.bonusLearnedBending;
+		for (AbilityData aData : getAllAbilityData()) {
+			if (!aData.isLocked() && hasBendingId(aData.getAbility().getBendingId())) {
+				chi += CHI_CONFIG.bonusAbility;
+				chi += aData.getLevel() * CHI_CONFIG.bonusAbilityLevel;
+			}
+		}
+		if (chi >= CHI_CONFIG.maxChiCap) chi = CHI_CONFIG.maxChiCap;
+
+		// needed to avoid StackOverflowError
+		if (chi != chi().getMaxChi()) {
+			float old = chi().getMaxChi();
+			chi().setMaxChi(chi);
+
+			// Don't need to wait for new chi to regen
+			if (chi > old) {
+				chi().changeTotalChi(chi - old);
+			}
+		}
+	}
+
 	// ================================================================================
 	// TICK HANDLERS
 	// ================================================================================
@@ -397,11 +417,19 @@ public class BendingData {
 	}
 
 	public boolean getBisonFollowMode() {
-		return getMiscData().getBisonFollowMode();
+		return miscData.getBisonFollowMode();
 	}
 
 	public void setBisonFollowMode(boolean followMode) {
 		getMiscData().setBisonFollowMode(followMode);
+	}
+
+	public boolean getCanUseAbilities() {
+		return miscData.getCanUseAbilities();
+	}
+
+	public void setCanUseAbilities(boolean canUseAbilities) {
+		miscData.setCanUseAbilities(canUseAbilities);
 	}
 
 	public void writeToNbt(NBTTagCompound writeTo) {

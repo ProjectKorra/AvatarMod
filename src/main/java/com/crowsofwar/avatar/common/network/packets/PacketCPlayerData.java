@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.network.packets;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.DataCategory;
 import com.crowsofwar.gorecore.GoreCore;
@@ -65,8 +66,10 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
-		BendingData data = BendingData.get(GoreCore.proxy.getClientSidePlayer().world, playerId);
-		
+
+		final BendingData data = AvatarPlayerData.fetcher()
+				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId).getData();
+
 		if (data != null) {
 			
 			// Find what changed
@@ -86,6 +89,22 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 		} else {
 			AvatarLog.warn(WarningType.WEIRD_PACKET, "Server sent a packet about data for player " + playerId
 					+ " but data couldn't be found for them");
+
+			// Get rid of bytes from ByteBuf which were unread
+			// They aren't used, but this is necessary since read/write need to use same number
+			// of bytes (or there will be big problems)
+
+			BendingData trashData = new BendingData(dataCategory -> {}, () -> {});
+
+			changed = new TreeSet<>();
+			int size = buf.readInt();
+			for (int i = 0; i < size; i++) {
+				changed.add(DataCategory.values()[buf.readInt()]);
+			}
+			for (DataCategory category : changed) {
+				category.read(buf, trashData);
+			}
+
 		}
 		
 	}

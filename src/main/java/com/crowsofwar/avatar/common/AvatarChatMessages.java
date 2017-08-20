@@ -89,7 +89,10 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_BISON_TRANSFER_OFFLINE = newChatMessage(CFG, "avatar.bisonWhistle.transferOffline", "owner");
 	
 	public static final FormattedMessage MSG_HUMANBENDER_NO_SCROLLS = newChatMessage(CFG, "avatar.outOfScrolls");
-	
+
+	public static final FormattedMessage MSG_SKATING_BENDING_DISABLED = newChatMessage(CFG,
+			"avatar.skatingBendingDisabled");
+
 	/**
 	 * Call the static initializers
 	 */

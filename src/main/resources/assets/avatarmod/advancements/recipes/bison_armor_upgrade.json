@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "avatarmod:bison_armor_2"
+    ]
+  },
+  "criteria": {
+    "gained_basic_saddle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "avatarmod:bison_armor",
+            "data": 0
+          }
+        ]
+      }
+    }
+  }
+}

@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
@@ -60,10 +61,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -97,8 +95,9 @@ public class PacketHandlerServer implements IPacketHandler {
 			while (iterator.hasNext()) {
 				ProcessAbilityRequest par = iterator.next();
 				par.ticks--;
-				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0) {
-					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability, par.player));
+				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0 && par.data.getCanUseAbilities()) {
+					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability,
+							par.player));
 					iterator.remove();
 				}
 			}
@@ -155,9 +154,17 @@ public class PacketHandlerServer implements IPacketHandler {
 			if (data.hasBendingId(ability.getBendingId())) {
 				if (!data.getAbilityData(ability).isLocked() || player.capabilities.isCreativeMode) {
 					if (data.getAbilityCooldown() == 0) {
-						AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability, player);
-						ability.execute(abilityCtx);
-						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+
+						if (data.getCanUseAbilities()) {
+							AbilityContext abilityCtx = new AbilityContext(data, packet
+									.getRaytrace(), ability, player);
+							ability.execute(abilityCtx);
+							data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+						} else {
+							// TODO make bending disabled available for multiple things
+							AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(player);
+						}
+
 					} else {
 						unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
 								player, data, ability, packet.getRaytrace()));
@@ -269,7 +276,8 @@ public class PacketHandlerServer implements IPacketHandler {
 				if (n.sqrMagnitude() > 1) {
 					n = n.normalize().times(1);
 				}
-				
+
+				// can't use setVelocity since that is Client SideOnly
 				player.motionX = n.x();
 				player.motionY = n.y();
 				player.motionZ = n.z();
@@ -428,6 +436,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		BendingData data = BendingData.get(player);
 		
 		List<BendingStyle> controllers = data.getAllBending();
+		controllers.sort(Comparator.comparing(BendingStyle::getName));
 		if (controllers.size() > 1) {
 			
 			int index = controllers.indexOf(data.getActiveBending());

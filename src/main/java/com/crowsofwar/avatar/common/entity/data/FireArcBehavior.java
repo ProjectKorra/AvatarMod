@@ -23,8 +23,8 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,7 +33,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -68,8 +67,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			if (owner == null) {
 				return this;
 			}
-			World world = owner.world;
-			
+
 			Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 					Math.toRadians(owner.rotationPitch));
 			Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
@@ -101,7 +99,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			entity.addVelocity(0, -9.81 / 60, 0);
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().expand(0.9, 0.9, 0.9),
+					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
 			
 			for (EntityLivingBase collided : collidedList) {
@@ -130,7 +128,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					return new FireArcBehavior.PlayerControlled();
 				}
 			}
-			
+
 			return this;
 		}
 		

@@ -249,20 +249,23 @@ public class EntityFloatingBlock extends AvatarEntity {
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
-		lastTickPosX = posX;
-		lastTickPosY = posY;
-		lastTickPosZ = posZ;
-		
+
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
 		
 	}
 	
-	/**
-	 * Called when the block collides with the ground as well as other entities
-	 */
 	@Override
 	public boolean onCollideWithSolid() {
+
+		FloatingBlockBehavior behavior = getBehavior();
+		if (!(behavior instanceof FloatingBlockBehavior.Fall || behavior instanceof
+				FloatingBlockBehavior.Thrown)) {
+
+			return false;
+
+		}
+
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
@@ -327,7 +330,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@Override
 	public void setEntityBoundingBox(AxisAlignedBB bb) {
 		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.expand(0.35, 0.35, 0.35);
+		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
 	}
 	
 	@Override

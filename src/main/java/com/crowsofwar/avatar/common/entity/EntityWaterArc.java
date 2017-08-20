@@ -206,7 +206,7 @@ public class EntityWaterArc extends EntityArc {
 			data.removeStatusControl(THROW_WATER);
 		}
 	}
-	
+
 	public static class WaterControlPoint extends ControlPoint {
 		
 		public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {

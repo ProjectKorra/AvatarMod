@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -123,6 +124,14 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	public void setBehavior(WallBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
+
+		// Remove "drop wall" statCtrl if the wall is dropping
+		if (behavior instanceof WallBehavior.Drop) {
+			if (getOwner() != null) {
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.DROP_WALL);
+			}
+		}
+		
 	}
 
 	public void setDirection(EnumFacing dir) {

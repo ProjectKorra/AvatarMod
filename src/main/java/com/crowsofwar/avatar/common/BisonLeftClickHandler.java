@@ -43,11 +43,23 @@ public class BisonLeftClickHandler {
 		Entity interacted = e.getEntity();
 		DamageSource damage = e.getSource();
 		if (damage.getTrueSource() instanceof EntityPlayer && interacted instanceof EntitySkyBison) {
+
 			EntitySkyBison bison = (EntitySkyBison) interacted;
 			EntityPlayer player = (EntityPlayer) damage.getTrueSource();
-			if (bison.onLeftClick(player)) {
-				e.setCanceled(true);
+
+			// ignore damage other than melee
+			if (damage.getDamageType().equals("player")) {
+				if (bison.onLeftClick(player)) {
+					e.setCanceled(true);
+				}
+			} else {
+
+				if (bison.getOwner() == player) {
+					e.setCanceled(true);
+				}
+
 			}
+
 		}
 	}
 	
