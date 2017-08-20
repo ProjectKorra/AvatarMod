@@ -30,7 +30,6 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,6 +37,10 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
 /**
  * 
@@ -73,9 +76,15 @@ public class AbilityAirBubble extends AirAbility {
 			float xp = data.getAbilityData(ID).getTotalXp();
 			
 			float size = 1.5f;
-			float health = 10 + ctx.getLevel() * 6;
-			if (ctx.getLevel() > 0) size = 2.5f;
-			if (ctx.isMasterLevel(FIRST)) size = 4f;
+			float health = 12;
+			if (ctx.getLevel() > 0) {
+				size = 2.5f;
+				health = 18;
+			}
+			if (ctx.isMasterLevel(FIRST)) {
+				size = 4f;
+				health = 24;
+			}
 			if (ctx.isMasterLevel(SECOND)) health = 10f;
 			
 			EntityAirBubble bubble = new EntityAirBubble(world);
