@@ -678,8 +678,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 * will attack as normal.
 	 */
 	public boolean onLeftClick(EntityPlayer player) {
-
-		if (player == getOwner()) {
+		
+		if (this.hasOwner()) {
 			if (player.isSneaking()) {
 				// Open GUI
 
