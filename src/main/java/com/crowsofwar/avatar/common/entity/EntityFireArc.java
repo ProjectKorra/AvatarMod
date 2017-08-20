@@ -30,7 +30,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EntityFireArc extends EntityArc {
+public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	
 	private static final Vector GRAVITY = new Vector(0, -9.81 / 60, 0);
 	
@@ -118,12 +118,7 @@ public class EntityFireArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vector getGravityVector() {
-		return GRAVITY;
-	}
-	
-	@Override
-	public ControlPoint createControlPoint(float size) {
+	public FireControlPoint createControlPoint(float size, int index) {
 		return new FireControlPoint(this, size, 0, 0, 0);
 	}
 	

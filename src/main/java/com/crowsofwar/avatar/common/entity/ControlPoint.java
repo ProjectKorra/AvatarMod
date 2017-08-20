@@ -177,5 +177,15 @@ public class ControlPoint {
 	public void setArc(EntityArc arc) {
 		this.arc = arc;
 	}
-	
+
+	/**
+	 * Get the interpolated position between two ticks.
+	 * @param partialTicks The percentage through this tick, from 0..1
+	 */
+	public Vector getInterpolatedPosition(float partialTicks) {
+		//@formatter:on
+		return lastPosition().plus (  (position() .minus(lastPosition()) ) .times(partialTicks)  );
+		//@formatter:off
+	}
+
 }

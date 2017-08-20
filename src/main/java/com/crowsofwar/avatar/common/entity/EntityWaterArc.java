@@ -36,7 +36,7 @@ import java.util.Random;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 
-public class EntityWaterArc extends EntityArc {
+public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
 	
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
@@ -133,12 +133,6 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	protected Vector getGravityVector() {
-		// Gravity is added in Behavior
-		return Vector.ZERO;
-	}
-	
-	@Override
 	public void onUpdate() {
 		
 		super.onUpdate();
@@ -168,7 +162,7 @@ public class EntityWaterArc extends EntityArc {
 	}
 
 	@Override
-	protected ControlPoint createControlPoint(float size) {
+	protected WaterControlPoint createControlPoint(float size, int index) {
 		return new WaterControlPoint(this, size, 0, 0, 0);
 	}
 	

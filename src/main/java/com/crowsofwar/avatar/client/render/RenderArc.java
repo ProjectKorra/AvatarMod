@@ -41,20 +41,24 @@ import net.minecraft.util.ResourceLocation;
 public abstract class RenderArc extends Render {
 	
 	private final RenderManager renderManager;
-	
-	/**
-	 * @param renderManager
-	 */
-	protected RenderArc(RenderManager renderManager) {
-		super(renderManager);
-		this.renderManager = renderManager;
-	}
-	
+
 	/**
 	 * Whether to render with full brightness.
 	 */
 	private boolean renderBright;
+	private boolean enableInterpolation;
+
+	protected RenderArc(RenderManager renderManager) {
+		this(renderManager, true);
+	}
+
+	protected RenderArc(RenderManager renderManager, boolean enableInterpolation) {
+		super(renderManager);
+		this.renderManager = renderManager;
+		this.enableInterpolation = enableInterpolation;
+	}
 	
+
 	@Override
 	public final void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_,
 			float partialTicks) {
@@ -64,8 +68,8 @@ public abstract class RenderArc extends Render {
 		double renderPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 		
 		EntityArc arc = (EntityArc) entity;
-		
-		for (int i = 1; i < arc.getControlPoints().length; i++) {
+
+		for (int i = arc.getControlPoints().size() - 1; i > 0; i--) {
 			renderSegment(arc, arc.getLeader(i), arc.getControlPoint(i), renderPosX, renderPosY, renderPosZ,
 					partialTicks);
 		}
@@ -75,12 +79,16 @@ public abstract class RenderArc extends Render {
 	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point, double renderPosX,
 			double renderPosY, double renderPosZ, float partialTicks) {
 		
-		// Interpolated positions
-		//@formatter:off
-		Vector leaderPos = leader.lastPosition() .plus (  (leader.position() .minus (leader.lastPosition()) ) .times(partialTicks)  );
-		Vector pointPos = point.lastPosition() .plus (  (point.position() .minus (point.lastPosition()) ) .times(partialTicks)  );
-		//@formatter:on
-		
+		Vector leaderPos = leader.position();
+		Vector pointPos = point.position();
+
+		if (enableInterpolation) {
+			//@formatter:off
+			leaderPos = leader.getInterpolatedPosition(partialTicks);
+			pointPos = point.getInterpolatedPosition(partialTicks);
+			//@formatter:on
+		}
+
 		double x = leaderPos.x() - TileEntityRendererDispatcher.staticPlayerX;
 		double y = leaderPos.y() - TileEntityRendererDispatcher.staticPlayerY;
 		double z = leaderPos.z() - TileEntityRendererDispatcher.staticPlayerZ;
