@@ -1,5 +1,6 @@
 AV2 Changelog :: version a4.5
 
++ Halved flamethrower chi drain
 + Move to MC 1.12 / 1.12.1
 + French translation by ExterMiner
 + Recipe book, auto unlock recipes at right times

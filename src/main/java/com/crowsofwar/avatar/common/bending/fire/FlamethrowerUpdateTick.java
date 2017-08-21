@@ -70,10 +70,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			Chi chi = data.chi();
 			float required = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
 			if (level == 3 && path == AbilityTreePath.FIRST) {
-				required *= 0.75f;
+				required *= 1.5f;
 			}
 			if (level == 3 && path == AbilityTreePath.SECOND) {
-				required *= 1;
+				required *= 2;
 			}
 			
 			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
