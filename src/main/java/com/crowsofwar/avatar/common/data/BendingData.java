@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
@@ -60,6 +61,7 @@ public class BendingData {
 	private final Set<StatusControl> statusControls;
 	private final Map<UUID, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
+	private final Map<TickHandler, Integer> tickHandlerDuration;
 	private UUID activeBending;
 	private Chi chi;
 	private MiscData miscData;
@@ -78,6 +80,7 @@ public class BendingData {
 		statusControls = new HashSet<>();
 		abilityData = new HashMap<>();
 		tickHandlers = new HashSet<>();
+		tickHandlerDuration = new HashMap<>();
 		activeBending = null;
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
@@ -335,14 +338,35 @@ public class BendingData {
 		return tickHandlers.contains(handler);
 	}
 
+	/**
+	 * Returns how many ticks the given TH has been executing for. Is reset on the world reload
+	 * and unsynchronized, so this should only be used temporarily. Returns -1 if doesn't have
+	 * the TickHandler.
+	 */
+	public int getTickHandlerDuration(TickHandler handler) {
+		if (hasTickHandler(handler)) {
+			return tickHandlerDuration.get(handler);
+		} else {
+			return -1;
+		}
+	}
+
+	public void setTickHandlerDuration(TickHandler handler, int duration) {
+		if (hasTickHandler(handler)) {
+			tickHandlerDuration.put(handler, duration);
+		}
+	}
+
 	public void addTickHandler(TickHandler handler) {
 		if (tickHandlers.add(handler)) {
+			tickHandlerDuration.put(handler, 0);
 			save(DataCategory.TICK_HANDLERS);
 		}
 	}
 
 	public void removeTickHandler(TickHandler handler) {
 		if (tickHandlers.remove(handler)) {
+			tickHandlerDuration.remove(handler);
 			save(DataCategory.TICK_HANDLERS);
 		}
 	}
@@ -354,10 +378,16 @@ public class BendingData {
 	public void setAllTickHandlers(List<TickHandler> handlers) {
 		tickHandlers.clear();
 		tickHandlers.addAll(handlers);
+
+		Map<TickHandler, Integer> newDurations = handlers.stream().collect(Collectors.toMap(Function.identity()
+				, h -> 0));
+		tickHandlerDuration.clear();
+		tickHandlerDuration.putAll(newDurations);
 	}
 
 	public void clearTickHandlers() {
 		tickHandlers.clear();
+		tickHandlerDuration.clear();
 	}
 
 	// ================================================================================
