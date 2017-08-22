@@ -28,12 +28,19 @@ public class LightningChargeHandler extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 
+		if (world.isRemote) {
+			return false;
+		}
+
 		int duration = data.getTickHandlerDuration(this);
-		applyMovementModifier(entity, 1 - duration / 20f);
+
+		applyMovementModifier(entity, (0.5f + duration / 40f) * 0.1f);
 
 		if (duration >= 40) {
 			fireLightning(world, entity);
-			applyMovementModifier(entity, 1);
+
+			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+
 			return true;
 		}
 
@@ -62,15 +69,15 @@ public class LightningChargeHandler extends TickHandler {
 		}
 	}
 
-	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
+	private void applyMovementModifier(EntityLivingBase entity, float subtract) {
 
 		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
 				.MOVEMENT_SPEED);
 
 		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
 
-		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Lightning charge " +
-				"modifier", multiplier - 1, 1));
+		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID,
+				"Lightning charge modifier", -subtract, 0));
 
 	}
 
