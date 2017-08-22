@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -34,7 +35,8 @@ public class LightningChargeHandler extends TickHandler {
 
 		int duration = data.getTickHandlerDuration(this);
 
-		applyMovementModifier(entity, (0.5f + duration / 40f) * 0.1f);
+		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
+		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
 		if (duration >= 40) {
 			fireLightning(world, entity);
@@ -69,7 +71,7 @@ public class LightningChargeHandler extends TickHandler {
 		}
 	}
 
-	private void applyMovementModifier(EntityLivingBase entity, float subtract) {
+	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
 		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
 				.MOVEMENT_SPEED);
@@ -77,7 +79,7 @@ public class LightningChargeHandler extends TickHandler {
 		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
 
 		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID,
-				"Lightning charge modifier", -subtract, 0));
+				"Lightning charge modifier", multiplier - 1, 1));
 
 	}
 
