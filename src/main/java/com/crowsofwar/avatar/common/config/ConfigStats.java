@@ -79,7 +79,8 @@ public class ConfigStats {
 			chiWaterBubble = 1.25f,
 			chiWaterSkateSecond = 0.5f,
 			chiWallOneSecond = 0.125f,
-			chiPrison = 5;
+			chiPrison = 5,
+			chiLightning = 6;
 	// @formatter:on
 	
 	@Load
