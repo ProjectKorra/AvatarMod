@@ -31,24 +31,7 @@ public class AbilityLightningArc extends Ability {
 
 		if (bender.consumeChi(STATS_CONFIG.chiLightning)) {
 			
-			float[] turbulenceValues = {0.6f, 1.2f};
 
-			for (float turbulence : turbulenceValues) {
-
-				EntityLightningArc lightning = new EntityLightningArc(world);
-				lightning.setOwner(entity);
-				lightning.setTurbulence(turbulence);
-
-				lightning.setPosition(Vector.getEyePos(entity));
-				lightning.setEndPos(Vector.getEyePos(entity));
-
-				Vector velocity = Vector.getLookRectangular(entity);
-				velocity = velocity.normalize().times(30);
-				lightning.setVelocity(velocity);
-
-				world.spawnEntity(lightning);
-
-			}
 
 		}
 
