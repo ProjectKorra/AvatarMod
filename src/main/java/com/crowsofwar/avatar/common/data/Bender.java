@@ -78,7 +78,16 @@ public interface Bender {
 	 * and returns true.
 	 */
 	boolean consumeWaterLevel(int amount);
-	
+
+	/**
+	 * Tries to consume the given amount of chi from the Bender. Returns true if successful (ie
+	 * there was enough chi); false on failure
+	 */
+	default boolean consumeChi(float amount) {
+		// TODO Account for entity Chi?
+		return true;
+	};
+
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */

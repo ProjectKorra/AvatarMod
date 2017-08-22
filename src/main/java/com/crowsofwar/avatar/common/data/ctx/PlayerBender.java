@@ -16,13 +16,18 @@
 */
 package com.crowsofwar.avatar.common.data.ctx;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
 /**
  * 
@@ -96,5 +101,25 @@ public class PlayerBender implements Bender {
 		}
 		
 	}
-	
+
+	@Override
+	public boolean consumeChi(float amount) {
+
+		// Avoid chi consumption if creative mode
+		if (isCreativeMode() && CHI_CONFIG.infiniteInCreative) {
+			return true;
+		}
+
+		// Otherwise just try normal chi consumption
+		boolean result = getData().chi().consumeChi(amount);
+
+		if (!result && !player.world.isRemote) {
+			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.nochi"), (EntityPlayerMP)
+					getEntity());
+		}
+
+		return result;
+
+	}
+
 }

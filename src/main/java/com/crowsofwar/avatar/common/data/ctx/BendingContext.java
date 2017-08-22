@@ -172,7 +172,10 @@ public class BendingContext {
 	/**
 	 * Tries to use the given amount of available chi. Returns true if there was
 	 * enough chi to remove and it removed it.
+	 *
+	 * @deprecated use {@link Bender#consumeChi(float)} instead
 	 */
+	@Deprecated
 	public boolean consumeChi(float amount) {
 		
 		// TODO Account for entity Chi?
