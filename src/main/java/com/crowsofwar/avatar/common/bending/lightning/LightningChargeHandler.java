@@ -6,12 +6,20 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 /**
  * @author CrowsOfWar
  */
 public class LightningChargeHandler extends TickHandler {
+
+	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
+			("dfb6235c-82b6-407e-beaf-a48045735a82");
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -21,9 +29,11 @@ public class LightningChargeHandler extends TickHandler {
 		BendingData data = ctx.getData();
 
 		int duration = data.getTickHandlerDuration(this);
+		applyMovementModifier(entity, 1 - duration / 20f);
 
 		if (duration >= 40) {
 			fireLightning(world, entity);
+			applyMovementModifier(entity, 1);
 			return true;
 		}
 
@@ -50,6 +60,18 @@ public class LightningChargeHandler extends TickHandler {
 			world.spawnEntity(lightning);
 
 		}
+	}
+
+	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
+
+		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
+				.MOVEMENT_SPEED);
+
+		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
+
+		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Lightning charge " +
+				"modifier", multiplier - 1, 1));
+
 	}
 
 }
