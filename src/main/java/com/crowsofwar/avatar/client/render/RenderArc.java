@@ -60,24 +60,26 @@ public abstract class RenderArc extends Render {
 	
 
 	@Override
-	public final void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_,
+	public void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_,
 			float partialTicks) {
 		
-		double renderPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
-		double renderPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
-		double renderPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
-		
 		EntityArc arc = (EntityArc) entity;
-
-		for (int i = arc.getControlPoints().size() - 1; i > 0; i--) {
-			renderSegment(arc, arc.getLeader(i), arc.getControlPoint(i), renderPosX, renderPosY, renderPosZ,
-					partialTicks);
-		}
+		renderArc(arc, partialTicks, 1, 1);
 		
 	}
 	
-	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point, double renderPosX,
-			double renderPosY, double renderPosZ, float partialTicks) {
+	protected void renderArc(EntityArc<?> arc, float partialTicks, float alpha, float scale) {
+
+		GlStateManager.color(1, 1, 1, alpha);
+
+		for (int i = arc.getControlPoints().size() - 1; i > 0; i--) {
+			renderSegment(arc, arc.getLeader(i), arc.getControlPoint(i), partialTicks, scale);
+		}
+
+	}
+
+	private void renderSegment(EntityArc arc, ControlPoint leader, ControlPoint point, float
+			partialTicks, float scale) {
 		
 		Vector leaderPos = leader.position();
 		Vector pointPos = point.position();
@@ -105,16 +107,14 @@ public abstract class RenderArc extends Render {
 		
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		
-		double sizeLeader = point.size() / 2;
-		double sizePoint = leader.size() / 2;
+
+		double sizeLeader = point.size() / 2 * scale;
+		double sizePoint = leader.size() / 2 * scale;
 		
 		Vector lookingEuler = Vector.getRotationTo(from, to);
 		
 		double u1 = (((arc.ticksExisted + partialTicks) / 20.0) % 1);
 		double u2 = (u1 + 0.5);
-		
-		GlStateManager.color(1, 1, 1);
 		
 		// Make 'back' matrix, face it forward
 		Matrix4d mat = new Matrix4d();
