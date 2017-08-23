@@ -24,8 +24,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderLightningArc extends RenderArc {
 
-	private static final ResourceLocation fire = new ResourceLocation("avatarmod",
-			"textures/entity/fire-ribbon.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
+			"textures/entity/lightning-ribbon.png");
 
 	private final ParticleSpawner particleSpawner;
 
@@ -37,7 +37,7 @@ public class RenderLightningArc extends RenderArc {
 	
 	@Override
 	protected ResourceLocation getTexture() {
-		return fire;
+		return TEXTURE;
 	}
 	
 }
