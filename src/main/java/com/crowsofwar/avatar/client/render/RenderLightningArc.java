@@ -17,9 +17,11 @@
 
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderLightningArc extends RenderArc {
@@ -33,6 +35,16 @@ public class RenderLightningArc extends RenderArc {
 		super(renderManager, false);
 		enableFullBrightness();
 		particleSpawner = new ClientParticleSpawner();
+	}
+
+	@Override
+	public void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_,
+						 float partialTicks) {
+
+		EntityLightningArc arc = (EntityLightningArc) entity;
+		renderArc(arc, partialTicks, 0.8f, 1);
+		renderArc(arc, partialTicks, 0.3f, 3);
+
 	}
 	
 	@Override
