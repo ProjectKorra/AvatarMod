@@ -45,6 +45,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	public EntityLightningArc(World world) {
 		super(world);
+		setSize(0.5f, 0.5f);
 	}
 
 	@Override
