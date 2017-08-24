@@ -512,7 +512,7 @@ public class BendingData {
 
 		Map<UUID, AbilityData> abilityData = new HashMap<>();
 		AvatarUtils.readMap(abilityData, nbt -> nbt.getUniqueId("Id"), nbt -> {
-			UUID abilityId = nbt.getUniqueId("Id");
+			UUID abilityId = nbt.getUniqueId("AbilityId");
 			AbilityData data = new AbilityData(this, abilityId);
 			data.readFromNbt(nbt);
 			return data;
