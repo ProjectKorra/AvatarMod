@@ -167,7 +167,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 //		setDead();
 		setVelocity(Vector.ZERO);
 		if (!world.isRemote) {
-			world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
+			if (world.isAirBlock(getPosition())) {
+				world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
+			}
 		}
 		return false;
 //		return true;
