@@ -48,9 +48,12 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	 */
 	private int stuckTime;
 
+	private float damage;
+
 	public EntityLightningArc(World world) {
 		super(world);
 		setSize(0.5f, 0.5f);
+		damage = 8;
 	}
 
 	@Override
@@ -127,7 +130,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 			stuckTo = (EntityLivingBase) entity;
 
-			if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 8)) {
+			if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, damage)) {
 				entity.setFire(4);
 
 				Vector velocity = velocity().normalize();
@@ -183,6 +186,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	public void setTurbulence(float turbulence) {
 		dataManager.set(SYNC_TURBULENCE, turbulence);
+	}
+
+	public float getDamage() {
+		return damage;
+	}
+
+	public void setDamage(float damage) {
+		this.damage = damage;
 	}
 
 	public class LightningControlPoint extends ControlPoint {

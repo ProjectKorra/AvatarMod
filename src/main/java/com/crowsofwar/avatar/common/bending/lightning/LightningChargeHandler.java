@@ -43,10 +43,12 @@ public class LightningChargeHandler extends TickHandler {
 
 		if (duration >= 40) {
 
-			fireLightning(world, entity);
+			AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
+			float damage = abilityData.getLevel() >= 1 ? 8 : 6;
+
+			fireLightning(world, entity, damage);
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-			AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
 			abilityData.addXp(SKILLS_CONFIG.madeLightning);
 
 			return true;
@@ -57,7 +59,7 @@ public class LightningChargeHandler extends TickHandler {
 
 	}
 
-	private void fireLightning(World world, EntityLivingBase entity) {
+	private void fireLightning(World world, EntityLivingBase entity, float damage) {
 		float[] turbulenceValues = {0.6f, 1.2f};
 
 		for (float turbulence : turbulenceValues) {
@@ -65,6 +67,7 @@ public class LightningChargeHandler extends TickHandler {
 			EntityLightningArc lightning = new EntityLightningArc(world);
 			lightning.setOwner(entity);
 			lightning.setTurbulence(turbulence);
+			lightning.setDamage(damage);
 
 			lightning.setPosition(Vector.getEyePos(entity));
 			lightning.setEndPos(Vector.getEyePos(entity));
