@@ -16,3 +16,4 @@ Skill menu tabs by FavouriteDragon
  adjusted for practical use by CrowsOfWar
 
 Translations by Ferrujado, Madwrist, SporYou, ExterMiner
+Polish translation by Gremter
