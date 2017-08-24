@@ -35,6 +35,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	private static final DataParameter<Float> SYNC_TURBULENCE = EntityDataManager.createKey
 			(EntityLightningArc.class, DataSerializers.FLOAT);
 
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
+			(EntityLightningArc.class, DataSerializers.FLOAT);
+
 	/**
 	 * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
 	 * damage it.
@@ -61,6 +64,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		super.entityInit();
 		dataManager.register(SYNC_ENDPOS, Vector.ZERO);
 		dataManager.register(SYNC_TURBULENCE, 0.6f);
+		dataManager.register(SYNC_SIZE, 1f);
 	}
 
 	@Override
@@ -111,6 +115,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 				world.setLastLightningBolt(2);
 			}
 		}
+
+		setSize(0.5f * getSizeMultiplier(), 0.5f * getSizeMultiplier());
 
 	}
 
@@ -194,6 +200,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	public void setDamage(float damage) {
 		this.damage = damage;
+	}
+
+	public float getSizeMultiplier() {
+		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSizeMultiplier(float sizeMultiplier) {
+		dataManager.set(SYNC_SIZE, sizeMultiplier);
 	}
 
 	public class LightningControlPoint extends ControlPoint {
