@@ -53,7 +53,7 @@ public class LightningChargeHandler extends TickHandler {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = 12;
 				size = 0.75f;
-				turbulenceValues = new float[] { 0.6f, 1.2f, 1.6f };
+				turbulenceValues = new float[] { 0.6f, 1.2f, 0.8f };
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				size = 1.5f;
