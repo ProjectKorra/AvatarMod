@@ -45,13 +45,13 @@ public class LightningChargeHandler extends TickHandler {
 
 			AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
 
-			float damage = abilityData.getLevel() >= 1 ? 8 : 6;
-			double speed = abilityData.getLevel() >= 0 ? 20 : 30;
-			float size = abilityData.getLevel() >= 2 ? 1.5f : 1;
+			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
+			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
+			float size = 1;
 			float[] turbulenceValues = { 0.6f, 1.2f };
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = 10;
+				damage = 12;
 				size = 0.75f;
 				turbulenceValues = new float[] { 0.6f, 1.2f, 1.6f };
 			}
