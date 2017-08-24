@@ -42,8 +42,8 @@ public class RenderLightningArc extends RenderArc {
 						 float partialTicks) {
 
 		EntityLightningArc arc = (EntityLightningArc) entity;
-		renderArc(arc, partialTicks, 0.8f, 1 * arc.getSizeMultiplier());
-		renderArc(arc, partialTicks, 0.3f, 3 * arc.getSizeMultiplier());
+		renderArc(arc, partialTicks, 0.8f, 0.67f * arc.getSizeMultiplier());
+		renderArc(arc, partialTicks, 0.3f, 2 * arc.getSizeMultiplier());
 
 	}
 	

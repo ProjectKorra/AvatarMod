@@ -116,7 +116,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			}
 		}
 
-		setSize(0.5f * getSizeMultiplier(), 0.5f * getSizeMultiplier());
+		setSize(0.33f * getSizeMultiplier(), 0.33f * getSizeMultiplier());
 
 	}
 
