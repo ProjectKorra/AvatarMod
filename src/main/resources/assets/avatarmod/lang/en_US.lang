@@ -218,6 +218,13 @@ avatar.ability.air_bubble.lvl3=More knockback
 avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
 avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by sneak
 
+avatar.ability.lightning_arc=Lightning Bolt
+avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your
+enemies!
+avatar.ability.lightning_arc.lvl1=Intimidate potential boyfriends
+avatar.ability.lightning_arc.lvl2=Lightning travels faster
+avatar.ability.lightning_arc.lvl3=Lightning does more damage
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
