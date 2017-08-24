@@ -1,5 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -18,6 +21,8 @@ import org.joml.SimplexNoise;
 import org.joml.Vector4d;
 
 import javax.annotation.Nullable;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -129,6 +134,15 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 				entity.addVelocity(velocity.x(), 0.6, velocity.z());
 				AvatarUtils.afterVelocityAdded(entity);
 
+				// Add Experience
+				// Although 2 lightning entities are fired in each lightning ability, this won't
+				// cause 2x XP rewards as this only happens when the entity is successfully attacked
+				// (hurtResistantTime prevents the 2 lightning entities from both damaging at once)
+				if (getOwner() != null) {
+					BendingData data = BendingData.get(getOwner());
+					AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
+					abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
+				}
 			}
 
 		}

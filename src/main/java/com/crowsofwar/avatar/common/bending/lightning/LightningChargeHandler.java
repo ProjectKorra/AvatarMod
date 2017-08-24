@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -13,6 +14,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -39,11 +42,15 @@ public class LightningChargeHandler extends TickHandler {
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
 		if (duration >= 40) {
-			fireLightning(world, entity);
 
+			fireLightning(world, entity);
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
+			AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
+			abilityData.addXp(SKILLS_CONFIG.madeLightning);
+
 			return true;
+
 		}
 
 		return false;

@@ -23,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
@@ -38,7 +39,7 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 public class BendingData {
 
 	// static methods
-	public static BendingData get(EntityLivingBase entity) {
+	public static BendingData get(@Nonnull EntityLivingBase entity) {
 		if (entity instanceof EntityPlayer) {
 			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
 		} else {

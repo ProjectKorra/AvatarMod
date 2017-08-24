@@ -52,7 +52,9 @@ public class ConfigSkills {
 		wallBlockedAttack = 3f,
 		airbubbleProtect = 6f,
 		litFire = 20,
-		createBubble = 15;
+		createBubble = 15,
+		madeLightning = 3,
+		struckWithLightning = 5;
 	// @formatter:on
 	
 	public static void load() {
