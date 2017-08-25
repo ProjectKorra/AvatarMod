@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -52,6 +53,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	private int stuckTime;
 
 	private float damage;
+
+	private LightningFloodFill floodFill;
 
 	public EntityLightningArc(World world) {
 		super(world);
@@ -119,6 +122,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 		setSize(0.33f * getSizeMultiplier(), 0.33f * getSizeMultiplier());
 
+		if (inWater && !world.isRemote) {
+			if (floodFill == null) {
+				floodFill = new LightningFloodFill(world, getPosition(), 5,
+						this::handleWaterElectrocution);
+			}
+			floodFill.tick();
+		}
+
 	}
 
 	@Override
@@ -156,6 +167,10 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			}
 
 		}
+	}
+
+	private void handleWaterElectrocution(EntityLivingBase target) {
+		System.out.println("Zapping " + target);
 	}
 
 	@Override
