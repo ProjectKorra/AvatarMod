@@ -21,8 +21,9 @@ import java.util.function.Consumer;
 public class LightningFloodFill {
 
 	private final World world;
-
-	private Consumer<EntityLivingBase> entityCallback;
+	private final Consumer<EntityLivingBase> entityCallback;
+	private final BlockPos originalPos;
+	private final int expansionSq;
 
 	/**
 	 * Queue of water blocks to process
@@ -40,6 +41,8 @@ public class LightningFloodFill {
 		this.waterBlocksQueue = new PriorityQueue<>(expansion * expansion * expansion);
 		this.processedBlocks = new TreeSet<>();
 		this.entityCallback = entityCallback;
+		this.originalPos = initialPos;
+		this.expansionSq = expansion * expansion;
 
 		waterBlocksQueue.add(initialPos);
 		processedBlocks.add(initialPos);
@@ -74,12 +77,15 @@ public class LightningFloodFill {
 		for (EnumFacing facing : EnumFacing.values()) {
 			BlockPos searchPos = pos.offset(facing);
 
-			boolean waterBlock = world.getBlockState(searchPos).getBlock() == Blocks.WATER;
-			boolean processedHere = processedBlocks.contains(searchPos);
-			if (waterBlock && !processedHere) {
-				waterBlocksQueue.add(searchPos);
-				processedBlocks.add(searchPos);
+			if (searchPos.distanceSq(originalPos) <= expansionSq) {
+				boolean waterBlock = world.getBlockState(searchPos).getBlock() == Blocks.WATER;
+				boolean processedHere = processedBlocks.contains(searchPos);
+				if (waterBlock && !processedHere) {
+					waterBlocksQueue.add(searchPos);
+					processedBlocks.add(searchPos);
+				}
 			}
+
 		}
 
 	}
