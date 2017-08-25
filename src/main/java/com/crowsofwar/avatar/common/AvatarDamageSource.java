@@ -144,5 +144,17 @@ public class AvatarDamageSource {
 	public static DamageSource causeSmashDamage(Entity hit, @Nullable Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_groundSmash", hit, owner);
 	}
-	
+
+	/**
+	 * Create a DamageSource for damage caused by lightning bending.
+	 *
+	 * @param hit
+	 *            Who was hit by lightning
+	 * @param owner
+	 *            The lightning bender
+	 */
+	public static DamageSource causeLightningDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_lightningBending", hit, owner).setDamageBypassesArmor();
+	}
+
 }

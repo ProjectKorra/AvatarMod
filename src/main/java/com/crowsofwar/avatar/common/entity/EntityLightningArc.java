@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -179,7 +180,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private void damageEntity(EntityLivingBase entity, float damageModifier) {
 
-		if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, damage * damageModifier)) {
+		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
+		if (entity.attackEntityFrom(damageSource, damage * damageModifier)) {
 
 			entity.setFire(4);
 
