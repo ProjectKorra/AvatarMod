@@ -24,6 +24,7 @@ import org.joml.Vector4d;
 import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 /**
  * @author CrowsOfWar
@@ -147,30 +148,44 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (stuckTo == null && entity instanceof EntityLivingBase) {
 
 			stuckTo = (EntityLivingBase) entity;
-
-			if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, damage)) {
-				entity.setFire(4);
-
-				Vector velocity = velocity().normalize();
-				entity.addVelocity(velocity.x(), 0.6, velocity.z());
-				AvatarUtils.afterVelocityAdded(entity);
-
-				// Add Experience
-				// Although 2 lightning entities are fired in each lightning ability, this won't
-				// cause 2x XP rewards as this only happens when the entity is successfully attacked
-				// (hurtResistantTime prevents the 2 lightning entities from both damaging at once)
-				if (getOwner() != null) {
-					BendingData data = BendingData.get(getOwner());
-					AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
-					abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
-				}
-			}
+			damageEntity(stuckTo);
 
 		}
 	}
 
-	private void handleWaterElectrocution(EntityLivingBase target) {
-		System.out.println("Zapping " + target);
+	private void handleWaterElectrocution(EntityLivingBase entity) {
+
+		if (entity != getOwner()) {
+			damageEntity(entity);
+		}
+
+	}
+
+	private void damageEntity(EntityLivingBase entity) {
+
+		double distance = entity.getDistanceSqToEntity(this);
+		float damageModifier = (float) (1 - distance);
+
+		if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, damage * damageModifier)) {
+
+			entity.setFire(4);
+
+			Vector velocity = getEntityPos(entity).minus(this.position());
+			velocity = velocity.times(0.2);
+			entity.addVelocity(velocity.x(), 0.4, velocity.z());
+			AvatarUtils.afterVelocityAdded(entity);
+
+			// Add Experience
+			// Although 2 lightning entities are fired in each lightning ability, this won't
+			// cause 2x XP rewards as this only happens when the entity is successfully attacked
+			// (hurtResistantTime prevents the 2 lightning entities from both damaging at once)
+			if (getOwner() != null) {
+				BendingData data = BendingData.get(getOwner());
+				AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
+				abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
+			}
+		}
+
 	}
 
 	@Override
