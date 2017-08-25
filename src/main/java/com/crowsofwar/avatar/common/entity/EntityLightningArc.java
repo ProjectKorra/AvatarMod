@@ -40,6 +40,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
 			(EntityLightningArc.class, DataSerializers.FLOAT);
 
+	private static final DataParameter<Boolean> SYNC_MAIN_ARC = EntityDataManager.createKey
+			(EntityLightningArc.class, DataSerializers.BOOLEAN);
+
 	/**
 	 * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
 	 * damage it.
@@ -69,6 +72,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		dataManager.register(SYNC_ENDPOS, Vector.ZERO);
 		dataManager.register(SYNC_TURBULENCE, 0.6f);
 		dataManager.register(SYNC_SIZE, 1f);
+		dataManager.register(SYNC_MAIN_ARC, true);
 	}
 
 	@Override
@@ -79,6 +83,10 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (isMainArc()) {
+			onUpdateMainArc();
+		}
+
 		if (getOwner() != null) {
 			Vector ownerPosition = Vector.getEyePos(getOwner());
 			Vector endPosition = getEndPos();
@@ -114,6 +122,15 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			setDead();
 		}
 
+		setSize(0.33f * getSizeMultiplier(), 0.33f * getSizeMultiplier());
+
+	}
+
+	/**
+	 * @see #isMainArc()
+	 */
+	private void onUpdateMainArc() {
+
 		// Lightning flash
 		if (world.isRemote) {
 			double threshold = stuckTime >= 0 ? 0.2 : 0.3;
@@ -122,8 +139,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			}
 		}
 
-		setSize(0.33f * getSizeMultiplier(), 0.33f * getSizeMultiplier());
-
+		// Electrocute enemies in water
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {
 				floodFill = new LightningFloodFill(world, getPosition(), 5,
@@ -240,6 +256,22 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	public void setSizeMultiplier(float sizeMultiplier) {
 		dataManager.set(SYNC_SIZE, sizeMultiplier);
+	}
+
+	/**
+	 * The ability actually creates 2-3 arcs for aesthetic effect. However, some work (e.g. flood
+	 * fill) should only be performed by one arc : The main arc. Of the many arcs spawned in each
+	 * ability use, one is flagged as the main arc.
+	 */
+	public boolean isMainArc() {
+		return dataManager.get(SYNC_MAIN_ARC);
+	}
+
+	/**
+	 * @see #isMainArc()
+	 */
+	public void setMainArc(boolean mainArc) {
+		dataManager.set(SYNC_MAIN_ARC, mainArc);
 	}
 
 	public class LightningControlPoint extends ControlPoint {
