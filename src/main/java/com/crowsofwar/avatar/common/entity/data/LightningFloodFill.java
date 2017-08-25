@@ -53,7 +53,7 @@ public class LightningFloodFill {
 	 */
 	public void tick() {
 
-		for (int i = 0; i < 10 && !waterBlocksQueue.isEmpty(); i++) {
+		for (int i = 0; i < 20 && !waterBlocksQueue.isEmpty(); i++) {
 			processBlock();
 		}
 

@@ -142,7 +142,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		// Electrocute enemies in water
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {
-				floodFill = new LightningFloodFill(world, getPosition(), 5,
+				floodFill = new LightningFloodFill(world, getPosition(), 12,
 						this::handleWaterElectrocution);
 			}
 			floodFill.tick();
@@ -172,7 +172,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	private void handleWaterElectrocution(EntityLivingBase entity) {
 
 		double distance = entity.getDistanceToEntity(this);
-		float damageModifier = (float) (1 - (distance / 5) * (distance / 5));
+		float damageModifier = (float) (1 - (distance / 12) * (distance / 12));
 		damageEntity(entity, damageModifier);
 
 	}
