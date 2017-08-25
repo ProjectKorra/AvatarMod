@@ -48,6 +48,7 @@ public class StatCtrlSkateJump extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		if (data.hasTickHandler(TickHandler.WATER_SKATE)) {
 			data.removeTickHandler(TickHandler.WATER_SKATE);
+			data.setCanUseAbilities(true);
 			
 			Vector velocity = Vector.getLookRectangular(entity);
 			velocity.mul(1.5);

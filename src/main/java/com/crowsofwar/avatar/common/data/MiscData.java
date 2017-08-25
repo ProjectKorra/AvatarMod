@@ -69,7 +69,10 @@ public class MiscData {
 		wallJumping = nbt.getBoolean("WallJumping");
 		petSummonCooldown = nbt.getInteger("PetSummonCooldown");
 		bisonFollowMode = nbt.getBoolean("BisonFollowMode");
-		canUseAbilities = nbt.getBoolean("CanUseAbilities");
+		// Use key ending with "a4.6" because there was a bug in a4.5 where canUseAbilities
+		// wasn't correctly flagged to false.
+		// This new key forces glitched players from a4.5 to reload their CanUseAbilities flag
+		canUseAbilities = nbt.getBoolean("CanUseAbilitiesA4.6");
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -79,7 +82,7 @@ public class MiscData {
 		nbt.setBoolean("WallJumping", wallJumping);
 		nbt.setInteger("PetSummonCooldown", petSummonCooldown);
 		nbt.setBoolean("BisonFollowMode", bisonFollowMode);
-		nbt.setBoolean("CanUseAbilities", canUseAbilities);
+		nbt.setBoolean("CanUseAbilitiesA4.6", canUseAbilities);
 	}
 	
 	public float getFallAbsorption() {
