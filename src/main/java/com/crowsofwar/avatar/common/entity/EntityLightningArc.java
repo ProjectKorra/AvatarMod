@@ -98,6 +98,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (stuckTo != null) {
 			setPosition(Vector.getEyePos(stuckTo));
 			setVelocity(Vector.ZERO);
+			damageEntity(stuckTo, 0.333f);
 		}
 
 		if (velocity().equals(Vector.ZERO)) {
@@ -148,7 +149,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (stuckTo == null && entity instanceof EntityLivingBase) {
 
 			stuckTo = (EntityLivingBase) entity;
-			damageEntity(stuckTo);
 
 		}
 	}
@@ -156,15 +156,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	private void handleWaterElectrocution(EntityLivingBase entity) {
 
 		if (entity != getOwner()) {
-			damageEntity(entity);
+			double distance = entity.getDistanceSqToEntity(this);
+			float damageModifier = (float) (1 - distance);
+			damageEntity(entity, damageModifier);
 		}
 
 	}
 
-	private void damageEntity(EntityLivingBase entity) {
-
-		double distance = entity.getDistanceSqToEntity(this);
-		float damageModifier = (float) (1 - distance);
+	private void damageEntity(EntityLivingBase entity, float damageModifier) {
 
 		if (entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, damage * damageModifier)) {
 
