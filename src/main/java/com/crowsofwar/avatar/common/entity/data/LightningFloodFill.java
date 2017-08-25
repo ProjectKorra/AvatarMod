@@ -42,6 +42,7 @@ public class LightningFloodFill {
 		this.entityCallback = entityCallback;
 
 		waterBlocksQueue.add(initialPos);
+		processedBlocks.add(initialPos);
 	}
 
 	/**
@@ -59,6 +60,8 @@ public class LightningFloodFill {
 
 		BlockPos pos = waterBlocksQueue.poll();
 
+		System.out.println("Looking at you, " + pos);
+
 		// Detect entities at this BlockPos
 
 		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new
@@ -75,10 +78,9 @@ public class LightningFloodFill {
 			boolean processedHere = processedBlocks.contains(searchPos);
 			if (waterBlock && !processedHere) {
 				waterBlocksQueue.add(searchPos);
+				processedBlocks.add(searchPos);
 			}
 		}
-
-		processedBlocks.add(pos);
 
 	}
 
