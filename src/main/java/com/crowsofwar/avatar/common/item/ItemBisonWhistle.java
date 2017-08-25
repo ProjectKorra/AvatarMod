@@ -82,13 +82,17 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 					double dist = entity.getDistanceToEntity(bison);
 
-					double seconds = dist / 20;
+					if (dist >= 20) {
+						double seconds = dist / 20;
 
-					BendingData data = Bender.create(entity).getData();
-					data.setPetSummonCooldown((int) (seconds * 20));
-					data.addTickHandler(TickHandler.BISON_SUMMONER);
+						BendingData data = Bender.create(entity).getData();
+						data.setPetSummonCooldown((int) (seconds * 20));
+						data.addTickHandler(TickHandler.BISON_SUMMONER);
 
-					MSG_BISON_WHISTLE_SUMMON.send(entity, (int) seconds);
+						MSG_BISON_WHISTLE_SUMMON.send(entity, (int) seconds);
+					} else {
+						MSG_BISON_WHISTLE_NEARBY.send(entity);
+					}
 
 				} else {
 					MSG_BISON_WHISTLE_NOT_FOUND.send(entity, getBisonName(stack));
