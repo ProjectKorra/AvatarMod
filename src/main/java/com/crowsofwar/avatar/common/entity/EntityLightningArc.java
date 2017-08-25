@@ -183,8 +183,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 			entity.setFire(4);
 
-			Vector velocity = getEntityPos(entity).minus(this.position());
-			velocity = velocity.times(0.2);
+			Vector velocity = getEntityPos(entity).minus(this.position()).normalize();
+			velocity = velocity.times(2);
 			entity.addVelocity(velocity.x(), 0.4, velocity.z());
 			AvatarUtils.afterVelocityAdded(entity);
 
