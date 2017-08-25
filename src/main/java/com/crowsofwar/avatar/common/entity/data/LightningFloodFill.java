@@ -1,12 +1,14 @@
 package com.crowsofwar.avatar.common.entity.data;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Manages lightning hurting nearby entities when in water, by using a flood-fill algorithm,
@@ -20,6 +22,8 @@ public class LightningFloodFill {
 
 	private final World world;
 
+	private Consumer<EntityLivingBase> entityCallback;
+
 	/**
 	 * Queue of water blocks to process
 	 */
@@ -30,13 +34,52 @@ public class LightningFloodFill {
 	 */
 	private final Set<BlockPos> processedBlocks;
 
-	public LightningFloodFill(World world, BlockPos initialPos, int expansion) {
+	public LightningFloodFill(World world, BlockPos initialPos, int expansion,
+							  Consumer<EntityLivingBase> entityCallback) {
 		this.world = world;
 		this.waterBlocksQueue = new PriorityQueue<>(expansion * expansion * expansion);
 		this.processedBlocks = new TreeSet<>();
+		this.entityCallback = entityCallback;
 
 		waterBlocksQueue.add(initialPos);
 	}
 
+	/**
+	 * Ticks the flood fill algorithm
+	 */
+	public void tick() {
+
+		for (int i = 0; i < 10 && !waterBlocksQueue.isEmpty(); i++) {
+			processBlock();
+		}
+
+	}
+
+	private void processBlock() {
+
+		BlockPos pos = waterBlocksQueue.poll();
+
+		// Detect entities at this BlockPos
+
+		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new
+				AxisAlignedBB(pos));
+		for (EntityLivingBase entity : entities) {
+			entityCallback.accept(entity);
+		}
+
+		// Add more BlockPos to check
+		for (EnumFacing facing : EnumFacing.values()) {
+			BlockPos searchPos = pos.offset(facing);
+
+			boolean waterBlock = world.getBlockState(searchPos).getBlock() == Blocks.WATER;
+			boolean processedHere = processedBlocks.contains(searchPos);
+			if (waterBlock && !processedHere) {
+				waterBlocksQueue.add(searchPos);
+			}
+		}
+
+		processedBlocks.add(pos);
+
+	}
 
 }
