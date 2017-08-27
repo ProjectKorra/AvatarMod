@@ -36,3 +36,6 @@ Server.launch
 .idea/
 code.iml
 out/
+
+*.ipr
+*.iws
