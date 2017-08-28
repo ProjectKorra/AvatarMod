@@ -307,7 +307,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			}
 		}
 		AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
-		if (data.isMasterPath(AbilityTreePath.SECOND)) {
+		if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
 			
 			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
 			if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
