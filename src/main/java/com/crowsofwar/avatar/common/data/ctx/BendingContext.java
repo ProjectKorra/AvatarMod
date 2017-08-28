@@ -227,8 +227,8 @@ public class BendingContext {
 				if (waterLevel > 0) {
 					world.setBlockState(targetPos.toBlockPos(),
 							ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
+					return true;
 				}
-				return true;
 			}
 			
 		}

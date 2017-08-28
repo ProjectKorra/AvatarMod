@@ -6,3 +6,4 @@ AV2 Changelog :: version a4.6
 > Fix bug where bending is still disabled when jumping out of water skate
 > Fix bug where other players can't mount their friend's bison
 > Fix mine_blocks ability not affecting fortune
+> Fix water arcs still able to be gotten from empty cauldrons
