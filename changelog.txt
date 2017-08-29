@@ -4,6 +4,7 @@ AV2 Changelog :: version a4.6
 * Can't summon flying bison if it is nearby (20 blocks)
 
 * Increase fall absorption from skating jump
+* Slightly improve risk of floating block place glitching
 
 > Fix bug where bending is still disabled when jumping out of water skate
 > Fix bug where other players can't mount their friend's bison

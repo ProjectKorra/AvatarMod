@@ -17,11 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -31,7 +26,6 @@ import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
@@ -43,6 +37,11 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -98,12 +97,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY() + 0.25, placeAt.getZ() + 0.5);
+
+			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
 			Vector thisPos = new Vector(entity);
 			Vector force = placeAtVec.minus(thisPos);
 			force.normalize();
 			force.mul(3);
 			entity.velocity().set(force);
+
 			if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
 				
 				entity.setDead();
