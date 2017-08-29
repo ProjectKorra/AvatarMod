@@ -16,9 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
-
 import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -28,8 +25,10 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
+
+import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
 
 /**
  * 
@@ -57,7 +56,7 @@ public class StatCtrlSkateJump extends StatusControl {
 			entity.motionZ = velocity.z() * 2;
 			AvatarUtils.afterVelocityAdded(entity);
 			
-			data.setFallAbsorption(6);
+			data.setFallAbsorption(9);
 			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND);

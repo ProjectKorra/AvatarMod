@@ -3,6 +3,8 @@ AV2 Changelog :: version a4.6
 * Halved flamethrower chi drain
 * Can't summon flying bison if it is nearby (20 blocks)
 
+* Increase fall absorption from skating jump
+
 > Fix bug where bending is still disabled when jumping out of water skate
 > Fix bug where other players can't mount their friend's bison
 > Fix mine_blocks ability not affecting fortune
