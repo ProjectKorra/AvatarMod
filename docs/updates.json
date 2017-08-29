@@ -16,8 +16,9 @@
     "1.11.2-latest": "a4.4",
     "1.11.2-recommended": "a4.4",
 
-    "1.12-latest": "a4.5",
-    "1.12-recommended": "a4.5",
-    "1.12.1-latest": "a4.5"
+    "1.12-latest": "a4.6",
+    "1.12-recommended": "a4.6",
+    "1.12.1-latest": "a4.6",
+    "1.12.1-recommended": "a4.6"
   }
 }
