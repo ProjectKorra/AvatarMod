@@ -8,3 +8,4 @@ AV2 Changelog :: version a4.6
 > Fix mine_blocks ability not affecting fortune
 > Fix water arcs still able to be gotten from empty cauldrons
 > Fix pickup block Explosions happening 100% of the time(instead of 50%)
+> Fix ravine bouncing off walls

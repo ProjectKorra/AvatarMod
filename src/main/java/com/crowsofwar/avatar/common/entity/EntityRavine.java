@@ -17,12 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_RAVINE;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -33,7 +27,6 @@ import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -51,6 +44,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_RAVINE;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -129,11 +128,11 @@ public class EntityRavine extends AvatarEntity {
 	public void onEntityUpdate() {
 		
 		super.onEntityUpdate();
-		
+
 		if (initialPosition == null) {
 			initialPosition = position().copy();
 		}
-		
+
 		Vector position = position();
 		Vector velocity = velocity();
 		
@@ -221,9 +220,14 @@ public class EntityRavine extends AvatarEntity {
 				
 			}
 		}
-		
+
 	}
-	
+
+	@Override
+	public void onCollideWithSolid() {
+		setDead();
+	}
+
 	private boolean attackEntity(Entity entity) {
 		
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
