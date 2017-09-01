@@ -50,7 +50,7 @@ public class StatCtrlThrowFireball extends StatusControl {
 		EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 		
 		if (fireball != null) {
-			AbilityData abilityData = ctx.getData().getAbilityData(AbilityFireball.ID);
+			AbilityData abilityData = ctx.getData().getAbilityData("fireball");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			fireball.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			fireball.setBehavior(new FireballBehavior.Thrown());

@@ -56,7 +56,7 @@ public class AbilityRavine extends EarthAbility {
 		
 		if (ctx.consumeChi(chi)) {
 			
-			AbilityData abilityData = ctx.getData().getAbilityData(ID);
+			AbilityData abilityData = ctx.getData().getAbilityData(this);
 			float xp = abilityData.getTotalXp();
 			
 			EntityLivingBase entity = ctx.getBenderEntity();

@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -113,7 +112,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			Bender bender = Bender.get(entity.getOwner());
 			if (bender != null) {
 				data = bender.getData();
-				abilityData = data.getAbilityData(AbilityWaterArc.ID);
+				abilityData = data.getAbilityData("water_arc");
 				waterSpear = abilityData.isMasterPath(AbilityTreePath.SECOND);
 			}
 

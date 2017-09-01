@@ -83,7 +83,7 @@ public class WaterSkateHandler extends TickHandler {
 	private void tryStartSkating(BendingData data, EntityLivingBase player) {
 		
 		if (!player.world.isRemote && data.hasStatusControl(SKATING_START)) {
-			if (shouldSkate(player, data.getAbilityData(AbilityWaterSkate.ID))) {
+			if (shouldSkate(player, data.getAbilityData("water_skate"))) {
 				data.removeStatusControl(SKATING_START);
 				data.addStatusControl(SKATING_JUMP);
 			}
@@ -97,7 +97,7 @@ public class WaterSkateHandler extends TickHandler {
 	 */
 	private boolean skate(BendingData data, EntityLivingBase player, Bender bender) {
 		
-		AbilityData abilityData = data.getAbilityData(AbilityWaterSkate.ID);
+		AbilityData abilityData = data.getAbilityData("water_skate");
 		
 		World world = player.world;
 		int yPos = getSurfacePos(player);

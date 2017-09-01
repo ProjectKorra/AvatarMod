@@ -173,7 +173,7 @@ public class EntityRavine extends AvatarEntity {
 		if (!world.isRemote && getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			if (data != null) {
-				data.getAbilityData(AbilityRavine.ID).addXp(SKILLS_CONFIG.ravineHit * attacked);
+				data.getAbilityData("ravine").addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}
 		}
 		

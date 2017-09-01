@@ -100,7 +100,7 @@ public class EntityAirblade extends AvatarEntity {
 				
 				if (getOwner() != null) {
 					BendingData data = getOwnerBender().getData();
-					data.getAbilityData(AbilityAirblade.ID).addXp(SKILLS_CONFIG.airbladeHit);
+					data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
 				}
 
 				if (chainAttack) {

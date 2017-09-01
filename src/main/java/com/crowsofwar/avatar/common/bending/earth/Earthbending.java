@@ -17,14 +17,13 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import java.awt.Color;
-import java.util.UUID;
-
-
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
+
+import java.awt.*;
+import java.util.UUID;
 
 public class Earthbending extends BendingStyle {
 
@@ -34,10 +33,10 @@ public class Earthbending extends BendingStyle {
 	
 	public Earthbending() {
 		
-		addAbility(AbilityPickUpBlock.ID);
-		addAbility(AbilityRavine.ID);
-		addAbility(AbilityWall.ID);
-		addAbility(AbilityMining.ID);
+		addAbility("pickup_block");
+		addAbility("ravine");
+		addAbility("wall");
+		addAbility("mine_blocks");
 		
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);

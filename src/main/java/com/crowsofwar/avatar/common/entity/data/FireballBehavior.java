@@ -18,10 +18,9 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -126,7 +125,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
-				data.getAbilityData(AbilityFireball.ID).addXp(xp);
+				data.getAbilityData("fireball").addXp(xp);
 			}
 			
 			// Remove the fireball & spawn particles
@@ -168,7 +167,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
 			entity.setVelocity(motion);
 			
-			if (data.getAbilityData(AbilityFireball.ID).isMasterPath(AbilityTreePath.SECOND)) {
+			if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {
 				int size = entity.getSize();
 				if (size < 60 && entity.ticksExisted % 4 == 0) {
 					entity.setSize(size + 1);

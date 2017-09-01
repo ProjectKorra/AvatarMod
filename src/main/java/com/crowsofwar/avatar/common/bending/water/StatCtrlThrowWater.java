@@ -49,7 +49,7 @@ public class StatCtrlThrowWater extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		AbilityData abilityData = data.getAbilityData(AbilityWaterArc.ID);
+		AbilityData abilityData = data.getAbilityData("water_arc");
 		
 		int lvl = abilityData.getLevel();
 		double velocity = 6;

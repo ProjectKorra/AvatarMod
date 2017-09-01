@@ -279,7 +279,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				EntityLivingBase owner = getOwner();
 				if (owner != null) {
 					BendingData data = BendingData.get(owner);
-					data.getAbilityData(AbilityWall.ID).addXp(SKILLS_CONFIG.wallBlockedAttack);
+					data.getAbilityData("wall").addXp(SKILLS_CONFIG.wallBlockedAttack);
 				}
 			}
 
@@ -294,7 +294,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 		boolean friendlyProjectile = false;
 		if (getOwner() != null) {
-			AbilityData data = Bender.get(getOwner()).getData().getAbilityData(AbilityWall.ID);
+			AbilityData data = Bender.get(getOwner()).getData().getAbilityData("wall");
 			if (data.isMaxLevel() && data.getPath() == AbilityTreePath.FIRST) {
 
 				friendlyProjectile = entity instanceof AvatarEntity

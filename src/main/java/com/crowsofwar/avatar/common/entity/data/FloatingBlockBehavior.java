@@ -19,11 +19,10 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -206,14 +205,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (collided.getHealth() <= 0) {
 					xp = SKILLS_CONFIG.blockKill;
 				}
-				data.getAbilityData(AbilityPickUpBlock.ID).addXp(xp);
+				data.getAbilityData("pickup_block").addXp(xp);
 			}
 			
 			// Remove the floating block & spawn particles
 			entity.onCollideWithSolid();
 			// boomerang upgrade handling
 			if (!entity.world.isRemote) {
-				if (data.getAbilityData(AbilityPickUpBlock.ID)
+				if (data.getAbilityData("pickup_block")
 						.isMasterPath(AbilityTreePath.FIRST)) {
 					
 					Chi chi = data.chi();

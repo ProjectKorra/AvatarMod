@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
@@ -196,7 +195,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			// (hurtResistantTime prevents the 2 lightning entities from both damaging at once)
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
-				AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
+				AbilityData abilityData = data.getAbilityData("lightning_arc");
 				abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
 			}
 		}

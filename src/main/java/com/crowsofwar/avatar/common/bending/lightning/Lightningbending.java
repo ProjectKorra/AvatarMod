@@ -37,8 +37,8 @@ public class Lightningbending extends BendingStyle {
 	
 	public Lightningbending() {
 		
-		addAbility(AbilityLightningStrike.ID);
-		addAbility(AbilityLightningArc.ID);
+		addAbility("lightning_strike");
+		addAbility("lightning_arc");
 
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);

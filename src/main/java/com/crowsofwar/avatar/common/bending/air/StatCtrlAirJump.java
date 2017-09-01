@@ -61,7 +61,7 @@ public class StatCtrlAirJump extends StatusControl {
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 		
-		AbilityData abilityData = data.getAbilityData(AbilityAirJump.ID);
+		AbilityData abilityData = data.getAbilityData("air_jump");
 		boolean allowDoubleJump = abilityData.getLevel() == 3
 				&& abilityData.getPath() == AbilityTreePath.FIRST;
 		

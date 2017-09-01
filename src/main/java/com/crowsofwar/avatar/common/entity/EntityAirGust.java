@@ -75,7 +75,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			BendingData data = Bender.get(owner).getData();
 			float xp = 0;
 			if (data != null) {
-				AbilityData abilityData = data.getAbilityData(AbilityAirGust.ID);
+				AbilityData abilityData = data.getAbilityData("air_gust");
 				xp = abilityData.getTotalXp();
 				abilityData.addXp(SKILLS_CONFIG.airGustHit);
 			}

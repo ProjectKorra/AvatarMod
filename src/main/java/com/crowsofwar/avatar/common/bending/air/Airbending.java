@@ -35,10 +35,10 @@ public class Airbending extends BendingStyle {
 	private BendingMenuInfo menu;
 	
 	public Airbending() {
-		addAbility(AbilityAirGust.ID);
-		addAbility(AbilityAirJump.ID);
-		addAbility(AbilityAirblade.ID);
-		addAbility(AbilityAirBubble.ID);
+		addAbility("air_gust");
+		addAbility("air_jump");
+		addAbility("airblade");
+		addAbility("air_bubble");
 		
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);

@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -110,7 +109,7 @@ public class EntityFlames extends AvatarEntity {
 		
 		if (!world.isRemote) {
 			BendingData data = Bender.get(owner).getData();
-			AbilityData abilityData = data.getAbilityData(AbilityFlamethrower.ID);
+			AbilityData abilityData = data.getAbilityData("flamethrower");
 			
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != owner && !(entity instanceof EntityFlames));

@@ -189,7 +189,7 @@ public class WindowAbility {
 		int mouseX = Mouse.getX() * width / mc.displayWidth;
 		int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
 		
-		AbilityData data = AbilityData.get(mc.player, ability.getId());
+		AbilityData data = AbilityData.get(mc.player, ability.getName());
 		
 		unlockTitle.setVisible(data.isLocked());
 		unlockText.setVisible(data.isLocked());
@@ -258,7 +258,7 @@ public class WindowAbility {
 	 */
 	public boolean canRenderTooltip(ItemStack stack) {
 		
-		AbilityData data = AbilityData.get(mc.player, ability.getId());
+		AbilityData data = AbilityData.get(mc.player, ability.getName());
 		if (data.isLocked()) {
 			return true;
 		}

@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -134,7 +133,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
 			
 			BendingData data = BendingData.get(entity.getOwner());
-			AbilityData abilityData = data.getAbilityData(AbilityWall.ID);
+			AbilityData abilityData = data.getAbilityData("wall");
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 
 				drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;

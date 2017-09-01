@@ -105,9 +105,8 @@ public class AbilityPickUpBlock extends EarthAbility {
 			
 			if (ctx.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 				
-				AbilityData abilityData = data.getAbilityData(ID);
-				float xp = abilityData.getTotalXp();
-				
+				AbilityData abilityData = data.getAbilityData(this);
+
 				EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 				floating.setItemDropsEnabled(!bender.isCreativeMode());

@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -281,7 +280,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			}
 		}
 
-		AbilityData data = BendingData.get(getOwner()).getAbilityData(AbilityPickUpBlock.ID);
+		AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
 		if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
 
 			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);

@@ -59,28 +59,28 @@ public class DataTransmitters {
 		}
 	};
 	
-	public static final DataTransmitter<Map<UUID, AbilityData>> ABILITY_DATA = new
-			DataTransmitter<Map<UUID, AbilityData>>() {
+	public static final DataTransmitter<Map<String, AbilityData>> ABILITY_DATA = new
+			DataTransmitter<Map<String, AbilityData>>() {
 		
 		@Override
-		public void write(ByteBuf buf, Map<UUID, AbilityData> t) {
-			Set<Map.Entry<UUID, AbilityData>> entries = t.entrySet();
+		public void write(ByteBuf buf, Map<String, AbilityData> t) {
+			Set<Map.Entry<String, AbilityData>> entries = t.entrySet();
 			buf.writeInt(entries.size());
-			for (Map.Entry<UUID, AbilityData> entry : entries) {
+			for (Map.Entry<String, AbilityData> entry : entries) {
 				entry.getValue().toBytes(buf);
 			}
 		}
 		
 		@Override
-		public Map<UUID, AbilityData> read(ByteBuf buf, BendingData data) {
-			Map<UUID, AbilityData> out = new HashMap<>();
+		public Map<String, AbilityData> read(ByteBuf buf, BendingData data) {
+			Map<String, AbilityData> out = new HashMap<>();
 			int size = buf.readInt();
 			for (int i = 0; i < size; i++) {
 				AbilityData abilityData = AbilityData.createFromBytes(buf, data);
 				if (abilityData == null) {
 					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
 				} else {
-					out.put(abilityData.getAbilityId(), abilityData);
+					out.put(abilityData.getAbilityName(), abilityData);
 				}
 			}
 			return out;

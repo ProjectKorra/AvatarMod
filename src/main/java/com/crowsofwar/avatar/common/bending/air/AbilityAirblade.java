@@ -63,7 +63,7 @@ public class AbilityAirblade extends AirAbility {
 		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw), pitch);
 		Vector spawnAt = Vector.getEntityPos(bender).plus(look.times(2)).plus(0, 1, 0);
 
-		AbilityData abilityData = ctx.getData().getAbilityData(ID);
+		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();
 		
 		EntityAirblade airblade = new EntityAirblade(world);

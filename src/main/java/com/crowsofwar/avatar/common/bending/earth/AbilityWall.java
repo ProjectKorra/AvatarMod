@@ -56,7 +56,7 @@ public class AbilityWall extends EarthAbility {
 			EnumFacing cardinal = entity.getHorizontalFacing();
 			BendingData data = ctx.getData();
 			
-			AbilityData abilityData = data.getAbilityData(ID);
+			AbilityData abilityData = data.getAbilityData(this);
 			float xp = abilityData.getTotalXp();
 			
 			int whMin, whMax;

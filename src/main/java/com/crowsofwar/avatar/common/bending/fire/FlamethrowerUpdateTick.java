@@ -46,7 +46,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		
-		AbilityData abilityData = data.getAbilityData(AbilityFlamethrower.ID);
+		AbilityData abilityData = data.getAbilityData("flamethrower");
 		AbilityTreePath path = abilityData.getPath();
 		float totalXp = abilityData.getTotalXp();
 		int level = abilityData.getLevel();

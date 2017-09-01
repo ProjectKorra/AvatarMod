@@ -17,16 +17,14 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import java.awt.Color;
-import java.util.UUID;
-
-
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.awt.*;
+import java.util.UUID;
 
 public class Waterbending extends BendingStyle {
 
@@ -35,10 +33,10 @@ public class Waterbending extends BendingStyle {
 	private BendingMenuInfo menu;
 	
 	public Waterbending() {
-		addAbility(AbilityWaterArc.ID);
-		addAbility(AbilityCreateWave.ID);
-		addAbility(AbilityWaterBubble.ID);
-		addAbility(AbilityWaterSkate.ID);
+		addAbility("water_arc");
+		addAbility("wave");
+		addAbility("water_bubble");
+		addAbility("water_skate");
 		
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);

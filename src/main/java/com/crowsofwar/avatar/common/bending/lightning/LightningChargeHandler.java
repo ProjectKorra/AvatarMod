@@ -45,7 +45,7 @@ public class LightningChargeHandler extends TickHandler {
 
 		if (duration >= 40) {
 
-			AbilityData abilityData = data.getAbilityData(AbilityLightningArc.ID);
+			AbilityData abilityData = data.getAbilityData("lightning_arc");
 
 			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			float damage = abilityData.getLevel() >= 2 ? 8 : 6;

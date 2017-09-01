@@ -342,7 +342,7 @@ public class EntityAirBubble extends AvatarEntity {
 						BendingData data = BendingData.get(owner);
 						if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
 
-							AbilityData aData = data.getAbilityData(AbilityAirBubble.ID);
+							AbilityData aData = data.getAbilityData("air_bubble");
 							aData.addXp(SKILLS_CONFIG.airbubbleProtect);
 							setHealth(getHealth() - amount);
 							return true;

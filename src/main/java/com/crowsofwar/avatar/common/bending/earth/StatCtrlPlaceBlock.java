@@ -79,7 +79,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				
 				data.removeStatusControl(THROW_BLOCK);
 				
-				data.getAbilityData(AbilityPickUpBlock.ID).addXp(SKILLS_CONFIG.blockPlaced);
+				data.getAbilityData("pickup_block").addXp(SKILLS_CONFIG.blockPlaced);
 				
 				return true;
 			}

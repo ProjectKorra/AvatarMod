@@ -52,7 +52,7 @@ public class StatCtrlThrowFire extends StatusControl {
 		
 		if (fire != null) {
 			
-			AbilityData abilityData = data.getAbilityData(AbilityFireArc.ID);
+			AbilityData abilityData = data.getAbilityData("fire_arc");
 			
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));

@@ -93,7 +93,7 @@ public class EntityWave extends AvatarEntity {
 			if (!collided.isEmpty()) {
 				BendingData data = Bender.get(owner).getData();
 				if (data != null) {
-					data.getAbilityData(AbilityCreateWave.ID).addXp(SKILLS_CONFIG.waveHit);
+					data.getAbilityData("wall").addXp(SKILLS_CONFIG.waveHit);
 				}
 			}
 		}
@@ -119,7 +119,7 @@ public class EntityWave extends AvatarEntity {
 
 	private int maxTimeOnLand() {
 		if (getOwner() != null) {
-			AbilityData data = BendingData.get(getOwner()).getAbilityData(AbilityCreateWave.ID);
+			AbilityData data = BendingData.get(getOwner()).getAbilityData("wall");
 			if (data.isMasterPath(AbilityTreePath.FIRST)) {
 				return 30;
 			}

@@ -16,18 +16,12 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
-
-import java.util.UUID;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import net.minecraft.entity.EntityLiving;
@@ -37,6 +31,8 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
@@ -72,8 +68,6 @@ public class AbilityAirBubble extends AirAbility {
 		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
 			
 			if (!ctx.consumeChi(STATS_CONFIG.chiAirBubble)) return;
-			
-			float xp = data.getAbilityData(ID).getTotalXp();
 			
 			float size = 1.5f;
 			float health = 12;

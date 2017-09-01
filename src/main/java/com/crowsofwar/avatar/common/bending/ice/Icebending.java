@@ -37,9 +37,9 @@ public class Icebending extends BendingStyle {
 	
 	public Icebending() {
 		
-		addAbility(AbilityIceWalk.ID);
-		addAbility(AbilityIceBurst.ID);
-		addAbility(AbilityIcePrison.ID);
+		addAbility("ice_walk");
+		addAbility("ice_burst");
+		addAbility("ice_prison");
 		
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);
