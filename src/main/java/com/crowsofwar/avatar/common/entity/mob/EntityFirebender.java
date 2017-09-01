@@ -17,9 +17,6 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -43,7 +40,7 @@ public class EntityFirebender extends EntityHumanBender {
 	public EntityFirebender(World world) {
 		super(world);
 		
-		getData().getAbilityData(AbilityFlamethrower.ID).setLevel(2);
+		getData().getAbilityData("flamethrower").setLevel(2);
 		
 	}
 	
@@ -55,9 +52,9 @@ public class EntityFirebender extends EntityHumanBender {
 	
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, Abilities.getAi(AbilityFlamethrower.ID, this, this));
-		this.tasks.addTask(3, Abilities.getAi(AbilityFireball.ID, this, this));
-		this.tasks.addTask(2, Abilities.getAi(AbilityFireArc.ID, this, this));
+		this.tasks.addTask(1, Abilities.getAi("flamethrower", this, this));
+		this.tasks.addTask(3, Abilities.getAi("fireball", this, this));
+		this.tasks.addTask(2, Abilities.getAi("fire_arc", this, this));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 	

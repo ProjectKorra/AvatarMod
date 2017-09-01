@@ -40,12 +40,13 @@ public class PacketSUseScroll extends AvatarPacket<PacketSUseScroll> {
 	
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		ability = Abilities.get(GoreCoreByteBufUtil.readUUID(buf));
+		ability = Abilities.get(GoreCoreByteBufUtil.readString(buf));
 	}
 	
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		GoreCoreByteBufUtil.writeUUID(buf, ability.getId());
+		GoreCoreByteBufUtil.writeString(buf, ability.getName
+				());
 	}
 	
 	@Override

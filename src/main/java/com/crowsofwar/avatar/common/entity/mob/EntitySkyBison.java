@@ -21,10 +21,6 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -192,9 +188,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 
-		this.tasks.addTask(1, Abilities.get(AbilityAirBubble.ID).getAi(this, this));
-		this.tasks.addTask(2, Abilities.get(AbilityAirGust.ID).getAi(this, this));
-		this.tasks.addTask(3, Abilities.get(AbilityAirblade.ID).getAi(this, this));
+		this.tasks.addTask(1, Abilities.get("air_bubble").getAi(this, this));
+		this.tasks.addTask(2, Abilities.get("air_gust").getAi(this, this));
+		this.tasks.addTask(3, Abilities.get("airblade").getAi(this, this));
 
 		this.tasks.addTask(2, new EntityAiBisonFollowAttacker(this));
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
@@ -708,7 +704,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private void onLiftoff() {
 		if (!isEatingGrass()) {
 			Raytrace.Result result = new Raytrace.Result();
-			Ability airJump = Abilities.get(AbilityAirJump.ID);
+			Ability airJump = Abilities.get("air_jump");
 			airJump.execute(new AbilityContext(getData(), this, this, result, airJump));
 			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
 			getData().removeStatusControl(StatusControl.AIR_JUMP);

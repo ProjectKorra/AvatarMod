@@ -47,7 +47,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		ability = Abilities.get(GoreCoreByteBufUtil.readUUID(buf));
+		ability = Abilities.get(GoreCoreByteBufUtil.readString(buf));
 		if (ability == null) {
 			throw new NullPointerException("Server sent invalid ability over network: ID " + ability);
 		}
@@ -56,7 +56,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		GoreCoreByteBufUtil.writeUUID(buf, ability.getId());
+		GoreCoreByteBufUtil.writeString(buf, ability.getName());
 		raytrace.toBytes(buf);
 	}
 	

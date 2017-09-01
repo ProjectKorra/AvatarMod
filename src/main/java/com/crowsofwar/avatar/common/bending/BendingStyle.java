@@ -32,10 +32,10 @@ import java.util.UUID;
 /**
  * Base class for bending abilities. All bending classes extend this one. They
  * can save data to NBT if necessary. Functionality for bending should be in
- * subclasses. Bending controllers are singletons, but must be accessed through
- * {@link BendingManager}.
+ * subclasses. Bending styles are singletons, but must be accessed through
+ * {@link BendingStyles}.
  * <p>
- * For the sake of abstraction, you won't need to refer to bending controllers
+ * For the sake of abstraction, you won't need to refer to bending styles
  * by their concrete names.
  * <p>
  * Subclasses have access to client input via optionally* implementable hook
@@ -82,8 +82,8 @@ public abstract class BendingStyle implements ReadableWritable {
 		this.abilities = new ArrayList<>();
 	}
 	
-	protected void addAbility(UUID abilityId) {
-		this.abilities.add(Abilities.get(abilityId));
+	protected void addAbility(String abilityName) {
+		this.abilities.add(Abilities.get(abilityName));
 	}
 	
 	/**
