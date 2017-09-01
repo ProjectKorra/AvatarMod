@@ -102,11 +102,11 @@ public class EntityRavine extends AvatarEntity {
 	public void onEntityUpdate() {
 		
 		super.onEntityUpdate();
-		
+
 		if (initialPosition == null) {
 			initialPosition = position();
 		}
-		
+
 		Vector position = position();
 		Vector velocity = velocity();
 		
@@ -193,9 +193,15 @@ public class EntityRavine extends AvatarEntity {
 				
 			}
 		}
-		
+
 	}
-	
+
+	@Override
+	public boolean onCollideWithSolid() {
+		setDead();
+		return false;
+	}
+
 	private boolean attackEntity(Entity entity) {
 		
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {

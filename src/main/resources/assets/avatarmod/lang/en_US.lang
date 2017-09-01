@@ -88,6 +88,7 @@ avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to y
 avatar.bisonWhistle.transferOffline=[error]This bison isn't yours. You can't transfer the bison since the owner ${owner} is offline.[/error]
 avatar.bisonWhistle.followOn=Your bison will now begin following you.
 avatar.bisonWhistle.followOff=Your bison have stopped following you.
+avatar.bisonWhistle.nearby=[error]Your bison is already nearby![/error]
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.

@@ -1,0 +1,293 @@
+avatar.category.main=Avatar Mod
+
+avatar.BendingList=Wyświetl listę magii
+avatar.CheatEarthbending=Cheat Earthbending
+avatar.ThrowBlock=Rzuć blok
+avatar.ToggleBending=Podnieś blok
+
+avatar.RadialMenu=Magia Ziemi
+avatar.Bend=Użyj Magii
+avatar.BendingCycleLeft=Zmień Magię w Lewo
+avatar.BendingCycleRight=Zmień Magię w Prawo
+avatar.Skills=Menu Umiejętności
+avatar.TransferBison=Zatwierdź transfer Bizona
+
+avatar.earthbending=Magia Ziemi
+avatar.earthbending.demonym=Mag Ziemi
+avatar.firebending=Magia Ognia
+avatar.firebending.demonym=Mag Ognia
+avatar.waterbending=Magia Wody
+avatar.waterbending.demonym=Mag Wody
+avatar.airbending=Magia Powietrza
+avatar.airbending.demonym=Mag Powietrza
+avatar.all=Uniwersalny
+
+avatar.cmd.bending=Zarządzaj magią gracza.
+avatar.cmd.bending.list.noData=[error][error_value]${player}[/error_value] nie jest zarejestrowanym kontem.[/error]
+avatar.cmd.bending.list.nonbender=[italic][value]${player}[/value] nie jest magiem.[/italic]
+avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
+avatar.cmd.bending.list.top=[bold]Wymieniam [value]${amount}[/value] magie które posiada [value]${player}[/value][/bold]:
+
+avatar.cmd.bending.add.alreadyHas=[error][error_value]${player}[/error_value] to już [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.add.success=[bold][value]${player}[/value] to teraz [value][translate=avatar.${bending}.demonym][/value]![/bold]
+
+avatar.cmd.bending.remove.doesntHave=[error][error_value]${player}[/error_value] nie jest [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.remove.success=[bold]Zabrano [value][translate=avatar.${bending}][/value] od [value]${player}[/value]![/bold]
+
+avatar.cmd.ability.set.range=[error]XP Umiejętności musi być od [error_value]0[/error_value] do [error_value]100[/error_value].
+avatar.cmd.ability.set.success=[bold]Pomyślnie ustawiono [value]${player}a[/value] doświadczenie dla [value]${ability}[/value] na [value]${amount}[/value][/bold]
+
+avatar.cmd.ability.get=[bold][value]${player}a[/value] doświadczenie dla [value]${ability}[/value] to [value]${amount}[/value][/bold]
+
+avatar.cmd.cfg.exception1=[error]Wystąpił błąd podczas próby przeładowania konfiguracji[/error]
+avatar.cmd.cfg.exception2=[error]Detale: [error_value]${details}[/error_value] zobacz logi po więcej[/error]
+
+avatar.cmd.cfg.successful=[bold]Pomyślnie przeładowano wartości konfiguracji[/bold]
+
+avatar.cmd.pp.add=Zwiększono [value]${player}a[/value] [value][translate=avatar.${bending}][/value] punkty postępu do [value]${pps}[/value].
+avatar.cmd.pp.get=[value]${player}[/value] aktualnie posiada [value]${pps}[/value] [value][translate=avatar.${bending}][/value] punktów postępu.
+avatar.cmd.pp.set=Ustaw [value]${player}[/value]a [value][translate=avatar.${bending}][/value] punkty postępu [value]${pps}[/value].
+avatar.cmd.pp.set.range=[error]Punkty postępu muszą być większe niż 0.[/error]
+
+avatar.spec.locked=zablokowane
+avatar.spec.lvl1=poziom I
+avatar.spec.lvl2=poziom II
+avatar.spec.lvl3=poziom III
+avatar.spec.lvl4_1=poziom IV, pierwsza droga
+avatar.spec.lvl4_2=poziom IV, druga droga
+avatar.cmd.xpset=Ustaw [value]${player}[/value]a [value]${ability}[/value] postęp na [value][translate=avatar.spec.${spec}][/value]
+avatar.cmd.noAbility=Nie ma umiejętności zwanej %s
+
+avatar.donthavebending=[error]Nie nauczyłeś się ${bending} jeszcze. To get it, type in: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
+avatar.nochi=Niewystarczająco chi!
+avatar.airBubbleElytra=Nie można użyć kuli powietrza z elytrą
+avatar.bisonStats=Bizon ma ${food}%% głodu, ${health}%% życia, i ${domestication} udomowienia.
+avatar.outOfScrolls=Tego maga inwentarz jest pusty. Prawdopodobnie nie będzie miał żadnych zwojów do dania.
+avatar.abilityLocked=Musisz odblokować tą umiejętność zanim jej użyjesz!
+avatar.bisonChestSlots1=Twój bizon nie ma jeszcze
+avatar.bisonChestSlots2=żadnego inwentarzu, ale zdobędzie
+avatar.bisonChestSlots3=więcej miejsc jak dorośnie.
+avatar.skatingBendingDisabled=[error]Nie możesz użyć magii podczas surfowania aż nie zdobędziesz poziomu II.[/error]
+
+avatar.bisonWhistle.summon=Twój Bizon został zawołany i przybędzie tu za około ${time} sekund!
+avatar.bisonWhistle.assign=Przywiązano Bizoni Gwizdek do ${bison}.
+avatar.bisonWhistle.notAssigned=[error]Bizoni Gwizdek nie został przywiązany do bizona; kucnij i kliknij ppm na bizona by go przywiązać.[/error]
+avatar.bisonWhistle.notFound=[error]${bison} już nie żyje w fizycznym świecie.[/error]
+avatar.bisonWhistle.notOwned=[error]Nie posiadasz tego latającego bizona.[/error]
+avatar.bisonWhistle.untamed=[error]Ten latający bizon jest dziki i musisz go najpierw oswoić.[/error]
+avatar.bisonWhistle.tooltipBound=Przywiązano do %s
+avatar.bisonWhistle.tooltipUnbound=Nie przywiązany
+avatar.bisonWhistle.transferAway=Twój latający bizon ${bison} został przeniesiony do ${newOwner}.
+avatar.bisonWhistle.transferTo=Posiadasz teraz latającego bizona ${bison} od ${oldOwner}!
+avatar.bisonWhistle.noTransfer=[error]Nikt ostatnio nie zażądał transferu bizona.[/error]
+avatar.bisonWhistle.transferAway.start=${newOwner} chciałby posiadać twojego bizona ${bison}. Kliknij [keybinding=avatar.TransferBison] by potwierdzić, zignoruj by odmówić.
+avatar.bisonWhistle.transferTo.start=Wiadomość została wysłana do ${oldOwner} by potwierdzić transfer ${bison}.
+avatar.bisonWhistle.transferAway.ignore=Transfer z ${newOwner} został zignorowany.
+avatar.bisonWhistle.transferTo.ignore=${oldOwner} wybrał by nie odpowiedzieć na twoje żądanie.
+avatar.bisonWhistle.transferOffline=[error]Ten bizon nie jest twój. Nie możesz ztransferować bizona gdyż właściciel ${owner} jest offline.[/error]
+avatar.bisonWhistle.followOn=Twój bizon będzie teraz za tobą podążał.
+avatar.bisonWhistle.followOff=Twój bizon przestał za tobą podążać.
+
+avatar.ability.pickup_block=Podnieś blok
+avatar.ability.pickup_block.desc=Użyj magii ziemi by ruszyć możliwe bloki i położyć je w pożądanym miejscu lub rzucić nimi we wrogów.
+avatar.ability.pickup_block.lvl1=Przemieść i rzuć możliwe bloki
+avatar.ability.pickup_block.lvl2=Szybsze i dalsze rzucenie
+avatar.ability.pickup_block.lvl3=Podwójne obrażenia
+avatar.ability.pickup_block.lvl4_1=Klockowy boomerang ;; Blok wraca po pomyślnym zaatakowaniu moba
+avatar.ability.pickup_block.lvl4_2=Wielkie uderzenie ;; 1/2 szansy by stworzyć eksplozję po wylądowaniu
+
+avatar.ability.ravine=Wąwóz
+avatar.ability.ravine.desc=Stwórz małą ale potężną szczelinę w ziemi. Działa tylko na poziomie ziemi, ale może zadać wiele obrażeń.
+avatar.ability.ravine.lvl1=Wolny, podstawowy wąwóz
+avatar.ability.ravine.lvl2=Większa prędkość
+avatar.ability.ravine.lvl3=Wąwóz podróżuje dalej chyba że jest przeszkoda
+avatar.ability.ravine.lvl4_1=Szczelina ;; Niszczy bloki pod sobą, atakuje kilku wrogów, ale kosztuje 1.5x chi
+avatar.ability.ravine.lvl4_2=Trzęsienie ziemi ;; Szansa wywalenia zbroi i broni z zaatakowanych wrogów
+
+avatar.ability.earth_wall=Ściana
+avatar.ability.earth_wall.desc=Podnieś przed sobą barierę ochronną. Może zablokować nadciągające pociski i moby.
+avatar.ability.earth_wall.lvl1=Przywołaj małą ścianę
+avatar.ability.earth_wall.lvl2=Stwórz większą ścianę
+avatar.ability.earth_wall.lvl3=Stwórz większą ścianę
+avatar.ability.earth_wall.lvl4_1=Strzelaj pociskami przez ścianę
+avatar.ability.earth_wall.lvl4_2=Ściana stoi dłużej, ale zużywa więcej chi
+
+avatar.ability.mine_blocks=Kopanie Bloków
+avatar.ability.mine_blocks.desc=Szybko niszczysz bloki wykopując tunel
+avatar.ability.mine_blocks.lvl1=Wykop kilka bloków
+avatar.ability.mine_blocks.lvl2=Wykop jeszcze więcej bloków
+avatar.ability.mine_blocks.lvl3=Fortuna poziomu I kiedy kopiesz
+avatar.ability.mine_blocks.lvl4_1=Kop bardzo daleko, poziom III fortuny
+avatar.ability.mine_blocks.lvl4_2=Wykop żyły rud, poziom IV fortuny
+
+avatar.ability.light_fire=Rozpal Ogień
+avatar.ability.light_fire.desc=Umiejętność rozpalania ognia. Jest mniej praktyczna w walkach niż w kilku innych czynnościach
+avatar.ability.light_fire.fail=Nie mogłeś rozpalić ognia. Może powinieneś spróbować ponownie...
+avatar.ability.light_fire.lvl1=Spróbuj stworzyć mały ogień
+avatar.ability.light_fire.lvl2=Większa szansa stworzenia ognia
+avatar.ability.light_fire.lvl3=Większa szansa stworzenia ognia
+avatar.ability.light_fire.lvl4_1=Ściana ognia ;; Tworzy linię ognia w kierunku na który patrzysz
+avatar.ability.light_fire.lvl4_2=Szeroki zasięg ;; Podpal również pobliskie bloki
+
+avatar.ability.fire_arc=Łuk Ognia
+avatar.ability.fire_arc.desc=Stwórz ognisty bat z ognia i rzucaj nim we wrogów.
+avatar.ability.fire_arc.lvl1=Tworzy łuk ognia
+avatar.ability.fire_arc.lvl2=Porusza się szybciej
+avatar.ability.fire_arc.lvl3=O wiele więcej obrażeń
+avatar.ability.fire_arc.lvl4_1=Duży ogień ;; Może zrobić więcej ognia po wylądowaniu
+avatar.ability.fire_arc.lvl4_2=Boomerang ;; Powraca po pomyślnym uderzeniu
+
+avatar.ability.flamethrower=Miotacz Ognia
+avatar.ability.flamethrower.desc=Generuje potężny strumień płomieni na krótki dystans. Znak rozpoznawczy Maga Ognia.
+avatar.ability.flamethrower.lvl1=Atakuj krótkim zasięgiem
+avatar.ability.flamethrower.lvl2=Prawie dwa razy tyle płomieni; ale więcej chi
+avatar.ability.flamethrower.lvl3=Dalszy zasięg, bardziej precyzyjny
+avatar.ability.flamethrower.lvl4_1=Ognisty strumień ;; Skoncentrowane płomienie na niezwykle daleki zasięg
+avatar.ability.flamethrower.lvl4_2=Świat spłonie!! ;; Nieskupione płomienie które tworzą wszędzie ogień
+
+avatar.ability.fireball=Kula Ognia
+avatar.ability.fireball.desc=Stwórz świecącą kulę płomieni. Tworzy ognistą eksplozję przy uderzeniu.
+avatar.ability.fireball.lvl1=Stwórz podstawową kulę ognia
+avatar.ability.fireball.lvl2=Szybsza gdy rzucona
+avatar.ability.fireball.lvl3=O wiele więcej obrażeń po bezpośrednim uderzeniu
+avatar.ability.fireball.lvl4_1=Skoncentrowana eksplozja ;; Czasami może zniszczyć obsydian
+avatar.ability.fireball.lvl4_2=Naładowana eksplozja ;; Zabiera kilka sekund by się naładować, większa eksplozja po naładowaniu
+
+avatar.ability.water_arc=Łuk Wody
+avatar.ability.water_arc.desc=Jeden z pospolitych ataków magów wody. Wystrzel łuk wody we wrogów, ale tylko gdy woda jest w pobliżu.
+avatar.ability.water_arc.lvl1=Podstawowy łuk wody
+avatar.ability.water_arc.lvl2=Dalszy zasięg pobierania wody
+avatar.ability.water_arc.lvl3=O wiele szybszy
+avatar.ability.water_arc.lvl4_1=Boomerang ;; Wraca do ciebie jak trafisz cel
+avatar.ability.water_arc.lvl4_2=Wodna włócznia ;; Wyłączona grawitacja na 2s po rzuceniu, wolniejsze
+
+avatar.ability.wave=Fala
+avatar.ability.wave.desc=Przywołaj falę wody by zniszczyła twoich wrogów. Działa tylko kiedy są w wodzie.
+avatar.ability.wave.lvl1=Wolna fala by utopić wrogów
+avatar.ability.wave.lvl2=O wiele więcej obrażeń
+avatar.ability.wave.lvl3=O wiele większa
+avatar.ability.wave.lvl4_1=Tsunami ;; O wiele większa i oddziałuje na stworzenia znajdujące się na lądzie
+avatar.ability.wave.lvl4_2=Potężne fale ;; Bardzo szybkie fale
+
+avatar.ability.water_bubble=Wodna bańka
+avatar.ability.water_bubble.desc=Zawieszenie i transportowanie bańki wody. Może być użyte jako wiadro dalekiego zasięgu.
+avatar.ability.water_bubble.lvl1=Wodna bańka krótkiego zasięgu, woda wysycha po zderzeniu
+avatar.ability.water_bubble.lvl2=Rzuć bańką dalej
+avatar.ability.water_bubble.lvl3=Bańka tworzy stałe źródło wody po wylądowaniu
+avatar.ability.water_bubble.lvl4_1=Rzucaj bańkę wody naprawdę daleko
+avatar.ability.water_bubble.lvl4_2=Nie zużywa wody do tworzenia bańki - nieskończona woda
+
+avatar.ability.water_skate=Surfowanie
+avatar.ability.water_skate.desc=Biegaj po tafli wody. Użyteczne w unikach, lub po prostu by pochodzić po wodzie.
+avatar.ability.water_skate.lvl1=Ślizgaj się po wodzie, nie można używać umiejętności
+avatar.ability.water_skate.lvl2=Możesz używać umiejętności podczas surfowania
+avatar.ability.water_skate.lvl3=O wiele szybciej surfujesz
+avatar.ability.water_skate.lvl4_1=Zbalansowane surfowanie ;; Możesz surfować nawet po płynącej wodzie
+avatar.ability.water_skate.lvl4_2=Wodne uderzenie ;; Zmiażdż ziemię po skoku
+
+avatar.ability.air_gust=Poryw Wiatru
+avatar.ability.air_gust.desc=Generuje silny poryw wiatru by odepchnąć wrogów, pozwalając ci skoncentrować się na innym problemie.
+avatar.ability.air_gust.lvl1=Zdmuchuje wrogów
+avatar.ability.air_gust.lvl2=Połowa odnawiania się umiejętności
+avatar.ability.air_gust.lvl3=Mocniejsze odpychanie
+avatar.ability.air_gust.lvl4_1=Gaszenie ;; Niszczy słabsze pociski
+avatar.ability.air_gust.lvl4_2=Wsysanie ;; Przyciąga wrogów do ciebie
+
+avatar.ability.air_jump=Powietrzny Skok
+avatar.ability.air_jump.desc=Manipulujesz powietrzem wokół siebie by się wystrzelić z ziemi. Perfekcyjne do łapania nic nie spodziewającego się wroga.
+avatar.ability.air_jump.lvl1=Skacz przez wiatr
+avatar.ability.air_jump.lvl2=Lekko zwiększona moc skoku
+avatar.ability.air_jump.lvl3=Jeszcze lepsze skakanie
+avatar.ability.air_jump.lvl4_1=Podwójny skok ;; Kosztuje dwa razy więcej chi
+avatar.ability.air_jump.lvl4_2=Walnięcie w ziemię ;; Atakuje pobliskich wrogów na ziemi
+
+avatar.ability.airblade=Ostrze Powietrza
+avatar.ability.airblade.desc=Kręcący się dysk powietrza, potężny na tyle by przeciąć ciało. Może być mordercze.
+avatar.ability.airblade.lvl1=Podstawowa umiejętność
+avatar.ability.airblade.lvl2=Większa szybkość i obrażenia
+avatar.ability.airblade.lvl3=Może teraz przecinać bloki
+avatar.ability.airblade.lvl4_1=Łańcuchowe ostrze ;; Skacze po wielu wrogach
+avatar.ability.airblade.lvl4_2=Przebijacz zbroi ;; Przecina się przez zbroję i kamień
+
+avatar.ability.air_bubble=Kula Powietrza
+avatar.ability.air_bubble.desc=Tworzysz kulę powietrza wokół siebie by obronić się przed nadciągającymi atakami. Jednakże, utrzymywanie jej zabiera dużą ilość chi.
+avatar.ability.air_bubble.lvl1=Mały zasięg i odrzut
+avatar.ability.air_bubble.lvl2=Średniej wielkośći kula powietrza
+avatar.ability.air_bubble.lvl3=Więcej odrzutu
+avatar.ability.air_bubble.lvl4_1=Kula pod presją ;; Bardzo duża wielkość
+avatar.ability.air_bubble.lvl4_2=Podłoże ;; Lekko się unosisz, możesz to wyłączyć to przez kucanie
+
+avatar.ability.undefined=???
+
+avatar.ui.level0=Poziom I
+avatar.ui.level1=Poziom II
+avatar.ui.level2=Poziom III
+avatar.ui.level3=-MAX-
+avatar.ui.path_first=Pierwsza Droga
+avatar.ui.path_second=Druga Droga
+avatar.ui.unlock=Umiejętność Zablokowana
+avatar.ui.unlockDesc=[translate=avatar.ui.unlockDesc.${bending}]
+avatar.ui.unlockDesc.airbending=Użyj Zwoju Magii Powietrza lub Uniwersalnego Zwoju by odblokować
+avatar.ui.unlockDesc.firebending=Użyj Zwoju Magii Ognia lub Uniwersalnego Zwoju by odblokować
+avatar.ui.unlockDesc.waterbending=Użyj Zwoju Magii Wody lub Uniwersalnego Zwoju by odblokować
+avatar.ui.unlockDesc.earthbending=Użyj Zwoju Magii Ziemi lub Uniwersalnego Zwoju by odblokować
+avatar.ui.skillsMenu=[translate=avatar.${bending}] - Ulepszanie Zdolności
+
+avatar.radial.undefined=Wkrótce!
+avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
+avatar.radial.max=Poziom IV, [translate=avatar.ui.path_${xp}]
+avatar.radial.locked1=Umiejętność Zablokowana
+avatar.radial.locked2=Naciśnij ${level} by odblokować
+avatar.radial.lockedCreative1=Tryb kreatywny
+avatar.radial.lockedCreative2=Zablokowane ale na trybie kreatywnym
+
+avatar.getBending.title=Odblokuj Magię
+avatar.getBending.incompatible=Możesz używać tylko zwojów swojej magii lub uniwersalne
+avatar.getBending.guide=Wsadź 3 zwoje tej samej magii lub uniwersalne by odblokować Magię
+
+avatar.key.none1=Nie przypisano
+avatar.key.none2=Kliknij by edytować
+avatar.key.set1=%1$s
+avatar.key.set2=Kliknij by edytować
+avatar.key.editing1=> %1$s <
+avatar.key.editing2=ESC by usunąć
+avatar.key.conflict1=%1$s
+avatar.key.conflict2=Konflikt z %1$s
+
+death.attack.avatar_earthbendBlock=%2$s roztrzaskał %1$s używając magii ziemi
+death.attack.avatar_waterArc=%2$s użył magii wody by sprowadzić do ziemi %1$s
+death.attack.avatar_ravine=%2$s zgniótł %1$s w wąwozie
+death.attack.avatar_wave=%1$s nie umie surfować
+death.attack.avatar_fireball=%2$s wysadził %1$s używając kuli ognia
+death.attack.avatar_airblade=%1$s został pokrojony przez %2$s
+death.attack.avatar_flamethrower=%1$s właśnie został upieczony przez %2$s!!
+death.attack.avatar_groundSmash=%2$s roztrzaskał %1$s do masy celulozowej
+
+entity.Airbender.name=Mag Powietrza
+entity.Firebender.name=Mag Ognia
+entity.Waterbender.name=Mag Wody
+entity.SkyBison.name=Latający Bizon
+entity.OtterPenguin.name=Wydropingwin
+
+itemGroup.avatar.items=Przedmioty z Avatara
+
+item.avatarmod:scroll.all.name=Zwój
+item.avatarmod:scroll.air.name=Zwój Magii Powietrza
+item.avatarmod:scroll.fire.name=Zwój Magii Ognia
+item.avatarmod:scroll.earth.name=Zwój Magii Ziemi
+item.avatarmod:scroll.water.name=Zwój Magii Wody
+item.avatarmod:water_pouch.name=Bukłak
+item.avatarmod:bison_whistle.name=Bizoni Gwizdek
+
+item.avatarmod:bison_saddle.basic.name=Podstawowe Siodło Bizonie
+item.avatarmod:bison_saddle.sturdy.name=Silne Siodło Bizonie
+item.avatarmod:bison_saddle.studded.name=Wysadzane Siodło Bizonie
+item.avatarmod:bison_saddle.majestic.name=Majestatyczne Siodło Bizonie
+
+item.avatarmod:bison_armor.woven.name=Tkana Zbroja dla Bizona
+item.avatarmod:bison_armor.chain.name=Zbroja Kolczy dla Bizona
+item.avatarmod:bison_armor.wrought.name=Fasonowana Zbroja dla Bizona
+item.avatarmod:bison_armor.legendary.name=Legendarna Zbroja dla Bizona
+
+avatar.tooltip.water_pouch=%d/5 Wody
+avatar.tooltip.water_pouch.empty=Pusty

@@ -97,11 +97,13 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY() + 0.25, placeAt.getZ() + 0.5);
+
+			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
 			Vector thisPos = new Vector(entity);
 			Vector force = placeAtVec.minus(thisPos);
 			force = force.normalize().times(3);
 			entity.setVelocity(force);
+
 			if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
 				
 				entity.setDead();

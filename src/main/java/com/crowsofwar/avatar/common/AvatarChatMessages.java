@@ -24,7 +24,7 @@ import net.minecraft.util.text.TextFormatting;
 import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 public class AvatarChatMessages {
-	
+
 	// @formatter:off
 	public static final MessageConfiguration CFG = new MessageConfiguration()
 			.addColor("value", TextFormatting.AQUA)
@@ -74,6 +74,7 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_BISON_WHISTLE_NOT_FOUND = newChatMessage(CFG, "avatar.bisonWhistle.notFound", "bison");
 	public static final FormattedMessage MSG_BISON_WHISTLE_NOTOWNED = newChatMessage(CFG, "avatar.bisonWhistle.notOwned");
 	public static final FormattedMessage MSG_BISON_WHISTLE_UNTAMED = newChatMessage(CFG, "avatar.bisonWhistle.untamed");
+	public static final FormattedMessage MSG_BISON_WHISTLE_NEARBY = newChatMessage(CFG, "avatar.bisonWhistle.nearby");
 
 	public static final FormattedMessage MSG_BISON_WHISTLE_FOLLOW_ON = newChatMessage(CFG, "avatar.bisonWhistle.followOn");
 	public static final FormattedMessage MSG_BISON_WHISTLE_FOLLOW_OFF = newChatMessage(CFG, "avatar.bisonWhistle.followOff");
