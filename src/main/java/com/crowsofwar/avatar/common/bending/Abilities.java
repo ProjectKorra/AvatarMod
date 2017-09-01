@@ -30,13 +30,7 @@ import java.util.*;
 public class Abilities {
 	
 	private static final List<Ability> abilities = new ArrayList<>();
-	private static final Map<UUID, Ability> abilitiesById = new HashMap<>();
 	private static final Map<String, Ability> abilitiesByName = new HashMap<>();
-	
-	@Nullable
-	public static Ability get(UUID id) {
-		return abilitiesById.get(id);
-	}
 	
 	@Nullable
 	public static Ability get(String name) {
@@ -44,19 +38,13 @@ public class Abilities {
 	}
 
 	@Nullable
-	public static BendingAi getAi(UUID id, EntityLiving entity, Bender bender) {
-		Ability ability = get(id);
+	public static BendingAi getAi(String name, EntityLiving entity, Bender bender) {
+		Ability ability = get(name);
 		if (ability != null) {
 			return ability.getAi(entity, bender);
 		} else {
 			return null;
 		}
-	}
-
-	@Nullable
-	public static String getName(UUID id) {
-		Ability ability = get(id);
-		return ability != null ? ability.getName() : null;
 	}
 
 	public static List<Ability> all() {
@@ -65,7 +53,6 @@ public class Abilities {
 	
 	public static void register(Ability ability) {
 		abilities.add(ability);
-		abilitiesById.put(ability.getId(), ability);
 		abilitiesByName.put(ability.getName(), ability);
 	}
 	
