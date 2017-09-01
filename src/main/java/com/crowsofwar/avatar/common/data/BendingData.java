@@ -60,7 +60,7 @@ public class BendingData {
 
 	private final Set<UUID> bendings;
 	private final Set<StatusControl> statusControls;
-	private final Map<UUID, AbilityData> abilityData;
+	private final Map<String, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
 	private final Map<TickHandler, Integer> tickHandlerDuration;
 	private UUID activeBending;
@@ -231,23 +231,23 @@ public class BendingData {
 	// ABILITY DATA
 	// ================================================================================
 
-	public boolean hasAbilityData(UUID abilityId) {
-		return abilityData.get(abilityId) != null;
+	public boolean hasAbilityData(String abilityName) {
+		return abilityData.get(abilityName) != null;
 	}
 
 	public boolean hasAbilityData(Ability ability) {
-		return hasAbilityData(ability.getId());
+		return hasAbilityData(ability.getName());
 	}
 
 	/**
 	 * Retrieves data about the given ability. Will get data if necessary.
 	 */
 
-	public AbilityData getAbilityData(UUID abilityId) {
-		AbilityData data = abilityData.get(abilityId);
+	public AbilityData getAbilityData(String abilityName) {
+		AbilityData data = abilityData.get(abilityName);
 		if (data == null) {
-			data = new AbilityData(this, Abilities.get(abilityId));
-			abilityData.put(abilityId, data);
+			data = new AbilityData(this, Abilities.get(abilityName));
+			abilityData.put(abilityName, data);
 			save(DataCategory.BENDING_LIST);
 		}
 
@@ -255,15 +255,15 @@ public class BendingData {
 	}
 
 	public AbilityData getAbilityData(Ability ability) {
-		return getAbilityData(ability.getId());
+		return getAbilityData(ability.getName());
 	}
 
-	public void setAbilityData(UUID abilityId, AbilityData data) {
-		abilityData.put(abilityId, data);
+	public void setAbilityData(String abilityName, AbilityData data) {
+		abilityData.put(abilityName, data);
 	}
 
 	public void setAbilityData(Ability ability, AbilityData data) {
-		setAbilityData(ability.getId(), data);
+		setAbilityData(ability.getName(), data);
 	}
 
 	/**
@@ -274,11 +274,11 @@ public class BendingData {
 		return new ArrayList<>(abilityData.values());
 	}
 
-	public Map<UUID, AbilityData> getAbilityDataMap() {
+	public Map<String, AbilityData> getAbilityDataMap() {
 		return new HashMap<>(abilityData);
 	}
 
-	public void setAbilityDataMap(Map<UUID, AbilityData> map) {
+	public void setAbilityDataMap(Map<String, AbilityData> map) {
 		abilityData.clear();
 		abilityData.putAll(map);
 	}
@@ -473,11 +473,10 @@ public class BendingData {
 				(nbtTag, control) -> nbtTag.setInteger("Id", control.id()), writeTo, "StatusControls");
 
 		AvatarUtils.writeMap(getAbilityDataMap(), //
-				(nbt, abilityId) -> {
-					nbt.setUniqueId("Id", abilityId);
-					nbt.setString("_AbilityName", Abilities.getName(abilityId) + "");
+				(nbt, abilityName) -> {
+					nbt.setString("Name", abilityName);
 				}, (nbt, data) -> {
-					nbt.setUniqueId("AbilityId", data.getAbilityId());
+					nbt.setString("Name", data.getAbilityName());
 					data.writeToNbt(nbt);
 				}, writeTo, "AbilityData");
 
@@ -510,15 +509,15 @@ public class BendingData {
 			addStatusControl(sc);
 		}
 
-		Map<UUID, AbilityData> abilityData = new HashMap<>();
-		AvatarUtils.readMap(abilityData, nbt -> nbt.getUniqueId("Id"), nbt -> {
-			UUID abilityId = nbt.getUniqueId("AbilityId");
-			AbilityData data = new AbilityData(this, abilityId);
+		Map<String, AbilityData> abilityData = new HashMap<>();
+		AvatarUtils.readMap(abilityData, nbt -> nbt.getString("Name"), nbt -> {
+			String abilityName = nbt.getString("Name");
+			AbilityData data = new AbilityData(this, abilityName);
 			data.readFromNbt(nbt);
 			return data;
 		}, readFrom, "AbilityData");
 		clearAbilityData();
-		for (Map.Entry<UUID, AbilityData> entry : abilityData.entrySet()) {
+		for (Map.Entry<String, AbilityData> entry : abilityData.entrySet()) {
 			setAbilityData(entry.getKey(), entry.getValue());
 		}
 

@@ -39,7 +39,7 @@ public class AbilityData {
 	public static final int MAX_LEVEL = 3;
 	
 	private final BendingData data;
-	private final UUID abilityId;
+	private final String abilityName;
 	private float xp;
 	/**
 	 * The current level. -1 for locked
@@ -50,12 +50,12 @@ public class AbilityData {
 	private AbilityTreePath path;
 	
 	public AbilityData(BendingData data, Ability ability) {
-		this(data, ability.getId());
+		this(data, ability.getName());
 	}
 
-	public AbilityData(BendingData data, UUID abilityId) {
+	public AbilityData(BendingData data, String abilityName) {
 		this.data = data;
-		this.abilityId = abilityId;
+		this.abilityName = abilityName;
 		this.xp = 0;
 		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
@@ -63,11 +63,13 @@ public class AbilityData {
 
 	@Nullable
 	public Ability getAbility() {
-		return Abilities.get(abilityId);
+		return Abilities.get(abilityName);
 	}
 
-	public UUID getAbilityId() {
-		return abilityId;
+	@Nullable
+	public String getAbilityName() {
+		Ability abil = getAbility();
+		return abil != null ? abil.getName() : null;
 	}
 
 	/**
@@ -231,7 +233,7 @@ public class AbilityData {
 	}
 	
 	public void toBytes(ByteBuf buf) {
-		GoreCoreByteBufUtil.writeUUID(buf, abilityId);
+		GoreCoreByteBufUtil.writeString(buf, abilityName);
 		buf.writeFloat(xp);
 		buf.writeInt(level);
 		buf.writeInt(path.id());
@@ -254,22 +256,22 @@ public class AbilityData {
 	 * Reads ability data from the network.
 	 */
 	public static AbilityData createFromBytes(ByteBuf buf, BendingData data) {
-		UUID abilityId = GoreCoreByteBufUtil.readUUID(buf);
-		AbilityData abilityData = new AbilityData(data, abilityId);
+		String abilityName = GoreCoreByteBufUtil.readString(buf);
+		AbilityData abilityData = new AbilityData(data, abilityName);
 		abilityData.fromBytes(buf);
 		return abilityData;
 	}
 
-	public static AbilityData get(EntityLivingBase entity, UUID abilityId) {
-		return BendingData.get(entity).getAbilityData(abilityId);
+	public static AbilityData get(EntityLivingBase entity, String abilityName) {
+		return BendingData.get(entity).getAbilityData(abilityName);
 	}
 
-	public static AbilityData get(World world, UUID playerId, UUID abilityId) {
-		return BendingData.get(world, playerId).getAbilityData(abilityId);
+	public static AbilityData get(World world, UUID playerId, String abilityName) {
+		return BendingData.get(world, playerId).getAbilityData(abilityName);
 	}
 
-	public static AbilityData get(World world, String playerName, UUID abilityId) {
-		return BendingData.get(world, playerName).getAbilityData(abilityId);
+	public static AbilityData get(World world, String playerName, String abilityName) {
+		return BendingData.get(world, playerName).getAbilityData(abilityName);
 	}
 
 	/**
