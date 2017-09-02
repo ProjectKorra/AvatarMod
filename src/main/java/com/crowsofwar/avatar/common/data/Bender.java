@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -174,6 +175,14 @@ public abstract class Bender {
 	 * @see com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage
 	 */
 	public void sendMessage(String message) {}
+
+	/*
+	 * Called when the bender is hit by lightning, and attempts to redirect it. Returns whether the
+	 * redirection was successful.
+	 */
+	public boolean redirectLightning(EntityLightningArc lightningArc) {
+		return false;
+	}
 
 	/**
 	 * Creates an appropriate Bender instance for that entity

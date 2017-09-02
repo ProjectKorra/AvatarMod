@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -149,4 +150,9 @@ public class PlayerBender extends Bender {
 			super.executeAbility(ability, raytrace);
 		}
 	}
+
+	public boolean redirectLightning(EntityLightningArc lightningArc) {
+		return false;
+	}
+
 }
