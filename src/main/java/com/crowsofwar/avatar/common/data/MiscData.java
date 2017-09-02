@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.common.data;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * 
@@ -35,11 +38,13 @@ public class MiscData {
 	private int petSummonCooldown;
 	private boolean bisonFollowMode;
 	private boolean canUseAbilities;
+	private List<LightningRedirectionData> lightningRedirectionData;
 	
 	public MiscData(Runnable save) {
 		this.save = save;
 		this.bisonFollowMode = true;
 		this.canUseAbilities = true;
+		this.lightningRedirectionData = new ArrayList<>();
 	}
 	
 	public void toBytes(ByteBuf buf) {
@@ -152,4 +157,9 @@ public class MiscData {
 	public void setCanUseAbilities(boolean canUseAbilities) {
 		this.canUseAbilities = canUseAbilities;
 	}
+
+	public List<LightningRedirectionData> getLightningRedirectionData() {
+		return lightningRedirectionData;
+	}
+
 }

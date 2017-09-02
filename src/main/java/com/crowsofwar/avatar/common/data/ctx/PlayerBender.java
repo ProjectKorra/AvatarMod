@@ -27,7 +27,6 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -154,10 +153,6 @@ public class PlayerBender extends Bender {
 	}
 
 	public boolean redirectLightning(EntityLightningArc lightningArc) {
-
-		Vector look = Vector.getLookRectangular(player);
-		Vector currentVelocity = lightningArc.velocity();
-		Vector newVelocity = look.times(currentVelocity.magnitude());
 
 		getData().addTickHandler(TickHandler.LIGHTNING_CHARGE);
 
