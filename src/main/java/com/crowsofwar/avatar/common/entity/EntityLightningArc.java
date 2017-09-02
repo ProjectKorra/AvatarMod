@@ -57,6 +57,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	 */
 	private int stuckTime;
 
+	/**
+	 * Whether the lightning was redirected by stuckTo (ie, the targeted player). Redirected
+	 * lightning will no longer attempt to damage the target; this prevents issues where target
+	 * redirects lightning multiple times.
+	 */
+	private boolean wasRedirected;
+
 	private float damage;
 
 	private LightningFloodFill floodFill;
@@ -107,7 +114,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (stuckTo != null) {
 			setPosition(Vector.getEyePos(stuckTo));
 			setVelocity(Vector.ZERO);
-			damageEntity(stuckTo, 0.333f);
+			if (!wasRedirected) {
+				damageEntity(stuckTo, 0.333f);
+			}
 		}
 
 		if (velocity().equals(Vector.ZERO)) {
@@ -182,10 +191,10 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 		// Handle lightning redirection
 		boolean redirected = false;
-		if (isMainArc() && entity == stuckTo && Bender.isBenderSupported(entity)) {
+		if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported
+				(entity)) {
 			redirected = Bender.get(entity).redirectLightning(this);
-			stuckTo = null;
-			stuckTime = -1;
+			wasRedirected = true;
 		}
 
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
