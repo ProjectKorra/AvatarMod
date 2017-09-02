@@ -184,6 +184,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		boolean redirected = false;
 		if (Bender.isBenderSupported(entity)) {
 			redirected = Bender.get(entity).redirectLightning(this);
+			stuckTo = null;
+			stuckTime = -1;
 		}
 
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());

@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
@@ -158,7 +159,7 @@ public class PlayerBender extends Bender {
 		Vector currentVelocity = lightningArc.velocity();
 		Vector newVelocity = look.times(currentVelocity.magnitude());
 
-		lightningArc.setVelocity(newVelocity);
+		getData().addTickHandler(TickHandler.LIGHTNING_CHARGE);
 
 		return true;
 	}
