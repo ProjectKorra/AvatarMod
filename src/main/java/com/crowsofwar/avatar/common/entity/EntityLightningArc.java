@@ -182,7 +182,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 		// Handle lightning redirection
 		boolean redirected = false;
-		if (Bender.isBenderSupported(entity)) {
+		if (isMainArc() && entity == stuckTo && Bender.isBenderSupported(entity)) {
 			redirected = Bender.get(entity).redirectLightning(this);
 			stuckTo = null;
 			stuckTime = -1;
