@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
@@ -179,8 +180,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private void damageEntity(EntityLivingBase entity, float damageModifier) {
 
+		// Handle lightning redirection
+		boolean redirected = false;
+		if (Bender.isBenderSupported(entity)) {
+			redirected = Bender.get(entity).redirectLightning(this);
+		}
+
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
-		if (entity.attackEntityFrom(damageSource, damage * damageModifier)) {
+		if (!redirected && entity.attackEntityFrom(damageSource, damage * damageModifier)) {
 
 			entity.setFire(4);
 
