@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,6 +24,7 @@ import org.joml.SimplexNoise;
 import org.joml.Vector4d;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -187,6 +189,22 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			stuckTo = (EntityLivingBase) entity;
 
 		}
+	}
+
+	/**
+	 * Custom lightning collision detection which uses raytrace. Required since lightning moves
+	 * quickly and can sometimes "glitch" through an entity without detecting the collision.
+	 */
+	@Override
+	protected void collideWithNearbyEntities() {
+
+		List<Entity> collisions = Raytrace.entityRaytrace(world, position(), velocity(), velocity
+				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+
+		for (Entity collided : collisions) {
+			onCollideWithEntity(collided);
+		}
+
 	}
 
 	private void handleWaterElectrocution(EntityLivingBase entity) {
