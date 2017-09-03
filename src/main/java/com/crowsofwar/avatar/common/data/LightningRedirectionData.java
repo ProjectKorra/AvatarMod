@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
@@ -7,17 +8,24 @@ import net.minecraft.entity.EntityLivingBase;
  */
 public class LightningRedirectionData {
 
-	private final EntityLivingBase originalShooter, redirector;
+	private final EntityLivingBase originalShooter;
 
 	private final double speed;
 	private final float sizeMultiplier, turbulence, damage;
 	private final boolean mainArc;
 
-	public LightningRedirectionData(EntityLivingBase originalShooter, EntityLivingBase
-			redirector, double speed, float damage, float sizeMultiplier, float turbulence,
+	public LightningRedirectionData(EntityLightningArc arc) {
+		this.originalShooter = arc.getOwner();
+		this.speed = 25;
+		this.sizeMultiplier = arc.getSizeMultiplier();
+		this.turbulence = arc.getTurbulence();
+		this.damage = arc.getDamage();
+		this.mainArc = arc.isMainArc();
+	}
+
+	public LightningRedirectionData(EntityLivingBase originalShooter, double speed, float damage, float sizeMultiplier, float turbulence,
 									boolean mainArc) {
 		this.originalShooter = originalShooter;
-		this.redirector = redirector;
 		this.speed = speed;
 		this.damage = damage;
 		this.sizeMultiplier = sizeMultiplier;
@@ -27,10 +35,6 @@ public class LightningRedirectionData {
 
 	public EntityLivingBase getOriginalShooter() {
 		return originalShooter;
-	}
-
-	public EntityLivingBase getRedirector() {
-		return redirector;
 	}
 
 	public double getSpeed() {

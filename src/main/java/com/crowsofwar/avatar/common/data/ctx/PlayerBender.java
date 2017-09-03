@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.LightningRedirectionData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -154,7 +155,12 @@ public class PlayerBender extends Bender {
 
 	public boolean redirectLightning(EntityLightningArc lightningArc) {
 
-		getData().addTickHandler(TickHandler.LIGHTNING_CHARGE);
+		BendingData data = getData();
+
+		LightningRedirectionData redirectionData = new LightningRedirectionData(lightningArc);
+		data.getMiscData().getLightningRedirectionData().add(redirectionData);
+
+		data.addTickHandler(TickHandler.LIGHTNING_REDIRECT);
 
 		return true;
 	}
