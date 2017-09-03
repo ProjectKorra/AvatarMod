@@ -272,6 +272,7 @@ death.attack.avatar_airblade=%1$s was sliced by %2$s
 death.attack.avatar_flamethrower=%1$s just got ROASTED by %2$s!!
 death.attack.avatar_groundSmash=%2$s smashed %1$s to a pulp
 death.attack.avatar_lightningBending=%2$s electrocuted %1$s
+death.attack.avatar_lightningBendingRedirected=%2$s redirected lightning to electrocute %1$s
 
 entity.Airbender.name=Airbender
 entity.Firebender.name=Firebender

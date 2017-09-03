@@ -207,7 +207,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			wasRedirected = true;
 		}
 
-		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
+		DamageSource damageSource = createDamageSource(entity);
 		if (!redirected && entity.attackEntityFrom(damageSource, damage * damageModifier)) {
 
 			entity.setFire(4);
@@ -228,6 +228,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			}
 		}
 
+	}
+
+	private DamageSource createDamageSource(EntityLivingBase target) {
+		if (isRedirected()) {
+			return AvatarDamageSource.causeRedirectedLightningDamage(target, getController());
+		} else {
+			return AvatarDamageSource.causeLightningDamage(target, getController());
+		}
 	}
 
 	@Override
@@ -308,6 +316,15 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	public void setController(EntityLivingBase controller) {
 		controllerRef.setEntity(controller);
+	}
+
+	/**
+	 * Whether this lightning was created from redirecting a first lightning. Not to be
+	 * confused with {@link #wasRedirected}, which is whether someone redirected this lightning
+	 * to create another lightning.
+	 */
+	public boolean isRedirected() {
+		return getOwner() != getController();
 	}
 
 	public class LightningControlPoint extends ControlPoint {
