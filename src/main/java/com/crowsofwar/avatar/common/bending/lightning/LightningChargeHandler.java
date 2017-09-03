@@ -84,6 +84,7 @@ public class LightningChargeHandler extends TickHandler {
 		for (float turbulence : turbulenceValues) {
 
 			EntityLightningArc lightning = new EntityLightningArc(world);
+			lightning.setController(entity);
 			lightning.setOwner(entity);
 			lightning.setTurbulence(turbulence);
 			lightning.setDamage(damage);

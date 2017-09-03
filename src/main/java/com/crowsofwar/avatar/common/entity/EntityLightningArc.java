@@ -105,14 +105,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			onUpdateMainArc();
 		}
 
-		if (getOwner() != null) {
-			Vector ownerPosition = Vector.getEyePos(getOwner());
+		if (getController() != null) {
+			Vector controllerPos = Vector.getEyePos(getController());
 			Vector endPosition = getEndPos();
-			Vector position = ownerPosition;
+			Vector position = controllerPos;
 
 			// position slightly below eye height
 			position = position.minusY(0.3);
-			// position slightly away from owner
+			// position slightly away from controller
 			position = position.plus(endPosition.minus(position).dividedBy(10));
 
 			setEndPos(position);
@@ -232,7 +232,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return entity != getOwner();
+		return entity != getController();
 	}
 
 	@Override
