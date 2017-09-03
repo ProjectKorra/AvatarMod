@@ -155,6 +155,10 @@ public class PlayerBender extends Bender {
 
 	public boolean redirectLightning(EntityLightningArc lightningArc) {
 
+		if (lightningArc.isCreatedByRedirection()) {
+			return false;
+		}
+
 		BendingData data = getData();
 
 		LightningRedirectionData redirectionData = new LightningRedirectionData(lightningArc);
