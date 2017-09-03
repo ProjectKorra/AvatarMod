@@ -71,12 +71,12 @@ public class LightningRedirectHandler extends TickHandler {
 		for (LightningRedirectionData redirectionData : redirectionDataList) {
 
 			EntityLightningArc lightning = new EntityLightningArc(world);
-			lightning.setController(entity);
 			lightning.setOwner(redirectionData.getOriginalShooter());
 			lightning.setTurbulence(redirectionData.getTurbulence());
 			lightning.setDamage(redirectionData.getDamage());
 			lightning.setSizeMultiplier(redirectionData.getSizeMultiplier());
 			lightning.setMainArc(redirectionData.isMainArc());
+			lightning.setCreatedByRedirection(true);
 
 			lightning.setPosition(Vector.getEyePos(entity));
 			lightning.setEndPos(Vector.getEyePos(entity));

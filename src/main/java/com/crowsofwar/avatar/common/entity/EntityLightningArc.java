@@ -64,6 +64,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	 */
 	private boolean wasRedirected;
 
+	/**
+	 * Whether the lightning was created through redirecting a first lightning. Not to be
+	 * confused with {@link #wasRedirected}, which is whether a first lightning got redirected to
+	 * make a second lightning.
+	 */
+	private boolean createdByRedirection;
+
 	private float damage;
 
 	private LightningFloodFill floodFill;
@@ -221,7 +228,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	}
 
 	private DamageSource createDamageSource(EntityLivingBase target) {
-		if (isRedirected()) {
+		if (createdByRedirection) {
 			return AvatarDamageSource.causeRedirectedLightningDamage(target, getOwner());
 		} else {
 			return AvatarDamageSource.causeLightningDamage(target, getOwner());
@@ -299,13 +306,12 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		dataManager.set(SYNC_MAIN_ARC, mainArc);
 	}
 
-	/**
-	 * Whether this lightning was created from redirecting a first lightning. Not to be
-	 * confused with {@link #wasRedirected}, which is whether someone redirected this lightning
-	 * to create another lightning.
-	 */
-	public boolean isRedirected() {
-		return getOwner() != getController();
+	public boolean isCreatedByRedirection() {
+		return createdByRedirection;
+	}
+
+	public void setCreatedByRedirection(boolean createdByRedirection) {
+		this.createdByRedirection = createdByRedirection;
 	}
 
 	public class LightningControlPoint extends ControlPoint {
