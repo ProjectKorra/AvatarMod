@@ -58,9 +58,12 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	private int stuckTime;
 
 	/**
-	 * Whether the lightning was redirected by stuckTo (ie, the targeted player). Redirected
-	 * lightning will no longer attempt to damage the target; this prevents issues where target
+	 * Whether the lightning was <b>attempted to be redirected</b> by stuckTo (ie, the targeted
+	 * player). Redirected lightning will no longer attempt to damage the target; this prevents issues where target
 	 * redirects lightning multiple times.
+	 * <p>
+	 * It is possible stuckTo failed to redirect the lightning; in this case wasRedirected will
+	 * remain true, and stuckTo will not attempt to redirect lightning again (only gets one chance).
 	 */
 	private boolean wasRedirected;
 
