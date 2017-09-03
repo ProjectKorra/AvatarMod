@@ -48,8 +48,8 @@ public class LightningRedirectHandler extends TickHandler {
 
 			List<LightningRedirectionData> redirectionDataList = data.getMiscData()
 					.getLightningRedirectionData();
-
 			fireLightning(world, entity, redirectionDataList);
+			redirectionDataList.clear();
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
@@ -87,6 +87,7 @@ public class LightningRedirectHandler extends TickHandler {
 			world.spawnEntity(lightning);
 
 		}
+
 	}
 
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
