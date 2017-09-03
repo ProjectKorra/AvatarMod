@@ -5,11 +5,9 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -25,7 +23,6 @@ import org.joml.SimplexNoise;
 import org.joml.Vector4d;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -46,9 +43,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private static final DataParameter<Boolean> SYNC_MAIN_ARC = EntityDataManager.createKey
 			(EntityLightningArc.class, DataSerializers.BOOLEAN);
-
-	private static final DataParameter<Optional<UUID>> SYNC_CONTROLLER = EntityDataManager
-			.createKey(EntityLightningArc.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
 	/**
 	 * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
@@ -74,13 +68,10 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private LightningFloodFill floodFill;
 
-	private final SyncedEntity<EntityLivingBase> controllerRef;
-
 	public EntityLightningArc(World world) {
 		super(world);
 		setSize(0.5f, 0.5f);
 		damage = 8;
-		controllerRef = new SyncedEntity<>(this, SYNC_CONTROLLER);
 	}
 
 	@Override
@@ -90,7 +81,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		dataManager.register(SYNC_TURBULENCE, 0.6f);
 		dataManager.register(SYNC_SIZE, 1f);
 		dataManager.register(SYNC_MAIN_ARC, true);
-		dataManager.register(SYNC_CONTROLLER, Optional.absent());
 	}
 
 	@Override
@@ -105,8 +95,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			onUpdateMainArc();
 		}
 
-		if (getController() != null) {
-			Vector controllerPos = Vector.getEyePos(getController());
+		if (getOwner() != null) {
+			Vector controllerPos = Vector.getEyePos(getOwner());
 			Vector endPosition = getEndPos();
 			Vector position = controllerPos;
 
@@ -232,15 +222,15 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private DamageSource createDamageSource(EntityLivingBase target) {
 		if (isRedirected()) {
-			return AvatarDamageSource.causeRedirectedLightningDamage(target, getController());
+			return AvatarDamageSource.causeRedirectedLightningDamage(target, getOwner());
 		} else {
-			return AvatarDamageSource.causeLightningDamage(target, getController());
+			return AvatarDamageSource.causeLightningDamage(target, getOwner());
 		}
 	}
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return entity != getController();
+		return entity != getOwner();
 	}
 
 	@Override
@@ -307,15 +297,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	 */
 	public void setMainArc(boolean mainArc) {
 		dataManager.set(SYNC_MAIN_ARC, mainArc);
-	}
-
-	@Override
-	public EntityLivingBase getController() {
-		return controllerRef.getEntity();
-	}
-
-	public void setController(EntityLivingBase controller) {
-		controllerRef.setEntity(controller);
 	}
 
 	/**
