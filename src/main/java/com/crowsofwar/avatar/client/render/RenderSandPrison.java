@@ -56,7 +56,7 @@ public class RenderSandPrison extends Render<EntitySandPrison> {
 
 		// For some reason, must rotate in degrees here (not radians)
 		GlStateManager.rotate(180, 1, 0, 0);
-		GlStateManager.scale(1.4, 1.4, 1.4);
+		GlStateManager.scale(1.4, 2.5, 1.4);
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();
 
