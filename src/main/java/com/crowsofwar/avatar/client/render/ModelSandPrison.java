@@ -93,6 +93,17 @@ public class ModelSandPrison extends ModelBase {
         this.shape9.setRotationPoint(1.4F, 21.7F, -3.0F);
         this.shape9.addBox(0.1F, -1.9F, 0.4F, 2, 4, 1, 0.0F);
         this.setRotateAngle(shape9, -0.19722220547535924F, -0.08726646259971647F, -0.3490658503988659F);
+
+        // CrowsOfWar: adjust y-position of ModelRenderers so that the model's bottom is at y=0
+        // If the model is sunk below the ground, it becomes harder to rotate along x/z axes
+        ModelRenderer[] all = {
+                shape1, shape2, shape3, shape4, shape5, shape6, shape7, shape8, shape9, shape10,
+                shape11, shape12, shape13, shape14, shape15, shape16
+        };
+        for (ModelRenderer mr : all) {
+            mr.rotationPointY -= 23.3f;
+        }
+
     }
 
     @Override

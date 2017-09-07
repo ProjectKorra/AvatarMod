@@ -54,11 +54,9 @@ public class RenderSandPrison extends Render<EntitySandPrison> {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 
-		// Should be rotating in degrees here...?
-		// radians doesn't work
-		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
-		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-
+		// For some reason, must rotate in degrees here (not radians)
+		GlStateManager.rotate(180, 1, 0, 0);
+		GlStateManager.scale(1.4, 1.4, 1.4);
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();
 
