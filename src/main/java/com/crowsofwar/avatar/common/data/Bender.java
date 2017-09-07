@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
+import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -29,32 +30,35 @@ import javax.annotation.Nullable;
  * 
  * @author CrowsOfWar
  */
-public interface Bender {
+public abstract class Bender {
 	
 	/**
 	 * For players, returns the username. For mobs, returns the mob's name (e.g.
 	 * Chicken).
 	 */
-	default String getName() {
+	public String getName() {
 		return getEntity().getName();
 	}
 	
 	/**
-	 * Return this bender in entity form
+	 * Gets this bender in entity form
 	 */
-	EntityLivingBase getEntity();
+	public abstract EntityLivingBase getEntity();
 	
 	/**
 	 * Get the world this entity is currently in
 	 */
-	default World getWorld() {
+	public World getWorld() {
 		return getEntity().world;
 	}
 	
 	/**
 	 * Returns whether this bender is a player
+	 *
+	 * @deprecated This ruins abstraction; <a href="https://trello.com/c/ph9WP946/210-remove-benderisplayer">to be removed</a>
 	 */
-	default boolean isPlayer() {
+	@Deprecated
+	public boolean isPlayer() {
 		return getEntity() instanceof EntityPlayer;
 	}
 
@@ -62,28 +66,34 @@ public interface Bender {
 	 * Get a BenderInfo object, a way to store the Bender's lookup information on disk so it can be
 	 * found again later.
 	 */
-	default BenderInfo getInfo() {
+	public BenderInfo getInfo() {
 		return BenderInfo.get(this);
 	}
 	
-	BendingData getData();
+	public abstract BendingData getData();
+
+	/**
+	 * Returns whether this bender is in creative mode
+	 *
+	 * @deprecated This ruins abstraction; <a href="https://trello.com/c/ph9WP946/210-remove-benderisplayer">to be removed</a>
+	 */
+	@Deprecated
+	public abstract boolean isCreativeMode();
 	
-	boolean isCreativeMode();
-	
-	boolean isFlying();
+	public abstract boolean isFlying();
 	
 	/**
 	 * If any water pouches are in the inventory, checks if there is enough
 	 * water. If there is, consumes the total amount of water in those pouches
 	 * and returns true.
 	 */
-	boolean consumeWaterLevel(int amount);
+	public abstract boolean consumeWaterLevel(int amount);
 
 	/**
 	 * Tries to consume the given amount of chi from the Bender. Returns true if successful (ie
 	 * there was enough chi); false on failure
 	 */
-	default boolean consumeChi(float amount) {
+	public boolean consumeChi(float amount) {
 		// TODO Account for entity Chi?
 		return true;
 	};
@@ -95,8 +105,8 @@ public interface Bender {
 	public static Bender get(@Nullable EntityLivingBase entity) {
 		if (entity == null) {
 			return null;
-		} else if (entity instanceof Bender) {
-			return (Bender) entity;
+		} else if (entity instanceof EntityBender) {
+			return ((EntityBender) entity).getBender();
 		} else if (entity instanceof EntityPlayer) {
 			return new PlayerBender((EntityPlayer) entity);
 		} else {
@@ -105,7 +115,7 @@ public interface Bender {
 	}
 
 	public static boolean isBenderSupported(EntityLivingBase entity) {
-		return entity == null || entity instanceof EntityPlayer || entity instanceof Bender;
+		return entity == null || entity instanceof EntityPlayer || entity instanceof EntityBender;
 	}
 	
 }
