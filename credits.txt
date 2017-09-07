@@ -9,6 +9,9 @@ Ostrich horse models & textures by talhanation
  model code cleanup by CrowsOfWar
 Otter penguin models & textures by talhanation
 
+Sand prison models by talhanation
+ model code cleanup by CrowsOfWar
+
 Radial menu, ability icons by EduMC
 Airbender/firebender skins by EduMC
 
