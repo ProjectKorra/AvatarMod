@@ -106,6 +106,15 @@ public abstract class Bender {
 	};
 
 	/**
+	 * Checks whether the Bender can use that given ability.
+	 */
+	protected boolean canUseAbility(Ability ability) {
+		BendingData data = getData();
+		return data.hasBendingId(ability.getBendingId()) && !data.getAbilityData(ability)
+				.isLocked();
+	}
+
+	/**
 	 * Executes the given ability in the correct context. This will eventually lead to calling
 	 * Ability{@link Ability#execute(AbilityContext)}.
 	 * <p>
@@ -122,26 +131,24 @@ public abstract class Bender {
 			// Server-side : Execute the ability
 
 			BendingData data = getData();
-			if (data.hasBendingId(ability.getBendingId())) {
-				if (!data.getAbilityData(ability).isLocked() || isCreativeMode()) {
-					if (data.getAbilityCooldown() == 0) {
+			if (canUseAbility(ability)) {
+				if (data.getAbilityCooldown() == 0) {
 
-						if (data.getCanUseAbilities()) {
-							AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability, getEntity());
-							ability.execute(abilityCtx);
-							data.setAbilityCooldown(ability.getCooldown(abilityCtx));
-						} else {
-							// TODO make bending disabled available for multiple things
-							AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(player);
-						}
-
+					if (data.getCanUseAbilities()) {
+						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability, getEntity());
+						ability.execute(abilityCtx);
+						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
 					} else {
-						unprocessedAbilityRequests.add(new PacketHandlerServer.ProcessAbilityRequest(data.getAbilityCooldown(),
-								player, data, ability, packet.getRaytrace()));
+						// TODO make bending disabled available for multiple things
+						AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(player);
 					}
+
 				} else {
-					AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), player);
+					unprocessedAbilityRequests.add(new PacketHandlerServer.ProcessAbilityRequest(data.getAbilityCooldown(),
+							player, data, ability, packet.getRaytrace()));
 				}
+			} else {
+				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), player);
 			}
 
 		}

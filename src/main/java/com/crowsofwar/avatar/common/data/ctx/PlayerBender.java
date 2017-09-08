@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.data.ctx;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -122,4 +123,8 @@ public class PlayerBender extends Bender {
 
 	}
 
+	@Override
+	protected boolean canUseAbility(Ability ability) {
+		return super.canUseAbility(ability) || player.isCreative();
+	}
 }
