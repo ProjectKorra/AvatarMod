@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.ai.*;
@@ -149,6 +150,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		setSize(2.5f, 2);
 
 		initChest();
+
+		// Override the implementation Bender#isFlying for this mob
+		this.bender = new BisonBenderComponent();
 
 	}
 
@@ -1099,6 +1103,21 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 					this.posY + 0.5D + this.rand.nextFloat() * this.height,
 					this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, //
 					mx, my, mz, new int[0]);
+		}
+
+	}
+
+	private class BisonBenderComponent extends BenderEntityComponent {
+
+		private BisonBenderComponent() {
+			super(EntitySkyBison.this);
+			// Since this is an inner class, it has a reference to the outer class that created
+			// it; that can be retrieved with "EntitySkyBison.this"
+		}
+
+		@Override
+		public boolean isFlying() {
+			return true;
 		}
 
 	}

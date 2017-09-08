@@ -30,7 +30,7 @@ import net.minecraft.world.World;
  */
 public abstract class EntityBender extends EntityCreature {
 	
-	private final BenderEntityComponent bender;
+	protected BenderEntityComponent bender;
 	
 	/**
 	 * @param world
