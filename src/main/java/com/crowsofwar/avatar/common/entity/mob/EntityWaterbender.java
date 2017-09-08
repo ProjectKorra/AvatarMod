@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.util.ResourceLocation;
@@ -36,6 +37,7 @@ public class EntityWaterbender extends EntityHumanBender {
 	
 	public EntityWaterbender(World world) {
 		super(world);
+		this.bender = new WaterbenderBenderComponent();
 	}
 	
 	@Override
@@ -59,10 +61,18 @@ public class EntityWaterbender extends EntityHumanBender {
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
 	}
-	
-	@Override
-	public boolean consumeWaterLevel(int amount) {
-		return true;
+
+	private class WaterbenderBenderComponent extends BenderEntityComponent {
+
+		private WaterbenderBenderComponent() {
+			super(EntityWaterbender.this);
+		}
+
+		@Override
+		public boolean consumeWaterLevel(int amount) {
+			return true;
+		}
+
 	}
-	
+
 }
