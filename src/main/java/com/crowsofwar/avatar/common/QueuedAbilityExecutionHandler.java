@@ -5,7 +5,7 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -39,17 +39,17 @@ public class QueuedAbilityExecutionHandler {
 				par.ticks--;
 				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0 && par.data.getCanUseAbilities()) {
 					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability,
-							par.player));
+							par.entity));
 					iterator.remove();
 				}
 			}
 		}
 	}
 
-	public static void queueAbilityExecution(EntityPlayer player, BendingData data, Ability
+	public static void queueAbilityExecution(EntityLivingBase entity, BendingData data, Ability
 			ability, Raytrace.Result raytrace) {
 
-		abilityExecutions.add(new QueuedAbilityExecution(data.getAbilityCooldown(), player, data,
+		abilityExecutions.add(new QueuedAbilityExecution(data.getAbilityCooldown(), entity, data,
 				ability, raytrace));
 
 	}
@@ -57,15 +57,15 @@ public class QueuedAbilityExecutionHandler {
 	private static class QueuedAbilityExecution {
 
 		private int ticks;
-		private final EntityPlayer player;
+		private final EntityLivingBase entity;
 		private final BendingData data;
 		private final Ability ability;
 		private final Raytrace.Result raytrace;
 
-		public QueuedAbilityExecution(int ticks, EntityPlayer player, BendingData data,
+		public QueuedAbilityExecution(int ticks, EntityLivingBase entity, BendingData data,
 									  Ability ability, Raytrace.Result raytrace) {
 			this.ticks = ticks;
-			this.player = player;
+			this.entity = entity;
 			this.data = data;
 			this.ability = ability;
 			this.raytrace = raytrace;

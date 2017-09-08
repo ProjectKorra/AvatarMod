@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
+import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
@@ -131,24 +132,26 @@ public abstract class Bender {
 			// Server-side : Execute the ability
 
 			BendingData data = getData();
+			EntityLivingBase entity = getEntity();
 			if (canUseAbility(ability)) {
 				if (data.getAbilityCooldown() == 0) {
 
 					if (data.getCanUseAbilities()) {
-						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability, getEntity());
+						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
+								entity);
 						ability.execute(abilityCtx);
 						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
 					} else {
 						// TODO make bending disabled available for multiple things
-						AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(player);
+						AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
 					}
 
 				} else {
-					unprocessedAbilityRequests.add(new PacketHandlerServer.ProcessAbilityRequest(data.getAbilityCooldown(),
-							player, data, ability, packet.getRaytrace()));
+					QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
+							raytrace);
 				}
 			} else {
-				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), player);
+				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), entity);
 			}
 
 		}
