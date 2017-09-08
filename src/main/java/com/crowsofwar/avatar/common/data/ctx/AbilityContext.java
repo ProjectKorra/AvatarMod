@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * 
@@ -34,8 +33,9 @@ public class AbilityContext extends BendingContext {
 	
 	private final Ability ability;
 	
-	public AbilityContext(BendingData data, Result raytrace, Ability ability, EntityPlayer player) {
-		super(data, player, raytrace);
+	public AbilityContext(BendingData data, Result raytrace, Ability ability, EntityLivingBase
+			entity) {
+		super(data, entity, raytrace);
 		this.ability = ability;
 	}
 	

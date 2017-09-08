@@ -16,8 +16,15 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarChatMessages;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.network.PacketHandlerServer;
+import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -51,7 +58,7 @@ public abstract class Bender {
 	public World getWorld() {
 		return getEntity().world;
 	}
-	
+
 	/**
 	 * Returns whether this bender is a player
 	 *
@@ -97,6 +104,48 @@ public abstract class Bender {
 		// TODO Account for entity Chi?
 		return true;
 	};
+
+	/**
+	 * Executes the given ability in the correct context. This will eventually lead to calling
+	 * Ability{@link Ability#execute(AbilityContext)}.
+	 * <p>
+	 * In certain conditions, other action might be taken; e.g. on client, send a packet to the
+	 * server to execute the ability.
+	 *
+	 * @param raytrace Raytrace performed client-side and sent to the server
+	 */
+	public void executeAbility(Ability ability, Raytrace.Result raytrace) {
+		if (getWorld().isRemote) {
+			// Client-side : Send packet to server
+
+		} else {
+			// Server-side : Execute the ability
+
+			BendingData data = getData();
+			if (data.hasBendingId(ability.getBendingId())) {
+				if (!data.getAbilityData(ability).isLocked() || isCreativeMode()) {
+					if (data.getAbilityCooldown() == 0) {
+
+						if (data.getCanUseAbilities()) {
+							AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability, getEntity());
+							ability.execute(abilityCtx);
+							data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+						} else {
+							// TODO make bending disabled available for multiple things
+							AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(player);
+						}
+
+					} else {
+						unprocessedAbilityRequests.add(new PacketHandlerServer.ProcessAbilityRequest(data.getAbilityCooldown(),
+								player, data, ability, packet.getRaytrace()));
+					}
+				} else {
+					AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), player);
+				}
+			}
+
+		}
+	}
 
 	/**
 	 * Creates an appropriate Bender instance for that entity
