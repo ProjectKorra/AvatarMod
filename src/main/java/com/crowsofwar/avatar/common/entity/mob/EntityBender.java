@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
+import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -59,6 +60,10 @@ public abstract class EntityBender extends EntityCreature {
 
 	public Bender getBender() {
 		return bender;
+	}
+
+	public BendingData getData() {
+		return bender.getData();
 	}
 
 }

@@ -34,7 +34,7 @@ import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
  * 
  * @author CrowsOfWar
  */
-public class PlayerBender implements Bender {
+public class PlayerBender extends Bender {
 	
 	private final EntityPlayer player;
 	

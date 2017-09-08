@@ -188,9 +188,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 
-		this.tasks.addTask(1, Abilities.get("air_bubble").getAi(this, this));
-		this.tasks.addTask(2, Abilities.get("air_gust").getAi(this, this));
-		this.tasks.addTask(3, Abilities.get("airblade").getAi(this, this));
+		this.tasks.addTask(1, Abilities.get("air_bubble").getAi(this, getBender()));
+		this.tasks.addTask(2, Abilities.get("air_gust").getAi(this, getBender()));
+		this.tasks.addTask(3, Abilities.get("airblade").getAi(this, getBender()));
 
 		this.tasks.addTask(2, new EntityAiBisonFollowAttacker(this));
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
@@ -271,11 +271,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		writeInventory(chest, nbt, "Inventory");
 
-	}
-
-	@Override
-	public boolean isFlying() {
-		return true;
 	}
 
 	// ================================================================================
@@ -705,8 +700,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (!isEatingGrass()) {
 			Raytrace.Result result = new Raytrace.Result();
 			Ability airJump = Abilities.get("air_jump");
-			airJump.execute(new AbilityContext(getData(), this, this, result, airJump));
-			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, this, result));
+			// TODO: Don't directly call execute... use Bender#executeAbility when implemented
+			// see: https://trello.com/c/hgKcz2IU/196-add-benderexecuteability
+			airJump.execute(new AbilityContext(getData(), this, getBender(), result, airJump));
+			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), result));
 			getData().removeStatusControl(StatusControl.AIR_JUMP);
 		}
 	}
