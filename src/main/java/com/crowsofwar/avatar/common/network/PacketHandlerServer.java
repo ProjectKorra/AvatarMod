@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
@@ -40,7 +41,6 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -54,14 +54,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -73,37 +72,18 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class PacketHandlerServer implements IPacketHandler {
 	
 	public static final IPacketHandler instance;
-	private List<ProcessAbilityRequest> unprocessedAbilityRequests;
-	
+
 	static {
 		instance = new PacketHandlerServer();
 	}
 	
 	private PacketHandlerServer() {
-		unprocessedAbilityRequests = new ArrayList<>();
 	}
 	
 	public static void register() {
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
-	
-	@SubscribeEvent
-	public void tick(WorldTickEvent e) {
-		World world = e.world;
-		if (e.phase == TickEvent.Phase.START && !world.isRemote) {
-			Iterator<ProcessAbilityRequest> iterator = unprocessedAbilityRequests.iterator();
-			while (iterator.hasNext()) {
-				ProcessAbilityRequest par = iterator.next();
-				par.ticks--;
-				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0 && par.data.getCanUseAbilities()) {
-					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability,
-							par.player));
-					iterator.remove();
-				}
-			}
-		}
-	}
-	
+
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		AvatarLog.debug("Server: Received a packet");
@@ -166,8 +146,8 @@ public class PacketHandlerServer implements IPacketHandler {
 						}
 
 					} else {
-						unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
-								player, data, ability, packet.getRaytrace()));
+						QueuedAbilityExecutionHandler.queueAbilityExecution(player, data,
+								ability, packet.getRaytrace());
 					}
 				} else {
 					AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), player);
@@ -450,25 +430,6 @@ public class PacketHandlerServer implements IPacketHandler {
 		}
 		
 		return null;
-		
-	}
-	
-	private static class ProcessAbilityRequest {
-		
-		private int ticks;
-		private final EntityPlayer player;
-		private final BendingData data;
-		private final Ability ability;
-		private final Raytrace.Result raytrace;
-		
-		public ProcessAbilityRequest(int ticks, EntityPlayer player, BendingData data,
-				Ability ability, Raytrace.Result raytrace) {
-			this.ticks = ticks;
-			this.player = player;
-			this.data = data;
-			this.ability = ability;
-			this.raytrace = raytrace;
-		}
 		
 	}
 	
