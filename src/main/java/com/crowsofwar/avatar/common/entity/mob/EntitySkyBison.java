@@ -19,12 +19,10 @@ package com.crowsofwar.avatar.common.entity.mob;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
@@ -705,12 +703,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	private void onLiftoff() {
 		if (!isEatingGrass()) {
-			Raytrace.Result result = new Raytrace.Result();
-			Ability airJump = Abilities.get("air_jump");
-			// TODO: Don't directly call execute... use Bender#executeAbility when implemented
-			// see: https://trello.com/c/hgKcz2IU/196-add-benderexecuteability
-			airJump.execute(new AbilityContext(getData(), this, getBender(), result, airJump));
-			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), result));
+			getBender().executeAbility(Abilities.get("air_jump"));
+			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), new
+					Raytrace.Result()));
 			getData().removeStatusControl(StatusControl.AIR_JUMP);
 		}
 	}
