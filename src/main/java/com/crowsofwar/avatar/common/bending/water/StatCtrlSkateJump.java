@@ -53,10 +53,10 @@ public class StatCtrlSkateJump extends StatusControl {
 			entity.motionY = velocity.y();
 			entity.motionZ = velocity.z() * 2;
 			AvatarUtils.afterVelocityAdded(entity);
-			
-			AbilityData abilityData = data.getAbilityData("water_skate");
+
 			data.setFallAbsorption(9);
 
+			AbilityData abilityData = data.getAbilityData("water_skate");
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}
