@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.data.ctx;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -127,4 +128,14 @@ public class PlayerBender extends Bender {
 	protected boolean canUseAbility(Ability ability) {
 		return super.canUseAbility(ability) || player.isCreative();
 	}
+
+	@Override
+	public void sendMessage(String message) {
+		if (!getWorld().isRemote) {
+			AvatarMod.network.sendTo(new PacketCErrorMessage(message), (EntityPlayerMP) player);
+		} else {
+			AvatarUiRenderer.displayErrorMessage(message);
+		}
+	}
+
 }

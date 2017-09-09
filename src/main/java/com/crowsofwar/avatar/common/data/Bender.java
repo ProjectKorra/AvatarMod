@@ -158,6 +158,14 @@ public abstract class Bender {
 	}
 
 	/**
+	 * Sends an error message to the Bender. This is really only useful for players, which causes
+	 * an error message to be displayed above the hotbar.
+	 *
+	 * @see com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage
+	 */
+	public void sendMessage(String message) {}
+
+	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */
 	@Nullable
