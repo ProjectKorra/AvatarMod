@@ -91,7 +91,8 @@ public class SyncedEntity<T extends Entity> {
 	}
 
 	public void setEntityId(@Nullable UUID entityId) {
-		cache.setEntityId(null);
+		cache.setEntityId(entityId);
+		using.getDataManager().set(sync, Optional.fromNullable(entityId));
 	}
 	
 	/**
