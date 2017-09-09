@@ -19,19 +19,16 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -126,36 +123,13 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
+
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = BendingData.get(player);
-		if (data != null) {
-			
-			Ability ability = packet.getAbility();
-			if (data.hasBendingId(ability.getBendingId())) {
-				if (!data.getAbilityData(ability).isLocked() || player.capabilities.isCreativeMode) {
-					if (data.getAbilityCooldown() == 0) {
-
-						if (data.getCanUseAbilities()) {
-							AbilityContext abilityCtx = new AbilityContext(data, packet
-									.getRaytrace(), ability, player);
-							ability.execute(abilityCtx);
-							data.setAbilityCooldown(ability.getCooldown(abilityCtx));
-						} else {
-							// TODO make bending disabled available for multiple things
-							AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(player);
-						}
-
-					} else {
-						QueuedAbilityExecutionHandler.queueAbilityExecution(player, data,
-								ability, packet.getRaytrace());
-					}
-				} else {
-					AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), player);
-				}
-			}
-			
+		Bender bender = Bender.get(player);
+		if (bender != null) {
+			bender.executeAbility(packet.getAbility(), packet.getRaytrace());
 		}
-		
+
 		return null;
 	}
 	

@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -73,7 +74,8 @@ public class RadialMenu extends Gui {
 	private int ticksExisted;
 	
 	private final Minecraft mc = Minecraft.getMinecraft();
-	
+	private final Bender bender;
+
 	/**
 	 * Create a new radial menu with the given controls.
 	 * 
@@ -106,6 +108,8 @@ public class RadialMenu extends Gui {
 		for (int i = 0; i < segments.length; i++) {
 			segments[i] = new RadialSegment(this, theme, i, controls[i]);
 		}
+
+		this.bender = Bender.get(mc.player);
 		
 	}
 	
@@ -235,10 +239,8 @@ public class RadialMenu extends Gui {
 			for (int i = 0; i < segments.length; i++) {
 				if (controls[i] == null) continue;
 				if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
-					
-					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player,
-							controls[i].getRaytrace());
-					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], raytrace));
+
+					bender.executeAbility(controls[i]);
 					AvatarUiRenderer.fade(segments[i]);
 					playClickSound(0.8f);
 					break;
