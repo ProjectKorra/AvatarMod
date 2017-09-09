@@ -16,15 +16,12 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import com.crowsofwar.avatar.common.network.PacketHandlerServer;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -151,7 +148,7 @@ public abstract class Bender {
 							raytrace);
 				}
 			} else {
-				AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), entity);
+				sendMessage("avatar.abilityLocked");
 			}
 
 		}

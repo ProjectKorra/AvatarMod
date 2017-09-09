@@ -138,10 +138,9 @@ public class AbilityLightFire extends FireAbility {
 						
 						return true;
 						
-					} else if (ctx.getBender().isPlayer()) {
+					} else {
 						
-						AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.ability.light_fire.fail"),
-								(EntityPlayerMP) ctx.getBenderEntity());
+						ctx.getBender().sendMessage("avatar.ability.light_fire.fail");
 						
 					}
 					

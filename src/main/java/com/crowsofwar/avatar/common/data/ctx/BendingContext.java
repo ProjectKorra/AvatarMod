@@ -188,10 +188,7 @@ public class BendingContext {
 			return true;
 		}
 		
-		if (bender.isPlayer() && !bender.getWorld().isRemote) {
-			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.nochi"),
-					(EntityPlayerMP) bender.getEntity());
-		}
+		bender.sendMessage("avatar.noChi");
 		
 		return false;
 	}

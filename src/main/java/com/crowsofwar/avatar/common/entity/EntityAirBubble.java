@@ -16,23 +16,18 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirBubble;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -43,7 +38,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -151,9 +145,8 @@ public class EntityAirBubble extends AvatarEntity {
 		
 		ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-		if (!elytraOk && !world.isRemote) {
-			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
-					(EntityPlayerMP) owner);
+		if (!elytraOk) {
+			ownerBender.sendMessage("avatar.airBubbleElytra");
 			dissipateSmall();
 		}
 		

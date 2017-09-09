@@ -115,9 +115,8 @@ public class PlayerBender extends Bender {
 		// Otherwise just try normal chi consumption
 		boolean result = getData().chi().consumeChi(amount);
 
-		if (!result && !player.world.isRemote) {
-			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.nochi"), (EntityPlayerMP)
-					getEntity());
+		if (!result) {
+			sendMessage("avatar.nochi");
 		}
 
 		return result;
