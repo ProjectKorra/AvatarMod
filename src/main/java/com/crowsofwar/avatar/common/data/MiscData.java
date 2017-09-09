@@ -73,6 +73,9 @@ public class MiscData {
 		// wasn't correctly flagged to false.
 		// This new key forces glitched players from a4.5 to reload their CanUseAbilities flag
 		canUseAbilities = nbt.getBoolean("CanUseAbilitiesA4.6");
+		if (!nbt.hasKey("CanUseAbilitiesA4.6")) {
+			canUseAbilities = true;
+		}
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
