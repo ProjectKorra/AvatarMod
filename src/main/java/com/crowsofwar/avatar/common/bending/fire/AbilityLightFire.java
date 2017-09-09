@@ -17,22 +17,12 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static java.lang.Math.floor;
-
-import java.util.UUID;
-
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
@@ -41,6 +31,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.floor;
+
 /**
  * 
  * 
@@ -48,13 +42,8 @@ import net.minecraft.world.World;
  */
 public class AbilityLightFire extends FireAbility {
 	
-	public static final UUID ID = UUID.fromString("f699bff5-8c0b-49a9-a328-19e15e0c2f6f");
-	
 	private final ParticleSpawner particles;
 	
-	/**
-	 * @param controller
-	 */
 	public AbilityLightFire() {
 		super("light_fire");
 		requireRaytrace(-1, false);
@@ -152,10 +141,5 @@ public class AbilityLightFire extends FireAbility {
 		return false;
 		
 	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
-	}
-	
+
 }

@@ -26,8 +26,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import java.util.UUID;
-
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
@@ -39,8 +37,6 @@ import static java.lang.Math.abs;
  * @author CrowsOfWar
  */
 public class AbilityAirblade extends AirAbility {
-	
-	public static final UUID ID = UUID.fromString("f520db9f-875a-4553-8ece-e9d5e36f7dcb");
 	
 	public AbilityAirblade() {
 		super("airblade");
@@ -91,10 +87,5 @@ public class AbilityAirblade extends AirAbility {
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirblade(this, entity, bender);
 	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
-	}
-	
+
 }

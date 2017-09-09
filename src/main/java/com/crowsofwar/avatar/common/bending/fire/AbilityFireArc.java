@@ -31,8 +31,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import java.util.UUID;
-
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -41,9 +39,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * @author CrowsOfWar
  */
 public class AbilityFireArc extends FireAbility {
-	
-	public static final UUID ID = UUID.fromString("48a755a4-5d4f-4b32-b299-093786dd93f3");
-	
+
 	public AbilityFireArc() {
 		super("fire_arc");
 		requireRaytrace(-1, false);
@@ -101,9 +97,4 @@ public class AbilityFireArc extends FireAbility {
 		return new AiFireArc(this, entity, bender);
 	}
 
-	@Override
-	public UUID getId() {
-		return ID;
-	}
-	
 }

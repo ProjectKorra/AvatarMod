@@ -69,12 +69,6 @@ public abstract class Ability {
 	}
 
 	/**
-	 * Get the Id of this ability. It is unique from all other abilities, and is
-	 * the same every time Minecraft runs (i.e. is not dynamically generated)
-	 */
-	public abstract UUID getId();
-
-	/**
 	 * Require that a raycast be sent prior to {@link #execute(AbilityContext)}.
 	 * Information for the raytrace will then be available through the
 	 * {@link AbilityContext}.

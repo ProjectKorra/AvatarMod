@@ -17,21 +17,18 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
-
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
 /**
  * 
@@ -40,11 +37,6 @@ import net.minecraft.world.World;
  */
 public class AbilityAirGust extends AirAbility {
 	
-	public static final UUID ID = UUID.fromString("881d9a53-eb19-4003-b569-c6af48372718");
-	
-	/**
-	 * @param controller
-	 */
 	public AbilityAirGust() {
 		super("air_gust");
 	}
@@ -79,11 +71,6 @@ public class AbilityAirGust extends AirAbility {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirGust(this, entity, bender);
-	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
 	}
 	
 }

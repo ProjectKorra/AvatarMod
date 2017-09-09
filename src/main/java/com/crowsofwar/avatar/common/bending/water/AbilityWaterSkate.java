@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -30,22 +28,15 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
  */
 public class AbilityWaterSkate extends WaterAbility {
 	
-	public static final UUID ID = UUID.fromString("a0ec6132-8d68-43eb-9685-00ca79feea85");
-	
 	public AbilityWaterSkate() {
 		super("water_skate");
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.SKATING_START);
 		ctx.getData().addTickHandler(TickHandler.WATER_SKATE);
-	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
 	}
 	
 }

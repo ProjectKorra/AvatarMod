@@ -16,29 +16,12 @@
 */
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
-import static java.lang.Math.abs;
-import static java.lang.Math.floor;
-import static net.minecraft.init.Blocks.AIR;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.VectorI;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
@@ -48,14 +31,22 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.*;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
+import static java.lang.Math.abs;
+import static java.lang.Math.floor;
+import static net.minecraft.init.Blocks.AIR;
+
 /**
  * 
  * 
  * @author CrowsOfWar
  */
 public class AbilityMining extends EarthAbility {
-	
-	public static final UUID ID = UUID.fromString("0fffb2ce-0673-49d6-bcfd-f61b911495fa");
 	
 	public AbilityMining() {
 		super("mine_blocks");
@@ -280,11 +271,6 @@ public class AbilityMining extends EarthAbility {
 	private boolean isBreakableOre(World world, BlockPos pos) {
 		Block block = world.getBlockState(pos).getBlock();
 		return block instanceof BlockOre || block instanceof BlockRedstoneOre;
-	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
 	}
 	
 }

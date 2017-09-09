@@ -38,7 +38,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
-import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -48,8 +47,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * @author CrowsOfWar
  */
 public class AbilityPickUpBlock extends EarthAbility {
-	
-	public static final UUID ID = UUID.fromString("a1fec675-871e-4ea0-950c-bb67c1e7898e");
 	
 	private final Random random;
 	
@@ -143,10 +140,5 @@ public class AbilityPickUpBlock extends EarthAbility {
 		}
 		
 	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
-	}
-	
+
 }

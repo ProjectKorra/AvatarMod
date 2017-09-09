@@ -16,15 +16,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 /**
  * @author CrowsOfWar
  */
 public class AbilitySandPrison extends Ability {
-
-	public static final UUID ID = UUID.fromString("b7066c8b-e46b-4f0f-ade8-3654ee51decb");
 
 	public AbilitySandPrison() {
 		super(Sandbending.ID, "sand_prison");
@@ -63,8 +60,4 @@ public class AbilitySandPrison extends Ability {
 		return standingOn == Blocks.SAND; // TODO configurable sand blocks
 	}
 
-	@Override
-	public UUID getId() {
-		return ID;
-	}
 }

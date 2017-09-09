@@ -32,14 +32,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
-import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityWall extends EarthAbility {
-	
-	public static final UUID ID = UUID.fromString("1728f2cd-f935-4325-a58e-212ff33d5b60");
 	
 	public AbilityWall() {
 		super("earth_wall");
@@ -149,10 +146,5 @@ public class AbilityWall extends EarthAbility {
 		}
 		
 	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
-	}
-	
+
 }

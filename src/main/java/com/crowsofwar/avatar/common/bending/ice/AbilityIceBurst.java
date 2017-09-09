@@ -24,16 +24,12 @@ import com.crowsofwar.avatar.common.entity.EntityIceShield;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import java.util.UUID;
-
 /**
  * 
  * 
  * @author CrowsOfWar
  */
 public class AbilityIceBurst extends Ability {
-	
-	public static final UUID ID = UUID.fromString("c6bb814c-4808-4bc1-a6aa-fc01c871eedb");
 	
 	public AbilityIceBurst() {
 		super(Icebending.ID, "ice_burst");
@@ -53,10 +49,5 @@ public class AbilityIceBurst extends Ability {
 		data.addStatusControl(StatusControl.SHIELD_SHATTER);
 		
 	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
-	}
-	
+
 }

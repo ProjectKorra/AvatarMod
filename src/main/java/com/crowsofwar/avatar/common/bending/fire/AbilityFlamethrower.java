@@ -17,14 +17,11 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.Bender;
-
 import net.minecraft.entity.EntityLiving;
 
 /**
@@ -34,11 +31,6 @@ import net.minecraft.entity.EntityLiving;
  */
 public class AbilityFlamethrower extends FireAbility {
 	
-	public static final UUID ID = UUID.fromString("e7fed19c-e8a8-4821-848b-093c731c9558");
-	
-	/**
-	 * @param controller
-	 */
 	public AbilityFlamethrower() {
 		super("flamethrower");
 	}
@@ -52,11 +44,6 @@ public class AbilityFlamethrower extends FireAbility {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFlamethrower(this, entity, bender);
-	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
 	}
 	
 }

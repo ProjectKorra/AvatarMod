@@ -33,7 +33,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.UUID;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -45,8 +44,6 @@ import static java.lang.Math.toRadians;
  * @author CrowsOfWar
  */
 public class AbilityWaterArc extends WaterAbility {
-	
-	public static final UUID ID = UUID.fromString("577c67ea-9e7c-4797-b100-c62d37e7d946");
 	
 	public AbilityWaterArc() {
 		super("water_arc");
@@ -136,9 +133,4 @@ public class AbilityWaterArc extends WaterAbility {
 		return new AiWaterArc(this, entity, bender);
 	}
 
-	@Override
-	public UUID getId() {
-		return ID;
-	}
-	
 }

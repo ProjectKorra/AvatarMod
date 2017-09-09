@@ -29,8 +29,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import java.util.UUID;
-
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
@@ -41,8 +39,6 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECO
  * @author CrowsOfWar
  */
 public class AbilityAirBubble extends AirAbility {
-	
-	public static final UUID ID = UUID.fromString("1376828c-a702-4bff-b2f1-372054398fe4");
 	
 	public AbilityAirBubble() {
 		super("air_bubble");
@@ -95,11 +91,6 @@ public class AbilityAirBubble extends AirAbility {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirBubble(this, entity, bender);
-	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
 	}
 	
 }

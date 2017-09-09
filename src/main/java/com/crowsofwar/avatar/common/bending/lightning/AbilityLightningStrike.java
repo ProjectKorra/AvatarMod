@@ -24,17 +24,13 @@ import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.UUID;
-
 /**
  * 
  * 
  * @author CrowsOfWar
  */
 public class AbilityLightningStrike extends Ability {
-	
-	public static final UUID ID = UUID.fromString("67e9390e-38d5-4858-ab99-31b6a206eaf6");
-	
+
 	public AbilityLightningStrike() {
 		super(Lightningbending.ID, "lightning_strike");
 	}
@@ -55,11 +51,6 @@ public class AbilityLightningStrike extends Ability {
 			
 		}
 		
-	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
 	}
 	
 }

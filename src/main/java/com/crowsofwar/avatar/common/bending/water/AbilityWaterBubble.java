@@ -17,11 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -30,12 +25,14 @@ import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -43,9 +40,7 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityWaterBubble extends WaterAbility {
-	
-	public static final UUID ID = UUID.fromString("d4884203-e156-4f06-bd51-c31aeb45d71e");
-	
+
 	public AbilityWaterBubble() {
 		super("water_bubble");
 		requireRaytrace(-1, false);
@@ -94,10 +89,5 @@ public class AbilityWaterBubble extends WaterAbility {
 			}
 		}
 	}
-	
-	@Override
-	public UUID getId() {
-		return ID;
-	}
-	
+
 }
