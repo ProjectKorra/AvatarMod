@@ -118,8 +118,20 @@ public abstract class Bender {
 	 * <p>
 	 * In certain conditions, other action might be taken; e.g. on client, send a packet to the
 	 * server to execute the ability.
+	 */
+	public void executeAbility(Ability ability) {
+
+		Raytrace.Result raytrace = Raytrace.getTargetBlock(getEntity(),
+				ability.getRaytrace());
+		executeAbility(ability, raytrace);
+
+	}
+
+	/**
+	 * Same as regular {@link #executeAbility(Ability)}, but allows a provided raytrace, instead
+	 * of performing another on the fly.
 	 *
-	 * @param raytrace Raytrace performed client-side and sent to the server
+	 * @see #executeAbility(Ability)
 	 */
 	public void executeAbility(Ability ability, Raytrace.Result raytrace) {
 		if (!getWorld().isRemote) {
