@@ -66,7 +66,7 @@ public abstract class EntityBender extends EntityCreature {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		bender.getData().decrementCooldown();
+		bender.onUpdate();
 	}
 
 	public Bender getBender() {
