@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -151,9 +152,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		initChest();
 
-		// Override the implementation Bender#isFlying for this mob
-		this.bender = new BisonBenderComponent();
+	}
 
+	@Override
+	protected Bender initBender() {
+		return new BisonBenderComponent();
 	}
 
 	@Override

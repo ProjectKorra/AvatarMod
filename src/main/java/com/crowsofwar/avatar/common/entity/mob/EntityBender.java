@@ -30,16 +30,27 @@ import net.minecraft.world.World;
  */
 public abstract class EntityBender extends EntityCreature {
 	
-	protected BenderEntityComponent bender;
+	private Bender bender;
 	
 	/**
 	 * @param world
 	 */
 	public EntityBender(World world) {
 		super(world);
-		bender = new BenderEntityComponent(this);
 	}
-	
+
+	protected Bender initBender() {
+		return new BenderEntityComponent(this);
+	}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		// Initialize the bender here (instead of constructor) so the bender will be ready for
+		// initEntityAI - Constructor is called AFTER initEntityAI
+		bender = initBender();
+	}
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
