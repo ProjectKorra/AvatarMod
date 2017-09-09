@@ -20,7 +20,9 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,6 +30,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
 /**
  * A wrapper for any mob/player that can bend to provide greater abstraction
@@ -174,6 +179,53 @@ public abstract class Bender {
 	 * @see com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage
 	 */
 	public void sendMessage(String message) {}
+
+	/**
+	 * Called every tick; updates things like chi.
+	 */
+	public void onUpdate() {
+
+		BendingData data = getData();
+		World world = getWorld();
+		EntityLivingBase entity = getEntity();
+
+		data.decrementCooldown();
+
+		// Update chi
+
+		if (!world.isRemote) {
+			Chi chi = data.chi();
+
+			if (entity.isPlayerSleeping()) {
+				chi.changeTotalChi(CHI_CONFIG.regenInBed / 20f);
+			} else {
+				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
+			}
+
+			if (chi.getAvailableChi() < chi.getMaxChi() * CHI_CONFIG.availableThreshold) {
+				chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);
+			}
+
+		}
+
+		// Tick the TickHandlers
+
+		List<TickHandler> tickHandlers = data.getAllTickHandlers();
+		if (tickHandlers != null) {
+			BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
+			for (TickHandler handler : tickHandlers) {
+				if (handler.tick(ctx)) {
+					// Can use this since the list is a COPY of the
+					// underlying list
+					data.removeTickHandler(handler);
+				} else {
+					int newDuration = data.getTickHandlerDuration(handler) + 1;
+					data.setTickHandlerDuration(handler, newDuration);
+				}
+			}
+		}
+
+	}
 
 	/**
 	 * Creates an appropriate Bender instance for that entity
