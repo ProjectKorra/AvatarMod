@@ -122,10 +122,7 @@ public abstract class Bender {
 	 * @param raytrace Raytrace performed client-side and sent to the server
 	 */
 	public void executeAbility(Ability ability, Raytrace.Result raytrace) {
-		if (getWorld().isRemote) {
-			// Client-side : Send packet to server
-
-		} else {
+		if (!getWorld().isRemote) {
 			// Server-side : Execute the ability
 
 			BendingData data = getData();
@@ -152,6 +149,10 @@ public abstract class Bender {
 			}
 
 		}
+
+		// On client-side, players will send a packet to the server, while other entities will do
+		// nothing
+
 	}
 
 	/**

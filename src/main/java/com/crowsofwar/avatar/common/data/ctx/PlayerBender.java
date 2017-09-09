@@ -23,6 +23,8 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -137,4 +139,14 @@ public class PlayerBender extends Bender {
 		}
 	}
 
+	@Override
+	public void executeAbility(Ability ability, Raytrace.Result raytrace) {
+		if (getWorld().isRemote) {
+
+			AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+
+		} else {
+			super.executeAbility(ability, raytrace);
+		}
+	}
 }
