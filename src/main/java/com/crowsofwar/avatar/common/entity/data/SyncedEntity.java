@@ -34,6 +34,7 @@ import java.util.UUID;
  * 
  * @author CrowsOfWar
  */
+@SuppressWarnings("Guava")
 public class SyncedEntity<T extends Entity> {
 	
 	private final Entity using;
@@ -78,7 +79,7 @@ public class SyncedEntity<T extends Entity> {
 	
 	public void setEntity(@Nullable T entity) {
 		cache.setEntity(entity);
-		using.getDataManager().set(sync, Optional.of(cache.getEntityId()));
+		using.getDataManager().set(sync, Optional.fromNullable(cache.getEntityId()));
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class SyncedEntity<T extends Entity> {
 	 */
 	public void readFromNbt(NBTTagCompound nbt) {
 		cache.readFromNbt(nbt);
-		using.getDataManager().set(sync, Optional.of(cache.getEntityId()));
+		using.getDataManager().set(sync, Optional.fromNullable(cache.getEntityId()));
 		if (!allowNullSaving && getEntity() == null) {
 			using.setDead();
 			AvatarLog.warn(WarningType.INVALID_SAVE,
