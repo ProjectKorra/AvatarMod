@@ -17,65 +17,30 @@
 
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
-import java.util.List;
-
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-
 public class AvatarPlayerTick {
-	
+
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent e) {
 		// Also forces loading of data on client
-		BendingData data = BendingData.get(e.player);
-		if (data != null) {
-			
+		Bender bender = Bender.get(e.player);
+		if (bender != null) {
+			BendingData data = bender.getData();
+
 			EntityPlayer player = e.player;
-			
+
 			if (!player.world.isRemote && player.ticksExisted == 0) {
 				data.saveAll();
 			}
-			
-			data.decrementCooldown();
-			if (!player.world.isRemote) {
-				Chi chi = data.chi();
-				
-				if (player.isPlayerSleeping()) {
-					chi.changeTotalChi(CHI_CONFIG.regenInBed / 20f);
-				} else {
-					chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
-				}
-				
-				if (chi.getAvailableChi() < chi.getMaxChi() * CHI_CONFIG.availableThreshold) {
-					chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);
-				}
-				
-			}
-			
+
 			if (e.phase == Phase.START) {
-				List<TickHandler> tickHandlers = data.getAllTickHandlers();
-				if (tickHandlers != null) {
-					BendingContext ctx = new BendingContext(data, player, new Raytrace.Result());
-					for (TickHandler handler : tickHandlers) {
-						if (handler.tick(ctx)) {
-							// Can use this since the list is a COPY of the
-							// underlying list
-							data.removeTickHandler(handler);
-						} else {
-							int newDuration = data.getTickHandlerDuration(handler) + 1;
-							data.setTickHandlerDuration(handler, newDuration);
-						}
-					}
-				}
+				bender.onUpdate();
 			}
 			
 		}
