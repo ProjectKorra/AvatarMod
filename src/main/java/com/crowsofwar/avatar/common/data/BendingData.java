@@ -468,12 +468,12 @@ public class BendingData {
 		// @formatter:off
 
 		AvatarUtils.writeList(bendings,
-				(compound, controllerId) -> compound.setUniqueId("ControllerID", controllerId),
+				(nbt, controllerId) -> nbt.setUniqueId("ControllerID", controllerId),
 				writeTo,
 				"BendingControllers");
 
 		AvatarUtils.writeList(statusControls,
-				(nbtTag, control) -> nbtTag.setInteger("Id", control.id()),
+				(nbt, control) -> nbt.setInteger("Id", control.id()),
 				writeTo,
 				"StatusControls");
 
@@ -506,12 +506,12 @@ public class BendingData {
 		// @formatter:off
 
 		AvatarUtils.readList(bendings,
-				compound -> compound.getUniqueId("ControllerID"),
+				nbt -> nbt.getUniqueId("ControllerID"),
 				readFrom,
 				"BendingControllers");
 
 		AvatarUtils.readList(statusControls,
-				nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")),
+				nbt -> StatusControl.lookup(nbt.getInteger("Id")),
 				readFrom,
 				"StatusControls");
 
