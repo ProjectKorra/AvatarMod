@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
-import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
@@ -76,9 +75,7 @@ public abstract class Bender {
 	 * Get a BenderInfo object, a way to store the Bender's lookup information on disk so it can be
 	 * found again later.
 	 */
-	public BenderInfo getInfo() {
-		return BenderInfo.get(this);
-	}
+	public abstract BenderInfo getInfo();
 	
 	public abstract BendingData getData();
 

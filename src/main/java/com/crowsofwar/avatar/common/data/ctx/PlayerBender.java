@@ -20,6 +20,8 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BenderInfoPlayer;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
@@ -149,4 +151,10 @@ public class PlayerBender extends Bender {
 			super.executeAbility(ability, raytrace);
 		}
 	}
+
+	@Override
+	public BenderInfo getInfo() {
+		return new BenderInfoPlayer(player.getName());
+	}
+
 }

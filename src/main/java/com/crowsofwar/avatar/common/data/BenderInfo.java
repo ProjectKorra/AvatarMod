@@ -104,17 +104,6 @@ public abstract class BenderInfo {
 		}
 	}
 
-	/**
-	 * Creates a new BenderInfo object of the appropriate subclass to represent that Bender.
-	 */
-	public static BenderInfo get(Bender bender) {
-		if (bender.isPlayer()) {
-			return new BenderInfoPlayer(bender.getName());
-		} else {
-			return new BenderInfoEntity(bender.getEntity().getUniqueID());
-		}
-	}
-
 	public static BenderInfo get(boolean player, @Nullable UUID id) {
 		if (id == null) {
 			return new NoBenderInfo();

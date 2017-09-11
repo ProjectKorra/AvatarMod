@@ -44,4 +44,9 @@ public class BenderEntityComponent extends Bender {
 	public boolean consumeWaterLevel(int amount) {
 		return false;
 	}
+
+	@Override
+	public BenderInfo getInfo() {
+		return new BenderInfoEntity(entity.getUniqueID());
+	}
 }
