@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -49,6 +50,7 @@ public class AbilityWaterBubble extends WaterAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 		
@@ -57,7 +59,7 @@ public class AbilityWaterBubble extends WaterAbility {
 			IBlockState lookingAtBlock = world.getBlockState(lookPos);
 			if (lookingAtBlock.getBlock() == Blocks.WATER) {
 				
-				if (ctx.consumeChi(STATS_CONFIG.chiWaterBubble)) {
+				if (bender.consumeChi(STATS_CONFIG.chiWaterBubble)) {
 					
 					EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
 							bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled

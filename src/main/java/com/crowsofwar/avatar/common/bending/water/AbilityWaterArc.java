@@ -53,6 +53,7 @@ public class AbilityWaterArc extends WaterAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		World world = ctx.getWorld();
+		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
@@ -63,7 +64,7 @@ public class AbilityWaterArc extends WaterAbility {
 				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
 			}
 			
-			if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
+			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
 

@@ -42,6 +42,7 @@ public class AbilityCreateWave extends WaterAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 
 		Vector look = Vector.getLookRectangular(entity).withY(0);
@@ -57,7 +58,7 @@ public class AbilityCreateWave extends WaterAbility {
 			for (int i = 0; i < 3; i++) {
 				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
 
-					if (ctx.consumeChi(STATS_CONFIG.chiWave)) {
+					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
 						double speed = 10;
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {

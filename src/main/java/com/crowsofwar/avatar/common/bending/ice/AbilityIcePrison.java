@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending.ice;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -44,8 +45,10 @@ public class AbilityIcePrison extends Ability {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
-		if (ctx.consumeChi(ConfigStats.STATS_CONFIG.chiPrison)) {
+
+		Bender bender = ctx.getBender();
+
+		if (bender.consumeChi(ConfigStats.STATS_CONFIG.chiPrison)) {
 			
 			EntityLivingBase caster = ctx.getBenderEntity();
 			World world = ctx.getWorld();

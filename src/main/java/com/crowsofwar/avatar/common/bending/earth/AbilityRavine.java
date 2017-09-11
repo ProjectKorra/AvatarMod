@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.gorecore.util.Vector;
@@ -40,13 +41,15 @@ public class AbilityRavine extends EarthAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
+
+		Bender bender = ctx.getBender();
 		
 		float chi = STATS_CONFIG.chiRavine;
 		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 			chi *= 1.5f;
 		}
 		
-		if (ctx.consumeChi(chi)) {
+		if (bender.consumeChi(chi)) {
 			
 			AbilityData abilityData = ctx.getData().getAbilityData(this);
 			float xp = abilityData.getTotalXp();

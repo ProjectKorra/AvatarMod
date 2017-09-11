@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
@@ -45,8 +46,10 @@ public class AbilityWall extends EarthAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
-		if (ctx.consumeChi(STATS_CONFIG.chiWall)) {
+
+		Bender bender = ctx.getBender();
+
+		if (bender.consumeChi(STATS_CONFIG.chiWall)) {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();

@@ -101,7 +101,7 @@ public class AbilityLightFire extends FireAbility {
 	
 	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
 			double chance) {
-		
+
 		if (world.isRainingAt(blockPos)) {
 			
 			particles.spawnParticles(world, EnumParticleTypes.CLOUD, 3, 7, ctx.getLookPos(),
@@ -114,7 +114,7 @@ public class AbilityLightFire extends FireAbility {
 			if (world.getBlockState(blockPos).getBlock() == Blocks.AIR
 					&& Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
 				
-				if (!useChi || ctx.consumeChi(STATS_CONFIG.chiLightFire)) {
+				if (!useChi || ctx.getBender().consumeChi(STATS_CONFIG.chiLightFire)) {
 					
 					double random = Math.random() * 100;
 					

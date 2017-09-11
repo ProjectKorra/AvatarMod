@@ -44,19 +44,20 @@ public class AbilityAirGust extends AirAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityLivingBase bender = ctx.getBenderEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		
-		if (!ctx.consumeChi(STATS_CONFIG.chiAirGust)) return;
+		if (!bender.consumeChi(STATS_CONFIG.chiAirGust)) return;
 		
-		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw),
-				Math.toRadians(bender.rotationPitch));
-		Vector pos = Vector.getEyePos(bender);
+		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
+				Math.toRadians(entity.rotationPitch));
+		Vector pos = Vector.getEyePos(entity);
 		
 		EntityAirGust gust = new EntityAirGust(world);
 		gust.setVelocity(look.times(25));
 		gust.setPosition(pos.x(), pos.y(), pos.z());
-		gust.setOwner(bender);
+		gust.setOwner(entity);
 		gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
 		gust.setAirGrab(ctx.isMasterLevel(SECOND));
 		

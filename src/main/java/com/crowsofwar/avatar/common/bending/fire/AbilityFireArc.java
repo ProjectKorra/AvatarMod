@@ -47,8 +47,10 @@ public class AbilityFireArc extends FireAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
-		if (ctx.consumeChi(STATS_CONFIG.chiFireArc)) {
+
+		Bender bender = ctx.getBender();
+
+		if (bender.consumeChi(STATS_CONFIG.chiFireArc)) {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();

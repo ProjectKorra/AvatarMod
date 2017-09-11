@@ -100,7 +100,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 		
 		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block)) {
 			
-			if (ctx.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+			if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 				
 				AbilityData abilityData = data.getAbilityData(this);
 

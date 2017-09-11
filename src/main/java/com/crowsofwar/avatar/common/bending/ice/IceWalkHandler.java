@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
@@ -32,7 +33,8 @@ public class IceWalkHandler extends TickHandler {
 	
 	@Override
 	public boolean tick(BendingContext ctx) {
-		if (!ctx.getWorld().isRemote && ctx.consumeChi(2.0f / 20)) {
+		Bender bender = ctx.getBender();
+		if (!ctx.getWorld().isRemote && bender.consumeChi(2.0f / 20)) {
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			EnchantmentFrostWalker.freezeNearby(entity, world, entity.getPosition(), 1);

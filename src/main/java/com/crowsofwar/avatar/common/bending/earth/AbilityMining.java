@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -54,10 +55,11 @@ public class AbilityMining extends EarthAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
+
+		Bender bender = ctx.getBender();
 		float chi = ctx.isMasterLevel(FIRST) ? STATS_CONFIG.chiMiningMaster : STATS_CONFIG.chiMining;
 		
-		if (ctx.consumeChi(chi)) {
+		if (bender.consumeChi(chi)) {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();

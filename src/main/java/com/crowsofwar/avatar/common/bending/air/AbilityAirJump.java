@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -42,8 +43,9 @@ public class AbilityAirJump extends AirAbility {
 	public void execute(AbilityContext ctx) {
 		
 		BendingData data = ctx.getData();
+		Bender bender = ctx.getBender();
 		
-		if (!data.hasStatusControl(AIR_JUMP) && ctx.consumeChi(STATS_CONFIG.chiAirJump)) {
+		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
 			
 			data.addStatusControl(AIR_JUMP);
 			if (data.hasTickHandler(TickHandler.AIR_PARTICLE_SPAWNER)) {

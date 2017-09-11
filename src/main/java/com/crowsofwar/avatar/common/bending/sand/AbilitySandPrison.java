@@ -31,10 +31,11 @@ public class AbilitySandPrison extends Ability {
 	@Override
 	public void execute(AbilityContext ctx) {
 
-		if (ctx.consumeChi(ConfigStats.STATS_CONFIG.chiSandPrison)) {
+		Bender bender = ctx.getBender();
+
+		if (bender.consumeChi(ConfigStats.STATS_CONFIG.chiSandPrison)) {
 
 			EntityLivingBase entity = ctx.getBenderEntity();
-			Bender bender = ctx.getBender();
 			World world = ctx.getWorld();
 			Vector start = Vector.getEyePos(entity);
 			Vector direction = Vector.getLookRectangular(entity);

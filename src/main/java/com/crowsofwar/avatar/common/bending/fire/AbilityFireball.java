@@ -49,12 +49,13 @@ public class AbilityFireball extends FireAbility {
 	public void execute(AbilityContext ctx) {
 		
 		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 		
 		if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
 		
-		if (ctx.consumeChi(STATS_CONFIG.chiFireball)) {
+		if (bender.consumeChi(STATS_CONFIG.chiFireball)) {
 			
 			Vector target;
 			if (ctx.isLookingAtBlock()) {

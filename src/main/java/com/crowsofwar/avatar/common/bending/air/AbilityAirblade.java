@@ -45,19 +45,20 @@ public class AbilityAirblade extends AirAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityLivingBase bender = ctx.getBenderEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		
-		if (!ctx.consumeChi(STATS_CONFIG.chiAirblade)) return;
+		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 		
-		double pitchDeg = bender.rotationPitch;
+		double pitchDeg = entity.rotationPitch;
 		if (abs(pitchDeg) > 30) {
 			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
 		}
 		float pitch = (float) Math.toRadians(pitchDeg);
 		
-		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw), pitch);
-		Vector spawnAt = Vector.getEntityPos(bender).plus(look.times(2)).plus(0, 1, 0);
+		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), pitch);
+		Vector spawnAt = Vector.getEntityPos(entity).plus(look.times(2)).plus(0, 1, 0);
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();
@@ -66,7 +67,7 @@ public class AbilityAirblade extends AirAbility {
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 30 : 20));
 		airblade.setDamage(STATS_CONFIG.airbladeSettings.damage * (1 + xp * .015f));
-		airblade.setOwner(bender);
+		airblade.setOwner(entity);
 		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));
 		airblade.setChainAttack(abilityData.isMasterPath(FIRST));
 		

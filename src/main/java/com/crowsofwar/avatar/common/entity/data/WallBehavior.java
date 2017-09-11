@@ -21,9 +21,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -138,13 +136,12 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 				drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
 				
-				BendingContext ctx = new BendingContext(data, entity.getOwner(),
-						Bender.get(entity.getOwner()), new Raytrace.Result());
-				
-				if (!entity.world.isRemote && !ctx.consumeChi(STATS_CONFIG.chiWallOneSecond / 20)) {
+				Bender ownerBender = Bender.get(entity.getOwner());
+				if (!entity.world.isRemote && !ownerBender.consumeChi(STATS_CONFIG
+						.chiWallOneSecond / 20)) {
 					drop = true;
 				}
-				
+
 			}
 			
 			return drop ? new Drop() : this;

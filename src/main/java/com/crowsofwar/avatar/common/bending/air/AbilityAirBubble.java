@@ -47,6 +47,7 @@ public class AbilityAirBubble extends AirAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 		
@@ -59,7 +60,7 @@ public class AbilityAirBubble extends AirAbility {
 
 		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
 			
-			if (!ctx.consumeChi(STATS_CONFIG.chiAirBubble)) return;
+			if (!bender.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 			
 			float size = 1.5f;
 			float health = 12;
