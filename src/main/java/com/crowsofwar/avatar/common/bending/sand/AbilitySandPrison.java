@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.bending.sand;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntitySandPrison;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -32,12 +33,14 @@ public class AbilitySandPrison extends Ability {
 
 		if (ctx.consumeChi(ConfigStats.STATS_CONFIG.chiSandPrison)) {
 
-			EntityLivingBase caster = ctx.getBenderEntity();
+			EntityLivingBase entity = ctx.getBenderEntity();
+			Bender bender = ctx.getBender();
 			World world = ctx.getWorld();
-			Vector start = Vector.getEyePos(caster);
-			Vector direction = Vector.getLookRectangular(caster);
+			Vector start = Vector.getEyePos(entity);
+			Vector direction = Vector.getLookRectangular(entity);
 
-			Predicate<Entity> filter = entity -> entity != caster && entity instanceof EntityLivingBase;
+			Predicate<Entity> filter = candidate -> candidate != entity && candidate instanceof
+					EntityLivingBase;
 			List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, 10, filter);
 
 			if (!hit.isEmpty()) {
@@ -46,6 +49,8 @@ public class AbilitySandPrison extends Ability {
 					EntitySandPrison.imprison(prisoner);
 					world.playSound(null, prisoner.getPosition(), SoundEvents.BLOCK_SAND_STEP,
 							SoundCategory.PLAYERS, 1, 1);
+				} else {
+					bender.sendMessage("avatar.sandPrisonDisabled");
 				}
 			}
 
