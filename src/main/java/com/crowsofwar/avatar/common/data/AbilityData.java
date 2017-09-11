@@ -66,10 +66,8 @@ public class AbilityData {
 		return Abilities.get(abilityName);
 	}
 
-	@Nullable
 	public String getAbilityName() {
-		Ability abil = getAbility();
-		return abil != null ? abil.getName() : null;
+		return abilityName;
 	}
 
 	/**
