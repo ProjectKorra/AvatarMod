@@ -30,7 +30,7 @@ public class AbilitySandPrison extends Ability {
 	@Override
 	public void execute(AbilityContext ctx) {
 
-		if (ctx.consumeChi(ConfigStats.STATS_CONFIG.chiPrison)) {
+		if (ctx.consumeChi(ConfigStats.STATS_CONFIG.chiSandPrison)) {
 
 			EntityLivingBase caster = ctx.getBenderEntity();
 			World world = ctx.getWorld();

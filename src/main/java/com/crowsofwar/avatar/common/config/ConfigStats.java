@@ -80,6 +80,7 @@ public class ConfigStats {
 			chiWaterSkateSecond = 0.5f,
 			chiWallOneSecond = 0.125f,
 			chiPrison = 5,
+			chiSandPrison = 3,
 			chiLightning = 6;
 	// @formatter:on
 	
