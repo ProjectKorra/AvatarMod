@@ -492,6 +492,8 @@ public class BendingData {
 
 	public void readFromNbt(NBTTagCompound readFrom) {
 
+		// @formatter:off
+
 		List<BendingStyle> bendings = new ArrayList<>();
 		AvatarUtils.readList(bendings,
 				compound -> BendingStyles.get(compound.getUniqueId("ControllerID")), readFrom,
@@ -510,16 +512,17 @@ public class BendingData {
 		}
 
 		Map<String, AbilityData> abilityData = new HashMap<>();
-		AvatarUtils.readMap(abilityData, nbt -> nbt.getString("Name"), nbt -> {
-			String abilityName = nbt.getString("Name");
-			AbilityData data = new AbilityData(this, abilityName);
-			data.readFromNbt(nbt);
-			return data;
-		}, readFrom, "AbilityData");
-		clearAbilityData();
-		for (Map.Entry<String, AbilityData> entry : abilityData.entrySet()) {
-			setAbilityData(entry.getKey(), entry.getValue());
-		}
+		AvatarUtils.readMap(abilityData,
+				// AbilityData key compound - identify the AD
+				nbt -> nbt.getString("Name"),
+				// AbilityData value compound - actual AD data
+				nbt -> {
+					String abilityName = nbt.getString("Name");
+					AbilityData data = new AbilityData(this, abilityName);
+					data.readFromNbt(nbt);
+					return data;
+				}, readFrom, "AbilityData");
+		setAbilityDataMap(abilityData);
 
 		getMiscData().readFromNbt(nestedCompound(readFrom, "Misc"));
 
@@ -533,6 +536,8 @@ public class BendingData {
 		for (TickHandler handler : tickHandlers) {
 			addTickHandler(handler);
 		}
+
+		// @formatter:on
 
 	}
 
