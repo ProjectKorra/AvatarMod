@@ -465,28 +465,39 @@ public class BendingData {
 
 	public void writeToNbt(NBTTagCompound writeTo) {
 
-		AvatarUtils.writeList(getAllBending(),
-				(compound, controller) -> compound.setUniqueId("ControllerID", controller.getId()), writeTo,
+		// @formatter:off
+
+		AvatarUtils.writeList(bendings,
+				(compound, controllerId) -> compound.setUniqueId("ControllerID", controllerId),
+				writeTo,
 				"BendingControllers");
 
-		AvatarUtils.writeList(getAllStatusControls(),
-				(nbtTag, control) -> nbtTag.setInteger("Id", control.id()), writeTo, "StatusControls");
+		AvatarUtils.writeList(statusControls,
+				(nbtTag, control) -> nbtTag.setInteger("Id", control.id()),
+				writeTo,
+				"StatusControls");
 
-		AvatarUtils.writeMap(getAbilityDataMap(), //
-				(nbt, abilityName) -> {
-					nbt.setString("Name", abilityName);
-				}, (nbt, data) -> {
+		AvatarUtils.writeMap(getAbilityDataMap(),
+				// AbilityData key compound - identification info for the AD
+				(nbt, abilityName) -> nbt.setString("Name", abilityName),
+				// AbilityData value compound - write the actual data
+				(nbt, data) -> {
 					nbt.setString("Name", data.getAbilityName());
 					data.writeToNbt(nbt);
-				}, writeTo, "AbilityData");
+				},
+				writeTo,
+				"AbilityData");
 
 		getMiscData().writeToNbt(nestedCompound(writeTo, "Misc"));
 
 		chi().writeToNBT(writeTo);
 
-		AvatarUtils.writeList(getAllTickHandlers(), //
-				(nbt, handler) -> nbt.setInteger("Id", handler.id()), //
-				writeTo, "TickHandlers");
+		AvatarUtils.writeList(tickHandlers,
+				(nbt, handler) -> nbt.setInteger("Id", handler.id()),
+				writeTo,
+				"TickHandlers");
+
+		// @formatter:on
 
 	}
 
