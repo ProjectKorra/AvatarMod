@@ -494,24 +494,16 @@ public class BendingData {
 
 		// @formatter:off
 
-		List<BendingStyle> bendings = new ArrayList<>();
 		AvatarUtils.readList(bendings,
-				compound -> BendingStyles.get(compound.getUniqueId("ControllerID")), readFrom,
+				compound -> compound.getUniqueId("ControllerID"),
+				readFrom,
 				"BendingControllers");
-		clearBending();
-		for (BendingStyle bending : bendings) {
-			addBending(bending);
-		}
 
-		List<StatusControl> scs = new ArrayList<>();
-		AvatarUtils.readList(scs, nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")), readFrom,
+		AvatarUtils.readList(statusControls,
+				nbtTag -> StatusControl.lookup(nbtTag.getInteger("Id")),
+				readFrom,
 				"StatusControls");
-		clearStatusControls();
-		for (StatusControl sc : scs) {
-			addStatusControl(sc);
-		}
 
-		Map<String, AbilityData> abilityData = new HashMap<>();
 		AvatarUtils.readMap(abilityData,
 				// AbilityData key compound - identify the AD
 				nbt -> nbt.getString("Name"),
@@ -522,20 +514,14 @@ public class BendingData {
 					data.readFromNbt(nbt);
 					return data;
 				}, readFrom, "AbilityData");
-		setAbilityDataMap(abilityData);
 
 		getMiscData().readFromNbt(nestedCompound(readFrom, "Misc"));
 
 		chi().readFromNBT(readFrom);
 
-		List<TickHandler> tickHandlers = new ArrayList<>();
 		AvatarUtils.readList(tickHandlers, //
 				nbt -> TickHandler.fromId(nbt.getInteger("Id")), //
 				readFrom, "TickHandlers");
-		clearTickHandlers();
-		for (TickHandler handler : tickHandlers) {
-			addTickHandler(handler);
-		}
 
 		// @formatter:on
 
