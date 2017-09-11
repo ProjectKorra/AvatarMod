@@ -154,10 +154,21 @@ public class AvatarUtils {
 			K key = keyProvider.apply(item.getCompoundTag("Key"));
 			V value = valueProvider.apply(item.getCompoundTag("Value"));
 
-			if (key == null) throw new DiskException(
-					"readMap- cannot have null key: " + item.getCompoundTag("Key") + " in compound " + nbt);
-			if (value == null) throw new DiskException("readMap- cannot have null value: "
-					+ item.getCompoundTag("Value") + " in compound " + nbt);
+			if (key == null) {
+				// look @ dis industry standard pro debugging techniques
+				AvatarLog.error("MapError: Issue reading map " + mapName + "'s key for item " + i);
+				AvatarLog.error("MapError: Item compound- " + item);
+				AvatarLog.error("MapError: Key compound- " + item.getCompoundTag("Key"));
+				throw new DiskException("readMap- Cannot have null key for map (see log for " +
+						"details)");
+			}
+			if (value == null) {
+				AvatarLog.error("MapError: Issue reading map " + mapName + "'s value for item" + i);
+				AvatarLog.error("MapError: Item compound- " + item);
+				AvatarLog.error("MapError: Value compound- " + item.getCompoundTag("Value"));
+				throw new DiskException("readMap- Cannot have null value for map (see log for " +
+						"details)");
+			}
 
 			map.put(key, value);
 		}
