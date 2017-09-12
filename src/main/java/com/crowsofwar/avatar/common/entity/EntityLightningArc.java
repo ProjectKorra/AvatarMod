@@ -2,10 +2,12 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,6 +24,7 @@ import org.joml.SimplexNoise;
 import org.joml.Vector4d;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -56,6 +59,23 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	 */
 	private int stuckTime;
 
+	/**
+	 * Whether the lightning was <b>attempted to be redirected</b> by stuckTo (ie, the targeted
+	 * player). Redirected lightning will no longer attempt to damage the target; this prevents issues where target
+	 * redirects lightning multiple times.
+	 * <p>
+	 * It is possible stuckTo failed to redirect the lightning; in this case wasRedirected will
+	 * remain true, and stuckTo will not attempt to redirect lightning again (only gets one chance).
+	 */
+	private boolean wasRedirected;
+
+	/**
+	 * Whether the lightning was created through redirecting a first lightning. Not to be
+	 * confused with {@link #wasRedirected}, which is whether a first lightning got redirected to
+	 * make a second lightning.
+	 */
+	private boolean createdByRedirection;
+
 	private float damage;
 
 	private LightningFloodFill floodFill;
@@ -88,13 +108,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		}
 
 		if (getOwner() != null) {
-			Vector ownerPosition = Vector.getEyePos(getOwner());
+			Vector controllerPos = Vector.getEyePos(getOwner());
 			Vector endPosition = getEndPos();
-			Vector position = ownerPosition;
+			Vector position = controllerPos;
 
 			// position slightly below eye height
 			position = position.minusY(0.3);
-			// position slightly away from owner
+			// position slightly away from controller
 			position = position.plus(endPosition.minus(position).dividedBy(10));
 
 			setEndPos(position);
@@ -106,7 +126,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (stuckTo != null) {
 			setPosition(Vector.getEyePos(stuckTo));
 			setVelocity(Vector.ZERO);
-			damageEntity(stuckTo, 0.333f);
+			if (!wasRedirected) {
+				damageEntity(stuckTo, 0.333f);
+			}
 		}
 
 		if (velocity().equals(Vector.ZERO)) {
@@ -169,6 +191,22 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		}
 	}
 
+	/**
+	 * Custom lightning collision detection which uses raytrace. Required since lightning moves
+	 * quickly and can sometimes "glitch" through an entity without detecting the collision.
+	 */
+	@Override
+	protected void collideWithNearbyEntities() {
+
+		List<Entity> collisions = Raytrace.entityRaytrace(world, position(), velocity(), velocity
+				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+
+		for (Entity collided : collisions) {
+			onCollideWithEntity(collided);
+		}
+
+	}
+
 	private void handleWaterElectrocution(EntityLivingBase entity) {
 
 		double distance = entity.getDistanceToEntity(this);
@@ -179,8 +217,16 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private void damageEntity(EntityLivingBase entity, float damageModifier) {
 
-		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
-		if (entity.attackEntityFrom(damageSource, damage * damageModifier)) {
+		// Handle lightning redirection
+		boolean redirected = false;
+		if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported
+				(entity)) {
+			redirected = Bender.get(entity).redirectLightning(this);
+			wasRedirected = true;
+		}
+
+		DamageSource damageSource = createDamageSource(entity);
+		if (!redirected && entity.attackEntityFrom(damageSource, damage * damageModifier)) {
 
 			entity.setFire(4);
 
@@ -200,6 +246,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			}
 		}
 
+	}
+
+	private DamageSource createDamageSource(EntityLivingBase target) {
+		if (createdByRedirection) {
+			return AvatarDamageSource.causeRedirectedLightningDamage(target, getOwner());
+		} else {
+			return AvatarDamageSource.causeLightningDamage(target, getOwner());
+		}
 	}
 
 	@Override
@@ -271,6 +325,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	 */
 	public void setMainArc(boolean mainArc) {
 		dataManager.set(SYNC_MAIN_ARC, mainArc);
+	}
+
+	public boolean isCreatedByRedirection() {
+		return createdByRedirection;
+	}
+
+	public void setCreatedByRedirection(boolean createdByRedirection) {
+		this.createdByRedirection = createdByRedirection;
 	}
 
 	public class LightningControlPoint extends ControlPoint {

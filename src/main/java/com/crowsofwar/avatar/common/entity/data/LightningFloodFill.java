@@ -63,8 +63,6 @@ public class LightningFloodFill {
 
 		BlockPos pos = waterBlocksQueue.poll();
 
-		System.out.println("Looking at you, " + pos);
-
 		// Detect entities at this BlockPos
 
 		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new

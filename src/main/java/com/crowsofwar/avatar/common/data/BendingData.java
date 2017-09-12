@@ -248,7 +248,7 @@ public class BendingData {
 		if (data == null) {
 			data = new AbilityData(this, Abilities.get(abilityName));
 			abilityData.put(abilityName, data);
-			save(DataCategory.BENDING_LIST);
+			save(DataCategory.ABILITY_DATA);
 		}
 
 		return data;
