@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.util;
 
-import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
 import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.gorecore.util.Vector;
@@ -80,28 +80,19 @@ public class AvatarDataSerializers {
 
 		@Override
 		public Vector copyValue(Vector vec) {
-			return vec.copy();
+			return vec;
 		}
 	};
 	public static final DataSerializer<BenderInfo> SERIALIZER_BENDER = new AvatarSerializer<BenderInfo>() {
 		
 		@Override
 		public void write(PacketBuffer buf, BenderInfo info) {
-			buf.writeBoolean(info.isPlayer());
-			buf.writeBoolean(info.getId() != null);
-			if (info.getId() != null) {
-				buf.writeUniqueId(info.getId());
-			}
+			info.writeToBytes(buf);
 		}
 		
 		@Override
 		public BenderInfo read(PacketBuffer buf) throws IOException {
-			boolean player = buf.readBoolean();
-			if (buf.readBoolean()) {
-				return new BenderInfo(player, buf.readUniqueId());
-			} else {
-				return new BenderInfo(player, null);
-			}
+			return BenderInfo.readFromBytes(buf);
 		}
 		
 		@Override
@@ -125,7 +116,7 @@ public class AvatarDataSerializers {
 		@Override
 		public SaddleTier read(PacketBuffer buf) throws IOException {
 			int id = buf.readInt();
-			return id == -1 ? null : SaddleTier.fromId(id);
+			return id == -1 ? null : SaddleTier.get(id);
 		}
 		
 		@Override
@@ -148,7 +139,7 @@ public class AvatarDataSerializers {
 		@Override
 		public ArmorTier read(PacketBuffer buf) throws IOException {
 			int id = buf.readInt();
-			return id == -1 ? null : ArmorTier.fromId(id);
+			return id == -1 ? null : ArmorTier.get(id);
 		}
 		
 		@Override

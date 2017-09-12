@@ -16,15 +16,14 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import java.util.Random;
-
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 /**
  * 
@@ -62,7 +61,7 @@ public class EntityAiBisonSit extends EntityAIBase {
 		Vector randomized = new Vector((random.nextDouble() * 2 - 1) * 2, 0,
 				(random.nextDouble() * 2 - 1) * 2);
 		
-		Vector targetPos = bisonPos.copy().setY(y - 1).plus(randomized);
+		Vector targetPos = bisonPos.withY(y - 1).plus(randomized);
 		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1);
 		
 	}

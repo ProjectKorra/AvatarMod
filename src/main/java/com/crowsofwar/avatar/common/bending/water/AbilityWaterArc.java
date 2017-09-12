@@ -19,13 +19,10 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
-import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -33,11 +30,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -50,9 +45,6 @@ import static java.lang.Math.toRadians;
  */
 public class AbilityWaterArc extends WaterAbility {
 	
-	/**
-	 * @param controller
-	 */
 	public AbilityWaterArc() {
 		super("water_arc");
 		requireRaytrace(-1, true);
@@ -61,6 +53,7 @@ public class AbilityWaterArc extends WaterAbility {
 	@Override
 	public void execute(AbilityContext ctx) {
 		World world = ctx.getWorld();
+		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
@@ -71,7 +64,7 @@ public class AbilityWaterArc extends WaterAbility {
 				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
 			}
 			
-			if (ctx.consumeChi(STATS_CONFIG.chiWaterArc)) {
+			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
 
@@ -121,11 +114,6 @@ public class AbilityWaterArc extends WaterAbility {
 		return null;
 		
 	}
-	
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiWaterArc(this, entity, bender);
-	}
 
 	/**
 	 * Kills already existing water arc if there is one
@@ -139,6 +127,11 @@ public class AbilityWaterArc extends WaterAbility {
 			water.setBehavior(new WaterArcBehavior.Thrown());
 		}
 
+	}
+
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiWaterArc(this, entity, bender);
 	}
 
 }

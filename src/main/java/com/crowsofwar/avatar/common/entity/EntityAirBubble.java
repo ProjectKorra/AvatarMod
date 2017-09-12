@@ -16,14 +16,10 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
-import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.material.Material;
@@ -32,7 +28,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -48,9 +43,9 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.UUID;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_BUBBLE;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 /**
  * 
@@ -59,8 +54,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityAirBubble extends AvatarEntity {
 	
-	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityAirBubble.class, AvatarDataSerializers.SERIALIZER_BENDER);
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityAirBubble.class,
@@ -76,14 +69,13 @@ public class EntityAirBubble extends AvatarEntity {
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
 			"airbubble_slowness", -.3, 2);
 	
-	private final OwnerAttribute ownerAttr;
 	private int airLeft;
 	
 	public EntityAirBubble(World world) {
 		super(world);
 		// setSize(2.5f, 2.5f);
 		setSize(0, 0);
-		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
+
 		this.airLeft = 600;
 	}
 	
@@ -96,16 +88,7 @@ public class EntityAirBubble extends AvatarEntity {
 		dataManager.register(SYNC_HOVERING, false);
 		dataManager.register(SYNC_SIZE, 2.5f);
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setOwner(owner);
-	}
-	
+
 	@Override
 	public EntityLivingBase getController() {
 		return !isDissipating() ? getOwner() : null;
@@ -136,6 +119,7 @@ public class EntityAirBubble extends AvatarEntity {
 			setDead();
 			return;
 		}
+
 		if (owner.isDead) {
 			dissipateSmall();
 			return;
@@ -151,7 +135,7 @@ public class EntityAirBubble extends AvatarEntity {
 		
 		setPosition(owner.posX, owner.posY, owner.posZ);
 
-		Bender ownerBender = ownerAttr.getOwnerBender();
+		Bender ownerBender = Bender.get(getOwner());
 		if (!world.isRemote
 				&& !ownerBender.getData().chi().consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
 
@@ -161,9 +145,8 @@ public class EntityAirBubble extends AvatarEntity {
 		
 		ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-		if (!elytraOk && !world.isRemote) {
-			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.airBubbleElytra"),
-					(EntityPlayerMP) owner);
+		if (!elytraOk) {
+			ownerBender.sendMessage("avatar.airBubbleElytra");
 			dissipateSmall();
 		}
 		
@@ -296,22 +279,16 @@ public class EntityAirBubble extends AvatarEntity {
 		
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;
-		Vector vel = new Vector(this.posX - entity.posX, this.posY - entity.posY, this.posZ - entity.posZ);
-		vel.normalize();
-		vel.mul(mult);
-		vel.add(0, .3f, 0);
-		
-		double velX = vel.x(), velY = vel.y(), velZ = vel.z();
-		
-		// Need to use addVelocity() so avatar entities can detect it
-		entity.motionX = entity.motionY = entity.motionZ = 0;
-		// entity.addVelocity(velX, velY, velZ);
-		entity.motionY = velY;
-		entity.motionX = velX;
-		entity.motionZ = velZ;
+		Vector vel = position().minus(getEntityPos(entity));
+		vel = vel.normalize().times(mult).plusY(0.3f);
+
+		entity.motionX = vel.x();
+		entity.motionY = vel.y();
+		entity.motionZ = vel.z();
+
 		if (entity instanceof AvatarEntity) {
 			AvatarEntity avent = (AvatarEntity) entity;
-			avent.velocity().set(velX, velY, velZ);
+			avent.setVelocity(vel);
 		}
 		entity.isAirBorne = true;
 		AvatarUtils.afterVelocityAdded(entity);
@@ -325,7 +302,6 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		ownerAttr.load(nbt);
 		setDissipateTime(nbt.getInteger("Dissipate"));
 		setHealth(nbt.getFloat("Health"));
 		setAllowHovering(nbt.getBoolean("AllowHovering"));
@@ -335,7 +311,6 @@ public class EntityAirBubble extends AvatarEntity {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		ownerAttr.save(nbt);
 		nbt.setInteger("Dissipate", getDissipateTime());
 		nbt.setFloat("Health", getHealth());
 		nbt.setBoolean("AllowHovering", doesAllowHovering());
@@ -357,10 +332,11 @@ public class EntityAirBubble extends AvatarEntity {
 				Entity sourceEntity = source.getTrueSource();
 				if (sourceEntity != null) {
 					if (!owner.isEntityInvulnerable(source)) {
-						BendingData data = Bender.getData(owner);
+						BendingData data = BendingData.get(owner);
 						if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
-							
-							data.getAbilityData(ABILITY_AIR_BUBBLE).addXp(SKILLS_CONFIG.airbubbleProtect);
+
+							AbilityData aData = data.getAbilityData("air_bubble");
+							aData.addXp(SKILLS_CONFIG.airbubbleProtect);
 							setHealth(getHealth() - amount);
 							return true;
 							
@@ -378,11 +354,6 @@ public class EntityAirBubble extends AvatarEntity {
 		}
 		return false;
 		
-	}
-	
-	@Override
-	public boolean tryDestroy() {
-		return false;
 	}
 	
 	public int getDissipateTime() {
@@ -435,7 +406,7 @@ public class EntityAirBubble extends AvatarEntity {
 	
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
-			BendingData data = Bender.create(getOwner()).getData();
+			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
 			

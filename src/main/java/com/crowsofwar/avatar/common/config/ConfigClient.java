@@ -16,14 +16,14 @@
 */
 package com.crowsofwar.avatar.common.config;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.gorecore.config.ConfigLoader;
+import com.crowsofwar.gorecore.config.Load;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.gorecore.config.ConfigLoader;
-import com.crowsofwar.gorecore.config.Load;
 
 /**
  * 
@@ -48,11 +48,11 @@ public class ConfigClient {
 	
 	@Load
 	private Map<String, Integer> nameKeymappings = new HashMap<>();
-	public Map<BendingAbility, Integer> keymappings = new HashMap<>();
+	public Map<Ability, Integer> keymappings = new HashMap<>();
 	
 	@Load
 	private Map<String, Boolean> nameConflicts = new HashMap<>();
-	public Map<BendingAbility, Boolean> conflicts = new HashMap<>();
+	public Map<Ability, Boolean> conflicts = new HashMap<>();
 	
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
@@ -60,8 +60,8 @@ public class ConfigClient {
 		CLIENT_CONFIG.keymappings.clear();
 		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
 		for (Map.Entry<String, Integer> entry : entries) {
-			BendingAbility ability = null;
-			for (BendingAbility a : BendingManager.allAbilities()) {
+			Ability ability = null;
+			for (Ability a : Abilities.all()) {
 				if (a.getName().equals(entry.getKey())) {
 					ability = a;
 					break;
@@ -74,8 +74,8 @@ public class ConfigClient {
 		CLIENT_CONFIG.conflicts.clear();
 		Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
 		for (Map.Entry<String, Boolean> entry : entries2) {
-			BendingAbility ability = null;
-			for (BendingAbility a : BendingManager.allAbilities()) {
+			Ability ability = null;
+			for (Ability a : Abilities.all()) {
 				if (a.getName().equals(entry.getKey())) {
 					ability = a;
 					break;
@@ -91,13 +91,13 @@ public class ConfigClient {
 	public static void save() {
 		
 		CLIENT_CONFIG.nameKeymappings.clear();
-		Set<Map.Entry<BendingAbility, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
-		for (Map.Entry<BendingAbility, Integer> entry : entries) {
+		Set<Map.Entry<Ability, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
+		for (Map.Entry<Ability, Integer> entry : entries) {
 			CLIENT_CONFIG.nameKeymappings.put(entry.getKey().getName(), entry.getValue());
 		}
 		CLIENT_CONFIG.nameConflicts.clear();
-		Set<Map.Entry<BendingAbility, Boolean>> entries2 = CLIENT_CONFIG.conflicts.entrySet();
-		for (Map.Entry<BendingAbility, Boolean> entry : entries2) {
+		Set<Map.Entry<Ability, Boolean>> entries2 = CLIENT_CONFIG.conflicts.entrySet();
+		for (Map.Entry<Ability, Boolean> entry : entries2) {
 			CLIENT_CONFIG.nameConflicts.put(entry.getKey().getName(), entry.getValue());
 		}
 		

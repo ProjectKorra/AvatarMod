@@ -17,20 +17,12 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_FIREBALL;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,6 +30,11 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -92,7 +89,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				entity.onCollideWithSolid();
 			}
 			
-			entity.velocity().add(0, -9.81 / 40, 0);
+			entity.addVelocity(0, -9.81 / 40, 0);
 			
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -104,8 +101,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 						collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion.mul(0.3);
-						motion.setY(0.08);
+						motion = motion.times(0.3).withY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 					}
 					
@@ -123,14 +119,13 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 			
 			Vector motion = entity.velocity().dividedBy(20);
-			motion.mul(STATS_CONFIG.fireballSettings.push);
-			motion.setY(0.08);
+			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
-			BendingData data = Bender.create(entity.getOwner()).getData();
+			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
-				data.getAbilityData(ABILITY_FIREBALL).addXp(xp);
+				data.getAbilityData("fireball").addXp(xp);
 			}
 			
 			// Remove the fireball & spawn particles
@@ -162,18 +157,17 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			
 			if (owner == null) return this;
 			
-			BendingData data = Bender.create(owner).getData();
+			BendingData data = Bender.get(owner).getData();
 			
 			double yaw = Math.toRadians(owner.rotationYaw);
 			double pitch = Math.toRadians(owner.rotationPitch);
 			Vector forward = Vector.toRectangular(yaw, pitch);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(new Vector(entity));
-			motion.mul(5);
-			entity.velocity().set(motion);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
+			entity.setVelocity(motion);
 			
-			if (data.getAbilityData(BendingAbility.ABILITY_FIREBALL).isMasterPath(AbilityTreePath.SECOND)) {
+			if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {
 				int size = entity.getSize();
 				if (size < 60 && entity.ticksExisted % 4 == 0) {
 					entity.setSize(size + 1);

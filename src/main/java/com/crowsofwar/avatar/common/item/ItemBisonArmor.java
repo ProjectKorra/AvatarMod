@@ -21,6 +21,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
+import javax.annotation.Nullable;
+
 /**
  * 
  * 
@@ -43,14 +45,14 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 	
 	@Override
 	public String getModelName(int meta) {
-		ArmorTier tier = ArmorTier.fromId(meta);
+		ArmorTier tier = ArmorTier.get(meta);
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return "bison_armor_" + tierName;
 	}
 	
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		ArmorTier tier = ArmorTier.fromId(stack.getMetadata());
+		ArmorTier tier = ArmorTier.get(stack.getMetadata());
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return super.getUnlocalizedName(stack) + "." + tierName;
 	}
@@ -93,15 +95,10 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 			return ordinal();
 		}
 		
-		/**
-		 * Finds the tier with the given id
-		 * 
-		 * @throws IllegalArgumentException
-		 *             when id is {@link #isValidId(int) invalid}
-		 */
-		public static ArmorTier fromId(int id) {
+		@Nullable
+		public static ArmorTier get(int id) {
 			if (!isValidId(id)) {
-				throw new IllegalArgumentException("No ArmorTier for id " + id);
+				return null;
 			}
 			return values()[id];
 		}

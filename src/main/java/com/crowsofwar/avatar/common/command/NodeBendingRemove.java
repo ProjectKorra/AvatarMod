@@ -17,27 +17,20 @@
 
 package com.crowsofwar.avatar.common.command;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.gorecore.tree.*;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.world.World;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.tree.ArgumentList;
-import com.crowsofwar.gorecore.tree.ArgumentOptions;
-import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
-import com.crowsofwar.gorecore.tree.CommandCall;
-import com.crowsofwar.gorecore.tree.IArgument;
-import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.NodeFunctional;
-
-import net.minecraft.command.ICommandSender;
-import net.minecraft.world.World;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 public class NodeBendingRemove extends NodeFunctional {
 	
 	private final IArgument<String> argPlayerName;
-	private final IArgument<List<BendingController>> argBendingController;
+	private final IArgument<List<BendingStyle>> argBendingController;
 	
 	public NodeBendingRemove() {
 		super("remove", true);
@@ -60,19 +53,19 @@ public class NodeBendingRemove extends NodeFunctional {
 		ArgumentList args = call.popArguments(this);
 		
 		String playerName = args.get(argPlayerName);
-		List<BendingController> controllers = args.get(argBendingController);
+		List<BendingStyle> controllers = args.get(argBendingController);
 		
-		for (BendingController controller : controllers) {
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(world, playerName);
+		for (BendingStyle controller : controllers) {
+			BendingData data = BendingData.get(world, playerName);
 			if (data == null) {
 				MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
 			} else {
 				
 				if (data.hasBending(controller)) {
 					data.removeBending(controller);
-					MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getControllerName());
+					MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getName());
 				} else {
-					MSG_BENDING_REMOVE_DOESNT_HAVE.send(sender, playerName, controller.getControllerName());
+					MSG_BENDING_REMOVE_DOESNT_HAVE.send(sender, playerName, controller.getName());
 				}
 			}
 		}

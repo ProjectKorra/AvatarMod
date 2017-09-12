@@ -20,7 +20,7 @@ package com.crowsofwar.avatar.client.gui;
 import static com.crowsofwar.avatar.client.gui.RadialMenu.*;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 
 import net.minecraft.client.Minecraft;
@@ -40,9 +40,9 @@ public class RadialSegment extends Gui {
 	private final Minecraft mc;
 	private final float angle;
 	private final int index;
-	private final BendingAbility ability;
+	private final Ability ability;
 	
-	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, BendingAbility ability) {
+	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, Ability ability) {
 		this.gui = gui;
 		this.angle = 22.5f + index * 45;
 		this.index = index;

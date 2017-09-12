@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,16 +43,15 @@ public class SleepChiRegenHandler {
 	@SubscribeEvent
 	public void onSlept(PlayerWakeUpEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
+		BendingData data = BendingData.get(player);
+		Chi chi = data.chi();
 		World world = player.world;
 		
 		if (world.getWorldTime() % 24000 <= 2) {
-			BendingData data = Bender.getData(player);
-			Chi chi = data.chi();
-			
 			chi.setAvailableChi(chi.getMaxChi() * CHI_CONFIG.availableThreshold);
 			chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
 		}
-		
+
 	}
 	
 }

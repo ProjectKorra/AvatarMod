@@ -17,18 +17,17 @@
 
 package com.crowsofwar.avatar.common.config;
 
-import static net.minecraft.init.Blocks.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.minecraft.init.Blocks.*;
 
 /**
  * 
@@ -79,8 +78,10 @@ public class ConfigStats {
 			chiWaterArc = 1f,
 			chiWaterBubble = 1.25f,
 			chiWaterSkateSecond = 0.5f,
-			chiWallOneSecond = 0.125f;
-
+			chiWallOneSecond = 0.125f,
+			chiPrison = 5,
+			chiSandPrison = 3,
+			chiLightning = 6;
 	// @formatter:on
 	
 	@Load

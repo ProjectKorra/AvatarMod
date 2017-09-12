@@ -20,10 +20,10 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.EntityLiving;
@@ -41,7 +41,7 @@ public class AiAirGust extends BendingAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiAirGust(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiAirGust(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
 	

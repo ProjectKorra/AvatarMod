@@ -64,6 +64,10 @@ public class MenuTheme {
 			this.hoverB = hoverB;
 		}
 		
+		public ThemeColor(int rgb, int rgbHover) {
+			this(new Color(rgb), new Color(rgbHover));
+		}
+		
 		public int getRed(boolean hover) {
 			return hover ? hoverR : r;
 		}

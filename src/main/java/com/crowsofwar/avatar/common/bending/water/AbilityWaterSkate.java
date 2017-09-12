@@ -31,7 +31,7 @@ public class AbilityWaterSkate extends WaterAbility {
 	public AbilityWaterSkate() {
 		super("water_skate");
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();

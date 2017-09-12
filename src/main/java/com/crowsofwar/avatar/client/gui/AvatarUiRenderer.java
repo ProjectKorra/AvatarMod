@@ -17,15 +17,13 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
+import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -46,9 +44,12 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
+import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.entity.EntityIcePrison.IMPRISONED_TIME;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
@@ -88,6 +89,7 @@ public class AvatarUiRenderer extends Gui {
 		renderChiMsg(resolution);
 		renderActiveBending(resolution);
 		renderAirBubbleHealth(resolution);
+		renderPrisonCracks(resolution);
 		
 	}
 	
@@ -123,8 +125,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 	
 	private void renderStatusControls(ScaledResolution resolution) {
-		List<StatusControl> statusControls = AvatarPlayerData.fetcher().fetch(mc.player)
-				.getAllStatusControls();
+		List<StatusControl> statusControls = BendingData.get(mc.player).getAllStatusControls();
 		for (StatusControl statusControl : statusControls) {
 			mc.getTextureManager().bindTexture(AvatarUiTextures.STATUS_CONTROL_ICONS);
 			int centerX = resolution.getScaledWidth() / 2;
@@ -149,7 +150,7 @@ public class AvatarUiRenderer extends Gui {
 		
 		GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		
 		if (data.getAllBending().isEmpty()) return;
 		
@@ -219,7 +220,7 @@ public class AvatarUiRenderer extends Gui {
 	
 	private void renderActiveBending(ScaledResolution res) {
 		
-		BendingData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		
 		if (data.getActiveBending() != null) {
 			
@@ -227,8 +228,9 @@ public class AvatarUiRenderer extends Gui {
 			drawBendingIcon(0, 0, data.getActiveBending());
 			
 			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
-			List<BendingController> allBending = data.getAllBending();
-			allBending.sort(Comparator.comparing(BendingController::getControllerName));
+
+			List<BendingStyle> allBending = data.getAllBending();
+			allBending.sort(Comparator.comparing(BendingStyle::getName));
 
 			// Draw next
 			int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
@@ -256,10 +258,10 @@ public class AvatarUiRenderer extends Gui {
 		
 	}
 	
-	private void drawBendingIcon(int xOff, int yOff, BendingController controller) {
+	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller) {
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
-		int u = 50 * (controller.getType().id() - 1);
+		int u = 50 * (BendingStyles.getNetworkId(controller.getId()) - 1); // TODO use individual texture for each bending
 		int v = 137;
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		drawTexturedModalRect(x, y, u, v, 50, 50);
@@ -272,7 +274,7 @@ public class AvatarUiRenderer extends Gui {
 		
 		World world = mc.world;
 		EntityPlayer player = mc.player;
-		BendingData data = Bender.getData(player);
+		BendingData data = BendingData.get(player);
 		
 		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 			EntityAirBubble bubble = EntityAirBubble.lookupControlledEntity(world, EntityAirBubble.class,
@@ -306,9 +308,46 @@ public class AvatarUiRenderer extends Gui {
 		
 	}
 	
-	public static void openBendingGui(BendingType bending) {
+	private void renderPrisonCracks(ScaledResolution res) {
 		
-		BendingController controller = BendingManager.getBending(bending);
+		EntityPlayer player = mc.player;
+		EntityIcePrison prison = EntityIcePrison.getPrison(player);
+		if (prison != null) {
+			
+			GlStateManager.pushMatrix();
+			
+			float scaledWidth = res.getScaledWidth();
+			float scaledHeight = res.getScaledHeight();
+			float scaleX = scaledWidth / 256;
+			float scaleY = scaledHeight / 256;
+			float scale = Math.max(scaleX, scaleY);
+			
+			// Width of screen: scaledWidth
+			// Width of ice: scale * 256
+			
+			GlStateManager.translate((scaledWidth - scale * 256) / 2, (scaledHeight - scale * 256) / 2, 0);
+			GlStateManager.scale(scale, scale, 1);
+			
+			mc.renderEngine.bindTexture(AvatarUiTextures.ICE);
+			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			
+			color(1, 1, 1, 0.5f);
+			float percent = (float) prison.ticksExisted / IMPRISONED_TIME;
+			int crackIndex = (int) (percent * percent * percent * (BLOCK_BREAK.length + 1)) - 1;
+			if (crackIndex > -1) {
+				mc.renderEngine.bindTexture(BLOCK_BREAK[crackIndex]);
+				drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			}
+			
+			GlStateManager.popMatrix();
+			
+		}
+		
+	}
+	
+	public static void openBendingGui(UUID bending) {
+		
+		BendingStyle controller = BendingStyles.get(bending);
 		BendingMenuInfo menu = controller.getRadialMenu();
 		
 		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getButtons());

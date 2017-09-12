@@ -17,16 +17,16 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -35,22 +35,21 @@ import net.minecraft.world.World;
  */
 public class AbilityRavine extends EarthAbility {
 	
-	/**
-	 * @param controller
-	 */
 	public AbilityRavine() {
 		super("ravine");
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
+
+		Bender bender = ctx.getBender();
 		
 		float chi = STATS_CONFIG.chiRavine;
 		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 			chi *= 1.5f;
 		}
 		
-		if (ctx.consumeChi(chi)) {
+		if (bender.consumeChi(chi)) {
 			
 			AbilityData abilityData = ctx.getData().getAbilityData(this);
 			float xp = abilityData.getTotalXp();
@@ -65,7 +64,7 @@ public class AbilityRavine extends EarthAbility {
 			EntityRavine ravine = new EntityRavine(world);
 			ravine.setOwner(entity);
 			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
-			ravine.velocity().set(look.times(mult));
+			ravine.setVelocity(look.times(mult));
 			ravine.setDamageMult(.75f + xp / 100);
 			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
@@ -75,5 +74,5 @@ public class AbilityRavine extends EarthAbility {
 		}
 		
 	}
-	
+
 }

@@ -48,7 +48,7 @@ public class PacketCErrorMessage extends AvatarPacket<PacketCErrorMessage> {
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.CLIENT;
 	}
 	

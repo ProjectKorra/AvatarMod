@@ -73,7 +73,6 @@ public abstract class AvatarParticle extends Particle {
 		mc.getTextureManager().bindTexture(frame.texture);
 		vb.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 		if (additiveBlending) {
-			// TODO Change textures of fire to make it look less "cartoony"
 			GlStateManager.blendFunc(SourceFactor.ONE, DestFactor.ONE);
 		}
 		

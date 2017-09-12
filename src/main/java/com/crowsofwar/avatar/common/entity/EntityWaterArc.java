@@ -17,10 +17,11 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -35,7 +36,7 @@ import java.util.Random;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 
-public class EntityWaterArc extends EntityArc {
+public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
 	
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
@@ -70,12 +71,12 @@ public class EntityWaterArc extends EntityArc {
 	}
 	
 	@Override
-	public void onCollideWithSolid() {
+	public boolean onCollideWithSolid() {
 		
 		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
-			if (tryDestroy()) {
-				setDead();
-			}
+			setDead();
+			cleanup();
+			return true;
 		}
 		
 		if (world.isRemote) {
@@ -119,13 +120,16 @@ public class EntityWaterArc extends EntityArc {
 			}
 			
 		}
+
+		return false;
 		
 	}
-	
+
 	@Override
-	protected Vector getGravityVector() {
-		// Gravity is added in Behavior
-		return Vector.ZERO;
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onMinorWaterContact();
+		}
 	}
 	
 	@Override
@@ -146,7 +150,7 @@ public class EntityWaterArc extends EntityArc {
 		if (inWater && behavior instanceof WaterArcBehavior.PlayerControlled) {
 			// try to go upwards
 			for (double i = 0.1; i <= 3; i += 0.05) {
-				BlockPos pos = new Vector(this).add(0, i, 0).toBlockPos();
+				BlockPos pos = new Vector(this).plus(0, i, 0).toBlockPos();
 				if (world.getBlockState(pos).getBlock() == Blocks.AIR) {
 					setPosition(posX, posY + i, posZ);
 					inWater = false;
@@ -156,17 +160,9 @@ public class EntityWaterArc extends EntityArc {
 		}
 		
 	}
-	
-	public static EntityWaterArc findFromId(World world, int id) {
-		for (Object obj : world.loadedEntityList) {
-			if (obj instanceof EntityWaterArc && ((EntityWaterArc) obj).getId() == id)
-				return (EntityWaterArc) obj;
-		}
-		return null;
-	}
-	
+
 	@Override
-	protected ControlPoint createControlPoint(float size) {
+	protected WaterControlPoint createControlPoint(float size, int index) {
 		return new WaterControlPoint(this, size, 0, 0, 0);
 	}
 	
@@ -198,13 +194,11 @@ public class EntityWaterArc extends EntityArc {
 		return 9;
 	}
 	
-	@Override
-	public boolean tryDestroy() {
+	private void cleanup() {
 		if (getOwner() != null) {
-			BendingData data = Bender.create(getOwner()).getData();
+			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(THROW_WATER);
 		}
-		return true;
 	}
 
 	public static class WaterControlPoint extends ControlPoint {

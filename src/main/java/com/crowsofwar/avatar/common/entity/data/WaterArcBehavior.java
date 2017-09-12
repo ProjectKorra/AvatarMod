@@ -18,13 +18,12 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -33,7 +32,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -63,10 +61,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		public WaterArcBehavior onUpdate(EntityWaterArc water) {
 			
 			EntityLivingBase owner = water.getOwner();
-			World world = owner.world;
-			
 			if (owner == null) return this;
-			
+
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 			
 			Vector target;
@@ -79,8 +75,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			
 			Vector motion = target.minus(water.position());
-			motion.mul(.3 * 20);
-			water.velocity().set(motion);
+			motion = motion.times(0.3 * 20);
+			water.setVelocity(motion);
 			
 			if (water.world.isRemote && water.canPlaySplash()) {
 				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
@@ -113,15 +109,15 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			BendingData data = null;
 			AbilityData abilityData = null;
 
-			Bender bender = Bender.create(entity.getOwner());
+			Bender bender = Bender.get(entity.getOwner());
 			if (bender != null) {
 				data = bender.getData();
-				abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_ARC);
+				abilityData = data.getAbilityData("water_arc");
 				waterSpear = abilityData.isMasterPath(AbilityTreePath.SECOND);
 			}
 
 			if (waterSpear || entity.ticksExisted >= 40) {
-				entity.velocity().add(0, -9.81 / 60, 0);
+				entity.setVelocity(entity.velocity().minusY(9.81 / 60));
 			}
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(

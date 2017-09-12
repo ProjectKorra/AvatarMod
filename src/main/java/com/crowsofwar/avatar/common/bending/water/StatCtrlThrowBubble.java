@@ -17,10 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
-
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -30,6 +26,9 @@ import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
+
+import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
 /**
  * 
@@ -54,14 +53,14 @@ public class StatCtrlThrowBubble extends StatusControl {
 		
 		if (bubble != null) {
 			
-			AbilityData adata = data.getAbilityData(BendingAbility.ABILITY_WATER_BUBBLE);
+			AbilityData adata = data.getAbilityData("water_bubble");
 			double mult = adata.getLevel() >= 1 ? 14 : 8;
 			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
 				mult = 20;
 			}
 			
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
-			bubble.velocity().set(Vector.getLookRectangular(ctx.getBenderEntity()).mul(mult));
+			bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(mult));
 		}
 		
 		return true;

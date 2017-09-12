@@ -18,21 +18,19 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
-public class EntityFireArc extends EntityArc {
+public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	
 	private static final Vector GRAVITY = new Vector(0, -9.81 / 60, 0);
 	
@@ -56,33 +54,27 @@ public class EntityFireArc extends EntityArc {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (inWater || world.isRainingAt(getPosition())) {
-			setDead();
-			Random random = new Random();
-			if (world.isRemote) {
-				int particles = random.nextInt(3) + 4;
-				for (int i = 0; i < particles; i++) {
-					world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
-							(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
-							(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
-				}
-			}
-			world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-					SoundCategory.PLAYERS, 1, random.nextFloat() * 0.3f + 1.1f, false);
-		}
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != newBehavior) setBehavior(newBehavior);
 	}
-	
-	public static EntityFireArc findFromId(World world, int id) {
-		return (EntityFireArc) EntityArc.findFromId(world, id);
-	}
-	
+
 	@Override
-	public void setDead() {
-		super.setDead();
+	public boolean onMajorWaterContact() {
+		spawnExtinguishIndicators();
+		setDead();
+		return true;
+	}
+
+	@Override
+	public boolean onMinorWaterContact() {
+		spawnExtinguishIndicators();
+		setDead();
+		return true;
+	}
+
+	private void cleanup() {
 		if (getOwner() != null) {
-			BendingData data = Bender.create(getOwner()).getData();
+			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIRE);
 			if (!world.isRemote) {
 				data.removeStatusControl(StatusControl.THROW_FIRE);
@@ -91,12 +83,42 @@ public class EntityFireArc extends EntityArc {
 	}
 
 	@Override
-	protected Vector getGravityVector() {
-		return GRAVITY;
+	public void setDead() {
+		super.setDead();
+		cleanup();
 	}
 	
 	@Override
-	public ControlPoint createControlPoint(float size) {
+	public boolean onCollideWithSolid() {
+
+		if (!(getBehavior() instanceof FireArcBehavior.Thrown)) {
+			return false;
+		}
+
+		if (!world.isRemote) {
+			int x = (int) Math.floor(posX);
+			int y = (int) Math.floor(posY);
+			int z = (int) Math.floor(posZ);
+			BlockPos pos = new BlockPos(x, y, z);
+			world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			
+			if (createBigFire) {
+				for (EnumFacing dir : EnumFacing.HORIZONTALS) {
+					BlockPos offsetPos = pos.offset(dir);
+					if (world.isAirBlock(offsetPos)) {
+						world.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
+					}
+				}
+			}
+
+			setDead();
+
+		}
+		return true;
+	}
+	
+	@Override
+	public FireControlPoint createControlPoint(float size, int index) {
 		return new FireControlPoint(this, size, 0, 0, 0);
 	}
 	

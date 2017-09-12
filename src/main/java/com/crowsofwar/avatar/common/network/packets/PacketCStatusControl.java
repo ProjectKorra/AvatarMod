@@ -49,7 +49,7 @@ public class PacketCStatusControl extends AvatarPacket<PacketCStatusControl> {
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.CLIENT;
 	}
 	

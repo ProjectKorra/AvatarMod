@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.network.packets;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.data.AbstractBendingData;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.DataCategory;
@@ -46,7 +45,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	 * Used server-side to find what to write<br />
 	 * Used client-side to write to
 	 */
-	private AvatarPlayerData data;
+	private BendingData data;
 	private UUID playerId;
 	
 	// We need a SortedSet since the order of writing/reading the data is
@@ -58,7 +57,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	
 	public PacketCPlayerData() {}
 	
-	public PacketCPlayerData(AvatarPlayerData data, UUID player, SortedSet<DataCategory> changed) {
+	public PacketCPlayerData(BendingData data, UUID player, SortedSet<DataCategory> changed) {
 		this.data = data;
 		this.playerId = player;
 		this.changed = changed;
@@ -67,9 +66,10 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
+
 		final BendingData data = AvatarPlayerData.fetcher()
-				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId);
-		
+				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId).getData();
+
 		if (data != null) {
 			
 			// Find what changed
@@ -85,7 +85,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 					category.read(buf, data);
 				}
 			});
-			
+
 		} else {
 			AvatarLog.warn(WarningType.WEIRD_PACKET, "Server sent a packet about data for player " + playerId
 					+ " but data couldn't be found for them");
@@ -94,10 +94,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 			// They aren't used, but this is necessary since read/write need to use same number
 			// of bytes (or there will be big problems)
 
-			BendingData trashData = new AbstractBendingData() {
-				@Override
-				public void save(DataCategory category) {}
-			};
+			BendingData trashData = new BendingData(dataCategory -> {}, () -> {});
 
 			changed = new TreeSet<>();
 			int size = buf.readInt();
@@ -130,7 +127,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.CLIENT;
 	}
 	

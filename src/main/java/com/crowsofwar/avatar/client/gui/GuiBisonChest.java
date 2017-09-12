@@ -17,13 +17,9 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import static net.minecraft.client.Minecraft.getMinecraft;
-import static net.minecraft.client.gui.inventory.GuiInventory.drawEntityOnScreen;
-
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -31,6 +27,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import static net.minecraft.client.Minecraft.getMinecraft;
+import static net.minecraft.client.gui.inventory.GuiInventory.drawEntityOnScreen;
 
 @SideOnly(Side.CLIENT)
 public class GuiBisonChest extends GuiContainer implements AvatarGui {
@@ -72,6 +71,9 @@ public class GuiBisonChest extends GuiContainer implements AvatarGui {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+
+		drawDefaultBackground();
+
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		int x = (this.width - this.xSize) / 2;

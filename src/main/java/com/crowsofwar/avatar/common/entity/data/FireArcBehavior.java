@@ -18,25 +18,20 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -71,13 +66,11 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			if (owner == null) {
 				return this;
 			}
-			World world = owner.world;
-			
+
 			Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 					Math.toRadians(owner.rotationPitch));
 			Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
-			Vector motion = lookPos.minus(new Vector(entity));
-			motion.mul(.3);
+			Vector motion = lookPos.minus(new Vector(entity)).times(0.3);
 			entity.move(MoverType.SELF, motion.x(), motion.y(), motion.z());
 			
 			return this;
@@ -102,7 +95,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 		
 		@Override
 		public FireArcBehavior onUpdate(EntityFireArc entity) {
-			entity.velocity().add(0, -9.81 / 60, 0);
+			entity.addVelocity(0, -9.81 / 60, 0);
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
@@ -117,9 +110,9 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				collided.setFire(3);
 				
 				if (!entity.world.isRemote) {
-					BendingData data = Bender.create(entity.getOwner()).getData();
+					BendingData data = Bender.get(entity.getOwner()).getData();
 					if (data != null) {
-						data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC)
+						data.getAbilityData("fire_arc")
 								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
 					}
 				}
@@ -127,32 +120,11 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			}
 			
 			if (!collidedList.isEmpty() && entity.getOwner() != null) {
-				BendingData data = Bender.getData(entity.getOwner());
-				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FIRE_ARC);
+				BendingData data = BendingData.get(entity.getOwner());
+				AbilityData abilityData = data.getAbilityData("fire_arc");
 				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 					data.addStatusControl(StatusControl.THROW_FIRE);
 					return new FireArcBehavior.PlayerControlled();
-				}
-			}
-
-
-			// Light fire at ground position
-			if (entity.isCollided) {
-				World world = entity.world;
-				BlockPos pos = entity.getPosition();
-				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-
-				if (entity.getCreateBigFire()) {
-					for (EnumFacing dir : EnumFacing.HORIZONTALS) {
-						BlockPos offsetPos = pos.offset(dir);
-						if (world.isAirBlock(offsetPos)) {
-							world.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
-						}
-					}
-				}
-
-				if (entity.tryDestroy()) {
-					entity.setDead();
 				}
 			}
 

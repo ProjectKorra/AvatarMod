@@ -17,35 +17,33 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
-import static com.crowsofwar.avatar.common.bending.BendingType.WATERBENDING;
-
-import java.awt.Color;
-
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-
 import net.minecraft.nbt.NBTTagCompound;
 
-public class Waterbending extends BendingController {
-	
+import java.awt.*;
+import java.util.UUID;
+
+public class Waterbending extends BendingStyle {
+
+	public static UUID ID = UUID.fromString("33486f81-29cc-4f7e-84ee-972a73b03b95");
+
 	private BendingMenuInfo menu;
 	
 	public Waterbending() {
-		addAbility(ABILITY_WATER_ARC);
-		addAbility(ABILITY_WAVE);
-		addAbility(ABILITY_WATER_BUBBLE);
-		addAbility(ABILITY_WATER_SKATE);
+		addAbility("water_arc");
+		addAbility("wave");
+		addAbility("water_bubble");
+		addAbility("water_skate");
 		
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
 		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
-				new ThemeColor(icon, base), 0x57E8F2), "Waterbend", this);
+				new ThemeColor(icon, base), 0x57E8F2), this);
 	}
 	
 	@Override
@@ -59,18 +57,18 @@ public class Waterbending extends BendingController {
 	}
 	
 	@Override
-	public BendingType getType() {
-		return WATERBENDING;
-	}
-	
-	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
 	
 	@Override
-	public String getControllerName() {
+	public String getName() {
 		return "waterbending";
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

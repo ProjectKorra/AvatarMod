@@ -16,17 +16,17 @@
 */
 package com.crowsofwar.avatar.common.gui;
 
-import static net.minecraft.item.ItemStack.EMPTY;
-
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.UUID;
+
+import static net.minecraft.item.ItemStack.EMPTY;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class ContainerSkillsGui extends Container {
 	
 	private int invIndex, hotbarIndex;
 	
-	public ContainerSkillsGui(EntityPlayer player, BendingType type) {
+	public ContainerSkillsGui(EntityPlayer player, UUID bendingId) {
 		this.player = player;
 		
 		inventory = new SkillsGuiInventory();
@@ -48,20 +48,20 @@ public class ContainerSkillsGui extends Container {
 		addSlotToContainer(new Slot(inventory, 0, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				ScrollType scrollType = ScrollType.fromId(stack.getMetadata());
+				ScrollType scrollType = ScrollType.get(stack.getMetadata());
 				Item item = stack.getItem();
 				Slot other = getSlot(1);
-				return item == AvatarItems.itemScroll && scrollType.accepts(type) && !other.getHasStack();
+				return item == AvatarItems.itemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
 			}
 		});
 		// Second scroll slot
 		addSlotToContainer(new Slot(inventory, 1, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				ScrollType scrollType = ScrollType.fromId(stack.getMetadata());
+				ScrollType scrollType = ScrollType.get(stack.getMetadata());
 				Item item = stack.getItem();
 				Slot other = getSlot(0);
-				return item == AvatarItems.itemScroll && scrollType.accepts(type) && !other.getHasStack();
+				return item == AvatarItems.itemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
 			}
 		});
 		

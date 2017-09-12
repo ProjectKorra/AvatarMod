@@ -17,22 +17,21 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -40,10 +39,7 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class AbilityFireArc extends FireAbility {
-	
-	/**
-	 * @param controller
-	 */
+
 	public AbilityFireArc() {
 		super("fire_arc");
 		requireRaytrace(-1, false);
@@ -51,8 +47,10 @@ public class AbilityFireArc extends FireAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
-		if (ctx.consumeChi(STATS_CONFIG.chiFireArc)) {
+
+		Bender bender = ctx.getBender();
+
+		if (bender.consumeChi(STATS_CONFIG.chiFireArc)) {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
@@ -81,11 +79,6 @@ public class AbilityFireArc extends FireAbility {
 		}
 		
 	}
-	
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiFireArc(this, entity, bender);
-	}
 
 	/**
 	 * Kills already existing fire arc if there is one
@@ -99,6 +92,11 @@ public class AbilityFireArc extends FireAbility {
 			fire.setBehavior(new FireArcBehavior.Thrown());
 		}
 
+	}
+
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiFireArc(this, entity, bender);
 	}
 
 }

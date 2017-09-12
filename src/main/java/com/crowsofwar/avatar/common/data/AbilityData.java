@@ -17,11 +17,16 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Represents saveable data about an ability. These are not singletons; there is
@@ -34,7 +39,7 @@ public class AbilityData {
 	public static final int MAX_LEVEL = 3;
 	
 	private final BendingData data;
-	private final BendingAbility ability;
+	private final String abilityName;
 	private float xp;
 	/**
 	 * The current level. -1 for locked
@@ -44,18 +49,27 @@ public class AbilityData {
 	private int level;
 	private AbilityTreePath path;
 	
-	public AbilityData(BendingData data, BendingAbility ability) {
+	public AbilityData(BendingData data, Ability ability) {
+		this(data, ability.getName());
+	}
+
+	public AbilityData(BendingData data, String abilityName) {
 		this.data = data;
-		this.ability = ability;
+		this.abilityName = abilityName;
 		this.xp = 0;
 		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
 	}
-	
-	public BendingAbility getAbility() {
-		return ability;
+
+	@Nullable
+	public Ability getAbility() {
+		return Abilities.get(abilityName);
 	}
-	
+
+	public String getAbilityName() {
+		return abilityName;
+	}
+
 	/**
 	 * Get the current level of this ability. A value of -1 indicates this
 	 * ability is {@link #isLocked() locked}.
@@ -207,7 +221,7 @@ public class AbilityData {
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
 		level = nbt.getInteger("Level");
-		path = AbilityTreePath.fromId(nbt.getInteger("Path"));
+		path = AbilityTreePath.get(nbt.getInteger("Path"));
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -217,7 +231,7 @@ public class AbilityData {
 	}
 	
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(ability.getId()); // ability ID read from createFromBytes
+		GoreCoreByteBufUtil.writeString(buf, abilityName);
 		buf.writeFloat(xp);
 		buf.writeInt(level);
 		buf.writeInt(path.id());
@@ -226,7 +240,7 @@ public class AbilityData {
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
 		level = buf.readInt();
-		path = AbilityTreePath.fromId(buf.readInt());
+		path = AbilityTreePath.get(buf.readInt());
 	}
 	
 	/**
@@ -238,22 +252,26 @@ public class AbilityData {
 	
 	/**
 	 * Reads ability data from the network.
-	 * 
-	 * @return The ability data with correct ability and XP, but null if invalid
-	 *         ability ID (does not log errors)
 	 */
 	public static AbilityData createFromBytes(ByteBuf buf, BendingData data) {
-		int abilityId = buf.readInt();
-		BendingAbility ability = BendingManager.getAbility(abilityId);
-		if (ability == null) {
-			return null;
-		} else {
-			AbilityData abilityData = new AbilityData(data, ability);
-			abilityData.fromBytes(buf);
-			return abilityData;
-		}
+		String abilityName = GoreCoreByteBufUtil.readString(buf);
+		AbilityData abilityData = new AbilityData(data, abilityName);
+		abilityData.fromBytes(buf);
+		return abilityData;
 	}
-	
+
+	public static AbilityData get(EntityLivingBase entity, String abilityName) {
+		return BendingData.get(entity).getAbilityData(abilityName);
+	}
+
+	public static AbilityData get(World world, UUID playerId, String abilityName) {
+		return BendingData.get(world, playerId).getAbilityData(abilityName);
+	}
+
+	public static AbilityData get(World world, String playerName, String abilityName) {
+		return BendingData.get(world, playerName).getAbilityData(abilityName);
+	}
+
 	/**
 	 * Describes which path the abilityData is currently taking. Main path is
 	 * for levels 1, 2, and 3. For level 4, either FIRST or SECOND path can be
@@ -268,11 +286,12 @@ public class AbilityData {
 		public int id() {
 			return ordinal();
 		}
-		
-		public static AbilityTreePath fromId(int id) {
-			if (id < 0 || id >= values().length)
-				throw new IllegalArgumentException("No AbilityTreePath for id: " + id);
-			
+
+		@Nullable
+		public static AbilityTreePath get(int id) {
+			if (id < 0 || id >= values().length) {
+				return null;
+			}
 			return values()[id];
 		}
 		

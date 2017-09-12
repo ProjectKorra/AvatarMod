@@ -17,9 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -32,7 +31,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_PICK_UP_BLOCK;
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
@@ -54,7 +52,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		
-		BendingController controller = BendingManager.getBending(BendingType.EARTHBENDING);
+		BendingStyle controller = BendingStyles.get(Earthbending.ID);
 		
 		BendingData data = ctx.getData();
 		
@@ -70,9 +68,8 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				looking.offset(lookingSide);
 				
 				floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
-				Vector force = looking.precision().minus(new Vector(floating));
-				force.normalize();
-				floating.velocity().add(force);
+				Vector force = looking.precision().minus(new Vector(floating)).normalize();
+				floating.addVelocity(force);
 				
 				SoundType sound = floating.getBlock().getSoundType();
 				if (sound != null) {
@@ -82,7 +79,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				
 				data.removeStatusControl(THROW_BLOCK);
 				
-				data.getAbilityData(ABILITY_PICK_UP_BLOCK).addXp(SKILLS_CONFIG.blockPlaced);
+				data.getAbilityData("pickup_block").addXp(SKILLS_CONFIG.blockPlaced);
 				
 				return true;
 			}

@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.common.data;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * 
@@ -35,11 +38,13 @@ public class MiscData {
 	private int petSummonCooldown;
 	private boolean bisonFollowMode;
 	private boolean canUseAbilities;
+	private List<LightningRedirectionData> lightningRedirectionData;
 	
 	public MiscData(Runnable save) {
 		this.save = save;
 		this.bisonFollowMode = true;
 		this.canUseAbilities = true;
+		this.lightningRedirectionData = new ArrayList<>();
 	}
 	
 	public void toBytes(ByteBuf buf) {
@@ -73,6 +78,9 @@ public class MiscData {
 		// wasn't correctly flagged to false.
 		// This new key forces glitched players from a4.5 to reload their CanUseAbilities flag
 		canUseAbilities = nbt.getBoolean("CanUseAbilitiesA4.6");
+		if (!nbt.hasKey("CanUseAbilitiesA4.6")) {
+			canUseAbilities = true;
+		}
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -149,4 +157,9 @@ public class MiscData {
 	public void setCanUseAbilities(boolean canUseAbilities) {
 		this.canUseAbilities = canUseAbilities;
 	}
+
+	public List<LightningRedirectionData> getLightningRedirectionData() {
+		return lightningRedirectionData;
+	}
+
 }

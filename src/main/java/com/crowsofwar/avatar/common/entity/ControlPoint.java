@@ -17,10 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.gorecore.util.ImmutableVector;
 import com.crowsofwar.gorecore.util.Vector;
-
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -39,10 +36,10 @@ public class ControlPoint {
 	protected EntityArc arc;
 	protected EntityLivingBase owner;
 	
-	private final Vector internalVelocity;
-	private final Vector internalPosition;
+	private Vector internalVelocity;
+	private Vector internalPosition;
 	
-	private ImmutableVector lastPos;
+	private Vector lastPos;
 	
 	private final World world;
 	private AxisAlignedBB hitbox;
@@ -61,7 +58,7 @@ public class ControlPoint {
 				position().z() - sizeHalfed, position().x() + sizeHalfed, position().y() + sizeHalfed,
 				position().z() + sizeHalfed);
 		
-		lastPos = new ImmutableVector();
+		lastPos = new Vector();
 		
 	}
 	
@@ -72,7 +69,11 @@ public class ControlPoint {
 	public Vector velocity() {
 		return internalVelocity;
 	}
-	
+
+	public void setVelocity(Vector velocity) {
+		internalVelocity = velocity;
+	}
+
 	/**
 	 * Get the position of this entity. Changes to this vector will be reflected
 	 * in the entity's actual position.
@@ -119,55 +120,35 @@ public class ControlPoint {
 				position().z() - sizeHalfed, position().x() + sizeHalfed, position().y() + sizeHalfed,
 				position().z() + sizeHalfed);
 		
-		lastPos = new ImmutableVector(position());
-		
-		position().add(velocity().times(0.05));
-		velocity().mul(0.4);
-		
+		lastPos = position();
+		move(velocity().times(0.05));
+		setVelocity(velocity().times(0.4));
+
+
 	}
 	
-	/**
-	 * @deprecated Use {@link #position()}.{@link Vector#set(Vector) set(pos)}
-	 */
-	@Deprecated
-	public void setVecPosition(Vector pos) {
-		position().set(pos);
+	public void setPosition(Vector pos) {
+		internalPosition = pos;
 	}
 	
 	/**
 	 * Move this control point by the designated offset, not checking for
 	 * collisions.
-	 * <p>
-	 * Not to be confused with {@link Entity#move(double, double, double)}
 	 * .
 	 */
 	public void move(double x, double y, double z) {
-		position().add(x, y, z);
+		setPosition(position().plus(x, y, z));
 	}
 	
 	/**
 	 * Move this control point by the designated offset, not checking for
 	 * collisions.
-	 * <p>
-	 * Not to be confused with {@link Entity#move(double, double, double)}
 	 * .
 	 */
 	public void move(Vector offset) {
 		move(offset.x(), offset.y(), offset.z());
 	}
-	
-	public double getXPos() {
-		return position().x();
-	}
-	
-	public double getYPos() {
-		return position().y();
-	}
-	
-	public double getZPos() {
-		return position().z();
-	}
-	
+
 	public double getDistance(ControlPoint point) {
 		return position().dist(point.position());
 	}
@@ -196,5 +177,15 @@ public class ControlPoint {
 	public void setArc(EntityArc arc) {
 		this.arc = arc;
 	}
-	
+
+	/**
+	 * Get the interpolated position between two ticks.
+	 * @param partialTicks The percentage through this tick, from 0..1
+	 */
+	public Vector getInterpolatedPosition(float partialTicks) {
+		//@formatter:on
+		return lastPosition().plus (  (position() .minus(lastPosition()) ) .times(partialTicks)  );
+		//@formatter:off
+	}
+
 }

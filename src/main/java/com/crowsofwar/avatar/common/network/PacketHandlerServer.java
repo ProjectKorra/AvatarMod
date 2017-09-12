@@ -19,19 +19,16 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -41,7 +38,6 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -55,14 +51,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -74,36 +69,18 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class PacketHandlerServer implements IPacketHandler {
 	
 	public static final IPacketHandler instance;
-	private List<ProcessAbilityRequest> unprocessedAbilityRequests;
-	
+
 	static {
 		instance = new PacketHandlerServer();
 	}
 	
 	private PacketHandlerServer() {
-		unprocessedAbilityRequests = new ArrayList<>();
 	}
 	
 	public static void register() {
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
-	
-	@SubscribeEvent
-	public void tick(WorldTickEvent e) {
-		World world = e.world;
-		if (e.phase == TickEvent.Phase.START && !world.isRemote) {
-			Iterator<ProcessAbilityRequest> iterator = unprocessedAbilityRequests.iterator();
-			while (iterator.hasNext()) {
-				ProcessAbilityRequest par = iterator.next();
-				par.ticks--;
-				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0 && par.data.getCanUseAbilities()) {
-					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability));
-					iterator.remove();
-				}
-			}
-		}
-	}
-	
+
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		AvatarLog.debug("Server: Received a packet");
@@ -146,33 +123,13 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 	
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
+
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data != null) {
-			
-			BendingAbility ability = packet.getAbility();
-			if (data.hasBending(ability.getBendingType())) {
-				if (!data.getAbilityData(ability).isLocked() || player.capabilities.isCreativeMode) {
-					if (data.getAbilityCooldown() == 0) {
-						if (data.getCanUseAbilities()) {
-							AbilityContext abilityCtx = new AbilityContext(data, packet.getRaytrace(), ability);
-							ability.execute(abilityCtx);
-							data.setAbilityCooldown(ability.getCooldown(abilityCtx));
-						} else {
-							// TODO make bending disabled available for multiple things
-							AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(player);
-						}
-					} else {
-						unprocessedAbilityRequests.add(new ProcessAbilityRequest(data.getAbilityCooldown(),
-								player, data, ability, packet.getRaytrace()));
-					}
-				} else {
-					AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.abilityLocked"), player);
-				}
-			}
-			
+		Bender bender = Bender.get(player);
+		if (bender != null) {
+			bender.executeAbility(packet.getAbility(), packet.getRaytrace());
 		}
-		
+
 		return null;
 	}
 	
@@ -191,7 +148,7 @@ public class PacketHandlerServer implements IPacketHandler {
 			
 		}
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		
 		if (data != null) data.saveAll();
 		return null;
@@ -206,12 +163,12 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
 			if (data.hasStatusControl(sc)) {
-				if (sc.execute(new BendingContext(data, packet.getRaytrace()))) {
+				if (sc.execute(new BendingContext(data, player, packet.getRaytrace()))) {
 					data.removeStatusControl(packet.getStatusControl());
 				}
 			}
@@ -226,8 +183,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		World world = player.world;
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(BendingType.AIRBENDING) && !data.isWallJumping()
+		BendingData data = BendingData.get(player);
+		if (data.hasBendingId(Airbending.ID) && !data.isWallJumping()
 				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			
 			data.setWallJumping(true);
@@ -267,18 +224,17 @@ public class PacketHandlerServer implements IPacketHandler {
 			if (normal != Vector.UP) {
 				
 				Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
-				Vector n = velocity.reflect(normal).mul(4).subtract(normal.times(0.5)).setY(0.5);
-				n.add(Vector.getLookRectangular(player).mul(.8));
+				Vector n = velocity.reflect(normal).times(4).minus(normal.times(0.5)).withY(0.5);
+				n = n.plus(Vector.getLookRectangular(player).times(.8));
 				
 				if (n.sqrMagnitude() > 1) {
-					n.normalize().mul(1);
+					n = n.normalize().times(1);
 				}
 
 				// can't use setVelocity since that is Client SideOnly
 				player.motionX = n.x();
 				player.motionY = n.y();
 				player.motionZ = n.z();
-
 				player.connection.sendPacket(new SPacketEntityVelocity(player));
 				
 				new NetworkParticleSpawner().spawnParticles(world, AvatarParticles.getParticleAir(), 4, 10,
@@ -298,12 +254,15 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = AvatarPlayerData.fetcher().fetch(player);
-		int el = packet.getElement();
-		
-		if (el >= 1 && el <= 4) {
-			if (data.hasBending(BendingType.find(el))) {
-				player.openGui(AvatarMod.instance, el, player.world, 0, 0, 0);
+		BendingData data = BendingData.get(player);
+		UUID element = packet.getElement();
+
+		System.out.println(element);
+
+		if (BendingStyles.has(element)) {
+			if (data.hasBendingId(element)) {
+				int guiId = AvatarGuiHandler.getGuiId(element);
+				player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
 			}
 		}
 		
@@ -313,7 +272,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseScroll(PacketSUseScroll packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		AbilityData abilityData = data.getAbilityData(packet.getAbility());
 		
 		if (!abilityData.isMaxLevel() && (abilityData.getXp() == 100 || abilityData.isLocked())) {
@@ -339,8 +298,8 @@ public class PacketHandlerServer implements IPacketHandler {
 					if (stack.getItem() == AvatarItems.itemScroll) {
 						
 						// Try to use this scroll
-						ScrollType type = ScrollType.fromId(stack.getMetadata());
-						if (type.accepts(packet.getAbility().getBendingType())) {
+						ScrollType type = ScrollType.get(stack.getMetadata());
+						if (type.accepts(packet.getAbility().getBendingId())) {
 							
 							activeSlot.putStack(ItemStack.EMPTY);
 							abilityData.addLevel();
@@ -376,7 +335,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleGetBending(PacketSOpenUnlockGui packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		
 		if (data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.world, 0, 0, 0);
@@ -389,24 +348,25 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUnlockBending(PacketSUnlockBending packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		Container container = player.openContainer;
 		
 		if (container instanceof ContainerGetBending) {
-			List<BendingType> eligible = ((ContainerGetBending) container).getEligibleTypes();
+			List<UUID> eligible = ((ContainerGetBending) container).getEligibleBending();
 			
-			BendingType desired = packet.getUnlockType();
-			if (eligible.contains(desired)) {
+			UUID bending = packet.getUnlockType();
+			if (eligible.contains(bending)) {
 				
 				if (data.getAllBending().isEmpty()) {
-					data.addBending(desired);
+					data.addBendingId(bending);
 					
 					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
 						container.getSlot(i).putStack(ItemStack.EMPTY);
 					}
 					
-					player.openGui(AvatarMod.instance, desired.id(), player.world, 0, 0, 0);
-					
+					int guiId = AvatarGuiHandler.getGuiId(bending);
+					player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
+
 				}
 				
 			}
@@ -427,10 +387,10 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleCycleBending(PacketSCycleBending packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = Bender.getData(player);
+		BendingData data = BendingData.get(player);
 		
-		List<BendingController> controllers = data.getAllBending();
-		controllers.sort(Comparator.comparing(BendingController::getControllerName));
+		List<BendingStyle> controllers = data.getAllBending();
+		controllers.sort(Comparator.comparing(BendingStyle::getName));
 		if (controllers.size() > 1) {
 			
 			int index = controllers.indexOf(data.getActiveBending());
@@ -444,25 +404,6 @@ public class PacketHandlerServer implements IPacketHandler {
 		}
 		
 		return null;
-		
-	}
-	
-	private static class ProcessAbilityRequest {
-		
-		private int ticks;
-		private final EntityPlayer player;
-		private final AvatarPlayerData data;
-		private final BendingAbility ability;
-		private final Raytrace.Result raytrace;
-		
-		public ProcessAbilityRequest(int ticks, EntityPlayer player, AvatarPlayerData data,
-				BendingAbility ability, Raytrace.Result raytrace) {
-			this.ticks = ticks;
-			this.player = player;
-			this.data = data;
-			this.ability = ability;
-			this.raytrace = raytrace;
-		}
 		
 	}
 	

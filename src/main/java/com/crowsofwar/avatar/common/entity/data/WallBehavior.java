@@ -19,17 +19,15 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
-import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WALL;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -52,7 +50,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			entity.velocity().add(0, -7.0 / 20, 0);
+			entity.addVelocity(0, -7.0 / 20, 0);
 			if (entity.onGround) {
 				entity.dropBlocks();
 				entity.setDead();
@@ -94,10 +92,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 					if (seg.height > maxHeight) maxHeight = (int) seg.height;
 				}
 				
-				entity.velocity().set(0, STATS_CONFIG.wallMomentum / 5 * maxHeight, 0);
+				entity.motionY = STATS_CONFIG.wallMomentum / 5 * maxHeight;
 				
 			} else {
-				entity.velocity().setY(entity.velocity().y() * 0.9);
+				entity.motionY *= 0.9;
 			}
 			
 			// For some reason, the same entity instance is on server/client,
@@ -127,24 +125,23 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			entity.velocity().set(0, 0, 0);
+			entity.setVelocity(Vector.ZERO);
 			ticks++;
 			
 			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
 			
-			BendingData data = Bender.getData(entity.getOwner());
-			AbilityData abilityData = data.getAbilityData(ABILITY_WALL);
+			BendingData data = BendingData.get(entity.getOwner());
+			AbilityData abilityData = data.getAbilityData("wall");
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-				
+
 				drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
 				
-				BendingContext ctx = new BendingContext(data, entity.getOwner(),
-						Bender.create(entity.getOwner()), new Raytrace.Result());
-				
-				if (!entity.world.isRemote && !ctx.consumeChi(STATS_CONFIG.chiWallOneSecond / 20)) {
+				Bender ownerBender = Bender.get(entity.getOwner());
+				if (!entity.world.isRemote && !ownerBender.consumeChi(STATS_CONFIG
+						.chiWallOneSecond / 20)) {
 					drop = true;
 				}
-				
+
 			}
 			
 			return drop ? new Drop() : this;

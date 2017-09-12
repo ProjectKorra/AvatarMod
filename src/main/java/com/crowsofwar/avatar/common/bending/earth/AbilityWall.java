@@ -18,6 +18,8 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
@@ -44,15 +46,19 @@ public class AbilityWall extends EarthAbility {
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
-		if (ctx.consumeChi(STATS_CONFIG.chiWall)) {
+
+		Bender bender = ctx.getBender();
+
+		if (bender.consumeChi(STATS_CONFIG.chiWall)) {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			EnumFacing cardinal = entity.getHorizontalFacing();
 			BendingData data = ctx.getData();
 			
-			float xp = data.getAbilityData(this).getTotalXp();
+			AbilityData abilityData = data.getAbilityData(this);
+			float xp = abilityData.getTotalXp();
+			
 			int whMin, whMax;
 			Random random = new Random();
 			if (xp == 100) {
@@ -71,7 +77,7 @@ public class AbilityWall extends EarthAbility {
 				whMax = 3;
 			}
 			
-			data.getAbilityData(this).addXp(SKILLS_CONFIG.wallRaised);
+			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 			
 			if (!ctx.isLookingAtBlock()) return;
 			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
@@ -115,14 +121,14 @@ public class AbilityWall extends EarthAbility {
 					if (!foundAir && state.getBlock() == Blocks.AIR) {
 						seg.setSize(seg.width, 5 - j - 1);
 						seg.setBlocksOffset(-(j + 1));
-						seg.position().setY(y + j + 1);
+						seg.setPosition(seg.position().withY(y + j + 1));
 						foundAir = true;
 					}
 					if (foundAir && state.getBlock() != Blocks.AIR) {
 						// Extend bounding box
 						seg.setSize(seg.width, 5 - j);
 						seg.setBlocksOffset(-j);
-						seg.position().setY(y + j);
+						seg.setPosition(seg.position().withY(y + j));
 					}
 					
 					seg.setBlock(j, state);
@@ -143,5 +149,5 @@ public class AbilityWall extends EarthAbility {
 		}
 		
 	}
-	
+
 }

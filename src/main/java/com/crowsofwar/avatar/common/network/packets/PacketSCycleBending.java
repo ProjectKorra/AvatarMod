@@ -47,7 +47,7 @@ public class PacketSCycleBending extends AvatarPacket<PacketSCycleBending> {
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	

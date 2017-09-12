@@ -22,11 +22,11 @@ import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.abs;
 import static java.lang.Math.toDegrees;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
@@ -51,7 +51,7 @@ public class AiFireArc extends BendingAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiFireArc(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiFireArc(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
 		setMutexBits(2);

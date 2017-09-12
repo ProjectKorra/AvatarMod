@@ -17,21 +17,21 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.Ability;
+
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public abstract class FireAbility extends BendingAbility {
+public abstract class FireAbility extends Ability {
 	
 	/**
 	 * @param name
 	 */
 	public FireAbility(String name) {
-		super(BendingType.FIREBENDING, name);
+		super(Firebending.ID, name);
 	}
 	
 }

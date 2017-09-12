@@ -17,17 +17,12 @@
 
 package com.crowsofwar.avatar.common.command;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.gorecore.tree.ArgumentList;
-import com.crowsofwar.gorecore.tree.ArgumentPlayerName;
-import com.crowsofwar.gorecore.tree.CommandCall;
-import com.crowsofwar.gorecore.tree.IArgument;
-import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.NodeFunctional;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.gorecore.tree.*;
+
+import java.util.List;
 
 /**
  * 
@@ -37,7 +32,7 @@ import com.crowsofwar.gorecore.tree.NodeFunctional;
 public class NodeAbilityGet extends NodeFunctional {
 	
 	private final IArgument<String> argPlayer;
-	private final IArgument<BendingAbility> argAbility;
+	private final IArgument<Ability> argAbility;
 	
 	/**
 	 * @param name
@@ -54,9 +49,9 @@ public class NodeAbilityGet extends NodeFunctional {
 		
 		ArgumentList args = call.popArguments(this);
 		String player = args.get(argPlayer);
-		BendingAbility ability = args.get(argAbility);
+		Ability ability = args.get(argAbility);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(call.getFrom().getEntityWorld(), player);
+		BendingData data = BendingData.get(call.getFrom().getEntityWorld(), player);
 		if (data != null) {
 			
 			float xp = data.getAbilityData(ability).getTotalXp();

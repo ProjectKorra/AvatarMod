@@ -27,7 +27,7 @@ import com.crowsofwar.avatar.client.uitools.Frame;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.StartingPosition;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 
 /**
  * 
@@ -36,12 +36,12 @@ import com.crowsofwar.avatar.common.bending.BendingAbility;
  */
 public class AbilityCard {
 	
-	private final BendingAbility ability;
+	private final Ability ability;
 	private final int index;
 	private Frame frame;
 	private UiComponent icon;
 	
-	public AbilityCard(BendingAbility ability, int index) {
+	public AbilityCard(Ability ability, int index) {
 		
 		fromPixels(0, 0);
 		fromPercent(0, 0);
@@ -81,7 +81,7 @@ public class AbilityCard {
 		return frame.getDimensions().xInPixels();
 	}
 	
-	public BendingAbility getAbility() {
+	public Ability getAbility() {
 		return ability;
 	}
 	

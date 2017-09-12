@@ -20,12 +20,12 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -40,7 +40,7 @@ import net.minecraft.entity.EntityLivingBase;
  */
 public class AiFlamethrower extends BendingAi {
 	
-	protected AiFlamethrower(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiFlamethrower(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		setMutexBits(2);
 	}

@@ -17,12 +17,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
-import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Predicate;
@@ -30,8 +27,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -48,11 +43,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * @author CrowsOfWar
  */
 public class EntityAirblade extends AvatarEntity {
-	
-	public static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityAirblade.class, AvatarDataSerializers.SERIALIZER_BENDER);
-	
-	private final OwnerAttribute ownerAttr;
+
 	private float damage;
 	
 	/**
@@ -69,7 +60,6 @@ public class EntityAirblade extends AvatarEntity {
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(1.5f, .2f);
-		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
 		this.chopBlocksThreshold = -1;
 	}
 	
@@ -78,7 +68,7 @@ public class EntityAirblade extends AvatarEntity {
 		
 		super.onUpdate();
 
-		velocity().mul(0.96);
+		setVelocity(velocity().times(0.96));
 		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
 		}
@@ -104,14 +94,13 @@ public class EntityAirblade extends AvatarEntity {
 				}
 				boolean successfulHit = collided.attackEntityFrom(source, damage);
 				
-				Vector motion = velocity().copy();
-				motion.mul(STATS_CONFIG.airbladeSettings.push);
-				motion.setY(0.08);
+				Vector motion = velocity();
+				motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 				
 				if (getOwner() != null) {
 					BendingData data = getOwnerBender().getData();
-					data.getAbilityData(BendingAbility.ABILITY_AIRBLADE).addXp(SKILLS_CONFIG.airbladeHit);
+					data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
 				}
 
 				if (chainAttack) {
@@ -130,7 +119,7 @@ public class EntityAirblade extends AvatarEntity {
 						if (!nextTargets.isEmpty()) {
 							EntityLivingBase nextTarget = nextTargets.get(0);
 							Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
-							velocity().set(direction.normalize().times(velocity().magnitude() *
+							setVelocity(direction.normalize().times(velocity().magnitude() *
 									0.5));
 						}
 
@@ -179,7 +168,7 @@ public class EntityAirblade extends AvatarEntity {
 		float hardness = state.getBlockHardness(world, pos);
 		if (hardness <= chopBlocksThreshold) {
 			breakBlock(pos);
-			velocity().mul(0.5);
+			setVelocity(velocity().times(0.5));
 		}
 	}
 	
@@ -187,18 +176,9 @@ public class EntityAirblade extends AvatarEntity {
 	public void setDead() {
 		super.setDead();
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setOwner(owner);
-	}
-	
+
 	public Bender getOwnerBender() {
-		return ownerAttr.getOwnerBender();
+		return Bender.get(getOwner());
 	}
 	
 	public void setDamage(float damage) {
@@ -232,7 +212,6 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		ownerAttr.load(nbt);
 		damage = nbt.getFloat("Damage");
 		chopBlocksThreshold = nbt.getFloat("ChopBlocksThreshold");
 		pierceArmor = nbt.getBoolean("Piercing");
@@ -242,7 +221,6 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		ownerAttr.save(nbt);
 		nbt.setFloat("Damage", damage);
 		nbt.setFloat("ChopBlocksThreshold", chopBlocksThreshold);
 		nbt.setBoolean("Piercing", pierceArmor);

@@ -17,21 +17,21 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.Ability;
+
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public abstract class EarthAbility extends BendingAbility {
-	
+public abstract class EarthAbility extends Ability {
+
 	/**
 	 * @param name
 	 */
 	public EarthAbility(String name) {
-		super(BendingType.EARTHBENDING, name);
+		super(Earthbending.ID, name);
 	}
 	
 }

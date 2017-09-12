@@ -16,22 +16,23 @@
 */
 package com.crowsofwar.avatar.common.gui;
 
-import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
-import static net.minecraft.item.ItemStack.EMPTY;
-
-import java.util.Arrays;
-import java.util.List;
-
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.item.ItemScroll.getScrollType;
+import static net.minecraft.item.ItemStack.EMPTY;
 
 /**
  * 
@@ -142,39 +143,39 @@ public class ContainerGetBending extends Container {
 	}
 	
 	/**
-	 * Returns the BendingTypes that can be unlocked by the scrolls which are
-	 * currently in the slots.
+	 * Returns the ints that can be unlocked by the scrolls which are currently
+	 * in the slots.
 	 */
-	public List<BendingType> getEligibleTypes() {
+	public List<UUID> getEligibleBending() {
 		
-		BendingType foundType = null;
+		UUID foundId = null;
 		
 		for (int i = 0; i <= 2; i++) {
 			Slot slot = getSlot(i);
 			
 			// No possible unlocks if there aren't 3 scrolls
 			if (!slot.getHasStack()) {
-				return Arrays.asList();
+				return Collections.emptyList();
 			}
-			
+
 			// If the scroll isn't universal, then we found the scroll type used
 			// Possible since all scroll stacks in the inventory must all be
 			// compatible (or they couldn't be added)
 			// Don't return here b/c didn't check if all slots aren't empty
-			BendingType type = ItemScroll.getScrollType(slot.getStack()).getBendingType();
-			if (type != null) {
-				foundType = type;
+			UUID bendingId = ItemScroll.getScrollType(slot.getStack()).getBendingId();
+			if (bendingId != null) {
+				foundId = bendingId;
 			}
 			
 		}
 		
-		if (foundType == null) {
+		if (foundId == null) {
 			// Didn't find scroll of a specific type
 			// all universal scrolls
-			return Arrays.asList(BendingType.allExceptError());
+			return BendingStyles.allIds();
 		} else {
 			// Found scroll of specific type
-			return Arrays.asList(foundType);
+			return Arrays.asList(foundId);
 		}
 		
 	}

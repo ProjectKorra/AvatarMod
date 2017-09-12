@@ -102,7 +102,7 @@ public abstract class WorldData extends WorldSavedData implements DataSaver {
 			
 			return data;
 		} catch (Exception e) {
-			FMLLog.bigWarning("GoreCore> Could not create World Data class!");
+			FMLLog.bigWarning("GoreCore> Could not get World Data class!");
 			e.printStackTrace();
 			return null;
 		}

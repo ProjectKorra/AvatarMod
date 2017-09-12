@@ -17,27 +17,16 @@
 
 package com.crowsofwar.avatar.common.network;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.DataCategory;
-import com.crowsofwar.avatar.common.data.MiscData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-
+import com.crowsofwar.avatar.common.data.*;
 import io.netty.buffer.ByteBuf;
+
+import java.util.*;
+
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
 
 /**
  * DataTransmitters are responsible for reading and writing certain parts of
@@ -48,47 +37,50 @@ import io.netty.buffer.ByteBuf;
  */
 public class DataTransmitters {
 	
-	public static final DataTransmitter<List<BendingController>> BENDING_LIST = new DataTransmitter<List<BendingController>>() {
+	public static final DataTransmitter<List<UUID>> BENDING_LIST = new
+			DataTransmitter<List<UUID>>() {
 		
 		@Override
-		public void write(ByteBuf buf, List<BendingController> t) {
+		public void write(ByteBuf buf, List<UUID> t) {
 			buf.writeInt(t.size());
-			for (BendingController controller : t)
-				buf.writeInt(controller.getType().id());
+			for (UUID bendingId : t) {
+				writeUUID(buf, bendingId);
+			}
 		}
 		
 		@Override
-		public List<BendingController> read(ByteBuf buf, BendingData data) {
+		public List<UUID> read(ByteBuf buf, BendingData data) {
 			int size = buf.readInt();
-			List<BendingController> out = new ArrayList<>(size);
+			List<UUID> out = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
-				out.add(BendingManager.getBending(BendingType.find(buf.readInt())));
+				out.add(readUUID(buf));
 			}
 			return out;
 		}
 	};
 	
-	public static final DataTransmitter<Map<BendingAbility, AbilityData>> ABILITY_DATA = new DataTransmitter<Map<BendingAbility, AbilityData>>() {
+	public static final DataTransmitter<Map<String, AbilityData>> ABILITY_DATA = new
+			DataTransmitter<Map<String, AbilityData>>() {
 		
 		@Override
-		public void write(ByteBuf buf, Map<BendingAbility, AbilityData> t) {
-			Set<Map.Entry<BendingAbility, AbilityData>> entries = t.entrySet();
+		public void write(ByteBuf buf, Map<String, AbilityData> t) {
+			Set<Map.Entry<String, AbilityData>> entries = t.entrySet();
 			buf.writeInt(entries.size());
-			for (Map.Entry<BendingAbility, AbilityData> entry : entries) {
+			for (Map.Entry<String, AbilityData> entry : entries) {
 				entry.getValue().toBytes(buf);
 			}
 		}
 		
 		@Override
-		public Map<BendingAbility, AbilityData> read(ByteBuf buf, BendingData data) {
-			Map<BendingAbility, AbilityData> out = new HashMap<>();
+		public Map<String, AbilityData> read(ByteBuf buf, BendingData data) {
+			Map<String, AbilityData> out = new HashMap<>();
 			int size = buf.readInt();
 			for (int i = 0; i < size; i++) {
 				AbilityData abilityData = AbilityData.createFromBytes(buf, data);
 				if (abilityData == null) {
 					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
 				} else {
-					out.put(abilityData.getAbility(), abilityData);
+					out.put(abilityData.getAbilityName(), abilityData);
 				}
 			}
 			return out;
@@ -185,21 +177,20 @@ public class DataTransmitters {
 		}
 	};
 	
-	public static final DataTransmitter<BendingController> ACTIVE_BENDING = new DataTransmitter<BendingController>() {
+	public static final DataTransmitter<UUID> ACTIVE_BENDING = new DataTransmitter<UUID>() {
 		
 		@Override
-		public void write(ByteBuf buf, BendingController t) {
-			buf.writeInt(t == null ? -1 : t.getType().id());
+		public void write(ByteBuf buf, UUID t) {
+			writeUUID(buf, t == null ? new UUID(0, 0) : t);
 		}
 		
 		@Override
-		public BendingController read(ByteBuf buf, BendingData data) {
-			int id = buf.readInt();
-			if (id == -1) {
+		public UUID read(ByteBuf buf, BendingData data) {
+			UUID id = readUUID(buf);
+			if (id.equals(new UUID(0, 0))) {
 				return null;
 			}
-			BendingType type = BendingType.find(id);
-			return BendingManager.getBending(type);
+			return id;
 		}
 	};
 	

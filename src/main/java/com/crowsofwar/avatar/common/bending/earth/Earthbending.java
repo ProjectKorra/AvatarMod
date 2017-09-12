@@ -17,27 +17,26 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
-import static com.crowsofwar.avatar.common.bending.BendingType.EARTHBENDING;
-
-import java.awt.Color;
-
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
-public class Earthbending extends BendingController {
-	
+import java.awt.*;
+import java.util.UUID;
+
+public class Earthbending extends BendingStyle {
+
+	public static UUID ID = UUID.fromString("82ad13b5-4bbe-4eaf-8aa0-00b36b33aed0");
+
 	private final BendingMenuInfo menu;
 	
 	public Earthbending() {
 		
-		addAbility(ABILITY_PICK_UP_BLOCK);
-		addAbility(ABILITY_RAVINE);
-		addAbility(ABILITY_WALL);
-		addAbility(ABILITY_MINING);
+		addAbility("pickup_block");
+		addAbility("ravine");
+		addAbility("wall");
+		addAbility("mine_blocks");
 		
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
@@ -46,13 +45,8 @@ public class Earthbending extends BendingController {
 		ThemeColor background = new ThemeColor(lightBrown, brown);
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
-		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F), "Earthbend", this);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F), this);
 		
-	}
-	
-	@Override
-	public BendingType getType() {
-		return EARTHBENDING;
 	}
 	
 	@Override
@@ -61,8 +55,13 @@ public class Earthbending extends BendingController {
 	}
 	
 	@Override
-	public String getControllerName() {
+	public String getName() {
 		return "earthbending";
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

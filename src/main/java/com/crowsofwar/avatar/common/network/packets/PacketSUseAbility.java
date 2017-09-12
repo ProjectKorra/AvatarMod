@@ -17,12 +17,12 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.Raytrace;
-
+import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -35,19 +35,19 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
-	private BendingAbility ability;
+	private Ability ability;
 	private Raytrace.Result raytrace;
 	
 	public PacketSUseAbility() {}
 	
-	public PacketSUseAbility(BendingAbility ability, Raytrace.Result raytrace) {
+	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace) {
 		this.ability = ability;
 		this.raytrace = raytrace;
 	}
 	
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		ability = BendingManager.getAbility(buf.readInt());
+		ability = Abilities.get(GoreCoreByteBufUtil.readString(buf));
 		if (ability == null) {
 			throw new NullPointerException("Server sent invalid ability over network: ID " + ability);
 		}
@@ -56,16 +56,16 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		buf.writeInt(ability.getId());
+		GoreCoreByteBufUtil.writeString(buf, ability.getName());
 		raytrace.toBytes(buf);
 	}
 	
 	@Override
-	public Side getRecievedSide() {
+	public Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	
-	public BendingAbility getAbility() {
+	public Ability getAbility() {
 		return ability;
 	}
 	

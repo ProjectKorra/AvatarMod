@@ -43,14 +43,14 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	
 	@Override
 	public String getModelName(int meta) {
-		SaddleTier tier = SaddleTier.fromId(meta);
+		SaddleTier tier = SaddleTier.get(meta);
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return "bison_saddle_" + tierName;
 	}
 	
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		SaddleTier tier = SaddleTier.fromId(stack.getMetadata());
+		SaddleTier tier = SaddleTier.get(stack.getMetadata());
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return super.getUnlocalizedName(stack) + "." + tierName;
 	}
@@ -93,15 +93,9 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 			return ordinal();
 		}
 		
-		/**
-		 * Finds the tier with the given id
-		 * 
-		 * @throws IllegalArgumentException
-		 *             when id is {@link #isValidId(int) invalid}
-		 */
-		public static SaddleTier fromId(int id) {
+		public static SaddleTier get(int id) {
 			if (!isValidId(id)) {
-				throw new IllegalArgumentException("No SaddleTier for id " + id);
+				return null;
 			}
 			return values()[id];
 		}

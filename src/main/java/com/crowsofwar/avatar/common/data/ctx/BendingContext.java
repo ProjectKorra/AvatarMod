@@ -21,7 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -64,9 +64,9 @@ public class BendingContext {
 	 * @param raytrace
 	 *            Result of the raytrace, from client
 	 */
-	public BendingContext(AvatarPlayerData data, Raytrace.Result raytrace) {
+	public BendingContext(BendingData data, EntityLivingBase entity, Raytrace.Result raytrace) {
 		this.data = data;
-		this.bender = new PlayerBender(data.getPlayerEntity());
+		this.bender = Bender.get(entity);
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
 		this.lookPos = raytrace.getPosPrecise();
@@ -172,7 +172,10 @@ public class BendingContext {
 	/**
 	 * Tries to use the given amount of available chi. Returns true if there was
 	 * enough chi to remove and it removed it.
+	 *
+	 * @deprecated use {@link Bender#consumeChi(float)} instead
 	 */
+	@Deprecated
 	public boolean consumeChi(float amount) {
 		
 		// TODO Account for entity Chi?
@@ -185,10 +188,7 @@ public class BendingContext {
 			return true;
 		}
 		
-		if (bender.isPlayer()) {
-			AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.nochi"),
-					(EntityPlayerMP) bender.getEntity());
-		}
+		bender.sendMessage("avatar.noChi");
 		
 		return false;
 	}

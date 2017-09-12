@@ -1,4 +1,4 @@
-/* 
+/*
   This file is part of AvatarMod.
     
   AvatarMod is free software: you can redistribute it and/or modify
@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.item;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.client.resources.I18n;
@@ -65,7 +64,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 			if (timeLeft >= 55) {
 				// Quick click - Toggle bison follow
-				BendingData data = Bender.getData(entity);
+				BendingData data = BendingData.get(entity);
 				data.setBisonFollowMode(!data.getBisonFollowMode());
 
 				if (data.getBisonFollowMode()) {
@@ -85,7 +84,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 					if (dist >= 20) {
 						double seconds = dist / 20;
 
-						BendingData data = Bender.create(entity).getData();
+						BendingData data = BendingData.get(entity);
 						data.setPetSummonCooldown((int) (seconds * 20));
 						data.addTickHandler(TickHandler.BISON_SUMMONER);
 

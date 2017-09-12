@@ -18,20 +18,28 @@
 package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.common.*;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.air.AirbendingEvents;
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingEvents;
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.air.*;
+import com.crowsofwar.avatar.common.bending.earth.*;
+import com.crowsofwar.avatar.common.bending.fire.*;
+import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
+import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
+import com.crowsofwar.avatar.common.bending.ice.AbilityIceWalk;
+import com.crowsofwar.avatar.common.bending.ice.Icebending;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningStrike;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
+import com.crowsofwar.avatar.common.bending.sand.Sandbending;
+import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.*;
-import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
-import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
-import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarDungeonLoot;
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -81,8 +89,6 @@ public class AvatarMod {
 		
 		AvatarLog.log = e.getModLog();
 		
-		BendingAbility.registerAbilities();
-		
 		ConfigStats.load();
 		ConfigSkills.load();
 		ConfigClient.load();
@@ -90,7 +96,8 @@ public class AvatarMod {
 		ConfigMobs.load();
 		
 		AvatarControl.initControls();
-		BendingManager.init();
+		registerAbilities();
+		registerBendingStyles();
 		AvatarItems.init();
 		AvatarDungeonLoot.register();
 		
@@ -102,9 +109,11 @@ public class AvatarMod {
 		TemporaryWaterHandler.register();
 		HumanBenderSpawner.register();
 		BisonInventoryPreventDismount.register();
+		PrisonActionCanceller.register();
+
 		SleepChiRegenHandler.register();
 		BisonLeftClickHandler.register();
-		
+
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 		
@@ -167,7 +176,13 @@ public class AvatarMod {
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
 		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
 		registerEntity(AvatarEntityItem.class, "Item");
-		
+		registerEntity(EntityIceShield.class, "iceshield");
+		registerEntity(EntityIceShard.class, "iceshard");
+		registerEntity(EntityIcePrison.class, "iceprison");
+		registerEntity(EntityOstrichHorse.class, "OstrichHorse");
+		registerEntity(EntitySandPrison.class, "sandprison");
+		registerEntity(EntityLightningArc.class, "lightningarc");
+
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
@@ -203,6 +218,41 @@ public class AvatarMod {
 	private void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
 		registerEntity(entity, name);
 		registerEgg(new ResourceLocation("avatarmod", name), primary, secondary);
+	}
+	
+	private static void registerAbilities() {
+		Abilities.register(new AbilityAirGust());
+		Abilities.register(new AbilityAirJump());
+		Abilities.register(new AbilityPickUpBlock());
+		Abilities.register(new AbilityRavine());
+		Abilities.register(new AbilityLightFire());
+		Abilities.register(new AbilityFireArc());
+		Abilities.register(new AbilityFlamethrower());
+		Abilities.register(new AbilityWaterArc());
+		Abilities.register(new AbilityCreateWave());
+		Abilities.register(new AbilityWaterBubble());
+		Abilities.register(new AbilityWall());
+		Abilities.register(new AbilityWaterSkate());
+		Abilities.register(new AbilityFireball());
+		Abilities.register(new AbilityAirblade());
+		Abilities.register(new AbilityMining());
+		Abilities.register(new AbilityAirBubble());
+		Abilities.register(new AbilityLightningStrike());
+		Abilities.register(new AbilityIceWalk());
+		Abilities.register(new AbilityIceBurst());
+		Abilities.register(new AbilityIcePrison());
+		Abilities.register(new AbilitySandPrison());
+		Abilities.register(new AbilityLightningArc());
+	}
+
+	private static void registerBendingStyles() {
+		BendingStyles.register(new Earthbending());
+		BendingStyles.register(new Firebending());
+		BendingStyles.register(new Waterbending());
+		BendingStyles.register(new Airbending());
+		BendingStyles.register(new Icebending());
+		BendingStyles.register(new Lightningbending());
+		BendingStyles.register(new Sandbending());
 	}
 	
 }

@@ -16,20 +16,15 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -40,6 +35,8 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 /**
  * 
  * 
@@ -49,7 +46,7 @@ public class AirbendingEvents {
 	
 	private AirbendingEvents() {}
 	
-	private void tick(EntityPlayer player, World world, AvatarPlayerData data) {
+	private void tick(EntityPlayer player, World world, BendingData data) {
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
 				&& !player.isCollidedVertically && data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
@@ -68,8 +65,8 @@ public class AirbendingEvents {
 	public void onPlayerTick(PlayerTickEvent e) {
 		EntityPlayer player = e.player;
 		World world = player.world;
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-		if (data.hasBending(BendingType.AIRBENDING)) {
+		BendingData data = BendingData.get(player);
+		if (data.hasBendingId(Airbending.ID)) {
 			tick(player, world, data);
 		}
 	}
@@ -81,7 +78,7 @@ public class AirbendingEvents {
 		EntityLivingBase attacked = (EntityLivingBase) e.getEntity();
 		
 		if (Bender.isBenderSupported(attacked)) {
-			BendingData data = Bender.create(attacked).getData();
+			BendingData data = Bender.get(attacked).getData();
 			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
 				EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
 						attacked);

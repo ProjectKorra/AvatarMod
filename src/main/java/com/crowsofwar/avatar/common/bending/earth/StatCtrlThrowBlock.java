@@ -17,10 +17,9 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -29,7 +28,6 @@ import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
@@ -47,7 +45,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		
-		BendingController controller = BendingManager.getBending(BendingType.EARTHBENDING);
+		BendingStyle controller = BendingStyles.get(Earthbending.ID);
 		
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.world;
@@ -62,10 +60,10 @@ public class StatCtrlThrowBlock extends StatusControl {
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
 			
 			// Calculate force and everything
-			double forceMult = data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK).getLevel() >= 1 //
+			double forceMult = data.getAbilityData("pickup_block").getLevel() >= 1 //
 					? 35 : 25;
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
-			floating.velocity().add(lookDir.times(forceMult));
+			floating.addVelocity(lookDir.times(forceMult));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
 
 			data.removeStatusControl(PLACE_BLOCK);

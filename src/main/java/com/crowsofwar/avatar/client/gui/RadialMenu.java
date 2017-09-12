@@ -17,26 +17,19 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import static com.crowsofwar.avatar.AvatarMod.proxy;
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.lwjgl.input.Keyboard;
-
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
@@ -44,6 +37,12 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
+import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.input.Keyboard;
+
+import static com.crowsofwar.avatar.AvatarMod.proxy;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 public class RadialMenu extends Gui {
 	
@@ -63,9 +62,9 @@ public class RadialMenu extends Gui {
 	public static final float menuScale = 0.36f;
 	
 	private RadialSegment[] segments;
-	private BendingAbility[] controls;
+	private Ability[] controls;
 	private MenuTheme theme;
-	private final BendingController controller;
+	private final BendingStyle controller;
 	
 	/**
 	 * Current radial segment that the mouse is over, null for none.
@@ -75,7 +74,8 @@ public class RadialMenu extends Gui {
 	private int ticksExisted;
 	
 	private final Minecraft mc = Minecraft.getMinecraft();
-	
+	private final Bender bender;
+
 	/**
 	 * Create a new radial menu with the given controls.
 	 * 
@@ -86,7 +86,7 @@ public class RadialMenu extends Gui {
 	 *            less than 8, then the array is filled with null. The arguments
 	 *            can only be a maximum of 8.
 	 */
-	public RadialMenu(BendingController controller, MenuTheme theme, BendingAbility... controls) {
+	public RadialMenu(BendingStyle controller, MenuTheme theme, Ability... controls) {
 		this.controller = controller;
 		this.theme = theme;
 		this.segments = new RadialSegment[8];
@@ -99,7 +99,7 @@ public class RadialMenu extends Gui {
 			throw new IllegalArgumentException("The length of controls can't be more than 8");
 		}
 		
-		BendingAbility[] ctrl = new BendingAbility[8];
+		Ability[] ctrl = new Ability[8];
 		for (int i = 0; i < ctrl.length; i++) {
 			ctrl[i] = i < controls.length ? controls[i] : null;
 		}
@@ -108,6 +108,8 @@ public class RadialMenu extends Gui {
 		for (int i = 0; i < segments.length; i++) {
 			segments[i] = new RadialSegment(this, theme, i, controls[i]);
 		}
+
+		this.bender = Bender.get(mc.player);
 		
 	}
 	
@@ -127,20 +129,23 @@ public class RadialMenu extends Gui {
 		
 	}
 	
-	private void displaySegmentDetails(BendingAbility ability, ScaledResolution resolution) {
+	private void displaySegmentDetails(Ability ability, ScaledResolution resolution) {
 		
 		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT * 1.5);
 		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		if (data != null) {
-			
-			AbilityData abilityData = data.getAbilityData(ability);
-			
+
+			int level = 0;
+
 			String secondKey = "avatar.radial.undefined";
 			String[] secondArgs = { "", "" };
 			if (ability != null) {
+				AbilityData abilityData = data.getAbilityData(ability);
+				level = abilityData.getLevel();
+
 				secondKey = "avatar.radial.xp";
 				secondArgs[0] = abilityData.getLevel() + "";
 				secondArgs[1] = (int) (abilityData.getXp()) + "";
@@ -171,7 +176,7 @@ public class RadialMenu extends Gui {
 			}
 			
 			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
-					(Object[]) ArrayUtils.addAll(secondArgs, abilityData.getLevel() + ""));
+					(Object[]) ArrayUtils.addAll(secondArgs, level + ""));
 			
 			drawCenteredString(mc.fontRenderer, second, x,
 					(int) (resolution.getScaledHeight() / 2 + mc.fontRenderer.FONT_HEIGHT * 0.5),
@@ -222,9 +227,9 @@ public class RadialMenu extends Gui {
 			
 			int centerX = resolution.getScaledWidth() / 2, centerY = resolution.getScaledHeight() / 2;
 			MenuTheme theme = controller.getRadialMenu().getTheme();
-			
+
 			drawCenteredString(mc.fontRenderer,
-					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getControllerName()),
+					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getName()),
 					centerX, centerY - mc.fontRenderer.FONT_HEIGHT, theme.getText());
 			
 		}
@@ -234,10 +239,8 @@ public class RadialMenu extends Gui {
 			for (int i = 0; i < segments.length; i++) {
 				if (controls[i] == null) continue;
 				if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
-					
-					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player,
-							controls[i].getRaytrace());
-					AvatarMod.network.sendToServer(new PacketSUseAbility(controls[i], raytrace));
+
+					bender.executeAbility(controls[i]);
 					AvatarUiRenderer.fade(segments[i]);
 					playClickSound(0.8f);
 					break;

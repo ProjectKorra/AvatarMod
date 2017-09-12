@@ -18,8 +18,12 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.gorecore.util.BackedVector;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -38,7 +42,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 /**
@@ -50,42 +56,59 @@ public abstract class AvatarEntity extends Entity {
 	
 	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
 			DataSerializers.VARINT);
-	
-	private final Vector internalVelocity;
-	private final Vector internalPosition;
-	
+
+	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager.createKey
+			(AvatarEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+
 	protected boolean putsOutFires;
 	protected boolean flammable;
-	
+
+	private SyncedEntity<EntityLivingBase> ownerRef;
+
 	/**
 	 * @param world
 	 */
 	public AvatarEntity(World world) {
 		super(world);
-		this.internalVelocity = createInternalVelocity();
-		this.internalPosition = new BackedVector(//
-				x -> setPosition(x, posY, posZ), //
-				y -> setPosition(posX, y, posZ), //
-				z -> setPosition(posX, posY, z), //
-				() -> posX, () -> posY, () -> posZ);
+
+		this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
 		this.putsOutFires = false;
 		this.flammable = false;
+
 	}
 	
 	@Override
 	protected void entityInit() {
 		dataManager.register(SYNC_ID,
 				world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
+		dataManager.register(SYNC_OWNER, Optional.absent());
 	}
 	
 	/**
 	 * Get the "owner", or the creator, of this entity. Most AvatarEntities have
 	 * an owner, though some do not.
 	 */
+	@Nullable
 	public EntityLivingBase getOwner() {
-		return null;
+		return ownerRef.getEntity();
 	}
-	
+
+	/**
+	 * Set the owner of the entity. Passing null will cause the entity to have no owner.
+	 */
+	public void setOwner(@Nullable EntityLivingBase owner) {
+		ownerRef.setEntity(owner);
+	}
+
+	/**
+	 * Get whether an owner is set. Note that {@link #getOwner()} can sometimes return null while
+	 * this returns true; that's because there was no owner entity found but the entity still has
+	 * its owner set to something that couldn't be found.
+	 */
+	public boolean hasOwner() {
+		return ownerRef.getEntityId() != null;
+	}
+
 	/**
 	 * Get whoever is currently controlling the movement of this entity, or null
 	 * if nobody is controlling it.
@@ -100,21 +123,36 @@ public abstract class AvatarEntity extends Entity {
 	}
 	
 	/**
-	 * Get the velocity of this entity in m/s. Changes to this vector will be
-	 * reflected in the entity's actual velocity.
+	 * Get the velocity of this entity in m/s.
 	 */
 	public Vector velocity() {
-		return internalVelocity;
+		return Vector.getVelocity(this);
 	}
-	
+
+	public void setVelocity(Vector velocity) {
+		motionX = velocity.x() / 20;
+		motionY = velocity.y() / 20;
+		motionZ = velocity.z() / 20;
+	}
+
+	public void addVelocity(Vector velocity) {
+		motionX += velocity.x() / 20;
+		motionY += velocity.y() / 20;
+		motionZ += velocity.z() / 20;
+	}
+
 	/**
 	 * Get the position of this entity. Changes to this vector will be reflected
 	 * in the entity's actual position.
 	 */
 	public Vector position() {
-		return internalPosition;
+		return Vector.getEntityPos(this);
 	}
-	
+
+	public void setPosition(Vector position) {
+		setPosition(position.x(), position.y(), position.z());
+	}
+
 	public int getAvId() {
 		return dataManager.get(SYNC_ID);
 	}
@@ -126,27 +164,15 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setAvId(nbt.getInteger("AvId"));
-		// Not necessary to check hidden
+		ownerRef.readFromNbt(nbt);
 	}
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("AvId", getAvId());
-		// Not necessary to check hidden
+		ownerRef.writeToNbt(nbt);
 	}
-	
-	//@formatter:off
-	protected Vector createInternalVelocity() {
-		return new BackedVector(
-				x -> this.motionX = x / 20,
-				y -> this.motionY = y / 20,
-				z -> this.motionZ = z / 20,
-				() -> this.motionX * 20,
-				() -> this.motionY * 20,
-				() -> this.motionZ * 20);
-	}
-	//@formatter:on
-	
+
 	/**
 	 * Looks up an entity from the world, given its {@link #getAvId() synced id}
 	 * . Returns null if not found.
@@ -217,6 +243,12 @@ public abstract class AvatarEntity extends Entity {
 		if (isCollided) {
 			onCollideWithSolid();
 		}
+		if (inWater) {
+			onMajorWaterContact();
+		}
+		if (world.isRainingAt(getPosition())) {
+			onMinorWaterContact();
+		}
 		
 		Vector v = velocity().dividedBy(20);
 		move(MoverType.SELF, v.x(), v.y(), v.z());
@@ -283,18 +315,29 @@ public abstract class AvatarEntity extends Entity {
 	protected void onCollideWithEntity(Entity entity) {}
 	
 	/**
-	 * Called when the entity collides with blocks or a wall
+	 * Called when the entity collides with blocks or a wall. Returns whether the entity was
+	 * destroyed.
 	 */
-	public void onCollideWithSolid() {}
-	
+	public boolean onCollideWithSolid() {
+		return false;
+	}
+
 	/**
-	 * Called when another entity destroys this AvatarEntity. If it is
-	 * considered to be destroyable, this is where things should be "cleaned up"
-	 * (eg remove status control). Returns true if it was destroyed. Some
-	 * entities are too strong to destroy, such as an air bubble.
+	 * Called when small sources of water hit the entity, such as rain. Larger sources, like
+	 * hitting a water block, should be handled in {@link #onMajorWaterContact()}. Returns
+	 * whether the entity was destroyed.
 	 */
-	public boolean tryDestroy() {
-		return true;
+	public boolean onMinorWaterContact() {
+		return false;
+	}
+
+	/**
+	 * Called when the entity comes into contact with large sources of water, like water blocks.
+	 * Other sources of wetness, like rain, should be handled in {@link #onMinorWaterContact()}.
+	 * Returns whether the entity was destroyed.
+	 */
+	public boolean onMajorWaterContact() {
+		return false;
 	}
 	
 	/**
@@ -338,7 +381,26 @@ public abstract class AvatarEntity extends Entity {
 		}
 		
 	}
-	
+
+	/**
+	 * Spawns smoke particles and plays sounds to indicate that the entity is being extinguished
+	 */
+	protected void spawnExtinguishIndicators() {
+
+		ParticleSpawner particleSpawner;
+		if (world.isRemote) {
+			particleSpawner = new ClientParticleSpawner();
+		} else {
+			particleSpawner = new NetworkParticleSpawner();
+		}
+		particleSpawner.spawnParticles(world, EnumParticleTypes.CLOUD, 4, 8, posX, posY, posZ,
+				0.05, 0.2, 0.05);
+
+		world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+				SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f);
+
+	}
+
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {
 		return getEntityBoundingBox();

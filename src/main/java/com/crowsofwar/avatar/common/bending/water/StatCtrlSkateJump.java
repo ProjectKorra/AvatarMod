@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -49,15 +48,15 @@ public class StatCtrlSkateJump extends StatusControl {
 			data.removeTickHandler(TickHandler.WATER_SKATE);
 			data.setCanUseAbilities(true);
 			
-			Vector velocity = Vector.getLookRectangular(entity);
-			velocity.mul(1.5);
+			Vector velocity = Vector.getLookRectangular(entity).times(1.5);
 			entity.motionX = velocity.x() * 2;
 			entity.motionY = velocity.y();
 			entity.motionZ = velocity.z() * 2;
 			AvatarUtils.afterVelocityAdded(entity);
-			
+
 			data.setFallAbsorption(9);
-			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
+
+			AbilityData abilityData = data.getAbilityData("water_skate");
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}

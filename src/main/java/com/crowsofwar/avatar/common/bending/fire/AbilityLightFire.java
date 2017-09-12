@@ -17,20 +17,12 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static java.lang.Math.floor;
-
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
@@ -38,6 +30,10 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.floor;
 
 /**
  * 
@@ -48,9 +44,6 @@ public class AbilityLightFire extends FireAbility {
 	
 	private final ParticleSpawner particles;
 	
-	/**
-	 * @param controller
-	 */
 	public AbilityLightFire() {
 		super("light_fire");
 		requireRaytrace(-1, false);
@@ -108,7 +101,7 @@ public class AbilityLightFire extends FireAbility {
 	
 	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
 			double chance) {
-		
+
 		if (world.isRainingAt(blockPos)) {
 			
 			particles.spawnParticles(world, EnumParticleTypes.CLOUD, 3, 7, ctx.getLookPos(),
@@ -121,7 +114,7 @@ public class AbilityLightFire extends FireAbility {
 			if (world.getBlockState(blockPos).getBlock() == Blocks.AIR
 					&& Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
 				
-				if (!useChi || ctx.consumeChi(STATS_CONFIG.chiLightFire)) {
+				if (!useChi || ctx.getBender().consumeChi(STATS_CONFIG.chiLightFire)) {
 					
 					double random = Math.random() * 100;
 					
@@ -134,10 +127,9 @@ public class AbilityLightFire extends FireAbility {
 						
 						return true;
 						
-					} else if (ctx.getBender().isPlayer()) {
+					} else {
 						
-						AvatarMod.network.sendTo(new PacketCErrorMessage("avatar.ability.light_fire.fail"),
-								(EntityPlayerMP) ctx.getBenderEntity());
+						ctx.getBender().sendMessage("avatar.ability.light_fire.fail");
 						
 					}
 					
@@ -149,5 +141,5 @@ public class AbilityLightFire extends FireAbility {
 		return false;
 		
 	}
-	
+
 }

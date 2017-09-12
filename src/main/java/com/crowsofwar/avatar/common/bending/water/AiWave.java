@@ -16,9 +16,9 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -39,7 +39,7 @@ import static java.lang.Math.toDegrees;
  */
 public class AiWave extends BendingAi {
 	
-	protected AiWave(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiWave(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
 	
@@ -93,9 +93,11 @@ public class AiWave extends BendingAi {
 	private boolean isAtEdgeOfWater() {
 		
 		World world = entity.world;
-		Vector look = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget())).setY(0);
-		
-		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).add(0, -1, 0),
+		Vector look = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()))
+				.withY(0);
+
+		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity)
+						.minusY(1),
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
 			
