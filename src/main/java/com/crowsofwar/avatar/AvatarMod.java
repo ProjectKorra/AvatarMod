@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIceWalk;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRedirect;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningStrike;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
@@ -243,6 +244,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityIcePrison());
 		Abilities.register(new AbilitySandPrison());
 		Abilities.register(new AbilityLightningArc());
+		Abilities.register(new AbilityLightningRedirect());
 	}
 
 	private static void registerBendingStyles() {
