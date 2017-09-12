@@ -19,12 +19,7 @@ package com.crowsofwar.avatar.common.data.ctx;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderInfo;
-import com.crowsofwar.avatar.common.data.BenderInfoPlayer;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.LightningRedirectionData;
-import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
@@ -167,13 +162,24 @@ public class PlayerBender extends Bender {
 		}
 
 		BendingData data = getData();
+		AbilityData abilityData = data.getAbilityData("lightning_redirect");
 
-		LightningRedirectionData redirectionData = new LightningRedirectionData(lightningArc);
-		data.getMiscData().getLightningRedirectionData().add(redirectionData);
+		// Percent chance to redirect lightning; 0..100
+		double chance = abilityData.getLevel() * 10 + 60;
 
-		data.addTickHandler(TickHandler.LIGHTNING_REDIRECT);
+		if (Math.random() * 100 < chance) {
 
-		return true;
+			LightningRedirectionData redirectionData = new LightningRedirectionData(lightningArc);
+			data.getMiscData().getLightningRedirectionData().add(redirectionData);
+
+			data.addTickHandler(TickHandler.LIGHTNING_REDIRECT);
+
+			return true;
+
+		}
+
+		return false;
+
 	}
 
 }
