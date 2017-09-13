@@ -40,7 +40,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class AbilityWall extends EarthAbility {
 	
 	public AbilityWall() {
-		super("earth_wall");
+		super("wall");
 		requireRaytrace(6, false);
 	}
 	
