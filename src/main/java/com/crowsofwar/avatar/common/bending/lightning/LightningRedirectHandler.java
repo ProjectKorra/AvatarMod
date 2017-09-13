@@ -15,6 +15,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.joml.SimplexNoise;
 
 import java.util.List;
 import java.util.UUID;
@@ -108,10 +109,15 @@ public class LightningRedirectHandler extends TickHandler {
 
 	private void applyShakiness(EntityLivingBase entity) {
 
-		entity.rotationYaw += 10;
+		float modPitch = SimplexNoise.noise(entity.ticksExisted / 25f, 0);
+		float modYaw = SimplexNoise.noise(entity.ticksExisted / 25f, 1000);
+
+		entity.rotationYaw += modYaw * 4;
+		entity.rotationPitch += modPitch * 4;
 
 		((EntityPlayerMP) entity).connection.setPlayerLocation(entity.posX, entity.posY, entity
-				.posZ, ((EntityPlayerMP) entity).rotationYaw, ((EntityPlayerMP) entity).rotationPitch);
+				.posZ, ((EntityPlayerMP) entity).rotationYaw, ((EntityPlayerMP) entity)
+				.rotationPitch);
 
 	}
 

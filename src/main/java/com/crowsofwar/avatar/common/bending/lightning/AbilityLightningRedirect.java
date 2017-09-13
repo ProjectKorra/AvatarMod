@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 /**
@@ -13,6 +14,8 @@ public class AbilityLightningRedirect extends Ability {
 	}
 
 	@Override
-	public void execute(AbilityContext ctx) {}
+	public void execute(AbilityContext ctx) {
+		ctx.getData().addTickHandler(TickHandler.LIGHTNING_REDIRECT);
+	}
 
 }
