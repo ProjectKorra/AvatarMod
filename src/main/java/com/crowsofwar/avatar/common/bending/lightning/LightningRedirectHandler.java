@@ -10,7 +10,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
@@ -37,6 +36,8 @@ public class LightningRedirectHandler extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 
+		applyShakiness(entity);
+
 		if (world.isRemote) {
 			return false;
 		}
@@ -45,8 +46,6 @@ public class LightningRedirectHandler extends TickHandler {
 
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-
-		applyShakiness(entity);
 
 		if (duration >= 40) {
 
@@ -109,15 +108,12 @@ public class LightningRedirectHandler extends TickHandler {
 
 	private void applyShakiness(EntityLivingBase entity) {
 
-		float modPitch = SimplexNoise.noise(entity.ticksExisted / 25f, 0);
-		float modYaw = SimplexNoise.noise(entity.ticksExisted / 25f, 1000);
+		float ticks = entity.ticksExisted;
+		float modPitch = SimplexNoise.noise(ticks / 25f, 0);
+		float modYaw = SimplexNoise.noise(ticks / 25f, 1000);
 
 		entity.rotationYaw += modYaw * 4;
 		entity.rotationPitch += modPitch * 4;
-
-		((EntityPlayerMP) entity).connection.setPlayerLocation(entity.posX, entity.posY, entity
-				.posZ, ((EntityPlayerMP) entity).rotationYaw, ((EntityPlayerMP) entity)
-				.rotationPitch);
 
 	}
 
