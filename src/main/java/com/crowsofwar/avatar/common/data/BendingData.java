@@ -534,6 +534,10 @@ public class BendingData {
 				nbt -> TickHandler.fromId(nbt.getInteger("Id")), //
 				readFrom, "TickHandlers");
 
+		for (TickHandler tickHandler : tickHandlers) {
+			tickHandlerDuration.putIfAbsent(tickHandler, 0);
+		}
+
 		// @formatter:on
 
 	}
