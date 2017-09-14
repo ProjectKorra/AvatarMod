@@ -94,6 +94,9 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_SKATING_BENDING_DISABLED = newChatMessage(CFG,
 			"avatar.skatingBendingDisabled");
 
+	public static final FormattedMessage MSG_LIGHTNING_REDIRECT_SUCCESS = newChatMessage(CFG,
+			"avatar.lightningRedirected", "lightningbender");
+
 	/**
 	 * Call the static initializers
 	 */

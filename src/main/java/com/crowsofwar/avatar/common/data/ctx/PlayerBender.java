@@ -31,6 +31,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_LIGHTNING_REDIRECT_SUCCESS;
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
 /**
@@ -173,6 +174,10 @@ public class PlayerBender extends Bender {
 			data.getMiscData().getLightningRedirectionData().add(redirectionData);
 
 			data.addTickHandler(TickHandler.LIGHTNING_REDIRECT);
+
+			String lightningArcOwner = lightningArc.getOwner() == null ? "lightningbender" :
+					lightningArc.getOwner().getName();
+			MSG_LIGHTNING_REDIRECT_SUCCESS.send(player, lightningArcOwner);
 
 			return true;
 

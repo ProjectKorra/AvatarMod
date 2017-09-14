@@ -70,6 +70,7 @@ avatar.bisonChestSlots2=inventory yet, but will gain
 avatar.bisonChestSlots3=more slots as it grows older.
 avatar.skatingBendingDisabled=[error]You can't use bending while water skating until you unlock level II.[/error]
 avatar.sandPrisonDisabled=The target must be on sand to be imprisoned.
+avatar.lightningRedirected=You redirected ${lightningbender}'s lightning!
 
 avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
