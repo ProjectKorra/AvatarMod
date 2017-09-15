@@ -39,6 +39,7 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 public class BendingData {
 
 	// static methods
+	@Nonnull
 	public static BendingData get(@Nonnull EntityLivingBase entity) {
 		if (entity instanceof EntityPlayer) {
 			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
@@ -47,12 +48,28 @@ public class BendingData {
 		}
 	}
 
+	@Nullable
 	public static BendingData get(World world, UUID playerId) {
 		return AvatarPlayerData.fetcher().fetch(world, playerId).getData();
 	}
 
+	@Nullable
 	public static BendingData get(World world, String playerName) {
 		return AvatarPlayerData.fetcher().fetch(world, playerName).getData();
+	}
+
+	@Nullable
+	public static BendingData get(World world, BenderInfo info) {
+		if (info.isPlayer()) {
+			return get(world, info.getId());
+		} else {
+			Bender bender = info.find(world);
+			if (bender != null) {
+				return get(bender.getEntity());
+			} else {
+				return null;
+			}
+		}
 	}
 
 	private final Consumer<DataCategory> saveCategory;

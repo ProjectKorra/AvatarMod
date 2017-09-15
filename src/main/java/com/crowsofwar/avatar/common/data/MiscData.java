@@ -19,8 +19,7 @@ package com.crowsofwar.avatar.common.data;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * 
@@ -38,13 +37,12 @@ public class MiscData {
 	private int petSummonCooldown;
 	private boolean bisonFollowMode;
 	private boolean canUseAbilities;
-	private List<LightningRedirectionData> lightningRedirectionData;
+	private BenderInfo redirectionSource;
 	
 	public MiscData(Runnable save) {
 		this.save = save;
 		this.bisonFollowMode = true;
 		this.canUseAbilities = true;
-		this.lightningRedirectionData = new ArrayList<>();
 	}
 	
 	public void toBytes(ByteBuf buf) {
@@ -81,6 +79,7 @@ public class MiscData {
 		if (!nbt.hasKey("CanUseAbilitiesA4.6")) {
 			canUseAbilities = true;
 		}
+		redirectionSource = BenderInfo.readFromNbt(nbt);
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -91,6 +90,7 @@ public class MiscData {
 		nbt.setInteger("PetSummonCooldown", petSummonCooldown);
 		nbt.setBoolean("BisonFollowMode", bisonFollowMode);
 		nbt.setBoolean("CanUseAbilitiesA4.6", canUseAbilities);
+		redirectionSource.writeToNbt(nbt);
 	}
 	
 	public float getFallAbsorption() {
@@ -158,8 +158,13 @@ public class MiscData {
 		this.canUseAbilities = canUseAbilities;
 	}
 
-	public List<LightningRedirectionData> getLightningRedirectionData() {
-		return lightningRedirectionData;
+	@Nonnull
+	public BenderInfo getRedirectionSource() {
+		return redirectionSource;
+	}
+
+	public void setRedirectionSource(BenderInfo redirectionSource) {
+		this.redirectionSource = redirectionSource;
 	}
 
 }

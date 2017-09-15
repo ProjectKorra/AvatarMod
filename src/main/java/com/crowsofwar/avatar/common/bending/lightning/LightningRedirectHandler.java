@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -48,9 +49,8 @@ public class LightningRedirectHandler extends TickHandler {
 
 		if (duration >= 40) {
 
-			EntityLivingBase originalShooter = data.getMiscData().getLightningRedirectionData()
-					.get(0).getOriginalShooter();
-			AbilityData abilityData = BendingData.get(originalShooter).getAbilityData
+			BenderInfo originalShooter = data.getMiscData().getRedirectionSource();
+			AbilityData abilityData = BendingData.get(world, originalShooter).getAbilityData
 					("lightning_arc");
 
 			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
@@ -70,7 +70,6 @@ public class LightningRedirectHandler extends TickHandler {
 //			List<LightningRedirectionData> redirectionDataList = data.getMiscData()
 //					.getLightningRedirectionData();
 			fireLightning(world, entity, damage, speed, size, turbulenceValues);
-			data.getMiscData().getLightningRedirectionData().clear();
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
