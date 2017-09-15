@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.LightningRedirectionData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
@@ -16,7 +16,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.joml.SimplexNoise;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -49,10 +48,29 @@ public class LightningRedirectHandler extends TickHandler {
 
 		if (duration >= 40) {
 
-			List<LightningRedirectionData> redirectionDataList = data.getMiscData()
-					.getLightningRedirectionData();
-			fireLightning(world, entity, redirectionDataList);
-			redirectionDataList.clear();
+			EntityLivingBase originalShooter = data.getMiscData().getLightningRedirectionData()
+					.get(0).getOriginalShooter();
+			AbilityData abilityData = BendingData.get(originalShooter).getAbilityData
+					("lightning_arc");
+
+			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
+			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
+			float size = 1;
+			float[] turbulenceValues = { 0.6f, 1.2f };
+
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damage = 12;
+				size = 0.75f;
+				turbulenceValues = new float[] { 0.6f, 1.2f, 0.8f };
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				size = 1.5f;
+			}
+
+//			List<LightningRedirectionData> redirectionDataList = data.getMiscData()
+//					.getLightningRedirectionData();
+			fireLightning(world, entity, damage, speed, size, turbulenceValues);
+			data.getMiscData().getLightningRedirectionData().clear();
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
@@ -68,24 +86,23 @@ public class LightningRedirectHandler extends TickHandler {
 
 	}
 
-	private void fireLightning(World world, EntityLivingBase entity,
-							   List<LightningRedirectionData> redirectionDataList) {
+	private void fireLightning(World world, EntityLivingBase entity, float damage, double speed,
+							   float size, float[] turbulenceValues) {
 
-		for (LightningRedirectionData redirectionData : redirectionDataList) {
+		for (float turbulence : turbulenceValues) {
 
 			EntityLightningArc lightning = new EntityLightningArc(world);
 			lightning.setOwner(entity);
-			lightning.setTurbulence(redirectionData.getTurbulence());
-			lightning.setDamage(redirectionData.getDamage());
-			lightning.setSizeMultiplier(redirectionData.getSizeMultiplier());
-			lightning.setMainArc(redirectionData.isMainArc());
-			lightning.setCreatedByRedirection(true);
+			lightning.setTurbulence(turbulence);
+			lightning.setDamage(damage);
+			lightning.setSizeMultiplier(size);
+			lightning.setMainArc(turbulence == turbulenceValues[0]);
 
 			lightning.setPosition(Vector.getEyePos(entity));
 			lightning.setEndPos(Vector.getEyePos(entity));
 
 			Vector velocity = Vector.getLookRectangular(entity);
-			velocity = velocity.normalize().times(20); // TODO redirection speed
+			velocity = velocity.normalize().times(speed);
 			lightning.setVelocity(velocity);
 
 			world.spawnEntity(lightning);
