@@ -220,6 +220,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (world.isRemote) {
 			return;
 		}
+		if (!isMainArc()) {
+			return;
+		}
 
 		// Handle lightning redirection
 		boolean redirected = false;
@@ -230,7 +233,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		}
 
 		DamageSource damageSource = createDamageSource(entity);
-		if (!redirected && entity.attackEntityFrom(damageSource, damage * damageModifier)) {
+		if (!wasRedirected && !redirected && entity.attackEntityFrom(damageSource, damage *
+				damageModifier)) {
 
 			entity.setFire(4);
 
