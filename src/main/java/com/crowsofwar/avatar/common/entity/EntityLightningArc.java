@@ -217,6 +217,10 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private void damageEntity(EntityLivingBase entity, float damageModifier) {
 
+		if (world.isRemote) {
+			return;
+		}
+
 		// Handle lightning redirection
 		boolean redirected = false;
 		if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported
