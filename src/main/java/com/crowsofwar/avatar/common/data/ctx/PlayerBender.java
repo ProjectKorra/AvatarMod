@@ -170,10 +170,13 @@ public class PlayerBender extends Bender {
 
 		if (Math.random() * 100 < chance) {
 
-			LightningRedirectionData redirectionData = new LightningRedirectionData(lightningArc);
-			data.getMiscData().getLightningRedirectionData().add(redirectionData);
+			BenderInfo originalShooterInfo = BenderInfo.get(lightningArc.getOwner());
+			if (lightningArc.getOwner() != null) {
 
-			data.addTickHandler(TickHandler.LIGHTNING_REDIRECT);
+				data.getMiscData().setRedirectionSource(originalShooterInfo);
+				data.addTickHandler(TickHandler.LIGHTNING_REDIRECT);
+
+			}
 
 			String lightningArcOwner = lightningArc.getOwner() == null ? "lightningbender" :
 					lightningArc.getOwner().getName();

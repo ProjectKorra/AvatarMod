@@ -50,6 +50,12 @@ public class LightningRedirectHandler extends TickHandler {
 		if (duration >= 40) {
 
 			BenderInfo originalShooter = data.getMiscData().getRedirectionSource();
+
+			if (originalShooter.find(world) == null) {
+				return true;
+			}
+
+			@SuppressWarnings("ConstantConditions")
 			AbilityData abilityData = BendingData.get(world, originalShooter).getAbilityData
 					("lightning_arc");
 
@@ -67,8 +73,6 @@ public class LightningRedirectHandler extends TickHandler {
 				size = 1.5f;
 			}
 
-//			List<LightningRedirectionData> redirectionDataList = data.getMiscData()
-//					.getLightningRedirectionData();
 			fireLightning(world, entity, damage, speed, size, turbulenceValues);
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
