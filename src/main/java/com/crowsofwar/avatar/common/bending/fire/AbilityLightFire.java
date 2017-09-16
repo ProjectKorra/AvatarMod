@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
@@ -40,12 +41,12 @@ import static java.lang.Math.floor;
  * 
  * @author CrowsOfWar
  */
-public class AbilityLightFire extends FireAbility {
+public class AbilityLightFire extends Ability {
 	
 	private final ParticleSpawner particles;
 	
 	public AbilityLightFire() {
-		super("light_fire");
+		super(Firebending.ID, "light_fire");
 		requireRaytrace(-1, false);
 		particles = new NetworkParticleSpawner();
 	}

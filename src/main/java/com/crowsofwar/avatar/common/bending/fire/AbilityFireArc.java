@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -38,10 +39,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * 
  * @author CrowsOfWar
  */
-public class AbilityFireArc extends FireAbility {
+public class AbilityFireArc extends Ability {
 
 	public AbilityFireArc() {
-		super("fire_arc");
+		super(Firebending.ID, "fire_arc");
 		requireRaytrace(-1, false);
 	}
 	

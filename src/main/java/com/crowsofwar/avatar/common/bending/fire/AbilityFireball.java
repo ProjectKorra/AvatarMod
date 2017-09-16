@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -38,10 +39,10 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
  * 
  * @author CrowsOfWar
  */
-public class AbilityFireball extends FireAbility {
+public class AbilityFireball extends Ability {
 
 	public AbilityFireball() {
-		super("fireball");
+		super(Firebending.ID, "fireball");
 		requireRaytrace(2.5, false);
 	}
 	

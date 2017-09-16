@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -46,12 +47,12 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * 
  * @author CrowsOfWar
  */
-public class AbilityPickUpBlock extends EarthAbility {
+public class AbilityPickUpBlock extends Ability {
 	
 	private final Random random;
 	
 	public AbilityPickUpBlock() {
-		super("pickup_block");
+		super(Earthbending.ID, "pickup_block");
 		this.random = new Random();
 		requireRaytrace(-1, true);
 	}

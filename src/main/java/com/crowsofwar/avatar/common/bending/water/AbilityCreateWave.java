@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -33,10 +34,10 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class AbilityCreateWave extends WaterAbility {
+public class AbilityCreateWave extends Ability {
 
 	public AbilityCreateWave() {
-		super("wave");
+		super(Waterbending.ID, "wave");
 	}
 
 	@Override

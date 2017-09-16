@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -36,10 +37,10 @@ import static java.lang.Math.abs;
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirblade extends AirAbility {
+public class AbilityAirblade extends Ability {
 	
 	public AbilityAirblade() {
-		super("airblade");
+		super(Airbending.ID, "airblade");
 	}
 	
 	@Override

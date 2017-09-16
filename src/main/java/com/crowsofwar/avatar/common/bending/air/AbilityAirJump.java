@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -33,10 +34,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirJump extends AirAbility {
+public class AbilityAirJump extends Ability {
 	
 	public AbilityAirJump() {
-		super("air_jump");
+		super(Airbending.ID, "air_jump");
 	}
 	
 	@Override

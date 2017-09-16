@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -33,10 +34,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * 
  * @author CrowsOfWar
  */
-public class AbilityRavine extends EarthAbility {
+public class AbilityRavine extends Ability {
 	
 	public AbilityRavine() {
-		super("ravine");
+		super(Earthbending.ID, "ravine");
 	}
 	
 	@Override

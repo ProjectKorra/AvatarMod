@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -29,10 +30,10 @@ import net.minecraft.entity.EntityLiving;
  * 
  * @author CrowsOfWar
  */
-public class AbilityFlamethrower extends FireAbility {
+public class AbilityFlamethrower extends Ability {
 	
 	public AbilityFlamethrower() {
-		super("flamethrower");
+		super(Firebending.ID, "flamethrower");
 	}
 	
 	@Override

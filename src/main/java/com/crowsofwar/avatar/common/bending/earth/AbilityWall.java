@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -37,10 +38,10 @@ import java.util.Random;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class AbilityWall extends EarthAbility {
+public class AbilityWall extends Ability {
 	
 	public AbilityWall() {
-		super("wall");
+		super(Earthbending.ID, "wall");
 		requireRaytrace(6, false);
 	}
 	

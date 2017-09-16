@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
@@ -47,10 +48,10 @@ import static net.minecraft.init.Blocks.AIR;
  * 
  * @author CrowsOfWar
  */
-public class AbilityMining extends EarthAbility {
+public class AbilityMining extends Ability {
 	
 	public AbilityMining() {
-		super("mine_blocks");
+		super(Earthbending.ID, "mine_blocks");
 	}
 	
 	@Override

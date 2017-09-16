@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -35,10 +36,10 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECO
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirGust extends AirAbility {
+public class AbilityAirGust extends Ability {
 	
 	public AbilityAirGust() {
-		super("air_gust");
+		super(Airbending.ID, "air_gust");
 	}
 	
 	@Override

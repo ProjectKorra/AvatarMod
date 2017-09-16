@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -40,10 +41,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * 
  * @author CrowsOfWar
  */
-public class AbilityWaterBubble extends WaterAbility {
+public class AbilityWaterBubble extends Ability {
 
 	public AbilityWaterBubble() {
-		super("water_bubble");
+		super(Waterbending.ID, "water_bubble");
 		requireRaytrace(-1, false);
 	}
 	
