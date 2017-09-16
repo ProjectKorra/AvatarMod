@@ -117,7 +117,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 
 			if (waterSpear || entity.ticksExisted >= 40) {
-				entity.setVelocity(entity.velocity().minusY(9.81 / 60));
+				entity.addVelocity(Vector.DOWN.times(9.81 / 60));
 			}
 			
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(

@@ -163,8 +163,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				
 			}
 			
-			entity.addVelocity(0, -9.81 / 20, 0);
-			
+			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
+
 			World world = entity.world;
 			if (!entity.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
@@ -251,7 +251,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			entity.addVelocity(0, -9.81 / 20, 0);
+			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
 			
 			Vector velocity = entity.velocity();
 			if (velocity.y() <= 0) {
@@ -318,7 +318,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			entity.addVelocity(0, -9.81 / 20, 0);
+			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
 			if (entity.isCollided) {
 				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();

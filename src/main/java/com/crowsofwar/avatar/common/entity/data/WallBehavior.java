@@ -50,7 +50,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			entity.addVelocity(0, -7.0 / 20, 0);
+			entity.addVelocity(Vector.DOWN.times(7.0 / 20));
 			if (entity.onGround) {
 				entity.dropBlocks();
 				entity.setDead();
@@ -92,7 +92,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 					if (seg.height > maxHeight) maxHeight = (int) seg.height;
 				}
 				
-				entity.motionY = STATS_CONFIG.wallMomentum / 5 * maxHeight;
+				entity.motionY = STATS_CONFIG.wallMomentum / 5 * maxHeight / 20;
 				
 			} else {
 				entity.motionY *= 0.9;
