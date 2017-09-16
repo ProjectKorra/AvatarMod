@@ -34,12 +34,9 @@ public class LightningTickHandler extends TickHandler {
 	@Override
 	public boolean tick(BendingContext ctx) {
 
-
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
-
-		applyShakiness(entity);
 
 		if (world.isRemote) {
 			return false;
@@ -90,8 +87,6 @@ public class LightningTickHandler extends TickHandler {
 
 		return false;
 
-
-		return false;
 	}
 
 	private void fireLightning(World world, EntityLivingBase entity, float damage, double speed,
