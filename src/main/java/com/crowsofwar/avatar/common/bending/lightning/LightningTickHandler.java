@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -16,6 +15,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -26,10 +26,18 @@ import java.util.UUID;
  *
  * @author CrowsOfWar
  */
-public class LightningTickHandler extends TickHandler {
+public abstract class LightningTickHandler extends TickHandler {
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("dfb6235c-82b6-407e-beaf-a48045735a82");
+
+	/**
+	 * Gets AbilityData to be used for determining lightning strength. This is normally the
+	 * bender's AbilityData, but in the case of redirection, it is the original bender's
+	 * AbilityData.
+	 */
+	@Nullable
+	protected abstract AbilityData getLightningData(BendingContext ctx);
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -49,15 +57,10 @@ public class LightningTickHandler extends TickHandler {
 
 		if (duration >= 40) {
 
-			BenderInfo originalShooter = data.getMiscData().getRedirectionSource();
-
-			if (originalShooter.find(world) == null) {
+			AbilityData abilityData = getLightningData(ctx);
+			if (abilityData == null) {
 				return true;
 			}
-
-			@SuppressWarnings("ConstantConditions")
-			AbilityData abilityData = BendingData.get(world, originalShooter).getAbilityData
-					("lightning_arc");
 
 			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			float damage = abilityData.getLevel() >= 2 ? 8 : 6;

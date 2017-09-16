@@ -1,8 +1,14 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
 import org.joml.SimplexNoise;
+
+import javax.annotation.Nullable;
 
 /**
  * Same as LightningChargeHandler, but handles lightning redirection
@@ -10,6 +16,27 @@ import org.joml.SimplexNoise;
  * @author CrowsOfWar
  */
 public class LightningRedirectHandler extends LightningTickHandler {
+
+	@Override
+	@Nullable
+	protected AbilityData getLightningData(BendingContext ctx) {
+
+		BendingData data = ctx.getData();
+		World world = ctx.getWorld();
+
+		BenderInfo originalShooter = data.getMiscData().getRedirectionSource();
+
+		if (originalShooter.find(world) == null) {
+			return null;
+		}
+
+		// No nullable warning here needed because if the originalShooter entity is present (as
+		// guaranteed above), BendingData#get won't return null
+		//noinspection ConstantConditions
+		return BendingData.get(world, originalShooter).getAbilityData
+				("lightning_arc");
+
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
