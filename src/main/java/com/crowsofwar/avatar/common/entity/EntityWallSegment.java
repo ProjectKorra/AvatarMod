@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -53,6 +52,7 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 /**
  * @author CrowsOfWar
  */
+@SuppressWarnings("Guava")
 public class EntityWallSegment extends AvatarEntity implements IEntityAdditionalSpawnData {
 
 	public static final int SEGMENT_HEIGHT = 5;
@@ -89,7 +89,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_WALL, null);
+		dataManager.register(SYNC_WALL, Optional.absent());
 		for (DataParameter<Optional<IBlockState>> sync : SYNC_BLOCKS_DATA)
 			dataManager.register(sync, Optional.of(Blocks.STONE.getDefaultState()));
 		dataManager.register(SYNC_BEHAVIOR, new WallBehavior.Rising());
