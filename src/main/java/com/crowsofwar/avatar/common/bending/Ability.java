@@ -97,6 +97,14 @@ public abstract class Ability {
 	}
 
 	/**
+	 * Whether the ability is visible in the radial menu. Note that this doesn't hide the ability
+	 * from the skills menu.
+	 */
+	public boolean isVisibleInRadial() {
+		return true;
+	}
+
+	/**
 	 * Creates a new instance of AI for the given entity/bender.
 	 */
 	public BendingAi getAi(EntityLiving entity, Bender bender) {

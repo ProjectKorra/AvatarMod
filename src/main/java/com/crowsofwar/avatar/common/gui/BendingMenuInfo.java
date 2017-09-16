@@ -17,10 +17,11 @@
 
 package com.crowsofwar.avatar.common.gui;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Encapsulates information about an BendingController's radial menu- the
@@ -37,15 +38,17 @@ public class BendingMenuInfo {
 	 * 
 	 * @param theme
 	 *            The theme of this menu, defines colors, etc.
-	 * @param buttons
-	 *            An array of abilities which will be used as the buttons. Can't
-	 *            be more than 8. If it is less than 8, the unspecified elements
-	 *            are filled with {@link AvatarAbility#NONE}.
 	 */
 	public BendingMenuInfo(MenuTheme theme, BendingStyle bending) {
+
 		List<Ability> buttons = bending.getAllAbilities();
+
+		// Filter out invisible abilities
+		buttons = buttons.stream().filter(Ability::isVisibleInRadial).collect(Collectors.toList());
+
 		if (buttons.size() > 8) throw new IllegalArgumentException(
 				"Cannot get BendingMenuInfo with buttons being larger than 8");
+
 		this.theme = theme;
 		this.buttons = new Ability[8];
 		for (int i = 0; i < 8; i++)
