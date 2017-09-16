@@ -11,11 +11,11 @@ import org.joml.SimplexNoise;
 import javax.annotation.Nullable;
 
 /**
- * Same as LightningChargeHandler, but handles lightning redirection
+ * Same as LightningCreateHandler, but handles lightning redirection
  *
  * @author CrowsOfWar
  */
-public class LightningRedirectHandler extends LightningTickHandler {
+public class LightningRedirectHandler extends LightningChargeHandler {
 
 	@Override
 	@Nullable
