@@ -18,4 +18,8 @@ public class AbilityLightningRedirect extends Ability {
 		// For lightning redirection code, see PlayerBender#redirectLightning
 	}
 
+	@Override
+	public boolean isVisibleInRadial() {
+		return false;
+	}
 }
