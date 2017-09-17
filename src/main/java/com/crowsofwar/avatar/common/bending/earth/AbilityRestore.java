@@ -7,7 +7,9 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -27,8 +29,7 @@ public class AbilityRestore extends Ability {
         World world = ctx.getWorld();
         if (bender.consumeChi(STATS_CONFIG.chiRestore)){
             AbilityData abilityData = data.getAbilityData(this);
-
-
+            entity.addPotionEffect(new PotionEffect (MobEffects.INSTANT_HEALTH, 1));
         }
 
     }
