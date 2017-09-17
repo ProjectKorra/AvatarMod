@@ -1,11 +1,13 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -24,6 +26,8 @@ public class AbilityRestore extends Ability {
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
         if (bender.consumeChi(STATS_CONFIG.chiRestore)){
+            AbilityData abilityData = data.getAbilityData(this);
+            
 
         }
 
