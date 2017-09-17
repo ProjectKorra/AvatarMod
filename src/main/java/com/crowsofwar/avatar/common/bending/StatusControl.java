@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleContract;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleExpand;
+import com.crowsofwar.avatar.common.bending.air.StatCtrlThrowCloudBall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlDropWall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
@@ -68,6 +69,7 @@ public abstract class StatusControl {
 			SKATING_JUMP = new StatCtrlSkateJump(),
 			SKATING_START = new StatCtrlSkateStart(),
 			THROW_FIREBALL = new StatCtrlThrowFireball(),
+			THROW_CLOUDBURST = new StatCtrlThrowCloudBall(),
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
 			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
 			ICE_WALK = new StatCtrlIceWalk(),
