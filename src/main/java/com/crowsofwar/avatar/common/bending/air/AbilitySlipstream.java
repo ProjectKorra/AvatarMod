@@ -36,13 +36,12 @@ public class AbilitySlipstream extends Ability {
             if (abilityData.getLevel() == 2) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 2));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 150, 2));
-                float xp = SKILLS_CONFIG.fireballHit;
+
                 data.getAbilityData("cleanse").addXp(xp);
                 if (abilityData.getLevel() == 3) {
                     entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100, 2));
                     entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 2));
                     entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 2));
-                    float xp = SKILLS_CONFIG.fireballHit;
                     data.getAbilityData("cleanse").addXp(xp);
                     if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                         entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100, 2));
