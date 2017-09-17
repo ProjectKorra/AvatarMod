@@ -103,7 +103,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall>{
 
             BendingData data = Bender.get(entity.getOwner()).getData();
             if (!collided.world.isRemote && data != null) {
-                float xp = SKILLS_CONFIG.fireballHit;
+                float xp = SKILLS_CONFIG.cloudburstHit;
                 data.getAbilityData("cloudburst").addXp(xp);
             }
 
