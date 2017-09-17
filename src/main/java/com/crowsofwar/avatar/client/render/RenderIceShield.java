@@ -20,7 +20,7 @@ public class RenderIceShield extends Render<EntityIceShield> {
 
 	private ModelBase model;
 
-	protected RenderIceShield(RenderManager renderManager) {
+	public RenderIceShield(RenderManager renderManager) {
 		super(renderManager);
 		model = new ModelIceShield();
 	}
