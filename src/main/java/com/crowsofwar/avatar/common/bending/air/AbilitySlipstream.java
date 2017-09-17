@@ -27,12 +27,12 @@ public class AbilitySlipstream extends Ability {
             World world = ctx.getWorld();
             if (bender.consumeChi(STATS_CONFIG.chiSlipstream)){
                 AbilityData abilityData = data.getAbilityData(this);
-                entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1));
-                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 5, 2));
-                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 5, 2));
-                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 5, 2));
-                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 5, 2));
-                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 5, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 100));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
             }
 
         }
