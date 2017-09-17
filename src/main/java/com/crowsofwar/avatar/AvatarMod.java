@@ -145,7 +145,7 @@ public class AvatarMod {
 		WaterBubbleBehavior.register();
 		WallBehavior.register();
 		FireballBehavior.register();
-		
+		CloudburstBehavior.register();
 		AvatarChatMessages.loadAll();
 		
 		EarthbendingEvents.register();
@@ -183,6 +183,7 @@ public class AvatarMod {
 		registerEntity(EntityOstrichHorse.class, "OstrichHorse");
 		registerEntity(EntitySandPrison.class, "sandprison");
 		registerEntity(EntityLightningArc.class, "lightningarc");
+		registerEntity(EntityCloudBall.class, "cloudburst");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
@@ -245,6 +246,7 @@ public class AvatarMod {
 		Abilities.register(new AbilitySandPrison());
 		Abilities.register(new AbilityLightningArc());
 		Abilities.register(new AbilityLightningRedirect());
+		Abilities.register(new AbilityCloudBurst());
 	}
 
 	private static void registerBendingStyles() {
