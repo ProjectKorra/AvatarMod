@@ -111,7 +111,7 @@ public class ModelIceShield extends ModelBase {
 	private ModelRenderer shape96;
 	private ModelRenderer shape97;
 
-	private ModelIceShield() {
+	public ModelIceShield() {
 		this.textureWidth = 256;
 		this.textureHeight = 128;
 		this.shape85 = new ModelRenderer(this, 0, 0);
