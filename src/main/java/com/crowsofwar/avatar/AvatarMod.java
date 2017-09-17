@@ -19,6 +19,7 @@ package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
@@ -247,6 +248,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityLightningArc());
 		Abilities.register(new AbilityLightningRedirect());
 		Abilities.register(new AbilityCloudBurst());
+		Abilities.register(new AbilityRestore());
 	}
 
 	private static void registerBendingStyles() {

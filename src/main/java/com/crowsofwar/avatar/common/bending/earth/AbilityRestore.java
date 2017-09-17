@@ -27,7 +27,7 @@ public class AbilityRestore extends Ability {
         World world = ctx.getWorld();
         if (bender.consumeChi(STATS_CONFIG.chiRestore)){
             AbilityData abilityData = data.getAbilityData(this);
-            
+
 
         }
 
