@@ -34,6 +34,7 @@ public class RenderIceShield extends Render<EntityIceShield> {
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
+		GlStateManager.translate(0, 0.3, 0);
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();
 
