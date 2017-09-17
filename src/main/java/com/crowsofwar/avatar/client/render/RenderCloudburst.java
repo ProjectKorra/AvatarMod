@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
-import com.crowsofwar.avatar.common.entity.EntityFireball;
+import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -9,7 +9,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -24,6 +27,7 @@ public class RenderCloudburst extends Render<EntityCloudBall>{
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
             "textures/entity/cloudburst.png");
+    private static final Random random = new Random();
 
     public RenderCloudburst(RenderManager renderManager) {
         super(renderManager);
@@ -45,6 +49,14 @@ public class RenderCloudburst extends Render<EntityCloudBall>{
         size *= Math.sqrt(entity.getSize() / 30f);
 
         enableBlend();
+        if (entity.ticksExisted % 3 == 0) {
+            World world = entity.world;
+            AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+            double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+            double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+            double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+            world.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
+        }
 
         if (MinecraftForgeClient.getRenderPass() == 0) {
 
@@ -131,7 +143,10 @@ public class RenderCloudburst extends Render<EntityCloudBall>{
             t.draw();
 
         }
+
+
     }
+
 
     @Override
     protected ResourceLocation getEntityTexture(EntityCloudBall entity) {

@@ -112,6 +112,7 @@ public class EntityCloudBall extends AvatarEntity {
             }
         }
         if (!world.isRemote){
+
             world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 0, 0, 0 );
         }
 
