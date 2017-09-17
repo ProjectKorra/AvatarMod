@@ -12,6 +12,9 @@ import javax.annotation.Nullable;
  */
 public class RenderIceShield extends Render<EntityIceShield> {
 
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
+			"textures/entity/ice-shield.png");
+
 	protected RenderIceShield(RenderManager renderManager) {
 		super(renderManager);
 	}
@@ -19,7 +22,7 @@ public class RenderIceShield extends Render<EntityIceShield> {
 	@Nullable
 	@Override
 	protected ResourceLocation getEntityTexture(EntityIceShield entity) {
-		return null;
+		return TEXTURE;
 	}
 
 }
