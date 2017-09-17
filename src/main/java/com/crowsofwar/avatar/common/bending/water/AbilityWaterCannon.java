@@ -5,8 +5,8 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 import java.util.UUID;
 
-public class WaterCannon extends Ability{
-    public WaterCannon() {
+public class AbilityWaterCannon extends Ability{
+    public AbilityWaterCannon() {
         super(Waterbending.ID, "water_cannon");
     }
 
