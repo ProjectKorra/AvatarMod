@@ -249,6 +249,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityLightningRedirect());
 		Abilities.register(new AbilityCloudBurst());
 		Abilities.register(new AbilityRestore());
+		Abilities.register(new AbilitySlipstream());
 	}
 
 	private static void registerBendingStyles() {
