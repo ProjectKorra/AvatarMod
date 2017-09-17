@@ -28,7 +28,6 @@ public class AbilitySlipstream extends Ability {
         World world = ctx.getWorld();
         if (bender.consumeChi(STATS_CONFIG.chiSlipstream)) {
             AbilityData abilityData = data.getAbilityData(this);
-            if (abilityData.getLevel() == 1) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 2));
                 float xp = SKILLS_CONFIG.madeLightning;
                 data.getAbilityData("cleanse").addXp(xp);
@@ -63,5 +62,5 @@ public class AbilitySlipstream extends Ability {
             }
         }
     }
-}
+
 
