@@ -28,29 +28,29 @@ public class AbilitySlipstream extends Ability {
         World world = ctx.getWorld();
         if (bender.consumeChi(STATS_CONFIG.chiSlipstream)) {
             AbilityData abilityData = data.getAbilityData(this);
-                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
                 float xp = SKILLS_CONFIG.madeLightning;
                 data.getAbilityData("cleanse").addXp(xp);
 
 
                 if (abilityData.getLevel() == 2) {
-                    entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 2));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 150, 2));
+                    entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100));
+                    entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 150, 1));
 
                     data.getAbilityData("cleanse").addXp(xp);
                     if (abilityData.getLevel() == 3) {
-                        entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100, 2));
-                        entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 2));
+                        entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
+                        entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 2));
                         data.getAbilityData("cleanse").addXp(xp);
                         if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                            entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100, 2));
+                            entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100, 1));
                             entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100, 2));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 2));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 2));
+                            entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100, 1));
+                            entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
+                            entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 1));
                             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300, 3));
+                                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300, 2));
                                 entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 300, 2));
                                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300, 3));
 
