@@ -35,7 +35,7 @@ public class AbilitySlipstream extends Ability {
 
                 if (abilityData.getLevel() == 2) {
                     entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 150, 1));
+                    entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
 
                     data.getAbilityData("cleanse").addXp(xp);
                     if (abilityData.getLevel() == 3) {
@@ -48,11 +48,11 @@ public class AbilitySlipstream extends Ability {
                             entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
                             entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100, 1));
                             entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 1));
+                            entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
                             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300, 2));
-                                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 300, 2));
-                                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300, 3));
+                                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 200, 2));
+                                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 200, 2));
+                                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 3));
 
                             }
 
