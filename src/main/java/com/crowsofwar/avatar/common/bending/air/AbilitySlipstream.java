@@ -30,7 +30,7 @@ public class AbilitySlipstream extends Ability {
             AbilityData abilityData = data.getAbilityData(this);
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
                 float xp = SKILLS_CONFIG.cloudburstHit;
-                data.getAbilityData("cleanse").addXp(xp);
+                data.getAbilityData("slipstream").addXp(xp);
 
 
                 if (abilityData.getLevel() == 2) {
