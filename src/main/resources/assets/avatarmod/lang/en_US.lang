@@ -21,6 +21,7 @@ avatar.waterbending=Waterbending
 avatar.waterbending.demonym=Waterbender
 avatar.airbending=Airbending
 avatar.airbending.demonym=Airbender
+avatar.lightningbending.demonym=Lightningbender
 avatar.all=Universal
 
 avatar.cmd.bending=Manage a player's bending controllers.
@@ -220,6 +221,10 @@ avatar.ability.air_bubble.lvl2=Medium-sized air bubble
 avatar.ability.air_bubble.lvl3=More knockback
 avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
 avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by sneak
+
+avatar.ability.slipstream=Slipstream
+avatar.ability.slipstream.desc=Surround yourself in a veil of air, increasing your movement speed.
+avatar.ability.slipstream.lvl1=Give yourself Speed I for 5 seconds.
 
 avatar.ability.lightning_arc=Lightning Bolt
 avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your
