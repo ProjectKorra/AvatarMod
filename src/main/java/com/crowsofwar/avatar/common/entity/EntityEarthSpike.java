@@ -172,7 +172,7 @@ public class EntityEarthSpike extends AvatarEntity {
         if (!world.isRemote && getOwner() != null) {
             BendingData data = BendingData.get(getOwner());
             if (data != null) {
-                data.getAbilityData("ravine").addXp(SKILLS_CONFIG.ravineHit * attacked);
+                data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit * attacked);
             }
         }
 
