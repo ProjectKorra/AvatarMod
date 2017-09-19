@@ -38,6 +38,7 @@ public class Earthbending extends BendingStyle {
 		addAbility("wall");
 		addAbility("mine_blocks");
 		addAbility("restore");
+		addAbility("earthspike");
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
 		Color gray = new Color(90, 90, 90);
