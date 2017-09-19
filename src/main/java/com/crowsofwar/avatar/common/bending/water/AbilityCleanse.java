@@ -28,20 +28,25 @@ public class AbilityCleanse extends Ability {
         World world = ctx.getWorld();
         if (bender.consumeChi(STATS_CONFIG.chiSlipstream)) {
             AbilityData abilityData = data.getAbilityData(this);
-            int regenboost = abilityData.getLevel() - 1;
-            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, regenboost));
-            if (abilityData.getLevel() == 2) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, regenboost));
+            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
+            if (abilityData.getLevel() == 1) {
+                entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
                 entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200));
-                if (abilityData.getLevel() == 3) {
-                    entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, regenboost));
+                if (abilityData.getLevel() == 2) {
+                    entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 1));
                     entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
                     entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
                     if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                         entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 200, 1));
-                        entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, regenboost));
+                        entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200, 1));
+                        if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
+                            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 2));
+                            entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
+                            entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
+
+                        }
                     }
 
                 }
