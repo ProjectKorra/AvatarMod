@@ -63,16 +63,6 @@ public abstract class Bender {
 	}
 
 	/**
-	 * Returns whether this bender is a player
-	 *
-	 * @deprecated This ruins abstraction; <a href="https://trello.com/c/ph9WP946/210-remove-benderisplayer">to be removed</a>
-	 */
-	@Deprecated
-	public boolean isPlayer() {
-		return getEntity() instanceof EntityPlayer;
-	}
-
-	/**
 	 * Get a BenderInfo object, a way to store the Bender's lookup information on disk so it can be
 	 * found again later.
 	 */
