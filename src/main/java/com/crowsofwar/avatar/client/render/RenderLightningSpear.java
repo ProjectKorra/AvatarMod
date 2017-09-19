@@ -21,7 +21,7 @@ import java.util.Random;
 
 public class RenderLightningSpear extends Render<EntityLightningSpear> {
     public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-            "textures/entity/airblade.png");
+            "textures/entity/lightning_spear.png");
     private static final Random random = new Random();
 
     public RenderLightningSpear(RenderManager renderManager) {
