@@ -63,7 +63,7 @@ public class EntityEarthSpike extends AvatarEntity {
     public EntityEarthSpike(World world) {
         super(world);
         setSize(1, 1);
-        this.damageMult = 1.1F;
+        this.damageMult = 1.6F;
     }
 
     public void setDamageMult(float mult) {
@@ -109,7 +109,7 @@ public class EntityEarthSpike extends AvatarEntity {
         Vector position = position();
         Vector velocity = velocity();
 
-        setPosition(position.plus(velocity.times(0.05)));
+        setPosition(position.plus(velocity.times(0.5)));
 
         if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
             setDead();
