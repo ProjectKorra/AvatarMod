@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.air.AiAirblade;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -17,8 +19,10 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRS
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 import static java.lang.Math.abs;
 
-public class AbilityLightningSpear extends Lightningbending {
-    public AbilityLightningSpear(){super(Lightningbending.ID, "lightning_spear");}
+public class AbilityLightningSpear extends Ability {
+    public AbilityLightningSpear() {
+        super(Lightningbending.ID, "lightning_spear");
+    }
     @Override
     public void execute(AbilityContext ctx) {
 
@@ -63,7 +67,7 @@ public class AbilityLightningSpear extends Lightningbending {
 
     @Override
     public BendingAi getAi(EntityLiving entity, Bender bender) {
-        return new AiAirblade(this, entity, bender);
+        return new AiLightningSpear(this, entity, bender);
     }
 
 }
