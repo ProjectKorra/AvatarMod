@@ -42,7 +42,7 @@ import static net.minecraft.util.math.MathHelper.cos;
 public class RenderLightningSpear extends Render<EntityLightningSpear> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-            "textures/entity/lightning_spear.png");
+            "textures/entity/lightningspear.png");
 
     public RenderLightningSpear(RenderManager renderManager) {
         super(renderManager);
