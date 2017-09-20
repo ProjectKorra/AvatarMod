@@ -45,7 +45,7 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 public class AbilityLightningSpear extends Ability {
 
     public AbilityLightningSpear() {
-        super(Firebending.ID, "lightningspear");
+        super(Firebending.ID, "lightning_spear");
         requireRaytrace(2.5, false);
     }
 

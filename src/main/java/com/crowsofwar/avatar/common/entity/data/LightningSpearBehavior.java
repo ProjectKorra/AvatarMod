@@ -126,7 +126,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             BendingData data = Bender.get(entity.getOwner()).getData();
             if (!collided.world.isRemote && data != null) {
                 float xp = SKILLS_CONFIG.fireballHit;
-                data.getAbilityData("lightningspear").addXp(xp);
+                data.getAbilityData("lightning_spear").addXp(xp);
             }
 
             // Remove the fireball & spawn particles
@@ -168,7 +168,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
             entity.setVelocity(motion);
 
-            if (data.getAbilityData("lightningspear").isMasterPath(AbilityTreePath.SECOND)) {
+            if (data.getAbilityData("lightning_spear").isMasterPath(AbilityTreePath.SECOND)) {
                 int size = entity.getSize();
                 if (size < 60 && entity.ticksExisted % 4 == 0) {
                     entity.setSize(size + 1);

@@ -137,7 +137,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
         if (getOwner() != null) {
             AbilityData abilityData = BendingData.get(getOwner())
-                    .getAbilityData("lightningspear");
+                    .getAbilityData("lightning_spear");
             if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
                 destroyObsidian = false;
             }
