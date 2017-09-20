@@ -32,12 +32,13 @@ public class AbilityLightningSpear extends Ability {
     public void execute(AbilityContext ctx) {
 
         EntityLivingBase entity = ctx.getBenderEntity();
+        Bender bender = ctx.getBender();
         World world = ctx.getWorld();
         BendingData data = ctx.getData();
 
         if (data.hasStatusControl(StatusControl.THROW_LIGHTNINSPEAR)) return;
 
-        if (ctx.consumeChi(STATS_CONFIG.chiCloudburst)) {
+        if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
 
             Vector target;
             if (ctx.isLookingAtBlock()) {
