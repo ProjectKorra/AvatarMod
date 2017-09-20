@@ -35,7 +35,7 @@ public class AbilityLightningSpear extends Ability {
         World world = ctx.getWorld();
         BendingData data = ctx.getData();
 
-        if (data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) return;
+        if (data.hasStatusControl(StatusControl.THROW_LIGHTNINSPEAR)) return;
 
         if (ctx.consumeChi(STATS_CONFIG.chiCloudburst)) {
 
@@ -59,7 +59,7 @@ public class AbilityLightningSpear extends Ability {
             world.spawnEntity(spear);
 
 
-            data.addStatusControl(StatusControl.THROW_CLOUDBURST);
+            data.addStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
 
         }
 
