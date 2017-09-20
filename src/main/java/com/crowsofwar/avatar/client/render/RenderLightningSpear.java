@@ -152,7 +152,7 @@ public class RenderLightningSpear extends Render<EntityLightningSpear> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityLightningSpear entity) {
-        return null;
+        return TEXTURE;
     }
 
 }
