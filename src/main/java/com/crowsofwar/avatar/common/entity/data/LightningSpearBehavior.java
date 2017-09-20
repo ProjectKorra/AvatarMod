@@ -119,7 +119,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
                     entity.getDamage());
             collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 
-            Vector motion = entity.velocity().dividedBy(20);
+            Vector motion = entity.velocity().dividedBy(10);
             motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
             collided.addVelocity(motion.x(), motion.y(), motion.z());
 
@@ -168,7 +168,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
             entity.setVelocity(motion);
 
-            if (data.getAbilityData("lightning_spear").isMasterPath(AbilityTreePath.SECOND)) {
+            if (data.getAbilityData("lightningspear").isMasterPath(AbilityTreePath.SECOND)) {
                 int size = entity.getSize();
                 if (size < 60 && entity.ticksExisted % 4 == 0) {
                     entity.setSize(size + 1);
