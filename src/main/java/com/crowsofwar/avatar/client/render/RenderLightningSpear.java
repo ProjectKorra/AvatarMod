@@ -151,7 +151,7 @@ public class RenderLightningSpear extends Render<EntityLightningSpear>{
 
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityCloudBall entity) {
+    protected ResourceLocation getEntityTexture(EntityLightningSpear entity) {
         return null;
     }
 
