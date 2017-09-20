@@ -4,7 +4,7 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.EntityCloudBall;
+
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
