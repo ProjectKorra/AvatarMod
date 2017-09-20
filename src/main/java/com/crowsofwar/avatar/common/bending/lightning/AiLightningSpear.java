@@ -53,7 +53,7 @@ public class AiLightningSpear extends BendingAi {
 
         if (timeExecuting >= 40) {
             BendingData data = bender.getData();
-            execStatusControl(StatusControl.THROW_FIREBALL);
+            execStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
             timeExecuting = 0;
             return false;
         } else {
@@ -78,8 +78,8 @@ public class AiLightningSpear extends BendingAi {
     public void resetTask() {
 
         EntityLightningSpear spear = AvatarEntity.lookupEntity(entity.world, EntityLightningSpear.class, //
-                fire -> fire.getBehavior() instanceof LightningSpearBehavior.PlayerControlled
-                        && fire.getOwner() == entity);
+                spear1 -> spear1.getBehavior() instanceof LightningSpearBehavior.PlayerControlled
+                        && spear1.getOwner() == entity);
 
         if (spear != null) {
             spear.setDead();
