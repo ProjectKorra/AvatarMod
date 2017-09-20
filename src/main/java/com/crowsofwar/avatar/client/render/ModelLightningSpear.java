@@ -20,7 +20,7 @@ public class ModelLightningSpear extends ModelBase {
         this.shape1.addBox(0.0F, 0.0F, 0.0F, 13, 2, 2, 0.0F);
     }
 
-    
+
 
     /**
      * This is a helper function from Tabula to set the rotation of model parts
