@@ -1,4 +1,4 @@
-package com.crowsofwar.client.render;
+package com.crowsofwar.avatar.client.render;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
