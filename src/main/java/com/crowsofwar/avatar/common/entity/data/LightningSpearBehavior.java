@@ -126,7 +126,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             BendingData data = Bender.get(entity.getOwner()).getData();
             if (!collided.world.isRemote && data != null) {
                 float xp = SKILLS_CONFIG.fireballHit;
-                data.getAbilityData("fireball").addXp(xp);
+                data.getAbilityData("lightningspear").addXp(xp);
             }
 
             // Remove the fireball & spawn particles
