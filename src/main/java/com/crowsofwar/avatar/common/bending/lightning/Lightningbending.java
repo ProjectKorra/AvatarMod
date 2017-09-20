@@ -40,7 +40,7 @@ public class Lightningbending extends BendingStyle {
 		addAbility("lightning_strike");
 		addAbility("lightning_arc");
 		addAbility("lightning_redirect");
-		addAbility("lightningspear");
+		addAbility("lightning_spear");
 
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);
