@@ -117,7 +117,6 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             double speed = entity.velocity().magnitude();
             collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
                     entity.getDamage());
-            collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 
             Vector motion = entity.velocity().dividedBy(5);
             motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
@@ -125,7 +124,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
             BendingData data = Bender.get(entity.getOwner()).getData();
             if (!collided.world.isRemote && data != null) {
-                float xp = SKILLS_CONFIG.fireballHit;
+                float xp = SKILLS_CONFIG.lightningspearHit;
                 data.getAbilityData("lightning_spear").addXp(xp);
             }
 

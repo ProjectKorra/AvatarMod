@@ -69,7 +69,7 @@ public class AbilityLightningSpear extends Ability {
                 target = playerPos.plus(getLookRectangular(entity).times(2.5));
             }
 
-            float damage = STATS_CONFIG.fireballSettings.damage;
+            float damage = 6F;
             damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
 
             EntityLightningSpear spear = new EntityLightningSpear(world);
