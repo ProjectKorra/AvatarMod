@@ -1,8 +1,22 @@
+/*
+  This file is part of AvatarMod.
+
+  AvatarMod is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  AvatarMod is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityCloudBall;
-import java.util.Random;
-
+import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -11,25 +25,24 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
-import static net.minecraft.client.renderer.GlStateManager.disableBlend;
-import static net.minecraft.client.renderer.GlStateManager.enableLighting;
 import static net.minecraft.util.math.MathHelper.cos;
 
-public class RenderLightningSpear extends Render<EntityLightningSpear>{
+/**
+ *
+ *
+ * @author CrowsOfWar
+ */
+public class RenderLightningSpear extends Render<EntityLightningSpear> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
             "textures/entity/lightning_spear.png");
-    private static final Random random = new Random();
 
     public RenderLightningSpear(RenderManager renderManager) {
         super(renderManager);
@@ -51,14 +64,6 @@ public class RenderLightningSpear extends Render<EntityLightningSpear>{
         size *= Math.sqrt(entity.getSize() / 30f);
 
         enableBlend();
-        if (entity.ticksExisted % 3 == 0) {
-            World world = entity.world;
-            AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-            double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-            double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-            double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-            world.spawnParticle(EnumParticleTypes.SPELL_MOB_AMBIENT, spawnX, spawnY, spawnZ, 0, 0, 0);
-        }
 
         if (MinecraftForgeClient.getRenderPass() == 0) {
 
@@ -98,7 +103,6 @@ public class RenderLightningSpear extends Render<EntityLightningSpear>{
         mat.rotate(rotateX, 1, 0, 0);
         mat.rotate(rotateY, 0, 1, 0);
         mat.rotate(rotateZ, 0, 0, 1);
-
 
         // @formatter:off
         // Can't use .mul(size) here because it would mul the w component
@@ -143,18 +147,12 @@ public class RenderLightningSpear extends Render<EntityLightningSpear>{
             vb.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).endVertex();
             vb.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).endVertex();
             t.draw();
-
         }
-
-
     }
-
 
     @Override
     protected ResourceLocation getEntityTexture(EntityLightningSpear entity) {
-        return TEXTURE;
+        return null;
     }
 
 }
-
-
