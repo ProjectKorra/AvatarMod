@@ -36,7 +36,7 @@ public class RenderLightningSpear extends Render<EntityLightningSpear> {
 
         Matrix4f mat = new Matrix4f();
         mat.translate((float) x, (float) y + .1f, (float) z);
-        
+
 
         //@formatter:off
         float n = -.75f, p = .75f;
