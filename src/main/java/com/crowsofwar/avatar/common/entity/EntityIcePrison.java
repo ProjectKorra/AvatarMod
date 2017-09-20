@@ -43,9 +43,10 @@ public class EntityIcePrison extends AvatarEntity {
 	
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-	
-	public static final int IMPRISONED_TIME = 100;
-	
+
+	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey
+			(EntityIcePrison.class, DataSerializers.VARINT);
+
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
 	
@@ -62,6 +63,7 @@ public class EntityIcePrison extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_IMPRISONED, Optional.absent());
+		dataManager.register(SYNC_IMPRISONED_TIME, 100);
 	}
 	
 	public EntityLivingBase getImprisoned() {
@@ -86,7 +88,7 @@ public class EntityIcePrison extends AvatarEntity {
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
 		}
-		if (ticksExisted >= IMPRISONED_TIME) {
+		if (ticksExisted >= getImprisonedTime()) {
 			setDead();
 			
 			if (!world.isRemote && imprisoned != null) {
@@ -122,7 +124,15 @@ public class EntityIcePrison extends AvatarEntity {
 		imprisonedAttr.writeToNbt(nbt);
 		nbt.setDouble("NormalSpeed", normalBaseValue);
 	}
-	
+
+	public int getImprisonedTime() {
+		return dataManager.get(SYNC_IMPRISONED_TIME);
+	}
+
+	public void setImprisonedTime(int imprisonedTime) {
+		dataManager.set(SYNC_IMPRISONED_TIME, imprisonedTime);
+	}
+
 	public static boolean isImprisoned(EntityLivingBase entity) {
 		
 		return getPrison(entity) != null;
