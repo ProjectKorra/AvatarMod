@@ -22,7 +22,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.List;
 
@@ -116,9 +118,13 @@ public class EntityLightningSpear extends AvatarEntity {
                 destroyObsidian = false;
             }
         }
-        if (!world.isRemote){
+        Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
+                !world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
+        if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 
-            world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 0, 0, 0 );
+            explosion.doExplosionA();
+            explosion.doExplosionB(true);
+
         }
 
 
@@ -161,7 +167,7 @@ public class EntityLightningSpear extends AvatarEntity {
     private void removeStatCtrl() {
         if (getOwner() != null) {
             BendingData data = Bender.get(getOwner()).getData();
-            data.removeStatusControl(StatusControl.THROW_CLOUDBURST);
+            data.removeStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
         }
     }
 
