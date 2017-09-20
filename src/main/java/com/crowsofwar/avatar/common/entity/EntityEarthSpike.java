@@ -109,7 +109,7 @@ public class EntityEarthSpike extends AvatarEntity {
         Vector position = position();
         Vector velocity = velocity();
 
-        setPosition(position.plus(velocity.times(0.5)));
+        setPosition(position.plus(velocity.times(0.0000005)));
 
         if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
             setDead();
