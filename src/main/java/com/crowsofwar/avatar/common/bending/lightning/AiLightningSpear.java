@@ -7,7 +7,9 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -75,13 +77,13 @@ public class AiLightningSpear extends BendingAi {
     @Override
     public void resetTask() {
 
-        EntityFireball fireball = AvatarEntity.lookupEntity(entity.world, EntityFireball.class, //
-                fire -> fire.getBehavior() instanceof FireballBehavior.PlayerControlled
+        EntityLightningSpear spear = AvatarEntity.lookupEntity(entity.world, EntityLightningSpear.class, //
+                fire -> fire.getBehavior() instanceof LightningSpearBehavior.PlayerControlled
                         && fire.getOwner() == entity);
 
-        if (fireball != null) {
-            fireball.setDead();
-            bender.getData().removeStatusControl(StatusControl.THROW_FIREBALL);
+        if (spear != null) {
+            spear.setDead();
+            bender.getData().removeStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
         }
 
     }
