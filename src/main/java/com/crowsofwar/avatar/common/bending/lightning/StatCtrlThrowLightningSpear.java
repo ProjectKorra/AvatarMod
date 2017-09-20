@@ -30,7 +30,7 @@ public class StatCtrlThrowLightningSpear extends StatusControl {
         EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, entity);
 
         if (spear != null) {
-            AbilityData abilityData = ctx.getData().getAbilityData("lightning_spear");
+            AbilityData abilityData = ctx.getData().getAbilityData("lightningspear");
             double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
             spear.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
             spear.setBehavior(new LightningSpearBehavior.Thrown());
