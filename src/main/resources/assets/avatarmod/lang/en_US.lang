@@ -229,6 +229,10 @@ avatar.ability.lightning_arc.lvl3=Lightning does more damage
 avatar.ability.lightning_arc.lvl4_1=Furious lightning ;; Does more damage, slightly smaller, another bolt
 avatar.ability.lightning_arc.lvl4_2=Large thunderbolts ;; Has a larger hitbox, making it easier to capture enemies
 
+avatar.ability.ice_prison=Ice Prison
+avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from
+following you for a short time.
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
