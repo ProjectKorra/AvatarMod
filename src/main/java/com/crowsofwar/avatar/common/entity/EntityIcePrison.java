@@ -143,10 +143,11 @@ public class EntityIcePrison extends AvatarEntity {
 		
 	}
 	
-	public static void imprison(EntityLivingBase entity) {
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
 		World world = entity.world;
 		EntityIcePrison prison = new EntityIcePrison(world);
 		prison.setImprisoned(entity);
+		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
 		world.spawnEntity(prison);
 	}
