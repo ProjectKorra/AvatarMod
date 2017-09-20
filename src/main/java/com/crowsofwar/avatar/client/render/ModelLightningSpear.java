@@ -1,6 +1,5 @@
-package com.crowsofwar.avatar.client.render;
+package com.crowsofwar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -20,7 +19,10 @@ public class ModelLightningSpear extends ModelBase {
         this.shape1.addBox(0.0F, 0.0F, 0.0F, 13, 2, 2, 0.0F);
     }
 
-
+    @Override
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+        this.shape1.render(f5);
+    }
 
     /**
      * This is a helper function from Tabula to set the rotation of model parts

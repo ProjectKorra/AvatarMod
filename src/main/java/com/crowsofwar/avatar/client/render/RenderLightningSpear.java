@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
+import net.minecraft.entity.Entity;
 import org.joml.Vector4d;
 import org.lwjgl.opengl.GL11;
 
