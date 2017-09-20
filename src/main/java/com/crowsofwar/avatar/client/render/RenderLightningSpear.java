@@ -80,4 +80,35 @@ public class RenderLightningSpear extends Render<EntityLightningSpear> {
         return TEXTURE;
     }
 
+    private void drawQuad(int normal, Vector pos1, Vector pos2, Vector pos3, Vector pos4, double u1,
+                          double v1, double u2, double v2) {
+
+        Tessellator t = Tessellator.getInstance();
+        BufferBuilder vb = t.getBuffer();
+
+        if (normal == 0 || normal == 2) {
+            vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            vb.pos(pos1.x(), pos1.y(), pos1.z()).tex(u2, v1).endVertex();
+            vb.pos(pos2.x(), pos2.y(), pos2.z()).tex(u2, v2).endVertex();
+            vb.pos(pos3.x(), pos3.y(), pos3.z()).tex(u1, v2).endVertex();
+            vb.pos(pos4.x(), pos4.y(), pos4.z()).tex(u1, v1).endVertex();
+            t.draw();
+        }
+        if (normal == 1 || normal == 2) {
+
+            vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            vb.pos(pos1.x(), pos1.y(), pos1.z()).tex(u2, v1).endVertex();
+            vb.pos(pos4.x(), pos4.y(), pos4.z()).tex(u1, v1).endVertex();
+            vb.pos(pos3.x(), pos3.y(), pos3.z()).tex(u1, v2).endVertex();
+            vb.pos(pos2.x(), pos2.y(), pos2.z()).tex(u2, v2).endVertex();
+            t.draw();
+        }
+    }
+
+    private void drawQuad(int normal, Vector4d pos1, Vector4d pos2, Vector4d pos3, Vector4d pos4, double u1,
+                          double v1, double u2, double v2) {
+        drawQuad(normal, new Vector(pos1.x, pos1.y, pos1.z), new Vector(pos2.x, pos2.y, pos2.z),
+                new Vector(pos3.x, pos3.y, pos3.z), new Vector(pos4.x, pos4.y, pos4.z), u1, v1, u2, v2);
+    }
+
 }
