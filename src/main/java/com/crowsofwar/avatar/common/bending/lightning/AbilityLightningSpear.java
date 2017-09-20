@@ -7,9 +7,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
-import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -17,8 +15,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 import static java.lang.Math.abs;
