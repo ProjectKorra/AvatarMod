@@ -90,7 +90,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
                 entity.onCollideWithSolid();
             }
 
-            entity.addVelocity(Vector.DOWN.times(1/120));
+            entity.addVelocity(Vector.DOWN.times(1/12000));
 
             World world = entity.world;
             if (!entity.isDead) {
@@ -102,7 +102,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
                         collision((EntityLivingBase) collided, entity);
                     } else if (collided != entity.getOwner()) {
                         Vector motion = new Vector(collided).minus(new Vector(entity));
-                        motion = motion.times(0.3).withY(0.09);
+                        motion = motion.times(0.7).withY(0.09);
                         collided.addVelocity(motion.x(), motion.y(), motion.z());
                     }
 
@@ -119,8 +119,8 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
                     entity.getDamage());
             collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 
-            Vector motion = entity.velocity().dividedBy(10);
-            motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
+            Vector motion = entity.velocity().dividedBy(5);
+            motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
             collided.addVelocity(motion.x(), motion.y(), motion.z());
 
             BendingData data = Bender.get(entity.getOwner()).getData();
