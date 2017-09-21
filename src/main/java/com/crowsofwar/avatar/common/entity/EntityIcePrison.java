@@ -194,6 +194,9 @@ public class EntityIcePrison extends AvatarEntity {
 	 */
 	private void setStats(AbilityData data) {
 
+		meltInSun = data.getLevel() < 1;
+		attackOnce = data.getLevel() >= 2;
+		attackRepeat = data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
 		double imprisonedSeconds = 3 + data.getLevel();
 
 		setImprisonedTime((int) (imprisonedSeconds * 20));
