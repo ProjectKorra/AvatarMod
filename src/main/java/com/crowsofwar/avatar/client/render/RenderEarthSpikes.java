@@ -63,8 +63,7 @@ public class RenderEarthSpikes extends Render<EntityEarthSpike> {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
 
-        // Should be rotating in degrees here...?
-        // radians doesn't work
+
         GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
         GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 
