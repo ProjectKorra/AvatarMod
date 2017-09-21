@@ -30,11 +30,14 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -56,6 +59,8 @@ public class EntityIcePrison extends AvatarEntity {
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
 
 	private boolean meltInSun;
+	private boolean attackOnce;
+	private boolean attackRepeat;
 
 	/**
 	 * @param world
@@ -97,6 +102,7 @@ public class EntityIcePrison extends AvatarEntity {
 			imprisoned.posZ = this.posZ;
 		}
 
+		// Countdown imprisonedTime
 		if (!world.isRemote) {
 			setImprisonedTime(getImprisonedTime() - 1);
 
@@ -112,6 +118,13 @@ public class EntityIcePrison extends AvatarEntity {
 
 		}
 
+		// Continually damage entity
+		if (attackRepeat && !world.isRemote) {
+			if (getImprisonedTime() % 20 == 19) {
+				attackPrisoner(1);
+			}
+		}
+
 		if (getImprisonedTime() <= 0) {
 			setDead();
 			
@@ -120,11 +133,22 @@ public class EntityIcePrison extends AvatarEntity {
 						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
 				imprisoned.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"),
 						60, 1, false, false));
+
+				if (attackOnce || attackRepeat) {
+					attackPrisoner(2f);
+				}
+
 			}
 			
 		}
 	}
-	
+
+	private void attackPrisoner(float damageMultiplier) {
+		EntityLivingBase imprisoned = getImprisoned();
+		// TODO Custom IcePrison DamageSource
+		imprisoned.attackEntityFrom(DamageSource.ANVIL, STATS_CONFIG.icePrisonDamage * damageMultiplier);
+	}
+
 	@Override
 	public void setDead() {
 		super.setDead();

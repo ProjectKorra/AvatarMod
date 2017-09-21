@@ -83,6 +83,9 @@ public class ConfigStats {
 			chiSandPrison = 3,
 			chiLightning = 6;
 	// @formatter:on
+
+	@Load
+	public float icePrisonDamage = 2;
 	
 	@Load
 	public float sleepChiRegen = 99999;
