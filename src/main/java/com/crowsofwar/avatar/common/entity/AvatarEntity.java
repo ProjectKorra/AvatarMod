@@ -249,6 +249,9 @@ public abstract class AvatarEntity extends Entity {
 		if (world.isRainingAt(getPosition())) {
 			onMinorWaterContact();
 		}
+		if (world.isFlammableWithin(this.getEntityBoundingBox().shrink(0.001D))) {
+			onFireContact();
+		}
 		
 		Vector v = velocity().dividedBy(20);
 		move(MoverType.SELF, v.x(), v.y(), v.z());
@@ -339,7 +342,13 @@ public abstract class AvatarEntity extends Entity {
 	public boolean onMajorWaterContact() {
 		return false;
 	}
-	
+
+	/**
+	 * Called when a source of fire, a fire block itself, hits the entity. Returns whether the
+	 * entity was destroyed.
+	 */
+	public boolean onFireContact() { return false; }
+
 	/**
 	 * Break the block at the given position, playing sound/particles, and
 	 * dropping item
