@@ -54,7 +54,9 @@ public class EntityIcePrison extends AvatarEntity {
 
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
-	
+
+	private boolean meltInSun;
+
 	/**
 	 * @param world
 	 */
@@ -94,9 +96,22 @@ public class EntityIcePrison extends AvatarEntity {
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
 		}
+
 		if (!world.isRemote) {
 			setImprisonedTime(getImprisonedTime() - 1);
+
+			// Reduce imprisonedTime 50% faster in the sun
+			if (meltInSun) {
+				if (world.isDaytime()) {
+					boolean inSky = world.canBlockSeeSky(getPosition());
+					if (inSky && ticksExisted % 2 == 0) {
+						setImprisonedTime(getImprisonedTime() - 1);
+					}
+				}
+			}
+
 		}
+
 		if (getImprisonedTime() <= 0) {
 			setDead();
 			
