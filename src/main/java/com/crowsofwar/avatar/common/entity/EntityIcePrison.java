@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
@@ -133,6 +135,17 @@ public class EntityIcePrison extends AvatarEntity {
 		dataManager.set(SYNC_IMPRISONED_TIME, imprisonedTime);
 	}
 
+	/**
+	 * Sets the statistics of this prison based on that ability data
+	 */
+	private void setStats(AbilityData data) {
+
+		double imprisonedSeconds = 3 + data.getLevel();
+
+		setImprisonedTime((int) (imprisonedSeconds * 20));
+
+	}
+
 	public static boolean isImprisoned(EntityLivingBase entity) {
 		
 		return getPrison(entity) != null;
@@ -156,9 +169,14 @@ public class EntityIcePrison extends AvatarEntity {
 	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
 		World world = entity.world;
 		EntityIcePrison prison = new EntityIcePrison(world);
+
 		prison.setImprisoned(entity);
 		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
+
+		BendingData data = BendingData.get(entity);
+		prison.setStats(data.getAbilityData("ice_prison"));
+
 		world.spawnEntity(prison);
 	}
 	
