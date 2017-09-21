@@ -49,7 +49,6 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.common.entity.EntityIcePrison.IMPRISONED_TIME;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
@@ -332,7 +331,7 @@ public class AvatarUiRenderer extends Gui {
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			
 			color(1, 1, 1, 0.5f);
-			float percent = (float) prison.ticksExisted / IMPRISONED_TIME;
+			float percent = 1 - (float) prison.getImprisonedTime() / prison.getMaxImprisonedTime();
 			int crackIndex = (int) (percent * percent * percent * (BLOCK_BREAK.length + 1)) - 1;
 			if (crackIndex > -1) {
 				mc.renderEngine.bindTexture(BLOCK_BREAK[crackIndex]);

@@ -49,6 +49,9 @@ public class EntityIcePrison extends AvatarEntity {
 	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey
 			(EntityIcePrison.class, DataSerializers.VARINT);
 
+	public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager
+			.createKey(EntityIcePrison.class, DataSerializers.VARINT);
+
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
 	
@@ -66,6 +69,7 @@ public class EntityIcePrison extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_IMPRISONED, Optional.absent());
 		dataManager.register(SYNC_IMPRISONED_TIME, 100);
+		dataManager.register(SYNC_MAX_IMPRISONED_TIME, 100);
 	}
 	
 	public EntityLivingBase getImprisoned() {
@@ -90,7 +94,10 @@ public class EntityIcePrison extends AvatarEntity {
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
 		}
-		if (ticksExisted >= getImprisonedTime()) {
+		if (!world.isRemote) {
+			setImprisonedTime(getImprisonedTime() - 1);
+		}
+		if (getImprisonedTime() <= 0) {
 			setDead();
 			
 			if (!world.isRemote && imprisoned != null) {
@@ -135,6 +142,14 @@ public class EntityIcePrison extends AvatarEntity {
 		dataManager.set(SYNC_IMPRISONED_TIME, imprisonedTime);
 	}
 
+	public int getMaxImprisonedTime() {
+		return dataManager.get(SYNC_MAX_IMPRISONED_TIME);
+	}
+
+	public void setMaxImprisonedTime(int maxImprisonedTime) {
+		dataManager.set(SYNC_MAX_IMPRISONED_TIME, maxImprisonedTime);
+	}
+
 	/**
 	 * Sets the statistics of this prison based on that ability data
 	 */
@@ -143,6 +158,7 @@ public class EntityIcePrison extends AvatarEntity {
 		double imprisonedSeconds = 3 + data.getLevel();
 
 		setImprisonedTime((int) (imprisonedSeconds * 20));
+		setMaxImprisonedTime(getImprisonedTime());
 
 	}
 
