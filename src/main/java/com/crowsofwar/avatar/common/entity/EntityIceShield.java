@@ -77,69 +77,6 @@ public class EntityIceShield extends AvatarEntity {
 		
 	}
 
-	/**
-	 * Shoots a single ice shard at the given target, using physics equations to properly aim.
-	 */
-	private void shootShardAt(Entity target) {
-		
-		EntityLivingBase owner = getOwner();
-		Vector targetPos = Vector.getEyePos(target);
-		Vector ownerPos = Vector.getEyePos(owner);
-		
-		Vector direction = Vector.getRotationTo(ownerPos, targetPos);
-		float yaw = (float) Math.toDegrees(direction.y());
-		
-		double horizDist = targetPos.withY(0).dist(ownerPos.withY(0));
-		double vertDist = targetPos.y() - ownerPos.y();
-		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(20, 20, horizDist,
-				vertDist));
-		
-		EntityIceShard shard = new EntityIceShard(world);
-		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
-		shard.aim(yaw, pitch, 20);
-		shard.setDamageMult(damageMult);
-		world.spawnEntity(shard);
-		
-	}
-	
-	/**
-	 * Shoot ice shards around the entity.
-	 * 
-	 * @param yawAngles
-	 *            Spacing for yaw angles
-	 * @param pitchAngles
-	 *            All of the pitch angles
-	 * @param shardsLimit
-	 *            Limit the number of ice shards to shoot. Note that the actual shards shot is
-	 *            also limited by the number of possible angles to shoot at (<code>yawAngles
-	 *            * pitchAngles.length</code>), so this acts as a limiter rather than the actual
-	 *            amount of shards to shoot.
-	 */
-	private void shootShardsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
-								   int shardsLimit) {
-		for (int i = 0; i < yawAngles; i++) {
-			float yaw = 360f / yawAngles * i;
-			for (int j = 0; j < pitchAngles.length; j++) {
-				
-				if (shardsLimit == 0) {
-					break;
-				}
-				
-				float pitch = pitchAngles[j];
-				
-				EntityIceShard shard = new EntityIceShard(world);
-				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ,
-						0, 0);
-				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
-				shard.setDamageMult(damageMult);
-				world.spawnEntity(shard);
-				
-				shardsLimit--;
-				
-			}
-		}
-	}
-
 	@Override
 	public EntityLivingBase getController() {
 		return getOwner();
@@ -187,6 +124,69 @@ public class EntityIceShield extends AvatarEntity {
 		nbt.setDouble("NormalBaseValue", normalBaseValue);
 		nbt.setDouble("DamageMult", damageMult);
 		nbt.setBoolean("TargetMobs", isTargetMobs());
+	}
+
+	/**
+	 * Shoots a single ice shard at the given target, using physics equations to properly aim.
+	 */
+	private void shootShardAt(Entity target) {
+
+		EntityLivingBase owner = getOwner();
+		Vector targetPos = Vector.getEyePos(target);
+		Vector ownerPos = Vector.getEyePos(owner);
+
+		Vector direction = Vector.getRotationTo(ownerPos, targetPos);
+		float yaw = (float) Math.toDegrees(direction.y());
+
+		double horizDist = targetPos.withY(0).dist(ownerPos.withY(0));
+		double vertDist = targetPos.y() - ownerPos.y();
+		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(20, 20, horizDist,
+				vertDist));
+
+		EntityIceShard shard = new EntityIceShard(world);
+		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
+		shard.aim(yaw, pitch, 20);
+		shard.setDamageMult(damageMult);
+		world.spawnEntity(shard);
+
+	}
+
+	/**
+	 * Shoot ice shards around the entity.
+	 *
+	 * @param yawAngles
+	 *            Spacing for yaw angles
+	 * @param pitchAngles
+	 *            All of the pitch angles
+	 * @param shardsLimit
+	 *            Limit the number of ice shards to shoot. Note that the actual shards shot is
+	 *            also limited by the number of possible angles to shoot at (<code>yawAngles
+	 *            * pitchAngles.length</code>), so this acts as a limiter rather than the actual
+	 *            amount of shards to shoot.
+	 */
+	private void shootShardsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
+								   int shardsLimit) {
+		for (int i = 0; i < yawAngles; i++) {
+			float yaw = 360f / yawAngles * i;
+			for (int j = 0; j < pitchAngles.length; j++) {
+
+				if (shardsLimit == 0) {
+					break;
+				}
+
+				float pitch = pitchAngles[j];
+
+				EntityIceShard shard = new EntityIceShard(world);
+				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ,
+						0, 0);
+				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
+				shard.setDamageMult(damageMult);
+				world.spawnEntity(shard);
+
+				shardsLimit--;
+
+			}
+		}
 	}
 
 	public double getDamageMult() {
