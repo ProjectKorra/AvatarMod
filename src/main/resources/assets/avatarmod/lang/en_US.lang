@@ -235,8 +235,9 @@ following you for a short time.
 avatar.ability.ice_prison.lvl1=Delay your attackers.
 avatar.ability.ice_prison.lvl2=The prison lasts slightly longer.
 avatar.ability.ice_prison.lvl3=The prisoner takes damage when the ice shatters.
-avatar.ability.ice_prison.lvl4_1=The prisoner continually takes damage throughout the imprisonment.
-avatar.ability.ice_prison.lvl4_2=The ice cannot be melted by the sun or firebending.
+avatar.ability.ice_prison.lvl4_1=Continuous punishment ;; The prisoner continually takes damage
+throughout the imprisonment.
+avatar.ability.ice_prison.lvl4_2=Glacier ice ;; The ice cannot be melted by the sun or firebending.
 
 avatar.ability.ice_burst=Ice Burst
 avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.
