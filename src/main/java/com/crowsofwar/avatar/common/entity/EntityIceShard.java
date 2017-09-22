@@ -64,7 +64,8 @@ public class EntityIceShard extends Entity {
 		if (!collidedEntities.isEmpty()) {
 			
 			Entity collided = collidedEntities.get(0);
-			
+
+			// TODO DamageSource for IceShard
 			DamageSource source = DamageSource.ANVIL;
 			collided.attackEntityFrom(source, 5);
 			
