@@ -40,6 +40,7 @@ public class EntityIceShield extends AvatarEntity {
 	private double normalBaseValue;
 
 	private double damageMult;
+	private boolean targetMobs;
 	
 	public EntityIceShield(World world) {
 		super(world);
@@ -52,22 +53,26 @@ public class EntityIceShield extends AvatarEntity {
 		setDead();
 		
 		EntityLivingBase owner = getOwner();
-		
+
 		// Shoot shards at mobs
 		int shardsLeft = 12;
-		
-		double halfRange = 20;
-		AxisAlignedBB aabb = new AxisAlignedBB(//
-				owner.posX - halfRange, owner.posY - halfRange, owner.posZ - halfRange, //
-				owner.posX + halfRange, owner.posY + halfRange, owner.posZ + halfRange);
-		List<EntityMob> targets = world.getEntitiesWithinAABB(EntityMob.class, aabb);
-		
-		int shardsAtMobs = Math.min(targets.size(), 5);
-		for (int i = 0; i < shardsAtMobs; i++) {
-			shootShardAt(targets.get(i));
+
+		if (targetMobs) {
+
+			double range = 40;
+			AxisAlignedBB aabb = new AxisAlignedBB(//
+					owner.posX - range / 2, owner.posY - range / 2, owner.posZ - range / 2, //
+					owner.posX + range / 2, owner.posY + range / 2, owner.posZ + range / 2);
+			List<EntityMob> targets = world.getEntitiesWithinAABB(EntityMob.class, aabb);
+
+			int shardsAtMobs = Math.min(targets.size(), 5);
+			for (int i = 0; i < shardsAtMobs; i++) {
+				shootShardAt(targets.get(i));
+				shardsLeft--;
+			}
+
 		}
-		shardsLeft -= shardsAtMobs;
-		
+
 		shootShardsAround(owner, 4, new float[] { 20, 0, -30 }, shardsLeft);
 		
 	}
@@ -173,6 +178,7 @@ public class EntityIceShield extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		normalBaseValue = nbt.getDouble("NormalBaseValue");
 		damageMult = nbt.getDouble("DamageMult");
+		setTargetMobs(nbt.getBoolean("TargetMobs"));
 	}
 	
 	@Override
@@ -180,6 +186,7 @@ public class EntityIceShield extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		nbt.setDouble("NormalBaseValue", normalBaseValue);
 		nbt.setDouble("DamageMult", damageMult);
+		nbt.setBoolean("TargetMobs", isTargetMobs());
 	}
 
 	public double getDamageMult() {
@@ -188,5 +195,13 @@ public class EntityIceShield extends AvatarEntity {
 
 	public void setDamageMult(double damageMult) {
 		this.damageMult = damageMult;
+	}
+
+	public boolean isTargetMobs() {
+		return targetMobs;
+	}
+
+	public void setTargetMobs(boolean targetMobs) {
+		this.targetMobs = targetMobs;
 	}
 }
