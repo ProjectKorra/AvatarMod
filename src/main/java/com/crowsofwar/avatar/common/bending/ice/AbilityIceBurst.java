@@ -51,14 +51,20 @@ public class AbilityIceBurst extends Ability {
 		double damageMult = abilityData.getLevel() >= 1 ? 1.25 : 1;
 		float[] shardPitchAngles = { -10, 10 };
 		boolean targetMobs = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST);
+		float health = abilityData.getLevel() >= 2 ? 8 : 6;
 
 		if (abilityData.getLevel() >= 2) {
 			shardPitchAngles = new float[] { -20, 0, 30 };
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			health = 12;
 		}
 
 		shield.setDamageMult(damageMult);
 		shield.setTargetMobs(targetMobs);
 		shield.setPitchAngles(shardPitchAngles);
+		shield.setHealth(health);
+		shield.setMaxHealth(health);
 
 		world.spawnEntity(shield);
 		data.addStatusControl(StatusControl.SHIELD_SHATTER);
