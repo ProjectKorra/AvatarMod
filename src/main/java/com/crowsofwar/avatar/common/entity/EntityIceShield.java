@@ -38,6 +38,8 @@ import java.util.List;
 public class EntityIceShield extends AvatarEntity {
 
 	private double normalBaseValue;
+
+	private double damageMult;
 	
 	public EntityIceShield(World world) {
 		super(world);
@@ -88,6 +90,7 @@ public class EntityIceShield extends AvatarEntity {
 		EntityIceShard shard = new EntityIceShard(world);
 		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
 		shard.aim(yaw, pitch, 20);
+		shard.setDamageMult(damageMult);
 		world.spawnEntity(shard);
 		
 	}
@@ -120,6 +123,7 @@ public class EntityIceShield extends AvatarEntity {
 				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ,
 						0, 0);
 				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
+				shard.setDamageMult(damageMult);
 				world.spawnEntity(shard);
 				
 				arrowsLeft--;
@@ -165,12 +169,21 @@ public class EntityIceShield extends AvatarEntity {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		normalBaseValue = nbt.getDouble("NormalBaseValue");
+		damageMult = nbt.getDouble("DamageMult");
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setDouble("NormalBaseValue", normalBaseValue);
+		nbt.setDouble("DamageMult", damageMult);
 	}
-	
+
+	public double getDamageMult() {
+		return damageMult;
+	}
+
+	public void setDamageMult(double damageMult) {
+		this.damageMult = damageMult;
+	}
 }

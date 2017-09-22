@@ -35,7 +35,9 @@ import java.util.List;
  * @author CrowsOfWar
  */
 public class EntityIceShard extends Entity {
-	
+
+	private double damageMult;
+
 	public EntityIceShard(World worldIn) {
 		super(worldIn);
 		setSize(0.5f, 0.5f);
@@ -67,7 +69,7 @@ public class EntityIceShard extends Entity {
 
 			// TODO DamageSource for IceShard
 			DamageSource source = DamageSource.ANVIL;
-			collided.attackEntityFrom(source, 5);
+			collided.attackEntityFrom(source, 5 * (float) damageMult);
 			
 			shatter();
 			
@@ -112,7 +114,15 @@ public class EntityIceShard extends Entity {
 		motionZ = velocity.z();
 		
 	}
-	
+
+	public double getDamageMult() {
+		return damageMult;
+	}
+
+	public void setDamageMult(double damageMult) {
+		this.damageMult = damageMult;
+	}
+
 	@Override
 	protected void entityInit() {
 		
