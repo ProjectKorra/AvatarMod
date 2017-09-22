@@ -57,7 +57,7 @@ public class AbilityIceBurst extends Ability {
 			shardPitchAngles = new float[] { -20, 0, 30 };
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			health = 12;
+			health = 14;
 		}
 
 		shield.setDamageMult(damageMult);
