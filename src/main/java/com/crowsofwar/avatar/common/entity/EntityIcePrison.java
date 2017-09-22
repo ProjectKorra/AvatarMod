@@ -158,7 +158,15 @@ public class EntityIcePrison extends AvatarEntity {
 			speed.setBaseValue(normalBaseValue);
 		}
 	}
-	
+
+	@Override
+	public boolean onFireContact() {
+		if (!world.isRemote) {
+			setImprisonedTime(getImprisonedTime() - 1);
+		}
+		return false;
+	}
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
