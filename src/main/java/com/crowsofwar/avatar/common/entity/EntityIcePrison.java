@@ -59,6 +59,7 @@ public class EntityIcePrison extends AvatarEntity {
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
 
 	private boolean meltInSun;
+	private boolean meltInFire;
 	private boolean attackOnce;
 	private boolean attackRepeat;
 
@@ -161,7 +162,7 @@ public class EntityIcePrison extends AvatarEntity {
 
 	@Override
 	public boolean onFireContact() {
-		if (!world.isRemote) {
+		if (meltInFire && !world.isRemote) {
 			setImprisonedTime(getImprisonedTime() - 1);
 		}
 		return false;
@@ -210,6 +211,7 @@ public class EntityIcePrison extends AvatarEntity {
 	private void setStats(AbilityData data) {
 
 		meltInSun = data.getLevel() < 1;
+		meltInFire = data.getLevel() < 2;
 		attackOnce = data.getLevel() >= 2;
 		attackRepeat = data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
 		double imprisonedSeconds = 3 + data.getLevel();
