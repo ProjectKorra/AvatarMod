@@ -181,6 +181,10 @@ public class EntityIcePrison extends AvatarEntity {
 		nbt.setDouble("NormalSpeed", normalBaseValue);
 	}
 
+	/**
+	 * A countdown which returns the ticks left to be imprisoned. When the countdown is over, the
+	 * entity will be freed.
+	 */
 	public int getImprisonedTime() {
 		return dataManager.get(SYNC_IMPRISONED_TIME);
 	}
@@ -189,6 +193,9 @@ public class EntityIcePrison extends AvatarEntity {
 		dataManager.set(SYNC_IMPRISONED_TIME, imprisonedTime);
 	}
 
+	/**
+	 * Returns the total ticks that the target will be imprisoned for.
+	 */
 	public int getMaxImprisonedTime() {
 		return dataManager.get(SYNC_MAX_IMPRISONED_TIME);
 	}
