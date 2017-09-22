@@ -24,6 +24,8 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -41,6 +43,7 @@ public class EntityIceShield extends AvatarEntity {
 
 	private double damageMult;
 	private boolean targetMobs;
+	private float[] pitchAngles;
 	
 	public EntityIceShield(World world) {
 		super(world);
@@ -73,7 +76,7 @@ public class EntityIceShield extends AvatarEntity {
 
 		}
 
-		shootShardsAround(owner, 4, new float[] { 20, 0, -30 }, shardsLeft);
+		shootShardsAround(owner, 4, pitchAngles, shardsLeft);
 		
 	}
 
@@ -116,6 +119,13 @@ public class EntityIceShield extends AvatarEntity {
 		normalBaseValue = nbt.getDouble("NormalBaseValue");
 		damageMult = nbt.getDouble("DamageMult");
 		setTargetMobs(nbt.getBoolean("TargetMobs"));
+
+		NBTTagList pitchAngleList = nbt.getTagList("PitchAngles", 5);
+		pitchAngles = new float[pitchAngleList.tagCount()];
+		for (int i = 0; i < pitchAngleList.tagCount(); i++) {
+			pitchAngles[i] = pitchAngleList.getFloatAt(i);
+		}
+
 	}
 	
 	@Override
@@ -124,6 +134,13 @@ public class EntityIceShield extends AvatarEntity {
 		nbt.setDouble("NormalBaseValue", normalBaseValue);
 		nbt.setDouble("DamageMult", damageMult);
 		nbt.setBoolean("TargetMobs", isTargetMobs());
+
+		NBTTagList pitchAngleList = new NBTTagList();
+		for (float pitchAngle : pitchAngles) {
+			pitchAngleList.appendTag(new NBTTagFloat(pitchAngle));
+		}
+		nbt.setTag("PitchAngles", pitchAngleList);
+
 	}
 
 	/**
@@ -203,5 +220,13 @@ public class EntityIceShield extends AvatarEntity {
 
 	public void setTargetMobs(boolean targetMobs) {
 		this.targetMobs = targetMobs;
+	}
+
+	public float[] getPitchAngles() {
+		return pitchAngles;
+	}
+
+	public void setPitchAngles(float[] pitchAngles) {
+		this.pitchAngles = pitchAngles;
 	}
 }
