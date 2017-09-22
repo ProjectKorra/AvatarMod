@@ -53,9 +53,8 @@ public class EntityIceShield extends AvatarEntity {
 		
 		EntityLivingBase owner = getOwner();
 		
-		// Shoot arrows at mobs
-		
-		int arrowsLeft = 12;
+		// Shoot shards at mobs
+		int shardsLeft = 12;
 		
 		double halfRange = 20;
 		AxisAlignedBB aabb = new AxisAlignedBB(//
@@ -63,17 +62,20 @@ public class EntityIceShield extends AvatarEntity {
 				owner.posX + halfRange, owner.posY + halfRange, owner.posZ + halfRange);
 		List<EntityMob> targets = world.getEntitiesWithinAABB(EntityMob.class, aabb);
 		
-		int arrowsAtMobs = Math.min(targets.size(), 5);
-		for (int i = 0; i < arrowsAtMobs; i++) {
-			shootArrowAt(targets.get(i));
+		int shardsAtMobs = Math.min(targets.size(), 5);
+		for (int i = 0; i < shardsAtMobs; i++) {
+			shootShardAt(targets.get(i));
 		}
-		arrowsLeft -= arrowsAtMobs;
+		shardsLeft -= shardsAtMobs;
 		
-		shootArrowsAround(owner, 4, new float[] { 20, 0, -30 }, arrowsLeft);
+		shootShardsAround(owner, 4, new float[] { 20, 0, -30 }, shardsLeft);
 		
 	}
-	
-	private void shootArrowAt(Entity target) {
+
+	/**
+	 * Shoots a single ice shard at the given target, using physics equations to properly aim.
+	 */
+	private void shootShardAt(Entity target) {
 		
 		EntityLivingBase owner = getOwner();
 		Vector targetPos = Vector.getEyePos(target);
@@ -96,24 +98,25 @@ public class EntityIceShield extends AvatarEntity {
 	}
 	
 	/**
-	 * Shoot arrows around the entity.
+	 * Shoot ice shards around the entity.
 	 * 
 	 * @param yawAngles
 	 *            Spacing for yaw angles
 	 * @param pitchAngles
 	 *            All of the pitch angles
-	 * @param arrowsLeft
-	 *            Limit the number of arrows to shoot. Note that setting this
-	 *            very high won't increase arrows shot since this only limits
-	 *            the arrows shot
+	 * @param shardsLimit
+	 *            Limit the number of ice shards to shoot. Note that the actual shards shot is
+	 *            also limited by the number of possible angles to shoot at (<code>yawAngles
+	 *            * pitchAngles.length</code>), so this acts as a limiter rather than the actual
+	 *            amount of shards to shoot.
 	 */
-	private void shootArrowsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
-			int arrowsLeft) {
+	private void shootShardsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
+								   int shardsLimit) {
 		for (int i = 0; i < yawAngles; i++) {
 			float yaw = 360f / yawAngles * i;
 			for (int j = 0; j < pitchAngles.length; j++) {
 				
-				if (arrowsLeft == 0) {
+				if (shardsLimit == 0) {
 					break;
 				}
 				
@@ -126,7 +129,7 @@ public class EntityIceShield extends AvatarEntity {
 				shard.setDamageMult(damageMult);
 				world.spawnEntity(shard);
 				
-				arrowsLeft--;
+				shardsLimit--;
 				
 			}
 		}
