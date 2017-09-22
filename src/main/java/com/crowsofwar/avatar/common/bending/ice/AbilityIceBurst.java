@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending.ice;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityIceShield;
@@ -45,6 +46,20 @@ public class AbilityIceBurst extends Ability {
 		EntityIceShield shield = new EntityIceShield(world);
 		shield.copyLocationAndAnglesFrom(entity);
 		shield.setOwner(entity);
+
+		AbilityData abilityData = ctx.getAbilityData();
+		double damageMult = abilityData.getLevel() >= 1 ? 1.25 : 1;
+		float[] shardPitchAngles = { -10, 10 };
+		boolean targetMobs = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST);
+
+		if (abilityData.getLevel() >= 2) {
+			shardPitchAngles = new float[] { -20, 0, 30 };
+		}
+
+		shield.setDamageMult(damageMult);
+		shield.setTargetMobs(targetMobs);
+		shield.setPitchAngles(shardPitchAngles);
+
 		world.spawnEntity(shield);
 		data.addStatusControl(StatusControl.SHIELD_SHATTER);
 		
