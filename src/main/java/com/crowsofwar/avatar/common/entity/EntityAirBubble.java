@@ -17,7 +17,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -36,7 +35,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -52,14 +50,10 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
  * 
  * @author CrowsOfWar
  */
-public class EntityAirBubble extends AvatarEntity {
+public class EntityAirBubble extends EntityShield {
 	
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
-	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityAirBubble.class,
-			DataSerializers.FLOAT);
-	public static final DataParameter<Float> SYNC_MAX_HEALTH = EntityDataManager
-			.createKey(EntityAirBubble.class, DataSerializers.FLOAT);
 	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
@@ -83,8 +77,6 @@ public class EntityAirBubble extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DISSIPATE, 0);
-		dataManager.register(SYNC_HEALTH, 20f);
-		dataManager.register(SYNC_MAX_HEALTH, 20f);
 		dataManager.register(SYNC_HOVERING, false);
 		dataManager.register(SYNC_SIZE, 2.5f);
 	}
@@ -116,7 +108,6 @@ public class EntityAirBubble extends AvatarEntity {
 		
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
-			setDead();
 			return;
 		}
 
@@ -129,11 +120,6 @@ public class EntityAirBubble extends AvatarEntity {
 			owner.setAir(Math.min(airLeft, 300));
 			airLeft--;
 		}
-		if (owner.isBurning()) {
-			owner.extinguish();
-		}
-		
-		setPosition(owner.posX, owner.posY, owner.posZ);
 
 		Bender ownerBender = Bender.get(getOwner());
 		if (!world.isRemote
@@ -303,7 +289,6 @@ public class EntityAirBubble extends AvatarEntity {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setDissipateTime(nbt.getInteger("Dissipate"));
-		setHealth(nbt.getFloat("Health"));
 		setAllowHovering(nbt.getBoolean("AllowHovering"));
 		airLeft = nbt.getInteger("AirLeft");
 	}
@@ -312,76 +297,43 @@ public class EntityAirBubble extends AvatarEntity {
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("Dissipate", getDissipateTime());
-		nbt.setFloat("Health", getHealth());
 		nbt.setBoolean("AllowHovering", doesAllowHovering());
 		nbt.setInteger("AirLeft", airLeft);
 	}
-	
+
+	@Override
+	protected float getChiDamageCost() {
+		return STATS_CONFIG.chiAirBubbleTakeDamage;
+	}
+
+	@Override
+	protected float getProtectionXp() {
+		return SKILLS_CONFIG.airbubbleProtect;
+	}
+
+	@Override
+	protected String getAbilityName() {
+		return "air_bubble";
+	}
+
+	@Override
+	protected void onDeath() {
+		dissipateSmall();
+	}
+
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
 	}
-	
-	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount) {
-		
-		EntityLivingBase owner = getOwner();
-		if (owner != null) {
-			
-			if (!world.isRemote) {
-				Entity sourceEntity = source.getTrueSource();
-				if (sourceEntity != null) {
-					if (!owner.isEntityInvulnerable(source)) {
-						BendingData data = BendingData.get(owner);
-						if (data.chi().consumeChi(STATS_CONFIG.chiAirBubbleTakeDamage * amount)) {
 
-							AbilityData aData = data.getAbilityData("air_bubble");
-							aData.addXp(SKILLS_CONFIG.airbubbleProtect);
-							setHealth(getHealth() - amount);
-							return true;
-							
-						} else {
-							dissipateSmall();
-							return true;
-						}
-					}
-				}
-			}
-			
-		} else {
-			dissipateSmall();
-			return true;
-		}
-		return false;
-		
-	}
-	
 	public int getDissipateTime() {
 		return dataManager.get(SYNC_DISSIPATE);
 	}
-	
+
 	public void setDissipateTime(int dissipate) {
 		dataManager.set(SYNC_DISSIPATE, dissipate);
 	}
-	
-	public float getHealth() {
-		return dataManager.get(SYNC_HEALTH);
-	}
-	
-	public void setHealth(float health) {
-		dataManager.set(SYNC_HEALTH, health);
-		if (health <= 0) dissipateSmall();
-		if (health > getMaxHealth()) health = getMaxHealth();
-	}
-	
-	public float getMaxHealth() {
-		return dataManager.get(SYNC_MAX_HEALTH);
-	}
-	
-	public void setMaxHealth(float health) {
-		dataManager.set(SYNC_MAX_HEALTH, health);
-	}
-	
+
 	public void dissipateLarge() {
 		if (!isDissipating()) setDissipateTime(1);
 		removeStatCtrl();
