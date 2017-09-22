@@ -232,6 +232,11 @@ avatar.ability.lightning_arc.lvl4_2=Large thunderbolts ;; Has a larger hitbox, m
 avatar.ability.ice_prison=Ice Prison
 avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from
 following you for a short time.
+avatar.ability.ice_prison.lvl1=Delay your attackers.
+avatar.ability.ice_prison.lvl2=The prison lasts slightly longer.
+avatar.ability.ice_prison.lvl3=The prisoner takes damage when the ice shatters.
+avatar.ability.ice_prison.lvl4_1=The prisoner continually takes damage throughout the imprisonment.
+avatar.ability.ice_prison.lvl4_2=The ice cannot be melted by the sun or firebending.
 
 avatar.ability.undefined=???
 
