@@ -37,7 +37,7 @@ import java.util.List;
  * 
  * @author CrowsOfWar
  */
-public class EntityIceShield extends AvatarEntity {
+public class EntityIceShield extends EntityShield {
 
 	private double normalBaseValue;
 
@@ -141,6 +141,26 @@ public class EntityIceShield extends AvatarEntity {
 		}
 		nbt.setTag("PitchAngles", pitchAngleList);
 
+	}
+
+	@Override
+	protected float getChiDamageCost() {
+		return 0;
+	}
+
+	@Override
+	protected float getProtectionXp() {
+		return 0;
+	}
+
+	@Override
+	protected String getAbilityName() {
+		return "ice_burst";
+	}
+
+	@Override
+	protected void onDeath() {
+		shatter();
 	}
 
 	/**

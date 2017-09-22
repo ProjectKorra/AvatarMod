@@ -31,7 +31,9 @@ import net.minecraft.world.World;
 import java.util.List;
 
 /**
- *
+ * An AvatarEntity that acts as a shield for further attacks. It has a certain amount of health
+ * and absorbs damage until the health is removed. The shield remains attached to the player and
+ * follows them wherever they go.
  *
  * @author CrowsOfWar
  */
