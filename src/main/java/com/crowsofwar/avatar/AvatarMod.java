@@ -110,7 +110,7 @@ public class AvatarMod {
 		TemporaryWaterHandler.register();
 		HumanBenderSpawner.register();
 		BisonInventoryPreventDismount.register();
-		PrisonActionCanceller.register();
+		IceActionCanceller.register();
 
 		SleepChiRegenHandler.register();
 		BisonLeftClickHandler.register();

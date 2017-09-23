@@ -16,6 +16,9 @@
 */
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -26,22 +29,34 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Cancels any actions done when a player is in an ice prison
+ * Cancels any actions done when a player is in an ice prison or ice shield
  * 
  * @author CrowsOfWar
  */
-public class PrisonActionCanceller {
+public class IceActionCanceller {
 	
-	private PrisonActionCanceller() {}
+	private IceActionCanceller() {}
 	
 	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new PrisonActionCanceller());
+		MinecraftForge.EVENT_BUS.register(new IceActionCanceller());
 	}
-	
+
+	private boolean isTrapped(EntityLivingBase entity) {
+		if (EntityIcePrison.isImprisoned(entity)) {
+			return true;
+		}
+
+		if (Bender.isBenderSupported(entity)) {
+			return BendingData.get(entity).hasStatusControl(StatusControl.SHIELD_SHATTER);
+		}
+
+		return false;
+	}
+
 	@SubscribeEvent
 	public void onJump(LivingJumpEvent e) {
 		EntityLivingBase entity = e.getEntityLiving();
-		if (EntityIcePrison.isImprisoned(entity)) {
+		if (isTrapped(entity)) {
 			entity.motionY = 0;
 		}
 	}
@@ -49,7 +64,7 @@ public class PrisonActionCanceller {
 	@SubscribeEvent
 	public void onInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
-		if (EntityIcePrison.isImprisoned(player)) {
+		if (isTrapped(player)) {
 			if (e.isCancelable()) {
 				e.setCanceled(true);
 			}
