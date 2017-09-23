@@ -16,10 +16,10 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 
 /**
  * Represents a bender's energy to use abilities. Chi is required to execute an
@@ -146,8 +146,12 @@ public class Chi {
 	}
 	
 	/**
-	 * Tries to consume the amount of available chi; returns whether there was
-	 * enough.
+	 * <strong>Only designed for use by internal data classes.</strong> A {@link Bender} object
+	 * is really the one responsible for consuming chi; use Bender{@link #consumeChi(float)}
+	 * which also takes into account special conditions like <strong>creative mode</strong>.
+	 * <p>
+	 * Tries to consume the amount of available chi from the available and total pools; returns
+	 * whether there was enough. Ignores special conditions (eg creative mode).
 	 */
 	public boolean consumeChi(float amount) {
 		float available = getAvailableChi();
