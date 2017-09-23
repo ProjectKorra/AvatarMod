@@ -71,11 +71,12 @@ public abstract class Bender {
 	public abstract BendingData getData();
 
 	/**
-	 * Returns whether this bender is in creative mode
-	 *
-	 * @deprecated This ruins abstraction; <a href="https://trello.com/c/ph9WP946/210-remove-benderisplayer">to be removed</a>
+	 * Returns whether this bender is in creative mode. <strong>This should usually be
+	 * avoided;</strong> it ruins abstraction. There are a few scenarios where this would be
+	 * necessary however - for example, disabling item drops if the player is on creative mode.
+	 * Nonetheless, it is usually not recommended to use this, and instead add a method to Bender
+	 * and have PlayerBender override that method.
 	 */
-	@Deprecated
 	public abstract boolean isCreativeMode();
 	
 	public abstract boolean isFlying();
