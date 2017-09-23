@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
+import com.sun.istack.internal.NotNull;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -43,6 +45,7 @@ public class MiscData {
 		this.save = save;
 		this.bisonFollowMode = true;
 		this.canUseAbilities = true;
+		this.redirectionSource = new NoBenderInfo();
 	}
 	
 	public void toBytes(ByteBuf buf) {
@@ -163,7 +166,10 @@ public class MiscData {
 		return redirectionSource;
 	}
 
-	public void setRedirectionSource(BenderInfo redirectionSource) {
+	public void setRedirectionSource(@NotNull BenderInfo redirectionSource) {
+		if (redirectionSource == null) {
+			redirectionSource = new NoBenderInfo();
+		}
 		this.redirectionSource = redirectionSource;
 	}
 
