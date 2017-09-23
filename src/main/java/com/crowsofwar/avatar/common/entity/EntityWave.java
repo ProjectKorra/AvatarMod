@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -54,6 +53,7 @@ public class EntityWave extends AvatarEntity {
 	
 	@Override
 	protected void entityInit() {
+		super.entityInit();
 		dataManager.register(SYNC_SIZE, 2f);
 	}
 	
