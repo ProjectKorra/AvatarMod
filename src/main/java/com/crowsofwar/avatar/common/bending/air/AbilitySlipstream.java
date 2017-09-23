@@ -40,7 +40,7 @@ public class AbilitySlipstream extends Ability {
                     entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
                     data.getAbilityData("slipstream").addXp(xp);
 
-                    if (abilityData.getLevel() == 3) {
+                    if (abilityData.getLevel() == 2) {
                         entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
                         entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
