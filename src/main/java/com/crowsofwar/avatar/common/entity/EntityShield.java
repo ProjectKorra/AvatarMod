@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -167,8 +168,10 @@ public abstract class EntityShield extends AvatarEntity {
 				Entity sourceEntity = source.getTrueSource();
 				if (sourceEntity != null) {
 					if (!owner.isEntityInvulnerable(source)) {
-						BendingData data = BendingData.get(owner);
-						if (data.chi().consumeChi(getChiDamageCost() * amount)) {
+
+						Bender bender = Bender.get(owner);
+						BendingData data = bender.getData();
+						if (bender.consumeChi(getChiDamageCost() * amount)) {
 
 							AbilityData aData = data.getAbilityData(getAbilityName());
 							aData.addXp(getProtectionXp());
@@ -178,6 +181,7 @@ public abstract class EntityShield extends AvatarEntity {
 						} else {
 							return true;
 						}
+
 					}
 				}
 			}
