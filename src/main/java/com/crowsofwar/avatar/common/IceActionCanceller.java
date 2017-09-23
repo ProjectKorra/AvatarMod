@@ -16,16 +16,16 @@
 */
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -33,19 +33,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * 
  * @author CrowsOfWar
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class IceActionCanceller {
-	
-	private IceActionCanceller() {}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new IceActionCanceller());
-	}
 
-	private boolean isTrapped(EntityLivingBase entity) {
+	private static boolean isTrapped(EntityLivingBase entity) {
 		if (EntityIcePrison.isImprisoned(entity)) {
 			return true;
 		}
 
+		//noinspection SimplifiableIfStatement
 		if (Bender.isBenderSupported(entity)) {
 			return BendingData.get(entity).hasStatusControl(StatusControl.SHIELD_SHATTER);
 		}
@@ -54,7 +50,7 @@ public class IceActionCanceller {
 	}
 
 	@SubscribeEvent
-	public void onJump(LivingJumpEvent e) {
+	public static void onJump(LivingJumpEvent e) {
 		EntityLivingBase entity = e.getEntityLiving();
 		if (isTrapped(entity)) {
 			entity.motionY = 0;
@@ -62,7 +58,7 @@ public class IceActionCanceller {
 	}
 	
 	@SubscribeEvent
-	public void onInteract(PlayerInteractEvent e) {
+	public static void onInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
 		if (isTrapped(player)) {
 			if (e.isCancelable()) {
