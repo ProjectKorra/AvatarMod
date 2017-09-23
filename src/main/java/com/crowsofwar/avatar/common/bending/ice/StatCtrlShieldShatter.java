@@ -33,7 +33,7 @@ import net.minecraft.world.World;
 public class StatCtrlShieldShatter extends StatusControl {
 	
 	public StatCtrlShieldShatter() {
-		super(11, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
+		super(13, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 	
 	@Override
