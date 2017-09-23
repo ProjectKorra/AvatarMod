@@ -29,12 +29,10 @@ public class AbilitySlipstream extends Ability {
         if (bender.consumeChi(STATS_CONFIG.chiSlipstream)) {
             float xp = SKILLS_CONFIG.blockPlaced;
             AbilityData abilityData = data.getAbilityData(this);
-            if (data.getAbilityData("slipstream").getLevel() == 0) {
 
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
-
                 data.getAbilityData("slipstream").addXp(xp);
-            }
+
 
 
 
@@ -47,7 +45,7 @@ public class AbilitySlipstream extends Ability {
                 }
 
                     if (abilityData.getLevel()==2) {
-                        
+
                         entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
                         entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
