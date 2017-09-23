@@ -16,20 +16,22 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
+import com.sun.istack.internal.NotNull;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 
 /**
- * 
- * 
+ *
+ *
  * @author CrowsOfWar
  */
 public class MiscData {
-	
+
 	private final Runnable save;
-	
+
 	private float fallAbsorption;
 	private int timeInAir;
 	private int abilityCooldown;
@@ -38,13 +40,14 @@ public class MiscData {
 	private boolean bisonFollowMode;
 	private boolean canUseAbilities;
 	private BenderInfo redirectionSource;
-	
+
 	public MiscData(Runnable save) {
 		this.save = save;
 		this.bisonFollowMode = true;
 		this.canUseAbilities = true;
+		this.redirectionSource = new NoBenderInfo();
 	}
-	
+
 	public void toBytes(ByteBuf buf) {
 		buf.writeFloat(fallAbsorption);
 		buf.writeInt(timeInAir);
@@ -54,7 +57,7 @@ public class MiscData {
 		buf.writeBoolean(bisonFollowMode);
 		buf.writeBoolean(canUseAbilities);
 	}
-	
+
 	public void fromBytes(ByteBuf buf) {
 		fallAbsorption = buf.readFloat();
 		timeInAir = buf.readInt();
@@ -64,7 +67,7 @@ public class MiscData {
 		bisonFollowMode = buf.readBoolean();
 		canUseAbilities = buf.readBoolean();
 	}
-	
+
 	public void readFromNbt(NBTTagCompound nbt) {
 		fallAbsorption = nbt.getFloat("FallAbsorption");
 		timeInAir = nbt.getInteger("TimeInAir");
@@ -81,7 +84,7 @@ public class MiscData {
 		}
 		redirectionSource = BenderInfo.readFromNbt(nbt);
 	}
-	
+
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("FallAbsorption", fallAbsorption);
 		nbt.setInteger("TimeInAir", timeInAir);
@@ -92,52 +95,52 @@ public class MiscData {
 		nbt.setBoolean("CanUseAbilitiesA4.6", canUseAbilities);
 		redirectionSource.writeToNbt(nbt);
 	}
-	
+
 	public float getFallAbsorption() {
 		return fallAbsorption;
 	}
-	
+
 	public void setFallAbsorption(float fallAbsorption) {
 		if (fallAbsorption == 0 || fallAbsorption > this.fallAbsorption) this.fallAbsorption = fallAbsorption;
 	}
-	
+
 	public int getTimeInAir() {
 		return timeInAir;
 	}
-	
+
 	public void setTimeInAir(int time) {
 		this.timeInAir = time;
 	}
-	
+
 	public int getAbilityCooldown() {
 		return abilityCooldown;
 	}
-	
+
 	public void setAbilityCooldown(int cooldown) {
 		if (cooldown < 0) cooldown = 0;
 		this.abilityCooldown = cooldown;
 		save.run();
 	}
-	
+
 	public void decrementCooldown() {
 		if (abilityCooldown > 0) {
 			abilityCooldown--;
 			save.run();
 		}
 	}
-	
+
 	public boolean isWallJumping() {
 		return wallJumping;
 	}
-	
+
 	public void setWallJumping(boolean wallJumping) {
 		this.wallJumping = wallJumping;
 	}
-	
+
 	public int getPetSummonCooldown() {
 		return petSummonCooldown;
 	}
-	
+
 	public void setPetSummonCooldown(int petSummonCooldown) {
 		this.petSummonCooldown = petSummonCooldown;
 	}
@@ -163,7 +166,10 @@ public class MiscData {
 		return redirectionSource;
 	}
 
-	public void setRedirectionSource(BenderInfo redirectionSource) {
+	public void setRedirectionSource(@NotNull BenderInfo redirectionSource) {
+		if (redirectionSource == null) {
+			redirectionSource = new NoBenderInfo();
+		}
 		this.redirectionSource = redirectionSource;
 	}
 

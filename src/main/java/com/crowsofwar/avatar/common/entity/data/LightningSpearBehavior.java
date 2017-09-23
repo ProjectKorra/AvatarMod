@@ -167,12 +167,12 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
             entity.setVelocity(motion);
 
-            if (data.getAbilityData("lightning_spear").isMasterPath(AbilityTreePath.SECOND)) {
+
                 int size = entity.getSize();
                 if (size < 60 && entity.ticksExisted % 4 == 0) {
                     entity.setSize(size + 1);
                 }
-            }
+
 
             return this;
         }

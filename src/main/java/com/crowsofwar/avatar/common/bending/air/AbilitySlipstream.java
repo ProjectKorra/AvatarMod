@@ -35,16 +35,16 @@ public class AbilitySlipstream extends Ability {
                 data.getAbilityData("slipstream").addXp(xp);
 
 
-                if (data.getAbilityData("slipstream").getLevel() == 1) {
+                if (abilityData.getLevel() == 1) {
                     entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100));
                     entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
-                    data.getAbilityData("slipstream").addXp(xp-0.5F);
+                    data.getAbilityData("slipstream").addXp(xp);
 
-                    if (data.getAbilityData("slipstream").getLevel() == 2) {
+                    if (abilityData.getLevel() == 3) {
                         entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
                         entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
-                        data.getAbilityData("slipstream").addXp(xp-1F);
+                        data.getAbilityData("slipstream").addXp(xp);
 
                         if (data.getAbilityData("slipstream").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                             entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
