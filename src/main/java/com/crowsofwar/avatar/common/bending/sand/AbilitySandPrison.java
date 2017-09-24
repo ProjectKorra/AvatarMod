@@ -47,8 +47,11 @@ public class AbilitySandPrison extends Ability {
 			List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, 10, filter);
 
 			if (!hit.isEmpty()) {
+
+				boolean allowEarthbendable = ctx.getAbilityData().getLevel() >= 1;
+
 				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
-				if (canImprison(prisoner)) {
+				if (canImprison(prisoner, allowEarthbendable)) {
 					EntitySandPrison.imprison(prisoner, entity);
 					world.playSound(null, prisoner.getPosition(), SoundEvents.BLOCK_SAND_STEP,
 							SoundCategory.PLAYERS, 1, 1);
@@ -56,7 +59,8 @@ public class AbilitySandPrison extends Ability {
 					ctx.getAbilityData().addXp(SKILLS_CONFIG.sandPrisoned);
 
 				} else {
-					bender.sendMessage("avatar.sandPrisonDisabled");
+					String suffix = allowEarthbendable ? "bendable" : "sand";
+					bender.sendMessage("avatar.sandPrisonDisabled." + suffix);
 				}
 			}
 
@@ -64,11 +68,21 @@ public class AbilitySandPrison extends Ability {
 
 	}
 
-	private boolean canImprison(EntityLivingBase target) {
+	/**
+	 * @param allowEarthbendable Whether to allow all earthbendable blocks (grass, dirt, etc) to
+	 *                              be used. If false, only sand can be used.
+	 */
+	private boolean canImprison(EntityLivingBase target, boolean allowEarthbendable) {
 		BlockPos pos = target.getPosition().down();
 		World world = target.world;
 		Block standingOn = world.getBlockState(pos).getBlock();
-		return standingOn == Blocks.SAND; // TODO configurable sand blocks
+
+		if (allowEarthbendable) {
+			return ConfigStats.STATS_CONFIG.bendableBlocks.contains(standingOn);
+		} else {
+			return standingOn == Blocks.SAND; // TODO configurable sand blocks
+		}
+
 	}
 
 }
