@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+
 /**
  * @author CrowsOfWar
  */
@@ -50,6 +52,9 @@ public class AbilitySandPrison extends Ability {
 					EntitySandPrison.imprison(prisoner, entity);
 					world.playSound(null, prisoner.getPosition(), SoundEvents.BLOCK_SAND_STEP,
 							SoundCategory.PLAYERS, 1, 1);
+
+					ctx.getAbilityData().addXp(SKILLS_CONFIG.sandPrisoned);
+
 				} else {
 					bender.sendMessage("avatar.sandPrisonDisabled");
 				}
