@@ -26,6 +26,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
@@ -46,6 +47,8 @@ public class EntitySandPrison extends AvatarEntity {
 
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
+
+	private boolean damageEntity;
 
 	/**
 	 * @param world
@@ -91,6 +94,12 @@ public class EntitySandPrison extends AvatarEntity {
 			if (!world.isRemote && imprisoned != null) {
 				world.playSound(null, imprisoned.getPosition(),
 						SoundEvents.BLOCK_SAND_BREAK, SoundCategory.PLAYERS, 1, 1);
+
+				if (damageEntity) {
+					// TODO SandPrison DamageSource
+					imprisoned.attackEntityFrom(DamageSource.ANVIL, 6);
+				}
+
 			}
 
 		}
@@ -118,6 +127,14 @@ public class EntitySandPrison extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		imprisonedAttr.writeToNbt(nbt);
 		nbt.setDouble("NormalSpeed", normalBaseValue);
+	}
+
+	public boolean isDamageEntity() {
+		return damageEntity;
+	}
+
+	public void setDamageEntity(boolean damageEntity) {
+		this.damageEntity = damageEntity;
 	}
 
 	public static boolean isImprisoned(EntityLivingBase entity) {
