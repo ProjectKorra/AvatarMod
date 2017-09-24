@@ -56,6 +56,7 @@ public class EntitySandPrison extends AvatarEntity {
 
 	private boolean damageEntity;
 	private boolean applySlowness;
+	private boolean vulnerableToAirbending;
 
 	/**
 	 * @param world
@@ -64,6 +65,7 @@ public class EntitySandPrison extends AvatarEntity {
 		super(world);
 		imprisonedAttr = new SyncedEntity<>(this, SYNC_IMPRISONED);
 		setSize(1, 0.25f);
+		vulnerableToAirbending = true;
 	}
 
 	@Override
@@ -128,6 +130,15 @@ public class EntitySandPrison extends AvatarEntity {
 	}
 
 	@Override
+	public boolean onAirContact() {
+		if (!world.isRemote && vulnerableToAirbending) {
+			setDead();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public void setDead() {
 		super.setDead();
 		EntityLivingBase imprisoned = getImprisoned();
@@ -144,6 +155,7 @@ public class EntitySandPrison extends AvatarEntity {
 		normalBaseValue = nbt.getDouble("NormalSpeed");
 		setImprisonedTime(nbt.getInteger("ImprisonedTime"));
 		setMaxImprisonedTime(nbt.getInteger("MaxImprisonedTime"));
+		setVulnerableToAirbending(nbt.getBoolean("VulnerableToAirbending"));
 	}
 
 	@Override
@@ -153,6 +165,7 @@ public class EntitySandPrison extends AvatarEntity {
 		nbt.setDouble("NormalSpeed", normalBaseValue);
 		nbt.setInteger("ImprisonedTime", getImprisonedTime());
 		nbt.setInteger("MaxImprisonedTime", getMaxImprisonedTime());
+		nbt.setBoolean("VulnerableToAirbending", isVulnerableToAirbending());
 	}
 
 	/**
@@ -192,6 +205,14 @@ public class EntitySandPrison extends AvatarEntity {
 
 	public void setApplySlowness(boolean applySlowness) {
 		this.applySlowness = applySlowness;
+	}
+
+	public boolean isVulnerableToAirbending() {
+		return vulnerableToAirbending;
+	}
+
+	public void setVulnerableToAirbending(boolean vulnerableToAirbending) {
+		this.vulnerableToAirbending = vulnerableToAirbending;
 	}
 
 	public static boolean isImprisoned(EntityLivingBase entity) {
