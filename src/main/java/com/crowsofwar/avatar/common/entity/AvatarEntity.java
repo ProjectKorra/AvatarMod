@@ -347,7 +347,9 @@ public abstract class AvatarEntity extends Entity {
 	 * Called when a source of fire, a fire block itself, hits the entity. Returns whether the
 	 * entity was destroyed.
 	 */
-	public boolean onFireContact() { return false; }
+	public boolean onFireContact() {
+		return false;
+	}
 
 	/**
 	 * Break the block at the given position, playing sound/particles, and
