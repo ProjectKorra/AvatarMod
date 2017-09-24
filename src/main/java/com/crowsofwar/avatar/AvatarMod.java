@@ -254,6 +254,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityCleanse());
 		Abilities.register(new AbilityEarthSpikes());
 		Abilities.register(new AbilityLightningSpear());
+		Abilities.register(new AbilityPurify());
 	}
 
 	private static void registerBendingStyles() {

@@ -38,6 +38,7 @@ public class Firebending extends BendingStyle {
 		addAbility("fire_arc");
 		addAbility("flamethrower");
 		addAbility("fireball");
+		addAbility("purify");
 		
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);

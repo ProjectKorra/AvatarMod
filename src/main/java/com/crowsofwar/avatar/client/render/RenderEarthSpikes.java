@@ -33,6 +33,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
+import static java.lang.Math.PI;
+
 /**
  *
  *
@@ -65,7 +67,7 @@ public class RenderEarthSpikes extends Render<EntityEarthSpike> {
 
 
         GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
-        GlStateManager.rotate(entity.rotationPitch, 1, -180, 0);
+        GlStateManager.rotate(entity.rotationPitch, 0, 2, 0);
 
         model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
         GlStateManager.popMatrix();
