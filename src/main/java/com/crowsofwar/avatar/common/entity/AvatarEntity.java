@@ -352,6 +352,14 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
+	 * Called when an airbending entity (such as an air gust) hits the entity. Returns whether
+	 * the entity was destroyed.
+	 */
+	public boolean onAirContact() {
+		return false;
+	}
+
+	/**
 	 * Break the block at the given position, playing sound/particles, and
 	 * dropping item
 	 */

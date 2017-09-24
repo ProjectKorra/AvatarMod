@@ -17,13 +17,13 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Predicate;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -81,58 +81,68 @@ public class EntityAirblade extends AvatarEntity {
 		}
 		
 		if (!isDead && !world.isRemote) {
-			List<EntityLivingBase> collidedList = world.getEntitiesWithinAABB(EntityLivingBase.class,
+			List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
 					getEntityBoundingBox());
 			
 			if (!collidedList.isEmpty()) {
-				
-				EntityLivingBase collided = collidedList.get(0);
-				
-				DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
-				if (pierceArmor) {
-					source.setDamageBypassesArmor();
-				}
-				boolean successfulHit = collided.attackEntityFrom(source, damage);
-				
-				Vector motion = velocity();
-				motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
-				collided.addVelocity(motion.x(), motion.y(), motion.z());
-				
-				if (getOwner() != null) {
-					BendingData data = getOwnerBender().getData();
-					data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
+
+				Entity collided = collidedList.get(0);
+
+				if (collided instanceof AvatarEntity) {
+					((AvatarEntity) collided).onAirContact();
+				} else if (collided instanceof EntityLivingBase) {
+					handleCollision((EntityLivingBase) collided);
 				}
 
-				if (chainAttack) {
-					if (successfulHit) {
-
-						AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
-						Predicate<EntityLivingBase> notFriendly =//
-								entity -> entity != collided && entity != getOwner();
-
-						List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB
-								(EntityLivingBase.class, aabb, notFriendly);
-
-						nextTargets.sort(AvatarUtils.getSortByDistanceComparator
-								(this::getDistanceToEntity));
-
-						if (!nextTargets.isEmpty()) {
-							EntityLivingBase nextTarget = nextTargets.get(0);
-							Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
-							setVelocity(direction.normalize().times(velocity().magnitude() *
-									0.5));
-						}
-
-					}
-				} else if (!world.isRemote) {
-					setDead();
-				}
-				
 			}
 		}
 		
 	}
-	
+
+	private void handleCollision(EntityLivingBase collided) {
+
+		DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
+		if (pierceArmor) {
+			source.setDamageBypassesArmor();
+		}
+		boolean successfulHit = collided.attackEntityFrom(source, damage);
+
+		Vector motion = velocity();
+		motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
+		collided.addVelocity(motion.x(), motion.y(), motion.z());
+
+		if (getOwner() != null) {
+			BendingData data = getOwnerBender().getData();
+			data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
+		}
+
+		if (chainAttack) {
+			if (successfulHit) {
+
+				AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
+				Predicate<EntityLivingBase> notFriendly =//
+						entity -> entity != collided && entity != getOwner();
+
+				List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB
+						(EntityLivingBase.class, aabb, notFriendly);
+
+				nextTargets.sort(AvatarUtils.getSortByDistanceComparator
+						(this::getDistanceToEntity));
+
+				if (!nextTargets.isEmpty()) {
+					EntityLivingBase nextTarget = nextTargets.get(0);
+					Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
+					setVelocity(direction.normalize().times(velocity().magnitude() *
+							0.5));
+				}
+
+			}
+		} else if (!world.isRemote) {
+			setDead();
+		}
+
+	}
+
 	/**
 	 * When the airblade can break blocks, checks any blocks that the airblade
 	 * collides with and tries to break them
