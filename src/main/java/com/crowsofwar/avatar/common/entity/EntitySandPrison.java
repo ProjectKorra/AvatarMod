@@ -43,7 +43,11 @@ public class EntitySandPrison extends AvatarEntity {
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntitySandPrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
-	public static final int IMPRISONED_TIME = 100;
+	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey
+			(EntitySandPrison.class, DataSerializers.VARINT);
+
+	public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager
+			.createKey(EntitySandPrison.class, DataSerializers.VARINT);
 
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
@@ -63,6 +67,8 @@ public class EntitySandPrison extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_IMPRISONED, Optional.absent());
+		dataManager.register(SYNC_IMPRISONED_TIME, 100);
+		dataManager.register(SYNC_MAX_IMPRISONED_TIME, 100);
 	}
 
 	public EntityLivingBase getImprisoned() {
@@ -88,7 +94,12 @@ public class EntitySandPrison extends AvatarEntity {
 			imprisoned.posZ = this.posZ;
 			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
 		}
-		if (ticksExisted >= IMPRISONED_TIME) {
+
+		if (!world.isRemote) {
+			setImprisonedTime(getImprisonedTime() - 1);
+		}
+
+		if (getImprisonedTime() <= 0) {
 			setDead();
 
 			if (!world.isRemote && imprisoned != null) {
@@ -120,6 +131,8 @@ public class EntitySandPrison extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		imprisonedAttr.readFromNbt(nbt);
 		normalBaseValue = nbt.getDouble("NormalSpeed");
+		setImprisonedTime(nbt.getInteger("ImprisonedTime"));
+		setMaxImprisonedTime(nbt.getInteger("MaxImprisonedTime"));
 	}
 
 	@Override
@@ -127,6 +140,31 @@ public class EntitySandPrison extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		imprisonedAttr.writeToNbt(nbt);
 		nbt.setDouble("NormalSpeed", normalBaseValue);
+		nbt.setInteger("ImprisonedTime", getImprisonedTime());
+		nbt.setInteger("MaxImprisonedTime", getMaxImprisonedTime());
+	}
+
+	/**
+	 * A countdown which returns the ticks left to be imprisoned. When the countdown is over, the
+	 * entity will be freed.
+	 */
+	public int getImprisonedTime() {
+		return dataManager.get(SYNC_IMPRISONED_TIME);
+	}
+
+	public void setImprisonedTime(int imprisonedTime) {
+		dataManager.set(SYNC_IMPRISONED_TIME, imprisonedTime);
+	}
+
+	/**
+	 * Returns the total ticks that the target will be imprisoned for.
+	 */
+	public int getMaxImprisonedTime() {
+		return dataManager.get(SYNC_MAX_IMPRISONED_TIME);
+	}
+
+	public void setMaxImprisonedTime(int maxImprisonedTime) {
+		dataManager.set(SYNC_MAX_IMPRISONED_TIME, maxImprisonedTime);
 	}
 
 	public boolean isDamageEntity() {
