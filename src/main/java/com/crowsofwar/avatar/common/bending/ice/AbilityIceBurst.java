@@ -19,11 +19,15 @@ package com.crowsofwar.avatar.common.bending.ice;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityIceShield;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -42,7 +46,12 @@ public class AbilityIceBurst extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		
+		Bender bender = ctx.getBender();
+
+		if (!bender.consumeChi(STATS_CONFIG.chiIceShieldCreate)) {
+			return;
+		}
+
 		EntityIceShield shield = new EntityIceShield(world);
 		shield.copyLocationAndAnglesFrom(entity);
 		shield.setOwner(entity);
@@ -68,7 +77,9 @@ public class AbilityIceBurst extends Ability {
 
 		world.spawnEntity(shield);
 		data.addStatusControl(StatusControl.SHIELD_SHATTER);
-		
+
+		abilityData.addXp(SKILLS_CONFIG.iceShieldCreated);
+
 	}
 
 }

@@ -32,6 +32,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 /**
  * 
  * 
@@ -145,12 +148,12 @@ public class EntityIceShield extends EntityShield {
 
 	@Override
 	protected float getChiDamageCost() {
-		return 0;
+		return STATS_CONFIG.chiIceShieldProtect;
 	}
 
 	@Override
 	protected float getProtectionXp() {
-		return 0;
+		return SKILLS_CONFIG.iceShieldProtected;
 	}
 
 	@Override

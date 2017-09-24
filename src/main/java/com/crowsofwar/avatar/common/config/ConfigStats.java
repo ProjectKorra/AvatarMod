@@ -81,7 +81,9 @@ public class ConfigStats {
 			chiWallOneSecond = 0.125f,
 			chiPrison = 5,
 			chiSandPrison = 3,
-			chiLightning = 6;
+			chiLightning = 6,
+			chiIceShieldCreate = 4,
+			chiIceShieldProtect = 0.15f;
 	// @formatter:on
 
 	@Load
