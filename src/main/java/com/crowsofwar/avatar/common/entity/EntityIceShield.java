@@ -115,7 +115,13 @@ public class EntityIceShield extends EntityShield {
 			}
 		}
 	}
-	
+
+	@Override
+	public boolean onFireContact() {
+		setHealth(getHealth() - 0.2f);
+		return getHealth() <= 0;
+	}
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
