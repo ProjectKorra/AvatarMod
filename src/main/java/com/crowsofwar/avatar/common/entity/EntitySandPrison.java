@@ -114,7 +114,7 @@ public class EntitySandPrison extends AvatarEntity {
 
 				if (damageEntity) {
 					// TODO SandPrison DamageSource
-					imprisoned.attackEntityFrom(DamageSource.ANVIL, 6);
+					imprisoned.attackEntityFrom(DamageSource.ANVIL, 8);
 				}
 
 				if (applySlowness) {
