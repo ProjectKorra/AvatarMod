@@ -43,11 +43,11 @@ public class PowerRatingManager {
 	 * Modifiers are present for a finite amount of time. Counts down each modifier's time left and
 	 * removes them if necessary.
 	 */
-	public void tickModifiers() {
+	public void tickModifiers(BendingContext ctx) {
 		Iterator<PowerRatingModifier> iterator = modifiers.iterator();
 		while (iterator.hasNext()) {
 			PowerRatingModifier modifier = iterator.next();
-			if (modifier.onUpdate()) {
+			if (modifier.onUpdate(ctx)) {
 				iterator.remove();
 			}
 		}

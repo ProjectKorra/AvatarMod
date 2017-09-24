@@ -29,7 +29,7 @@ public abstract class PowerRatingModifier {
 	 * <p>
 	 * By default, modifiers are removed when a countdown is over.
 	 */
-	public boolean onUpdate() {
+	public boolean onUpdate(BendingContext ctx) {
 		ticks--;
 		return ticks <= 0;
 	}
