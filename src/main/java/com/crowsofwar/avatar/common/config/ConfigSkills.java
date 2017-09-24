@@ -57,7 +57,8 @@ public class ConfigSkills {
 		struckWithLightning = 5,
 		sandPrisoned = 9,
 		iceShieldCreated = 2,
-		iceShieldProtected = 6;
+		iceShieldProtected = 6,
+		icePrisoned = 10;
 	// @formatter:on
 	
 	public static void load() {

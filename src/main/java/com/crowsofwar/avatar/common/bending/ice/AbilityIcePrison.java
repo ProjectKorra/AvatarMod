@@ -32,6 +32,8 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+
 /**
  * 
  * 
@@ -67,7 +69,9 @@ public class AbilityIcePrison extends Ability {
 				
 				world.playSound(null, prisoner.posX, prisoner.posY, prisoner.posZ,
 						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
-				
+
+				ctx.getAbilityData().addXp(SKILLS_CONFIG.icePrisoned);
+
 			}
 			
 		}
