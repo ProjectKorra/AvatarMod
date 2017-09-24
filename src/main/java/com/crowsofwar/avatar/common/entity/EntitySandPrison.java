@@ -220,15 +220,16 @@ public class EntitySandPrison extends AvatarEntity {
 
 		float imprisonedSeconds = abilityData.getLevel() >= 1 ? 5 : 4;
 		damageEntity = false;
-		applySlowness = abilityData.getLevel() >= 1;
-		vulnerableToAirbending = abilityData.getLevel() < 2;
+		applySlowness = abilityData.getLevel() >= 2;
+		vulnerableToAirbending = true;
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			damageEntity = true;
-			applySlowness = false;
+			imprisonedSeconds = 6;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			imprisonedSeconds = 12;
+			vulnerableToAirbending = false;
 		}
 
 		setImprisonedTime((int) (imprisonedSeconds * 20));
