@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,6 +84,7 @@ public class BendingData {
 	private UUID activeBending;
 	private Chi chi;
 	private MiscData miscData;
+	private PowerRatingManager powerRatingManager;
 
 	/**
 	 * Create a new BendingData
@@ -102,6 +104,7 @@ public class BendingData {
 		activeBending = null;
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
+		powerRatingManager = new PowerRatingManager();
 	}
 
 	// ================================================================================
@@ -406,6 +409,14 @@ public class BendingData {
 	public void clearTickHandlers() {
 		tickHandlers.clear();
 		tickHandlerDuration.clear();
+	}
+
+	// ================================================================================
+	// POWER RATING
+	// ================================================================================
+
+	public PowerRatingManager getPowerRatingManager() {
+		return powerRatingManager;
 	}
 
 	// ================================================================================

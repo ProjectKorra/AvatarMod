@@ -12,12 +12,12 @@ import java.util.UUID;
  *
  * @author CrowsOfWar
  */
-public class PowerRating {
+public class PowerRatingManager {
 
 	private final UUID bendingType;
 	private List<PowerRatingModifier> modifiers;
 
-	public PowerRating(UUID bendingType) {
+	public PowerRatingManager(UUID bendingType) {
 		this.bendingType = bendingType;
 		modifiers = new ArrayList<>();
 	}
