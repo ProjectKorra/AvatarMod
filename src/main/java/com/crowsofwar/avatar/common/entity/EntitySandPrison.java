@@ -26,6 +26,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
@@ -53,6 +55,7 @@ public class EntitySandPrison extends AvatarEntity {
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
 
 	private boolean damageEntity;
+	private boolean applySlowness;
 
 	/**
 	 * @param world
@@ -109,6 +112,14 @@ public class EntitySandPrison extends AvatarEntity {
 				if (damageEntity) {
 					// TODO SandPrison DamageSource
 					imprisoned.attackEntityFrom(DamageSource.ANVIL, 6);
+				}
+
+				if (applySlowness) {
+
+					Potion slowness = Potion.getPotionFromResourceLocation("slowness");
+					//noinspection ConstantConditions
+					imprisoned.addPotionEffect(new PotionEffect(slowness, 80, 1));
+
 				}
 
 			}
@@ -173,6 +184,14 @@ public class EntitySandPrison extends AvatarEntity {
 
 	public void setDamageEntity(boolean damageEntity) {
 		this.damageEntity = damageEntity;
+	}
+
+	public boolean isApplySlowness() {
+		return applySlowness;
+	}
+
+	public void setApplySlowness(boolean applySlowness) {
+		this.applySlowness = applySlowness;
 	}
 
 	public static boolean isImprisoned(EntityLivingBase entity) {
