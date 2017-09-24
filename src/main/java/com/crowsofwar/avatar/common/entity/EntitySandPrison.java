@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
@@ -215,6 +216,26 @@ public class EntitySandPrison extends AvatarEntity {
 		this.vulnerableToAirbending = vulnerableToAirbending;
 	}
 
+	private void setStats(AbilityData abilityData) {
+
+		float imprisonedSeconds = abilityData.getLevel() >= 1 ? 5 : 4;
+		damageEntity = false;
+		applySlowness = abilityData.getLevel() >= 1;
+		vulnerableToAirbending = abilityData.getLevel() < 2;
+
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			damageEntity = true;
+			applySlowness = false;
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			imprisonedSeconds = 12;
+		}
+
+		setImprisonedTime((int) (imprisonedSeconds * 20));
+		setMaxImprisonedTime((int) (imprisonedSeconds * 20));
+
+	}
+
 	public static boolean isImprisoned(EntityLivingBase entity) {
 
 		return getPrison(entity) != null;
@@ -235,11 +256,12 @@ public class EntitySandPrison extends AvatarEntity {
 
 	}
 
-	public static void imprison(EntityLivingBase entity) {
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
 		World world = entity.world;
 		EntitySandPrison prison = new EntitySandPrison(world);
 		prison.setImprisoned(entity);
 		prison.copyLocationAndAnglesFrom(entity);
+		prison.setStats(AbilityData.get(owner, "sand_prison"));
 		world.spawnEntity(prison);
 	}
 
