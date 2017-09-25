@@ -102,19 +102,21 @@ public class EntityCloudBall extends AvatarEntity {
 
         float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
         explosionSize *= getSize() / 30f;
-        boolean destroyObsidian = false;
+        boolean indestructible = false;
 
         if (getOwner() != null) {
             AbilityData abilityData = BendingData.get(getOwner())
                     .getAbilityData("cloudburst");
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                destroyObsidian = false;
-            }
-        }
-        if (!world.isRemote){
+                indestructible = true;
+                if (indestructible = true){
+                    setDead();
+                    return false;
+                }
 
-            world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 0, 0, 0 );
-        }
+                }
+            }
+
 
 
 
