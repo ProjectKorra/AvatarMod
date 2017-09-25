@@ -152,10 +152,14 @@ public abstract class Bender {
 				if (data.getAbilityCooldown() == 0) {
 
 					if (data.getCanUseAbilities()) {
+
+						double powerRating = calcPowerRating(ability.getBendingId());
 						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
-								entity);
+								entity, powerRating);
+
 						ability.execute(abilityCtx);
 						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+
 					} else {
 						// TODO make bending disabled available for multiple things
 						AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
