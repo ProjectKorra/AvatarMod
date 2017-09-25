@@ -203,6 +203,8 @@ public abstract class Bender {
 
 		data.decrementCooldown();
 
+		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
+
 		// Update chi
 
 		if (!world.isRemote) {
@@ -224,7 +226,6 @@ public abstract class Bender {
 
 		List<TickHandler> tickHandlers = data.getAllTickHandlers();
 		if (tickHandlers != null) {
-			BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
 			for (TickHandler handler : tickHandlers) {
 				if (handler.tick(ctx)) {
 					// Can use this since the list is a COPY of the
@@ -235,6 +236,13 @@ public abstract class Bender {
 					data.setTickHandlerDuration(handler, newDuration);
 				}
 			}
+		}
+
+		// Update bending managers
+
+		List<PowerRatingManager> managers = data.getPowerRatingManagers();
+		for (PowerRatingManager manager : managers) {
+			manager.tickModifiers(ctx);
 		}
 
 	}

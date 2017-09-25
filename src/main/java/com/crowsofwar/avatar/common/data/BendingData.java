@@ -438,6 +438,14 @@ public class BendingData {
 		return getPowerRatingManager(bendingStyle.getId());
 	}
 
+	/**
+	 * Gets all power rating managers; changes to this list aren't reflected in the BendingData's
+	 * power rating list
+	 */
+	public List<PowerRatingManager> getPowerRatingManagers() {
+		return new ArrayList<>(powerRatingManagers.values());
+	}
+
 	// ================================================================================
 	// MISC
 	// ================================================================================
