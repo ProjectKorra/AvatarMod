@@ -17,7 +17,6 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.*;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,7 +83,7 @@ public class BendingData {
 	private UUID activeBending;
 	private Chi chi;
 	private MiscData miscData;
-	private PowerRatingManager powerRatingManager;
+	private Map<UUID, PowerRatingManager> powerRatingManagers;
 
 	/**
 	 * Create a new BendingData
@@ -104,7 +103,7 @@ public class BendingData {
 		activeBending = null;
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
-		powerRatingManager = new PowerRatingManager();
+		powerRatingManagers = new HashMap<>();
 	}
 
 	// ================================================================================
@@ -415,8 +414,28 @@ public class BendingData {
 	// POWER RATING
 	// ================================================================================
 
-	public PowerRatingManager getPowerRatingManager() {
-		return powerRatingManager;
+	/**
+	 * Gets the power rating manager for the given bending style. Returns null if the bender
+	 * doesn't have that bending style.
+	 */
+	@Nullable
+	public PowerRatingManager getPowerRatingManager(UUID bendingId) {
+		if (hasBendingId(bendingId)) {
+			return powerRatingManagers.computeIfAbsent(bendingId, PowerRatingManager::new);
+		} else {
+			if (powerRatingManagers.containsKey(bendingId)) {
+				powerRatingManagers.remove(bendingId);
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * @see #getPowerRatingManager(UUID)
+	 */
+	@Nullable
+	public PowerRatingManager getPowerRatingManager(BendingStyle bendingStyle) {
+		return getPowerRatingManager(bendingStyle.getId());
 	}
 
 	// ================================================================================

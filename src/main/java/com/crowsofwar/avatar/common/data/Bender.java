@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
@@ -96,6 +97,14 @@ public abstract class Bender {
 		// TODO Account for entity Chi?
 		return true;
 	};
+
+	/**
+	 * Calculates the current power rating based off the current environment.
+	 */
+	public double calcPowerRating(UUID bendingId) {
+		BendingContext ctx = new BendingContext(getData(), getEntity(), this, new Raytrace.Result());
+		if ()
+	}
 
 	/**
 	 * Checks whether the Bender can use that given ability.
