@@ -103,7 +103,13 @@ public abstract class Bender {
 	 */
 	public double calcPowerRating(UUID bendingId) {
 		BendingContext ctx = new BendingContext(getData(), getEntity(), this, new Raytrace.Result());
-		if ()
+
+		PowerRatingManager manager = getData().getPowerRatingManager(bendingId);
+		if (manager != null) {
+			return manager.getRating(ctx);
+		}
+		return 0;
+
 	}
 
 	/**
