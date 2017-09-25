@@ -39,7 +39,7 @@ public class QueuedAbilityExecutionHandler {
 				par.ticks--;
 				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0 && par.data.getCanUseAbilities()) {
 					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability,
-							par.entity));
+							par.entity, par.powerRating));
 					iterator.remove();
 				}
 			}
@@ -47,10 +47,10 @@ public class QueuedAbilityExecutionHandler {
 	}
 
 	public static void queueAbilityExecution(EntityLivingBase entity, BendingData data, Ability
-			ability, Raytrace.Result raytrace) {
+			ability, Raytrace.Result raytrace, double powerRating) {
 
 		abilityExecutions.add(new QueuedAbilityExecution(data.getAbilityCooldown(), entity, data,
-				ability, raytrace));
+				ability, raytrace, powerRating));
 
 	}
 
@@ -61,14 +61,16 @@ public class QueuedAbilityExecutionHandler {
 		private final BendingData data;
 		private final Ability ability;
 		private final Raytrace.Result raytrace;
+		private final double powerRating;
 
 		public QueuedAbilityExecution(int ticks, EntityLivingBase entity, BendingData data,
-									  Ability ability, Raytrace.Result raytrace) {
+									  Ability ability, Raytrace.Result raytrace, double powerRating) {
 			this.ticks = ticks;
 			this.entity = entity;
 			this.data = data;
 			this.ability = ability;
 			this.raytrace = raytrace;
+			this.powerRating = powerRating;
 		}
 
 	}

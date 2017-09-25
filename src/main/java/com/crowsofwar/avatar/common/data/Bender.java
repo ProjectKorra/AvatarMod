@@ -149,11 +149,13 @@ public abstract class Bender {
 			BendingData data = getData();
 			EntityLivingBase entity = getEntity();
 			if (canUseAbility(ability)) {
+
+				double powerRating = calcPowerRating(ability.getBendingId());
+
 				if (data.getAbilityCooldown() == 0) {
 
 					if (data.getCanUseAbilities()) {
 
-						double powerRating = calcPowerRating(ability.getBendingId());
 						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
 								entity, powerRating);
 
@@ -167,7 +169,7 @@ public abstract class Bender {
 
 				} else {
 					QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
-							raytrace);
+							raytrace, powerRating);
 				}
 			} else {
 				sendMessage("avatar.abilityLocked");
