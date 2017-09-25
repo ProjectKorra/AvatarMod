@@ -2,10 +2,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Manages the power rating
@@ -15,11 +12,11 @@ import java.util.UUID;
 public class PowerRatingManager {
 
 	private final UUID bendingType;
-	private List<PowerRatingModifier> modifiers;
+	private Set<PowerRatingModifier> modifiers;
 
 	public PowerRatingManager(UUID bendingType) {
 		this.bendingType = bendingType;
-		modifiers = new ArrayList<>();
+		modifiers = new HashSet<>();
 	}
 
 	public double getRating(BendingContext ctx) {
@@ -45,6 +42,7 @@ public class PowerRatingManager {
 	 */
 	public void tickModifiers(BendingContext ctx) {
 		Iterator<PowerRatingModifier> iterator = modifiers.iterator();
+		//noinspection Java8CollectionRemoveIf
 		while (iterator.hasNext()) {
 			PowerRatingModifier modifier = iterator.next();
 			if (modifier.onUpdate(ctx)) {

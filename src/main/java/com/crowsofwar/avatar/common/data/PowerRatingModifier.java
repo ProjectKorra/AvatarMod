@@ -34,4 +34,14 @@ public abstract class PowerRatingModifier {
 		return ticks <= 0;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return obj.getClass() == this.getClass();
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
+
 }
