@@ -119,10 +119,11 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         }
 
         // Destroy if in a block
-        IBlockState inBlock = world.getBlockState(getPosition());
+       IBlockState inBlock = world.getBlockState(getPosition());
         if (inBlock.isFullBlock()) {
             setDead();
         }
+
 
         // Destroy non-solid blocks in the ravine
         BlockPos inPos = getPosition();
