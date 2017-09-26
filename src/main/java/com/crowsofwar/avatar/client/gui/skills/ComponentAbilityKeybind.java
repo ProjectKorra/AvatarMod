@@ -16,10 +16,6 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-
-import org.lwjgl.input.Keyboard;
-
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.Ability;
 
@@ -27,6 +23,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import org.lwjgl.input.Keyboard;
+
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 /**
  * 
@@ -161,6 +160,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	private void storeKey(Integer key) {
 		CLIENT_CONFIG.keymappings.put(ability, key);
+		CLIENT_CONFIG.save();
 	}
 	
 	public boolean isEditing() {
