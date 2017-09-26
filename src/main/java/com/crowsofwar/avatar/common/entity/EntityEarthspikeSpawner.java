@@ -29,7 +29,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class EntityEarthspikeSpawner extends AvatarEntity {
     private Vector initialPosition;
 
-
+    private float damageMult;
     private double maxTravelDistanceSq;
     private boolean breakBlocks;
     private boolean dropEquipment;
@@ -40,9 +40,13 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     public EntityEarthspikeSpawner(World world) {
         super(world);
         setSize(1, 1);
+        this.damageMult = 1.6F;
 
     }
 
+    public void setDamageMult(float mult) {
+        this.damageMult = mult;
+    }
 
     public void setDistance(double dist) {
         maxTravelDistanceSq = dist * dist;
@@ -210,6 +214,9 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
                 }
 
             }
+            DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
+            float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
+            return entity.attackEntityFrom(ds, damage);
 
 
         }

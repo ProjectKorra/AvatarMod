@@ -44,6 +44,7 @@ public class AbilityEarthSpikes extends Ability {
             earthspike.setOwner(entity);
             earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
             earthspike.setVelocity(look.times(mult));
+            earthspike.setDamageMult(.90f + xp / 100);
             earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
             earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
             earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));

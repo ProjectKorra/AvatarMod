@@ -99,43 +99,12 @@ public class EntityEarthSpike extends AvatarEntity {
         super.onEntityUpdate();
 
 
-        BlockPos above = getPosition().offset(EnumFacing.UP);
-        BlockPos below = getPosition().offset(EnumFacing.DOWN);
-        Block belowBlock = world.getBlockState(below).getBlock();
-
-        if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-                world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
-                SoundCategory.PLAYERS, 1, 1, false);
-
-        if (!world.getBlockState(below).isNormalCube()) {
-            setDead();
-        }
-
-        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
-            setDead();
-        }
-
-        // Destroy if in a block
-        IBlockState inBlock = world.getBlockState(getPosition());
-        if (inBlock.isFullBlock()) {
-            setDead();
+        if (ticksExisted % 5 == 0){
+            this.setDead();
         }
 
         // Destroy non-solid blocks in the ravine
-        BlockPos inPos = getPosition();
-        if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 
-            if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-
-                breakBlock(getPosition());
-
-            } else {
-
-                setDead();
-
-            }
-
-        }
 
         // amount of entities which were successfully attacked
         int attacked = 0;
@@ -171,7 +140,7 @@ public class EntityEarthSpike extends AvatarEntity {
     private boolean attackEntity(Entity entity) {
 
         if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-            
+
 
             if (dropEquipment && entity instanceof EntityLivingBase) {
 
