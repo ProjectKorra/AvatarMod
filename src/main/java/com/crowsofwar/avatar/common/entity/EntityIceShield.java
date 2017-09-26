@@ -123,6 +123,11 @@ public class EntityIceShield extends EntityShield {
 	}
 
 	@Override
+	public boolean canPush() {
+		return false;
+	}
+
+	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		normalBaseValue = nbt.getDouble("NormalBaseValue");

@@ -360,6 +360,13 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
+	 * Returns true if another AvatarEntity can push this one.
+	 */
+	public boolean canPush() {
+		return true;
+	}
+
+	/**
 	 * Break the block at the given position, playing sound/particles, and
 	 * dropping item
 	 */

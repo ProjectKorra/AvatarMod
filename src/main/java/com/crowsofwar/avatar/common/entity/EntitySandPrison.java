@@ -237,6 +237,11 @@ public class EntitySandPrison extends AvatarEntity {
 
 	}
 
+	@Override
+	public boolean canPush() {
+		return false;
+	}
+
 	public static boolean isImprisoned(EntityLivingBase entity) {
 
 		return getPrison(entity) != null;

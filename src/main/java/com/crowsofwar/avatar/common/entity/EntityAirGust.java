@@ -70,7 +70,13 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	protected void onCollideWithEntity(Entity entity) {
 		EntityLivingBase owner = getOwner();
 		if (!entity.world.isRemote && entity != owner) {
-			
+
+			if (entity instanceof AvatarEntity) {
+				AvatarEntity avatarEntity = (AvatarEntity) entity;
+				if (avatarEntity.onAirContact()) return;
+				if (!avatarEntity.canPush()) return;
+			}
+
 			BendingData data = Bender.get(owner).getData();
 			float xp = 0;
 			if (data != null) {

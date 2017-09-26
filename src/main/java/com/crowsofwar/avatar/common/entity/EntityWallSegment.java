@@ -226,6 +226,11 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	@Override
+	public boolean canPush() {
+		return false;
+	}
+
+	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
 		// Note... only called server-side
