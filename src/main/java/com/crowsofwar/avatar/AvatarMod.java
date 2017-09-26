@@ -186,6 +186,7 @@ public class AvatarMod {
 		registerEntity(EntityCloudBall.class, "cloudburst");
 		registerEntity(EntityEarthSpike.class, "earthspike");
 		registerEntity(EntityLightningSpear.class, "lightning_spear");
+		registerEntity(EntityEarthspikeSpawner.class, "earthspike_spawner");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
@@ -255,6 +256,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityEarthSpikes());
 		Abilities.register(new AbilityLightningSpear());
 		Abilities.register(new AbilityPurify());
+		Abilities.register(new AbilityEarthSpikes());
 	}
 
 	private static void registerBendingStyles() {
