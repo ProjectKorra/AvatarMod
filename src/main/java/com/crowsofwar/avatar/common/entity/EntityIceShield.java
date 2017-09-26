@@ -99,6 +99,9 @@ public class EntityIceShield extends EntityShield {
 				speed.setBaseValue(0);
 			}
 			owner.setPosition(posX, posY, posZ);
+			owner.motionX = this.motionX;
+			owner.motionY = this.motionY;
+			owner.motionZ = this.motionZ;
 		}
 	}
 	
