@@ -159,25 +159,8 @@ public class EntityEarthSpike extends AvatarEntity {
                 data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit * attacked);
             }
         }
-
-        if (!world.isRemote && breakBlocks) {
-            BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
-            if (!last.equals(getPosition()) && !last.equals(initialPosition.toBlockPos())) {
-
-                world.destroyBlock(last.down(), true);
-
-                double travel = Math.sqrt(getSqrDistanceTravelled() / maxTravelDistanceSq);
-                double chance = -(travel - 0.5) * (travel - 0.5) + 0.25;
-                chance *= 2;
-
-                if (rand.nextDouble() <= chance) {
-                    world.destroyBlock(last.down(2), true);
-                }
-
-            }
-        }
-
     }
+
 
     @Override
     public boolean onCollideWithSolid() {
@@ -188,10 +171,7 @@ public class EntityEarthSpike extends AvatarEntity {
     private boolean attackEntity(Entity entity) {
 
         if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-
-            Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
-            entity.addVelocity(push.x(), push.y(), push.z());
-            AvatarUtils.afterVelocityAdded(entity);
+            
 
             if (dropEquipment && entity instanceof EntityLivingBase) {
 

@@ -96,7 +96,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
                 world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
                 SoundCategory.PLAYERS, 1, 1, false);
-        if (ticksExisted % 7 == 0) {
+        if (ticksExisted % 3 == 0) {
             EntityEarthSpike earthspike = new EntityEarthSpike(world);
             earthspike.posX = this.posX;
             earthspike.posY = this.posY;
