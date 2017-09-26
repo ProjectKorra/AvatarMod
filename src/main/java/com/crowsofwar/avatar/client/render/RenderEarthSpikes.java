@@ -66,7 +66,8 @@ public class RenderEarthSpikes extends Render<EntityEarthSpike> {
         GlStateManager.translate(x, y, z);
 
 
-        GlStateManager.rotate(-entity.rotationYaw, 0, 0, 180);
+        GlStateManager.rotate(-entity.rotationYaw, 0, 0, 0);
+        GlStateManager.rotate(entity.rotationPitch, 0, 0, 1);
         GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 
         model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
