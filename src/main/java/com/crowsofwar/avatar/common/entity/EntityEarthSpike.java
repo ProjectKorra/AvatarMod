@@ -69,19 +69,6 @@ public class EntityEarthSpike extends AvatarEntity {
     public void setDamageMult(float mult) {
         this.damageMult = mult;
     }
-
-    public void setBreakBlocks(boolean breakBlocks) {
-        this.breakBlocks = breakBlocks;
-    }
-
-    public void setDropEquipment(boolean dropEquipment) {
-        this.dropEquipment = dropEquipment;
-    }
-
-    public double getSqrDistanceTravelled() {
-        return position().sqrDist(initialPosition);
-    }
-
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
@@ -99,42 +86,15 @@ public class EntityEarthSpike extends AvatarEntity {
         super.onEntityUpdate();
 
 
-        if (ticksExisted % 5 == 0){
+        if (ticksExisted % 6 == 0) {
             this.setDead();
         }
-
-        // Destroy non-solid blocks in the ravine
-
-
-        // amount of entities which were successfully attacked
-        int attacked = 0;
-
-        // Push collided entities back
-        if (!world.isRemote) {
-            List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-                    entity -> entity != getOwner());
-            if (!collided.isEmpty()) {
-                for (Entity entity : collided) {
-                    if (attackEntity(entity)) {
-                        attacked++;
-                    }
-                }
-            }
-        }
-
         if (!world.isRemote && getOwner() != null) {
             BendingData data = BendingData.get(getOwner());
             if (data != null) {
-                data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit * attacked);
+                data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
             }
         }
-    }
-
-
-    @Override
-    public boolean onCollideWithSolid() {
-        setDead();
-        return false;
     }
 
     private boolean attackEntity(Entity entity) {
@@ -142,28 +102,10 @@ public class EntityEarthSpike extends AvatarEntity {
         if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
 
 
-            if (dropEquipment && entity instanceof EntityLivingBase) {
-
-                EntityLivingBase elb = (EntityLivingBase) entity;
-
-                for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-
-                    ItemStack stack = elb.getItemStackFromSlot(slot);
-                    if (!stack.isEmpty()) {
-                        double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
-                        if (rand.nextDouble() * 100 <= chance) {
-                            elb.entityDropItem(stack, 0);
-                            elb.setItemStackToSlot(slot, ItemStack.EMPTY);
-                        }
-                    }
-
-                }
-
-            }
-
             DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
             float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
             return entity.attackEntityFrom(ds, damage);
+
 
         }
 
@@ -172,3 +114,13 @@ public class EntityEarthSpike extends AvatarEntity {
     }
 
 }
+
+
+
+
+
+
+        // Destroy non-solid blocks in the ravine
+
+
+
