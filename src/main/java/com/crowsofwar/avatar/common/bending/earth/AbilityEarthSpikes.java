@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityEarthSpike;
+import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -39,11 +40,10 @@ public class AbilityEarthSpikes extends Ability {
 
             double mult = ctx.getLevel() >= 1 ? 14 : 8;
 
-            EntityEarthSpike earthspike = new EntityEarthSpike(world);
+            EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
             earthspike.setOwner(entity);
             earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
             earthspike.setVelocity(look.times(mult));
-            earthspike.setDamageMult(.90f + xp / 100);
             earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
             earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
             earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));

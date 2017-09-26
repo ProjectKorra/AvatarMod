@@ -122,6 +122,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityCloudBall.class, RenderCloudburst::new);
 		registerEntityRenderingHandler(EntityEarthSpike.class, RenderEarthSpikes::new);
 		registerEntityRenderingHandler(EntityLightningSpear.class, RenderLightningSpear::new);
+		registerEntityRenderingHandler(EntityEarthspikeSpawner.class, RenderEarthspikeSpawner::new);
 
 		registerEntityRenderingHandler(EntityAirbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 7));

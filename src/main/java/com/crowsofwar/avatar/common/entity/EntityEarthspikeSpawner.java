@@ -1,25 +1,9 @@
-/*
-  This file is part of AvatarMod.
-
-  AvatarMod is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  AvatarMod is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -29,7 +13,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -43,16 +26,10 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-/**
- *
- *
- * @author CrowsOfWar
- */
-public class EntityEarthSpike extends AvatarEntity {
-
+public class EntityEarthspikeSpawner extends AvatarEntity {
     private Vector initialPosition;
 
-    private float damageMult;
+
     private double maxTravelDistanceSq;
     private boolean breakBlocks;
     private boolean dropEquipment;
@@ -60,14 +37,15 @@ public class EntityEarthSpike extends AvatarEntity {
     /**
      * @param world
      */
-    public EntityEarthSpike(World world) {
+    public EntityEarthspikeSpawner(World world) {
         super(world);
         setSize(1, 1);
-        this.damageMult = 1.6F;
+
     }
 
-    public void setDamageMult(float mult) {
-        this.damageMult = mult;
+
+    public void setDistance(double dist) {
+        maxTravelDistanceSq = dist * dist;
     }
 
     public void setBreakBlocks(boolean breakBlocks) {
@@ -98,6 +76,18 @@ public class EntityEarthSpike extends AvatarEntity {
 
         super.onEntityUpdate();
 
+        if (initialPosition == null) {
+            initialPosition = position();
+        }
+
+        Vector position = position();
+        Vector velocity = velocity();
+
+        setPosition(position.plus(velocity.times(0.0000005)));
+
+        if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
+            setDead();
+        }
 
         BlockPos above = getPosition().offset(EnumFacing.UP);
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
@@ -106,6 +96,14 @@ public class EntityEarthSpike extends AvatarEntity {
         if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
                 world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
                 SoundCategory.PLAYERS, 1, 1, false);
+        if (ticksExisted % 7 == 0) {
+            EntityEarthSpike earthspike = new EntityEarthSpike(world);
+            earthspike.posX = this.posX;
+            earthspike.posY = this.posY;
+            earthspike.posZ = this.posZ;
+
+
+        }
 
         if (!world.getBlockState(below).isNormalCube()) {
             setDead();
@@ -201,7 +199,7 @@ public class EntityEarthSpike extends AvatarEntity {
 
                     ItemStack stack = elb.getItemStackFromSlot(slot);
                     if (!stack.isEmpty()) {
-                        double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
+                        double chance = slot.getSlotType() == EntityEquipmentSlot.Type.HAND ? 40 : 20;
                         if (rand.nextDouble() * 100 <= chance) {
                             elb.entityDropItem(stack, 0);
                             elb.setItemStackToSlot(slot, ItemStack.EMPTY);
@@ -212,9 +210,6 @@ public class EntityEarthSpike extends AvatarEntity {
 
             }
 
-            DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
-            float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
-            return entity.attackEntityFrom(ds, damage);
 
         }
 
@@ -223,3 +218,5 @@ public class EntityEarthSpike extends AvatarEntity {
     }
 
 }
+
+
