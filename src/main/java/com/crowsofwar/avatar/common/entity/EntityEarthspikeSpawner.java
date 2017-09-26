@@ -102,6 +102,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             earthspike.posY = this.posY;
             earthspike.posZ = this.posZ;
 
+            world.spawnEntity(earthspike);
 
         }
 
