@@ -75,8 +75,6 @@ public abstract class EntityShield extends AvatarEntity {
 			owner.extinguish();
 		}
 
-		setPosition(owner.posX, owner.posY, owner.posZ);
-
 	}
 
 	/**

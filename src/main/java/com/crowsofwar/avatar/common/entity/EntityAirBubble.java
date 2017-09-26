@@ -116,6 +116,8 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
+		setPosition(owner.posX, owner.posY, owner.posZ);
+
 		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
 			owner.setAir(Math.min(airLeft, 300));
 			airLeft--;
