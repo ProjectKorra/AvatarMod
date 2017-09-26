@@ -231,27 +231,23 @@ avatar.ability.lightning_arc.lvl4_1=Furious lightning ;; Does more damage, sligh
 avatar.ability.lightning_arc.lvl4_2=Large thunderbolts ;; Has a larger hitbox, making it easier to capture enemies
 
 avatar.ability.ice_prison=Ice Prison
-avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from
-following you for a short time.
+avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from following you for a short time.
 avatar.ability.ice_prison.lvl1=Delay your attackers.
 avatar.ability.ice_prison.lvl2=The prison lasts slightly longer.
 avatar.ability.ice_prison.lvl3=The prisoner takes damage when the ice shatters.
-avatar.ability.ice_prison.lvl4_1=Continuous punishment ;; The prisoner continually takes damage
-throughout the imprisonment.
+avatar.ability.ice_prison.lvl4_1=Continuous punishment ;; The prisoner continually takes damage throughout the imprisonment.
 avatar.ability.ice_prison.lvl4_2=Glacier ice ;; The ice cannot be melted by the sun or firebending.
 
 avatar.ability.sand_prison=Sand Prison
 avatar.ability.sand_prison.desc=Create a snare out of sand to temporarily capture your enemies
 avatar.ability.sand_prison.lvl1=Delay your attackers.
-avatar.ability.sand_prison.lvl2=You can catch targets in any earth block by manipulating the
-small sediments
+avatar.ability.sand_prison.lvl2=You can catch targets in any earth block by manipulating the small sediments
 avatar.ability.sand_prison.lvl3=The prisoner receives a slowness effect after being freed
 avatar.ability.sand_prison.lvl4_1=The prisoner takes damage after being freed
 avatar.ability.sand_prison.lvl4_2=The sand can't be blown away by airbending
 
 avatar.ability.ice_burst=Ice Burst
-avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.
-When broken, it shoots powerful shards in all directions.
+avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.  When broken, it shoots powerful shards in all directions.
 avatar.ability.ice_burst.lvl1=Protect yourself from damage
 avatar.ability.ice_burst.lvl2=The shards deal slightly more damage.
 avatar.ability.ice_burst.lvl3=The shield has a little more health.
