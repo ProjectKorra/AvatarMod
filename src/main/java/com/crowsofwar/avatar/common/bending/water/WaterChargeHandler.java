@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 
+import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -19,16 +20,17 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-/*public abstract class WaterChargeHandler extends TickHandler {
+public abstract class WaterChargeHandler extends TickHandler {
     private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
-            ("dfb6235c-82b6-407e-beaf-a48045735a82");
+            ("dfb6235c-82b6-407e-beaf-a4d8045735a82");
+
 
     /**
      * Gets AbilityData to be used for determining lightning strength. This is normally the
      * bender's AbilityData, but in the case of redirection, it is the original bender's
      * AbilityData.
      */
-   /* @Nullable
+    @Nullable
     protected abstract AbilityData getLightningData(BendingContext ctx);
 
     @Override
@@ -84,7 +86,7 @@ import java.util.UUID;
 
     }
 
-    private void fireLightning(World world, EntityLivingBase entity, float damage, double speed,
+    private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,
                                float size, float[] turbulenceValues) {
 
         for (float turbulence : turbulenceValues) {
@@ -125,4 +127,4 @@ import java.util.UUID;
 
 }
 
-**/
+
