@@ -27,7 +27,7 @@ public class RenderWaterCannon extends RenderArc {
                          float partialTicks) {
 
         EntityWaterCannon cannon = (EntityWaterCannon) entity;
-        renderArc(cannon, partialTicks, 2f, 2f * cannon.getSizeMultiplier());
+        renderArc(cannon, partialTicks, 1f, 4f * cannon.getSizeMultiplier());
 
 
     }

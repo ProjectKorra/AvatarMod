@@ -109,7 +109,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             Vector position = controllerPos;
 
             // position slightly below eye height
-            position = position.minusY(0.1);
+            position = position.minusY(0.01);
             // position slightly away from controller
             position = position.plus(endPosition.minus(position).dividedBy(10));
 
@@ -139,7 +139,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             setDead();
         }
 
-        setSize(1.0f * getSizeMultiplier(), 1.0f * getSizeMultiplier());
+        setSize(3.0f * getSizeMultiplier(), 3.0f * getSizeMultiplier());
 
     }
 
@@ -152,7 +152,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         if (world.isRemote) {
             double threshold = stuckTime >= 0 ? 0.2 : 0.3;
             if (SimplexNoise.noise(ticksExisted * 2, 0) >= threshold) {
-                world.setLastLightningBolt(2);
+                world.setLastLightningBolt(1);
             }
         }
     }
@@ -204,15 +204,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             return;
         }
 
-        // Handle lightning redirection
-        boolean redirected = false;
-        if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported
-                (entity)) {
-            wasRedirected = true;
-        }
+
+
 
         DamageSource damageSource = createDamageSource(entity);
-        if (!wasRedirected && !redirected && entity.attackEntityFrom(damageSource, damage *
+        if (entity.attackEntityFrom(damageSource, damage *
                 damageModifier)) {
 
 
