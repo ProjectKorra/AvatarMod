@@ -78,16 +78,16 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     public EntityWaterCannon(World world) {
         super(world);
-        setSize(2.0f, 2.0f);
-        damage = 12;
+        setSize(2f, 2f);
+        damage = 14;
     }
 
     @Override
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_ENDPOS, Vector.ZERO);
-        dataManager.register(SYNC_TURBULENCE, 0.000001f);
-        dataManager.register(SYNC_SIZE, 3f);
+        dataManager.register(SYNC_TURBULENCE, 0.00000001f);
+        dataManager.register(SYNC_SIZE, 4f);
         dataManager.register(SYNC_MAIN_ARC, true);
     }
 
