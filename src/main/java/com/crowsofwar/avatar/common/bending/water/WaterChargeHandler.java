@@ -119,7 +119,7 @@ public abstract class WaterChargeHandler extends TickHandler {
         moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
 
         moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID,
-                "Water Charge Modifier", multiplier - 1, 1));
+                "Water charge modifier", multiplier - 1, 1));
 
     }
 

@@ -155,7 +155,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
                 world.setLastLightningBolt(2);
             }
         }
-
+    }
 
 
     @Override
@@ -192,7 +192,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         }
 
     }
-}
+
 
 
     private void damageEntity(EntityLivingBase entity, float damageModifier) {
@@ -208,7 +208,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         boolean redirected = false;
         if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported
                 (entity)) {
-            redirected = Bender.get(entity).redirectLightning(this);
             wasRedirected = true;
         }
 
@@ -252,11 +251,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     public boolean onCollideWithSolid() {
 //		setDead();
         setVelocity(Vector.ZERO);
-        if (!world.isRemote) {
-            if (world.isAirBlock(getPosition())) {
-                world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
-            }
-        }
         return false;
 //		return true;
     }
@@ -363,5 +357,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         }
 
     }
-
 }
+
+
