@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderWaterCannon extends RenderArc {
     private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-            "textures/entity/lightning-ribbon.png");
+            "textures/entity/water-ribbon.png");
 
     private final ParticleSpawner particleSpawner;
 
