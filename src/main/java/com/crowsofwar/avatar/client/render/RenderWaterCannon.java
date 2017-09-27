@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
+import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.sun.org.apache.regexp.internal.RE;
@@ -25,8 +26,8 @@ public class RenderWaterCannon extends RenderArc {
     public void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_,
                          float partialTicks) {
 
-        EntityLightningArc arc = (EntityLightningArc) entity;
-        renderArc(arc, partialTicks, 2f, 2f * arc.getSizeMultiplier());
+        EntityWaterCannon cannon = (EntityWaterCannon) entity;
+        renderArc(cannon, partialTicks, 2f, 2f * cannon.getSizeMultiplier());
 
 
     }
