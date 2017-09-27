@@ -79,7 +79,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     public EntityWaterCannon(World world) {
         super(world);
         setSize(0.5f, 0.5f);
-        damage = 8;
+        damage = 12;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     @Override
     public int getAmountOfControlPoints() {
-        return 1;
+        return 3;
     }
 
     @Override
@@ -133,7 +133,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
                         SoundCategory.PLAYERS, 1, 1);
             }
         }
-        boolean existTooLong = stuckTime >= 40 || ticksExisted >= 200;
+        boolean existTooLong = stuckTime >= 20 || ticksExisted >= 100;
         boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
         if (existTooLong || stuckIsDead) {
             setDead();
@@ -217,7 +217,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
             Vector velocity = getEntityPos(entity).minus(this.position()).normalize();
-            velocity = velocity.times(4);
+            velocity = velocity.times(2);
             entity.addVelocity(velocity.x(), 0.4, velocity.z());
             AvatarUtils.afterVelocityAdded(entity);
 
