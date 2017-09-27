@@ -78,7 +78,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     public EntityWaterCannon(World world) {
         super(world);
-        setSize(0.5f, 0.5f);
+        setSize(2.0f, 2.0f);
         damage = 12;
     }
 
@@ -86,8 +86,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_ENDPOS, Vector.ZERO);
-        dataManager.register(SYNC_TURBULENCE, 0.6f);
-        dataManager.register(SYNC_SIZE, 1f);
+        dataManager.register(SYNC_TURBULENCE, 0.000001f);
+        dataManager.register(SYNC_SIZE, 3f);
         dataManager.register(SYNC_MAIN_ARC, true);
     }
 
@@ -109,7 +109,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             Vector position = controllerPos;
 
             // position slightly below eye height
-            position = position.minusY(0.01);
+            position = position.minusY(0.5);
             // position slightly away from controller
             position = position.plus(endPosition.minus(position).dividedBy(10));
 
@@ -311,7 +311,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         private final int index;
 
         public CannonControlPoint(EntityArc arc, int index) {
-            super(arc, 0.1f, 0, 0, 0);
+            super(arc, 1.0f, 0, 0, 0);
             this.index = index;
         }
 
