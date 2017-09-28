@@ -17,23 +17,12 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityEarthSpike;
-import org.joml.Vector4d;
-import org.lwjgl.opengl.GL11;
-
-import com.crowsofwar.avatar.common.entity.EntityIceShard;
-import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-
-import static java.lang.Math.PI;
 
 /**
  *
@@ -68,6 +57,7 @@ public class RenderEarthSpikes extends Render<EntityEarthSpike> {
 
         GlStateManager.rotate(180, 1, 0, 0);
         GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+		GlStateManager.translate(0, -1.5, 0);
 
         model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
         GlStateManager.popMatrix();
