@@ -133,7 +133,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
                         SoundCategory.PLAYERS, 1, 1);
             }
         }
-        boolean existTooLong = stuckTime >= 20 || ticksExisted >= 100;
+        boolean existTooLong = stuckTime >= 5 || ticksExisted >= 200;
         boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
         if (existTooLong || stuckIsDead) {
             setDead();

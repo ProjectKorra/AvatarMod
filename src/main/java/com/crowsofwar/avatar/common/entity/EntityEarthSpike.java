@@ -36,12 +36,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityEarthSpike extends AvatarEntity {
 
-    private Vector initialPosition;
 
     private float damageMult;
-    private double maxTravelDistanceSq;
-    private boolean breakBlocks;
-    private boolean dropEquipment;
 
     /**
      * @param world
@@ -73,7 +69,7 @@ public class EntityEarthSpike extends AvatarEntity {
 
         setVelocity(Vector.ZERO);
 
-        if (ticksExisted >= 40) {
+        if (ticksExisted >= 10) {
             this.setDead();
         }
         if (!world.isRemote && getOwner() != null) {
