@@ -331,7 +331,9 @@ public class BendingData {
 		float chi = 0;
 		chi += getAllBending().size() * CHI_CONFIG.bonusLearnedBending;
 		for (AbilityData aData : getAllAbilityData()) {
-			if (!aData.isLocked() && hasBendingId(aData.getAbility().getBendingId())) {
+			boolean hasBending = aData.getAbility() != null && hasBendingId(aData.getAbility()
+					.getBendingId());
+			if (!aData.isLocked() && hasBending) {
 				chi += CHI_CONFIG.bonusAbility;
 				chi += aData.getLevel() * CHI_CONFIG.bonusAbilityLevel;
 			}
