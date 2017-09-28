@@ -79,7 +79,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     public EntityWaterCannon(World world) {
         super(world);
         setSize(1.5f, 1.5f);
-        damage = 14;
+        damage = 146F;
     }
 
     @Override
