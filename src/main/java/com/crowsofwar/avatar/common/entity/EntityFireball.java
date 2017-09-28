@@ -139,6 +139,7 @@ public class EntityFireball extends AvatarEntity {
 		
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 		explosionSize *= getSize() / 30f;
+		explosionSize += getPowerRating() * 2.0 / 100;
 		boolean destroyObsidian = false;
 		
 		if (getOwner() != null) {
