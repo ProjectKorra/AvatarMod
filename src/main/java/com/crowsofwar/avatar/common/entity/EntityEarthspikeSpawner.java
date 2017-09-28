@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -100,7 +99,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
                 world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
                 SoundCategory.PLAYERS, 1, 1, false);
-        if (ticksExisted % 3 == 0) {
+        if (ticksExisted % 3 == 0 && !world.isRemote) {
             EntityEarthSpike earthspike = new EntityEarthSpike(world);
             earthspike.posX = this.posX;
             earthspike.posY = this.posY;
