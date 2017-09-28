@@ -37,6 +37,15 @@ public class PowerRatingManager {
 		modifiers.remove(modifier);
 	}
 
+	public boolean hasModifier(Class<? extends PowerRatingModifier> modifier) {
+		for (PowerRatingModifier mod : modifiers) {
+			if (mod.getClass() == modifier) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Modifiers are present for a finite amount of time. Counts down each modifier's time left and
 	 * removes them if necessary.

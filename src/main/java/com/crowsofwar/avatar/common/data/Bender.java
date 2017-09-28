@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import net.minecraft.entity.EntityLivingBase;
@@ -249,6 +250,11 @@ public abstract class Bender {
 		List<PowerRatingManager> managers = data.getPowerRatingManagers();
 		for (PowerRatingManager manager : managers) {
 			manager.tickModifiers(ctx);
+		}
+
+		// Update power rating modifiers
+		if (!world.isRemote) {
+			PrModifierHandler.addPowerRatingModifiers(this);
 		}
 
 	}
