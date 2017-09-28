@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
+import com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner;
 import com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.common.bending.ice.IceWalkHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
@@ -40,6 +41,7 @@ import java.util.Map;
 public abstract class TickHandler {
 	
 	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
+	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
 	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
 	public static TickHandler WATER_SKATE = new WaterSkateHandler();
 	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();

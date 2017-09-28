@@ -95,13 +95,13 @@ public class StatCtrlFireJump extends StatusControl {
 
             data.setFallAbsorption(fallAbsorption);
 
-            data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
+            data.addTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER);
             if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityData.AbilityTreePath.SECOND) {
                 data.addTickHandler(TickHandler.SMASH_GROUND);
             }
             abilityData.addXp(STATS_CONFIG.chiAirJump);
 
-            entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
+            entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_BURN,
                     SoundCategory.PLAYERS, 1, .7f);
 
             return true;
