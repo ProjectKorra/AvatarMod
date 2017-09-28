@@ -18,27 +18,13 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.EntityEquipmentSlot.Type;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -85,8 +71,9 @@ public class EntityEarthSpike extends AvatarEntity {
 
         super.onEntityUpdate();
 
+        setVelocity(Vector.ZERO);
 
-        if (ticksExisted % 6 == 0) {
+        if (ticksExisted >= 40) {
             this.setDead();
         }
         if (!world.isRemote && getOwner() != null) {
