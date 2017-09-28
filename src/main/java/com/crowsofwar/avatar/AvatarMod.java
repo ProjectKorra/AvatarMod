@@ -259,6 +259,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityPurify());
 		Abilities.register(new AbilityEarthSpikes());
 		Abilities.register(new AbilityWaterCannon());
+		Abilities.register(new AbilityFireJump());
 	}
 
 	private static void registerBendingStyles() {
