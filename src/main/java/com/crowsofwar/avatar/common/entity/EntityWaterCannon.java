@@ -86,7 +86,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_ENDPOS, Vector.ZERO);
-        dataManager.register(SYNC_TURBULENCE, 0.00000001f);
+        dataManager.register(SYNC_TURBULENCE, 0.000000000000000001f);
         dataManager.register(SYNC_SIZE, 3f);
         dataManager.register(SYNC_MAIN_ARC, true);
     }
@@ -109,9 +109,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             Vector position = controllerPos;
 
             // position slightly below eye height
-            position = position.minusY(0.5);
+            position = position.minusY(0.00001);
             // position slightly away from controller
-            position = position.plus(endPosition.minus(position).dividedBy(10));
+            position = position.plus(endPosition.minus(position).dividedBy(20));
 
             setEndPos(position);
 
