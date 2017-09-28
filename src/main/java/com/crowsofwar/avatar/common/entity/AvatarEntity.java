@@ -62,6 +62,7 @@ public abstract class AvatarEntity extends Entity {
 
 	protected boolean putsOutFires;
 	protected boolean flammable;
+	private double powerRating;
 
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
@@ -160,7 +161,15 @@ public abstract class AvatarEntity extends Entity {
 	private void setAvId(int id) {
 		dataManager.set(SYNC_ID, id);
 	}
-	
+
+	public double getPowerRating() {
+		return powerRating;
+	}
+
+	public void setPowerRating(double powerRating) {
+		this.powerRating = powerRating;
+	}
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setAvId(nbt.getInteger("AvId"));
@@ -257,7 +266,7 @@ public abstract class AvatarEntity extends Entity {
 		move(MoverType.SELF, v.x(), v.y(), v.z());
 		
 	}
-	
+
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
 		List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
