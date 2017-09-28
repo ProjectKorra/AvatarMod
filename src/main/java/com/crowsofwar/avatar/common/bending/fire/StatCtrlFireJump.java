@@ -79,7 +79,7 @@ public class StatCtrlFireJump extends StatusControl {
             }
 
             ParticleSpawner spawner = new NetworkParticleSpawner();
-            spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 4, 10,
+            spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20,
                     new Vector(entity), new Vector(1, 0, 1));
 
             float fallAbsorption = 0;
@@ -101,7 +101,7 @@ public class StatCtrlFireJump extends StatusControl {
             }
             abilityData.addXp(STATS_CONFIG.chiAirJump);
 
-            entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_BURN,
+            entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
                     SoundCategory.PLAYERS, 1, .7f);
 
             return true;
