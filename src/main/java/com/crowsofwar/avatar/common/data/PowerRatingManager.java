@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ public class PowerRatingManager {
 		for (PowerRatingModifier modifier : modifiers) {
 			result += modifier.get(ctx);
 		}
-		return result;
+		return MathHelper.clamp(result, -100, 100);
 	}
 
 	public void addModifier(PowerRatingModifier modifier) {
