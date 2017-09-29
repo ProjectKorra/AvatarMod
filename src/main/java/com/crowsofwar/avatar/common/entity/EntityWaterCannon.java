@@ -74,12 +74,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     private float damage;
 
-    private LightningFloodFill floodFill;
+
 
     public EntityWaterCannon(World world) {
         super(world);
         setSize(1.5f, 1.5f);
-        damage = 2000F;
+        damage = 60;
     }
 
     @Override
@@ -122,7 +122,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         if (stuckTo != null) {
             setPosition(Vector.getEyePos(stuckTo));
             setVelocity(Vector.ZERO);
-              damageEntity(stuckTo, 0.333f);
+              damageEntity(stuckTo, 1f);
             }
 
 
@@ -149,12 +149,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     private void onUpdateMainArc() {
 
         // Lightning flash
-        if (world.isRemote) {
-            double threshold = stuckTime >= 0 ? 0.2 : 0.3;
-            if (SimplexNoise.noise(ticksExisted * 2, 0) >= threshold) {
-                world.setLastLightningBolt(1);
-            }
-        }
     }
 
 

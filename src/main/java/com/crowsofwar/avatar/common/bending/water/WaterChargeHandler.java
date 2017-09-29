@@ -62,12 +62,12 @@ public abstract class WaterChargeHandler extends TickHandler {
             float[] turbulenceValues = { 0.6f, 1.2f };
 
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                damage = 12;
+                damage = 450;
                 size = 0.75f;
-                turbulenceValues = new float[] { 0.6f, 1.2f, 0.8f };
+                turbulenceValues = new float[] { 0f, 0f, 0f };
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                size = 1.5f;
+                size = 4.0f;
             }
 
             fireCannon(world, entity, damage, speed, size, turbulenceValues);
@@ -93,8 +93,8 @@ public abstract class WaterChargeHandler extends TickHandler {
 
             EntityWaterCannon cannon = new EntityWaterCannon(world);
             cannon.setOwner(entity);
-            cannon.setTurbulence(turbulence);
-            cannon.setDamage(damage);
+            cannon.setTurbulence(0);
+            cannon.setDamage(10);
             cannon.setSizeMultiplier(size);
             cannon.setMainArc(turbulence == turbulenceValues[0]);
 
