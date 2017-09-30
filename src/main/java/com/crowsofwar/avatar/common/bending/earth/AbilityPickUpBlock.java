@@ -64,6 +64,7 @@ public class AbilityPickUpBlock extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
+
 		
 		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
 				EntityFloatingBlock.class,
@@ -95,26 +96,35 @@ public class AbilityPickUpBlock extends Ability {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+
 		
 		IBlockState ibs = world.getBlockState(pos);
 		Block block = ibs.getBlock();
+
 		
 		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block)) {
 			
 			if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 				
-				AbilityData abilityData = data.getAbilityData(this);
+				AbilityData abilityData = ctx.getData().getAbilityData(this);
+
 
 				EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 				floating.setItemDropsEnabled(!bender.isCreativeMode());
+				float damageMult = abilityData.getLevel() >= 2 ? 2 : 1;
+				//damageMult += ctx.getPowerRating() / 200;
+				floating.setDamageMult(damageMult);
 				
 				double dist = 2.5;
 				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
 				floating.setVelocity(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
-				floating.setDamageMult(abilityData.getLevel() >= 2 ? 2 : 1);
+				floating.setDamageMult(damageMult);
+
+
+
 				
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);

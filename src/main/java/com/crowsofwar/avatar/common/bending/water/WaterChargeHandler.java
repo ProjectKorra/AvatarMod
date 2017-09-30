@@ -1,24 +1,35 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.util.Raytrace.entityRaytrace;
+import static com.crowsofwar.avatar.common.util.Raytrace.getReachDistance;
+import static com.crowsofwar.avatar.common.util.Raytrace.getTargetBlock;
 
 public abstract class WaterChargeHandler extends TickHandler {
     private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
@@ -39,6 +50,12 @@ public abstract class WaterChargeHandler extends TickHandler {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
+
+
+        Vector eyePos = Vector.getEyePos(entity);
+        Vector look = new Vector(entity.getLookVec());
+
+
 
         if (world.isRemote) {
             return false;
@@ -86,14 +103,27 @@ public abstract class WaterChargeHandler extends TickHandler {
 
     }
 
+
+
     private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,
-                               float size, float[] turbulenceValues) {
+                            float size, float[] turbulenceValues) {
 
         for (float turbulence : turbulenceValues) {
+            /*Vector playerpos = Vector.getEntityPos(entity);
+            Vector look = Vector.getLookRectangular(entity);
+            Raytrace.Result look1 = getTargetBlock(entity, 200);
+
+
+            double maxDistance = 100F;
+            Vector endpos = entityRaytrace(world, playerpos, look1, maxDistance);
+            **/
+            
+
+
+
 
             EntityWaterCannon cannon = new EntityWaterCannon(world);
             cannon.setOwner(entity);
-            cannon.setTurbulence(0);
             cannon.setDamage(10);
             cannon.setSizeMultiplier(size);
             cannon.setMainArc(turbulence == turbulenceValues[0]);
@@ -110,6 +140,7 @@ public abstract class WaterChargeHandler extends TickHandler {
         }
 
     }
+
 
     private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
