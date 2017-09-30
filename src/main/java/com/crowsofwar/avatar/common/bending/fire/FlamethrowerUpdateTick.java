@@ -62,7 +62,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		}
 		
 		if (!entity.world.isRemote && Math.random() < flamesPerSecond / 20.0) {
-			
+
+			double powerRating = bender.calcPowerRating(Firebending.ID);
+
 			float requiredChi = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
 			if (level == 3 && path == AbilityTreePath.FIRST) {
 				requiredChi *= 1.5f;
@@ -70,6 +72,15 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			if (level == 3 && path == AbilityTreePath.SECOND) {
 				requiredChi *= 2;
 			}
+
+			// Adjust chi to power rating
+			// Multiply chi by a number (from 0..2) based on the power rating - powerFactor
+			//  Numbers 0..1 would reduce the chi, while numbers 1..2 would increase the chi
+			// maxPowerFactor: maximum amount that the chi can be multiplied by
+			// e.g. 0.1 -> chi can be changed by 10%; powerFactor in between 0.9..1.1
+			double maxPowerFactor = 0.4;
+			double powerFactor = (powerRating + 100) / 100 * maxPowerFactor + 1 - maxPowerFactor;
+			requiredChi *= powerFactor;
 			
 			if (bender.consumeChi(requiredChi)) {
 				
@@ -89,7 +100,11 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					randomness = 20;
 					lightsFires = true;
 				}
-				
+
+				// Affect stats by power rating
+				speedMult += powerRating / 100f * 2.5f;
+				randomness -= powerRating / 100f * 6f;
+
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
 				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
