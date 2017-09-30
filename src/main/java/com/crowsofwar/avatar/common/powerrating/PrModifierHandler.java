@@ -24,12 +24,12 @@ public class PrModifierHandler {
 
 			PowerRatingManager manager = data.getPowerRatingManager(bendingId);
 
-			if (bendingId == Firebending.ID) {
+			if (bendingId.equals(Firebending.ID)) {
 				if (!manager.hasModifier(FirebendingSunModifier.class)) {
 					manager.addModifier(new FirebendingSunModifier());
 				}
 			}
-			if (bendingId == Waterbending.ID) {
+			if (bendingId.equals(Waterbending.ID)) {
 				if (!manager.hasModifier(WaterbendingMoonBonus.class)) {
 					manager.addModifier(new WaterbendingMoonBonus());
 				}
