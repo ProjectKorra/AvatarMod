@@ -108,13 +108,15 @@ public class AbilityPickUpBlock extends Ability {
 				EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 				floating.setItemDropsEnabled(!bender.isCreativeMode());
-				
+				float damageMult = abilityData.getLevel() >= 2 ? 2 : 1;
+				damageMult += ctx.getPowerRating() / 200;
+
 				double dist = 2.5;
 				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
 				floating.setVelocity(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
-				floating.setDamageMult(abilityData.getLevel() >= 2 ? 2 : 1);
+				floating.setDamageMult(damageMult);
 				
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);
