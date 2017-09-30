@@ -64,7 +64,8 @@ public class AbilityLightFire extends Ability {
 			BlockPos blockPos = setAt.toBlockPos();
 			
 			double chance = 20 * ctx.getLevel() + 40;
-			
+			chance += ctx.getPowerRating() / 10;
+
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 				
 				int yaw = (int) floor((ctx.getBenderEntity().rotationYaw * 8 / 360) + 0.5) & 7;
