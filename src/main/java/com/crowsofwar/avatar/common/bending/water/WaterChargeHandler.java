@@ -79,12 +79,11 @@ public abstract class WaterChargeHandler extends TickHandler {
             float[] turbulenceValues = { 0.6f, 1.2f };
 
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                damage = 450;
-                size = 0.75f;
-                turbulenceValues = new float[] { 0f, 0f, 0f };
+                damage = 15;
+                size = 1f;
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                size = 4.0f;
+                size = 6.0f;
             }
 
             fireCannon(world, entity, damage, speed, size, turbulenceValues);
@@ -109,14 +108,14 @@ public abstract class WaterChargeHandler extends TickHandler {
                             float size, float[] turbulenceValues) {
 
         for (float turbulence : turbulenceValues) {
-            /*Vector playerpos = Vector.getEntityPos(entity);
-            Vector look = Vector.getLookRectangular(entity);
-            Raytrace.Result look1 = getTargetBlock(entity, 200);
+            Vector playerpos = Vector.getEntityPos(entity);
+            Vector look = Vector.getEyePos(entity);
+            RayTraceResult look1 = entity.rayTrace(200, 100);
+            double x = look1.getBlockPos().getX();
 
 
             double maxDistance = 100F;
-            Vector endpos = entityRaytrace(world, playerpos, look1, maxDistance);
-            **/
+
             
 
 
@@ -129,7 +128,7 @@ public abstract class WaterChargeHandler extends TickHandler {
             cannon.setMainArc(turbulence == turbulenceValues[0]);
 
             cannon.setPosition(Vector.getEyePos(entity));
-            cannon.setEndPos(Vector.getEyePos(entity));
+            cannon.setEndPos(look1);
 
             Vector velocity = Vector.getLookRectangular(entity);
             velocity = velocity.normalize().times(speed);

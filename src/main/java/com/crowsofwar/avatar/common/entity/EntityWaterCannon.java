@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -120,6 +121,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             rotationYaw = (float) Math.toDegrees(newRotations.y());
             rotationPitch = (float) Math.toDegrees(newRotations.x());
         }
+
         if (stuckTo != null) {
             setPosition(Vector.getEyePos(stuckTo));
             setVelocity(Vector.ZERO);
