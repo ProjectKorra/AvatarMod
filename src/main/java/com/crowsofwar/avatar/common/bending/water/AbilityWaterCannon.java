@@ -37,6 +37,8 @@ public class AbilityWaterCannon extends Ability{
 
         if (targetPos != null || ctx.consumeWater(3)) {
 
+
+
             if (targetPos == null) {
                 targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
             }

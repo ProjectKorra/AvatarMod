@@ -18,6 +18,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import org.joml.Matrix4d;
 import org.joml.SimplexNoise;
@@ -86,7 +87,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_ENDPOS, Vector.ZERO);
-        dataManager.register(SYNC_TURBULENCE, 0.000000000000000001f);
+        dataManager.register(SYNC_TURBULENCE, 0f);
         dataManager.register(SYNC_SIZE, 3f);
         dataManager.register(SYNC_MAIN_ARC, true);
     }
@@ -133,6 +134,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
                         SoundCategory.PLAYERS, 1, 1);
             }
         }
+
         boolean existTooLong = stuckTime >= 5 || ticksExisted >= 200;
         boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
         if (existTooLong || stuckIsDead) {
@@ -148,7 +150,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
      */
     private void onUpdateMainArc() {
 
-        // Lightning flash
+
     }
 
 
@@ -320,25 +322,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             Vector normalPosition = arcPos.plus(dir.times(targetDist).times(index));
             Vector randomize = Vector.ZERO;
 
-            if (index != arc.getControlPoints().size() - 1 && index != 0) {
-                double actualOffX = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
-                        getEntityId
-                                () *
-                                1000) * getTurbulence();
-                double actualOffY = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
-                        getEntityId() *
-                                2000) * getTurbulence();
 
-                Matrix4d matrix = new Matrix4d();
-                matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);
-                matrix.rotate(Math.toRadians(rotationPitch), 1, 0, 0);
-                Vector4d randomJoml = new Vector4d(actualOffX, actualOffY, 0, 1);
-                randomJoml.mul(matrix);
-
-                randomize = new Vector(randomJoml.x, randomJoml.y, randomJoml.z);
-            }
-
-            return normalPosition.plus(randomize);
+            return normalPosition;
         }
 
         @Override
