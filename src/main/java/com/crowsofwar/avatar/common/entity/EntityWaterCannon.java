@@ -111,9 +111,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             Vector position = controllerPos;
 
             // position slightly below eye height
-            position = position.minusY(0.1);
+            position = position.minusY(0.3);
             // position slightly away from controller
-            position = position.plus(endPosition.minus(position).dividedBy(20));
+            position = position.plus(endPosition.minus(position).dividedBy(10));
 
             setEndPos(position);
 

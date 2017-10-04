@@ -112,7 +112,7 @@ public abstract class WaterChargeHandler extends TickHandler {
         for (float turbulence : turbulenceValues) {
             Vector playerpos = Vector.getEntityPos(entity);
             Vector look = Vector.getEyePos(entity);
-            double maxRange = -1;
+            double maxRange = 80;
             EntityWaterCannon cannon = new EntityWaterCannon(world);
             List<Entity> hitEntities = Raytrace.entityRaytrace(world, playerpos, Vector.getLookRectangular(entity), maxRange);
                 if (!hitEntities.isEmpty()) {
