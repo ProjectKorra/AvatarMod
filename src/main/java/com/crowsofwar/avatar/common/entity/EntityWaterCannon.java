@@ -95,7 +95,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     @Override
     public int getAmountOfControlPoints() {
-        return 2;
+        return 40;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             // position slightly below eye height
             position = position.minusY(0.3);
             // position slightly away from controller
-            position = position.plus(endPosition.minus(position).dividedBy(10));
+            position = position.plus(endPosition.minus(position).dividedBy(15));
 
             setEndPos(position);
 
@@ -125,7 +125,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         if (stuckTo != null) {
             setPosition(Vector.getEyePos(stuckTo));
             setVelocity(Vector.ZERO);
-              damageEntity(stuckTo, 0.222f);
+              damageEntity(stuckTo, 1f);
             }
 
 

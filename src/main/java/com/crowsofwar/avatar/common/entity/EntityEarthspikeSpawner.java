@@ -28,6 +28,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
     private Vector initialPosition;
+    public static boolean unstoppable = false;
 
 
     private float damageMult;
@@ -115,7 +116,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             setDead();
         }
 
-        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
+        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && unstoppable == false) {
             setDead();
         }
 

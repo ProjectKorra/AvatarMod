@@ -37,6 +37,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class EntityEarthSpike extends AvatarEntity {
 
 
+
     private float damageMult;
 
     /**
