@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -25,6 +26,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.util.Raytrace.entityRaytrace;
@@ -110,25 +112,43 @@ public abstract class WaterChargeHandler extends TickHandler {
         for (float turbulence : turbulenceValues) {
             Vector playerpos = Vector.getEntityPos(entity);
             Vector look = Vector.getEyePos(entity);
-            RayTraceResult look1 = entity.rayTrace(200, 100);
-            double x = look1.getBlockPos().getX();
+            double maxRange = -1;
+            EntityWaterCannon cannon = new EntityWaterCannon(world);
+            List<Entity> hitEntities = Raytrace.entityRaytrace(world, playerpos, Vector.getLookRectangular(entity), maxRange);
+                if (!hitEntities.isEmpty()) {
+                    cannon.setEndPos(Vector.getEntityPos(hitEntities.get(1)));
+
+            }   else {
+                    Raytrace.Result hitBlocks = Raytrace.getTargetBlock(entity, maxRange);
+                    if (hitBlocks.hitSomething()) {
+                        cannon.setEndPos(hitBlocks.getPosPrecise());
+
+                    } else {
+                        if (hitEntities.isEmpty() && !hitBlocks.hitSomething()) {
 
 
-            double maxDistance = 100F;
+                            cannon.setEndPos(Vector.getLookRectangular(entity));
+                        }
+                    }
+                }
+
+
+
+
+
+
 
             
 
 
 
 
-            EntityWaterCannon cannon = new EntityWaterCannon(world);
             cannon.setOwner(entity);
             cannon.setDamage(10);
             cannon.setSizeMultiplier(size);
             cannon.setMainArc(turbulence == turbulenceValues[0]);
 
             cannon.setPosition(Vector.getEyePos(entity));
-            cannon.setEndPos(look1);
 
             Vector velocity = Vector.getLookRectangular(entity);
             velocity = velocity.normalize().times(speed);
