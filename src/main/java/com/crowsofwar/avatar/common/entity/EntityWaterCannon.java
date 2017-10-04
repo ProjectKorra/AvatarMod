@@ -93,6 +93,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         dataManager.register(SYNC_MAIN_ARC, true);
     }
 
+    //controls how lasery the entity is; the more control points, the more it will look like a laser.
     @Override
     public int getAmountOfControlPoints() {
         return 40;
