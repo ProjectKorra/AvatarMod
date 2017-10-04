@@ -111,7 +111,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             Vector position = controllerPos;
 
             // position slightly below eye height
-            position = position.minusY(0.00001);
+            position = position.minusY(0.1);
             // position slightly away from controller
             position = position.plus(endPosition.minus(position).dividedBy(20));
 
@@ -125,7 +125,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         if (stuckTo != null) {
             setPosition(Vector.getEyePos(stuckTo));
             setVelocity(Vector.ZERO);
-              damageEntity(stuckTo, 1f);
+              damageEntity(stuckTo, 0.222f);
             }
 
 
@@ -137,7 +137,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             }
         }
 
-        boolean existTooLong = stuckTime >= 5 || ticksExisted >= 200;
+        boolean existTooLong = stuckTime >= 20 || ticksExisted >= 200;
         boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
         if (existTooLong || stuckIsDead) {
             setDead();

@@ -116,7 +116,7 @@ public abstract class WaterChargeHandler extends TickHandler {
             EntityWaterCannon cannon = new EntityWaterCannon(world);
             List<Entity> hitEntities = Raytrace.entityRaytrace(world, playerpos, Vector.getLookRectangular(entity), maxRange);
                 if (!hitEntities.isEmpty()) {
-                    cannon.setEndPos(Vector.getEntityPos(hitEntities.get(1)));
+                    cannon.setEndPos(Vector.getEntityPos(hitEntities.get(0)));
 
             }   else {
                     Raytrace.Result hitBlocks = Raytrace.getTargetBlock(entity, maxRange);
@@ -125,8 +125,6 @@ public abstract class WaterChargeHandler extends TickHandler {
 
                     } else {
                         if (hitEntities.isEmpty() && !hitBlocks.hitSomething()) {
-
-
                             cannon.setEndPos(Vector.getLookRectangular(entity));
                         }
                     }
