@@ -17,6 +17,7 @@ public class AbilityEarthSpikes extends Ability {
     public AbilityEarthSpikes() {
          super(Earthbending.ID,"earthspike");
     }
+    public boolean unstoppable = false;
 
     @Override
     public void execute(AbilityContext ctx) {
@@ -39,6 +40,9 @@ public class AbilityEarthSpikes extends Ability {
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
             double mult = ctx.getLevel() >= 1 ? 14 : 8;
+            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
+                unstoppable = true;
+            }
 
             EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
             earthspike.setOwner(entity);

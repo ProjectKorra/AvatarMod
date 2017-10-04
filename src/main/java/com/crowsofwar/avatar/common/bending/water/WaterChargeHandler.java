@@ -36,8 +36,6 @@ import static com.crowsofwar.avatar.common.util.Raytrace.getTargetBlock;
 public abstract class WaterChargeHandler extends TickHandler {
     private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
             ("dfb6235c-82b6-407e-beaf-a4d8045735a82");
-
-
     /**
      * Gets AbilityData to be used for determining lightning strength. This is normally the
      * bender's AbilityData, but in the case of redirection, it is the original bender's
@@ -68,13 +66,13 @@ public abstract class WaterChargeHandler extends TickHandler {
         float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
         applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
+
         if (duration >= 40) {
 
             AbilityData abilityData = getLightningData(ctx);
             if (abilityData == null) {
                 return true;
             }
-
             double speed = abilityData.getLevel() >= 1 ? 20 : 30;
             float damage = abilityData.getLevel() >= 2 ? 8 : 6;
             float size = 1;

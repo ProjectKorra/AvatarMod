@@ -69,7 +69,7 @@ public class EntityEarthSpike extends AvatarEntity {
 
         setVelocity(Vector.ZERO);
 
-        if (ticksExisted >= 10) {
+        if (ticksExisted >= 15) {
             this.setDead();
         }
         if (!world.isRemote && getOwner() != null) {

@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -27,6 +28,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
     private Vector initialPosition;
+
 
     private float damageMult;
     private double maxTravelDistanceSq;
