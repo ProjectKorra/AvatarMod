@@ -50,6 +50,7 @@ public abstract class WaterChargeHandler extends TickHandler {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
+        EntityWaterCannon cannon = new EntityWaterCannon(world);
 
 
         Vector eyePos = Vector.getEyePos(entity);
@@ -76,20 +77,21 @@ public abstract class WaterChargeHandler extends TickHandler {
             double speed = abilityData.getLevel() >= 1 ? 20 : 30;
             float damage = abilityData.getLevel() >= 2 ? 8 : 6;
             float size = 1;
-            float[] turbulenceValues = { 0.6f, 1.2f };
+            float[] turbulenceValues = { 0.0f, 0.0f };
             if (abilityData.getLevel() == 1){
-                damage = 11;
+                cannon.setDamage(11);
             }
             if (abilityData.getLevel() == 2){
-                damage = 12;
+                cannon.setDamage(12);
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                damage = 17;
-                size = 0.1f;
+                cannon.setDamage(17);
+                cannon.setSizeMultiplier(size/8);
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                size = 6.0f;
+                cannon.setSizeMultiplier(size*1.5F);
             }
+
 
             fireCannon(world, entity, damage, speed, size, turbulenceValues);
 
@@ -113,6 +115,7 @@ public abstract class WaterChargeHandler extends TickHandler {
                             float size, float[] turbulenceValues) {
 
         for (float turbulence : turbulenceValues) {
+
             Vector playerpos = Vector.getEntityPos(entity);
             Vector look = Vector.getEyePos(entity);
             double maxRange = 80;

@@ -81,7 +81,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     public EntityWaterCannon(World world) {
         super(world);
         setSize(1.5f, 1.5f);
-        damage = 60;
+        damage = 10;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         if (stuckTo != null) {
             setPosition(Vector.getEyePos(stuckTo));
             setVelocity(Vector.ZERO);
-              damageEntity(stuckTo, 1f);
+              damageEntity(stuckTo, 0.5f);
             }
 
 
