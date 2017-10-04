@@ -116,7 +116,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             setDead();
         }
 
-        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && unstoppable == false) {
+        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
             setDead();
         }
 
