@@ -37,11 +37,12 @@ public class AbilityCloudBurst extends Ability {
 
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
+        Bender bender = ctx.getBender();
         BendingData data = ctx.getData();
 
         if (data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) return;
 
-        if (ctx.consumeChi(STATS_CONFIG.chiCloudburst)) {
+        if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
 
             Vector target;
             if (ctx.isLookingAtBlock()) {

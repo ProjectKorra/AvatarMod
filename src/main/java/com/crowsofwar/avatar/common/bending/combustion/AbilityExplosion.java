@@ -30,7 +30,7 @@ public class AbilityExplosion extends Ability {
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
 
-        if (!bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
+        if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
             Raytrace.Result hit = Raytrace.getTargetBlock(entity, 20);
             if (hit.hitSomething()) {
                 BlockPos hitAt1 = hit.getPos().toBlockPos();
