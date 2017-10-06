@@ -24,6 +24,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
+
     private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
             (EntityWaterCannon.class, AvatarDataSerializers.SERIALIZER_VECTOR);
 
@@ -43,26 +44,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
      */
     private int stuckTime;
 
-    /**
-     * Whether the lightning was <b>attempted to be redirected</b> by stuckTo (ie, the targeted
-     * player). Redirected lightning will no longer attempt to damage the target; this prevents issues where target
-     * redirects lightning multiple times.
-     * <p>
-     * It is possible stuckTo failed to redirect the lightning; in this case wasRedirected will
-     * remain true, and stuckTo will not attempt to redirect lightning again (only gets one chance).
-     */
-    private boolean wasRedirected;
-
-    /**
-     * Whether the lightning was created through redirecting a first lightning. Not to be
-     * confused with {@link #wasRedirected}, which is whether a first lightning got redirected to
-     * make a second lightning.
-     */
-    private boolean createdByRedirection;
-
     private float damage;
-
-
 
     public EntityWaterCannon(World world) {
         super(world);
@@ -196,11 +178,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     }
 
     private DamageSource createDamageSource(EntityLivingBase target) {
-        if (createdByRedirection) {
-            return AvatarDamageSource.causeRedirectedLightningDamage(target, getOwner());
-        } else {
-            return AvatarDamageSource.causeLightningDamage(target, getOwner());
-        }
+        // TODO Custom Water Cannon DamageSource
+        return AvatarDamageSource.causeLightningDamage(target, getOwner());
     }
 
     @Override
@@ -210,10 +189,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     @Override
     public boolean onCollideWithSolid() {
-//		setDead();
         setVelocity(Vector.ZERO);
         return false;
-//		return true;
     }
 
     @Override
@@ -262,11 +239,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
             double targetDist = arcPos.dist(getEndPos()) / getControlPoints().size();
             Vector dir = Vector.getLookRectangular(arc);
 
-            Vector normalPosition = arcPos.plus(dir.times(targetDist).times(index));
-            Vector randomize = Vector.ZERO;
+            return arcPos.plus(dir.times(targetDist).times(index));
 
-
-            return normalPosition;
         }
 
         @Override
