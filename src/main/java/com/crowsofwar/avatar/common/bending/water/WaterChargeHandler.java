@@ -125,7 +125,6 @@ public abstract class WaterChargeHandler extends TickHandler {
         cannon.setOwner(entity);
         cannon.setDamage(10);
         cannon.setSizeMultiplier(size);
-        cannon.setMainArc(true);
 
         cannon.setPosition(Vector.getEyePos(entity));
         cannon.setEndPos(Vector.getLookRectangular(entity));

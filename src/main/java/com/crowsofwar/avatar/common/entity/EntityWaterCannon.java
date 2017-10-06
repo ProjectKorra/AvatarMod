@@ -30,9 +30,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
             (EntityWaterCannon.class, DataSerializers.FLOAT);
 
-    private static final DataParameter<Boolean> SYNC_MAIN_ARC = EntityDataManager.createKey
-            (EntityWaterCannon.class, DataSerializers.BOOLEAN);
-
     /**
      * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
      * damage it.
@@ -78,7 +75,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         super.entityInit();
         dataManager.register(SYNC_ENDPOS, Vector.ZERO);
         dataManager.register(SYNC_SIZE, 3f);
-        dataManager.register(SYNC_MAIN_ARC, true);
     }
 
     //controls how lasery the entity is; the more control points, the more it will look like a laser.
@@ -90,9 +86,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (isMainArc()) {
-            onUpdateMainArc();
-        }
 
         if (getOwner() != null) {
             Vector controllerPos = Vector.getEyePos(getOwner());
@@ -136,15 +129,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     }
 
-    /**
-     * @see #isMainArc()
-     */
-    private void onUpdateMainArc() {
-
-
-    }
-
-
     @Override
     protected void updateCpBehavior() {
         for (EntityWaterCannon.CannonControlPoint controlPoint : getControlPoints()) {
@@ -187,12 +171,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         if (world.isRemote) {
             return;
         }
-        if (!isMainArc()) {
-            return;
-        }
-
-
-
 
         DamageSource damageSource = createDamageSource(entity);
         if (entity.attackEntityFrom(damageSource, damage *
@@ -266,24 +244,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     public void setSizeMultiplier(float sizeMultiplier) {
         dataManager.set(SYNC_SIZE, sizeMultiplier);
     }
-
-    /**
-     * The ability actually creates 2-3 arcs for aesthetic effect. However, some work (e.g. flood
-     * fill) should only be performed by one arc : The main arc. Of the many arcs spawned in each
-     * ability use, one is flagged as the main arc.
-     */
-    public boolean isMainArc() {
-        return dataManager.get(SYNC_MAIN_ARC);
-    }
-
-    /**
-     * @see #isMainArc()
-     */
-    public void setMainArc(boolean mainArc) {
-        dataManager.set(SYNC_MAIN_ARC, mainArc);
-    }
-
-    
 
     public class CannonControlPoint extends ControlPoint {
 
