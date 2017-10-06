@@ -2,28 +2,20 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
-import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import org.joml.Matrix4d;
-import org.joml.SimplexNoise;
-import org.joml.Vector4d;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,9 +26,6 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
     private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
             (EntityWaterCannon.class, AvatarDataSerializers.SERIALIZER_VECTOR);
-
-    private static final DataParameter<Float> SYNC_TURBULENCE = EntityDataManager.createKey
-            (EntityWaterCannon.class, DataSerializers.FLOAT);
 
     private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
             (EntityWaterCannon.class, DataSerializers.FLOAT);
@@ -88,7 +77,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_ENDPOS, Vector.ZERO);
-        dataManager.register(SYNC_TURBULENCE, 0f);
         dataManager.register(SYNC_SIZE, 3f);
         dataManager.register(SYNC_MAIN_ARC, true);
     }
@@ -261,14 +249,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     public void setEndPos(Vector endPos) {
         dataManager.set(SYNC_ENDPOS, endPos);
-    }
-
-    public float getTurbulence() {
-        return dataManager.get(SYNC_TURBULENCE);
-    }
-
-    public void setTurbulence(float turbulence) {
-        dataManager.set(SYNC_TURBULENCE, turbulence);
     }
 
     public float getDamage() {
