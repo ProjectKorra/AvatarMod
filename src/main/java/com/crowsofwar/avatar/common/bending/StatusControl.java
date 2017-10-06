@@ -20,14 +20,17 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleContract;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleExpand;
+import com.crowsofwar.avatar.common.bending.air.StatCtrlThrowCloudBall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlDropWall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
+import com.crowsofwar.avatar.common.bending.fire.StatCtrlFireJump;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlSetFlamethrowing;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlThrowFire;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlThrowFireball;
 import com.crowsofwar.avatar.common.bending.ice.StatCtrlIceWalk;
 import com.crowsofwar.avatar.common.bending.ice.StatCtrlShieldShatter;
+import com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateJump;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateStart;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowBubble;
@@ -58,6 +61,7 @@ public abstract class StatusControl {
 	// @formatter:off
 	public static final StatusControl
 			AIR_JUMP = new StatCtrlAirJump(),
+			FIRE_JUMP = new StatCtrlFireJump(),
 			PLACE_BLOCK = new StatCtrlPlaceBlock(),
 			THROW_BLOCK = new StatCtrlThrowBlock(),
 			THROW_WATER = new StatCtrlThrowWater(),
@@ -68,6 +72,8 @@ public abstract class StatusControl {
 			SKATING_JUMP = new StatCtrlSkateJump(),
 			SKATING_START = new StatCtrlSkateStart(),
 			THROW_FIREBALL = new StatCtrlThrowFireball(),
+			THROW_CLOUDBURST = new StatCtrlThrowCloudBall(),
+			THROW_LIGHTNINSPEAR = new StatCtrlThrowLightningSpear(),
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
 			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
 			ICE_WALK = new StatCtrlIceWalk(),

@@ -18,10 +18,13 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
+import com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner;
 import com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.common.bending.ice.IceWalkHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
+import com.crowsofwar.avatar.common.bending.water.WaterChargeHandler;
+import com.crowsofwar.avatar.common.bending.water.WaterCreateHandler;
 import com.crowsofwar.avatar.common.bending.water.WaterSkateHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
@@ -38,12 +41,14 @@ import java.util.Map;
 public abstract class TickHandler {
 	
 	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
+	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
 	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
 	public static TickHandler WATER_SKATE = new WaterSkateHandler();
 	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();
 	public static TickHandler SMASH_GROUND = new SmashGroundHandler();
 	public static TickHandler ICE_WALK = new IceWalkHandler();
 	public static TickHandler LIGHTNING_CHARGE = new LightningCreateHandler();
+	public static TickHandler WATER_CHARGE = new WaterCreateHandler();
 	public static TickHandler LIGHTNING_REDIRECT = new LightningRedirectHandler();
 	
 	private static int nextId = 1;

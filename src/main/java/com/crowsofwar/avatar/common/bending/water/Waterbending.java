@@ -37,6 +37,8 @@ public class Waterbending extends BendingStyle {
 		addAbility("wave");
 		addAbility("water_bubble");
 		addAbility("water_skate");
+		addAbility("water_cannon");
+		addAbility("cleanse");
 		
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);
