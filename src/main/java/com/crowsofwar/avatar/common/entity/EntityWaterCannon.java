@@ -25,230 +25,229 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
 
-    private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
-            (EntityWaterCannon.class, AvatarDataSerializers.SERIALIZER_VECTOR);
+	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
+			(EntityWaterCannon.class, AvatarDataSerializers.SERIALIZER_VECTOR);
 
-    private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
-            (EntityWaterCannon.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
+			(EntityWaterCannon.class, DataSerializers.FLOAT);
 
-    /**
-     * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
-     * damage it.
-     */
-    @Nullable
-    private EntityLivingBase stuckTo;
+	/**
+	 * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
+	 * damage it.
+	 */
+	@Nullable
+	private EntityLivingBase stuckTo;
 
-    /**
-     * If the lightning hits an entity or the ground, the lightning "sticks to" that position and
-     * will die after some time after getting stuck.
-     */
-    private int stuckTime;
+	/**
+	 * If the lightning hits an entity or the ground, the lightning "sticks to" that position and
+	 * will die after some time after getting stuck.
+	 */
+	private int stuckTime;
 
-    private float damage;
+	private float damage;
 
-    public EntityWaterCannon(World world) {
-        super(world);
-        setSize(1.5f, 1.5f);
-        damage = 10;
-    }
+	public EntityWaterCannon(World world) {
+		super(world);
+		setSize(1.5f, 1.5f);
+		damage = 10;
+	}
 
-    @Override
-    protected void entityInit() {
-        super.entityInit();
-        dataManager.register(SYNC_ENDPOS, Vector.ZERO);
-        dataManager.register(SYNC_SIZE, 3f);
-    }
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_ENDPOS, Vector.ZERO);
+		dataManager.register(SYNC_SIZE, 3f);
+	}
 
-    //controls how lasery the entity is; the more control points, the more it will look like a laser.
-    @Override
-    public int getAmountOfControlPoints() {
-        return 40;
-    }
+	@Override
+	public int getAmountOfControlPoints() {
+		return 40;
+	}
 
-    @Override
-    public void onUpdate() {
-        super.onUpdate();
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
 
-        if (getOwner() != null) {
-            Vector controllerPos = Vector.getEyePos(getOwner());
-            Vector endPosition = getEndPos();
-            Vector position = controllerPos;
+		if (getOwner() != null) {
+			Vector controllerPos = Vector.getEyePos(getOwner());
+			Vector endPosition = getEndPos();
+			Vector position = controllerPos;
 
-            // position slightly below eye height
-            position = position.minusY(0.3);
-            // position slightly away from controller
-            position = position.plus(endPosition.minus(position).dividedBy(15));
+			// position slightly below eye height
+			position = position.minusY(0.3);
+			// position slightly away from controller
+			position = position.plus(endPosition.minus(position).dividedBy(15));
 
-            setEndPos(position);
+			setEndPos(position);
 
-            Vector newRotations = Vector.getRotationTo(position(), getEndPos());
-            rotationYaw = (float) Math.toDegrees(newRotations.y());
-            rotationPitch = (float) Math.toDegrees(newRotations.x());
-        }
+			Vector newRotations = Vector.getRotationTo(position(), getEndPos());
+			rotationYaw = (float) Math.toDegrees(newRotations.y());
+			rotationPitch = (float) Math.toDegrees(newRotations.x());
+		}
 
-        if (stuckTo != null) {
-            setPosition(Vector.getEyePos(stuckTo));
-            setVelocity(Vector.ZERO);
-              damageEntity(stuckTo, 0.5f);
-            }
-
-
-        if (velocity().equals(Vector.ZERO)) {
-            stuckTime++;
-            if (stuckTime == 1) {
-                world.playSound(null, getPosition(), SoundEvents.BLOCK_WATER_AMBIENT,
-                        SoundCategory.PLAYERS, 1, 1);
-            }
-        }
-
-        boolean existTooLong = stuckTime >= 20 || ticksExisted >= 200;
-        boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
-        if (existTooLong || stuckIsDead) {
-            setDead();
-        }
-
-        setSize(3.0f * getSizeMultiplier(), 3.0f * getSizeMultiplier());
-
-    }
-
-    @Override
-    protected void updateCpBehavior() {
-        for (EntityWaterCannon.CannonControlPoint controlPoint : getControlPoints()) {
-
-            controlPoint.setPosition(controlPoint.getPosition
-                    (ticksExisted));
-
-        }
-    }
-
-    @Override
-    protected void onCollideWithEntity(Entity entity){
-            if (stuckTo == null && entity instanceof EntityLivingBase) {
-
-                stuckTo = (EntityLivingBase) entity;
-
-            }
-        }
-
-    /**
-     * Custom lightning collision detection which uses raytrace. Required since lightning moves
-     * quickly and can sometimes "glitch" through an entity without detecting the collision.
-     */
-    @Override
-    protected void collideWithNearbyEntities() {
-
-        List<Entity> collisions = Raytrace.entityRaytrace(world, position(), velocity(), velocity
-                ().magnitude() / 20, entity -> entity != getOwner() && entity != this);
-
-        for (Entity collided : collisions) {
-            onCollideWithEntity(collided);
-        }
-
-    }
+		if (stuckTo != null) {
+			setPosition(Vector.getEyePos(stuckTo));
+			setVelocity(Vector.ZERO);
+			  damageEntity(stuckTo, 0.5f);
+			}
 
 
+		if (velocity().equals(Vector.ZERO)) {
+			stuckTime++;
+			if (stuckTime == 1) {
+				world.playSound(null, getPosition(), SoundEvents.BLOCK_WATER_AMBIENT,
+						SoundCategory.PLAYERS, 1, 1);
+			}
+		}
 
-    private void damageEntity(EntityLivingBase entity, float damageModifier) {
+		boolean existTooLong = stuckTime >= 20 || ticksExisted >= 200;
+		boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
+		if (existTooLong || stuckIsDead) {
+			setDead();
+		}
 
-        if (world.isRemote) {
-            return;
-        }
+		setSize(3.0f * getSizeMultiplier(), 3.0f * getSizeMultiplier());
 
-        DamageSource damageSource = createDamageSource(entity);
-        if (entity.attackEntityFrom(damageSource, damage *
-                damageModifier)) {
+	}
+
+	@Override
+	protected void updateCpBehavior() {
+		for (EntityWaterCannon.CannonControlPoint controlPoint : getControlPoints()) {
+
+			controlPoint.setPosition(controlPoint.getPosition
+					(ticksExisted));
+
+		}
+	}
+
+	@Override
+	protected void onCollideWithEntity(Entity entity){
+			if (stuckTo == null && entity instanceof EntityLivingBase) {
+
+				stuckTo = (EntityLivingBase) entity;
+
+			}
+		}
+
+	/**
+	 * Custom lightning collision detection which uses raytrace. Required since lightning moves
+	 * quickly and can sometimes "glitch" through an entity without detecting the collision.
+	 */
+	@Override
+	protected void collideWithNearbyEntities() {
+
+		List<Entity> collisions = Raytrace.entityRaytrace(world, position(), velocity(), velocity
+				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+
+		for (Entity collided : collisions) {
+			onCollideWithEntity(collided);
+		}
+
+	}
 
 
-            Vector velocity = getEntityPos(entity).minus(this.position()).normalize();
-            velocity = velocity.times(2);
-            entity.addVelocity(velocity.x(), 0.4, velocity.z());
-            AvatarUtils.afterVelocityAdded(entity);
 
-            // Add Experience
-            // Although 2 lightning entities are fired in each lightning ability, this won't
-            // cause 2x XP rewards as this only happens when the entity is successfully attacked
-            // (hurtResistantTime prevents the 2 lightning entities from both damaging at once)
-            if (getOwner() != null) {
-                BendingData data = BendingData.get(getOwner());
-                AbilityData abilityData = data.getAbilityData("water_cannon");
-                abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
-            }
-        }
+	private void damageEntity(EntityLivingBase entity, float damageModifier) {
 
-    }
+		if (world.isRemote) {
+			return;
+		}
 
-    private DamageSource createDamageSource(EntityLivingBase target) {
-        // TODO Custom Water Cannon DamageSource
-        return AvatarDamageSource.causeLightningDamage(target, getOwner());
-    }
+		DamageSource damageSource = createDamageSource(entity);
+		if (entity.attackEntityFrom(damageSource, damage *
+				damageModifier)) {
 
-    @Override
-    protected boolean canCollideWith(Entity entity) {
-        return entity != getOwner();
-    }
 
-    @Override
-    public boolean onCollideWithSolid() {
-        setVelocity(Vector.ZERO);
-        return false;
-    }
+			Vector velocity = getEntityPos(entity).minus(this.position()).normalize();
+			velocity = velocity.times(2);
+			entity.addVelocity(velocity.x(), 0.4, velocity.z());
+			AvatarUtils.afterVelocityAdded(entity);
 
-    @Override
-    protected EntityWaterCannon.CannonControlPoint createControlPoint(float size, int index) {
-        return new EntityWaterCannon.CannonControlPoint(this, index);
-    }
+			// Add Experience
+			// Although 2 lightning entities are fired in each lightning ability, this won't
+			// cause 2x XP rewards as this only happens when the entity is successfully attacked
+			// (hurtResistantTime prevents the 2 lightning entities from both damaging at once)
+			if (getOwner() != null) {
+				BendingData data = BendingData.get(getOwner());
+				AbilityData abilityData = data.getAbilityData("water_cannon");
+				abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
+			}
+		}
 
-    public Vector getEndPos() {
-        return dataManager.get(SYNC_ENDPOS);
-    }
+	}
 
-    public void setEndPos(Vector endPos) {
-        dataManager.set(SYNC_ENDPOS, endPos);
-    }
+	private DamageSource createDamageSource(EntityLivingBase target) {
+		// TODO Custom Water Cannon DamageSource
+		return AvatarDamageSource.causeLightningDamage(target, getOwner());
+	}
 
-    public float getDamage() {
-        return damage;
-    }
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return entity != getOwner();
+	}
 
-    public void setDamage(float damage) {
-        this.damage = damage;
-    }
+	@Override
+	public boolean onCollideWithSolid() {
+		setVelocity(Vector.ZERO);
+		return false;
+	}
 
-    public float getSizeMultiplier() {
-        return dataManager.get(SYNC_SIZE);
-    }
+	@Override
+	protected EntityWaterCannon.CannonControlPoint createControlPoint(float size, int index) {
+		return new EntityWaterCannon.CannonControlPoint(this, index);
+	}
 
-    public void setSizeMultiplier(float sizeMultiplier) {
-        dataManager.set(SYNC_SIZE, sizeMultiplier);
-    }
+	public Vector getEndPos() {
+		return dataManager.get(SYNC_ENDPOS);
+	}
 
-    public class CannonControlPoint extends ControlPoint {
+	public void setEndPos(Vector endPos) {
+		dataManager.set(SYNC_ENDPOS, endPos);
+	}
 
-        private final int index;
+	public float getDamage() {
+		return damage;
+	}
 
-        public CannonControlPoint(EntityArc arc, int index) {
-            super(arc, 1.0f, 0, 0, 0);
-            this.index = index;
-        }
+	public void setDamage(float damage) {
+		this.damage = damage;
+	}
 
-        public Vector getPosition(float ticks) {
+	public float getSizeMultiplier() {
+		return dataManager.get(SYNC_SIZE);
+	}
 
-            float partialTicks = ticks - (int) ticks;
-            Vector arcPos = arc.position().plus(arc.velocity().dividedBy(20).times(partialTicks));
+	public void setSizeMultiplier(float sizeMultiplier) {
+		dataManager.set(SYNC_SIZE, sizeMultiplier);
+	}
 
-            double targetDist = arcPos.dist(getEndPos()) / getControlPoints().size();
-            Vector dir = Vector.getLookRectangular(arc);
+	public class CannonControlPoint extends ControlPoint {
 
-            return arcPos.plus(dir.times(targetDist).times(index));
+		private final int index;
 
-        }
+		public CannonControlPoint(EntityArc arc, int index) {
+			super(arc, 1.0f, 0, 0, 0);
+			this.index = index;
+		}
 
-        @Override
-        public Vector getInterpolatedPosition(float partialTicks) {
-            return getPosition(arc.ticksExisted + partialTicks);
-        }
+		public Vector getPosition(float ticks) {
 
-    }
+			float partialTicks = ticks - (int) ticks;
+			Vector arcPos = arc.position().plus(arc.velocity().dividedBy(20).times(partialTicks));
+
+			double targetDist = arcPos.dist(getEndPos()) / getControlPoints().size();
+			Vector dir = Vector.getLookRectangular(arc);
+
+			return arcPos.plus(dir.times(targetDist).times(index));
+
+		}
+
+		@Override
+		public Vector getInterpolatedPosition(float partialTicks) {
+			return getPosition(arc.ticksExisted + partialTicks);
+		}
+
+	}
 }
 
 
