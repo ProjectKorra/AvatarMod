@@ -44,6 +44,8 @@ public class ConfigSkills {
 		fireHit = 3f,
 		flamethrowerHit = 0.75f,
 		fireballHit = 4.5f,
+		cloudburstHit = 5.0f,
+		lightningspearHit = 6.0F,
 		airbladeHit = 3f,
 		miningUse = 10f,
 		miningBreakOre = 5f,
