@@ -18,16 +18,20 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public abstract class WaterChargeHandler extends TickHandler {
+public class WaterChargeHandler extends TickHandler {
+
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("dfb6235c-82b6-407e-beaf-a4d8045735a82");
+
 	/**
 	 * Gets AbilityData to be used for determining lightning strength. This is normally the
 	 * bender's AbilityData, but in the case of redirection, it is the original bender's
 	 * AbilityData.
 	 */
 	@Nullable
-	protected abstract AbilityData getLightningData(BendingContext ctx);
+	private AbilityData getLightningData(BendingContext ctx) {
+        return ctx.getData().getAbilityData("water_cannon");
+    }
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -37,12 +41,6 @@ public abstract class WaterChargeHandler extends TickHandler {
 		BendingData data = ctx.getData();
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
 
-
-		Vector eyePos = Vector.getEyePos(entity);
-		Vector look = new Vector(entity.getLookVec());
-
-
-
 		if (world.isRemote) {
 			return false;
 		}
@@ -51,7 +49,6 @@ public abstract class WaterChargeHandler extends TickHandler {
 
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-
 
 		if (duration >= 40) {
 
@@ -76,7 +73,6 @@ public abstract class WaterChargeHandler extends TickHandler {
 				cannon.setSizeMultiplier(size*1.5F);
 			}
 
-
 			fireCannon(world, entity, damage, speed, size);
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
@@ -98,29 +94,7 @@ public abstract class WaterChargeHandler extends TickHandler {
 	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,
 							float size) {
 
-		Vector playerpos = Vector.getEntityPos(entity);
-		Vector look = Vector.getEyePos(entity);
-		double maxRange = 80;
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
-	  /*  List<Entity> hitEntities = Raytrace.entityRaytrace(world, playerpos, Vector.getLookRectangular(entity), maxRange);
-			if (!hitEntities.isEmpty()) {
-				cannon.setEndPos(Vector.getEntityPos(hitEntities.get(0)));
-
-		}   else {
-				Raytrace.Result hitBlocks = Raytrace.getTargetBlock(entity, maxRange);
-				if (hitBlocks.hitSomething()) {
-					cannon.setEndPos(hitBlocks.getPosPrecise());
-
-				} else {
-					if (hitEntities.isEmpty() && !hitBlocks.hitSomething()) {
-						cannon.setEndPos(Vector.getLookRectangular(entity));
-					}
-				}
-			}
-
-		**/
-
-
 
 		cannon.setOwner(entity);
 		cannon.setDamage(10);
