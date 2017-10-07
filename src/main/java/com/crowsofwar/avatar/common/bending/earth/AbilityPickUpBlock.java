@@ -115,9 +115,6 @@ public class AbilityPickUpBlock extends Ability {
 				float damageMult = abilityData.getLevel() >= 2 ? 2 : 1;
 
 				damageMult += ctx.getPowerRating() / 200;
-
-
-				//damageMult += ctx.getPowerRating() / 200;
 				floating.setDamageMult(damageMult);
 				
 
