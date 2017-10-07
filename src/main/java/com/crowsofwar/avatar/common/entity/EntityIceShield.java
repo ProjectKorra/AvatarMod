@@ -24,20 +24,29 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class EntityIceShield extends AvatarEntity {
+public class EntityIceShield extends EntityShield {
 
 	private double normalBaseValue;
+
+	private double damageMult;
+	private boolean targetMobs;
+	private float[] pitchAngles;
 	
 	public EntityIceShield(World world) {
 		super(world);
@@ -50,82 +59,28 @@ public class EntityIceShield extends AvatarEntity {
 		setDead();
 		
 		EntityLivingBase owner = getOwner();
-		
-		// Shoot arrows at mobs
-		
-		int arrowsLeft = 12;
-		
-		double halfRange = 20;
-		AxisAlignedBB aabb = new AxisAlignedBB(//
-				owner.posX - halfRange, owner.posY - halfRange, owner.posZ - halfRange, //
-				owner.posX + halfRange, owner.posY + halfRange, owner.posZ + halfRange);
-		List<EntityMob> targets = world.getEntitiesWithinAABB(EntityMob.class, aabb);
-		
-		int arrowsAtMobs = Math.min(targets.size(), 5);
-		for (int i = 0; i < arrowsAtMobs; i++) {
-			shootArrowAt(targets.get(i));
-		}
-		arrowsLeft -= arrowsAtMobs;
-		
-		shootArrowsAround(owner, 4, new float[] { 20, 0, -30 }, arrowsLeft);
-		
-	}
-	
-	private void shootArrowAt(Entity target) {
-		
-		EntityLivingBase owner = getOwner();
-		Vector targetPos = Vector.getEyePos(target);
-		Vector ownerPos = Vector.getEyePos(owner);
-		
-		Vector direction = Vector.getRotationTo(ownerPos, targetPos);
-		float yaw = (float) Math.toDegrees(direction.y());
-		
-		double horizDist = targetPos.withY(0).dist(ownerPos.withY(0));
-		double vertDist = targetPos.y() - ownerPos.y();
-		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(20, 20, horizDist,
-				vertDist));
-		
-		EntityIceShard shard = new EntityIceShard(world);
-		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
-		shard.aim(yaw, pitch, 20);
-		world.spawnEntity(shard);
-		
-	}
-	
-	/**
-	 * Shoot arrows around the entity.
-	 * 
-	 * @param yawAngles
-	 *            Spacing for yaw angles
-	 * @param pitchAngles
-	 *            All of the pitch angles
-	 * @param arrowsLeft
-	 *            Limit the number of arrows to shoot. Note that setting this
-	 *            very high won't increase arrows shot since this only limits
-	 *            the arrows shot
-	 */
-	private void shootArrowsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
-			int arrowsLeft) {
-		for (int i = 0; i < yawAngles; i++) {
-			float yaw = 360f / yawAngles * i;
-			for (int j = 0; j < pitchAngles.length; j++) {
-				
-				if (arrowsLeft == 0) {
-					break;
-				}
-				
-				float pitch = pitchAngles[j];
-				
-				EntityIceShard shard = new EntityIceShard(world);
-				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ,
-						0, 0);
-				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
-				world.spawnEntity(shard);
-				
-				arrowsLeft--;
-				
+
+		// Shoot shards at mobs
+		int shardsLeft = 12;
+
+		if (targetMobs) {
+
+			double range = 40;
+			AxisAlignedBB aabb = new AxisAlignedBB(//
+					owner.posX - range / 2, owner.posY - range / 2, owner.posZ - range / 2, //
+					owner.posX + range / 2, owner.posY + range / 2, owner.posZ + range / 2);
+			List<EntityMob> targets = world.getEntitiesWithinAABB(EntityMob.class, aabb);
+
+			int shardsAtMobs = Math.min(targets.size(), 5);
+			for (int i = 0; i < shardsAtMobs; i++) {
+				shootShardAt(targets.get(i));
+				shardsLeft--;
 			}
+
 		}
+
+		shootShardsAround(owner, 4, pitchAngles, shardsLeft);
+		
 	}
 
 	@Override
@@ -143,9 +98,10 @@ public class EntityIceShield extends AvatarEntity {
 				normalBaseValue = speed.getBaseValue();
 				speed.setBaseValue(0);
 			}
-			owner.posX = this.posX;
-			owner.posY = this.posY;
-			owner.posZ = this.posZ;
+			owner.setPosition(posX, posY, posZ);
+			owner.motionX = this.motionX;
+			owner.motionY = this.motionY;
+			owner.motionZ = this.motionZ;
 		}
 	}
 	
@@ -160,17 +116,152 @@ public class EntityIceShield extends AvatarEntity {
 			}
 		}
 	}
-	
+
+	@Override
+	public boolean onFireContact() {
+		setHealth(getHealth() - 0.2f);
+		return getHealth() <= 0;
+	}
+
+	@Override
+	public boolean canPush() {
+		return false;
+	}
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		normalBaseValue = nbt.getDouble("NormalBaseValue");
+		damageMult = nbt.getDouble("DamageMult");
+		setTargetMobs(nbt.getBoolean("TargetMobs"));
+
+		NBTTagList pitchAngleList = nbt.getTagList("PitchAngles", 5);
+		pitchAngles = new float[pitchAngleList.tagCount()];
+		for (int i = 0; i < pitchAngleList.tagCount(); i++) {
+			pitchAngles[i] = pitchAngleList.getFloatAt(i);
+		}
+
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setDouble("NormalBaseValue", normalBaseValue);
+		nbt.setDouble("DamageMult", damageMult);
+		nbt.setBoolean("TargetMobs", isTargetMobs());
+
+		NBTTagList pitchAngleList = new NBTTagList();
+		for (float pitchAngle : pitchAngles) {
+			pitchAngleList.appendTag(new NBTTagFloat(pitchAngle));
+		}
+		nbt.setTag("PitchAngles", pitchAngleList);
+
 	}
-	
+
+	@Override
+	protected float getChiDamageCost() {
+		return STATS_CONFIG.chiIceShieldProtect;
+	}
+
+	@Override
+	protected float getProtectionXp() {
+		return SKILLS_CONFIG.iceShieldProtected;
+	}
+
+	@Override
+	protected String getAbilityName() {
+		return "ice_burst";
+	}
+
+	@Override
+	protected void onDeath() {
+		shatter();
+	}
+
+	/**
+	 * Shoots a single ice shard at the given target, using physics equations to properly aim.
+	 */
+	private void shootShardAt(Entity target) {
+
+		EntityLivingBase owner = getOwner();
+		Vector targetPos = Vector.getEyePos(target);
+		Vector ownerPos = Vector.getEyePos(owner);
+
+		Vector direction = Vector.getRotationTo(ownerPos, targetPos);
+		float yaw = (float) Math.toDegrees(direction.y());
+
+		double horizDist = targetPos.withY(0).dist(ownerPos.withY(0));
+		double vertDist = targetPos.y() - ownerPos.y();
+		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(20, 20, horizDist,
+				vertDist));
+
+		EntityIceShard shard = new EntityIceShard(world);
+		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
+		shard.aim(yaw, pitch, 20);
+		shard.setDamageMult(damageMult);
+		world.spawnEntity(shard);
+
+	}
+
+	/**
+	 * Shoot ice shards around the entity.
+	 *
+	 * @param yawAngles
+	 *            Spacing for yaw angles
+	 * @param pitchAngles
+	 *            All of the pitch angles
+	 * @param shardsLimit
+	 *            Limit the number of ice shards to shoot. Note that the actual shards shot is
+	 *            also limited by the number of possible angles to shoot at (<code>yawAngles
+	 *            * pitchAngles.length</code>), so this acts as a limiter rather than the actual
+	 *            amount of shards to shoot.
+	 */
+	private void shootShardsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
+								   int shardsLimit) {
+		for (int i = 0; i < yawAngles; i++) {
+			float yaw = 360f / yawAngles * i;
+			for (int j = 0; j < pitchAngles.length; j++) {
+
+				if (shardsLimit == 0) {
+					break;
+				}
+
+				float pitch = pitchAngles[j];
+
+				EntityIceShard shard = new EntityIceShard(world);
+				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ,
+						0, 0);
+				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
+				shard.setDamageMult(damageMult);
+				world.spawnEntity(shard);
+
+				shardsLimit--;
+
+			}
+		}
+	}
+
+	public double getDamageMult() {
+		return damageMult;
+	}
+
+	public void setDamageMult(double damageMult) {
+		this.damageMult = damageMult;
+	}
+
+	public boolean isTargetMobs() {
+		return targetMobs;
+	}
+
+	public void setTargetMobs(boolean targetMobs) {
+		this.targetMobs = targetMobs;
+	}
+
+	public float[] getPitchAngles() {
+		return pitchAngles;
+	}
+
+	public void setPitchAngles(float[] pitchAngles) {
+		this.pitchAngles = pitchAngles;
+	}
 }

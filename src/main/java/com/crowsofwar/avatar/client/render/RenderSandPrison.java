@@ -17,10 +17,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntitySandPrison;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -29,44 +26,24 @@ import net.minecraft.util.ResourceLocation;
  *
  * @author CrowsOfWar
  */
-public class RenderSandPrison extends Render<EntitySandPrison> {
+public class RenderSandPrison extends RenderModel<EntitySandPrison> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/sand-prison.png");
 
-	private ModelBase model;
-
-	/**
-	 * @param renderManager
-	 */
 	public RenderSandPrison(RenderManager renderManager) {
-		super(renderManager);
-		this.model = new ModelSandPrison();
-	}
-
-	@Override
-	public void doRender(EntitySandPrison entity, double x, double y, double z, float entityYaw,
-						 float partialTicks) {
-
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		GlStateManager.enableBlend();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
-
-		// For some reason, must rotate in degrees here (not radians)
-		GlStateManager.rotate(180, 1, 0, 0);
-		GlStateManager.scale(1.4, 2.5, 1.4);
-		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
-		GlStateManager.popMatrix();
-
-		GlStateManager.disableBlend();
-
+		super(renderManager, new ModelSandPrison());
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntitySandPrison entity) {
-		return null;
+		return TEXTURE;
 	}
 
+	@Override
+	protected void performGlTransforms(EntitySandPrison entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		// For some reason, must rotate in degrees here (not radians)
+		GlStateManager.rotate(180, 1, 0, 0);
+		GlStateManager.scale(1.4, 2.5, 1.4);
+	}
 }

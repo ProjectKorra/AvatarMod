@@ -17,21 +17,13 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -69,29 +61,6 @@ public class AirbendingEvents {
 		if (data.hasBendingId(Airbending.ID)) {
 			tick(player, world, data);
 		}
-	}
-	
-	@SubscribeEvent
-	public void airBubbleShield(LivingAttackEvent e) {
-		World world = e.getEntity().world;
-		
-		EntityLivingBase attacked = (EntityLivingBase) e.getEntity();
-		
-		if (Bender.isBenderSupported(attacked)) {
-			BendingData data = Bender.get(attacked).getData();
-			if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
-				EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
-						attacked);
-				if (bubble != null) {
-					if (bubble.attackEntityFrom(e.getSource(), e.getAmount())) {
-						e.setCanceled(true);
-						world.playSound(null, attacked.getPosition(), SoundEvents.BLOCK_CLOTH_HIT,
-								SoundCategory.PLAYERS, 1, 1);
-					}
-				}
-			}
-		}
-		
 	}
 	
 	public static void register() {

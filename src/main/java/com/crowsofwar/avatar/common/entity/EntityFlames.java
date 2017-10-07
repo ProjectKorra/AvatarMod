@@ -74,7 +74,14 @@ public class EntityFlames extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		setDead();
 	}
-	
+
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onFireContact();
+		}
+	}
+
 	@Override
 	public void onUpdate() {
 		

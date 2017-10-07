@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
@@ -31,7 +32,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
-	
+
 	private static final Vector GRAVITY = new Vector(0, -9.81 / 60, 0);
 	
 	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
@@ -87,7 +88,14 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		super.setDead();
 		cleanup();
 	}
-	
+
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onFireContact();
+		}
+	}
+
 	@Override
 	public boolean onCollideWithSolid() {
 

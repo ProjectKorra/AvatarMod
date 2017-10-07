@@ -16,8 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.gorecore.util.Vector;
@@ -26,7 +29,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getVelocity;
@@ -61,18 +63,15 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		
 		if (!entity.world.isRemote && Math.random() < flamesPerSecond / 20.0) {
 			
-			Chi chi = data.chi();
-			float required = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
+			float requiredChi = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
 			if (level == 3 && path == AbilityTreePath.FIRST) {
-				required *= 1.5f;
+				requiredChi *= 1.5f;
 			}
 			if (level == 3 && path == AbilityTreePath.SECOND) {
-				required *= 2;
+				requiredChi *= 2;
 			}
 			
-			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
-			
-			if (infinite || chi.consumeChi(required)) {
+			if (bender.consumeChi(requiredChi)) {
 				
 				Vector eye = getEyePos(entity);
 				

@@ -16,11 +16,10 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -100,7 +99,7 @@ public abstract class BendingAi extends EntityAIBase {
 		BendingData data = bender.getData();
 		if (data.hasStatusControl(sc)) {
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
-			if (sc.execute(new AbilityContext(data, entity, bender, raytrace, ability))) {
+			if (sc.execute(new BendingContext(data, entity, bender, raytrace))) {
 				data.removeStatusControl(sc);
 			}
 		}

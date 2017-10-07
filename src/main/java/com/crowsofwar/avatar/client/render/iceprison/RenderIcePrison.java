@@ -36,7 +36,7 @@ public class RenderIcePrison extends Render<EntityIcePrison> {
 	}
 
 	private ModelBase getModel(EntityIcePrison entity) {
-		double percent = (double) entity.ticksExisted / EntityIcePrison.IMPRISONED_TIME;
+		double percent = 1 - (double) entity.getImprisonedTime() / entity.getMaxImprisonedTime();
 		int index = prisonModels.length - (int) (percent * prisonModels.length);
 		if (index == prisonModels.length) {
 			index--;

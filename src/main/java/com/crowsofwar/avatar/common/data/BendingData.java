@@ -83,6 +83,7 @@ public class BendingData {
 	private UUID activeBending;
 	private Chi chi;
 	private MiscData miscData;
+	private Map<UUID, PowerRatingManager> powerRatingManagers;
 
 	/**
 	 * Create a new BendingData
@@ -102,6 +103,7 @@ public class BendingData {
 		activeBending = null;
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
+		powerRatingManagers = new HashMap<>();
 	}
 
 	// ================================================================================
@@ -329,7 +331,9 @@ public class BendingData {
 		float chi = 0;
 		chi += getAllBending().size() * CHI_CONFIG.bonusLearnedBending;
 		for (AbilityData aData : getAllAbilityData()) {
-			if (!aData.isLocked() && hasBendingId(aData.getAbility().getBendingId())) {
+			boolean hasBending = aData.getAbility() != null && hasBendingId(aData.getAbility()
+					.getBendingId());
+			if (!aData.isLocked() && hasBending) {
 				chi += CHI_CONFIG.bonusAbility;
 				chi += aData.getLevel() * CHI_CONFIG.bonusAbilityLevel;
 			}
@@ -406,6 +410,42 @@ public class BendingData {
 	public void clearTickHandlers() {
 		tickHandlers.clear();
 		tickHandlerDuration.clear();
+	}
+
+	// ================================================================================
+	// POWER RATING
+	// ================================================================================
+
+	/**
+	 * Gets the power rating manager for the given bending style. Returns null if the bender
+	 * doesn't have that bending style.
+	 */
+	@Nullable
+	public PowerRatingManager getPowerRatingManager(UUID bendingId) {
+		if (hasBendingId(bendingId)) {
+			return powerRatingManagers.computeIfAbsent(bendingId, PowerRatingManager::new);
+		} else {
+			if (powerRatingManagers.containsKey(bendingId)) {
+				powerRatingManagers.remove(bendingId);
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * @see #getPowerRatingManager(UUID)
+	 */
+	@Nullable
+	public PowerRatingManager getPowerRatingManager(BendingStyle bendingStyle) {
+		return getPowerRatingManager(bendingStyle.getId());
+	}
+
+	/**
+	 * Gets all power rating managers; changes to this list aren't reflected in the BendingData's
+	 * power rating list
+	 */
+	public List<PowerRatingManager> getPowerRatingManagers() {
+		return new ArrayList<>(powerRatingManagers.values());
 	}
 
 	// ================================================================================

@@ -32,17 +32,20 @@ import net.minecraft.entity.EntityLivingBase;
 public class AbilityContext extends BendingContext {
 	
 	private final Ability ability;
-	
+	private final double powerRating;
+
 	public AbilityContext(BendingData data, Result raytrace, Ability ability, EntityLivingBase
-			entity) {
+			entity, double powerRating) {
 		super(data, entity, raytrace);
 		this.ability = ability;
+		this.powerRating = powerRating;
 	}
 	
 	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace,
-						  Ability ability) {
+						  Ability ability, double powerRating) {
 		super(data, entity, bender, raytrace);
 		this.ability = ability;
+		this.powerRating = powerRating;
 	}
 	
 	public AbilityData getAbilityData() {
@@ -63,5 +66,9 @@ public class AbilityContext extends BendingContext {
 	public boolean isMasterLevel(AbilityTreePath path) {
 		return getLevel() == 3 && getPath() == path;
 	}
-	
+
+	public double getPowerRating() {
+		return powerRating;
+	}
+
 }

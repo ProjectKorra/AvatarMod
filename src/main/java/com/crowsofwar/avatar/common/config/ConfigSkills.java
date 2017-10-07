@@ -56,7 +56,11 @@ public class ConfigSkills {
 		litFire = 20,
 		createBubble = 15,
 		madeLightning = 3,
-		struckWithLightning = 5;
+		struckWithLightning = 5,
+		sandPrisoned = 9,
+		iceShieldCreated = 2,
+		iceShieldProtected = 6,
+		icePrisoned = 10;
 	// @formatter:on
 	
 	public static void load() {

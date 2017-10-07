@@ -17,12 +17,11 @@
 
 package com.crowsofwar.avatar.client.gui;
 
+import com.crowsofwar.avatar.common.bending.Ability;
+import net.minecraft.util.ResourceLocation;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.crowsofwar.avatar.common.bending.Ability;
-
-import net.minecraft.util.ResourceLocation;
 
 /**
  * 
@@ -40,8 +39,8 @@ public class AvatarUiTextures {
 			"textures/gui/skillmenu.png");
 	public static final ResourceLocation getBending = new ResourceLocation("avatarmod",
 			"textures/gui/getbending.png");
-	public static final ResourceLocation airBubbleHealth = new ResourceLocation("avatarmod",
-			"textures/gui/airbubble_health.png");
+	public static final ResourceLocation shieldHealth = new ResourceLocation("avatarmod",
+			"textures/gui/shield_health.png");
 	
 	static final ResourceLocation bgWater = new ResourceLocation("avatarmod",
 			"textures/gui/bg_water_screen.png");

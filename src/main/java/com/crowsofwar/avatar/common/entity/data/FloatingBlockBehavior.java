@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -215,8 +214,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				if (data.getAbilityData("pickup_block")
 						.isMasterPath(AbilityTreePath.FIRST)) {
 					
-					Chi chi = data.chi();
-					if (chi.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+					Bender bender = Bender.get(entity.getOwner());
+					if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 						data.addStatusControl(StatusControl.THROW_BLOCK);
 						data.addStatusControl(StatusControl.PLACE_BLOCK);
 						return new FloatingBlockBehavior.PlayerControlled();

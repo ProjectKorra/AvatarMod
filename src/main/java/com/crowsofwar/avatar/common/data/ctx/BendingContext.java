@@ -168,31 +168,7 @@ public class BendingContext {
 			return serverLookBlock;
 		}
 	}
-	
-	/**
-	 * Tries to use the given amount of available chi. Returns true if there was
-	 * enough chi to remove and it removed it.
-	 *
-	 * @deprecated use {@link Bender#consumeChi(float)} instead
-	 */
-	@Deprecated
-	public boolean consumeChi(float amount) {
-		
-		// TODO Account for entity Chi?
-		if (!bender.isPlayer()) return true;
-		if (bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative) {
-			return true;
-		}
-		
-		if (data.chi().consumeChi(amount)) {
-			return true;
-		}
-		
-		bender.sendMessage("avatar.noChi");
-		
-		return false;
-	}
-	
+
 	/**
 	 * Consumes the given amount of water either from direct water source, from
 	 * a water pouch, or several other sources.

@@ -22,8 +22,10 @@ import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
+import com.crowsofwar.avatar.common.entity.EntityIceShield;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -49,7 +51,6 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.common.entity.EntityIcePrison.IMPRISONED_TIME;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
@@ -89,6 +90,7 @@ public class AvatarUiRenderer extends Gui {
 		renderChiMsg(resolution);
 		renderActiveBending(resolution);
 		renderAirBubbleHealth(resolution);
+		renderIceShieldHealth(resolution);
 		renderPrisonCracks(resolution);
 		
 	}
@@ -266,46 +268,63 @@ public class AvatarUiRenderer extends Gui {
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		drawTexturedModalRect(x, y, u, v, 50, 50);
 	}
-	
+
 	private void renderAirBubbleHealth(ScaledResolution res) {
-		
-		mc.renderEngine.bindTexture(AvatarUiTextures.airBubbleHealth);
-		GlStateManager.color(1, 1, 1, 1);
-		
 		World world = mc.world;
 		EntityPlayer player = mc.player;
 		BendingData data = BendingData.get(player);
-		
+
 		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
-			EntityAirBubble bubble = EntityAirBubble.lookupControlledEntity(world, EntityAirBubble.class,
+			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
 					player);
 			if (bubble != null) {
-				
-				int x = res.getScaledWidth() / 2 - 91;
-				int y = res.getScaledHeight() - GuiIngameForge.left_height;
-				if (mc.player.getTotalArmorValue() == 0) {
-					y += 10;
-				}
-				
-				int hearts = (int) (bubble.getMaxHealth() / 2);
-				for (int i = 0; i < hearts; i++) {
-					
-					// Draw background
-					drawTexturedModalRect(x + i * 9, y, 0, 0, 9, 9);
-					
-					// Draw hearts or half hearts
-					int diff = (int) (bubble.getHealth() - i * 2);
-					if (diff >= 2) {
-						drawTexturedModalRect(x + i * 9, y, 18, 0, 9, 9);
-					} else if (diff == 1) {
-						drawTexturedModalRect(x + i * 9, y, 27, 0, 9, 9);
-					}
-					
-				}
-				
+				renderShieldHealth(res, bubble.getHealth(), bubble.getMaxHealth(), 0);
 			}
 		}
+	}
+
+	private void renderIceShieldHealth(ScaledResolution res) {
+		World world = mc.world;
+		EntityPlayer player = mc.player;
+		BendingData data = BendingData.get(player);
+
+		if (data.hasStatusControl(StatusControl.SHIELD_SHATTER)) {
+			EntityIceShield shield = AvatarEntity.lookupControlledEntity(world, EntityIceShield
+					.class, player);
+			if (shield != null) {
+				renderShieldHealth(res, shield.getHealth(), shield.getMaxHealth(), 9);
+			}
+		}
+	}
+
+	private void renderShieldHealth(ScaledResolution res, float health, float maxHealth, int
+			textureV) {
 		
+		mc.renderEngine.bindTexture(AvatarUiTextures.shieldHealth);
+		GlStateManager.color(1, 1, 1, 1);
+		
+		int x = res.getScaledWidth() / 2 - 91;
+		int y = res.getScaledHeight() - GuiIngameForge.left_height;
+		if (mc.player.getTotalArmorValue() == 0) {
+			y += 10;
+		}
+
+		int hearts = (int) (maxHealth / 2);
+		for (int i = 0; i < hearts; i++) {
+
+			// Draw background
+			drawTexturedModalRect(x + i * 9, y, 0, textureV, 9, 9);
+
+			// Draw hearts or half hearts
+			int diff = (int) (health - i * 2);
+			if (diff >= 2) {
+				drawTexturedModalRect(x + i * 9, y, 18, textureV, 9, 9);
+			} else if (diff == 1) {
+				drawTexturedModalRect(x + i * 9, y, 27, textureV, 9, 9);
+			}
+
+		}
+
 	}
 	
 	private void renderPrisonCracks(ScaledResolution res) {
@@ -332,7 +351,7 @@ public class AvatarUiRenderer extends Gui {
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			
 			color(1, 1, 1, 0.5f);
-			float percent = (float) prison.ticksExisted / IMPRISONED_TIME;
+			float percent = 1 - (float) prison.getImprisonedTime() / prison.getMaxImprisonedTime();
 			int crackIndex = (int) (percent * percent * percent * (BLOCK_BREAK.length + 1)) - 1;
 			if (crackIndex > -1) {
 				mc.renderEngine.bindTexture(BLOCK_BREAK[crackIndex]);

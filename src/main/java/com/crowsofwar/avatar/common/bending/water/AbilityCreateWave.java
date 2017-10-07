@@ -50,6 +50,7 @@ public class AbilityCreateWave extends Ability {
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity)
 				.minusY(1), look, 4, (pos, blockState) -> blockState.getBlock() == Blocks
 				.WATER);
+
 		if (result.hitSomething()) {
 
 			VectorI pos = result.getPos();

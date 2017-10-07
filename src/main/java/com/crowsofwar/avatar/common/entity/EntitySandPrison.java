@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,6 +27,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
@@ -42,10 +46,18 @@ public class EntitySandPrison extends AvatarEntity {
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntitySandPrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
-	public static final int IMPRISONED_TIME = 100;
+	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey
+			(EntitySandPrison.class, DataSerializers.VARINT);
+
+	public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager
+			.createKey(EntitySandPrison.class, DataSerializers.VARINT);
 
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
+
+	private boolean damageEntity;
+	private boolean applySlowness;
+	private boolean vulnerableToAirbending;
 
 	/**
 	 * @param world
@@ -54,12 +66,15 @@ public class EntitySandPrison extends AvatarEntity {
 		super(world);
 		imprisonedAttr = new SyncedEntity<>(this, SYNC_IMPRISONED);
 		setSize(1, 0.25f);
+		vulnerableToAirbending = true;
 	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_IMPRISONED, Optional.absent());
+		dataManager.register(SYNC_IMPRISONED_TIME, 100);
+		dataManager.register(SYNC_MAX_IMPRISONED_TIME, 100);
 	}
 
 	public EntityLivingBase getImprisoned() {
@@ -85,15 +100,43 @@ public class EntitySandPrison extends AvatarEntity {
 			imprisoned.posZ = this.posZ;
 			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
 		}
-		if (ticksExisted >= IMPRISONED_TIME) {
+
+		if (!world.isRemote) {
+			setImprisonedTime(getImprisonedTime() - 1);
+		}
+
+		if (getImprisonedTime() <= 0) {
 			setDead();
 
 			if (!world.isRemote && imprisoned != null) {
 				world.playSound(null, imprisoned.getPosition(),
 						SoundEvents.BLOCK_SAND_BREAK, SoundCategory.PLAYERS, 1, 1);
+
+				if (damageEntity) {
+					// TODO SandPrison DamageSource
+					imprisoned.attackEntityFrom(DamageSource.ANVIL, 8);
+				}
+
+				if (applySlowness) {
+
+					Potion slowness = Potion.getPotionFromResourceLocation("slowness");
+					//noinspection ConstantConditions
+					imprisoned.addPotionEffect(new PotionEffect(slowness, 80, 1));
+
+				}
+
 			}
 
 		}
+	}
+
+	@Override
+	public boolean onAirContact() {
+		if (!world.isRemote && vulnerableToAirbending) {
+			setDead();
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -111,6 +154,9 @@ public class EntitySandPrison extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		imprisonedAttr.readFromNbt(nbt);
 		normalBaseValue = nbt.getDouble("NormalSpeed");
+		setImprisonedTime(nbt.getInteger("ImprisonedTime"));
+		setMaxImprisonedTime(nbt.getInteger("MaxImprisonedTime"));
+		setVulnerableToAirbending(nbt.getBoolean("VulnerableToAirbending"));
 	}
 
 	@Override
@@ -118,6 +164,82 @@ public class EntitySandPrison extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		imprisonedAttr.writeToNbt(nbt);
 		nbt.setDouble("NormalSpeed", normalBaseValue);
+		nbt.setInteger("ImprisonedTime", getImprisonedTime());
+		nbt.setInteger("MaxImprisonedTime", getMaxImprisonedTime());
+		nbt.setBoolean("VulnerableToAirbending", isVulnerableToAirbending());
+	}
+
+	/**
+	 * A countdown which returns the ticks left to be imprisoned. When the countdown is over, the
+	 * entity will be freed.
+	 */
+	public int getImprisonedTime() {
+		return dataManager.get(SYNC_IMPRISONED_TIME);
+	}
+
+	public void setImprisonedTime(int imprisonedTime) {
+		dataManager.set(SYNC_IMPRISONED_TIME, imprisonedTime);
+	}
+
+	/**
+	 * Returns the total ticks that the target will be imprisoned for.
+	 */
+	public int getMaxImprisonedTime() {
+		return dataManager.get(SYNC_MAX_IMPRISONED_TIME);
+	}
+
+	public void setMaxImprisonedTime(int maxImprisonedTime) {
+		dataManager.set(SYNC_MAX_IMPRISONED_TIME, maxImprisonedTime);
+	}
+
+	public boolean isDamageEntity() {
+		return damageEntity;
+	}
+
+	public void setDamageEntity(boolean damageEntity) {
+		this.damageEntity = damageEntity;
+	}
+
+	public boolean isApplySlowness() {
+		return applySlowness;
+	}
+
+	public void setApplySlowness(boolean applySlowness) {
+		this.applySlowness = applySlowness;
+	}
+
+	public boolean isVulnerableToAirbending() {
+		return vulnerableToAirbending;
+	}
+
+	public void setVulnerableToAirbending(boolean vulnerableToAirbending) {
+		this.vulnerableToAirbending = vulnerableToAirbending;
+	}
+
+	private void setStats(AbilityData abilityData) {
+
+		float imprisonedSeconds = abilityData.getLevel() >= 1 ? 5 : 4;
+		damageEntity = false;
+		applySlowness = abilityData.getLevel() >= 2;
+		vulnerableToAirbending = true;
+
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			damageEntity = true;
+			imprisonedSeconds = 6;
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			imprisonedSeconds = 12;
+			vulnerableToAirbending = false;
+		}
+
+		setImprisonedTime((int) (imprisonedSeconds * 20));
+		setMaxImprisonedTime((int) (imprisonedSeconds * 20));
+
+	}
+
+	@Override
+	public boolean canPush() {
+		return false;
 	}
 
 	public static boolean isImprisoned(EntityLivingBase entity) {
@@ -140,11 +262,12 @@ public class EntitySandPrison extends AvatarEntity {
 
 	}
 
-	public static void imprison(EntityLivingBase entity) {
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
 		World world = entity.world;
 		EntitySandPrison prison = new EntitySandPrison(world);
 		prison.setImprisoned(entity);
 		prison.copyLocationAndAnglesFrom(entity);
+		prison.setStats(AbilityData.get(owner, "sand_prison"));
 		world.spawnEntity(prison);
 	}
 

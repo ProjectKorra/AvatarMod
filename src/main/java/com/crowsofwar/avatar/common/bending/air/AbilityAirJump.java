@@ -57,8 +57,12 @@ public class AbilityAirJump extends Ability {
 					data.removeStatusControl(AIR_JUMP);
 				}
 			}
-			
+
 		}
+
+		//noinspection ConstantConditions
+		data.getPowerRatingManager(getBendingId()).addModifier(new AirJumpPowerModifier());
+
 	}
 	
 }

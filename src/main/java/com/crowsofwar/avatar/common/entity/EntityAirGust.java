@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -71,7 +70,13 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	protected void onCollideWithEntity(Entity entity) {
 		EntityLivingBase owner = getOwner();
 		if (!entity.world.isRemote && entity != owner) {
-			
+
+			if (entity instanceof AvatarEntity) {
+				AvatarEntity avatarEntity = (AvatarEntity) entity;
+				if (avatarEntity.onAirContact()) return;
+				if (!avatarEntity.canPush()) return;
+			}
+
 			BendingData data = Bender.get(owner).getData();
 			float xp = 0;
 			if (data != null) {
@@ -89,10 +94,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			setDead();
 			
 			if (entity instanceof AvatarEntity) {
-				if (((AvatarEntity) entity).onMinorWaterContact()) {// TODO think of a hook for
-					// air gust contact
-					entity.setDead();
-				}
+				((AvatarEntity) entity).onAirContact();
 			}
 			
 		}

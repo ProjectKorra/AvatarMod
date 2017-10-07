@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,6 +32,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
@@ -63,16 +65,6 @@ public abstract class Bender {
 	}
 
 	/**
-	 * Returns whether this bender is a player
-	 *
-	 * @deprecated This ruins abstraction; <a href="https://trello.com/c/ph9WP946/210-remove-benderisplayer">to be removed</a>
-	 */
-	@Deprecated
-	public boolean isPlayer() {
-		return getEntity() instanceof EntityPlayer;
-	}
-
-	/**
 	 * Get a BenderInfo object, a way to store the Bender's lookup information on disk so it can be
 	 * found again later.
 	 */
@@ -81,11 +73,12 @@ public abstract class Bender {
 	public abstract BendingData getData();
 
 	/**
-	 * Returns whether this bender is in creative mode
-	 *
-	 * @deprecated This ruins abstraction; <a href="https://trello.com/c/ph9WP946/210-remove-benderisplayer">to be removed</a>
+	 * Returns whether this bender is in creative mode. <strong>This should usually be
+	 * avoided;</strong> it ruins abstraction. There are a few scenarios where this would be
+	 * necessary however - for example, disabling item drops if the player is on creative mode.
+	 * Nonetheless, it is usually not recommended to use this, and instead add a method to Bender
+	 * and have PlayerBender override that method.
 	 */
-	@Deprecated
 	public abstract boolean isCreativeMode();
 	
 	public abstract boolean isFlying();
@@ -105,6 +98,20 @@ public abstract class Bender {
 		// TODO Account for entity Chi?
 		return true;
 	};
+
+	/**
+	 * Calculates the current power rating based off the current environment.
+	 */
+	public double calcPowerRating(UUID bendingId) {
+		BendingContext ctx = new BendingContext(getData(), getEntity(), this, new Raytrace.Result());
+
+		PowerRatingManager manager = getData().getPowerRatingManager(bendingId);
+		if (manager != null) {
+			return manager.getRating(ctx);
+		}
+		return 0;
+
+	}
 
 	/**
 	 * Checks whether the Bender can use that given ability.
@@ -143,13 +150,19 @@ public abstract class Bender {
 			BendingData data = getData();
 			EntityLivingBase entity = getEntity();
 			if (canUseAbility(ability)) {
+
+				double powerRating = calcPowerRating(ability.getBendingId());
+
 				if (data.getAbilityCooldown() == 0) {
 
 					if (data.getCanUseAbilities()) {
+
 						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
-								entity);
+								entity, powerRating);
+
 						ability.execute(abilityCtx);
 						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+
 					} else {
 						// TODO make bending disabled available for multiple things
 						AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
@@ -157,7 +170,7 @@ public abstract class Bender {
 
 				} else {
 					QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
-							raytrace);
+							raytrace, powerRating);
 				}
 			} else {
 				sendMessage("avatar.abilityLocked");
@@ -197,6 +210,8 @@ public abstract class Bender {
 
 		data.decrementCooldown();
 
+		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
+
 		// Update chi
 
 		if (!world.isRemote) {
@@ -218,7 +233,6 @@ public abstract class Bender {
 
 		List<TickHandler> tickHandlers = data.getAllTickHandlers();
 		if (tickHandlers != null) {
-			BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
 			for (TickHandler handler : tickHandlers) {
 				if (handler.tick(ctx)) {
 					// Can use this since the list is a COPY of the
@@ -229,6 +243,18 @@ public abstract class Bender {
 					data.setTickHandlerDuration(handler, newDuration);
 				}
 			}
+		}
+
+		// Update bending managers
+
+		List<PowerRatingManager> managers = data.getPowerRatingManagers();
+		for (PowerRatingManager manager : managers) {
+			manager.tickModifiers(ctx);
+		}
+
+		// Update power rating modifiers
+		if (!world.isRemote) {
+			PrModifierHandler.addPowerRatingModifiers(this);
 		}
 
 	}

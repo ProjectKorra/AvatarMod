@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,11 +30,14 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
@@ -43,12 +48,21 @@ public class EntityIcePrison extends AvatarEntity {
 	
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-	
-	public static final int IMPRISONED_TIME = 100;
-	
+
+	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey
+			(EntityIcePrison.class, DataSerializers.VARINT);
+
+	public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager
+			.createKey(EntityIcePrison.class, DataSerializers.VARINT);
+
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
-	
+
+	private boolean meltInSun;
+	private boolean meltInFire;
+	private boolean attackOnce;
+	private boolean attackRepeat;
+
 	/**
 	 * @param world
 	 */
@@ -62,6 +76,8 @@ public class EntityIcePrison extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_IMPRISONED, Optional.absent());
+		dataManager.register(SYNC_IMPRISONED_TIME, 100);
+		dataManager.register(SYNC_MAX_IMPRISONED_TIME, 100);
 	}
 	
 	public EntityLivingBase getImprisoned() {
@@ -86,7 +102,31 @@ public class EntityIcePrison extends AvatarEntity {
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
 		}
-		if (ticksExisted >= IMPRISONED_TIME) {
+
+		// Countdown imprisonedTime
+		if (!world.isRemote) {
+			setImprisonedTime(getImprisonedTime() - 1);
+
+			// Reduce imprisonedTime 50% faster in the sun
+			if (meltInSun) {
+				if (world.isDaytime()) {
+					boolean inSky = world.canBlockSeeSky(getPosition());
+					if (inSky && ticksExisted % 2 == 0) {
+						setImprisonedTime(getImprisonedTime() - 1);
+					}
+				}
+			}
+
+		}
+
+		// Continually damage entity
+		if (attackRepeat && !world.isRemote) {
+			if (getImprisonedTime() % 20 == 19) {
+				attackPrisoner(1);
+			}
+		}
+
+		if (getImprisonedTime() <= 0) {
 			setDead();
 			
 			if (!world.isRemote && imprisoned != null) {
@@ -94,11 +134,22 @@ public class EntityIcePrison extends AvatarEntity {
 						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
 				imprisoned.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"),
 						60, 1, false, false));
+
+				if (attackOnce || attackRepeat) {
+					attackPrisoner(2f);
+				}
+
 			}
 			
 		}
 	}
-	
+
+	private void attackPrisoner(float damageMultiplier) {
+		EntityLivingBase imprisoned = getImprisoned();
+		// TODO Custom IcePrison DamageSource
+		imprisoned.attackEntityFrom(DamageSource.ANVIL, STATS_CONFIG.icePrisonDamage * damageMultiplier);
+	}
+
 	@Override
 	public void setDead() {
 		super.setDead();
@@ -108,7 +159,15 @@ public class EntityIcePrison extends AvatarEntity {
 			speed.setBaseValue(normalBaseValue);
 		}
 	}
-	
+
+	@Override
+	public boolean onFireContact() {
+		if (meltInFire && !world.isRemote) {
+			setImprisonedTime(getImprisonedTime() - 1);
+		}
+		return false;
+	}
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
@@ -122,7 +181,46 @@ public class EntityIcePrison extends AvatarEntity {
 		imprisonedAttr.writeToNbt(nbt);
 		nbt.setDouble("NormalSpeed", normalBaseValue);
 	}
-	
+
+	/**
+	 * A countdown which returns the ticks left to be imprisoned. When the countdown is over, the
+	 * entity will be freed.
+	 */
+	public int getImprisonedTime() {
+		return dataManager.get(SYNC_IMPRISONED_TIME);
+	}
+
+	public void setImprisonedTime(int imprisonedTime) {
+		dataManager.set(SYNC_IMPRISONED_TIME, imprisonedTime);
+	}
+
+	/**
+	 * Returns the total ticks that the target will be imprisoned for.
+	 */
+	public int getMaxImprisonedTime() {
+		return dataManager.get(SYNC_MAX_IMPRISONED_TIME);
+	}
+
+	public void setMaxImprisonedTime(int maxImprisonedTime) {
+		dataManager.set(SYNC_MAX_IMPRISONED_TIME, maxImprisonedTime);
+	}
+
+	/**
+	 * Sets the statistics of this prison based on that ability data
+	 */
+	private void setStats(AbilityData data) {
+
+		attackOnce = data.getLevel() >= 2;
+		attackRepeat = data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
+		meltInSun = !data.isMasterPath(AbilityData.AbilityTreePath.SECOND);
+		meltInFire = !data.isMasterPath(AbilityData.AbilityTreePath.SECOND);
+		double imprisonedSeconds = 3 + data.getLevel();
+
+		setImprisonedTime((int) (imprisonedSeconds * 20));
+		setMaxImprisonedTime(getImprisonedTime());
+
+	}
+
 	public static boolean isImprisoned(EntityLivingBase entity) {
 		
 		return getPrison(entity) != null;
@@ -143,11 +241,17 @@ public class EntityIcePrison extends AvatarEntity {
 		
 	}
 	
-	public static void imprison(EntityLivingBase entity) {
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
 		World world = entity.world;
 		EntityIcePrison prison = new EntityIcePrison(world);
+
 		prison.setImprisoned(entity);
+		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
+
+		BendingData data = BendingData.get(entity);
+		prison.setStats(data.getAbilityData("ice_prison"));
+
 		world.spawnEntity(prison);
 	}
 	

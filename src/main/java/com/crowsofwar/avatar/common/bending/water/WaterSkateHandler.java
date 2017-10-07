@@ -36,7 +36,6 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -106,18 +105,9 @@ public class WaterSkateHandler extends TickHandler {
 			return true;
 		} else {
 			
-			float required = STATS_CONFIG.chiWaterSkateSecond / 20f;
-			Chi chi = data.chi();
-			
-			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
-			
-			if (chi.getAvailableChi() >= required || infinite) {
-				
-				if (!infinite) {
-					chi.changeTotalChi(-required);
-					chi.changeAvailableChi(-required);
-				}
-				
+			float requiredChi = STATS_CONFIG.chiWaterSkateSecond / 20f;
+			if (bender.consumeChi(requiredChi)) {
+
 				double targetSpeed = abilityData.getLevel() >= 2 ? 1.2 : 0.8;
 				
 				if (player.moveForward != 0) {
