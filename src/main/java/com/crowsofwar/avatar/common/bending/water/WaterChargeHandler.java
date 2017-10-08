@@ -18,10 +18,15 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.util.Raytrace.entityRaytrace;
+import static com.crowsofwar.avatar.common.util.Raytrace.getReachDistance;
+import static com.crowsofwar.avatar.common.util.Raytrace.getTargetBlock;
+
 public class WaterChargeHandler extends TickHandler {
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("dfb6235c-82b6-407e-beaf-a4d8045735a82");
+
 
 	/**
 	 * Gets AbilityData to be used for determining lightning strength. This is normally the
@@ -58,7 +63,9 @@ public class WaterChargeHandler extends TickHandler {
 			}
 			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
+
 			float size = 1;
+			float[] turbulenceValues = { 0.0f, 0.0f };
 			if (abilityData.getLevel() == 1){
 				cannon.setDamage(11);
 			}
@@ -67,10 +74,10 @@ public class WaterChargeHandler extends TickHandler {
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				cannon.setDamage(17);
-				cannon.setSizeMultiplier(size/8);
+				size = 0.25F;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				cannon.setSizeMultiplier(size*1.5F);
+				size = 6F;
 			}
 
 			fireCannon(world, entity, damage, speed, size);

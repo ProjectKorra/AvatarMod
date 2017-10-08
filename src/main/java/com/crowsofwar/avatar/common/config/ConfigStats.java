@@ -56,6 +56,9 @@ public class ConfigStats {
 	
 	@Load
 	public FireballSettings fireballSettings = new FireballSettings();
+
+	@Load
+	public ExplosionSettings explosionSettings = new ExplosionSettings();
 	
 	// @formatter:off
 	@Load
@@ -179,6 +182,23 @@ public class ConfigStats {
 		@Load
 		public double push = .75;
 		
+	}
+	public static class ExplosionSettings{
+		@Load
+		public float damage = 6;
+
+
+		@Load
+		public float explosionSize = 1.0f;
+
+		@Load
+		public boolean damageBlocks = false;
+
+		@Load
+		public double push = .75;
+
+
+
 	}
 	
 }
