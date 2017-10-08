@@ -1,16 +1,14 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.World;
+
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -26,7 +24,6 @@ public class AbilityCleanse extends Ability {
         BendingData data = ctx.getData();
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
-        World world = ctx.getWorld();
         if (bender.consumeChi(STATS_CONFIG.chiSlipstream)) {
             AbilityData abilityData = data.getAbilityData(this);
             float xp = SKILLS_CONFIG.blockPlaced;
@@ -53,10 +50,11 @@ public class AbilityCleanse extends Ability {
                             entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 2));
                             entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
                             entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
+                    }
+
+                }
+                data.getPowerRatingManager(getBendingId()).addModifier(new CleansePowerModifier());
             }
 
         }
-    }
-
-}
 

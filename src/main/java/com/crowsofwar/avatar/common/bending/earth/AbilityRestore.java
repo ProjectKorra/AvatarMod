@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.air.AirJumpPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -58,6 +59,7 @@ public class AbilityRestore extends Ability {
                         }
 
                     }
+                data.getPowerRatingManager(getBendingId()).addModifier(new RestorePowerModifier());
                 }
 
             }

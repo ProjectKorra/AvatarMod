@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.air.AirJumpPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -9,7 +9,6 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -24,7 +23,6 @@ public class AbilityPurify extends Ability {
         BendingData data = ctx.getData();
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
-        World world = ctx.getWorld();
         if (bender.consumeChi(STATS_CONFIG.chiSlipstream)) {
             float xp = SKILLS_CONFIG.blockPlaced;
             AbilityData abilityData = data.getAbilityData(this);
@@ -67,6 +65,7 @@ public class AbilityPurify extends Ability {
             }
 
         }
+        data.getPowerRatingManager(getBendingId()).addModifier(new PurifyPowerModifier());
 
     }
 }
