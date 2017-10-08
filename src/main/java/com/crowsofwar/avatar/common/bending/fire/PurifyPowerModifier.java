@@ -12,7 +12,7 @@ public class PurifyPowerModifier extends PowerRatingModifier {
         AbilityPurify purify = new AbilityPurify();
         BendingData data = ctx.getData();
         AbilityData abilityData = data.getAbilityData(purify);
-        return 10*2*abilityData.getLevel();
+        return 10+(3*abilityData.getLevel());
 
     }
 }

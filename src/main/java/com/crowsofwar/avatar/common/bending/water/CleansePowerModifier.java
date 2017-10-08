@@ -12,7 +12,7 @@ public class CleansePowerModifier extends PowerRatingModifier {
         AbilityCleanse cleanse = new AbilityCleanse();
         BendingData data = ctx.getData();
         AbilityData abilityData = data.getAbilityData(cleanse);
-        return 10*2*abilityData.getLevel();
+        return 10+(3*abilityData.getLevel());
 
     }
 }

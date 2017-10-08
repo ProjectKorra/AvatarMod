@@ -12,7 +12,7 @@ public class RestorePowerModifier extends PowerRatingModifier {
         AbilityRestore restore = new AbilityRestore();
         BendingData data = ctx.getData();
         AbilityData abilityData = data.getAbilityData(restore);
-        return 10*2*abilityData.getLevel();
+        return 10+(3*abilityData.getLevel());
 
     }
 }
