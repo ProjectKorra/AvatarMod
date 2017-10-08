@@ -13,7 +13,6 @@ public class SlipstreamPowerModifier extends PowerRatingModifier {
         AbilityData abilityData = data.getAbilityData(slipstream);
         return 10*2*abilityData.getLevel();
 
-
+        }
     }
 
-}
