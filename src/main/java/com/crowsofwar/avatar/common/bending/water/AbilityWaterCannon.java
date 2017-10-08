@@ -35,9 +35,6 @@ public class AbilityWaterCannon extends Ability{
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
 
 		if (targetPos != null || ctx.consumeWater(3)) {
-
-
-
 			if (targetPos == null) {
 				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
 			}
