@@ -30,47 +30,52 @@ public class AbilitySlipstream extends Ability {
             float xp = SKILLS_CONFIG.blockPlaced;
             AbilityData abilityData = data.getAbilityData(this);
 
+            entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
+            data.getAbilityData("slipstream").addXp(xp);
+
+
+            if (abilityData.getLevel() == 1) {
+
+                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
-                data.getAbilityData("slipstream").addXp(xp);
+                data.getAbilityData("slipstream").addXp(xp - 0.5F);
+
+            }
+
+            if (abilityData.getLevel() == 2) {
+
+                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
+                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
+                data.getAbilityData("slipstream").addXp(xp - 1.0F);
+            }
 
 
+            if (data.getAbilityData("slipstream").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
+                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
+                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
+                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
+            }
+
+            if (data.getAbilityData("slipstream").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 200));
+                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 200, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 2));
+            }
+
+        }
 
 
-                if (abilityData.getLevel()==1) {
+        public class SlipstreamModifier {
+            public static void addPowerRatingModifiers(Bender bender) {
 
-                    entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
-                    data.getAbilityData("slipstream").addXp(xp-0.5F);
+                return data.getPowerRating(Airbending.ID).addModifier(new SlipstreamModifier());
 
-                }
+            }
+        }
 
-                    if (abilityData.getLevel()==2) {
-
-                        entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
-                        entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
-                        entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
-                        data.getAbilityData("slipstream").addXp(xp - 1.0F);
-                    }
-
-
-                        if (data.getAbilityData("slipstream").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                            entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
-                        }
-
-                            if (data.getAbilityData("slipstream").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                                entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 200));
-                                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 200, 2));
-                                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 2));
-                            }
-
-                            }
-
-                        }
-                    }
-
-
+    }
+}
 
