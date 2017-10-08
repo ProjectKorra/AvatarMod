@@ -17,7 +17,6 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
-import com.sun.istack.internal.NotNull;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -166,7 +165,7 @@ public class MiscData {
 		return redirectionSource;
 	}
 
-	public void setRedirectionSource(@NotNull BenderInfo redirectionSource) {
+	public void setRedirectionSource(@Nonnull BenderInfo redirectionSource) {
 		if (redirectionSource == null) {
 			redirectionSource = new NoBenderInfo();
 		}
