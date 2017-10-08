@@ -47,8 +47,9 @@ public abstract class WaterChargeHandler extends TickHandler {
     @Override
     public boolean tick(BendingContext ctx) {
 
-        World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
+        World world = ctx.getWorld();
+        Bender bender = ctx.getBender();
         BendingData data = ctx.getData();
         EntityWaterCannon cannon = new EntityWaterCannon(world);
 
@@ -66,6 +67,7 @@ public abstract class WaterChargeHandler extends TickHandler {
 
         float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
         applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
+       // float damagePower = ctx.
 
 
         if (duration >= 40) {
@@ -76,6 +78,7 @@ public abstract class WaterChargeHandler extends TickHandler {
             }
             double speed = abilityData.getLevel() >= 1 ? 20 : 30;
             float damage = abilityData.getLevel() >= 2 ? 8 : 6;
+
             float size = 1;
             float[] turbulenceValues = { 0.0f, 0.0f };
             if (abilityData.getLevel() == 1){
@@ -86,10 +89,10 @@ public abstract class WaterChargeHandler extends TickHandler {
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                 cannon.setDamage(17);
-                cannon.setSizeMultiplier(size/8);
+                size = 0.25F;
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                cannon.setSizeMultiplier(size*1.5F);
+                size = 6F;
             }
 
 

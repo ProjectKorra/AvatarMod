@@ -35,6 +35,7 @@ public class AbilityWaterCannon extends Ability{
         boolean hasLightningCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
         Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
 
+
         if (targetPos != null || ctx.consumeWater(3)) {
 
 
