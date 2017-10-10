@@ -6,21 +6,13 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -57,6 +49,9 @@ public class EntityCloudBall extends AvatarEntity {
     public void onUpdate() {
         super.onUpdate();
         setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
+        if (ticksExisted >= 250) {
+            this.setDead();
+        }
 
         // TODO Temporary fix to avoid extra fireballs
         // Add hook or something
@@ -100,25 +95,13 @@ public class EntityCloudBall extends AvatarEntity {
     @Override
     public boolean onCollideWithSolid() {
 
-        float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
-        explosionSize *= getSize() / 30f;
-        boolean indestructible = false;
-
         if (getOwner() != null) {
             AbilityData abilityData = BendingData.get(getOwner())
                     .getAbilityData("cloudburst");
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                indestructible = true;
-                if (indestructible = true){
-                    setDead();
-                    return false;
-                }
+             }
 
-                }
-            }
-
-
-
+        }
 
         setDead();
         return true;
