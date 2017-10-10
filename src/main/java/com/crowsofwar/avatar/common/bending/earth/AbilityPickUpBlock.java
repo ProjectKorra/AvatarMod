@@ -128,7 +128,7 @@ public class AbilityPickUpBlock extends Ability {
 				floating.setOwner(entity);
 				floating.setDamageMult(damageMult);
 
-				
+
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);
 				} else {

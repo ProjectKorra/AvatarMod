@@ -30,24 +30,24 @@ public class AbilityCleanse extends Ability {
             AbilityData abilityData = data.getAbilityData(this);
             float xp = SKILLS_CONFIG.blockPlaced;
 
-            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
+            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 100));
             data.getAbilityData("cleanse").addXp(xp);
 
             if (abilityData.getLevel() == 1) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
-                entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200));
+                entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 100));
                 data.getAbilityData("cleanse").addXp(xp);
                 chi *= 1.5f;
             }
                 if (abilityData.getLevel() == 2) {
                     entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
                     entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
+                    entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
                     data.getAbilityData("cleanse").addXp(xp);
                     chi *= 2f;
                 }
                      if (data.getAbilityData("cleanse").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                        entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 200));
+                        entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 100));
                         entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
