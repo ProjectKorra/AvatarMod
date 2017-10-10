@@ -22,8 +22,10 @@ public class AbilitySlipstream extends Ability {
         BendingData data = ctx.getData();
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
-        if (bender.consumeChi(STATS_CONFIG.chiSlipstream)) {
-            float xp = SKILLS_CONFIG.blockPlaced;
+        float chi = STATS_CONFIG.chiBuff;
+        if (bender.consumeChi(chi)) {
+            float xp = SKILLS_CONFIG.buffUsed;
+
 
             AbilityData abilityData = data.getAbilityData(this);
 
@@ -33,11 +35,13 @@ public class AbilitySlipstream extends Ability {
 
 
 
+
                 if (abilityData.getLevel()==1) {
 
                     entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100));
                     entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
                     data.getAbilityData("slipstream").addXp(xp-0.5F);
+                    chi *= 1.5f;
 
 
                 }
@@ -48,6 +52,7 @@ public class AbilitySlipstream extends Ability {
                         entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
                         entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
                         data.getAbilityData("slipstream").addXp(xp - 1.0F);
+                        chi *= 2f;
 
                     }
 
@@ -58,6 +63,8 @@ public class AbilitySlipstream extends Ability {
                             entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 100));
                             entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 100, 1));
                             entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
+                            chi *= 2.5f;
+
 
                         }
 
@@ -65,6 +72,7 @@ public class AbilitySlipstream extends Ability {
                                 entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 200));
                                 entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 200, 2));
                                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 2));
+                                chi *= 2.5f;
 
                                 }
                             }
