@@ -113,19 +113,14 @@ public class AbilityPickUpBlock extends Ability {
 				floating.setItemDropsEnabled(!bender.isCreativeMode());
 
 				float damageMult = abilityData.getLevel() >= 2 ? 2 : 1;
-<<<<<<< HEAD
-
 				damageMult += ctx.getPowerRating() / 200;
 
 
 				//damageMult += ctx.getPowerRating() / 200;
 				floating.setDamageMult(damageMult);
-				
-
-=======
 				damageMult += ctx.getPowerRating() / 200;
 
->>>>>>> 509b54e53b1546e8840a5689079130c25c9b8e98
+
 				double dist = 2.5;
 				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
 				floating.setVelocity(force);
@@ -133,13 +128,7 @@ public class AbilityPickUpBlock extends Ability {
 				floating.setOwner(entity);
 				floating.setDamageMult(damageMult);
 
-<<<<<<< HEAD
-
-
-
 				
-=======
->>>>>>> 509b54e53b1546e8840a5689079130c25c9b8e98
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);
 				} else {
