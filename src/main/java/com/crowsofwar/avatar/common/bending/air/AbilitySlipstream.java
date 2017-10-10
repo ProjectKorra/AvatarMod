@@ -70,6 +70,7 @@ public class AbilitySlipstream extends Ability {
                             }
 
              data.getPowerRatingManager(getBendingId()).addModifier(new SlipstreamPowerModifier());
+
                         }
                     }
 

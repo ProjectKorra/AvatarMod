@@ -11,6 +11,7 @@ public class SlipstreamPowerModifier extends PowerRatingModifier {
         AbilitySlipstream slipstream = new AbilitySlipstream();
         BendingData data = ctx.getData();
         AbilityData abilityData = data.getAbilityData(slipstream);
+        setTicks(20+(20*abilityData.getLevel()));
         return 10+(3*abilityData.getLevel());
 
         }

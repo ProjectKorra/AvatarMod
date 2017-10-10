@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.air.AbilitySlipstream;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
@@ -12,6 +11,7 @@ public class CleansePowerModifier extends PowerRatingModifier {
         AbilityCleanse cleanse = new AbilityCleanse();
         BendingData data = ctx.getData();
         AbilityData abilityData = data.getAbilityData(cleanse);
+        setTicks(20+(20*abilityData.getLevel()));
         return 10+(3*abilityData.getLevel());
 
     }

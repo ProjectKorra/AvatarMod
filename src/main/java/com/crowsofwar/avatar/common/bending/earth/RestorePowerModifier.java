@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.air.AbilitySlipstream;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
@@ -12,6 +11,7 @@ public class RestorePowerModifier extends PowerRatingModifier {
         AbilityRestore restore = new AbilityRestore();
         BendingData data = ctx.getData();
         AbilityData abilityData = data.getAbilityData(restore);
+        setTicks(20+(20*abilityData.getLevel()));
         return 10+(3*abilityData.getLevel());
 
     }
