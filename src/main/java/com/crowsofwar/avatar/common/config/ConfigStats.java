@@ -74,7 +74,6 @@ public class ConfigStats {
 			chiWall = 2.5f,
 			chiPickUpBlock = 1.25f,
 			chiMining = 2f,
-			chiRestore = 1F,
 			chiMiningMaster = 0.5f,
 			chiFireArc = 1f,
 			chiFireball = 2f,
