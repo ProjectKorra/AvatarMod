@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.air.AirJumpPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -9,7 +9,6 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -24,26 +23,36 @@ public class AbilityPurify extends Ability {
         BendingData data = ctx.getData();
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
-        World world = ctx.getWorld();
-        if (bender.consumeChi(STATS_CONFIG.chiSlipstream)) {
-            float xp = SKILLS_CONFIG.blockPlaced;
-            AbilityData abilityData = data.getAbilityData(this);
+        AbilityData abilityData = data.getAbilityData(this);
+        float chi = STATS_CONFIG.chiBuff;
+        if (abilityData.getLevel()==1){
+            chi *= 1.5f;
+        }
+        if (abilityData.getLevel()==2){
+            chi *= 2f;
+        }
+        if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)){
+            chi *= 2.5F;
+        }
+        if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)){
+            chi *= 2.5F;
+        }
+        if (bender.consumeChi(chi)) {
+            float xp = SKILLS_CONFIG.buffUsed;
 
             entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
             data.getAbilityData("purify").addXp(xp);
 
 
-
-
-            if (abilityData.getLevel()==1) {
+            if (abilityData.getLevel() == 1) {
 
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
-                data.getAbilityData("purify").addXp(xp-0.5F);
+                data.getAbilityData("purify").addXp(xp - 0.5F);
 
             }
 
-            if (abilityData.getLevel()==2) {
+            if (abilityData.getLevel() == 2) {
 
                 entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 100));
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
@@ -66,7 +75,9 @@ public class AbilityPurify extends Ability {
                 entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 200));
             }
 
+            PurifyPowerModifier modifier = new PurifyPowerModifier();
+            modifier.setTicks(20+(20*abilityData.getLevel()));
+            data.getPowerRatingManager(getBendingId()).addModifier(new PurifyPowerModifier());
         }
-
     }
 }

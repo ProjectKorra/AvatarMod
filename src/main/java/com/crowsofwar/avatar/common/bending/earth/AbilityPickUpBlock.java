@@ -115,12 +115,19 @@ public class AbilityPickUpBlock extends Ability {
 				float damageMult = abilityData.getLevel() >= 2 ? 2 : 1;
 				damageMult += ctx.getPowerRating() / 200;
 
+
+				//damageMult += ctx.getPowerRating() / 200;
+				floating.setDamageMult(damageMult);
+				damageMult += ctx.getPowerRating() / 200;
+
+
 				double dist = 2.5;
 				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
 				floating.setVelocity(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
 				floating.setDamageMult(damageMult);
+
 
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);
