@@ -39,30 +39,30 @@ public class AbilityCleanse extends Ability {
                 data.getAbilityData("cleanse").addXp(xp);
                 chi *= 1.5f;
             }
-                if (abilityData.getLevel() == 2) {
-                    entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
-                    data.getAbilityData("cleanse").addXp(xp);
-                    chi *= 2f;
-                }
-                     if (data.getAbilityData("cleanse").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                        entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 100));
-                        entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 1));
-                        entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
-                        entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
-                         chi *= 2.5f;
-                    }
-                          if (data.getAbilityData("cleanse").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 2));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
-                            entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
-                              chi *= 2.5f;
-                    }
-
-                }
-                data.getPowerRatingManager(getBendingId()).addModifier(new CleansePowerModifier());
+            if (abilityData.getLevel() == 2) {
+                entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
+                entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
+                data.getAbilityData("cleanse").addXp(xp);
+                chi *= 2f;
             }
-
+            if (data.getAbilityData("cleanse").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 100));
+                entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
+                chi *= 2.5f;
+            }
+            if (data.getAbilityData("cleanse").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
+                chi *= 2.5f;
+            }
+            CleansePowerModifier modifier = new CleansePowerModifier();
+            modifier.setTicks(20+(20*abilityData.getLevel()));
+            data.getPowerRatingManager(getBendingId()).addModifier(new CleansePowerModifier());
+            }
         }
+    }
 

@@ -8,10 +8,8 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 public class RestorePowerModifier extends PowerRatingModifier {
     @Override
     public double get(BendingContext ctx) {
-        AbilityRestore restore = new AbilityRestore();
         BendingData data = ctx.getData();
-        AbilityData abilityData = data.getAbilityData(restore);
-        setTicks(20+(20*abilityData.getLevel()));
+        AbilityData abilityData = data.getAbilityData(new AbilityRestore());
         return 10+(3*abilityData.getLevel());
 
     }

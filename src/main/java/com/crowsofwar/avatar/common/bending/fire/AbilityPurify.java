@@ -32,18 +32,16 @@ public class AbilityPurify extends Ability {
             data.getAbilityData("purify").addXp(xp);
 
 
-
-
-            if (abilityData.getLevel()==1) {
+            if (abilityData.getLevel() == 1) {
 
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
-                data.getAbilityData("purify").addXp(xp-0.5F);
+                data.getAbilityData("purify").addXp(xp - 0.5F);
                 chi *= 1.5f;
 
             }
 
-            if (abilityData.getLevel()==2) {
+            if (abilityData.getLevel() == 2) {
 
                 entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 100));
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
@@ -69,8 +67,9 @@ public class AbilityPurify extends Ability {
                 chi *= 2.5f;
             }
 
+            PurifyPowerModifier modifier = new PurifyPowerModifier();
+            modifier.setTicks(20+(20*abilityData.getLevel()));
+            data.getPowerRatingManager(getBendingId()).addModifier(new PurifyPowerModifier());
         }
-        data.getPowerRatingManager(getBendingId()).addModifier(new PurifyPowerModifier());
-
     }
 }

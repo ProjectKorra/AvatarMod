@@ -8,10 +8,8 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 public class SlipstreamPowerModifier extends PowerRatingModifier {
     @Override
     public double get(BendingContext ctx) {
-        AbilitySlipstream slipstream = new AbilitySlipstream();
         BendingData data = ctx.getData();
-        AbilityData abilityData = data.getAbilityData(slipstream);
-        setTicks(20+(20*abilityData.getLevel()));
+        AbilityData abilityData = data.getAbilityData(new AbilitySlipstream());
         return 10+(3*abilityData.getLevel());
 
         }

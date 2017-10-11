@@ -75,12 +75,15 @@ public class AbilitySlipstream extends Ability {
                                 chi *= 2.5f;
 
                                 }
+
+
+                            SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();
+                            modifier.setTicks(20+(20*abilityData.getLevel()));
+                            data.getPowerRatingManager(getBendingId()).addModifier(new SlipstreamPowerModifier());
+
+                                }
                             }
-
-             data.getPowerRatingManager(getBendingId()).addModifier(new SlipstreamPowerModifier());
-
                         }
-                    }
 
 
 
