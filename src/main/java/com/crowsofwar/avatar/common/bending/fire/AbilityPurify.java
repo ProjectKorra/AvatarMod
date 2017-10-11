@@ -23,10 +23,22 @@ public class AbilityPurify extends Ability {
         BendingData data = ctx.getData();
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
+        AbilityData abilityData = data.getAbilityData(this);
         float chi = STATS_CONFIG.chiBuff;
+        if (abilityData.getLevel()==1){
+            chi *= 1.5f;
+        }
+        if (abilityData.getLevel()==2){
+            chi *= 2f;
+        }
+        if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)){
+            chi *= 2.5F;
+        }
+        if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)){
+            chi *= 2.5F;
+        }
         if (bender.consumeChi(chi)) {
-            float xp = SKILLS_CONFIG.blockPlaced;
-            AbilityData abilityData = data.getAbilityData(this);
+            float xp = SKILLS_CONFIG.buffUsed;
 
             entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
             data.getAbilityData("purify").addXp(xp);
@@ -37,7 +49,6 @@ public class AbilityPurify extends Ability {
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
                 data.getAbilityData("purify").addXp(xp - 0.5F);
-                chi *= 1.5f;
 
             }
 
@@ -47,7 +58,6 @@ public class AbilityPurify extends Ability {
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
                 data.getAbilityData("purify").addXp(xp - 1.0F);
-                chi *= 2f;
             }
 
 
@@ -56,7 +66,6 @@ public class AbilityPurify extends Ability {
                 entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 100));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
-                chi *= 2.5f;
             }
 
             if (data.getAbilityData("purify").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -64,7 +73,6 @@ public class AbilityPurify extends Ability {
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 200, 1));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 1));
                 entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 200));
-                chi *= 2.5f;
             }
 
             PurifyPowerModifier modifier = new PurifyPowerModifier();

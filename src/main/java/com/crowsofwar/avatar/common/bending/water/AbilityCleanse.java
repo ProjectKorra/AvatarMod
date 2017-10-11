@@ -24,11 +24,23 @@ public class AbilityCleanse extends Ability {
         BendingData data = ctx.getData();
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
+        AbilityData abilityData = data.getAbilityData(this);
         float chi = STATS_CONFIG.chiBuff;
+        if (abilityData.getLevel()==1){
+            chi *= 1.5f;
+        }
+        if (abilityData.getLevel()==2){
+            chi *= 2f;
+        }
+        if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)){
+            chi *= 2.5F;
+        }
+        if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)){
+            chi *= 2.5F;
+        }
 
         if (bender.consumeChi(chi)) {
-            AbilityData abilityData = data.getAbilityData(this);
-            float xp = SKILLS_CONFIG.blockPlaced;
+            float xp = SKILLS_CONFIG.buffUsed;
 
             entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 100));
             data.getAbilityData("cleanse").addXp(xp);
@@ -37,27 +49,23 @@ public class AbilityCleanse extends Ability {
                 entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
                 entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 100));
                 data.getAbilityData("cleanse").addXp(xp);
-                chi *= 1.5f;
             }
             if (abilityData.getLevel() == 2) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
                 entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
                 data.getAbilityData("cleanse").addXp(xp);
-                chi *= 2f;
             }
             if (data.getAbilityData("cleanse").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 100));
                 entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 1));
                 entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
-                chi *= 2.5f;
             }
             if (data.getAbilityData("cleanse").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 2));
                 entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 200));
-                chi *= 2.5f;
             }
             CleansePowerModifier modifier = new CleansePowerModifier();
             modifier.setTicks(20+(20*abilityData.getLevel()));
