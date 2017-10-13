@@ -66,8 +66,6 @@ public class AbilityMining extends Ability {
 			World world = ctx.getWorld();
 			
 			AbilityData abilityData = ctx.getAbilityData();
-			float xp = abilityData.getTotalXp();
-			
 			abilityData.addXp(SKILLS_CONFIG.miningUse);
 			
 			//@formatter:off
@@ -76,7 +74,7 @@ public class AbilityMining extends Ability {
 			// 4 = N 0x -z    5 = NE +x -z
 			// 6 = E +x 0z    7 = SE +x +z
 			//@formatter:on
-			
+
 			int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
 			int x = 0, z = 0;
 			if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
@@ -113,9 +111,11 @@ public class AbilityMining extends Ability {
 				rays.clear();
 				rays.add(new VectorI(entity.getPosition().up(pitch < 0 ? 0 : 1)));
 			}
-			
+
 			int dist = getDistance(abilityData.getLevel(), abilityData.getPath());
+			dist += (int) (ctx.getPowerRating() / 40);
 			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
+			fortune += (int) Math.ceil(ctx.getPowerRating() / 50);
 			
 			// For keeping track of already inspected/to-be-inspected positions
 			// of ore blocks

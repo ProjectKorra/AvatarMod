@@ -39,16 +39,20 @@ public class AbilityEarthSpikes extends Ability {
 
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
-            double mult = ctx.getLevel() >= 1 ? 14 : 8;
+            double speed = ctx.getLevel() >= 1 ? 14 : 8;
+            speed += ctx.getPowerRating() / 100 * 4;
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
                 unstoppable = true;
             }
 
+            float damageMult = 0.90f + xp / 100;
+            damageMult += ctx.getPowerRating() / 30f;
+
             EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
             earthspike.setOwner(entity);
             earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-            earthspike.setVelocity(look.times(mult));
-            earthspike.setDamageMult(.90f + xp / 100);
+            earthspike.setVelocity(look.times(speed));
+            earthspike.setDamageMult(damageMult);
             earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
             earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
             earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
