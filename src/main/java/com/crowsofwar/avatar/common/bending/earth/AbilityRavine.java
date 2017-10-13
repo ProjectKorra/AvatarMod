@@ -60,12 +60,13 @@ public class AbilityRavine extends Ability {
 			
 			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 			
-			double mult = ctx.getLevel() >= 1 ? 14 : 8;
-			
+			double speed = ctx.getLevel() >= 1 ? 14 : 8;
+			speed += ctx.getPowerRating() / 25;
+
 			EntityRavine ravine = new EntityRavine(world);
 			ravine.setOwner(entity);
 			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
-			ravine.setVelocity(look.times(mult));
+			ravine.setVelocity(look.times(speed));
 			ravine.setDamageMult(.75f + xp / 100);
 			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));

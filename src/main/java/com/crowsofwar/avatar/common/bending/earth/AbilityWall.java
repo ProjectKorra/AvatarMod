@@ -58,26 +58,27 @@ public class AbilityWall extends Ability {
 			BendingData data = ctx.getData();
 			
 			AbilityData abilityData = data.getAbilityData(this);
-			float xp = abilityData.getTotalXp();
+			// This "power" variable is the player's experience, but power rating can boost power by up to 25 points
+			float power = abilityData.getTotalXp() + (float) ctx.getPowerRating() / 100 * 25;
 			
 			int whMin, whMax;
 			Random random = new Random();
-			if (xp == 100) {
+			if (power == 100) {
 				whMin = whMax = 5;
-			} else if (xp >= 75) {
+			} else if (power >= 75) {
 				whMin = 4;
 				whMax = 5;
-			} else if (xp >= 50) {
+			} else if (power >= 50) {
 				whMin = 3;
 				whMax = 4;
-			} else if (xp >= 25) {
+			} else if (power >= 25) {
 				whMin = 2;
 				whMax = 4;
 			} else {
 				whMin = 2;
 				whMax = 3;
 			}
-			
+
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 			
 			if (!ctx.isLookingAtBlock()) return;
