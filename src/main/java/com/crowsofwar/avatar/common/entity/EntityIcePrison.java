@@ -16,7 +16,9 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
@@ -208,13 +210,13 @@ public class EntityIcePrison extends AvatarEntity {
 	/**
 	 * Sets the statistics of this prison based on that ability data
 	 */
-	private void setStats(AbilityData data) {
+	private void setStats(AbilityData data, double powerRating) {
 
 		attackOnce = data.getLevel() >= 2;
 		attackRepeat = data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
 		meltInSun = !data.isMasterPath(AbilityData.AbilityTreePath.SECOND);
 		meltInFire = !data.isMasterPath(AbilityData.AbilityTreePath.SECOND);
-		double imprisonedSeconds = 3 + data.getLevel();
+		double imprisonedSeconds = 3 + data.getLevel() + powerRating / 35f;
 
 		setImprisonedTime((int) (imprisonedSeconds * 20));
 		setMaxImprisonedTime(getImprisonedTime());
@@ -249,8 +251,8 @@ public class EntityIcePrison extends AvatarEntity {
 		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
 
-		BendingData data = BendingData.get(entity);
-		prison.setStats(data.getAbilityData("ice_prison"));
+		Bender bender = Bender.get(entity);
+		prison.setStats(bender.getData().getAbilityData("ice_prison"), bender.calcPowerRating(Icebending.ID));
 
 		world.spawnEntity(prison);
 	}
