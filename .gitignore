@@ -39,5 +39,6 @@ out/
 
 *.ipr
 *.iws
+*.iml
 
 **/Thumbs.db
