@@ -71,6 +71,7 @@ public class AbilityLightningSpear extends Ability {
 
             float damage = 6F;
             damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
+            damage *= 1 + ctx.getPowerRating() / 200f;
 
             EntityLightningSpear spear = new EntityLightningSpear(world);
             spear.setPosition(target);

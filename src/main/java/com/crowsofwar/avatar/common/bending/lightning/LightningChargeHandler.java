@@ -45,6 +45,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+		double powerRating = ctx.getBender().calcPowerRating(Lightningbending.ID);
 
 		if (world.isRemote) {
 			return false;
@@ -75,6 +76,9 @@ public abstract class LightningChargeHandler extends TickHandler {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				size = 1.5f;
 			}
+
+			speed += powerRating / 15;
+			damage += powerRating / 50;
 
 			fireLightning(world, entity, damage, speed, size, turbulenceValues);
 
