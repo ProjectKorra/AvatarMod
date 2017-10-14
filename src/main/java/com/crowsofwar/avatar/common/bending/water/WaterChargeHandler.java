@@ -25,7 +25,7 @@ import static com.crowsofwar.avatar.common.util.Raytrace.getTargetBlock;
 public class WaterChargeHandler extends TickHandler {
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
-			("dfb6235c-82b6-407e-beaf-a4d8045735a82");
+			("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
 
 	/**
 	 * Gets AbilityData to be used for determining water cannon strength. This is normally the
@@ -63,28 +63,25 @@ public class WaterChargeHandler extends TickHandler {
 				return true;
 			}
 
-			// TODO Fix damage / speed logic -- these values are not used ...?
-
 			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
-			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
-			damage += powerRating / 50;
+			float damage = 8;
 
 			float size = 1;
-			float[] turbulenceValues = { 0.0f, 0.0f };
 			if (abilityData.getLevel() == 1){
-				cannon.setDamage(11);
+				damage = 11;
 			}
 			if (abilityData.getLevel() == 2){
-				cannon.setDamage(12);
+				damage = 12;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				cannon.setDamage(17);
-				size = 0.25F;
+				damage = 17;
+				size = 0.5f;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				size = 6F;
+				size = 2;
 			}
+			damage += powerRating / 30;
 
 			fireCannon(world, entity, damage, speed, size);
 
@@ -92,7 +89,6 @@ public class WaterChargeHandler extends TickHandler {
 
 			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 					SoundCategory.PLAYERS, 1, 2);
-
 
 			return true;
 
@@ -102,15 +98,13 @@ public class WaterChargeHandler extends TickHandler {
 
 	}
 
-
-
 	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,
 							float size) {
 
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
 
 		cannon.setOwner(entity);
-		cannon.setDamage(10);
+		cannon.setDamage(damage);
 		cannon.setSizeMultiplier(size);
 
 		cannon.setPosition(Vector.getEyePos(entity));
@@ -124,7 +118,6 @@ public class WaterChargeHandler extends TickHandler {
 
 	}
 
-
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
 		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
@@ -136,8 +129,6 @@ public class WaterChargeHandler extends TickHandler {
 				"Water charge modifier", multiplier - 1, 1));
 
 	}
-
-
 
 }
 
