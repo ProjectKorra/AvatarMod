@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityEarthSpike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
@@ -27,9 +28,10 @@ public class AbilityEarthSpikes extends Ability {
         float xp = abilityData.getTotalXp();
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
-
-
         Bender bender = ctx.getBender();
+        if (i >= 8){
+            i = 0;
+        }
 
         float chi = STATS_CONFIG.chiEarthspike;
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
@@ -49,7 +51,8 @@ public class AbilityEarthSpikes extends Ability {
             EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
             double mult = ctx.getLevel() >= 1 ? 14 : 8;
-            Vector speed =(look.times(mult));
+            // Vector speed =(look.times(mult));
+            double speed = 5;
 
             if (abilityData.getLevel() == 1) {
                 earthspike.setVelocity(look.times(mult * 5));
@@ -59,24 +62,27 @@ public class AbilityEarthSpikes extends Ability {
                 earthspike.setVelocity(look.times(mult * 10));
             }
 
-                Double angle = i * 45;
-                Vector direction = Vector.toRectangular(angle, 0);
+            Double angle = i * 45;
+            Vector direction = Vector.toRectangular(angle, 0);
 
-                earthspike.setOwner(entity);
-                earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-                earthspike.setVelocity(speed);
-                earthspike.setDamageMult(damage + xp / 100);
-                earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
-                earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
-                earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-                world.spawnEntity(earthspike);
-                if (i<8 && abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)){
-                    earthspike.setVelocity(direction times speed);
+            earthspike.setOwner(entity);
+            earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
+            earthspike.setVelocity(look.times(mult));
+            earthspike.setDamageMult(damage + xp / 100);
+            earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
+            earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
+            earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+            world.spawnEntity(earthspike);
+            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                while (i < 8) {
+                    earthspike.setVelocity(direction.times(speed));
                     i += 1;
+                    world.spawnEntity(earthspike);
+
+                }
 
             }
 
         }
-
     }
 }
