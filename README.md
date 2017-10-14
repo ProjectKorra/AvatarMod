@@ -43,3 +43,8 @@ If you want to mess around with the code, but not join the team, there is still 
 available to everybody at [readthedocs](http://avatarmod-docs.readthedocs.io/en/latest/).
 Instructions on installing the code are [here](http://avatarmod-docs.readthedocs.io/en/latest/setup
 .html).
+
+Credits
+-------
+
+See [credits.txt](https://github.com/ProjectKorra/AvatarMod/blob/master/credits.txt).
