@@ -16,7 +16,9 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
@@ -216,7 +218,7 @@ public class EntitySandPrison extends AvatarEntity {
 		this.vulnerableToAirbending = vulnerableToAirbending;
 	}
 
-	private void setStats(AbilityData abilityData) {
+	private void setStats(AbilityData abilityData, double powerRating) {
 
 		float imprisonedSeconds = abilityData.getLevel() >= 1 ? 5 : 4;
 		damageEntity = false;
@@ -231,6 +233,8 @@ public class EntitySandPrison extends AvatarEntity {
 			imprisonedSeconds = 12;
 			vulnerableToAirbending = false;
 		}
+
+		imprisonedSeconds += powerRating / 50;
 
 		setImprisonedTime((int) (imprisonedSeconds * 20));
 		setMaxImprisonedTime((int) (imprisonedSeconds * 20));
@@ -267,7 +271,10 @@ public class EntitySandPrison extends AvatarEntity {
 		EntitySandPrison prison = new EntitySandPrison(world);
 		prison.setImprisoned(entity);
 		prison.copyLocationAndAnglesFrom(entity);
-		prison.setStats(AbilityData.get(owner, "sand_prison"));
+
+		double powerRating = Bender.get(owner).calcPowerRating(Sandbending.ID);
+		prison.setStats(AbilityData.get(owner, "sand_prison"), powerRating);
+
 		world.spawnEntity(prison);
 	}
 
