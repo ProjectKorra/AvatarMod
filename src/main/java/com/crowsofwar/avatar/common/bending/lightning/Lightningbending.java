@@ -37,7 +37,6 @@ public class Lightningbending extends BendingStyle {
 	
 	public Lightningbending() {
 		
-		addAbility("lightning_strike");
 		addAbility("lightning_arc");
 		addAbility("lightning_redirect");
 		addAbility("lightning_spear");

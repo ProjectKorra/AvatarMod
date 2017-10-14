@@ -37,7 +37,6 @@ public class Icebending extends BendingStyle {
 	
 	public Icebending() {
 		
-		addAbility("ice_walk");
 		addAbility("ice_burst");
 		addAbility("ice_prison");
 		

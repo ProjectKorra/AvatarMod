@@ -19,7 +19,6 @@ package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
@@ -28,7 +27,6 @@ import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIceWalk;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.bending.lightning.*;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
@@ -244,8 +242,6 @@ public class AvatarMod {
 		Abilities.register(new AbilityAirblade());
 		Abilities.register(new AbilityMining());
 		Abilities.register(new AbilityAirBubble());
-		Abilities.register(new AbilityLightningStrike());
-		Abilities.register(new AbilityIceWalk());
 		Abilities.register(new AbilityIceBurst());
 		Abilities.register(new AbilityIcePrison());
 		Abilities.register(new AbilitySandPrison());
