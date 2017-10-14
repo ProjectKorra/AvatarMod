@@ -4,10 +4,8 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityEarthSpike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
@@ -76,8 +74,9 @@ public class AbilityEarthSpikes extends Ability {
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                 while (i < 8) {
                     earthspike.setVelocity(direction.times(speed));
-                    i += 1;
                     world.spawnEntity(earthspike);
+                    i += 1;
+
 
                 }
 
