@@ -36,13 +36,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityEarthSpike extends AvatarEntity {
 
-
-
     private float damageMult;
 
-    /**
-     * @param world
-     */
     public EntityEarthSpike(World world) {
         super(world);
         setSize(1, 1);
@@ -52,6 +47,7 @@ public class EntityEarthSpike extends AvatarEntity {
     public void setDamageMult(float mult) {
         this.damageMult = mult;
     }
+
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
@@ -67,44 +63,48 @@ public class EntityEarthSpike extends AvatarEntity {
     public void onEntityUpdate() {
 
         super.onEntityUpdate();
-
         setVelocity(Vector.ZERO);
 
         if (ticksExisted >= 15) {
             this.setDead();
         }
-        if (!world.isRemote && getOwner() != null) {
-            BendingData data = BendingData.get(getOwner());
-            if (data != null) {
-                data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
-            }
-        }
     }
 
-    private boolean attackEntity(Entity entity) {
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+    	if (!world.isRemote) {
+    		pushEntity(entity);
+    		if (attackEntity(entity)) {
 
+    			if (getOwner() != null) {
+					BendingData data = BendingData.get(getOwner());
+					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
+				}
+
+			}
+		}
+	}
+
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return true;
+	}
+
+	private boolean attackEntity(Entity entity) {
         if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-
-
             DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
             float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
             return entity.attackEntityFrom(ds, damage);
-
-
         }
 
         return false;
-
     }
 
+    private void pushEntity(Entity entity) {
+    	Vector entityPos = Vector.getEntityPos(entity);
+    	Vector direction = entityPos.minus(this.position());
+    	Vector velocity = direction.times(STATS_CONFIG.ravineSettings.push);
+    	entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+	}
+
 }
-
-
-
-
-
-
-        // Destroy non-solid blocks in the ravine
-
-
-

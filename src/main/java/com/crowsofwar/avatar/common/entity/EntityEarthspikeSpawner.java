@@ -27,10 +27,10 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
+
     private Vector initialPosition;
-    public static boolean unstoppable = false;
 
-
+    private boolean unstoppable;
     private float damageMult;
     private double maxTravelDistanceSq;
     private boolean breakBlocks;
@@ -66,7 +66,15 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         return position().sqrDist(initialPosition);
     }
 
-    @Override
+	public boolean isUnstoppable() {
+		return unstoppable;
+	}
+
+	public void setUnstoppable(boolean unstoppable) {
+		this.unstoppable = unstoppable;
+	}
+
+	@Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
     }

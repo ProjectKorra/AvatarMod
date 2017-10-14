@@ -32,14 +32,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			(EntityWaterCannon.class, DataSerializers.FLOAT);
 
 	/**
-	 * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
+	 * If the water cannon hits an entity, the water cannon "sticks to" that entity and continues to
 	 * damage it.
 	 */
 	@Nullable
 	private EntityLivingBase stuckTo;
 
 	/**
-	 * If the lightning hits an entity or the ground, the lightning "sticks to" that position and
+	 * If the water cannon hits an entity or the ground, the water cannon "sticks to" that position and
 	 * will die after some time after getting stuck.
 	 */
 	private int stuckTime;
@@ -130,7 +130,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 	/**
-	 * Custom lightning collision detection which uses raytrace. Required since lightning moves
+	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
 	 * quickly and can sometimes "glitch" through an entity without detecting the collision.
 	 */
 	@Override
@@ -164,9 +164,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			AvatarUtils.afterVelocityAdded(entity);
 
 			// Add Experience
-			// Although 2 lightning entities are fired in each lightning ability, this won't
+			// Although 2 water cannon entities are fired in each water cannon ability, this won't
 			// cause 2x XP rewards as this only happens when the entity is successfully attacked
-			// (hurtResistantTime prevents the 2 lightning entities from both damaging at once)
+			// (hurtResistantTime prevents the 2 water cannon entities from both damaging at once)
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
 				AbilityData abilityData = data.getAbilityData("water_cannon");
