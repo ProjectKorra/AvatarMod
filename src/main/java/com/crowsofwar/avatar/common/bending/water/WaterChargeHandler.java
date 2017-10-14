@@ -57,12 +57,19 @@ public class WaterChargeHandler extends TickHandler {
 
 		if (duration >= 40) {
 
+			double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
+
 			AbilityData abilityData = getLightningData(ctx);
 			if (abilityData == null) {
 				return true;
 			}
+
+			// TODO Fix damage / speed logic -- these values are not used ...?
+
 			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
+			speed += powerRating / 15;
 			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
+			damage += powerRating / 50;
 
 			float size = 1;
 			float[] turbulenceValues = { 0.0f, 0.0f };

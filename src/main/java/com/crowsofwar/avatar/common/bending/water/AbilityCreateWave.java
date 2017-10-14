@@ -69,13 +69,16 @@ public class AbilityCreateWave extends Ability {
 						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 							speed = 18;
 						}
+						speed += ctx.getPowerRating() / 100 * 8;
 
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
 
-						wave.setDamageMultiplier(ctx.getLevel() >= 1 ? 1.5f : 1);
+						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
+						damageMult += ctx.getPowerRating() / 200f;
+						wave.setDamageMultiplier(damageMult);
 						wave.setWaveSize(ctx.getLevel() >= 2 ? 3 : 2);
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 							wave.setWaveSize(5);

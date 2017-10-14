@@ -97,6 +97,7 @@ public class WaterSkateHandler extends TickHandler {
 	private boolean skate(BendingData data, EntityLivingBase player, Bender bender) {
 		
 		AbilityData abilityData = data.getAbilityData("water_skate");
+		double powerRating = bender.calcPowerRating(Waterbending.ID);
 		
 		World world = player.world;
 		int yPos = getSurfacePos(player);
@@ -106,10 +107,12 @@ public class WaterSkateHandler extends TickHandler {
 		} else {
 			
 			float requiredChi = STATS_CONFIG.chiWaterSkateSecond / 20f;
+			requiredChi -= powerRating / 100 * 0.25f;
 			if (bender.consumeChi(requiredChi)) {
 
 				double targetSpeed = abilityData.getLevel() >= 2 ? 1.2 : 0.8;
-				
+				targetSpeed += powerRating / 400f;
+
 				if (player.moveForward != 0) {
 					if (player.moveForward < 0) {
 						targetSpeed /= 2;

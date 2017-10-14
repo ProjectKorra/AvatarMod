@@ -46,7 +46,8 @@ public class StatCtrlThrowBubble extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		BendingData data = ctx.getData();
-		
+		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
+
 		EntityWaterBubble bubble = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterBubble.class, //
 				bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
 						&& bub.getOwner() == ctx.getBenderEntity());
@@ -54,13 +55,14 @@ public class StatCtrlThrowBubble extends StatusControl {
 		if (bubble != null) {
 			
 			AbilityData adata = data.getAbilityData("water_bubble");
-			double mult = adata.getLevel() >= 1 ? 14 : 8;
+			double speed = adata.getLevel() >= 1 ? 14 : 8;
 			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
-				mult = 20;
+				speed = 20;
 			}
+			speed += powerRating / 30f;
 			
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
-			bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(mult));
+			bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
 		}
 		
 		return true;
