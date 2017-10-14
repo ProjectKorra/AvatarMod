@@ -1,7 +1,9 @@
 AvatarMod2 Credits
 ------------------
 
-Code by CrowsOfWar
+Most (90%) Code written by CrowsOfWar
+Some Code written by FavouriteDragon
+
 All models animated by CrowsOfWar
 Sky bison armor/saddle item texture by CrowsOfWar
 
