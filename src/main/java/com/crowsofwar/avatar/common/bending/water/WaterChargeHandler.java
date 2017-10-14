@@ -27,14 +27,13 @@ public class WaterChargeHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("dfb6235c-82b6-407e-beaf-a4d8045735a82");
 
-
 	/**
-	 * Gets AbilityData to be used for determining lightning strength. This is normally the
+	 * Gets AbilityData to be used for determining water cannon strength. This is normally the
 	 * bender's AbilityData, but in the case of redirection, it is the original bender's
 	 * AbilityData.
 	 */
 	@Nullable
-	private AbilityData getLightningData(BendingContext ctx) {
+	private AbilityData getWaterCannonData(BendingContext ctx) {
         return ctx.getData().getAbilityData("water_cannon");
     }
 
@@ -59,7 +58,7 @@ public class WaterChargeHandler extends TickHandler {
 
 			double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 
-			AbilityData abilityData = getLightningData(ctx);
+			AbilityData abilityData = getWaterCannonData(ctx);
 			if (abilityData == null) {
 				return true;
 			}
