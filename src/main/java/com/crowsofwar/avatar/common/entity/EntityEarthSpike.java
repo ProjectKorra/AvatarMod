@@ -73,6 +73,7 @@ public class EntityEarthSpike extends AvatarEntity {
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
     	if (!world.isRemote) {
+    		pushEntity(entity);
     		if (attackEntity(entity)) {
 
     			if (getOwner() != null) {
@@ -90,7 +91,6 @@ public class EntityEarthSpike extends AvatarEntity {
 	}
 
 	private boolean attackEntity(Entity entity) {
-
         if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
             DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
             float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
@@ -98,7 +98,13 @@ public class EntityEarthSpike extends AvatarEntity {
         }
 
         return false;
-
     }
+
+    private void pushEntity(Entity entity) {
+    	Vector entityPos = Vector.getEntityPos(entity);
+    	Vector direction = entityPos.minus(this.position());
+    	Vector velocity = direction.times(STATS_CONFIG.ravineSettings.push);
+    	entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+	}
 
 }
