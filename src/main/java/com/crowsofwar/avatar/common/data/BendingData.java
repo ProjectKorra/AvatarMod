@@ -460,66 +460,6 @@ public class BendingData {
 		this.miscData = md;
 	}
 
-	public float getFallAbsorption() {
-		return miscData.getFallAbsorption();
-	}
-
-	public void setFallAbsorption(float fallAbsorption) {
-		miscData.setFallAbsorption(fallAbsorption);
-	}
-
-	public int getTimeInAir() {
-		return miscData.getTimeInAir();
-	}
-
-	public void setTimeInAir(int time) {
-		miscData.setTimeInAir(time);
-	}
-
-	public int getAbilityCooldown() {
-		return miscData.getAbilityCooldown();
-	}
-
-	public void setAbilityCooldown(int cooldown) {
-		miscData.setAbilityCooldown(cooldown);
-	}
-
-	public void decrementCooldown() {
-		miscData.decrementCooldown();
-	}
-
-	public boolean isWallJumping() {
-		return miscData.isWallJumping();
-	}
-
-	public void setWallJumping(boolean wallJumping) {
-		miscData.setWallJumping(wallJumping);
-	}
-
-	public int getPetSummonCooldown() {
-		return miscData.getPetSummonCooldown();
-	}
-
-	public void setPetSummonCooldown(int cooldown) {
-		miscData.setPetSummonCooldown(cooldown);
-	}
-
-	public boolean getBisonFollowMode() {
-		return miscData.getBisonFollowMode();
-	}
-
-	public void setBisonFollowMode(boolean followMode) {
-		getMiscData().setBisonFollowMode(followMode);
-	}
-
-	public boolean getCanUseAbilities() {
-		return miscData.getCanUseAbilities();
-	}
-
-	public void setCanUseAbilities(boolean canUseAbilities) {
-		miscData.setCanUseAbilities(canUseAbilities);
-	}
-
 	public void writeToNbt(NBTTagCompound writeTo) {
 
 		// @formatter:off

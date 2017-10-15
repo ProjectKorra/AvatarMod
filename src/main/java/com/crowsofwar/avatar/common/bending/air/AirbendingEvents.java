@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.MiscData;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,17 +36,19 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class AirbendingEvents {
 	
 	private static void tick(EntityPlayer player, World world, BendingData data) {
+		MiscData miscData = data.getMiscData();
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
-				&& !player.isCollidedVertically && data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
+				&& !player.isCollidedVertically && miscData.getTimeInAir() >= STATS_CONFIG
+				.wallJumpDelay) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
 		}
 		if (player.onGround) {
-			data.setWallJumping(false);
-			data.setTimeInAir(0);
+			miscData.setWallJumping(false);
+			miscData.setTimeInAir(0);
 		} else {
-			data.setTimeInAir(data.getTimeInAir() + 1);
+			miscData.setTimeInAir(miscData.getTimeInAir() + 1);
 		}
 	}
 	

@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.MiscData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,10 +35,11 @@ public class FallAbsorptionHandler {
 		if (entity instanceof EntityPlayer && !entity.world.isRemote) {
 			EntityPlayer player = (EntityPlayer) entity;
 			BendingData data = BendingData.get(player);
-			if (data.getFallAbsorption() != 0) {
-				e.setDistance(e.getDistance() - data.getFallAbsorption());
+			MiscData miscData = data.getMiscData();
+			if (miscData.getFallAbsorption() != 0) {
+				e.setDistance(e.getDistance() - miscData.getFallAbsorption());
 				if (e.getDistance() < 0) e.setDistance(0);
-				data.setFallAbsorption(0);
+				miscData.setFallAbsorption(0);
 			}
 		}
 	}
