@@ -7,7 +7,17 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.Logger;
+import scala.collection.script.Start;
+
+//import java.util.logging.Level;
+// import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.minecraftforge.fml.common.FMLLog;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -15,6 +25,7 @@ public class AbilityEarthSpikes extends Ability {
     public double i = 0;
     public float damage = 0.90F;
 
+    private Logger logger = LogManager.getLogger(this.getClass());
 
     public AbilityEarthSpikes() {
         super(Earthbending.ID, "earthspike");
@@ -50,7 +61,7 @@ public class AbilityEarthSpikes extends Ability {
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
             double mult = ctx.getLevel() >= 1 ? 14 : 8;
             // Vector speed =(look.times(mult));
-            double speed = 5;
+            double speed = 3;
 
             if (abilityData.getLevel() == 1) {
                 earthspike.setVelocity(look.times(mult * 5));
@@ -60,8 +71,9 @@ public class AbilityEarthSpikes extends Ability {
                 earthspike.setVelocity(look.times(mult * 10));
             }
 
-            Double angle = i * 45;
-            Vector direction = Vector.toRectangular(angle, 0);
+          //  Double angle = i * 45;
+            // Vector direction =  Vector.toRectangular(Math.toRadians(entity.rotationYaw + i*45), Math.toRadians(entity.rotationPitch));
+            // Vector velocity = direction.times(speed);
 
             earthspike.setOwner(entity);
             earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
@@ -71,15 +83,45 @@ public class AbilityEarthSpikes extends Ability {
             earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
             earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
             world.spawnEntity(earthspike);
+
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                while (i < 8) {
-                    earthspike.setVelocity(direction.times(speed));
-                    world.spawnEntity(earthspike);
-                    i += 1;
+//                for (double i = 0; i < 8; i++) {
+//                    EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
+//                    spawner.setVelocity(velocity);
+//                    world.spawnEntity(spawner);
+//
+//
+//                }
+//
+//                //
+               //  Start facing north
 
 
+/*            logger.warn("Inside condition");
+                EnumFacing facing = EnumFacing.NORTH;
+                 Vector direction = new Vector();
+                for (int i = 0; i < 4; i++) {
+                    EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
+                    spawner.setVelocity(new Vector(facing));
+                    world.spawnEntity(spawner);
+                    facing.rotateY();
+                    logger.warn("Spawn: "+i);
+
+                }**/
+
+                logger.warn("Inside condition");
+              for (double i = 0; i < 8; i++) {
+                    Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i*45), Math.toRadians(entity.rotationPitch));
+                    Vector velocity = direction1.times(speed);
+                    EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
+                    spawner.setVelocity(velocity);
+                    world.spawnEntity(spawner);
+                  logger.warn("Spawn: "+i);
+                  logger.warn("direction: "+direction1.toString());
                 }
-
+            }
+            else {
+                logger.warn("not in condition");
             }
 
         }
