@@ -71,7 +71,7 @@ public class AbilityEarthSpikes extends Ability {
                 earthspike.setVelocity(look.times(mult * 10));
             }
 
-          //  Double angle = i * 45;
+            //  Double angle = i * 45;
             // Vector direction =  Vector.toRectangular(Math.toRadians(entity.rotationYaw + i*45), Math.toRadians(entity.rotationPitch));
             // Vector velocity = direction.times(speed);
 
@@ -85,39 +85,15 @@ public class AbilityEarthSpikes extends Ability {
             world.spawnEntity(earthspike);
 
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-//                for (double i = 0; i < 8; i++) {
-//                    EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
-//                    spawner.setVelocity(velocity);
-//                    world.spawnEntity(spawner);
-//
-//
-//                }
-//
-//                //
-               //  Start facing north
-
-
-/*            logger.warn("Inside condition");
-                EnumFacing facing = EnumFacing.NORTH;
-                 Vector direction = new Vector();
-                for (int i = 0; i < 4; i++) {
-                    EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
-                    spawner.setVelocity(new Vector(facing));
-                    world.spawnEntity(spawner);
-                    facing.rotateY();
-                    logger.warn("Spawn: "+i);
-
-                }**/
-
                 logger.warn("Inside condition");
-              for (double i = 0; i < 8; i++) {
+                for (double i = 0; i < 8; i++) {
                     Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i*45), Math.toRadians(entity.rotationPitch));
                     Vector velocity = direction1.times(speed);
                     EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
                     spawner.setVelocity(velocity);
                     world.spawnEntity(spawner);
-                  logger.warn("Spawn: "+i);
-                  logger.warn("direction: "+direction1.toString());
+                    logger.warn("Spawn: "+i);
+                    logger.warn("direction: "+direction1.toString());
                 }
             }
             else {
