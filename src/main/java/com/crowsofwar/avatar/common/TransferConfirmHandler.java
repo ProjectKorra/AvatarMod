@@ -23,10 +23,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -39,13 +41,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 public class TransferConfirmHandler {
 	
 	private static final Map<EntityPlayer, TransferData> inProgressTransfers = new HashMap<>();
-	
-	private TransferConfirmHandler() {}
-	
-	public static void registerEventHandler() {
-		MinecraftForge.EVENT_BUS.register(new TransferConfirmHandler.TickHandler());
-	}
-	
+
 	/**
 	 * Initiates the transfer process and intializes data about the transfer.
 	 * Also sends messages to parties involved.
@@ -94,11 +90,12 @@ public class TransferConfirmHandler {
 		}
 		
 	}
-	
-	private static class TickHandler {
+
+	@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+	public static class TickHandler {
 		
 		@SubscribeEvent
-		public void onTick(TickEvent.ServerTickEvent e) {
+		public static void onTick(TickEvent.ServerTickEvent e) {
 			if (e.phase == Phase.START) {
 				
 				Set<Map.Entry<EntityPlayer, TransferData>> entries = inProgressTransfers.entrySet();

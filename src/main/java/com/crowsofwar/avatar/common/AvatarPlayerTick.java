@@ -17,17 +17,20 @@
 
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarPlayerTick {
 
 	@SubscribeEvent
-	public void onPlayerTick(PlayerTickEvent e) {
+	public static void onPlayerTick(PlayerTickEvent e) {
 		// Also forces loading of data on client
 		Bender bender = Bender.get(e.player);
 		if (bender != null) {

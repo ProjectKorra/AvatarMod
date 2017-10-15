@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +28,7 @@ import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraft.world.storage.loot.functions.SetNBT;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -37,16 +39,11 @@ import static net.minecraft.world.storage.loot.LootTableList.*;
  * 
  * @author CrowsOfWar
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarDungeonLoot {
 	
-	private AvatarDungeonLoot() {}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new AvatarDungeonLoot());
-	}
-	
 	@SubscribeEvent
-	public void onLootLoad(LootTableLoadEvent e) {
+	public static void onLootLoad(LootTableLoadEvent e) {
 		
 		if (!STATS_CONFIG.addDungeonLoot) {
 			return;
@@ -113,7 +110,7 @@ public class AvatarDungeonLoot {
 		
 	}
 	
-	private boolean isLootTable(LootTableLoadEvent e, ResourceLocation... names) {
+	private static boolean isLootTable(LootTableLoadEvent e, ResourceLocation... names) {
 		for (ResourceLocation name : names) {
 			if (e.getName().equals(name)) {
 				return true;
@@ -122,7 +119,7 @@ public class AvatarDungeonLoot {
 		return false;
 	}
 	
-	private void addLoot(LootTableLoadEvent e, int emptyWeight, LootItem... items) {
+	private static void addLoot(LootTableLoadEvent e, int emptyWeight, LootItem... items) {
 		
 		String lootPoolName = "custom_avatar_loot_pools";
 		int j = 2;

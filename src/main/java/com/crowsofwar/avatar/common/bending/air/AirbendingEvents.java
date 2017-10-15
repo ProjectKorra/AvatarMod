@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -24,21 +25,16 @@ import com.crowsofwar.gorecore.GoreCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-/**
- * 
- * 
- * @author CrowsOfWar
- */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AirbendingEvents {
 	
-	private AirbendingEvents() {}
-	
-	private void tick(EntityPlayer player, World world, BendingData data) {
+	private static void tick(EntityPlayer player, World world, BendingData data) {
 		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
 				&& !player.isCollidedVertically && data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
@@ -54,7 +50,7 @@ public class AirbendingEvents {
 	}
 	
 	@SubscribeEvent
-	public void onPlayerTick(PlayerTickEvent e) {
+	public static void onPlayerTick(PlayerTickEvent e) {
 		EntityPlayer player = e.player;
 		World world = player.world;
 		BendingData data = BendingData.get(player);
@@ -62,9 +58,5 @@ public class AirbendingEvents {
 			tick(player, world, data);
 		}
 	}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new AirbendingEvents());
-	}
-	
+
 }

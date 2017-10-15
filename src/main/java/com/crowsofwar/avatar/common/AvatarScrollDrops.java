@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
@@ -28,19 +29,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/**
- * 
- * 
- * @author CrowsOfWar
- */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarScrollDrops {
 	
-	private AvatarScrollDrops() {}
-	
 	@SubscribeEvent
-	public void onMobDeath(LivingDropsEvent e) {
+	public static void onMobDeath(LivingDropsEvent e) {
 		
 		EntityLivingBase entity = e.getEntityLiving();
 		DamageSource source = e.getSource();
@@ -65,10 +61,6 @@ public class AvatarScrollDrops {
 			
 		}
 		
-	}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new AvatarScrollDrops());
 	}
 	
 }

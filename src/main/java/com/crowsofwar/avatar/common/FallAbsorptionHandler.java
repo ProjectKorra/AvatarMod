@@ -16,24 +16,20 @@
 */
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/**
- * 
- * 
- * @author CrowsOfWar
- */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FallAbsorptionHandler {
-	
-	private FallAbsorptionHandler() {}
-	
+
 	@SubscribeEvent
-	public void onFall(LivingFallEvent e) {
+	public static void onFall(LivingFallEvent e) {
 		Entity entity = e.getEntity();
 		if (entity instanceof EntityPlayer && !entity.world.isRemote) {
 			EntityPlayer player = (EntityPlayer) entity;
@@ -44,10 +40,6 @@ public class FallAbsorptionHandler {
 				data.setFallAbsorption(0);
 			}
 		}
-	}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new FallAbsorptionHandler());
 	}
 	
 }

@@ -41,6 +41,7 @@ import com.crowsofwar.avatar.common.entity.data.*;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarDungeonLoot;
+import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
@@ -98,19 +99,7 @@ public class AvatarMod {
 		registerAbilities();
 		registerBendingStyles();
 		AvatarItems.init();
-		AvatarDungeonLoot.register();
-		
 		AvatarParticles.register();
-		AirbendingEvents.register();
-		FallAbsorptionHandler.register();
-		AvatarScrollDrops.register();
-		TransferConfirmHandler.registerEventHandler();
-		TemporaryWaterHandler.register();
-		HumanBenderSpawner.register();
-		BisonInventoryPreventDismount.register();
-
-		SleepChiRegenHandler.register();
-		BisonLeftClickHandler.register();
 
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
