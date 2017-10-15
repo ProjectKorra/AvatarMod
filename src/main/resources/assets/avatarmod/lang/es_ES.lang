@@ -16,7 +16,7 @@ avatar.earthbending=Tierra Control
 avatar.earthbending.demonym=Maestro Tierra
 avatar.firebending=Fuego Control
 avatar.firebending.demonym=Maestro Fuego
-avatar.waterbending=Agua Control
+avatar.waterbending=Agua Controldueno
 avatar.waterbending.demonym=Maestro Agua
 avatar.airbending=Aire Control
 avatar.airbending.demonym=Maestro Aire
@@ -78,7 +78,7 @@ avatar.bisonWhistle.tooltipUnbound=No esta ligado
 avatar.bisonWhistle.transferAway=Tu bisonte volador ${bison} ha sido transferido a ${newOwner}.
 avatar.bisonWhistle.transferTo=Ahora te pertenece el bisonte volador de ${oldOwner}, ${bison}!
 avatar.bisonWhistle.noTransfer=[error]Nadie ha pedido una transferencia de bisonte.[/error]
-avatar.bisonWhistle.transferAway.start=${newOwner} quiere ser dueÒo de ${bison}. Presiona [keybinding=avatar.TransferBison] para confirmar, ignora para declinar.
+avatar.bisonWhistle.transferAway.start=${newOwner} quiere ser due√±o de ${bison}. Presiona [keybinding=avatar.TransferBison] para confirmar, ignora para declinar.
 avatar.bisonWhistle.transferTo.start=Un mensaje le fue enviado a ${oldOwner} para confirmar la transferencia de ${bison}.
 avatar.bisonWhistle.transferAway.ignore=La transferencia con ${newOwner} ha sido ignorada.
 avatar.bisonWhistle.transferTo.ignore=${oldOwner} ha decidido no responder a la transferencia.
@@ -152,7 +152,7 @@ avatar.ability.fireball.lvl4_1=Explosion enfocada ;; Puede llegar a destruir obs
 avatar.ability.fireball.lvl4_2=Explosion cargada ;; Toma un par de segundos para cargar, la explosion es mas grande
 
 avatar.ability.water_arc=Arco de agua
-avatar.ability.water_arc.desc=Uno de los ataques m·s comunes del Agua Control. Dispara un arco de agua a tu enemigo, pero sÛlo cuando el agua est· cerca.
+avatar.ability.water_arc.desc=Uno de los ataques m√°s comunes del Agua Control. Dispara un arco de agua a tu enemigo, pero s√≥lo cuando el agua est√° cerca.
 avatar.ability.water_arc.lvl1=Arco de agua basico
 avatar.ability.water_arc.lvl2=Rango de obtencion mas amplio
 avatar.ability.water_arc.lvl3=Mas rapido
