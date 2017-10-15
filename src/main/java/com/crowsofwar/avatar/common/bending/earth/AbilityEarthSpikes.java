@@ -38,9 +38,6 @@ public class AbilityEarthSpikes extends Ability {
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
         Bender bender = ctx.getBender();
-        if (i >= 8){
-            i = 0;
-        }
 
         float chi = STATS_CONFIG.chiEarthspike;
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
@@ -71,9 +68,6 @@ public class AbilityEarthSpikes extends Ability {
                 earthspike.setVelocity(look.times(mult * 10));
             }
 
-            //  Double angle = i * 45;
-            // Vector direction =  Vector.toRectangular(Math.toRadians(entity.rotationYaw + i*45), Math.toRadians(entity.rotationPitch));
-            // Vector velocity = direction.times(speed);
 
             earthspike.setOwner(entity);
             earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
@@ -86,7 +80,7 @@ public class AbilityEarthSpikes extends Ability {
 
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                 logger.warn("Inside condition");
-                for (double i = 0; i < 8; i++) {
+                for (int i = 0; i < 8; i++) {
                     Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i*45), Math.toRadians(entity.rotationPitch));
                     Vector velocity = direction1.times(speed);
                     EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
