@@ -67,16 +67,16 @@ public class AbilityEarthSpikes extends Ability {
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
                 earthspike.setVelocity(look.times(mult * 10));
             }
+            if (abilityData.getLevel() <= 2 || ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 
 
-            earthspike.setOwner(entity);
-            earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-            earthspike.setVelocity(look.times(mult));
-            earthspike.setDamageMult(damage + xp / 100);
-            earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
-            earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
-            earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-            world.spawnEntity(earthspike);
+                earthspike.setOwner(entity);
+                earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
+                earthspike.setVelocity(look.times(mult));
+                earthspike.setDamageMult(damage + xp / 100);
+                earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
+                world.spawnEntity(earthspike);
+            }
 
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                 logger.warn("Inside condition");
@@ -85,6 +85,9 @@ public class AbilityEarthSpikes extends Ability {
                     Vector velocity = direction1.times(speed);
                     EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
                     spawner.setVelocity(velocity);
+                    spawner.setPosition(Vector.getEntityPos(entity));
+                    spawner.setDamageMult(damage + xp / 100);
+                    spawner.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
                     world.spawnEntity(spawner);
                     logger.warn("Spawn: "+i);
                     logger.warn("direction: "+direction1.toString());
