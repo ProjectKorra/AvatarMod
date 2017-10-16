@@ -40,24 +40,33 @@ public class WaterChargeHandler extends TickHandler {
 
 	@Override
 	public boolean tick(BendingContext ctx) {
-
+		AbilityData abilityData = getLightningData(ctx);
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+		int duration = data.getTickHandlerDuration(this);
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
+		if (abilityData.getLevel() == 1){
+			duration = 35;
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)){
+			duration = 50;
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
+			duration = 30;
+		}
 
 		if (world.isRemote) {
 			return false;
 		}
 
-		int duration = data.getTickHandlerDuration(this);
+
 
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
 		if (duration >= 40) {
 
-			AbilityData abilityData = getLightningData(ctx);
 			if (abilityData == null) {
 				return true;
 			}
