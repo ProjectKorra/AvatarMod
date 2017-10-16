@@ -46,16 +46,6 @@ public class WaterChargeHandler extends TickHandler {
 		BendingData data = ctx.getData();
 		int duration = data.getTickHandlerDuration(this);
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
-		if (abilityData.getLevel() == 1){
-			duration = 35;
-		}
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)){
-			duration = 50;
-		}
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
-			duration = 30;
-		}
-
 		if (world.isRemote) {
 			return false;
 		}
