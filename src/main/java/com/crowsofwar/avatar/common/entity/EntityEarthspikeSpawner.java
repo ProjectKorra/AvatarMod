@@ -28,13 +28,13 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
     private Vector initialPosition;
-    public static boolean unstoppable = false;
 
 
     private float damageMult;
     private double maxTravelDistanceSq;
     private boolean breakBlocks;
     private boolean dropEquipment;
+    private boolean isUnstoppable;
 
     /**
      * @param world
@@ -61,6 +61,8 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     public void setDropEquipment(boolean dropEquipment) {
         this.dropEquipment = dropEquipment;
     }
+
+    public  void setUnstoppable (boolean isUnstoppable) {this.isUnstoppable = isUnstoppable;}
 
     public double getSqrDistanceTravelled() {
         return position().sqrDist(initialPosition);
@@ -100,6 +102,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         BlockPos above = getPosition().offset(EnumFacing.UP);
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = world.getBlockState(below).getBlock();
+        Block aboveBlock = world.getBlockState(above).getBlock();
 
         if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
                 world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
@@ -114,11 +117,11 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
         }
 
-        if (!world.getBlockState(below).isNormalCube()) {
+        if (!world.getBlockState(below).isNormalCube() && !isUnstoppable) {
             setDead();
         }
 
-        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
+        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !isUnstoppable) {
             setDead();
         }
 
@@ -201,24 +204,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             entity.addVelocity(push.x(), push.y(), push.z());
             AvatarUtils.afterVelocityAdded(entity);
 
-            if (dropEquipment && entity instanceof EntityLivingBase) {
-
-                EntityLivingBase elb = (EntityLivingBase) entity;
-
-                for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-
-                    ItemStack stack = elb.getItemStackFromSlot(slot);
-                    if (!stack.isEmpty()) {
-                        double chance = slot.getSlotType() == EntityEquipmentSlot.Type.HAND ? 40 : 20;
-                        if (rand.nextDouble() * 100 <= chance) {
-                            elb.entityDropItem(stack, 0);
-                            elb.setItemStackToSlot(slot, ItemStack.EMPTY);
-                        }
-                    }
-
-                }
-
-            }
             DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
             float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
             return entity.attackEntityFrom(ds, damage);

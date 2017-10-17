@@ -54,7 +54,6 @@ public class AbilityEarthSpikes extends Ability {
             EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
             double mult = ctx.getLevel() >= 1 ? 14 : 8;
-            // Vector speed =(look.times(mult));
 
             if (abilityData.getLevel() == 1 || abilityData.getLevel() == 2) {
                 earthspike.setVelocity(look.times(mult * 2));
@@ -71,12 +70,13 @@ public class AbilityEarthSpikes extends Ability {
                 earthspike.setVelocity(look.times(mult));
                 earthspike.setDamageMult(damage + xp / 100);
                 earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
+                earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
                 world.spawnEntity(earthspike);
             }
 
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                 logger.warn("Inside condition");
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 8; i++) {
                     Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), 0);
                     EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
                     spawner.setVelocity(direction1.times(mult * 2));
