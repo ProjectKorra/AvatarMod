@@ -66,6 +66,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         return position().sqrDist(initialPosition);
     }
 
+
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
@@ -128,7 +129,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         }
 
 
-        // Destroy non-solid blocks in the ravine
+        // Destroy non-solid blocks in the earthspike
         BlockPos inPos = getPosition();
         if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 

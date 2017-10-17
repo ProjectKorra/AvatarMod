@@ -56,7 +56,7 @@ public class AiCloudBall extends BendingAi {
 
         if (timeExecuting >= 40) {
             BendingData data = bender.getData();
-            execStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
+            execStatusControl(StatusControl.THROW_CLOUDBURST);
             timeExecuting = 0;
             return false;
         } else {
@@ -86,7 +86,7 @@ public class AiCloudBall extends BendingAi {
 
         if (cloudball != null) {
             cloudball.setDead();
-            bender.getData().removeStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
+            bender.getData().removeStatusControl(StatusControl.THROW_CLOUDBURST);
         }
 
     }

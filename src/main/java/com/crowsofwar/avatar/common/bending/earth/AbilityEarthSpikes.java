@@ -7,11 +7,8 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Logger;
-import scala.collection.script.Start;
-
+import org.apache.logging.log4j.Logger;;
 //import java.util.logging.Level;
 // import java.util.logging.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -58,14 +55,13 @@ public class AbilityEarthSpikes extends Ability {
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
             double mult = ctx.getLevel() >= 1 ? 14 : 8;
             // Vector speed =(look.times(mult));
-            double speed = 3;
 
-            if (abilityData.getLevel() == 1) {
-                earthspike.setVelocity(look.times(mult * 5));
+            if (abilityData.getLevel() == 1 || abilityData.getLevel() == 2) {
+                earthspike.setVelocity(look.times(mult * 2));
 
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                earthspike.setVelocity(look.times(mult * 10));
+                earthspike.setVelocity(look.times(mult * 5));
             }
             if (abilityData.getLevel() <= 2 || ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 
@@ -80,12 +76,12 @@ public class AbilityEarthSpikes extends Ability {
 
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
                 logger.warn("Inside condition");
-                for (int i = 0; i < 8; i++) {
-                    Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i*45), Math.toRadians(entity.rotationPitch));
-                    Vector velocity = direction1.times(speed);
+                for (int i = 0; i < 2; i++) {
+                    Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), 0);
                     EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
-                    spawner.setVelocity(velocity);
-                    spawner.setPosition(Vector.getEntityPos(entity));
+                    spawner.setVelocity(direction1.times(mult * 2));
+                    spawner.setOwner(entity);
+                    spawner.setPosition(entity.posX, entity.posY, entity.posZ);
                     spawner.setDamageMult(damage + xp / 100);
                     spawner.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
                     world.spawnEntity(spawner);
@@ -93,10 +89,6 @@ public class AbilityEarthSpikes extends Ability {
                     logger.warn("direction: "+direction1.toString());
                 }
             }
-            else {
-                logger.warn("not in condition");
-            }
-
         }
     }
 }
