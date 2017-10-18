@@ -31,9 +31,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
 
     private float damageMult;
-    private double maxTravelDistanceSq;
-    private boolean breakBlocks;
-    private boolean dropEquipment;
     private boolean isUnstoppable;
 
     /**
@@ -50,17 +47,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         this.damageMult = mult;
     }
 
-    public void setDistance(double dist) {
-        maxTravelDistanceSq = dist * dist;
-    }
-
-    public void setBreakBlocks(boolean breakBlocks) {
-        this.breakBlocks = breakBlocks;
-    }
-
-    public void setDropEquipment(boolean dropEquipment) {
-        this.dropEquipment = dropEquipment;
-    }
 
     public  void setUnstoppable (boolean isUnstoppable) {this.isUnstoppable = isUnstoppable;}
 
@@ -95,14 +81,15 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
         setPosition(position.plus(velocity.times(0.0000005)));
 
-        if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
-            setDead();
+        if (!world.isRemote && ticksExisted >= 100 && !isUnstoppable){
+            this.setDead();
         }
-
-        BlockPos above = getPosition().offset(EnumFacing.UP);
+        if (!world.isRemote && ticksExisted >= 200 && isUnstoppable){
+            this.setDead();
+        }
+        
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = world.getBlockState(below).getBlock();
-        Block aboveBlock = world.getBlockState(above).getBlock();
 
         if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
                 world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
@@ -126,7 +113,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         }
 
         // Destroy if in a block
-       IBlockState inBlock = world.getBlockState(getPosition());
+        IBlockState inBlock = world.getBlockState(getPosition());
         if (inBlock.isFullBlock()) {
             setDead();
         }
@@ -170,24 +157,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
                 data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
             }
         }
-
-        if (!world.isRemote && breakBlocks) {
-            BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
-            if (!last.equals(getPosition()) && !last.equals(initialPosition.toBlockPos())) {
-
-                world.destroyBlock(last.down(), true);
-
-                double travel = Math.sqrt(getSqrDistanceTravelled() / maxTravelDistanceSq);
-                double chance = -(travel - 0.5) * (travel - 0.5) + 0.25;
-                chance *= 2;
-
-                if (rand.nextDouble() <= chance) {
-                    world.destroyBlock(last.down(2), true);
-                }
-
-            }
-        }
-
     }
 
     @Override

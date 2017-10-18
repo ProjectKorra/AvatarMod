@@ -69,7 +69,6 @@ public class AbilityEarthSpikes extends Ability {
                 earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
                 earthspike.setVelocity(look.times(mult));
                 earthspike.setDamageMult(damage + xp / 100);
-                earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
                 earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
                 world.spawnEntity(earthspike);
             }
@@ -83,7 +82,6 @@ public class AbilityEarthSpikes extends Ability {
                     spawner.setOwner(entity);
                     spawner.setPosition(entity.posX, entity.posY, entity.posZ);
                     spawner.setDamageMult(damage + xp / 100);
-                    spawner.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
                     world.spawnEntity(spawner);
                     logger.warn("Spawn: "+i);
                     logger.warn("direction: "+direction1.toString());
