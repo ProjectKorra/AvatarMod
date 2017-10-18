@@ -65,7 +65,7 @@ public class RenderWave extends Render<EntityWave> {
 		GlStateManager.translate(x, y, z);
 
 
-		GlStateManager.rotate(0, 1, 0, 0);
+		GlStateManager.rotate(180, 0, 1, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
