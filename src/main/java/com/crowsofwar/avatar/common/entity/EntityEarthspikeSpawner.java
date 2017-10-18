@@ -87,7 +87,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         if (!world.isRemote && ticksExisted >= 200 && isUnstoppable){
             this.setDead();
         }
-        
+
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = world.getBlockState(below).getBlock();
 
