@@ -31,10 +31,13 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityCreateWave extends Ability {
+	private Logger logger = LogManager.getLogger(this.getClass());
 
 	public AbilityCreateWave() {
 		super(Waterbending.ID, "wave");
@@ -74,6 +77,7 @@ public class AbilityCreateWave extends Ability {
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
+						logger.warn(wave.rotationYaw);
 
 						wave.setDamageMultiplier(ctx.getLevel() >= 1 ? 1.5f : 1);
 						wave.setWaveSize(ctx.getLevel() >= 2 ? 3 : 2);

@@ -18,8 +18,10 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityEarthSpike;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -57,6 +59,9 @@ public class RenderWave extends Render<EntityWave> {
 	@Override
 	public void doRender(EntityWave entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
+		Vector look = Vector.getLookRectangular(entity).withY(0);
+		entity.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		GlStateManager.enableBlend();
@@ -65,7 +70,8 @@ public class RenderWave extends Render<EntityWave> {
 		GlStateManager.translate(x, y, z);
 
 
-		GlStateManager.rotate(180, 0, 1, 0);
+		GlStateManager.rotate(entity.rotationYaw, 0, 1, 0);
+
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
