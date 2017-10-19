@@ -24,16 +24,12 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class AbilityEarthSpikes extends Ability {
 	public float damage = 0.90F;
 
-	private Logger logger = LogManager.getLogger(this.getClass());
-
 	public AbilityEarthSpikes() {
 		super(Earthbending.ID, "earthspike");
 	}
 
 	@Override
 	public void execute(AbilityContext ctx) {
-
-		System.out.println("EXecute");
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();
@@ -55,13 +51,10 @@ public class AbilityEarthSpikes extends Ability {
 			damage = 1.5F;
 		}
 
-		System.out.println("AAA");
-
 		if (bender.consumeChi(chi)) {
 			EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
 			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 			double mult = ctx.getLevel() >= 1 ? 14 : 8;
-			// Vector speed =(look.times(mult));
 			double speed = 3;
 
 			if (abilityData.getLevel() == 1) {
@@ -78,21 +71,17 @@ public class AbilityEarthSpikes extends Ability {
 			earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
 			earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-//			world.spawnEntity(earthspike);
-
-			System.out.println("AAA");
+			world.spawnEntity(earthspike);
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 
 				for (int i = 0; i < 8; i++) {
 
-					System.out.println(i);
-
 					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 							i * 45), 0);
 					Vector velocity = direction1.times(speed);
 					EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
-					spawner.setVelocity(look.times(mult));
+					spawner.setVelocity(velocity);
 
 					spawner.setOwner(entity);
 					spawner.setPosition(entity.posX, entity.posY, entity.posZ);
@@ -102,12 +91,7 @@ public class AbilityEarthSpikes extends Ability {
 					spawner.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 
 					world.spawnEntity(spawner);
-					System.out.println(velocity);
-					logger.warn("Spawn: " + i);
-					logger.warn("direction: " + direction1.toString());
 				}
-			} else {
-				logger.warn("not in condition");
 			}
 
 		}

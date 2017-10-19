@@ -86,11 +86,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             initialPosition = position();
         }
 
-        Vector position = position();
-        Vector velocity = velocity();
-
-        setPosition(position.plus(velocity.times(0.0000005)));
-
         if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
             setDead();
         }
