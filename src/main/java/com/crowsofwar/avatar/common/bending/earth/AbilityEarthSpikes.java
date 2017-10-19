@@ -88,7 +88,8 @@ public class AbilityEarthSpikes extends Ability {
 
 					System.out.println(i);
 
-					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), Math.toRadians(entity.rotationPitch));
+					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+							i * 45), 0);
 					Vector velocity = direction1.times(speed);
 					EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
 					spawner.setVelocity(look.times(mult));
