@@ -185,7 +185,13 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     }
 
-    @Override
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) && !(entity instanceof EntityEarthspikeSpawner) && !
+				(entity instanceof EntityEarthSpike);
+	}
+
+	@Override
     public boolean onCollideWithSolid() {
         setDead();
         return false;
@@ -193,7 +199,8 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     private boolean attackEntity(Entity entity) {
 
-        if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
+        if (!(entity instanceof EntityItem && entity.ticksExisted <=
+				10) && canCollideWith(entity)) {
 
             Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
             entity.addVelocity(push.x(), push.y(), push.z());
