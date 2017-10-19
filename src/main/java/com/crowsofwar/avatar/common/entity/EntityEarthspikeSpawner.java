@@ -2,25 +2,20 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -28,10 +23,9 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
     private Vector initialPosition;
-
-
+    private boolean unstoppable;
     private float damageMult;
-    private boolean isUnstoppable;
+    private double maxTravelDistanceSq;
 
     /**
      * @param world
@@ -46,14 +40,20 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     public void setDamageMult(float mult) {
         this.damageMult = mult;
     }
+    public void isUnstoppable (boolean isUnstoppable) {
+        this.unstoppable = isUnstoppable;
+    }
 
-
-    public  void setUnstoppable (boolean isUnstoppable) {this.isUnstoppable = isUnstoppable;}
+    public void setDistance(double dist) {
+        if (unstoppable == true){
+            maxTravelDistanceSq = dist * dist * 2;
+        }
+        maxTravelDistanceSq = dist * dist;
+    }
 
     public double getSqrDistanceTravelled() {
         return position().sqrDist(initialPosition);
     }
-
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -75,23 +75,11 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             initialPosition = position();
         }
 
-<<<<<<< HEAD
-        Vector position = position();
-        Vector velocity = velocity();
-
-        setPosition(position.plus(velocity.times(0.0000005)));
-
-        if (!world.isRemote && ticksExisted >= 100 && !isUnstoppable){
-            this.setDead();
-        }
-        if (!world.isRemote && ticksExisted >= 200 && isUnstoppable){
-            this.setDead();
-=======
         if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
             setDead();
->>>>>>> origin/crows/earthspike-debug
         }
 
+        BlockPos above = getPosition().offset(EnumFacing.UP);
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = world.getBlockState(below).getBlock();
 
@@ -108,11 +96,11 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
         }
 
-        if (!world.getBlockState(below).isNormalCube() && !isUnstoppable) {
+        if (!world.getBlockState(below).isNormalCube()) {
             setDead();
         }
 
-        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !isUnstoppable) {
+        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
             setDead();
         }
 
@@ -123,7 +111,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         }
 
 
-        // Destroy non-solid blocks in the earthspike
+        // Destroy non-solid blocks in the ravine
         BlockPos inPos = getPosition();
         if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 
@@ -161,15 +149,17 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
                 data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
             }
         }
+
+
     }
 
-	@Override
-	protected boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && !(entity instanceof EntityEarthspikeSpawner) && !
-				(entity instanceof EntityEarthSpike);
-	}
+    @Override
+    protected boolean canCollideWith(Entity entity) {
+        return super.canCollideWith(entity) && !(entity instanceof EntityEarthspikeSpawner) && !
+                (entity instanceof EntityEarthSpike);
+    }
 
-	@Override
+    @Override
     public boolean onCollideWithSolid() {
         setDead();
         return false;
@@ -178,7 +168,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     private boolean attackEntity(Entity entity) {
 
         if (!(entity instanceof EntityItem && entity.ticksExisted <=
-				10) && canCollideWith(entity)) {
+                10) && canCollideWith(entity)) {
 
             Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
             entity.addVelocity(push.x(), push.y(), push.z());
@@ -196,5 +186,3 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     }
 
 }
-
-
