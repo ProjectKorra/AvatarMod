@@ -78,10 +78,9 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     }
 
     @Override
-    public void onEntityUpdate() {
+    public void onUpdate() {
 
-
-        super.onEntityUpdate();
+        super.onUpdate();
 
         if (initialPosition == null) {
             initialPosition = position();
