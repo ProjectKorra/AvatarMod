@@ -67,15 +67,15 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     }
 
     @Override
-    public void onEntityUpdate() {
+    public void onUpdate() {
 
-
-        super.onEntityUpdate();
+        super.onUpdate();
 
         if (initialPosition == null) {
             initialPosition = position();
         }
 
+<<<<<<< HEAD
         Vector position = position();
         Vector velocity = velocity();
 
@@ -86,6 +86,10 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         }
         if (!world.isRemote && ticksExisted >= 200 && isUnstoppable){
             this.setDead();
+=======
+        if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
+            setDead();
+>>>>>>> origin/crows/earthspike-debug
         }
 
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
@@ -159,7 +163,13 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         }
     }
 
-    @Override
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) && !(entity instanceof EntityEarthspikeSpawner) && !
+				(entity instanceof EntityEarthSpike);
+	}
+
+	@Override
     public boolean onCollideWithSolid() {
         setDead();
         return false;
@@ -167,7 +177,8 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     private boolean attackEntity(Entity entity) {
 
-        if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
+        if (!(entity instanceof EntityItem && entity.ticksExisted <=
+				10) && canCollideWith(entity)) {
 
             Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
             entity.addVelocity(push.x(), push.y(), push.z());
