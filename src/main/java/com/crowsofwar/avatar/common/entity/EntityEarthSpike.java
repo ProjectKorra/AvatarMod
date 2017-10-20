@@ -19,12 +19,15 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -73,18 +76,39 @@ public class EntityEarthSpike extends AvatarEntity {
         if (ticksExisted >= 15) {
             this.setDead();
         }
+        // amount of entities which were successfully attacked
+        int attacked = 0;
+
+        // Push collided entities back
+        if (!world.isRemote) {
+            List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+                    entity -> entity != getOwner());
+            if (!collided.isEmpty()) {
+                for (Entity entity : collided) {
+                    if (attackEntity(entity)) {
+                        attacked++;
+                    }
+                }
+            }
+        }
+
         if (!world.isRemote && getOwner() != null) {
             BendingData data = BendingData.get(getOwner());
             if (data != null) {
-                data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
+                data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
             }
         }
+
     }
 
     private boolean attackEntity(Entity entity) {
 
-        if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
+        if (!(entity instanceof EntityItem && entity.ticksExisted <=
+                10) && canCollideWith(entity)) {
 
+            Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
+            entity.addVelocity(push.x(), push.y(), push.z());
+            AvatarUtils.afterVelocityAdded(entity);
 
             DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
             float damage = STATS_CONFIG.ravineSettings.damage * damageMult;

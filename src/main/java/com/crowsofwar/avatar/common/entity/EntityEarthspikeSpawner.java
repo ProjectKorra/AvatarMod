@@ -103,7 +103,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
 
         // Destroy non-solid blocks in the earthspike
-        BlockPos inPos = getPosition();
         if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 
             if (inBlock.getBlockHardness(world, getPosition()) == 0) {
