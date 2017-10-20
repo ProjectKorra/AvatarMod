@@ -53,15 +53,19 @@ public class AbilityEarthSpikes extends Ability {
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
                 earthspike.setVelocity(look.times(mult * 10));
-                earthspike.isUnstoppable(true);
 
             }
-            earthspike.setOwner(entity);
-            earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-            earthspike.setVelocity(look.times(mult));
-            earthspike.setDamageMult(damage + xp / 100);
-            earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
-            world.spawnEntity(earthspike);
+            if (abilityData.getLevel() <= 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+
+
+                earthspike.setOwner(entity);
+                earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
+                earthspike.setVelocity(look.times(mult));
+                earthspike.setDamageMult(damage + xp / 100);
+                earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
+                earthspike.isUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+                world.spawnEntity(earthspike);
+            }
 
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 

@@ -79,7 +79,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             setDead();
         }
 
-        BlockPos above = getPosition().offset(EnumFacing.UP);
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = world.getBlockState(below).getBlock();
 
@@ -111,7 +110,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         }
 
 
-        // Destroy non-solid blocks in the ravine
+        // Destroy non-solid blocks in the earthspike
         BlockPos inPos = getPosition();
         if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 

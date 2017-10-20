@@ -17,10 +17,12 @@
 
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.EntityEarthSpike;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -59,6 +61,8 @@ public class RenderWave extends Render<EntityWave> {
 	@Override
 	public void doRender(EntityWave entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
+		EntityLivingBase player = new PlayerBender();
+
 		Vector look = Vector.getLookRectangular(entity).withY(0);
 		entity.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
