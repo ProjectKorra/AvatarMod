@@ -25,7 +25,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     private Vector initialPosition;
     private boolean unstoppable;
     private float damageMult;
-    private double maxTravelDistanceSq;
+    private double maxTicksAlive;
 
     /**
      * @param world
@@ -43,17 +43,8 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     public void isUnstoppable (boolean isUnstoppable) {
         this.unstoppable = isUnstoppable;
     }
+    public void maxTicks (float ticks) {this.maxTicksAlive = ticks;}
 
-    public void setDistance(double dist) {
-        if (unstoppable == true){
-            maxTravelDistanceSq = dist * dist * 2;
-        }
-        maxTravelDistanceSq = dist * dist;
-    }
-
-    public double getSqrDistanceTravelled() {
-        return position().sqrDist(initialPosition);
-    }
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -75,9 +66,10 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             initialPosition = position();
         }
 
-        if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
+        if (!world.isRemote && ticksExisted >= maxTicksAlive) {
             setDead();
         }
+
 
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = world.getBlockState(below).getBlock();
@@ -154,8 +146,9 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     @Override
     protected boolean canCollideWith(Entity entity) {
-        return super.canCollideWith(entity) && !(entity instanceof EntityEarthspikeSpawner) && !
+        return super.canCollideWith(entity)&& !(entity instanceof EntityEarthspikeSpawner) && !
                 (entity instanceof EntityEarthSpike);
+
     }
 
     @Override

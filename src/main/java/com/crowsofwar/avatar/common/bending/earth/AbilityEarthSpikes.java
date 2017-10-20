@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityEarthSpikes extends Ability {
-    public float damage = 0.90F;
+
 
     public AbilityEarthSpikes() {
         super(Earthbending.ID, "earthspike");
@@ -21,7 +21,9 @@ public class AbilityEarthSpikes extends Ability {
     public void execute(AbilityContext ctx) {
 
         AbilityData abilityData = ctx.getData().getAbilityData(this);
+        float damage = 0.90F;
         float xp = abilityData.getTotalXp();
+        float ticks = 100;
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
         Bender bender = ctx.getBender();
@@ -34,10 +36,12 @@ public class AbilityEarthSpikes extends Ability {
         if (ctx.getLevel() == 1 || ctx.getLevel() == 2) {
             chi *= 1.5f;
             damage = 1F;
+            ticks = 150;
         }
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
             chi *= 2f;
             damage = 1.5F;
+            ticks = 200;
 
         }
 
@@ -62,7 +66,7 @@ public class AbilityEarthSpikes extends Ability {
                 earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
                 earthspike.setVelocity(look.times(mult));
                 earthspike.setDamageMult(damage + xp / 100);
-                earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
+                earthspike.maxTicks(ticks);
                 earthspike.isUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
                 world.spawnEntity(earthspike);
             }
@@ -75,13 +79,12 @@ public class AbilityEarthSpikes extends Ability {
                             i * 45), 0);
                     Vector velocity = direction1.times(speed);
                     EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
-                    spawner.setVelocity(velocity);
 
+                    spawner.setVelocity(velocity);
+                    earthspike.maxTicks(ticks);
                     spawner.setOwner(entity);
                     spawner.setPosition(entity.posX, entity.posY, entity.posZ);
                     spawner.setDamageMult(damage + xp / 100);
-                    spawner.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
-
                     world.spawnEntity(spawner);
                 }
             }
