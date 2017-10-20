@@ -61,10 +61,6 @@ public class RenderWave extends Render<EntityWave> {
 	@Override
 	public void doRender(EntityWave entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
-		EntityLivingBase player = new PlayerBender();
-
-		Vector look = Vector.getLookRectangular(entity).withY(0);
-		entity.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
