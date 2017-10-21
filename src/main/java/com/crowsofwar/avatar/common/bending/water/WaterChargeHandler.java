@@ -55,6 +55,7 @@ public class WaterChargeHandler extends TickHandler {
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
+
 		if (duration >= 40) {
 
 			if (abilityData == null) {
@@ -92,6 +93,14 @@ public class WaterChargeHandler extends TickHandler {
 
 
 			return true;
+
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
+			if (duration >= 40 && duration % 10 == 0 && duration <= 80){
+				EntityWaterCannon waterCannon = new EntityWaterCannon(world);
+				waterCannon.setDamage(4);
+				world.spawnEntity(waterCannon);
+			}
 
 		}
 
