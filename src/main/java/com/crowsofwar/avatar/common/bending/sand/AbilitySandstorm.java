@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.sand;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntitySandstorm;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -32,6 +33,8 @@ public class AbilitySandstorm extends Ability {
 			sandstorm.setPosition(hitPos);
 			sandstorm.setOwner(entity);
 			world.spawnEntity(sandstorm);
+
+			ctx.getData().addStatusControl(StatusControl.SANDSTORM_REDIRECT);
 
 		}
 
