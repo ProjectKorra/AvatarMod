@@ -28,14 +28,9 @@ public class StatCtrlSandstormRedirect extends StatusControl {
 
 		if (sandstorm != null) {
 
-			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, 20, false);
-			if (raytrace.hitSomething()) {
-
-				sandstorm.getMovementHandler().setTargetPos(raytrace.getPosPrecise());
-
-			} else {
-				return false;
-			}
+			Vector newVelocity = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+			newVelocity = newVelocity.times(10);
+			sandstorm.getMovementHandler().setTargetPos(newVelocity);
 
 		}
 

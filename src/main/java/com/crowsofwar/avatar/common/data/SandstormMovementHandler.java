@@ -25,7 +25,7 @@ public class SandstormMovementHandler {
 			double targetSpeed = 15;
 
 			Vector targetVelocity = targetPos.minus(sandstorm.position()).times(targetSpeed);
-			Vector nextVelocity = sandstorm.velocity().plus(targetVelocity);
+			Vector nextVelocity = sandstorm.velocity().plus(targetVelocity.dividedBy(100));
 
 			if (nextVelocity.magnitude() > targetSpeed) {
 				nextVelocity = nextVelocity.normalize().times(targetSpeed);
