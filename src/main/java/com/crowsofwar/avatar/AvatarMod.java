@@ -177,6 +177,7 @@ public class AvatarMod {
 		registerEntity(EntityLightningSpear.class, "lightning_spear");
 		registerEntity(EntityEarthspikeSpawner.class, "earthspike_spawner");
 		registerEntity(EntityWaterCannon.class, "water_cannon");
+		registerEntity(EntitySandstorm.class, "sandstorm");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
