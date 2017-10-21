@@ -20,7 +20,7 @@ public class AbilityEarthSpikes extends Ability {
 
 	@Override
 	public void execute(AbilityContext ctx) {
-
+up
 		Bender bender = ctx.getBender();
 
 		float chi = STATS_CONFIG.chiRavine;
