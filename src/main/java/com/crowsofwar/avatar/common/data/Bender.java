@@ -153,15 +153,15 @@ public abstract class Bender {
 
 				double powerRating = calcPowerRating(ability.getBendingId());
 
-				if (data.getAbilityCooldown() == 0) {
+				if (data.getMiscData().getAbilityCooldown() == 0) {
 
-					if (data.getCanUseAbilities()) {
+					if (data.getMiscData().getCanUseAbilities()) {
 
 						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
 								entity, powerRating);
 
 						ability.execute(abilityCtx);
-						data.setAbilityCooldown(ability.getCooldown(abilityCtx));
+						data.getMiscData().setAbilityCooldown(ability.getCooldown(abilityCtx));
 
 					} else {
 						// TODO make bending disabled available for multiple things
@@ -208,7 +208,7 @@ public abstract class Bender {
 		World world = getWorld();
 		EntityLivingBase entity = getEntity();
 
-		data.decrementCooldown();
+		data.getMiscData().decrementCooldown();
 
 		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
 

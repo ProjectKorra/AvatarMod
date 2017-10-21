@@ -71,7 +71,7 @@ public class WaterSkateHandler extends TickHandler {
 		
 		if (data.hasStatusControl(SKATING_JUMP) && skate(data, entity, ctx.getBender())) {
 			data.removeStatusControl(StatusControl.SKATING_JUMP);
-			data.setCanUseAbilities(true);
+			data.getMiscData().setCanUseAbilities(true);
 			return true;
 		} else {
 			return false;
@@ -154,7 +154,7 @@ public class WaterSkateHandler extends TickHandler {
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
 				}
-				data.setCanUseAbilities(abilityData.getLevel() >= 1);
+				data.getMiscData().setCanUseAbilities(abilityData.getLevel() >= 1);
 				
 			}
 			
