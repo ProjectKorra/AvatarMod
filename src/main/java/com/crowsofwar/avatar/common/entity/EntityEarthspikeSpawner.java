@@ -150,6 +150,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     }
 
+
     @Override
     public boolean onCollideWithSolid() {
         setDead();
