@@ -51,34 +51,49 @@ public class EntitySandstorm extends AvatarEntity {
 		where d = distance from sandstorm center, g = "gravity" towards center of sandstorm (m/s)
 		 */
 
-//		final double gravity = 1.5;
-//		final double distance = entity.getDistanceToEntity(this);
+//		final double gravity = 2.5;
+//		double distance = entity.getDistanceToEntity(this);
 //
-//		double orbitalSpeed = Math.sqrt(2 * gravity * distance - gravity * gravity);
+//		if (2 * gravity * distance - gravity * gravity <= 0) {
+//			distance = 2 / gravity + 1;
+//		}
+//
+//		double orbitalSpeed = Math.sqrt(2 * gravity * distance - gravity * gravity) * 2;
 //
 //		Vector gravityForce = this.position().minus(Vector.getEntityPos(entity)).times(orbitalSpeed);
 //
+//		acceleration = acceleration.plus(gravityForce);
 //
 //		entity.addVelocity(acceleration.x() / 20, acceleration.y() / 20, acceleration.z() / 20);
+//
+//		if (acceleration.sqrMagnitude() < 0.8) {
+//			entity.setPosition(entity.posX + 1, entity.posY, entity.posZ);
+//			entity.addVelocity(0, )
+//		}
 
 		double currentAngle = Vector.getRotationTo(position(), Vector.getEntityPos(entity)).y();
-		double nextAngle = currentAngle + Math.toRadians(30);
+		double nextAngle = currentAngle + Math.toRadians(360 / 20);
 //		System.out.println(currentAngle + " -> " + nextAngle);
 
-		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times
-				(1)).plus(velocity().dividedBy(20));
+		Vector myNextPos = position();
+		Vector theirNextPos = myNextPos.plus(Vector.toRectangular(nextAngle, 0)).plusY(2);
+		Vector delta = theirNextPos.minus(Vector.getEntityPos(entity));
 
-//		Vector nextVelocity = nextPos.minus(Vector.getEntityPos(entity)).times(10);
-//		entity.setVelocity(nextVelocity.x() / 20, nextVelocity.y() / 20 + 0.5, nextVelocity.z() /
-//				20);
-		entity.setPosition(nextPos.x(), nextPos.y(), nextPos.z());
-
-entity.motionY += 0.1;
-
+		Vector theirNextVelocity = velocity();
+		theirNextVelocity = theirNextVelocity.plus(delta.times(20));
+		entity.setVelocity(theirNextVelocity.x() / 20, theirNextVelocity.y() / 20,
+				theirNextVelocity.z
+				() / 20);
+//		entity.setPosition(nextPos.x(), nextPos.y(), nextPos.z());
+//
+//entity.motionY += 0.1;
+//
 		AvatarUtils.afterVelocityAdded(entity);
-
+//
+//		setVelocity(Vector.NORTH.times(3));
 //		setVelocity(Vector.ZERO);
 
+//		setDead();
 	}
 
 	public SandstormMovementHandler getMovementHandler() {
