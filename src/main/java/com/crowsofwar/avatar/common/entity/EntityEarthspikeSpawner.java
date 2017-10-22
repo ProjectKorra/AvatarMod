@@ -59,7 +59,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     @Override
     public void onUpdate() {
-
         super.onUpdate();
 
         if (initialPosition == null) {
@@ -69,7 +68,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         if (!world.isRemote && ticksExisted >= maxTicksAlive) {
             setDead();
         }
-
 
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = world.getBlockState(below).getBlock();
@@ -84,7 +82,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             earthspike.posZ = this.posZ;
 
             world.spawnEntity(earthspike);
-
         }
 
         if (!world.getBlockState(below).isNormalCube()) {
@@ -101,7 +98,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             setDead();
         }
 
-
         // Destroy non-solid blocks in the earthspike
         if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 
@@ -112,9 +108,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             } else {
 
                 setDead();
-
             }
-
         }
 
         // amount of entities which were successfully attacked
@@ -139,8 +133,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
                 data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
             }
         }
-
-
     }
 
     @Override
@@ -149,13 +141,12 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     }
 
-
     @Override
     public boolean onCollideWithSolid() {
         setDead();
         return false;
     }
-    
+
     private boolean attackEntity(Entity entity) {
 
         if (!(entity instanceof EntityItem && entity.ticksExisted <=
@@ -168,12 +159,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
             float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
             return entity.attackEntityFrom(ds, damage);
-
-
-        }
-
+            }
         return false;
-
     }
-
 }
