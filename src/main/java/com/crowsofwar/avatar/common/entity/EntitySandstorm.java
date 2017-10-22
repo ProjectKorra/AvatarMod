@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class EntitySandstorm extends AvatarEntity {
@@ -15,7 +16,6 @@ public class EntitySandstorm extends AvatarEntity {
 		super(world);
 		setSize(2.2f, 5.2f);
 		movementHandler = new SandstormMovementHandler(this);
-		noClip = true;
 	}
 
 	@Override
@@ -64,5 +64,9 @@ public class EntitySandstorm extends AvatarEntity {
 		return movementHandler;
 	}
 
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
 
 }
