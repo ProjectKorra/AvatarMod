@@ -43,7 +43,7 @@ public class WaterChargeHandler extends TickHandler {
 		BendingData data = ctx.getData();
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
-		float damage = abilityData.getLevel() >= 2 ? 8 : 6;
+		float damage = 10;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 		float size = 1;
@@ -54,11 +54,10 @@ public class WaterChargeHandler extends TickHandler {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
 			if (duration >= 40 && duration % 15 == 0 && duration <= 100){
-				EntityWaterCannon cannon = new EntityWaterCannon(world);
 				if (abilityData == null) {
 					return true;
 				}
-				cannon.setDamage(4);
+				damage = 4;
 				size = 0.1F;
 				fireCannon(world, entity, damage, speed, size);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
@@ -76,17 +75,16 @@ public class WaterChargeHandler extends TickHandler {
 			if (abilityData == null) {
 				return true;
 			}
-			EntityWaterCannon cannon = new EntityWaterCannon(world);
 
 			if (abilityData.getLevel() == 1){
-				cannon.setDamage(11);
+				damage = 11;
 				size = 2F;
 			}
 			if (abilityData.getLevel() == 2){
-				cannon.setDamage(12);
+				damage = 12;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				cannon.setDamage(20);
+				damage = 20;
 				size = 2.5F;
 
 			}
@@ -116,7 +114,7 @@ public class WaterChargeHandler extends TickHandler {
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
 
 		cannon.setOwner(entity);
-		cannon.setDamage(10);
+		cannon.setDamage(damage);
 		cannon.setSizeMultiplier(size);
 
 		cannon.setPosition(Vector.getEyePos(entity));
