@@ -63,13 +63,14 @@ public class WaterChargeHandler extends TickHandler {
 				world.spawnEntity(cannon);
 				fireCannon(world, entity, damage, speed, size);
 
-				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+
 
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 						SoundCategory.PLAYERS, 1, 2);
 
 			}
 			if (duration >= 80){
+				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 				return  true;
 			}
 
