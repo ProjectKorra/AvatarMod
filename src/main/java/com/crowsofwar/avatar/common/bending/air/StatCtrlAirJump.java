@@ -117,7 +117,7 @@ public class StatCtrlAirJump extends StatusControl {
 				fallAbsorption = 19;
 			}
 			
-			data.setFallAbsorption(fallAbsorption);
+			data.getMiscData().setFallAbsorption(fallAbsorption);
 			
 			data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
