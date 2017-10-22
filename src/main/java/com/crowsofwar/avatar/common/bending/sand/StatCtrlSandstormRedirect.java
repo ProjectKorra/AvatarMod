@@ -27,7 +27,6 @@ public class StatCtrlSandstormRedirect extends StatusControl {
 
 		EntitySandstorm sandstorm = AvatarEntity.lookupOwnedEntity(world, EntitySandstorm
 				.class, entity);
-
 		if (sandstorm != null) {
 
 			Vector newVelocity = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);

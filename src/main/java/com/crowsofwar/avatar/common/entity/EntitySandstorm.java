@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,7 +13,7 @@ public class EntitySandstorm extends AvatarEntity {
 
 	public EntitySandstorm(World world) {
 		super(world);
-		setSize(1.2f, 2.2f);
+		setSize(2.2f, 5.2f);
 		movementHandler = new SandstormMovementHandler(this);
 	}
 
@@ -49,9 +50,33 @@ public class EntitySandstorm extends AvatarEntity {
 		where d = distance from sandstorm center, g = "gravity" towards center of sandstorm (m/s)
 		 */
 
-		Vector towardsSandstorm = this.position().minus(Vector.getEntityPos(entity));
+//		final double gravity = 1.5;
+//		final double distance = entity.getDistanceToEntity(this);
+//
+//		double orbitalSpeed = Math.sqrt(2 * gravity * distance - gravity * gravity);
+//
+//		Vector gravityForce = this.position().minus(Vector.getEntityPos(entity)).times(orbitalSpeed);
+//
+//
+//		entity.addVelocity(acceleration.x() / 20, acceleration.y() / 20, acceleration.z() / 20);
 
-		entity.addVelocity(acceleration.x() / 20, acceleration.y() / 20, acceleration.z() / 20);
+		double currentAngle = Vector.getRotationTo(position(), Vector.getEntityPos(entity)).y();
+		double nextAngle = currentAngle + Math.toRadians(30);
+//		System.out.println(currentAngle + " -> " + nextAngle);
+
+		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times
+				(1));
+
+		Vector nextVelocity = nextPos.minus(Vector.getEntityPos(entity)).times(10);
+//		entity.setVelocity(nextVelocity.x() / 20, nextVelocity.y() / 20 + 0.5, nextVelocity.z() /
+//				20);
+entity.setPosition(nextPos.x(), nextPos.y(), nextPos.z());
+
+entity.motionY += 0.1;
+
+		AvatarUtils.afterVelocityAdded(entity);
+
+		setVelocity(Vector.ZERO);
 
 	}
 
