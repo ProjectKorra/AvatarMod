@@ -140,9 +140,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             }
         }
 
-        if (this.isDead){
-            System.out.println(" i  dieddddddddd");
-        }
 
     }
 
@@ -157,6 +154,12 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     public boolean onCollideWithSolid() {
         setDead();
         return false;
+    }
+    @Override
+    public void setDead() {
+        if (this.isDead) {
+            Thread.dumpStack();
+        }
     }
 
     private boolean attackEntity(Entity entity) {
