@@ -31,7 +31,7 @@ public class AbilityEarthSpikes extends Ability {
         float chi = STATS_CONFIG.chiEarthspike;
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
             chi *= 2.5f;
-            damage = 1.25f;
+            damage = 1f;
             ticks = 150;
         }
         if (ctx.getLevel() == 1 || ctx.getLevel() == 2) {
