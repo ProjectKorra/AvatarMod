@@ -38,6 +38,10 @@ public class EntitySandstorm extends AvatarEntity {
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
+		if (entity == getOwner()) {
+			return;
+		}
+
 		// Rotates the entity around this sandstorm
 		// First: calculates current angle, and the next angle
 		// Then, calculates position with that next angle
