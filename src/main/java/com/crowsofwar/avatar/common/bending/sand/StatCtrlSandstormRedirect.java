@@ -9,6 +9,10 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+/**
+ * A Status Control which allows player to change the target velocity of the sandstorm. Then the
+ * SandstormMovementHandler gradually transitions current velocity to the target velocity.
+ */
 public class StatCtrlSandstormRedirect extends StatusControl {
 
 	public StatCtrlSandstormRedirect() {
