@@ -155,13 +155,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
         setDead();
         return false;
     }
-    @Override
-    public void setDead() {
-        if (this.isDead) {
-            Thread.dumpStack();
-        }
-    }
-
+    
     private boolean attackEntity(Entity entity) {
 
         if (!(entity instanceof EntityItem && entity.ticksExisted <=

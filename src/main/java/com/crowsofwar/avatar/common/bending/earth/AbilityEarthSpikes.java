@@ -32,6 +32,7 @@ public class AbilityEarthSpikes extends Ability {
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
             chi *= 2.5f;
             damage = 1.25f;
+            ticks = 150;
         }
         if (ctx.getLevel() == 1 || ctx.getLevel() == 2) {
             chi *= 1.5f;
@@ -81,7 +82,7 @@ public class AbilityEarthSpikes extends Ability {
                     EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
 
                     spawner.setVelocity(velocity);
-                    earthspike.maxTicks(ticks);
+                    spawner.maxTicks(ticks);
                     spawner.setOwner(entity);
                     spawner.setPosition(entity.posX, entity.posY, entity.posZ);
                     spawner.setDamageMult(damage + xp / 100);
