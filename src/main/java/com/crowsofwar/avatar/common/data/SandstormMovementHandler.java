@@ -12,23 +12,20 @@ public class SandstormMovementHandler {
 
 	private final EntitySandstorm sandstorm;
 	@Nullable
-	private Vector targetPos;
+	private Vector targetVelocity;
 
 	public SandstormMovementHandler(EntitySandstorm sandstorm) {
 		this.sandstorm = sandstorm;
-		this.targetPos = null;
+		this.targetVelocity = null;
 	}
 
 	public void update() {
-		if (targetPos != null) {
+		if (targetVelocity != null) {
 
-			double targetSpeed = 15;
+			Vector nextVelocity = sandstorm.velocity().plus(targetVelocity.dividedBy(10));
 
-			Vector targetVelocity = targetPos.minus(sandstorm.position()).times(targetSpeed);
-			Vector nextVelocity = sandstorm.velocity().plus(targetVelocity.dividedBy(100));
-
-			if (nextVelocity.magnitude() > targetSpeed) {
-				nextVelocity = nextVelocity.normalize().times(targetSpeed);
+			if (nextVelocity.sqrMagnitude() > targetVelocity.sqrMagnitude()) {
+				nextVelocity = nextVelocity.normalize().times(targetVelocity.magnitude());
 			}
 
 			sandstorm.setVelocity(nextVelocity);
@@ -36,8 +33,8 @@ public class SandstormMovementHandler {
 		}
 	}
 
-	public void setTargetPos(@Nullable Vector targetPos) {
-		this.targetPos = targetPos;
+	public void setTargetVelocity(@Nullable Vector targetVelocity) {
+		this.targetVelocity = targetVelocity;
 	}
 
 }
