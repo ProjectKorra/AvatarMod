@@ -1,10 +1,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.entity.EntitySandstorm;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nullable;
 
@@ -15,34 +12,32 @@ public class SandstormMovementHandler {
 
 	private final EntitySandstorm sandstorm;
 	@Nullable
-	private Vector nextPos;
+	private Vector targetPos;
 
 	public SandstormMovementHandler(EntitySandstorm sandstorm) {
 		this.sandstorm = sandstorm;
-		this.nextPos = null;
+		this.targetPos = null;
 	}
 
 	public void update() {
-		EntityLivingBase owner = sandstorm.getOwner();
-		if (owner != null) {
+		if (targetPos != null) {
 
-			if (sandstorm.ticksExisted % 20 == 0) {
+			double targetSpeed = 15;
 
-				Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 15, false);
-				nextPos = raytrace.getPosPrecise();
+			Vector targetVelocity = targetPos.minus(sandstorm.position()).times(targetSpeed);
+			Vector nextVelocity = sandstorm.velocity().plus(targetVelocity);
 
-			} else {
-
-				if (nextPos != null) {
-					Vector direction = nextPos.minus(sandstorm.position());
-					double speed = MathHelper.clamp(nextPos.sqrDist(direction) / 5, 0, 3);
-					sandstorm.setVelocity(direction.times(speed));
-				}
-
+			if (nextVelocity.magnitude() > targetSpeed) {
+				nextVelocity = nextVelocity.normalize().times(targetSpeed);
 			}
 
-		}
+			sandstorm.setVelocity(nextVelocity);
 
+		}
+	}
+
+	public void setTargetPos(@Nullable Vector targetPos) {
+		this.targetPos = targetPos;
 	}
 
 }

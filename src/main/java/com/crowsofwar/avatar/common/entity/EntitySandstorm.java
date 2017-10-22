@@ -18,7 +18,7 @@ public class EntitySandstorm extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		if (!world.isRemote) {
-//			movementHandler.update();
+			movementHandler.update();
 		}
 
 		if (isCollided || ticksExisted >= 100) {
@@ -26,4 +26,7 @@ public class EntitySandstorm extends AvatarEntity {
 		}
 	}
 
+	public SandstormMovementHandler getMovementHandler() {
+		return movementHandler;
+	}
 }
