@@ -140,6 +140,9 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             }
         }
 
+        if (this.isDead){
+            System.out.println(" i  dieddddddddd");
+        }
 
     }
 

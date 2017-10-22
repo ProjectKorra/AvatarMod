@@ -53,18 +53,14 @@ public class WaterChargeHandler extends TickHandler {
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
-			if (duration >= 40 && duration % 10 == 0 && duration <= 80){
+			if (duration >= 40 && duration % 15 == 0 && duration <= 100){
 				EntityWaterCannon cannon = new EntityWaterCannon(world);
 				if (abilityData == null) {
 					return true;
 				}
 				cannon.setDamage(4);
 				size = 0.1F;
-				world.spawnEntity(cannon);
 				fireCannon(world, entity, damage, speed, size);
-
-
-
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 						SoundCategory.PLAYERS, 1, 2);
 
@@ -75,7 +71,7 @@ public class WaterChargeHandler extends TickHandler {
 			}
 
 		}
-		else if (duration >= 40) {
+		else if (duration >= 100) {
 
 			if (abilityData == null) {
 				return true;
