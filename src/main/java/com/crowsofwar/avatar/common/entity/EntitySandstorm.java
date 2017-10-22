@@ -15,6 +15,7 @@ public class EntitySandstorm extends AvatarEntity {
 		super(world);
 		setSize(2.2f, 5.2f);
 		movementHandler = new SandstormMovementHandler(this);
+		noClip = true;
 	}
 
 	@Override
@@ -65,18 +66,18 @@ public class EntitySandstorm extends AvatarEntity {
 //		System.out.println(currentAngle + " -> " + nextAngle);
 
 		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times
-				(1));
+				(1)).plus(velocity().dividedBy(20));
 
-		Vector nextVelocity = nextPos.minus(Vector.getEntityPos(entity)).times(10);
+//		Vector nextVelocity = nextPos.minus(Vector.getEntityPos(entity)).times(10);
 //		entity.setVelocity(nextVelocity.x() / 20, nextVelocity.y() / 20 + 0.5, nextVelocity.z() /
 //				20);
-entity.setPosition(nextPos.x(), nextPos.y(), nextPos.z());
+		entity.setPosition(nextPos.x(), nextPos.y(), nextPos.z());
 
 entity.motionY += 0.1;
 
 		AvatarUtils.afterVelocityAdded(entity);
 
-		setVelocity(Vector.ZERO);
+//		setVelocity(Vector.ZERO);
 
 	}
 
