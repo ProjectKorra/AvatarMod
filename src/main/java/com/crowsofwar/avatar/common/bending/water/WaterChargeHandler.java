@@ -18,9 +18,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-import static com.crowsofwar.avatar.common.util.Raytrace.entityRaytrace;
-import static com.crowsofwar.avatar.common.util.Raytrace.getReachDistance;
-import static com.crowsofwar.avatar.common.util.Raytrace.getTargetBlock;
 
 public class WaterChargeHandler extends TickHandler {
 
@@ -45,43 +42,56 @@ public class WaterChargeHandler extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		int duration = data.getTickHandlerDuration(this);
-		EntityWaterCannon cannon = new EntityWaterCannon(world);
+		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
+		float damage = abilityData.getLevel() >= 2 ? 8 : 6;
+		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
+		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
+		float size = 1;
+
 		if (world.isRemote) {
 			return false;
 		}
 
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
+			if (duration >= 40 && duration % 10 == 0 && duration <= 80){
+				EntityWaterCannon cannon = new EntityWaterCannon(world);
+				if (abilityData == null) {
+					return true;
+				}
+				cannon.setDamage(4);
+				size = 0.1F;
+				world.spawnEntity(cannon);
+				fireCannon(world, entity, damage, speed, size);
 
+				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
-		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
+				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
+						SoundCategory.PLAYERS, 1, 2);
 
+			}
+			if (duration >= 80){
+				return  true;
+			}
 
-		if (duration >= 40) {
+		}
+		else if (duration >= 40) {
 
 			if (abilityData == null) {
 				return true;
 			}
-			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
-			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
+			EntityWaterCannon cannon = new EntityWaterCannon(world);
 
-			float size = 1;
-			float[] turbulenceValues = { 0.0f, 0.0f };
 			if (abilityData.getLevel() == 1){
 				cannon.setDamage(11);
 				size = 2F;
 			}
 			if (abilityData.getLevel() == 2){
 				cannon.setDamage(12);
-				size = 2.5F;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				cannon.setDamage(20);
-				size = 3F;
+				size = 2.5F;
 
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
-				cannon.setDamage(4);
-				size = 0.1F;
 			}
 
 			fireCannon(world, entity, damage, speed, size);
@@ -95,14 +105,7 @@ public class WaterChargeHandler extends TickHandler {
 			return true;
 
 		}
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
-			if (duration >= 40 && duration % 10 == 0 && duration <= 80){
-				EntityWaterCannon waterCannon = new EntityWaterCannon(world);
-				waterCannon.setDamage(4);
-				world.spawnEntity(waterCannon);
-			}
 
-		}
 
 		return false;
 
@@ -127,15 +130,6 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setVelocity(velocity);
 
 		world.spawnEntity(cannon);
-		for (int i = 0; i < 10; i++){
-			EntityWaterCannon waterCannon = new EntityWaterCannon(world);
-			cannon.setPosition(Vector.getEyePos(entity));
-			cannon.setEndPos(Vector.getLookRectangular(entity));
-			cannon.setOwner(entity);
-			cannon.setVelocity(velocity);
-			world.spawnEntity(waterCannon);
-
-		}
 
 	}
 
