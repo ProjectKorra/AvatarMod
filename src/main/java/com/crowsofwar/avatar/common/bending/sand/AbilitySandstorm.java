@@ -28,10 +28,13 @@ public class AbilitySandstorm extends Ability {
 		if (raytrace.hitSomething()) {
 
 			Vector hitPos = raytrace.getPosPrecise();
+			
+			Vector velocity = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0).times(8);
 
 			EntitySandstorm sandstorm = new EntitySandstorm(world);
 			sandstorm.setPosition(hitPos);
 			sandstorm.setOwner(entity);
+			sandstorm.setVelocity(velocity);
 			world.spawnEntity(sandstorm);
 
 			ctx.getData().addStatusControl(StatusControl.SANDSTORM_REDIRECT);

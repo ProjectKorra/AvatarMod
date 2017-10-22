@@ -124,7 +124,7 @@ public abstract class StatusControl {
 	 *            Information for status control
 	 * @return Whether to remove it
 	 */
-	public abstract boolean execute(BendingContext ctx);
+	public abstract boolean  execute(BendingContext ctx);
 	
 	public int id() {
 		return id;

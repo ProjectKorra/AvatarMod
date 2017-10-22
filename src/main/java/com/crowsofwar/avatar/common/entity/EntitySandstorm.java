@@ -20,6 +20,10 @@ public class EntitySandstorm extends AvatarEntity {
 		if (!world.isRemote) {
 //			movementHandler.update();
 		}
+
+		if (isCollided || ticksExisted >= 100) {
+			setDead();
+		}
 	}
 
 }
