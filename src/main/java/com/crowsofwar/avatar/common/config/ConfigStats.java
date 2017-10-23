@@ -70,6 +70,7 @@ public class ConfigStats {
 			chiAirBubbleOneSecond = 0.125f,
 			chiBuff = 2F,
 			chiCloudburst = 2.5F,
+			chiEarthspike = 2F,
 			chiRavine = 1.5f,
 			chiWall = 2.5f,
 			chiPickUpBlock = 1.25f,

@@ -18,9 +18,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-import static com.crowsofwar.avatar.common.util.Raytrace.entityRaytrace;
-import static com.crowsofwar.avatar.common.util.Raytrace.getReachDistance;
-import static com.crowsofwar.avatar.common.util.Raytrace.getTargetBlock;
 
 public class WaterChargeHandler extends TickHandler {
 
@@ -39,23 +36,42 @@ public class WaterChargeHandler extends TickHandler {
 
 	@Override
 	public boolean tick(BendingContext ctx) {
-
+		AbilityData abilityData = getLightningData(ctx);
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
-		EntityWaterCannon cannon = new EntityWaterCannon(world);
+		int duration = data.getTickHandlerDuration(this);
+		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
+		float damage = 10;
+		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
+		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
+		float size = 1;
 
 		if (world.isRemote) {
 			return false;
 		}
 
-		int duration = data.getTickHandlerDuration(this);
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
+			if (duration >= 40 && duration % 15 == 0 && duration <= 100){
+				if (abilityData == null) {
+					return true;
+				}
+				damage = 4;
+				size = 0.1F;
+				fireCannon(world, entity, damage, speed, size);
+				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
+						SoundCategory.PLAYERS, 1, 2);
 
-		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
-		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
+			}
+			if (duration >= 80){
+				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+				return  true;
+			}
 
-		if (duration >= 40) {
+		}
+		else if (duration >= 100) {
 
+<<<<<<< HEAD
 			double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 
 			AbilityData abilityData = getWaterCannonData(ctx);
@@ -70,16 +86,31 @@ public class WaterChargeHandler extends TickHandler {
 			float size = 1;
 			if (abilityData.getLevel() == 1){
 				damage = 11;
+=======
+			if (abilityData == null) {
+				return true;
+			}
+
+			if (abilityData.getLevel() == 1){
+				damage = 11;
+				size = 2F;
+>>>>>>> FavouriteDragon/a5.0Levels
 			}
 			if (abilityData.getLevel() == 2){
 				damage = 12;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+<<<<<<< HEAD
 				damage = 17;
 				size = 0.5f;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				size = 2;
+=======
+				damage = 20;
+				size = 2.5F;
+
+>>>>>>> FavouriteDragon/a5.0Levels
 			}
 			damage += powerRating / 30;
 
@@ -93,6 +124,7 @@ public class WaterChargeHandler extends TickHandler {
 			return true;
 
 		}
+
 
 		return false;
 

@@ -114,8 +114,7 @@ public class EntityRavine extends AvatarEntity {
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
 			setDead();
 		}
-		
-		BlockPos above = getPosition().offset(EnumFacing.UP);
+
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 		
