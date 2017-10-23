@@ -71,8 +71,6 @@ public class EntityEarthSpike extends AvatarEntity {
         if (ticksExisted >= 15) {
             this.setDead();
         }
-<<<<<<< HEAD
-=======
         // amount of entities which were successfully attacked
         int attacked = 0;
 
@@ -95,38 +93,35 @@ public class EntityEarthSpike extends AvatarEntity {
                 data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
             }
         }
-
->>>>>>> FavouriteDragon/a5.0Levels
     }
 
-	@Override
+    @Override
+    protected boolean canCollideWith(Entity entity) {
+        return super.canCollideWith(entity && !(entity instanceof EntityEarthspikeSpawner) && !(entity instanceof EntityEarthSpike));
+    }
+
+    @Override
 	protected void onCollideWithEntity(Entity entity) {
-    	if (!world.isRemote) {
-    		pushEntity(entity);
-    		if (attackEntity(entity)) {
+        if (!world.isRemote) {
+            pushEntity(entity);
+            if (attackEntity(entity)) {
 
-<<<<<<< HEAD
-    			if (getOwner() != null) {
-					BendingData data = BendingData.get(getOwner());
-					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
-				}
+                if (getOwner() != null) {
+                    BendingData data = BendingData.get(getOwner());
+                    data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
+                }
 
-			}
-		}
-	}
-=======
+            }
+        }
+
         if (!(entity instanceof EntityItem && entity.ticksExisted <=
                 10) && canCollideWith(entity)) {
 
             Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
             entity.addVelocity(push.x(), push.y(), push.z());
             AvatarUtils.afterVelocityAdded(entity);
->>>>>>> FavouriteDragon/a5.0Levels
-
-	@Override
-	protected boolean canCollideWith(Entity entity) {
-		return true;
-	}
+        }
+    }
 
 	private boolean attackEntity(Entity entity) {
         if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {

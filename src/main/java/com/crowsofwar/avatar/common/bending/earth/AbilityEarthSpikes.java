@@ -12,59 +12,13 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityEarthSpikes extends Ability {
 
-<<<<<<< HEAD
-	public AbilityEarthSpikes() {
-		 super(Earthbending.ID,"earthspike");
-	}
-=======
 
     public AbilityEarthSpikes() {
         super(Earthbending.ID, "earthspike");
     }
->>>>>>> FavouriteDragon/a5.0Levels
 
 	@Override
 	public void execute(AbilityContext ctx) {
-
-<<<<<<< HEAD
-		Bender bender = ctx.getBender();
-
-		float chi = STATS_CONFIG.chiRavine;
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi *= 1.5f;
-		}
-
-		if (bender.consumeChi(chi)) {
-
-			AbilityData abilityData = ctx.getData().getAbilityData(this);
-			float xp = abilityData.getTotalXp();
-
-			EntityLivingBase entity = ctx.getBenderEntity();
-			World world = ctx.getWorld();
-
-			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-
-			double speed = ctx.getLevel() >= 1 ? 14 : 8;
-			speed += ctx.getPowerRating() / 100 * 4;
-
-			float damageMult = 0.90f + xp / 100;
-			damageMult += ctx.getPowerRating() / 30f;
-
-			EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
-			earthspike.setOwner(entity);
-			earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-			earthspike.setVelocity(look.times(speed));
-			earthspike.setDamageMult(damageMult);
-			earthspike.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
-			earthspike.setBreakBlocks(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
-			earthspike.setDropEquipment(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-			earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-			world.spawnEntity(earthspike);
-
-		}
-
-	}
-=======
         AbilityData abilityData = ctx.getData().getAbilityData(this);
         float damage = 0.90F;
         float xp = abilityData.getTotalXp();
@@ -134,7 +88,6 @@ public class AbilityEarthSpikes extends Ability {
                     world.spawnEntity(spawner);
                 }
             }
->>>>>>> FavouriteDragon/a5.0Levels
 
         }
     }
