@@ -5,7 +5,6 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class EntitySandstorm extends AvatarEntity {
@@ -50,7 +49,14 @@ public class EntitySandstorm extends AvatarEntity {
 		double currentAngle = Vector.getRotationTo(position(), Vector.getEntityPos(entity)).y();
 		double nextAngle = currentAngle + Math.toRadians(360 / 20);
 
-		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0)).plusY(2);
+		double currentDistance = entity.getDistanceToEntity(this);
+		double nextDistance = currentDistance + 0.05;
+		if (nextDistance < 0.8) {
+			nextDistance = 0.8;
+		}
+
+		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance))
+				.plusY(2);
 		Vector delta = nextPos.minus(Vector.getEntityPos(entity));
 
 		Vector nextVelocity = velocity().plus(delta.times(20));
