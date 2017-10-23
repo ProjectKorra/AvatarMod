@@ -53,7 +53,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 				return true;
 			}
 
-			boolean followMode = BendingData.get(owner).getBisonFollowMode();
+			boolean followMode = BendingData.get(owner).getMiscData().getBisonFollowMode();
 			if (followMode) {
 				double maxDist = bison.getAttackTarget() == null ? 6 : 20;
 				double maxDistSq = maxDist * maxDist;

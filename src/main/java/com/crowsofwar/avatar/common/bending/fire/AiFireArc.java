@@ -16,24 +16,23 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+
 import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.abs;
 import static java.lang.Math.toDegrees;
-
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
-import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.gorecore.util.Vector;
-
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 
 /**
  * 
@@ -97,7 +96,7 @@ public class AiFireArc extends BendingAi {
 			data.chi().setTotalChi(10);
 			data.chi().setAvailableChi(10);
 			execAbility();
-			data.setAbilityCooldown(80);
+			data.getMiscData().setAbilityCooldown(80);
 		}
 		
 		if (timeExecuting >= 80) {
@@ -115,7 +114,7 @@ public class AiFireArc extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
-				&& bender.getData().getAbilityCooldown() == 0;
+				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
 	
 	@Override

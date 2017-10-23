@@ -46,7 +46,7 @@ public class StatCtrlSkateJump extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		if (data.hasTickHandler(TickHandler.WATER_SKATE)) {
 			data.removeTickHandler(TickHandler.WATER_SKATE);
-			data.setCanUseAbilities(true);
+			data.getMiscData().setCanUseAbilities(true);
 			
 			Vector velocity = Vector.getLookRectangular(entity).times(1.5);
 			entity.motionX = velocity.x() * 2;
@@ -54,7 +54,7 @@ public class StatCtrlSkateJump extends StatusControl {
 			entity.motionZ = velocity.z() * 2;
 			AvatarUtils.afterVelocityAdded(entity);
 
-			data.setFallAbsorption(9);
+			data.getMiscData().setFallAbsorption(9);
 
 			AbilityData abilityData = data.getAbilityData("water_skate");
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {

@@ -16,14 +16,13 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import java.util.List;
-import java.util.Random;
-
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-
 import net.minecraft.entity.EntityLivingBase;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * 
@@ -39,7 +38,7 @@ public class BisonSummonHandler extends TickHandler {
 		
 		BendingData data = ctx.getData();
 		
-		int cooldown = data.getPetSummonCooldown();
+		int cooldown = data.getMiscData().getPetSummonCooldown();
 		if (cooldown <= 0) {
 			
 			trySummonBison(ctx.getBenderEntity());
@@ -47,7 +46,7 @@ public class BisonSummonHandler extends TickHandler {
 			
 		} else {
 			
-			data.setPetSummonCooldown(cooldown - 1);
+			data.getMiscData().setPetSummonCooldown(cooldown - 1);
 			return false;
 			
 		}

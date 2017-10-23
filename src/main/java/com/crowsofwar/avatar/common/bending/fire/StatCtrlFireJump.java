@@ -93,7 +93,7 @@ public class StatCtrlFireJump extends StatusControl {
                 fallAbsorption = 17;
             }
 
-            data.setFallAbsorption(fallAbsorption);
+            data.getMiscData().setFallAbsorption(fallAbsorption);
 
             data.addTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER);
             if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityData.AbilityTreePath.SECOND) {
