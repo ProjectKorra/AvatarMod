@@ -22,13 +22,8 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
-<<<<<<< HEAD
 
     private Vector initialPosition;
-
-=======
-    private Vector initialPosition;
->>>>>>> FavouriteDragon/a5.0Levels
     private boolean unstoppable;
     private float damageMult;
     private double maxTicksAlive;
