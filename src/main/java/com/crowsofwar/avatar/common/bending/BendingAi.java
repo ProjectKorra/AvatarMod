@@ -39,59 +39,59 @@ import net.minecraft.entity.ai.EntityAIBase;
  * @author CrowsOfWar
  */
 public abstract class BendingAi extends EntityAIBase {
-	
+
 	protected final Ability ability;
 	protected final EntityLiving entity;
 	protected final Bender bender;
-	
+
 	protected int timeExecuting;
-	
+
 	protected BendingAi(Ability ability, EntityLiving entity, Bender bender) {
 		this.ability = ability;
 		this.entity = entity;
 		this.bender = bender;
 		this.timeExecuting = 0;
 	}
-	
+
 	@Override
 	public void startExecuting() {
 		timeExecuting = 0;
 		startExec();
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
 		return false;
 	}
-	
+
 	@Override
 	public void resetTask() {
 		timeExecuting = 0;
 	}
-	
+
 	@Override
 	public void updateTask() {
 		timeExecuting++;
 	}
-	
+
 	@Override
 	public final boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
 		boolean targetInRange = target == null || entity.getDistanceSqToEntity(target) < 12 * 12;
 		return bender.getData().getAbilityCooldown() == 0 && targetInRange && shouldExec();
 	}
-	
+
 	protected abstract boolean shouldExec();
-	
+
 	protected abstract void startExec();
-	
+
 	/**
 	 * Executes the ability's main code (the part used for players)
 	 */
 	protected void execAbility() {
 		bender.executeAbility(ability);
 	}
-	
+
 	/**
 	 * If the status control is present, uses up the status control
 	 */
@@ -104,5 +104,5 @@ public abstract class BendingAi extends EntityAIBase {
 			}
 		}
 	}
-	
+
 }
