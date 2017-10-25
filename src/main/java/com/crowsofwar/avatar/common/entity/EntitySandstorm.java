@@ -74,6 +74,8 @@ public class EntitySandstorm extends AvatarEntity {
 			// for a while
 			// Fling entity to be far away quickly
 			nextDistance = 3;
+			// Fling in the current direction
+			nextAngle = Vector.getRotationTo(Vector.ZERO, velocity()).y();
 		}
 
 		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance))
