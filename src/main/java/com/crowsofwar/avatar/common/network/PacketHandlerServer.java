@@ -184,10 +184,10 @@ public class PacketHandlerServer implements IPacketHandler {
 		World world = player.world;
 		
 		BendingData data = BendingData.get(player);
-		if (data.hasBendingId(Airbending.ID) && !data.isWallJumping()
-				&& data.getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
+		if (data.hasBendingId(Airbending.ID) && !data.getMiscData().isWallJumping()
+				&& data.getMiscData().getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
 			
-			data.setWallJumping(true);
+			data.getMiscData().setWallJumping(true);
 			
 			// Detect direction to jump
 			Vector normal = Vector.UP;
@@ -242,7 +242,7 @@ public class PacketHandlerServer implements IPacketHandler {
 				world.playSound(null, new BlockPos(player), block.getSoundType().getBreakSound(),
 						SoundCategory.PLAYERS, 1, 0.6f);
 				
-				data.setFallAbsorption(3);
+				data.getMiscData().setFallAbsorption(3);
 				
 			}
 			

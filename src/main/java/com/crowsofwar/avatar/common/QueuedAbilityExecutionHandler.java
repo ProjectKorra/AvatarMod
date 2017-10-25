@@ -37,7 +37,8 @@ public class QueuedAbilityExecutionHandler {
 			while (iterator.hasNext()) {
 				QueuedAbilityExecution par = iterator.next();
 				par.ticks--;
-				if (par.ticks <= 0 && par.data.getAbilityCooldown() == 0 && par.data.getCanUseAbilities()) {
+				if (par.ticks <= 0 && par.data.getMiscData().getAbilityCooldown() == 0 && par
+						.data.getMiscData().getCanUseAbilities()) {
 					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability,
 							par.entity, par.powerRating));
 					iterator.remove();
@@ -49,7 +50,7 @@ public class QueuedAbilityExecutionHandler {
 	public static void queueAbilityExecution(EntityLivingBase entity, BendingData data, Ability
 			ability, Raytrace.Result raytrace, double powerRating) {
 
-		abilityExecutions.add(new QueuedAbilityExecution(data.getAbilityCooldown(), entity, data,
+		abilityExecutions.add(new QueuedAbilityExecution(data.getMiscData().getAbilityCooldown(), entity, data,
 				ability, raytrace, powerRating));
 
 	}

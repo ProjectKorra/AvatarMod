@@ -65,9 +65,9 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 			if (timeLeft >= 55) {
 				// Quick click - Toggle bison follow
 				BendingData data = BendingData.get(entity);
-				data.setBisonFollowMode(!data.getBisonFollowMode());
+				data.getMiscData().setBisonFollowMode(!data.getMiscData().getBisonFollowMode());
 
-				if (data.getBisonFollowMode()) {
+				if (data.getMiscData().getBisonFollowMode()) {
 					MSG_BISON_WHISTLE_FOLLOW_ON.send(entity);
 				} else {
 					MSG_BISON_WHISTLE_FOLLOW_OFF.send(entity);
@@ -85,7 +85,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 						double seconds = dist / 20;
 
 						BendingData data = BendingData.get(entity);
-						data.setPetSummonCooldown((int) (seconds * 20));
+						data.getMiscData().setPetSummonCooldown((int) (seconds * 20));
 						data.addTickHandler(TickHandler.BISON_SUMMONER);
 
 						MSG_BISON_WHISTLE_SUMMON.send(entity, (int) seconds);

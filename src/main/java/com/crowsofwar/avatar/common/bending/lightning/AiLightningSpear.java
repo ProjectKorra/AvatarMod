@@ -6,9 +6,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -39,7 +37,7 @@ public class AiLightningSpear extends BendingAi {
         data.chi().setTotalChi(10);
         data.chi().setAvailableChi(10);
         execAbility();
-        data.setAbilityCooldown(100);
+        data.getMiscData().setAbilityCooldown(100);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class AiLightningSpear extends BendingAi {
     protected boolean shouldExec() {
         EntityLivingBase target = entity.getAttackTarget();
         return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
-                && bender.getData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+                && bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
     }
 
     @Override
