@@ -30,9 +30,10 @@ public class SandstormMovementHandler {
 	public void update() {
 		if (targetVelocity != null) {
 
-			Vector modifyVelocity = targetVelocity.minus(sandstorm.velocity());
-			Vector nextVelocity = sandstorm.velocity().plus(modifyVelocity.dividedBy(10));
-			sandstorm.setVelocity(nextVelocity);
+
+			double changeFactor = 0.1;
+			sandstorm.setVelocity(sandstorm.velocity().times(1 - changeFactor).plus
+					(targetVelocity.times(changeFactor)));
 
 		}
 	}
