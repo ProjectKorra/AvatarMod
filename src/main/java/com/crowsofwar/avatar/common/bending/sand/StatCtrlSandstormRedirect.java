@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntitySandstorm;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -29,9 +30,18 @@ public class StatCtrlSandstormRedirect extends StatusControl {
 				.class, entity);
 		if (sandstorm != null) {
 
-			Vector newVelocity = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-			newVelocity = newVelocity.times(15);
-			sandstorm.getMovementHandler().setTargetVelocity(newVelocity);
+			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, 40, true);
+			if (raytrace.hitSomething()) {
+
+				Vector hitPos = raytrace.getPosPrecise();
+
+				Vector currentPos = Vector.getEntityPos(sandstorm);
+				Vector newVelocity = hitPos.minus(currentPos).withY(0).normalize();
+				newVelocity = newVelocity.times(15);
+
+				sandstorm.getMovementHandler().setTargetVelocity(newVelocity);
+
+			}
 
 		}
 
