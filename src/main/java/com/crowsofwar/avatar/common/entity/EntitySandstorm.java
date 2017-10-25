@@ -37,6 +37,11 @@ public class EntitySandstorm extends AvatarEntity {
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
+		// Number of blocks that the target "floats" above the ground
+		final double floatingDistance = 2;
+		// The maximum distance between a sandstorm and an orbiting mob before the mob is thrown
+		final double maxPickupRange = 1.3;
+
 		if (entity == getOwner()) {
 			return;
 		}
@@ -49,14 +54,30 @@ public class EntitySandstorm extends AvatarEntity {
 		double currentAngle = Vector.getRotationTo(position(), Vector.getEntityPos(entity)).y();
 		double nextAngle = currentAngle + Math.toRadians(360 / 20);
 
-		double currentDistance = entity.getDistanceToEntity(this);
-		double nextDistance = currentDistance + 0.05;
+		double currentDistance = entity.getDistance(this.posX, this.posY + floatingDistance, this
+				.posZ);
+		double nextDistance = currentDistance + 0.01;
+
+		// Prevent entities from orbiting too closely
 		if (nextDistance < 0.8) {
 			nextDistance = 0.8;
 		}
 
+		// Below conditions handle cases when entity was just picked up or needs to be flung off
+
+		if (nextDistance > 2) {
+			// Entities recently picked up typically have very large distances, over maxPickupRange
+			// Bring them close to the center
+			nextDistance = 0.8;
+		} else if (nextDistance > maxPickupRange) {
+			// If the distance is large, but not very large(>2), it has probably just been here
+			// for a while
+			// Fling entity to be far away quickly
+			nextDistance = 3;
+		}
+
 		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance))
-				.plusY(2);
+				.plusY(floatingDistance);
 		Vector delta = nextPos.minus(Vector.getEntityPos(entity));
 
 		Vector nextVelocity = velocity().plus(delta.times(20));
