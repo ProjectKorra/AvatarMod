@@ -308,7 +308,7 @@ public abstract class AvatarEntity extends Entity {
 	 * pushes the entities away.
 	 */
 	protected boolean canCollideWith(Entity entity) {
-		return entity instanceof EntityLivingBase;
+		return entity instanceof AvatarEntity;
 	}
 	
 	@Override

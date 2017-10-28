@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -64,6 +65,12 @@ public class EntityEarthSpike extends AvatarEntity {
     protected void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         setDead();
+    }
+
+    @Override
+    protected boolean canCollideWith(Entity entity) {
+        return entity instanceof EntityLivingBase && !(entity instanceof EntityEarthspikeSpawner) && !(entity instanceof EntityEarthSpike);
+
     }
 
     @Override

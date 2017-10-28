@@ -8,6 +8,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -137,7 +138,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     @Override
     protected boolean canCollideWith(Entity entity) {
-        return super.canCollideWith(entity) && !(entity instanceof EntityEarthspikeSpawner) && !(entity instanceof EntityEarthSpike);
+        return entity instanceof EntityLivingBase && !(entity instanceof EntityEarthspikeSpawner) && !(entity instanceof EntityEarthSpike);
 
     }
 
