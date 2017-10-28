@@ -37,7 +37,6 @@ import org.apache.logging.log4j.Logger;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityCreateWave extends Ability {
-	private Logger logger = LogManager.getLogger(this.getClass());
 
 	public AbilityCreateWave() {
 		super(Waterbending.ID, "wave");
@@ -78,7 +77,8 @@ public class AbilityCreateWave extends Ability {
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
-						logger.warn(wave.rotationYaw);
+						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+						System.out.println(wave.rotationYaw);
 
 						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
 						damageMult += ctx.getPowerRating() / 200f;
@@ -87,9 +87,6 @@ public class AbilityCreateWave extends Ability {
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 							wave.setWaveSize(5);
 						}
-
-						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
-
 						world.spawnEntity(wave);
 
 					}

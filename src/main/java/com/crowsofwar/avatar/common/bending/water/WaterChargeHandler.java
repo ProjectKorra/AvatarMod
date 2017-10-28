@@ -31,8 +31,8 @@ public class WaterChargeHandler extends TickHandler {
 	 */
 	@Nullable
 	private AbilityData getWaterCannonData(BendingContext ctx) {
-        return ctx.getData().getAbilityData("water_cannon");
-    }
+		return ctx.getData().getAbilityData("water_cannon");
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -53,7 +53,7 @@ public class WaterChargeHandler extends TickHandler {
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			if (duration >= 40 && duration % 15 == 0 && duration <= 100) {
+			if (duration >= 40 && duration % 10 == 0 && duration <= 100) {
 				if (abilityData == null) {
 					return true;
 				}
@@ -78,6 +78,30 @@ public class WaterChargeHandler extends TickHandler {
 			if (abilityData.getLevel() == 1) {
 				damage = 11;
 			}
+
+				return  true;
+			}
+
+			speed = abilityData.getLevel() >= 1 ? 20 : 30;
+			speed += powerRating / 15;
+			damage = 8;
+
+			size = 1;
+			if (abilityData.getLevel() == 1) {
+				damage = 11;
+				size = 2;
+			}
+			if (abilityData.getLevel() == 2){
+				damage = 12;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damage = 20;
+				size = 2.5F;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				size = 2;
+			}
+			damage += powerRating / 30;
 
 				if (abilityData == null) {
 					return true;
@@ -117,10 +141,6 @@ public class WaterChargeHandler extends TickHandler {
 
 			}
 
-
-			return false;
-
-		}
 
 
 	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,

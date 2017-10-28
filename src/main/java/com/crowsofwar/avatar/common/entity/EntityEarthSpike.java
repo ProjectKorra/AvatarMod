@@ -19,9 +19,9 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -39,87 +39,103 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityEarthSpike extends AvatarEntity {
 
+	private float damageMult;
 
+	public EntityEarthSpike(World world) {
+		super(world);
+		setSize(1, 1);
+		this.damageMult = 1.6F;
+	}
 
-    private float damageMult;
+	public void setDamageMult(float mult) {
+		this.damageMult = mult;
+	}
 
-    /**
-     * @param world
-     */
-    public EntityEarthSpike(World world) {
-        super(world);
-        setSize(1, 1);
-        this.damageMult = 1.6F;
-    }
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+	}
 
-    public void setDamageMult(float mult) {
-        this.damageMult = mult;
-    }
-    @Override
-    protected void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);
-    }
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		setDead();
+	}
 
-    @Override
-    protected void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
-        setDead();
-    }
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		if (entity instanceof EntityEarthSpike || entity instanceof EntityEarthspikeSpawner) {
+			return false;
+		}
+		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
 
-    @Override
-    public void onEntityUpdate() {
+	}
 
-        super.onEntityUpdate();
+	@Override
+	public void onEntityUpdate() {
 
-        setVelocity(Vector.ZERO);
+		super.onEntityUpdate();
+		setVelocity(Vector.ZERO);
 
-        if (ticksExisted >= 15) {
-            this.setDead();
-        }
-        // amount of entities which were successfully attacked
-        int attacked = 0;
+		if (ticksExisted >= 15) {
+			this.setDead();
+		}
 
-        // Push collided entities back
-        if (!world.isRemote) {
-            List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-                    entity -> entity != getOwner());
-            if (!collided.isEmpty()) {
-                for (Entity entity : collided) {
-                    if (attackEntity(entity)) {
-                        attacked++;
-                    }
-                }
-            }
-        }
+		// amount of entities which were successfully attacked
+		int attacked = 0;
 
-        if (!world.isRemote && getOwner() != null) {
-            BendingData data = BendingData.get(getOwner());
-            if (data != null) {
-                data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
-            }
-        }
+		// Push collided entities back
+		if (!world.isRemote) {
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+					entity -> entity != getOwner());
+			if (!collided.isEmpty()) {
+				for (Entity entity : collided) {
+					if (attackEntity(entity)) {
+						attacked++;
+					}
+				}
+			}
+		}
 
-    }
+		if (!world.isRemote && getOwner() != null) {
+			BendingData data = BendingData.get(getOwner());
+			if (data != null) {
+				data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
+			}
+		}
+	}
 
-    private boolean attackEntity(Entity entity) {
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (!world.isRemote) {
+			pushEntity(entity);
+			if (attackEntity(entity)) {
 
-        if (!(entity instanceof EntityItem && entity.ticksExisted <=
-                10) && canCollideWith(entity)) {
+				if (getOwner() != null) {
+					BendingData data = BendingData.get(getOwner());
+					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
+				}
 
-            Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
-            entity.addVelocity(push.x(), push.y(), push.z());
-            AvatarUtils.afterVelocityAdded(entity);
+			}
+		}
+	}
 
-            DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
-            float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
-            return entity.attackEntityFrom(ds, damage);
+	private boolean attackEntity(Entity entity) {
+		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
+			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
+			float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
+			return entity.attackEntityFrom(ds, damage);
+		}
 
+		return false;
+	}
 
-        }
-
-        return false;
-
-    }
+	private void pushEntity(Entity entity) {
+		Vector entityPos = Vector.getEntityPos(entity);
+		Vector direction = entityPos.minus(this.position());
+		Vector velocity = direction.times(STATS_CONFIG.ravineSettings.push);
+		entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+	}
 
 }
 

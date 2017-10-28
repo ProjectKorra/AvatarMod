@@ -8,6 +8,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,8 +23,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
-
-    private Vector initialPosition;
     private boolean unstoppable;
     private float damageMult;
     private double maxTicksAlive;
@@ -46,16 +45,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     }
     public void maxTicks (float ticks) {this.maxTicksAlive = ticks;}
 
-
-	public boolean isUnstoppable() {
-		return unstoppable;
-	}
-
-	public void setUnstoppable(boolean unstoppable) {
-		this.unstoppable = unstoppable;
-	}
-
-	@Override
+    @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
     }
@@ -69,10 +59,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     @Override
     public void onUpdate() {
         super.onUpdate();
-
-        if (initialPosition == null) {
-            initialPosition = position();
-        }
 
         if (!world.isRemote && ticksExisted >= maxTicksAlive) {
             setDead();
@@ -146,7 +132,10 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     @Override
     protected boolean canCollideWith(Entity entity) {
-        return super.canCollideWith(entity) && !(entity instanceof EntityEarthspikeSpawner) && !(entity instanceof EntityEarthSpike);
+        if (entity instanceof EntityEarthSpike || entity instanceof EntityEarthspikeSpawner) {
+            return false;
+        }
+        return entity instanceof EntityLivingBase || super.canCollideWith(entity);
 
     }
 
@@ -168,7 +157,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
             DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
             float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
             return entity.attackEntityFrom(ds, damage);
-            }
+        }
         return false;
     }
 }

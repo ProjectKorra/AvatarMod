@@ -13,9 +13,11 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class AbilityEarthSpikes extends Ability {
 
 
+
     public AbilityEarthSpikes() {
         super(Earthbending.ID, "earthspike");
     }
+
 
 	@Override
 	public void execute(AbilityContext ctx) {

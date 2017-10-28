@@ -1,0 +1,11 @@
+* Added particle effects for fireball
+* Added a model for wave
+* Added Purify
+* Added Cleanse
+* Added Restore
+* Added Slipstream
+* Added Earthspike
+* Added Cloudburst
+* Added Fire Jump
+* Added Water Cannon
+* Fixed some bugs
