@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -69,6 +71,7 @@ public class EntitySandstorm extends AvatarEntity {
 			// Entities recently picked up typically have very large distances, over maxPickupRange
 			// Bring them close to the center
 			nextDistance = 0.8;
+			onPickupEntity();
 		} else if (nextDistance > maxPickupRange) {
 			// If the distance is large, but not very large(>2), it has probably just been here
 			// for a while
@@ -91,6 +94,15 @@ public class EntitySandstorm extends AvatarEntity {
 
 	public SandstormMovementHandler getMovementHandler() {
 		return movementHandler;
+	}
+
+	/**
+	 * Called when an entity is picked up by the sandstorm
+	 */
+	private void onPickupEntity() {
+		if (getOwner() != null) {
+			AbilityData.get(getOwner(), "sandstorm").addXp(ConfigSkills.SKILLS_CONFIG.sandstormPickedUp);
+		}
 	}
 
 	@Override
