@@ -56,7 +56,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_ENDPOS, Vector.ZERO);
-		dataManager.register(SYNC_SIZE, 3f);
+		dataManager.register(SYNC_SIZE, 1.5f);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			setDead();
 		}
 
-		setSize(3.0f * getSizeMultiplier(), 3.0f * getSizeMultiplier());
+		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
 
 	}
 

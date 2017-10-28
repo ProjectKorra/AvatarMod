@@ -24,11 +24,16 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Random;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
 import static net.minecraft.util.math.MathHelper.cos;
@@ -46,6 +51,7 @@ public class RenderFireball extends Render<EntityFireball> {
 	public RenderFireball(RenderManager renderManager) {
 		super(renderManager);
 	}
+	private static final Random random = new Random();
 	
 	// @formatter:off
 	@Override
@@ -63,6 +69,14 @@ public class RenderFireball extends Render<EntityFireball> {
 		size *= Math.sqrt(entity.getSize() / 30f);
 		
 		enableBlend();
+		if (entity.ticksExisted % 3 == 0) {
+			World world = entity.world;
+			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+			double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+			world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
+		}
 		
 		if (MinecraftForgeClient.getRenderPass() == 0) {
 			

@@ -146,7 +146,7 @@ public class EntityAirBubble extends EntityShield {
 			
 			if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
 				
-				owner.motionY += .03;
+				owner.motionY += 0.03;
 				
 				if (doesAllowHovering()) {
 					

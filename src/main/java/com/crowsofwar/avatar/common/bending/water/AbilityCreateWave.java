@@ -31,6 +31,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -75,6 +77,8 @@ public class AbilityCreateWave extends Ability {
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
+						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+						System.out.println(wave.rotationYaw);
 
 						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
 						damageMult += ctx.getPowerRating() / 200f;
@@ -83,9 +87,6 @@ public class AbilityCreateWave extends Ability {
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 							wave.setWaveSize(5);
 						}
-
-						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
-
 						world.spawnEntity(wave);
 
 					}
