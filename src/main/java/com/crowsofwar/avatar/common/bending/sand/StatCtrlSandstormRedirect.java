@@ -37,7 +37,7 @@ public class StatCtrlSandstormRedirect extends StatusControl {
 
 				Vector currentPos = Vector.getEntityPos(sandstorm);
 				Vector newVelocity = hitPos.minus(currentPos).withY(0).normalize();
-				newVelocity = newVelocity.times(15);
+				newVelocity = newVelocity.times(15 * sandstorm.getVelocityMultiplier());
 
 				sandstorm.getMovementHandler().setTargetVelocity(newVelocity);
 

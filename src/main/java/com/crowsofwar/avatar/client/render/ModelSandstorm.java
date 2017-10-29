@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.entity.EntitySandstorm;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -42,9 +43,12 @@ public class ModelSandstorm extends ModelBase {
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float
 			netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
 
-		shape3.rotateAngleY = (float) Math.toRadians(ageInTicks * 20);
-		shape1.rotateAngleY = (float) Math.toRadians(ageInTicks * -3);
-		shape2.rotateAngleY = (float) Math.toRadians(ageInTicks * 0.5);
+		EntitySandstorm sandstorm = (EntitySandstorm) entityIn;
+		double velocityMultiplier =  sandstorm.getVelocityMultiplier();
+
+		shape3.rotateAngleY = (float) Math.toRadians(ageInTicks * 20 * velocityMultiplier);
+		shape1.rotateAngleY = (float) Math.toRadians(ageInTicks * -3 * velocityMultiplier);
+		shape2.rotateAngleY = (float) Math.toRadians(ageInTicks * 0.5 * velocityMultiplier);
 
 	}
 
