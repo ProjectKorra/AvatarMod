@@ -10,34 +10,33 @@ import net.minecraft.entity.Entity;
  * Created using Tabula 7.0.0
  */
 public class ModelSandstorm extends ModelBase {
-    public ModelRenderer shape1;
-    public ModelRenderer shape2;
-    public ModelRenderer shape3;
+	public ModelRenderer mainPart;
+	public ModelRenderer topPart;
+	public ModelRenderer groundPart;
 
-    public ModelSandstorm() {
-        this.textureWidth = 64;
-        this.textureHeight = 64;
-        this.shape3 = new ModelRenderer(this, 40, 0);
-        this.shape3.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.shape3.addBox(-3.0F, 0.0F, -3.0F, 6, 14, 6, 0.0F);
-        this.setRotateAngle(shape3, 0.0F, 0.045553093477052F, 0.0F);
-        this.shape2 = new ModelRenderer(this, 0, 28);
-        this.shape2.setRotationPoint(0.0F, -14.0F, 0.0F);
-        this.shape2.addBox(-7.0F, 0.0F, -7.0F, 14, 7, 14, 0.0F);
-        this.setRotateAngle(shape2, 0.0F, -0.31869712141416456F, 0.0F);
-        this.shape1 = new ModelRenderer(this, 0, 0);
-        this.shape1.setRotationPoint(0.0F, -16.0F, 0.0F);
-        this.shape1.addBox(-5.0F, 0.0F, -5.0F, 10, 18, 10, 0.0F);
-        this.setRotateAngle(shape1, 0.0F, -0.18203784098300857F, 0.0F);
-    }
+	public ModelSandstorm() {
+		this.textureWidth = 64;
+		this.textureHeight = 64;
+		this.groundPart = new ModelRenderer(this, 40, 0);
+		this.groundPart.setRotationPoint(0.0F, 16.0F, 0.0F);
+		this.groundPart.addBox(-3.0F, 0.0F, -3.0F, 6, 14, 6, 0.0F);
+		this.setRotateAngle(groundPart, 0.0F, 0.045553093477052F, 0.0F);
+		this.topPart = new ModelRenderer(this, 0, 28);
+		this.topPart.setRotationPoint(0.0F, 2.0F, 0.0F);
+		this.topPart.addBox(-7.0F, 0.0F, -7.0F, 14, 7, 14, 0.0F);
+		this.setRotateAngle(topPart, 0.0F, -0.31869712141416456F, 0.0F);
+		this.mainPart = new ModelRenderer(this, 0, 0);
+		this.mainPart.setRotationPoint(0.0F, -16.0F, 0.0F);
+		this.mainPart.addBox(-5.0F, 0.0F, -5.0F, 10, 18, 10, 0.0F);
+		this.setRotateAngle(mainPart, 0.0F, -0.18203784098300857F, 0.0F);
+		this.mainPart.addChild(this.groundPart);
+		this.mainPart.addChild(this.topPart);
+	}
 
-    @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-        this.shape3.render(f5);
-        this.shape2.render(f5);
-        this.shape1.render(f5);
-    }
+	@Override
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		this.mainPart.render(f5);
+	}
 
 	@Override
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float
@@ -46,9 +45,9 @@ public class ModelSandstorm extends ModelBase {
 		EntitySandstorm sandstorm = (EntitySandstorm) entityIn;
 		double velocityMultiplier =  sandstorm.getVelocityMultiplier();
 
-		shape3.rotateAngleY = (float) Math.toRadians(ageInTicks * 20 * velocityMultiplier);
-		shape1.rotateAngleY = (float) Math.toRadians(ageInTicks * -3 * velocityMultiplier);
-		shape2.rotateAngleY = (float) Math.toRadians(ageInTicks * 0.5 * velocityMultiplier);
+		groundPart.rotateAngleY = (float) Math.toRadians(ageInTicks * 20 * velocityMultiplier);
+		mainPart.rotateAngleY = (float) Math.toRadians(ageInTicks * -3 * velocityMultiplier);
+		topPart.rotateAngleY = (float) Math.toRadians(ageInTicks * 0.5 * velocityMultiplier);
 
 	}
 
