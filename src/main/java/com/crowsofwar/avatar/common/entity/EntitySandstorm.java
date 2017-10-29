@@ -110,4 +110,9 @@ public class EntitySandstorm extends AvatarEntity {
 		return false;
 	}
 
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+
 }
