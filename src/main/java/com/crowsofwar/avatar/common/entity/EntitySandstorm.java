@@ -18,12 +18,14 @@ public class EntitySandstorm extends AvatarEntity {
 	private boolean damageFlungTargets;
 	private boolean damageContactingTargets;
 	private boolean vulnerableToAirbending;
+	private double velocityMultiplier;
 
 	public EntitySandstorm(World world) {
 		super(world);
 		setSize(2.2f, 5.2f);
 		movementHandler = new SandstormMovementHandler(this);
 		vulnerableToAirbending = true;
+		velocityMultiplier = 1;
 	}
 
 	@Override
@@ -177,12 +179,21 @@ public class EntitySandstorm extends AvatarEntity {
 		this.vulnerableToAirbending = vulnerableToAirbending;
 	}
 
+	public double getVelocityMultiplier() {
+		return velocityMultiplier;
+	}
+
+	public void setVelocityMultiplier(double velocityMultiplier) {
+		this.velocityMultiplier = velocityMultiplier;
+	}
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setDamageFlungTargets(nbt.getBoolean("DamageFlungTargets"));
 		setDamageContactingTargets(nbt.getBoolean("DamageContactingTargets"));
 		setVulnerableToAirbending(nbt.getBoolean("VulnerableToAirbending"));
+		setVelocityMultiplier(nbt.getDouble("VelocityMultiplier"));
 	}
 
 	@Override
@@ -191,6 +202,7 @@ public class EntitySandstorm extends AvatarEntity {
 		nbt.setBoolean("DamageFlungTargets", isDamageFlungTargets());
 		nbt.setBoolean("DamageContactingTargets", isDamageContactingTargets());
 		nbt.setBoolean("VulnerableToAirbending", isVulnerableToAirbending());
+		nbt.setDouble("VelocityMultiplier", getVelocityMultiplier());
 	}
 
 }
