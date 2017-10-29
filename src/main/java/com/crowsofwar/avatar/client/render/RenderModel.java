@@ -36,7 +36,7 @@ public class RenderModel<T extends Entity> extends Render<T> {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		performGlTransforms(entity, x, y, z, entityYaw, partialTicks);
-		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
+		model.render(entity, 0, 0, entity.ticksExisted + partialTicks, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();
 
 		GlStateManager.disableBlend();
