@@ -266,6 +266,7 @@ avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically 
 avatar.ability.ice_burst.lvl4_2=Hardened ice ;; The ice shield has much more health
 
 avatar.ability.sandstorm=Sandstorm
+avatar.ability.sandstorm.desc=Create a whirling dust devil that picks up enemies and carries them away
 avatar.ability.sandstorm.lvl1=Pick up entities and throw them off, vulnerable to airbending moves
 avatar.ability.sandstorm.lvl2=Moves slightly faster and travels slightly farther
 avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they are flung away
