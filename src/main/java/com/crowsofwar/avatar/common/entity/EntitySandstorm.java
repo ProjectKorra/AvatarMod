@@ -16,6 +16,7 @@ public class EntitySandstorm extends AvatarEntity {
 	private final SandstormMovementHandler movementHandler;
 
 	private boolean damageFlungTargets;
+	private boolean damageContactingTargets;
 
 	public EntitySandstorm(World world) {
 		super(world);
@@ -94,6 +95,7 @@ public class EntitySandstorm extends AvatarEntity {
 		entity.setVelocity(nextVelocity.x() / 20, nextVelocity.y() / 20, nextVelocity.z() / 20);
 
 		AvatarUtils.afterVelocityAdded(entity);
+		onContact(entity);
 
 	}
 
@@ -114,9 +116,19 @@ public class EntitySandstorm extends AvatarEntity {
 	 * Called when the sandstorm "flings" an entity away after it's been orbiting for a while
 	 */
 	private void onFlingEntity(Entity entity) {
-		if (damageFlungTargets) {
+		if (!world.isRemote && damageFlungTargets) {
 			// TODO Custom sandstorm DamageSource
 			entity.attackEntityFrom(DamageSource.ANVIL, 5);
+		}
+	}
+
+	/**
+	 * Called when another entity is picked up and orbits the sandstorm
+	 */
+	private void onContact(Entity entity) {
+		if (!world.isRemote && damageContactingTargets) {
+			// TODO Custom sandstorm DamageSource
+			entity.attackEntityFrom(DamageSource.ANVIL, 1);
 		}
 	}
 
@@ -138,16 +150,26 @@ public class EntitySandstorm extends AvatarEntity {
 		this.damageFlungTargets = damageFlungTargets;
 	}
 
+	public boolean isDamageContactingTargets() {
+		return damageContactingTargets;
+	}
+
+	public void setDamageContactingTargets(boolean damageContactingTargets) {
+		this.damageContactingTargets = damageContactingTargets;
+	}
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setDamageFlungTargets(nbt.getBoolean("DamageFlungTargets"));
+		setDamageContactingTargets(nbt.getBoolean("DamageContactingTargets"));
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setBoolean("DamageFlungTargets", isDamageFlungTargets());
+		nbt.setBoolean("DamageContactingTargets", isDamageContactingTargets());
 	}
 
 }
