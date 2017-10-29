@@ -17,11 +17,13 @@ public class EntitySandstorm extends AvatarEntity {
 
 	private boolean damageFlungTargets;
 	private boolean damageContactingTargets;
+	private boolean vulnerableToAirbending;
 
 	public EntitySandstorm(World world) {
 		super(world);
 		setSize(2.2f, 5.2f);
 		movementHandler = new SandstormMovementHandler(this);
+		vulnerableToAirbending = true;
 	}
 
 	@Override
@@ -133,6 +135,15 @@ public class EntitySandstorm extends AvatarEntity {
 	}
 
 	@Override
+	public boolean onAirContact() {
+		if (vulnerableToAirbending) {
+			setDead();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public boolean canBePushed() {
 		return false;
 	}
@@ -158,11 +169,20 @@ public class EntitySandstorm extends AvatarEntity {
 		this.damageContactingTargets = damageContactingTargets;
 	}
 
+	public boolean isVulnerableToAirbending() {
+		return vulnerableToAirbending;
+	}
+
+	public void setVulnerableToAirbending(boolean vulnerableToAirbending) {
+		this.vulnerableToAirbending = vulnerableToAirbending;
+	}
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setDamageFlungTargets(nbt.getBoolean("DamageFlungTargets"));
 		setDamageContactingTargets(nbt.getBoolean("DamageContactingTargets"));
+		setVulnerableToAirbending(nbt.getBoolean("VulnerableToAirbending"));
 	}
 
 	@Override
@@ -170,6 +190,7 @@ public class EntitySandstorm extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		nbt.setBoolean("DamageFlungTargets", isDamageFlungTargets());
 		nbt.setBoolean("DamageContactingTargets", isDamageContactingTargets());
+		nbt.setBoolean("VulnerableToAirbending", isVulnerableToAirbending());
 	}
 
 }
