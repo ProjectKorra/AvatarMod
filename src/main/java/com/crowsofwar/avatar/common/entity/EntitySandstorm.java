@@ -7,11 +7,15 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class EntitySandstorm extends AvatarEntity {
 
 	private final SandstormMovementHandler movementHandler;
+
+	private boolean damageFlungTargets;
 
 	public EntitySandstorm(World world) {
 		super(world);
@@ -79,6 +83,7 @@ public class EntitySandstorm extends AvatarEntity {
 			nextDistance = 3;
 			// Fling in the current direction
 			nextAngle = Vector.getRotationTo(Vector.ZERO, velocity()).y();
+			onFlingEntity(entity);
 		}
 
 		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance))
@@ -105,6 +110,16 @@ public class EntitySandstorm extends AvatarEntity {
 		}
 	}
 
+	/**
+	 * Called when the sandstorm "flings" an entity away after it's been orbiting for a while
+	 */
+	private void onFlingEntity(Entity entity) {
+		if (damageFlungTargets) {
+			// TODO Custom sandstorm DamageSource
+			entity.attackEntityFrom(DamageSource.ANVIL, 5);
+		}
+	}
+
 	@Override
 	public boolean canBePushed() {
 		return false;
@@ -113,6 +128,26 @@ public class EntitySandstorm extends AvatarEntity {
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
+	}
+
+	public boolean isDamageFlungTargets() {
+		return damageFlungTargets;
+	}
+
+	public void setDamageFlungTargets(boolean damageFlungTargets) {
+		this.damageFlungTargets = damageFlungTargets;
+	}
+
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		setDamageFlungTargets(nbt.getBoolean("DamageFlungTargets"));
+	}
+
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setBoolean("DamageFlungTargets", isDamageFlungTargets());
 	}
 
 }
