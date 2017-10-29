@@ -61,7 +61,10 @@ public class AbilityCloudBurst extends Ability {
             cloudball.setOwner(entity);
             cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
             cloudball.setDamage(damage);
+            cloudball.rotationPitch = entity.rotationPitch;
+            cloudball.rotationYaw = entity.rotationYaw;
             if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) cloudball.setSize(20);
+            cloudball.isUnpredictable(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
             world.spawnEntity(cloudball);
 
 

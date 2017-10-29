@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -29,6 +30,7 @@ public class EntityCloudBall extends AvatarEntity {
     private AxisAlignedBB expandedHitbox;
 
     private float damage;
+    private boolean unpredictable;
 
     /**
      * @param world
@@ -36,6 +38,10 @@ public class EntityCloudBall extends AvatarEntity {
    public EntityCloudBall(World world) {
         super(world);
         setSize(0.8f, 0.8f);
+
+    }
+    public void isUnpredictable (boolean isUnpredictable) {
+        this.unpredictable = isUnpredictable;
     }
 
     @Override
@@ -51,6 +57,16 @@ public class EntityCloudBall extends AvatarEntity {
         setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
         if (ticksExisted >= 250) {
             this.setDead();
+        }
+        EntityCloudBall cloudBall = new EntityCloudBall(world);
+        Vector look = Vector.getLookRectangular(cloudBall);
+
+        if (unpredictable && ticksExisted % 20 == 0 && !world.isRemote){
+            EntityAirblade airblade = new EntityAirblade(world);
+            airblade.posX = this.posX;
+            airblade.posY = this.posY;
+            airblade.posZ = this.posZ;
+            airblade.setVelocity(look);
         }
 
         // TODO Temporary fix to avoid extra fireballs
