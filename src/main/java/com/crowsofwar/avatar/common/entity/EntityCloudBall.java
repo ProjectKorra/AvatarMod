@@ -67,7 +67,11 @@ public class EntityCloudBall extends AvatarEntity {
             airblade.posY = this.posY;
             airblade.posZ = this.posZ;
             airblade.setVelocity(look);
+            world.spawnEntity(airblade);
         }
+      /*  if (!world.isRemote){
+            Thread.dumpStack();
+        }**/
 
         // TODO Temporary fix to avoid extra fireballs
         // Add hook or something
