@@ -47,7 +47,9 @@ public class ModelSandstorm extends ModelBase {
 		double velocityMultiplier =  sandstorm.getVelocityMultiplier();
 
 		groundPart.rotateAngleY = (float) Math.toRadians(ageInTicks * 20 * velocityMultiplier);
+		groundPart.rotateAngleX = (float) (Math.sin(ageInTicks / 60) * Math.toRadians(6));
 		mainPart.rotateAngleY = (float) Math.toRadians(ageInTicks * -3 * velocityMultiplier);
+		mainPart.rotateAngleZ = (float) (Math.sin(ageInTicks / 60) * Math.toRadians(4));
 		topPart.rotateAngleY = (float) Math.toRadians(ageInTicks * 0.5 * velocityMultiplier);
 
 	}
