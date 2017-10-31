@@ -20,7 +20,7 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_XPSET_SUCCESS;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -43,7 +43,7 @@ import com.crowsofwar.gorecore.tree.NodeFunctional;
 public class NodeXpSet extends NodeFunctional {
 	
 	private final IArgument<String> argPlayerName;
-	private final IArgument<BendingAbility> argAbility;
+	private final IArgument<Ability> argAbility;
 	private final IArgument<String> argSpecification;
 	private final IArgument<Float> argNewXp;
 	
@@ -65,11 +65,11 @@ public class NodeXpSet extends NodeFunctional {
 		
 		ArgumentList args = call.popArguments(this);
 		String playerName = args.get(argPlayerName);
-		BendingAbility ability = args.get(argAbility);
+		Ability ability = args.get(argAbility);
 		String specification = args.get(argSpecification);
 		float xp = args.get(argNewXp);
 		
-		BendingData data = AvatarPlayerData.fetcher().fetch(call.getFrom().getEntityWorld(), playerName);
+		BendingData data = BendingData.get(call.getFrom().getEntityWorld(), playerName);
 		AbilityData abilityData = data.getAbilityData(ability);
 		
 		int level;

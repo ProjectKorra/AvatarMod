@@ -18,8 +18,8 @@
 package com.crowsofwar.avatar.common.command;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeBranch;
@@ -30,26 +30,26 @@ import java.util.List;
 
 public class AvatarCommand extends TreeCommand {
 	
-	public static final List<BendingController>[] CONTROLLER_BENDING_OPTIONS;
+	public static final List<BendingStyle>[] CONTROLLER_BENDING_OPTIONS;
 	static {
-		CONTROLLER_BENDING_OPTIONS = new List[BendingManager.allBending().size() + 1];
-		CONTROLLER_BENDING_OPTIONS[0] = BendingManager.allBending();
+		CONTROLLER_BENDING_OPTIONS = new List[BendingStyles.all().size() + 1];
+		CONTROLLER_BENDING_OPTIONS[0] = BendingStyles.all();
 		for (int i = 1; i < CONTROLLER_BENDING_OPTIONS.length; i++) {
-			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingManager.allBending().get(i - 1));
+			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingStyles.all().get(i - 1));
 		}
 	}
 	
-	public static final ITypeConverter<List<BendingController>> CONVERTER_BENDING = new ITypeConverter<List<BendingController>>() {
+	public static final ITypeConverter<List<BendingStyle>> CONVERTER_BENDING = new ITypeConverter<List<BendingStyle>>() {
 		
 		@Override
-		public List<BendingController> convert(String str) {
-			return str.equals("all") ? BendingManager.allBending()
-					: Arrays.asList(BendingManager.getBending(str.toLowerCase()));
+		public List<BendingStyle> convert(String str) {
+			return str.equals("all") ? BendingStyles.all()
+					: Arrays.asList(BendingStyles.get(str.toLowerCase()));
 		}
 		
 		@Override
-		public String toString(List<BendingController> obj) {
-			return obj.equals(BendingManager.allBending()) ? "all" : obj.get(0).getControllerName();
+		public String toString(List<BendingStyle> obj) {
+			return obj.equals(BendingStyles.all()) ? "all" : obj.get(0).getName();
 		}
 		
 		@Override

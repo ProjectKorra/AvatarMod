@@ -38,12 +38,16 @@ public class ConfigSkills {
 		blockKill = 4f,
 		airJump = 2f,
 		airGustHit = 4f,
+		buffUsed = 2f,
+		earthspikeHit = 3.5F,
 		ravineHit = 3f,
 		waveHit = 4f,
 		waterHit = 3f,
 		fireHit = 3f,
 		flamethrowerHit = 0.75f,
 		fireballHit = 4.5f,
+		cloudburstHit = 5.0f,
+		lightningspearHit = 6.0F,
 		airbladeHit = 3f,
 		miningUse = 10f,
 		miningBreakOre = 5f,
@@ -52,7 +56,13 @@ public class ConfigSkills {
 		wallBlockedAttack = 3f,
 		airbubbleProtect = 6f,
 		litFire = 20,
-		createBubble = 15;
+		createBubble = 15,
+		madeLightning = 3,
+		struckWithLightning = 5,
+		sandPrisoned = 9,
+		iceShieldCreated = 2,
+		iceShieldProtected = 6,
+		icePrisoned = 10;
 	// @formatter:on
 	
 	public static void load() {

@@ -16,10 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
-
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -27,9 +23,11 @@ import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
 /**
  * 
@@ -52,9 +50,9 @@ public class StatCtrlThrowFireball extends StatusControl {
 		EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 		
 		if (fireball != null) {
-			AbilityData abilityData = ctx.getData().getAbilityData(BendingAbility.ABILITY_FIREBALL);
+			AbilityData abilityData = ctx.getData().getAbilityData("fireball");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
-			fireball.velocity().add(Vector.getLookRectangular(entity).mul(speedMult));
+			fireball.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			fireball.setBehavior(new FireballBehavior.Thrown());
 		}
 		

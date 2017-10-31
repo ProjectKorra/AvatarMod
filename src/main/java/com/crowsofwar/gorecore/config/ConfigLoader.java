@@ -47,7 +47,7 @@ import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
  * A configuration loader. It populates the fields of an object, with data from
  * disk, using reflection.
  * <p>
- * Each configuration loader may, in turn, create more objects which need to be
+ * Each configuration loader may, in turn, get more objects which need to be
  * loaded- a field may have a custom type.
  * <p>
  * Load an object by using {@link #load(Object, String)}.
@@ -207,7 +207,7 @@ public class ConfigLoader {
 				} catch (InstantiationException | IllegalAccessException e) {
 					
 					throw new ConfigurationException.ReflectionException(
-							"Couldn't create a loader class of loader "
+							"Couldn't get a loader class of loader "
 									+ loaderInfo.customLoaderClass.getName(),
 							e);
 					
@@ -251,7 +251,7 @@ public class ConfigLoader {
 	 * type. See {@link ConverterRegistry}.</li>
 	 * <li>As a last resort, if the object is a Map, that means that it probably
 	 * represents data for a class. Will instantiate an instance of
-	 * <code>to</code> with reflection, then create a ConfigLoader and load it.
+	 * <code>to</code> with reflection, then get a ConfigLoader and load it.
 	 * </li>
 	 * </ol>
 	 * 
@@ -307,7 +307,7 @@ public class ConfigLoader {
 				
 			} catch (Exception e) {
 				throw new ConfigurationException.ReflectionException(
-						"Couldn't create an object of " + to + " with reflection", e);
+						"Couldn't get an object of " + to + " with reflection", e);
 			}
 			
 			return loadedObject;

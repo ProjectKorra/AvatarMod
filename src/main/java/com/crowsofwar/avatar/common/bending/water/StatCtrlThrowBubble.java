@@ -17,10 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
-
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -30,6 +26,9 @@ import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
+
+import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
 /**
  * 
@@ -47,21 +46,23 @@ public class StatCtrlThrowBubble extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 		BendingData data = ctx.getData();
-		
+		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
+
 		EntityWaterBubble bubble = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterBubble.class, //
 				bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
 						&& bub.getOwner() == ctx.getBenderEntity());
 		
 		if (bubble != null) {
 			
-			AbilityData adata = data.getAbilityData(BendingAbility.ABILITY_WATER_BUBBLE);
-			double mult = adata.getLevel() >= 1 ? 14 : 8;
+			AbilityData adata = data.getAbilityData("water_bubble");
+			double speed = adata.getLevel() >= 1 ? 14 : 8;
 			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
-				mult = 20;
+				speed = 20;
 			}
+			speed += powerRating / 30f;
 			
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
-			bubble.velocity().set(Vector.getLookRectangular(ctx.getBenderEntity()).mul(mult));
+			bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
 		}
 		
 		return true;

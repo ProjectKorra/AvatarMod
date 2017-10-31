@@ -17,21 +17,17 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-import java.util.Random;
-
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -42,17 +38,21 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class AbilityPickUpBlock extends EarthAbility {
+public class AbilityPickUpBlock extends Ability {
 	
 	private final Random random;
 	
 	public AbilityPickUpBlock() {
-		super("pickup_block");
+		super(Earthbending.ID, "pickup_block");
 		this.random = new Random();
 		requireRaytrace(-1, true);
 	}
@@ -64,6 +64,7 @@ public class AbilityPickUpBlock extends EarthAbility {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
+
 		
 		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
 				EntityFloatingBlock.class,
@@ -95,28 +96,39 @@ public class AbilityPickUpBlock extends EarthAbility {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+
 		
 		IBlockState ibs = world.getBlockState(pos);
 		Block block = ibs.getBlock();
+
 		
 		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block)) {
 			
-			if (ctx.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+			if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 				
-				AbilityData abilityData = data.getAbilityData(this);
-				float xp = abilityData.getTotalXp();
-				
+				AbilityData abilityData = ctx.getData().getAbilityData(this);
+
 				EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 				floating.setItemDropsEnabled(!bender.isCreativeMode());
-				
+
+				float damageMult = abilityData.getLevel() >= 2 ? 2 : 1;
+				damageMult += ctx.getPowerRating() / 200;
+
+
+				//damageMult += ctx.getPowerRating() / 200;
+				floating.setDamageMult(damageMult);
+				damageMult += ctx.getPowerRating() / 200;
+
+
 				double dist = 2.5;
 				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
-				floating.velocity().add(force);
+				floating.setVelocity(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
-				floating.setDamageMult(abilityData.getLevel() >= 2 ? 2 : 1);
-				
+				floating.setDamageMult(damageMult);
+
+
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);
 				} else {
@@ -142,5 +154,5 @@ public class AbilityPickUpBlock extends EarthAbility {
 		}
 		
 	}
-	
+
 }

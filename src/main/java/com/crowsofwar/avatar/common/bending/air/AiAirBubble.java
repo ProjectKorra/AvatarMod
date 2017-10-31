@@ -18,9 +18,9 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import java.util.Random;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 
@@ -40,7 +40,7 @@ public class AiAirBubble extends BendingAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiAirBubble(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiAirBubble(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		this.random = new Random();
 	}
@@ -58,7 +58,7 @@ public class AiAirBubble extends BendingAi {
 				bubble -> bubble.getOwner() == entity) != null;
 		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.25f || entity.getHealth() < 10;
 		
-		// 2% chance to create air bubble every tick
+		// 2% chance to get air bubble every tick
 		return !already && underAttack && lowHealth && random.nextDouble() <= 0.02;
 		
 	}

@@ -64,7 +64,7 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	

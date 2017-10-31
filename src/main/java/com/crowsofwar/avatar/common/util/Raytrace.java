@@ -17,21 +17,25 @@
 
 package com.crowsofwar.avatar.common.util;
 
-import java.util.function.BiPredicate;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class Raytrace {
 	
@@ -170,7 +174,7 @@ public class Raytrace {
 		
 		if (range == -1) range = 3;
 		
-		Vector currentPosition = start.copy();
+		Vector currentPosition = start;
 		Vector increment = direction.times(0.2);
 		while (currentPosition.sqrDist(start) <= range * range) {
 			
@@ -180,10 +184,47 @@ public class Raytrace {
 				return new Result(new VectorI(pos), EnumFacing.DOWN, currentPosition);
 			}
 			
-			currentPosition.add(increment);
+			currentPosition = currentPosition.plus(increment);
 			
 		}
 		return new Result();
+		
+	}
+	
+	public static List<Entity> entityRaytrace(World world, Vector start, Vector direction,
+			double maxDistance) {
+		return entityRaytrace(world, start, direction, maxDistance, entity -> true);
+	}
+	
+	public static List<Entity> entityRaytrace(World world, Vector start, Vector direction, double maxRange,
+			Predicate<Entity> filter) {
+		
+		// Detect correct range- avoid obstructions from walls
+		double range = maxRange;
+		Result raytrace = raytrace(world, start, direction, maxRange, true);
+		if (raytrace.hitSomething()) {
+			Vector stopAt = raytrace.posPrecise;
+			range = start.minus(stopAt).magnitude();
+		}
+		
+		List<Entity> hit = new ArrayList<>();
+		
+		Vector end = start.plus(direction.times(range));
+		AxisAlignedBB aabb = new AxisAlignedBB(start.x(), start.y(), start.z(), end.x(), end.y(), end.z());
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
+		
+		for (Entity entity : entities) {
+			if (filter.test(entity)) {
+				AxisAlignedBB collisionBox = entity.getEntityBoundingBox();
+				RayTraceResult result = collisionBox.calculateIntercept(start.toMinecraft(),
+						end.toMinecraft());
+				if (result != null) {
+					hit.add(entity);
+				}
+			}
+		}
+		
+		return hit;
 		
 	}
 	

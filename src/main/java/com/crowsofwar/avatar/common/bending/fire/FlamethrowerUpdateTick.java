@@ -16,27 +16,23 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_FLAMETHROWER;
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getVelocityMpS;
-import static java.lang.Math.toRadians;
-
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEyePos;
+import static com.crowsofwar.gorecore.util.Vector.getVelocity;
+import static java.lang.Math.toRadians;
 
 /**
  * 
@@ -52,7 +48,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		
-		AbilityData abilityData = data.getAbilityData(ABILITY_FLAMETHROWER);
+		AbilityData abilityData = data.getAbilityData("flamethrower");
 		AbilityTreePath path = abilityData.getPath();
 		float totalXp = abilityData.getTotalXp();
 		int level = abilityData.getLevel();
@@ -66,19 +62,27 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		}
 		
 		if (!entity.world.isRemote && Math.random() < flamesPerSecond / 20.0) {
-			
-			Chi chi = data.chi();
-			float required = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
+
+			double powerRating = bender.calcPowerRating(Firebending.ID);
+
+			float requiredChi = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
 			if (level == 3 && path == AbilityTreePath.FIRST) {
-				required *= 1.5f;
+				requiredChi *= 1.5f;
 			}
 			if (level == 3 && path == AbilityTreePath.SECOND) {
-				required *= 2;
+				requiredChi *= 2;
 			}
+
+			// Adjust chi to power rating
+			// Multiply chi by a number (from 0..2) based on the power rating - powerFactor
+			//  Numbers 0..1 would reduce the chi, while numbers 1..2 would increase the chi
+			// maxPowerFactor: maximum amount that the chi can be multiplied by
+			// e.g. 0.1 -> chi can be changed by 10%; powerFactor in between 0.9..1.1
+			double maxPowerFactor = 0.4;
+			double powerFactor = (powerRating + 100) / 100 * maxPowerFactor + 1 - maxPowerFactor;
+			requiredChi *= powerFactor;
 			
-			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
-			
-			if (infinite || chi.consumeChi(required)) {
+			if (bender.consumeChi(requiredChi)) {
 				
 				Vector eye = getEyePos(entity);
 				
@@ -96,13 +100,17 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					randomness = 20;
 					lightsFires = true;
 				}
-				
+
+				// Affect stats by power rating
+				speedMult += powerRating / 100f * 2.5f;
+				randomness -= powerRating / 100f * 6f;
+
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
 				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 				
 				EntityFlames flames = new EntityFlames(world, entity);
-				flames.velocity().set(look.times(speedMult).plus(getVelocityMpS(entity)));
+				flames.setVelocity(look.times(speedMult).plus(getVelocity(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setLightsFires(lightsFires);
 				world.spawnEntity(flames);

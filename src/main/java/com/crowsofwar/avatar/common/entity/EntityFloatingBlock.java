@@ -17,16 +17,12 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.gorecore.util.BackedVector;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
@@ -72,9 +68,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
 			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
 	
-	private static final DataParameter<BenderInfo> SYNC_OWNER = createKey(EntityFloatingBlock.class,
-			AvatarDataSerializers.SERIALIZER_BENDER);
-	
 	private static int nextBlockID = 0;
 	
 	/**
@@ -97,8 +90,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	private float damageMult;
 	
-	private final OwnerAttribute ownerAttrib;
-	
 	public EntityFloatingBlock(World world) {
 		super(world);
 		float size = .9f;
@@ -107,7 +98,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 			setID(nextBlockID++);
 		}
 		this.enableItemDrops = true;
-		this.ownerAttrib = new OwnerAttribute(this, SYNC_OWNER);
 		this.damageMult = 1;
 		
 	}
@@ -121,20 +111,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		this(world, blockState);
 		setOwner(owner);
 	}
-	
-	@Override
-	protected Vector createInternalVelocity() {
-		//@formatter:off
-		return new BackedVector(
-				x -> dataManager.set(SYNC_VELOCITY, velocity().copy().setX(x)),
-				y -> dataManager.set(SYNC_VELOCITY, velocity().copy().setY(y)),
-				z -> dataManager.set(SYNC_VELOCITY, velocity().copy().setZ(z)),
-				() -> dataManager.get(SYNC_VELOCITY).x(),
-				() -> dataManager.get(SYNC_VELOCITY).y(),
-				() -> dataManager.get(SYNC_VELOCITY).z());
-		//@formatter:on
-	}
-	
+
 	// Called from constructor of Entity class
 	@Override
 	protected void entityInit() {
@@ -153,13 +130,13 @@ public class EntityFloatingBlock extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		setBlockState(
 				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
-		setVelocity(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ"));
+		setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble
+				("VelocityZ")));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
 		damageMult = nbt.getFloat("DamageMultiplier");
-		ownerAttrib.load(nbt);
 	}
 	
 	@Override
@@ -175,7 +152,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		nbt.setInteger("Behavior", getBehavior().getId());
 		getBehavior().save(nestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
-		ownerAttrib.save(nbt);
 	}
 	
 	@Override
@@ -267,8 +243,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 			
 		}
 		
-		if (!world.isRemote) velocity().mul(getFriction());
-		
+		setVelocity(velocity().times(getFriction()));
+
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
@@ -278,17 +254,14 @@ public class EntityFloatingBlock extends AvatarEntity {
 		
 	}
 	
-	/**
-	 * Called when the block collides with the ground as well as other entities
-	 */
 	@Override
-	public void onCollideWithSolid() {
+	public boolean onCollideWithSolid() {
 
 		FloatingBlockBehavior behavior = getBehavior();
 		if (!(behavior instanceof FloatingBlockBehavior.Fall || behavior instanceof
 				FloatingBlockBehavior.Thrown)) {
 
-			return;
+			return false;
 
 		}
 
@@ -306,9 +279,10 @@ public class EntityFloatingBlock extends AvatarEntity {
 				world.spawnEntity(ei);
 			}
 		}
-		AbilityData data = Bender.getData(getOwner()).getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK);
+
+		AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
 		if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
-			
+
 			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
 			if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 				explosion.doExplosionA();
@@ -318,7 +292,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		}
 		
 		setDead();
-		
+		return true;
+
 	}
 	
 	public float getFriction() {
@@ -332,16 +307,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public void drop() {
 		setBehavior(new FloatingBlockBehavior.Fall());
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttrib.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttrib.setOwner(owner);
-	}
-	
+
 	public FloatingBlockBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
@@ -380,11 +346,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 	
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return false;
-	}
-	
-	@Override
-	public boolean tryDestroy() {
 		return false;
 	}
 	

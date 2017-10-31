@@ -124,7 +124,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 
 	// moveWithHeading
 	@Override
-	public void travel(float strafe, float forward, float unknown) {
+	public void travel(float strafe, float jump, float forward) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
 		
 		if (this.isBeingRidden() && this.canBeSteered()) {
@@ -144,7 +144,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 				
 				setAIMoveSpeed((float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
 						.getAttributeValue());
-				super.travel(strafe, forward, unknown);
+				super.travel(strafe, jump, forward);
 				
 			} else {
 				this.motionX = 0.0D;
@@ -166,7 +166,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
-			super.travel(strafe, forward, unknown);
+			super.travel(strafe, jump, forward);
 		}
 	}
 	

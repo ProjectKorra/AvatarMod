@@ -20,28 +20,24 @@ package com.crowsofwar.avatar.common.gui;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
+import java.util.UUID;
+
 public class AvatarGuiHandler implements IGuiHandler {
 	
-	public static final int GUI_ID_SKILLS_EARTH = 1;
-	public static final int GUI_ID_SKILLS_FIRE = 2;
-	public static final int GUI_ID_SKILLS_WATER = 3;
-	public static final int GUI_ID_SKILLS_AIR = 4;
 	public static final int GUI_ID_BISON_CHEST = 5;
 	public static final int GUI_ID_GET_BENDING = 6;
 	
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
-		if (id >= GUI_ID_SKILLS_EARTH && id <= GUI_ID_SKILLS_AIR) {
-			int element = id - GUI_ID_SKILLS_EARTH + 1;
-			return new ContainerSkillsGui(player, BendingType.values()[id]);
+		if (isBendingGui(id)) {
+			return new ContainerSkillsGui(player, getBendingId(id));
 		}
 		if (id == GUI_ID_BISON_CHEST) {
 			// x-coordinate represents ID of sky bison
@@ -66,6 +62,18 @@ public class AvatarGuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		return AvatarMod.proxy.createClientGui(id, player, world, x, y, z);
+	}
+	
+	public static int getGuiId(UUID bendingId) {
+		return 100 + BendingStyles.getNetworkId(bendingId);
+	}
+	
+	public static UUID getBendingId(int guiId) {
+		return BendingStyles.get((byte) (guiId - 100)).getId();
+	}
+	
+	public static boolean isBendingGui(int guiId) {
+		return guiId > 100 && BendingStyles.has(getBendingId(guiId));
 	}
 	
 }

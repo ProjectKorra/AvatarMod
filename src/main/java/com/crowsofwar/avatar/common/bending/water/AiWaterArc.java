@@ -16,22 +16,21 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
-
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
 
 /**
  * 
@@ -47,7 +46,7 @@ public class AiWaterArc extends BendingAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiWaterArc(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiWaterArc(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
 		setMutexBits(3);
@@ -75,7 +74,7 @@ public class AiWaterArc extends BendingAi {
 			data.chi().setTotalChi(10);
 			data.chi().setAvailableChi(10);
 			execAbility();
-			data.setAbilityCooldown(80);
+			data.getMiscData().setAbilityCooldown(80);
 		}
 		
 		if (timeExecuting >= 80) {
@@ -93,7 +92,7 @@ public class AiWaterArc extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
-				&& bender.getData().getAbilityCooldown() == 0;
+				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
 	
 	@Override

@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -53,7 +53,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 				return true;
 			}
 
-			boolean followMode = Bender.getData(owner).getBisonFollowMode();
+			boolean followMode = BendingData.get(owner).getMiscData().getBisonFollowMode();
 			if (followMode) {
 				double maxDist = bison.getAttackTarget() == null ? 6 : 20;
 				double maxDistSq = maxDist * maxDist;

@@ -16,10 +16,11 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_WAVE;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -38,10 +39,15 @@ public class EntityWaterbender extends EntityHumanBender {
 	public EntityWaterbender(World world) {
 		super(world);
 	}
-	
+
+	@Override
+	protected Bender initBender() {
+		return new WaterbenderBenderComponent();
+	}
+
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, ABILITY_WAVE.getAi(this, this));
+		this.tasks.addTask(1, Abilities.get("wave").getAi(this, getBender()));
 		// this.tasks.addTask(2, ABILITY_WATER_ARC.getAi(this, this));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
@@ -60,10 +66,18 @@ public class EntityWaterbender extends EntityHumanBender {
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
 	}
-	
-	@Override
-	public boolean consumeWaterLevel(int amount) {
-		return true;
+
+	private class WaterbenderBenderComponent extends BenderEntityComponent {
+
+		private WaterbenderBenderComponent() {
+			super(EntityWaterbender.this);
+		}
+
+		@Override
+		public boolean consumeWaterLevel(int amount) {
+			return true;
+		}
+
 	}
-	
+
 }

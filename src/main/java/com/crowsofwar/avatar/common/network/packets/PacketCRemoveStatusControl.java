@@ -49,7 +49,7 @@ public class PacketCRemoveStatusControl extends AvatarPacket<PacketCRemoveStatus
 	}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.CLIENT;
 	}
 	

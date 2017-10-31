@@ -17,29 +17,29 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.*;
-import static com.crowsofwar.avatar.common.bending.BendingType.FIREBENDING;
-
-import java.awt.Color;
-
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-
 import net.minecraft.nbt.NBTTagCompound;
 
-public class Firebending extends BendingController {
-	
+import java.awt.*;
+import java.util.UUID;
+
+public class Firebending extends BendingStyle {
+
+	public static UUID ID = UUID.fromString("8485da8f-20d9-4e98-9a10-721104e962fe");
+
 	private final BendingMenuInfo menu;
 	
 	public Firebending() {
 		
-		addAbility(ABILITY_LIGHT_FIRE);
-		addAbility(ABILITY_FIRE_ARC);
-		addAbility(ABILITY_FLAMETHROWER);
-		addAbility(ABILITY_FIREBALL);
+		addAbility("light_fire");
+		addAbility("fire_arc");
+		addAbility("flamethrower");
+		addAbility("fireball");
+		addAbility("fire_jump");
+		addAbility("purify");
 		
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
@@ -47,7 +47,7 @@ public class Firebending extends BendingController {
 		ThemeColor background = new ThemeColor(light, red);
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
-		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A), "Firebend", this);
+		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A), this);
 		
 	}
 	
@@ -62,18 +62,18 @@ public class Firebending extends BendingController {
 	}
 	
 	@Override
-	public BendingType getType() {
-		return FIREBENDING;
-	}
-	
-	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
 	
 	@Override
-	public String getControllerName() {
+	public String getName() {
 		return "firebending";
+	}
+	
+	@Override
+	public UUID getId() {
+		return ID;
 	}
 	
 }

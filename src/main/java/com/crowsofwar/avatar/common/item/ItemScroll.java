@@ -17,9 +17,12 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingType;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -41,6 +44,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 
@@ -59,12 +63,13 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		BendingData data = AvatarPlayerData.fetcher().fetch(player);
+		BendingData data = BendingData.get(player);
 		if (data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
 		} else {
-			BendingController controller = data.getAllBending().get(0);
-			player.openGui(AvatarMod.instance, controller.getType().id(), world, 0, 0, 0);
+			BendingStyle controller = data.getAllBending().get(0);
+			int guiId = AvatarGuiHandler.getGuiId(controller.getId());
+			player.openGui(AvatarMod.instance, guiId, world, 0, 0, 0);
 		}
 		
 		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
@@ -73,7 +78,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
-		return super.getUnlocalizedName(stack) + "." + ScrollType.fromId(metadata).displayName();
+		return super.getUnlocalizedName(stack) + "." + ScrollType.get(metadata).displayName();
 	}
 	
 	@Override
@@ -102,10 +107,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	public void addInformation(ItemStack stack, World world, List<String> tooltips,
 							   ITooltipFlag advanced) {
 		
-		BendingType bendingType = getScrollType(stack).getBendingType();
-		String bendingTypeName = bendingType == null ? "all" : bendingType.name().toLowerCase();
-		
-		String tooltip = I18n.format("avatar." + bendingTypeName);
+		String tooltip = I18n.format("avatar." + getScrollType(stack).getBendingName());
 		tooltips.add(tooltip);
 		
 	}
@@ -117,7 +119,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	public String getModelName(int meta) {
-		return "scroll_" + ScrollType.fromId(meta).displayName();
+		return "scroll_" + ScrollType.get(meta).displayName();
 	}
 	
 	@Override
@@ -140,7 +142,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	public static ScrollType getScrollType(ItemStack stack) {
 		int meta = stack.getMetadata();
 		if (meta < 0 || meta >= ScrollType.values().length) return ScrollType.ALL;
-		return ScrollType.fromId(meta);
+		return ScrollType.get(meta);
 	}
 	
 	public static void setScrollType(ItemStack stack, ScrollType type) {
@@ -148,18 +150,19 @@ public class ItemScroll extends Item implements AvatarItem {
 	}
 	
 	public enum ScrollType {
+
 		ALL(null),
-		EARTH(BendingType.EARTHBENDING),
-		FIRE(BendingType.FIREBENDING),
-		WATER(BendingType.WATERBENDING),
-		AIR(BendingType.AIRBENDING);
-		
-		private final BendingType type;
-		
-		private ScrollType(BendingType type) {
-			this.type = type;
+		EARTH(Earthbending.ID),
+		FIRE(Firebending.ID),
+		WATER(Waterbending.ID),
+		AIR(Airbending.ID);
+
+		private final UUID bendingId;
+
+		private ScrollType(UUID bendingId) {
+			this.bendingId = bendingId;
 		}
-		
+
 		public boolean isCompatibleWith(ScrollType other) {
 			return other == this || this == ALL || other == ALL;
 		}
@@ -172,22 +175,26 @@ public class ItemScroll extends Item implements AvatarItem {
 			return ordinal();
 		}
 		
-		public boolean accepts(BendingType type) {
-			return this.type == null || this.type == type;
+		public boolean accepts(UUID bendingId) {
+			return getBendingId() == null || getBendingId() == bendingId;
 		}
-		
+
+		public String getBendingName() {
+			return bendingId == null ? "all" : BendingStyles.get(bendingId).getName();
+		}
+
 		/**
-		 * Gets the corresponding bending type from this scroll. Returns null if
-		 * there isn't an exact corresponding type (ie, in the case of
-		 * {@link #ALL}).
+		 * Gets the corresponding bending ID from this scroll. Returns null in the
+		 * case of ALL.
 		 */
 		@Nullable
-		public BendingType getBendingType() {
-			return type;
+		public UUID getBendingId() {
+			return bendingId;
 		}
-		
-		public static ScrollType fromId(int id) {
-			if (id < 0 || id >= values().length) throw new IllegalArgumentException("Invalid id: " + id);
+
+		@Nullable
+		public static ScrollType get(int id) {
+			if (id < 0 || id >= values().length) return null;
 			return values()[id];
 		}
 		

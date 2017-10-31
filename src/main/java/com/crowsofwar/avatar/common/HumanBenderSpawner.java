@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
@@ -28,6 +29,7 @@ import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent.EventType;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
@@ -39,16 +41,11 @@ import java.util.Random;
  * 
  * @author CrowsOfWar
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class HumanBenderSpawner {
 	
-	private HumanBenderSpawner() {}
-	
-	public static void register() {
-		MinecraftForge.TERRAIN_GEN_BUS.register(new HumanBenderSpawner());
-	}
-	
 	@SubscribeEvent
-	public void modifyVillageSpawner(InitMapGenEvent e) {
+	public static void modifyVillageSpawner(InitMapGenEvent e) {
 		
 		if (e.getType() == EventType.VILLAGE) {
 			// TODO See if this messes up superflat world options

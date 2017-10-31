@@ -17,16 +17,15 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.data.PlayerData;
 import com.crowsofwar.gorecore.data.WorldDataPlayers;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	
@@ -53,6 +52,11 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	}
 	
 	public static AvatarWorldData getDataFromWorld(World world) {
+		if (world.isRemote) {
+			throw new IllegalStateException("AvatarWorldData is designed to be used only on " +
+					"server side");
+		}
+
 		return getDataForWorld(AvatarWorldData.class, WORLD_DATA_KEY, world, false);
 	}
 	

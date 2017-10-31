@@ -17,41 +17,19 @@
 
 package com.crowsofwar.avatar.client;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.network.packets.PacketSConfirmTransfer;
-import com.crowsofwar.avatar.common.network.packets.PacketSCycleBending;
-import com.crowsofwar.avatar.common.network.packets.PacketSOpenUnlockGui;
-import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseStatusControl;
+import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
@@ -64,6 +42,14 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import java.util.*;
+
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 
 /**
  * Large class that manages input on the client-side. After input is received,
@@ -82,7 +68,7 @@ public class ClientInput implements IControlsHandler {
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
 	 */
-	private final List<BendingController> keyboardBending;
+	private final List<BendingStyle> keyboardBending;
 	
 	private final boolean[] wasAbilityDown;
 	
@@ -102,7 +88,7 @@ public class ClientInput implements IControlsHandler {
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
 		addKeybinding("TransferBison", Keyboard.KEY_L, "main");
 		
-		this.wasAbilityDown = new boolean[BendingManager.allAbilities().size()];
+		this.wasAbilityDown = new boolean[Abilities.all().size()];
 		
 	}
 	
@@ -159,12 +145,12 @@ public class ClientInput implements IControlsHandler {
 		tryCycleBending();
 		
 		if (AvatarControl.KEY_SKILLS.isPressed()) {
-			BendingData data = AvatarPlayerData.fetcher().fetch(mc.player);
-			BendingType active = data.getActiveBendingType();
+			BendingData data = BendingData.get(mc.player);
+			BendingStyle active = data.getActiveBending();
 			if (active == null) {
 				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
 			} else {
-				AvatarMod.network.sendToServer(new PacketSSkillsMenu(active));
+				AvatarMod.network.sendToServer(new PacketSSkillsMenu(active.getId()));
 			}
 		}
 		if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {
@@ -173,7 +159,7 @@ public class ClientInput implements IControlsHandler {
 		
 	}
 	
-	private boolean isAbilityPressed(BendingAbility ability) {
+	private boolean isAbilityPressed(Ability ability) {
 		Integer key = CLIENT_CONFIG.keymappings.get(ability);
 		if (key != null) {
 			if (key < 0 && Mouse.isButtonDown(key + 100)) return true;
@@ -186,11 +172,11 @@ public class ClientInput implements IControlsHandler {
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void tryOpenBendingMenu() {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_USE_BENDING.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			
 			if (data.getActiveBending() != null) {
-				AvatarUiRenderer.openBendingGui(data.getActiveBendingType());
+				AvatarUiRenderer.openBendingGui(data.getActiveBendingId());
 			} else {
 				
 				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
@@ -205,7 +191,7 @@ public class ClientInput implements IControlsHandler {
 	}
 	
 	private void tryCycleBending() {
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_BENDING_CYCLE_LEFT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			AvatarMod.network.sendToServer(new PacketSCycleBending(false));
 		}
@@ -235,7 +221,7 @@ public class ClientInput implements IControlsHandler {
 		
 		if (player != null && player.world != null) {
 			// Send any input to the server
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
+			BendingData data = BendingData.get(player);
 			
 			if (data != null) {
 				
@@ -256,9 +242,9 @@ public class ClientInput implements IControlsHandler {
 				
 			}
 			
-			List<BendingAbility> allAbilities = BendingManager.allAbilities();
+			List<Ability> allAbilities = Abilities.all();
 			for (int i = 0; i < allAbilities.size(); i++) {
-				BendingAbility ability = allAbilities.get(i);
+				Ability ability = allAbilities.get(i);
 				boolean down = isAbilityPressed(ability);
 				
 				if (!CLIENT_CONFIG.conflicts.containsKey(ability))

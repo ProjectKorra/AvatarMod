@@ -29,9 +29,9 @@ import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
 import com.crowsofwar.avatar.client.render.*;
+import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BendingType;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -113,7 +113,18 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
 		registerEntityRenderingHandler(EntitySkyBison.class, RenderSkyBison::new);
 		registerEntityRenderingHandler(EntityOtterPenguin.class, RenderOtterPenguin::new);
-		
+		registerEntityRenderingHandler(EntityIceShard.class, RenderIceShard::new);
+		registerEntityRenderingHandler(EntityOstrichHorse.class, RenderOstrichHorse::new);
+		registerEntityRenderingHandler(EntityIcePrison.class, RenderIcePrison::new);
+		registerEntityRenderingHandler(EntityLightningArc.class, RenderLightningArc::new);
+		registerEntityRenderingHandler(EntitySandPrison.class, RenderSandPrison::new);
+		registerEntityRenderingHandler(EntityIceShield.class, RenderIceShield::new);
+		registerEntityRenderingHandler(EntityCloudBall.class, RenderCloudburst::new);
+		registerEntityRenderingHandler(EntityEarthSpike.class, RenderEarthSpikes::new);
+		registerEntityRenderingHandler(EntityLightningSpear.class, RenderLightningSpear::new);
+		registerEntityRenderingHandler(EntityEarthspikeSpawner.class, RenderEarthspikeSpawner::new);
+		registerEntityRenderingHandler(EntityWaterCannon.class, RenderWaterCannon::new);
+
 		registerEntityRenderingHandler(EntityAirbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 7));
 		registerEntityRenderingHandler(EntityFirebender.class,
@@ -157,10 +168,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
 		
-		if (id == AvatarGuiHandler.GUI_ID_SKILLS_EARTH) return new SkillsGui(BendingType.EARTHBENDING);
-		if (id == AvatarGuiHandler.GUI_ID_SKILLS_FIRE) return new SkillsGui(BendingType.FIREBENDING);
-		if (id == AvatarGuiHandler.GUI_ID_SKILLS_WATER) return new SkillsGui(BendingType.WATERBENDING);
-		if (id == AvatarGuiHandler.GUI_ID_SKILLS_AIR) return new SkillsGui(BendingType.AIRBENDING);
+		if (AvatarGuiHandler.isBendingGui(id)) {
+			return new SkillsGui(AvatarGuiHandler.getBendingId(id));
+		}
 		if (id == AvatarGuiHandler.GUI_ID_BISON_CHEST) {
 			// x-coordinate represents ID of sky bison
 			int bisonId = x;

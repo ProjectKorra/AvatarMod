@@ -16,39 +16,32 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.MiscData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/**
- * 
- * 
- * @author CrowsOfWar
- */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FallAbsorptionHandler {
-	
-	private FallAbsorptionHandler() {}
-	
+
 	@SubscribeEvent
-	public void onFall(LivingFallEvent e) {
+	public static void onFall(LivingFallEvent e) {
 		Entity entity = e.getEntity();
 		if (entity instanceof EntityPlayer && !entity.world.isRemote) {
 			EntityPlayer player = (EntityPlayer) entity;
-			AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(player);
-			if (data.getFallAbsorption() != 0) {
-				e.setDistance(e.getDistance() - data.getFallAbsorption());
+			BendingData data = BendingData.get(player);
+			MiscData miscData = data.getMiscData();
+			if (miscData.getFallAbsorption() != 0) {
+				e.setDistance(e.getDistance() - miscData.getFallAbsorption());
 				if (e.getDistance() < 0) e.setDistance(0);
-				data.setFallAbsorption(0);
+				miscData.setFallAbsorption(0);
 			}
 		}
-	}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new FallAbsorptionHandler());
 	}
 	
 }

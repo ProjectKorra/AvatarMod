@@ -21,6 +21,9 @@ avatar.waterbending=Waterbending
 avatar.waterbending.demonym=Waterbender
 avatar.airbending=Airbending
 avatar.airbending.demonym=Airbender
+avatar.lightningbending.demonym=Lightningbender
+avatar.icebending.demonym=Icebender
+avatar.sandbending.demonym=Sandbending
 avatar.all=Universal
 
 avatar.cmd.bending=Manage a player's bending controllers.
@@ -69,6 +72,9 @@ avatar.bisonChestSlots1=Your bison does not have any
 avatar.bisonChestSlots2=inventory yet, but will gain
 avatar.bisonChestSlots3=more slots as it grows older.
 avatar.skatingBendingDisabled=[error]You can't use bending while water skating until you unlock level II.[/error]
+avatar.sandPrisonDisabled.sand=The target must be on sand to be imprisoned.
+avatar.sandPrisonDisabled.bendable=The target must be on an earth related block to be imprisoned.
+avatar.lightningRedirected=You redirected ${lightningbender}'s lightning!
 
 avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
@@ -219,6 +225,46 @@ avatar.ability.air_bubble.lvl3=More knockback
 avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
 avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by sneak
 
+avatar.ability.slipstream=Slipstream
+avatar.ability.slipstream.desc=Surround yourself in a veil of air, increasing your movement speed.
+avatar.ability.slipstream.lvl1=Give yourself Speed I for 5 seconds.
+avatar.ability.slipstream.lvl2=Give yourself Speed I for 5 seconds, Jump Boost for 5 seconds.
+avatar.ability.slipstream.lvl3=Give yourself Speed II for 10 seconds, Jump Boost II for 5 seconds, Invisibility I for 5 seconds.
+avatar.ability.slipstream.lvl4_1=Divine Breeze ;; Give yourself Saturation I for 5 seconds, Strength I for 5 seconds, Invisibility I for 5 seconds, Speed II for 5 seconds, and Jump Boost II for 5 seconds.
+avatar.ability.slipstream.lvl4_2=Run like the wind ;; Give yourself Speed III for 10 seconds, Jump Boost III for 10 seconds and Invisibility I for 10 seconds.
+
+avatar.ability.lightning_arc=Lightning Bolt
+avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your enemies!
+avatar.ability.lightning_arc.lvl1=Intimidate potential boyfriends
+avatar.ability.lightning_arc.lvl2=Lightning travels faster
+avatar.ability.lightning_arc.lvl3=Lightning does more damage
+avatar.ability.lightning_arc.lvl4_1=Furious lightning ;; Does more damage, slightly smaller, another bolt
+avatar.ability.lightning_arc.lvl4_2=Large thunderbolts ;; Has a larger hitbox, making it easier to capture enemies
+
+avatar.ability.ice_prison=Ice Prison
+avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from following you for a short time.
+avatar.ability.ice_prison.lvl1=Delay your attackers.
+avatar.ability.ice_prison.lvl2=The prison lasts slightly longer.
+avatar.ability.ice_prison.lvl3=The prisoner takes damage when the ice shatters.
+avatar.ability.ice_prison.lvl4_1=Continuous punishment ;; The prisoner continually takes damage throughout the imprisonment.
+avatar.ability.ice_prison.lvl4_2=Glacier ice ;; The ice cannot be melted by the sun or firebending.
+
+avatar.ability.sand_prison=Sand Prison
+avatar.ability.sand_prison.desc=Create a snare out of sand to temporarily capture your enemies
+avatar.ability.sand_prison.lvl1=Delay your attackers.
+avatar.ability.sand_prison.lvl2=You can catch targets in any earth block by manipulating the small sediments
+avatar.ability.sand_prison.lvl3=The prisoner receives a slowness effect after being freed
+avatar.ability.sand_prison.lvl4_1=The prisoner takes damage after being freed
+avatar.ability.sand_prison.lvl4_2=The sand can't be blown away by airbending
+
+avatar.ability.ice_burst=Ice Burst
+avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.  When broken, it shoots powerful shards in all directions.
+avatar.ability.ice_burst.lvl1=Protect yourself from damage
+avatar.ability.ice_burst.lvl2=The shards deal slightly more damage.
+avatar.ability.ice_burst.lvl3=The shield has a little more health.
+avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically target monsters
+avatar.ability.ice_burst.lvl4_2=Hardened ice ;; The ice shield has much more health
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
@@ -260,6 +306,8 @@ death.attack.avatar_fireball=%2$s blasted %1$s with a fireball
 death.attack.avatar_airblade=%1$s was sliced by %2$s
 death.attack.avatar_flamethrower=%1$s just got ROASTED by %2$s!!
 death.attack.avatar_groundSmash=%2$s smashed %1$s to a pulp
+death.attack.avatar_lightningBending=%2$s electrocuted %1$s
+death.attack.avatar_lightningBendingRedirected=%2$s redirected lightning to electrocute %1$s
 
 entity.Airbender.name=Airbender
 entity.Firebender.name=Firebender

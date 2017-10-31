@@ -16,22 +16,21 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
-
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
 
 /**
  * 
@@ -47,7 +46,7 @@ public class AiFireball extends BendingAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiFireball(BendingAbility ability, EntityLiving entity, Bender bender) {
+	protected AiFireball(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
 		setMutexBits(2);
@@ -60,7 +59,7 @@ public class AiFireball extends BendingAi {
 		data.chi().setTotalChi(10);
 		data.chi().setAvailableChi(10);
 		execAbility();
-		data.setAbilityCooldown(100);
+		data.getMiscData().setAbilityCooldown(100);
 	}
 	
 	@Override
@@ -87,7 +86,7 @@ public class AiFireball extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
-				&& bender.getData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 	
 	@Override

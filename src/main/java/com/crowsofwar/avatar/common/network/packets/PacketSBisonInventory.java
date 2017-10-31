@@ -35,7 +35,7 @@ public class PacketSBisonInventory extends AvatarPacket<PacketSBisonInventory> {
 	public void avatarToBytes(ByteBuf buf) {}
 	
 	@Override
-	protected Side getRecievedSide() {
+	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	

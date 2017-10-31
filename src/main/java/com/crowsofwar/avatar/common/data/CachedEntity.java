@@ -17,79 +17,80 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import javax.annotation.Nullable;
-
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
+
 /**
- * Represents an AvatarEntity which is stored by ID but also cached for
- * performance.
- * <p>
- * Note: is not synced; designed to be manipulated by someone with a
- * synchronized ID.
+ * Represents an entity which is stored by its UUID but also cached for
+ * performance. Can also store no entity.
  * 
  * @author CrowsOfWar
  */
-public class CachedEntity<T extends AvatarEntity> {
+public class CachedEntity<T extends Entity> {
 	
 	private T cachedEntity;
-	private int entityId;
+	private UUID entityId;
 	
-	public CachedEntity(int id) {
+	public CachedEntity(@Nullable UUID id) {
 		this.entityId = id;
 	}
-	
-	/**
-	 * Reads this cached entity from NBT. Warning: Will use values directly from
-	 * this compound, so make sure that a sub-compound is used specifically for
-	 * this cached entity.
-	 */
-	public void readFromNBT(NBTTagCompound nbt) {
-		entityId = nbt.getInteger("EntityId");
+
+	public void readFromNbt(NBTTagCompound nbt) {
+		entityId = nbt.getBoolean("NoEntity") ? null : nbt.getUniqueId("EntityUuid");
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("EntityId", entityId);
+	public void writeToNbt(NBTTagCompound nbt) {
+		nbt.setBoolean("NoEntity", entityId == null);
+		if (entityId != null) {
+			nbt.setUniqueId("EntityUuid", entityId);
+		}
 	}
 	
 	public void fromBytes(ByteBuf buf) {
-		entityId = buf.readInt();
+		entityId = buf.readBoolean() ? null : new UUID(buf.readLong(), buf.readLong());
 	}
 	
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(entityId);
+		buf.writeBoolean(entityId == null);
+		if (entityId != null) {
+			buf.writeLong(entityId.getMostSignificantBits());
+			buf.writeLong(entityId.getLeastSignificantBits());
+		}
 	}
-	
-	public int getEntityId() {
+
+	@Nullable
+	public UUID getEntityId() {
 		return entityId;
 	}
 	
-	public void setEntityId(int entityId) {
+	public void setEntityId(@Nullable UUID entityId) {
 		this.entityId = entityId;
 	}
 	
 	/**
-	 * Gets the entity, searching for it if necessary. Then returns the entity.
-	 * <p>
-	 * Null if entity cannot be found.
+	 * Finds the entity through the cache or searching for it.
 	 */
-	public @Nullable T getEntity(World world) {
-		if (checkCacheValidity() && entityId > -1) {
-			cachedEntity = AvatarEntity.lookupEntity(world, entityId);
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public T getEntity(World world) {
+		if (isCacheInvalid()) {
+			List<Entity> list = world.getEntities(Entity.class, entity -> getId(entity).equals(entityId));
+			cachedEntity = list.isEmpty() ? null : (T) list.get(0);
 		}
 		return cachedEntity;
 	}
 	
-	/**
-	 * Sets the entity Id and cache. Can be set to null.
-	 */
 	public void setEntity(@Nullable T entity) {
 		cachedEntity = entity;
-		entityId = entity == null ? -1 : entity.getAvId();
+		entityId = entity == null ? null : getId(entity);
 	}
 	
 	/**
@@ -98,14 +99,14 @@ public class CachedEntity<T extends AvatarEntity> {
 	 * 
 	 * @return whether cache is invalid; if true the cached entity is null
 	 */
-	private boolean checkCacheValidity() {
-		if (entityId < 0 || cachedEntity == null || cachedEntity.isDead
-				|| cachedEntity.getAvId() != entityId) {
-			cachedEntity = null;
-			return true;
-		}
-		
-		return false;
+	private boolean isCacheInvalid() {
+		return cachedEntity == null || cachedEntity.isDead || cachedEntity.getUniqueID() !=
+				entityId;
+	}
+	
+	private static UUID getId(Entity entity) {
+		return entity instanceof EntityPlayer ? AccountUUIDs.getId(entity.getName()).getUUID()
+				: entity.getUniqueID();
 	}
 	
 }

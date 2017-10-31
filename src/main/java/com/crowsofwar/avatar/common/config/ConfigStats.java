@@ -17,18 +17,17 @@
 
 package com.crowsofwar.avatar.common.config;
 
-import static net.minecraft.init.Blocks.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.minecraft.init.Blocks.*;
 
 /**
  * 
@@ -57,6 +56,9 @@ public class ConfigStats {
 	
 	@Load
 	public FireballSettings fireballSettings = new FireballSettings();
+
+	@Load
+	public ExplosionSettings explosionSettings = new ExplosionSettings();
 	
 	// @formatter:off
 	@Load
@@ -66,6 +68,9 @@ public class ConfigStats {
 			chiAirBubble = 1.5f,
 			chiAirBubbleTakeDamage = 0.25f,
 			chiAirBubbleOneSecond = 0.125f,
+			chiBuff = 2F,
+			chiCloudburst = 2.5F,
+			chiEarthspike = 2F,
 			chiRavine = 1.5f,
 			chiWall = 2.5f,
 			chiPickUpBlock = 1.25f,
@@ -79,9 +84,16 @@ public class ConfigStats {
 			chiWaterArc = 1f,
 			chiWaterBubble = 1.25f,
 			chiWaterSkateSecond = 0.5f,
-			chiWallOneSecond = 0.125f;
-
+			chiWallOneSecond = 0.125f,
+			chiPrison = 5,
+			chiSandPrison = 3,
+			chiLightning = 6,
+			chiIceShieldCreate = 4,
+			chiIceShieldProtect = 0.15f;
 	// @formatter:on
+
+	@Load
+	public float icePrisonDamage = 2;
 	
 	@Load
 	public float sleepChiRegen = 99999;
@@ -170,6 +182,23 @@ public class ConfigStats {
 		@Load
 		public double push = .75;
 		
+	}
+	public static class ExplosionSettings{
+		@Load
+		public float damage = 6;
+
+
+		@Load
+		public float explosionSize = 1.0f;
+
+		@Load
+		public boolean damageBlocks = false;
+
+		@Load
+		public double push = .75;
+
+
+
 	}
 	
 }

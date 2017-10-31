@@ -58,7 +58,7 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	}
 	
 	@Override
-	public Side getRecievedSide() {
+	public Side getReceivedSide() {
 		return Side.SERVER;
 	}
 	

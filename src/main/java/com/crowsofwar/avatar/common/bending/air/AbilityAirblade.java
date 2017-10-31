@@ -16,59 +16,59 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityAirblade;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
+
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 import static java.lang.Math.abs;
-
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.entity.EntityAirblade;
-import com.crowsofwar.gorecore.util.Vector;
-
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class AbilityAirblade extends AirAbility {
+public class AbilityAirblade extends Ability {
 	
 	public AbilityAirblade() {
-		super("airblade");
+		super(Airbending.ID, "airblade");
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
 		
-		EntityLivingBase bender = ctx.getBenderEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		
-		if (!ctx.consumeChi(STATS_CONFIG.chiAirblade)) return;
+		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 		
-		double pitchDeg = bender.rotationPitch;
+		double pitchDeg = entity.rotationPitch;
 		if (abs(pitchDeg) > 30) {
 			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
 		}
 		float pitch = (float) Math.toRadians(pitchDeg);
 		
-		Vector look = Vector.toRectangular(Math.toRadians(bender.rotationYaw), pitch);
-		Vector spawnAt = Vector.getEntityPos(bender).add(look).add(0, 1, 0);
-		spawnAt.add(look);
-		
+		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), pitch);
+		Vector spawnAt = Vector.getEntityPos(entity).plus(look.times(2)).plus(0, 1, 0);
+
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();
 		
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-		airblade.velocity().set(look.times(ctx.getLevel() >= 1 ? 30 : 20));
+		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 30 : 20));
 		airblade.setDamage(STATS_CONFIG.airbladeSettings.damage * (1 + xp * .015f));
-		airblade.setOwner(bender);
+		airblade.setOwner(entity);
 		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));
 		airblade.setChainAttack(abilityData.isMasterPath(FIRST));
 		
@@ -89,5 +89,5 @@ public class AbilityAirblade extends AirAbility {
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirblade(this, entity, bender);
 	}
-	
+
 }

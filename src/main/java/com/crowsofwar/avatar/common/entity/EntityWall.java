@@ -17,8 +17,9 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.entity.data.SyncableEntityReference;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +28,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static java.lang.Math.abs;
@@ -41,11 +44,12 @@ public class EntityWall extends AvatarEntity {
 	
 	private static final DataParameter<Integer> SYNC_DIRECTION = EntityDataManager.createKey(EntityWall.class,
 			DataSerializers.VARINT);
-	private static final DataParameter<Integer>[] SYNC_SEGMENTS;
+	private static final DataParameter<Optional<UUID>>[] SYNC_SEGMENTS;
+
 	static {
 		SYNC_SEGMENTS = new DataParameter[5];
 		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
-			SYNC_SEGMENTS[i] = EntityDataManager.createKey(EntityWall.class, DataSerializers.VARINT);
+			SYNC_SEGMENTS[i] = EntityDataManager.createKey(EntityWall.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 		}
 	}
 	
@@ -53,18 +57,20 @@ public class EntityWall extends AvatarEntity {
 	 * All the segments in this wall. MUST be fixed-length, as the data
 	 * parameters must be same for both sides.
 	 */
-	private final SyncableEntityReference<EntityWallSegment>[] segments;
+	private final SyncedEntity<EntityWallSegment>[] segments;
 	
 	private int nextSegment = 0;
 	
 	/**
 	 * @param world
 	 */
+	@SuppressWarnings("unchecked")
 	public EntityWall(World world) {
 		super(world);
-		this.segments = new SyncableEntityReference[5];
+		this.segments = new SyncedEntity[5];
 		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new SyncableEntityReference(this, SYNC_SEGMENTS[i]);
+			segments[i] = new SyncedEntity(this, SYNC_SEGMENTS[i]);
+			segments[i].preventNullSaving();
 		}
 		setSize(0, 0);
 	}
@@ -74,7 +80,7 @@ public class EntityWall extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_DIRECTION, NORTH.ordinal());
 		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
-			dataManager.register(SYNC_SEGMENTS[i], -1);
+			dataManager.register(SYNC_SEGMENTS[i], Optional.absent());
 		}
 	}
 	
@@ -86,7 +92,7 @@ public class EntityWall extends AvatarEntity {
 		// Also calculate lowest top pos of each segment
 		double slowest = Integer.MAX_VALUE;
 		double lowest = Integer.MAX_VALUE;
-		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+		for (SyncedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
 			if (seg != null) {
 
@@ -104,17 +110,20 @@ public class EntityWall extends AvatarEntity {
 		
 		// Now sync all wall segment speeds
 		// Also sync all segment pos to the lowest height
-		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+		for (SyncedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
 			if (seg != null) {
 
-				seg.velocity().setY(slowest);
-				seg.position().setY(lowest - seg.height);
+				Vector vel = seg.velocity();
+				Vector pos = seg.position();
+
+				seg.setVelocity(vel.withY(slowest));
+				seg.setPosition(pos.withY(lowest - seg.height));
 
 			}
 		}
-		
-		velocity().set(Vector.ZERO);
+
+		setVelocity(Vector.ZERO);
 		this.noClip = true;
 		move(MoverType.SELF, 0, slowest / 20, 0);
 	}
@@ -143,7 +152,7 @@ public class EntityWall extends AvatarEntity {
 	
 	@Override
 	public void setDead() {
-		for (SyncableEntityReference<EntityWallSegment> ref : segments) {
+		for (SyncedEntity<EntityWallSegment> ref : segments) {
 			// don't use setDead() as that will trigger this being called again
 			EntityWallSegment entity = ref.getEntity();
 			if (entity != null) {
@@ -159,25 +168,20 @@ public class EntityWall extends AvatarEntity {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
-			segments[i].readFromNBT(nestedCompound(nbt, "Wall" + i));
+			segments[i].readFromNbt(nestedCompound(nbt, "Wall" + i));
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
-			segments[i].writeToNBT(nestedCompound(nbt, "Wall" + i));
+			segments[i].writeToNbt(nestedCompound(nbt, "Wall" + i));
 	}
 	
 	@Override
 	protected boolean canCollideWith(Entity entity) {
 		return super.canCollideWith(entity) && !(entity instanceof EntityWall)
 				&& !(entity instanceof EntityWallSegment);
-	}
-	
-	@Override
-	public boolean tryDestroy() {
-		return false;
 	}
 	
 }

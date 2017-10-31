@@ -17,42 +17,41 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class AbilityFireArc extends FireAbility {
-	
-	/**
-	 * @param controller
-	 */
+public class AbilityFireArc extends Ability {
+
 	public AbilityFireArc() {
-		super("fire_arc");
+		super(Firebending.ID, "fire_arc");
 		requireRaytrace(-1, false);
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
-		if (ctx.consumeChi(STATS_CONFIG.chiFireArc)) {
+
+		Bender bender = ctx.getBender();
+
+		if (bender.consumeChi(STATS_CONFIG.chiFireArc)) {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
@@ -68,11 +67,14 @@ public class AbilityFireArc extends FireAbility {
 
 			removeExisting(ctx);
 
+			float damage = ctx.getLevel() >= 2 ? 2 : 1;
+			damage += ctx.getPowerRating() / 200f;
+
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
 			fire.setBehavior(new FireArcBehavior.PlayerControlled());
 			fire.setOwner(entity);
-			fire.setDamageMult(ctx.getLevel() >= 2 ? 2 : 1);
+			fire.setDamageMult(damage);
 			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			world.spawnEntity(fire);
 
@@ -80,11 +82,6 @@ public class AbilityFireArc extends FireAbility {
 
 		}
 		
-	}
-	
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiFireArc(this, entity, bender);
 	}
 
 	/**
@@ -99,6 +96,11 @@ public class AbilityFireArc extends FireAbility {
 			fire.setBehavior(new FireArcBehavior.Thrown());
 		}
 
+	}
+
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiFireArc(this, entity, bender);
 	}
 
 }

@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -54,7 +54,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
-			entity.velocity().add(0, -9.81 / 20, 0);
+			entity.addVelocity(Vector.DOWN.times(0.981));
 			if (entity.isCollided) {
 				entity.setDead();
 			}
@@ -83,7 +83,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			
 			if (owner == null) return this;
 			
-			BendingData data = Bender.create(owner).getData();
+			BendingData data = Bender.get(owner).getData();
 			
 			Vector target;
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 3, false);
@@ -97,10 +97,9 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 				target = forward.times(3).plus(eye);
 			}
 			
-			Vector motion = target.minus(new Vector(entity));
-			motion.mul(3);
-			
-			entity.velocity().set(motion);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(3);
+			entity.setVelocity(motion);
+
 			return this;
 		}
 		
@@ -122,7 +121,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
-			entity.velocity().add(0, -9.81 / 10, 0);
+			entity.addVelocity(Vector.DOWN.times(0.981));
 			if (entity.isCollided) {
 				
 				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();

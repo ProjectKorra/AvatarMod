@@ -16,30 +16,12 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
-import static net.minecraft.client.Minecraft.getMinecraft;
-import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
-
-import java.io.IOException;
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.ComponentText;
-import com.crowsofwar.avatar.client.uitools.Frame;
-import com.crowsofwar.avatar.client.uitools.Measurement;
-import com.crowsofwar.avatar.client.uitools.ScreenInfo;
-import com.crowsofwar.avatar.client.uitools.StartingPosition;
-import com.crowsofwar.avatar.client.uitools.UiComponentHandler;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
-import com.crowsofwar.avatar.common.bending.BendingController;
-import com.crowsofwar.avatar.common.bending.BendingManager;
-import com.crowsofwar.avatar.common.bending.BendingType;
+import com.crowsofwar.avatar.client.uitools.*;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
@@ -47,7 +29,6 @@ import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
@@ -56,6 +37,18 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
+import static net.minecraft.client.Minecraft.getMinecraft;
+import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
 
 /**
  * 
@@ -78,11 +71,11 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private ComponentText title;
 	private UiComponentHandler handler;
 	
-	public SkillsGui(BendingType type) {
-		super(new ContainerSkillsGui(getMinecraft().player, type));
-		
+	public SkillsGui(UUID guiBending) {
+		super(new ContainerSkillsGui(getMinecraft().player, guiBending));
+
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
-		BendingData data = AvatarPlayerData.fetcher().fetch(getMinecraft().player);
+		BendingData data = BendingData.get(getMinecraft().player);
 		
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
@@ -91,8 +84,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		ScreenInfo.refreshDimensions();
 		
-		BendingController controller = BendingManager.getBending(type);
-		List<BendingAbility> abilities = controller.getAllAbilities();
+		BendingStyle controller = BendingStyles.get(guiBending);
+		List<Ability> abilities = controller.getAllAbilities();
 		cards = new AbilityCard[abilities.size()];
 		for (int i = 0; i < abilities.size(); i++) {
 			cards[i] = new AbilityCard(abilities.get(i), i);
@@ -100,15 +93,20 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		
 		handler = new UiComponentHandler();
 		
-		BendingType[] types = data.getAllBending().stream()//
-				.map(c -> c.getType())//
-				.sorted((c1, c2) -> c1.name().compareTo(c2.name()))//
-				.toArray(BendingType[]::new);
+		UUID[] types = data.getAllBending().stream()//
+				.map(BendingStyle::getId)//
+				.sorted((id1, id2) -> {
+					BendingStyle c1 = BendingStyles.get(id1);
+					BendingStyle c2 = BendingStyles.get(id2);
+					return c1.getName().compareTo(c2.getName());
+				})//
+				.toArray(UUID[]::new);
 		
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
 			float scale = 1.4f;
-			tabs[i] = new ComponentBendingTab(types[i], types[i] == type);
+			BendingStyle style = BendingStyles.get(types[i]);
+			tabs[i] = new ComponentBendingTab(style, types[i] == guiBending);
 			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
 			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2) * scale, 0));
 			tabs[i].setScale(scale);
@@ -128,7 +126,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		hotbar.setVisible(false);
 		
 		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
-				I18n.format("avatar.ui.skillsMenu"), type.name().toLowerCase()));
+				I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(guiBending).getName().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);
@@ -178,8 +176,10 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		
-		AvatarPlayerData data = AvatarPlayerData.fetcher().fetch(mc.player);
+
+		drawDefaultBackground();
+
+		BendingData data = BendingData.get(mc.player);
 		
 		handler.draw(partialTicks, mouseX, mouseY);
 		
@@ -270,7 +270,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	/**
 	 * Called when the 'use scroll' button is clicked
 	 */
-	public void useScroll(BendingAbility ability) {
+	public void useScroll(Ability ability) {
 		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
 		
 		if (container.getSlot(0).getHasStack() || container.getSlot(1).getHasStack()) {

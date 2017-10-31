@@ -22,9 +22,9 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -40,7 +40,6 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -62,7 +61,7 @@ public class StatCtrlAirJump extends StatusControl {
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 		
-		AbilityData abilityData = data.getAbilityData(ABILITY_AIR_JUMP);
+		AbilityData abilityData = data.getAbilityData("air_jump");
 		boolean allowDoubleJump = abilityData.getLevel() == 3
 				&& abilityData.getPath() == AbilityTreePath.FIRST;
 		
@@ -71,8 +70,8 @@ public class StatCtrlAirJump extends StatusControl {
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity,
 				entity.getEntityBoundingBox().grow(0, 0.5, 0));
 		boolean onGround = !collideWithGround.isEmpty();
-		
-		if (onGround || (allowDoubleJump && ctx.consumeChi(STATS_CONFIG.chiAirJump))) {
+
+		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
 			
 			int lvl = abilityData.getLevel();
 			double multiplier = 0.65;
@@ -90,10 +89,10 @@ public class StatCtrlAirJump extends StatusControl {
 					Math.toRadians(entity.rotationYaw), 0);
 			
 			Vector velocity = rotations.toRectangular();
-			velocity.setY(Math.pow(velocity.y(), .1));
-			velocity.mul(multiplier);
+			velocity = velocity.withY(Math.pow(velocity.y(), .1));
+			velocity = velocity.times(multiplier);
 			if (!onGround) {
-				velocity.mul(0.6);
+				velocity = velocity.times(0.6);
 				entity.motionX = 0;
 				entity.motionY = 0;
 				entity.motionZ = 0;
@@ -118,7 +117,7 @@ public class StatCtrlAirJump extends StatusControl {
 				fallAbsorption = 19;
 			}
 			
-			data.setFallAbsorption(fallAbsorption);
+			data.getMiscData().setFallAbsorption(fallAbsorption);
 			
 			data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {

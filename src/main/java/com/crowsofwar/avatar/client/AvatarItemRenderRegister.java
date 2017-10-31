@@ -47,7 +47,7 @@ public class AvatarItemRenderRegister {
 		
 		for (int i = 0; i < ScrollType.amount(); i++) {
 
-			ScrollType type = ScrollType.fromId(i);
+			ScrollType type = ScrollType.get(i);
 
 			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
 					"inventory");

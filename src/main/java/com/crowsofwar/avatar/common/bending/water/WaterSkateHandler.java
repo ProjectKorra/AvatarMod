@@ -16,14 +16,9 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -41,7 +36,6 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -77,7 +71,7 @@ public class WaterSkateHandler extends TickHandler {
 		
 		if (data.hasStatusControl(SKATING_JUMP) && skate(data, entity, ctx.getBender())) {
 			data.removeStatusControl(StatusControl.SKATING_JUMP);
-			data.setCanUseAbilities(true);
+			data.getMiscData().setCanUseAbilities(true);
 			return true;
 		} else {
 			return false;
@@ -88,7 +82,7 @@ public class WaterSkateHandler extends TickHandler {
 	private void tryStartSkating(BendingData data, EntityLivingBase player) {
 		
 		if (!player.world.isRemote && data.hasStatusControl(SKATING_START)) {
-			if (shouldSkate(player, data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE))) {
+			if (shouldSkate(player, data.getAbilityData("water_skate"))) {
 				data.removeStatusControl(SKATING_START);
 				data.addStatusControl(SKATING_JUMP);
 			}
@@ -102,7 +96,8 @@ public class WaterSkateHandler extends TickHandler {
 	 */
 	private boolean skate(BendingData data, EntityLivingBase player, Bender bender) {
 		
-		AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_WATER_SKATE);
+		AbilityData abilityData = data.getAbilityData("water_skate");
+		double powerRating = bender.calcPowerRating(Waterbending.ID);
 		
 		World world = player.world;
 		int yPos = getSurfacePos(player);
@@ -111,20 +106,13 @@ public class WaterSkateHandler extends TickHandler {
 			return true;
 		} else {
 			
-			float required = STATS_CONFIG.chiWaterSkateSecond / 20f;
-			Chi chi = data.chi();
-			
-			boolean infinite = bender.isCreativeMode() && CHI_CONFIG.infiniteInCreative;
-			
-			if (chi.getAvailableChi() >= required || infinite) {
-				
-				if (!infinite) {
-					chi.changeTotalChi(-required);
-					chi.changeAvailableChi(-required);
-				}
-				
+			float requiredChi = STATS_CONFIG.chiWaterSkateSecond / 20f;
+			requiredChi -= powerRating / 100 * 0.25f;
+			if (bender.consumeChi(requiredChi)) {
+
 				double targetSpeed = abilityData.getLevel() >= 2 ? 1.2 : 0.8;
-				
+				targetSpeed += powerRating / 400f;
+
 				if (player.moveForward != 0) {
 					if (player.moveForward < 0) {
 						targetSpeed /= 2;
@@ -135,22 +123,22 @@ public class WaterSkateHandler extends TickHandler {
 				
 				player.setPosition(player.posX, yPos + .2, player.posZ);
 				Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);
-				Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).mul(targetSpeed);
+				Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).times(targetSpeed);
 				
 				double targetWeight = 0.1;
-				currentVelocity.mul(1 - targetWeight);
-				targetVelocity.mul(targetWeight);
+				currentVelocity = currentVelocity.times(1 - targetWeight);
+				targetVelocity = targetVelocity.times(targetWeight);
 				
 				double targetSpeedWeight = 0.2;
 				double speed = currentVelocity.magnitude() * (1 - targetSpeedWeight)
 						+ targetSpeed * targetSpeedWeight;
 				
-				Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().mul(speed);
+				Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().times(speed);
 				
 				Vector playerMovement = toRectangular(toRadians(player.rotationYaw - 90),
-						toRadians(player.rotationPitch)).mul(player.moveStrafing * 0.02);
+						toRadians(player.rotationPitch)).times(player.moveStrafing * 0.02);
 				
-				newVelocity.add(playerMovement);
+				newVelocity = newVelocity.plus(playerMovement);
 				
 				player.motionX = newVelocity.x();
 				player.motionY = 0;
@@ -160,13 +148,13 @@ public class WaterSkateHandler extends TickHandler {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 0.4f, 2f);
 					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 2, 4,
-							Vector.getEntityPos(player).add(0, .4, 0), new Vector(.2, 1, .2));
+							Vector.getEntityPos(player).plus(0, .4, 0), new Vector(.2, 1, .2));
 				}
 				
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
 				}
-				data.setCanUseAbilities(abilityData.getLevel() >= 1);
+				data.getMiscData().setCanUseAbilities(abilityData.getLevel() >= 1);
 				
 			}
 			

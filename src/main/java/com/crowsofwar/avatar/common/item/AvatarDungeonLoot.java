@@ -16,17 +16,11 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static net.minecraft.world.storage.loot.LootTableList.*;
-
+import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootEntry;
-import net.minecraft.world.storage.loot.LootEntryEmpty;
-import net.minecraft.world.storage.loot.LootEntryItem;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.storage.loot.functions.SetCount;
@@ -34,23 +28,22 @@ import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraft.world.storage.loot.functions.SetNBT;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static net.minecraft.world.storage.loot.LootTableList.*;
 
 /**
  * 
  * 
  * @author CrowsOfWar
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarDungeonLoot {
 	
-	private AvatarDungeonLoot() {}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new AvatarDungeonLoot());
-	}
-	
 	@SubscribeEvent
-	public void onLootLoad(LootTableLoadEvent e) {
+	public static void onLootLoad(LootTableLoadEvent e) {
 		
 		if (!STATS_CONFIG.addDungeonLoot) {
 			return;
@@ -70,6 +63,10 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
+			addLoot(e, 65, //
+					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(0),
+					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(1),
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(0));
 		}
 		
 		if (isLootTable(e, CHESTS_STRONGHOLD_LIBRARY, CHESTS_ABANDONED_MINESHAFT, CHESTS_SIMPLE_DUNGEON)) {
@@ -85,6 +82,10 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
+			addLoot(e, 65, //
+					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(0),
+					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(1),
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(0));
 		}
 		
 		if (isLootTable(e, CHESTS_VILLAGE_BLACKSMITH, CHESTS_IGLOO_CHEST, CHESTS_DESERT_PYRAMID,
@@ -95,6 +96,10 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
+			addLoot(e, 65, //
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(0),
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(1),
+					new LootItem(AvatarItems.itemOstrichEquipment, 20).withMetadata(0));
 		}
 		
 		if (isLootTable(e, CHESTS_SPAWN_BONUS_CHEST)) {
@@ -105,7 +110,7 @@ public class AvatarDungeonLoot {
 		
 	}
 	
-	private boolean isLootTable(LootTableLoadEvent e, ResourceLocation... names) {
+	private static boolean isLootTable(LootTableLoadEvent e, ResourceLocation... names) {
 		for (ResourceLocation name : names) {
 			if (e.getName().equals(name)) {
 				return true;
@@ -114,7 +119,7 @@ public class AvatarDungeonLoot {
 		return false;
 	}
 	
-	private void addLoot(LootTableLoadEvent e, int emptyWeight, LootItem... items) {
+	private static void addLoot(LootTableLoadEvent e, int emptyWeight, LootItem... items) {
 		
 		String lootPoolName = "custom_avatar_loot_pools";
 		int j = 2;

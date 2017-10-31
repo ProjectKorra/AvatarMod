@@ -18,12 +18,10 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -101,9 +99,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
 			Vector thisPos = new Vector(entity);
 			Vector force = placeAtVec.minus(thisPos);
-			force.normalize();
-			force.mul(3);
-			entity.velocity().set(force);
+			force = force.normalize().times(3);
+			entity.setVelocity(force);
 
 			if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
 				
@@ -165,8 +162,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				
 			}
 			
-			entity.velocity().add(0, -9.81 / 20, 0);
-			
+			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
+
 			World world = entity.world;
 			if (!entity.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
@@ -177,8 +174,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 						return collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion.mul(0.3);
-						motion.setY(0.08);
+						motion = motion.times(0.3).withY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 					}
 					
@@ -198,30 +194,28 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			// Push entity
 			Vector motion = new Vector(collided).minus(new Vector(entity));
-			motion.mul(STATS_CONFIG.floatingBlockSettings.push);
-			motion.setY(0.08);
+			motion = motion.times(STATS_CONFIG.floatingBlockSettings.push).withY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 			
 			// Add XP
-			BendingData data = Bender.create(entity.getOwner()).getData();
+			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.blockThrowHit;
 				if (collided.getHealth() <= 0) {
 					xp = SKILLS_CONFIG.blockKill;
 				}
-				data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK).addXp(xp);
+				data.getAbilityData("pickup_block").addXp(xp);
 			}
 			
 			// Remove the floating block & spawn particles
 			entity.onCollideWithSolid();
-			
 			// boomerang upgrade handling
 			if (!entity.world.isRemote) {
-				if (data.getAbilityData(BendingAbility.ABILITY_PICK_UP_BLOCK)
+				if (data.getAbilityData("pickup_block")
 						.isMasterPath(AbilityTreePath.FIRST)) {
 					
-					Chi chi = data.chi();
-					if (chi.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+					Bender bender = Bender.get(entity.getOwner());
+					if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 						data.addStatusControl(StatusControl.THROW_BLOCK);
 						data.addStatusControl(StatusControl.PLACE_BLOCK);
 						return new FloatingBlockBehavior.PlayerControlled();
@@ -256,12 +250,11 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			entity.velocity().add(0, -9.81 / 20, 0);
+			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
 			
 			Vector velocity = entity.velocity();
 			if (velocity.y() <= 0) {
-				velocity.setY(0);
-				entity.velocity().set(velocity);
+				entity.setVelocity(velocity.withY(0));
 				return new PlayerControlled();
 			}
 			
@@ -292,7 +285,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			
 			if (owner == null) return this;
 			
-			BendingData data = Bender.create(owner).getData();
+			BendingData data = Bender.get(owner).getData();
 			
 			double yaw = Math.toRadians(owner.rotationYaw);
 			double pitch = Math.toRadians(owner.rotationPitch);
@@ -300,8 +293,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(new Vector(entity));
-			motion.mul(5);
-			entity.velocity().set(motion);
+			motion = motion.times(5);
+			entity.setVelocity(motion);
 			
 			return this;
 		}
@@ -324,7 +317,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
-			entity.velocity().add(0, -9.81 / 20, 0);
+			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
 			if (entity.isCollided) {
 				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();

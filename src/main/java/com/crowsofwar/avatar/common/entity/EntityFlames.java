@@ -17,32 +17,23 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-
-import java.util.List;
-import java.util.Random;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
-import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * 
@@ -50,8 +41,6 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class EntityFlames extends AvatarEntity {
-	
-	private final IEntityProperty<Vector> propVelocity;
 	
 	/**
 	 * The owner, null client side
@@ -65,7 +54,6 @@ public class EntityFlames extends AvatarEntity {
 	 */
 	public EntityFlames(World worldIn) {
 		super(worldIn);
-		this.propVelocity = new EntityPropertyMotion(this);
 		setSize(0.1f, 0.1f);
 	}
 	
@@ -86,21 +74,28 @@ public class EntityFlames extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		setDead();
 	}
-	
+
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onFireContact();
+		}
+	}
+
 	@Override
 	public void onUpdate() {
 		
 		super.onUpdate();
-		
-		velocity().mul(0.94);
-		
+
+		setVelocity(velocity().times(0.94));
+
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
 		
-		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().copy().normalize(), 0.3,
+		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
-			velocity().set(velocity().reflect(new Vector(sideHit)).times(0.5));
+			setVelocity(velocity().reflect(new Vector(sideHit)).times(0.5));
 			
 			// Try to light firest
 			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {
@@ -120,8 +115,8 @@ public class EntityFlames extends AvatarEntity {
 		}
 		
 		if (!world.isRemote) {
-			BendingData data = Bender.create(owner).getData();
-			AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_FLAMETHROWER);
+			BendingData data = Bender.get(owner).getData();
+			AbilityData abilityData = data.getAbilityData("flamethrower");
 			
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != owner && !(entity instanceof EntityFlames));
@@ -146,36 +141,27 @@ public class EntityFlames extends AvatarEntity {
 			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
 			if (!collided.isEmpty()) setDead();
 		}
-		
-		handleWaterMovement();
-		if (inWater) {
-			setDead();
-			showExtinguished();
-		}
-		if (world.isRainingAt(getPosition())) {
-			setDead();
-			if (Math.random() < 0.3) showExtinguished();
-		}
-		
+
 	}
-	
-	/**
-	 * Plays an extinguishing sound and particles
-	 */
-	private void showExtinguished() {
-		Random random = new Random();
-		if (world.isRemote) {
-			world.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ,
-					(random.nextGaussian() - 0.5) * 0.05 + motionX / 10, random.nextGaussian() * 0.08,
-					(random.nextGaussian() - 0.5) * 0.05 + motionZ / 10);
-		}
-		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-				SoundCategory.PLAYERS, 0.3f, random.nextFloat() * 0.3f + 1.1f, false);
-	}
-	
+
 	@Override
-	protected void playStepSound(BlockPos pos, Block blockIn) {}
-	
+	public boolean onMajorWaterContact() {
+		setDead();
+		spawnExtinguishIndicators();
+		return true;
+	}
+
+	@Override
+	public boolean onMinorWaterContact() {
+		setDead();
+
+		// Spawn less extinguish indicators in the rain to prevent spamming
+		if (rand.nextDouble() < 0.3) {
+			spawnExtinguishIndicators();
+		}
+		return true;
+	}
+
 	public boolean doesLightFires() {
 		return lightsFires;
 	}

@@ -17,10 +17,9 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +29,7 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
-public class EntityAirGust extends EntityArc {
+public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> {
 	
 	public static final Vector ZERO = new Vector(0, 0, 0);
 	
@@ -71,28 +70,31 @@ public class EntityAirGust extends EntityArc {
 	protected void onCollideWithEntity(Entity entity) {
 		EntityLivingBase owner = getOwner();
 		if (!entity.world.isRemote && entity != owner) {
-			
-			BendingData data = Bender.create(owner).getData();
+
+			if (entity instanceof AvatarEntity) {
+				AvatarEntity avatarEntity = (AvatarEntity) entity;
+				if (avatarEntity.onAirContact()) return;
+				if (!avatarEntity.canPush()) return;
+			}
+
+			BendingData data = Bender.get(owner).getData();
 			float xp = 0;
 			if (data != null) {
-				AbilityData abilityData = data.getAbilityData(BendingAbility.ABILITY_AIR_GUST);
+				AbilityData abilityData = data.getAbilityData("air_gust");
 				xp = abilityData.getTotalXp();
 				abilityData.addXp(SKILLS_CONFIG.airGustHit);
 			}
 			
 			Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
-			velocity.setY(airGrab ? -1 : 1);
-			velocity.mul(airGrab ? -0.8 : 1);
-			
+			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.8 : 1);
+
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			afterVelocityAdded(entity);
 			
 			setDead();
 			
 			if (entity instanceof AvatarEntity) {
-				if (((AvatarEntity) entity).tryDestroy()) {
-					entity.setDead();
-				}
+				((AvatarEntity) entity).onAirContact();
 			}
 			
 		}
@@ -104,19 +106,13 @@ public class EntityAirGust extends EntityArc {
 	}
 	
 	@Override
-	public void onCollideWithSolid() {
-		if (tryDestroy()) {
-			setDead();
-		}
+	public boolean onCollideWithSolid() {
+		setDead();
+		return true;
 	}
-	
+
 	@Override
-	protected Vector getGravityVector() {
-		return ZERO;
-	}
-	
-	@Override
-	protected ControlPoint createControlPoint(float size) {
+	protected AirGustControlPoint createControlPoint(float size, int index) {
 		return new AirGustControlPoint(this, 0.5f, 0, 0, 0);
 	}
 	
@@ -158,7 +154,7 @@ public class EntityAirGust extends EntityArc {
 		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
-		
+
 		@Override
 		public void onUpdate() {
 			super.onUpdate();

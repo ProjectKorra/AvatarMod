@@ -16,11 +16,10 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -34,69 +33,65 @@ import net.minecraft.entity.ai.EntityAIBase;
  * <p>
  * BendingAi is a subclass of EntityAIBase, meaning that a new instance is
  * applied per-entity in its tasks list. A new instance of a BendingAi is
- * acquired via the ability's {@link BendingAbility#getAi(EntityLiving, Bender)
+ * acquired via the ability's {@link Ability#getAi(EntityLiving, Bender)
  * getAi method} for the specific mob.
  * 
  * @author CrowsOfWar
  */
 public abstract class BendingAi extends EntityAIBase {
-	
-	protected final BendingAbility ability;
+
+	protected final Ability ability;
 	protected final EntityLiving entity;
 	protected final Bender bender;
-	
+
 	protected int timeExecuting;
-	
-	protected BendingAi(BendingAbility ability, EntityLiving entity, Bender bender) {
+
+	protected BendingAi(Ability ability, EntityLiving entity, Bender bender) {
 		this.ability = ability;
 		this.entity = entity;
 		this.bender = bender;
 		this.timeExecuting = 0;
 	}
-	
+
 	@Override
 	public void startExecuting() {
 		timeExecuting = 0;
 		startExec();
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
 		return false;
 	}
-	
+
 	@Override
 	public void resetTask() {
 		timeExecuting = 0;
 	}
-	
+
 	@Override
 	public void updateTask() {
 		timeExecuting++;
 	}
-	
+
 	@Override
 	public final boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
 		boolean targetInRange = target == null || entity.getDistanceSqToEntity(target) < 12 * 12;
-		return bender.getData().getAbilityCooldown() == 0 && targetInRange && shouldExec();
+		return bender.getData().getMiscData().getAbilityCooldown() == 0 && targetInRange && shouldExec();
 	}
-	
+
 	protected abstract boolean shouldExec();
-	
+
 	protected abstract void startExec();
-	
+
 	/**
 	 * Executes the ability's main code (the part used for players)
 	 */
 	protected void execAbility() {
-		if (bender.getData().getAbilityCooldown() == 0) {
-			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
-			AbilityContext ctx = new AbilityContext(bender.getData(), entity, bender, raytrace, ability);
-			ability.execute(ctx);
-		}
+		bender.executeAbility(ability);
 	}
-	
+
 	/**
 	 * If the status control is present, uses up the status control
 	 */
@@ -104,10 +99,10 @@ public abstract class BendingAi extends EntityAIBase {
 		BendingData data = bender.getData();
 		if (data.hasStatusControl(sc)) {
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
-			if (sc.execute(new AbilityContext(data, entity, bender, raytrace, ability))) {
+			if (sc.execute(new BendingContext(data, entity, bender, raytrace))) {
 				data.removeStatusControl(sc);
 			}
 		}
 	}
-	
+
 }

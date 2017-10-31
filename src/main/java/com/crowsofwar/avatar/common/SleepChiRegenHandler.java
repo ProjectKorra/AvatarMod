@@ -16,44 +16,34 @@
 */
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.ctx.Bender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-/**
- * 
- * 
- * @author CrowsOfWar
- */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class SleepChiRegenHandler {
 	
-	private SleepChiRegenHandler() {}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new SleepChiRegenHandler());
-	}
-	
 	@SubscribeEvent
-	public void onSlept(PlayerWakeUpEvent e) {
+	public static void onSlept(PlayerWakeUpEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
+		BendingData data = BendingData.get(player);
+		Chi chi = data.chi();
 		World world = player.world;
 		
 		if (world.getWorldTime() % 24000 <= 2) {
-			BendingData data = Bender.getData(player);
-			Chi chi = data.chi();
-			
 			chi.setAvailableChi(chi.getMaxChi() * CHI_CONFIG.availableThreshold);
 			chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
 		}
-		
+
 	}
 	
 }

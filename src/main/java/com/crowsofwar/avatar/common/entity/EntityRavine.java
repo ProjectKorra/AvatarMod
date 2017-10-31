@@ -20,11 +20,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.BenderInfo;
-import com.crowsofwar.avatar.common.entity.data.OwnerAttribute;
-import com.crowsofwar.avatar.common.entityproperty.EntityPropertyMotion;
-import com.crowsofwar.avatar.common.entityproperty.IEntityProperty;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -37,8 +32,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
@@ -47,7 +40,6 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.common.bending.BendingAbility.ABILITY_RAVINE;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -57,14 +49,9 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * @author CrowsOfWar
  */
 public class EntityRavine extends AvatarEntity {
-	
-	private static final DataParameter<BenderInfo> SYNC_OWNER = EntityDataManager
-			.createKey(EntityRavine.class, AvatarDataSerializers.SERIALIZER_BENDER);
-	
-	private final IEntityProperty<Vector> propVelocity;
+
 	private Vector initialPosition;
-	private final OwnerAttribute ownerAttr;
-	
+
 	private float damageMult;
 	private double maxTravelDistanceSq;
 	private boolean breakBlocks;
@@ -75,13 +62,8 @@ public class EntityRavine extends AvatarEntity {
 	 */
 	public EntityRavine(World world) {
 		super(world);
-		
-		this.propVelocity = new EntityPropertyMotion(this);
 		setSize(1, 1);
-		
 		this.damageMult = 1;
-		this.ownerAttr = new OwnerAttribute(this, SYNC_OWNER);
-		
 	}
 	
 	public void setDamageMult(float mult) {
@@ -99,16 +81,7 @@ public class EntityRavine extends AvatarEntity {
 	public void setDropEquipment(boolean dropEquipment) {
 		this.dropEquipment = dropEquipment;
 	}
-	
-	@Override
-	public EntityLivingBase getOwner() {
-		return ownerAttr.getOwner();
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		ownerAttr.setOwner(owner);
-	}
-	
+
 	public double getSqrDistanceTravelled() {
 		return position().sqrDist(initialPosition);
 	}
@@ -130,20 +103,18 @@ public class EntityRavine extends AvatarEntity {
 		super.onEntityUpdate();
 
 		if (initialPosition == null) {
-			initialPosition = position().copy();
+			initialPosition = position();
 		}
 
 		Vector position = position();
 		Vector velocity = velocity();
 		
-		Vector nowPos = position.add(velocity.times(0.05));
-		setPosition(nowPos.x(), nowPos.y(), nowPos.z());
-		
+		setPosition(position.plus(velocity.times(0.05)));
+
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
 			setDead();
 		}
-		
-		BlockPos above = getPosition().offset(EnumFacing.UP);
+
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 		
@@ -198,9 +169,9 @@ public class EntityRavine extends AvatarEntity {
 		}
 		
 		if (!world.isRemote && getOwner() != null) {
-			BendingData data = ownerAttr.getOwnerBender().getData();
+			BendingData data = BendingData.get(getOwner());
 			if (data != null) {
-				data.getAbilityData(ABILITY_RAVINE).addXp(SKILLS_CONFIG.ravineHit * attacked);
+				data.getAbilityData("ravine").addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}
 		}
 		
@@ -224,15 +195,16 @@ public class EntityRavine extends AvatarEntity {
 	}
 
 	@Override
-	public void onCollideWithSolid() {
+	public boolean onCollideWithSolid() {
 		setDead();
+		return false;
 	}
 
 	private boolean attackEntity(Entity entity) {
 		
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
 			
-			Vector push = velocity().copy().setY(1).mul(STATS_CONFIG.ravineSettings.push);
+			Vector push = velocity().withY(1).times(STATS_CONFIG.ravineSettings.push);
 			entity.addVelocity(push.x(), push.y(), push.z());
 			AvatarUtils.afterVelocityAdded(entity);
 			

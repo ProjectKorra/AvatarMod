@@ -16,28 +16,14 @@
 */
 package com.crowsofwar.avatar.common.bending.earth;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
-import static java.lang.Math.abs;
-import static java.lang.Math.floor;
-import static net.minecraft.init.Blocks.AIR;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.VectorI;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
@@ -47,30 +33,39 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.*;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
+import static java.lang.Math.abs;
+import static java.lang.Math.floor;
+import static net.minecraft.init.Blocks.AIR;
+
 /**
  * 
  * 
  * @author CrowsOfWar
  */
-public class AbilityMining extends EarthAbility {
+public class AbilityMining extends Ability {
 	
 	public AbilityMining() {
-		super("mine_blocks");
+		super(Earthbending.ID, "mine_blocks");
 	}
 	
 	@Override
 	public void execute(AbilityContext ctx) {
-		
+
+		Bender bender = ctx.getBender();
 		float chi = ctx.isMasterLevel(FIRST) ? STATS_CONFIG.chiMiningMaster : STATS_CONFIG.chiMining;
 		
-		if (ctx.consumeChi(chi)) {
+		if (bender.consumeChi(chi)) {
 			
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			
 			AbilityData abilityData = ctx.getAbilityData();
-			float xp = abilityData.getTotalXp();
-			
 			abilityData.addXp(SKILLS_CONFIG.miningUse);
 			
 			//@formatter:off
@@ -79,7 +74,7 @@ public class AbilityMining extends EarthAbility {
 			// 4 = N 0x -z    5 = NE +x -z
 			// 6 = E +x 0z    7 = SE +x +z
 			//@formatter:on
-			
+
 			int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
 			int x = 0, z = 0;
 			if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
@@ -116,9 +111,11 @@ public class AbilityMining extends EarthAbility {
 				rays.clear();
 				rays.add(new VectorI(entity.getPosition().up(pitch < 0 ? 0 : 1)));
 			}
-			
+
 			int dist = getDistance(abilityData.getLevel(), abilityData.getPath());
+			dist += (int) (ctx.getPowerRating() / 40);
 			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
+			fortune += (int) Math.ceil(ctx.getPowerRating() / 50);
 			
 			// For keeping track of already inspected/to-be-inspected positions
 			// of ore blocks

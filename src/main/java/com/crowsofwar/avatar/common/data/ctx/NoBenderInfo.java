@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.data.ctx;
 
 import java.util.UUID;
 
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 

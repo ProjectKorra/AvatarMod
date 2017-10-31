@@ -226,7 +226,6 @@ avatar.ui.level3=-MAX-
 avatar.ui.path_first=Pierwsza Droga
 avatar.ui.path_second=Druga Droga
 avatar.ui.unlock=Umiejętność Zablokowana
-avatar.ui.unlockDesc=[translate=avatar.ui.unlockDesc.${bending}]
 avatar.ui.unlockDesc.airbending=Użyj Zwoju Magii Powietrza lub Uniwersalnego Zwoju by odblokować
 avatar.ui.unlockDesc.firebending=Użyj Zwoju Magii Ognia lub Uniwersalnego Zwoju by odblokować
 avatar.ui.unlockDesc.waterbending=Użyj Zwoju Magii Wody lub Uniwersalnego Zwoju by odblokować

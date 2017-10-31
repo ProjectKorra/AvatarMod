@@ -16,13 +16,12 @@
 */
 package com.crowsofwar.avatar.common.data.ctx;
 
-import com.crowsofwar.avatar.common.bending.BendingAbility;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
-
 import net.minecraft.entity.EntityLivingBase;
 
 /**
@@ -32,17 +31,21 @@ import net.minecraft.entity.EntityLivingBase;
  */
 public class AbilityContext extends BendingContext {
 	
-	private final BendingAbility ability;
-	
-	public AbilityContext(AvatarPlayerData data, Result raytrace, BendingAbility ability) {
-		super(data, raytrace);
+	private final Ability ability;
+	private final double powerRating;
+
+	public AbilityContext(BendingData data, Result raytrace, Ability ability, EntityLivingBase
+			entity, double powerRating) {
+		super(data, entity, raytrace);
 		this.ability = ability;
+		this.powerRating = powerRating;
 	}
 	
 	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace,
-			BendingAbility ability) {
+						  Ability ability, double powerRating) {
 		super(data, entity, bender, raytrace);
 		this.ability = ability;
+		this.powerRating = powerRating;
 	}
 	
 	public AbilityData getAbilityData() {
@@ -63,5 +66,9 @@ public class AbilityContext extends BendingContext {
 	public boolean isMasterLevel(AbilityTreePath path) {
 		return getLevel() == 3 && getPath() == path;
 	}
-	
+
+	public double getPowerRating() {
+		return powerRating;
+	}
+
 }
