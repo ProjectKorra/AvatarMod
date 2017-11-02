@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.entity.mob;
+package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
