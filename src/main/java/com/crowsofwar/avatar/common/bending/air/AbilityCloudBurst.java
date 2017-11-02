@@ -64,8 +64,17 @@ public class AbilityCloudBurst extends Ability {
             cloudball.rotationPitch = entity.rotationPitch;
             cloudball.rotationYaw = entity.rotationYaw;
             if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) cloudball.setSize(20);
-            cloudball.isUnpredictable(ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST));
+            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) cloudball.setUnpredictable(0);
             world.spawnEntity(cloudball);
+
+            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST) && !world.isRemote) {
+                for (int i = 0; i<5; i++) {
+                    EntityCloudBall ball = new EntityCloudBall(world);
+                    ball.setPosition();
+
+                }
+
+            }
 
 
             data.addStatusControl(StatusControl.THROW_CLOUDBURST);

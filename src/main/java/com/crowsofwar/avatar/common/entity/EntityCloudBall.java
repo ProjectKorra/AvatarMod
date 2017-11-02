@@ -30,7 +30,7 @@ public class EntityCloudBall extends AvatarEntity {
     private AxisAlignedBB expandedHitbox;
 
     private float damage;
-    private boolean unpredictable;
+    private int unpredictable;
 
     /**
      * @param world
@@ -40,8 +40,8 @@ public class EntityCloudBall extends AvatarEntity {
         setSize(0.8f, 0.8f);
 
     }
-    public void isUnpredictable (boolean isUnpredictable) {
-        this.unpredictable = isUnpredictable;
+    public void setUnpredictable (int setUnpredictable) {
+        this.unpredictable = setUnpredictable;
     }
 
     @Override
@@ -61,14 +61,6 @@ public class EntityCloudBall extends AvatarEntity {
         EntityCloudBall cloudBall = new EntityCloudBall(world);
         Vector look = Vector.getLookRectangular(cloudBall);
 
-        if (unpredictable && ticksExisted % 20 == 0 && !world.isRemote){
-            EntityAirblade airblade = new EntityAirblade(world);
-            airblade.posX = this.posX;
-            airblade.posY = this.posY;
-            airblade.posZ = this.posZ;
-            airblade.setVelocity(look);
-            world.spawnEntity(airblade);
-        }
       /*  if (!world.isRemote){
             Thread.dumpStack();
         }**/
@@ -118,8 +110,6 @@ public class EntityCloudBall extends AvatarEntity {
         if (getOwner() != null) {
             AbilityData abilityData = BendingData.get(getOwner())
                     .getAbilityData("cloudburst");
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-             }
 
         }
 
