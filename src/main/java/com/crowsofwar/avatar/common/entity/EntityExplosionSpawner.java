@@ -80,14 +80,7 @@ public class EntityExplosionSpawner extends AvatarEntity {
             float explosionSize = STATS_CONFIG.explosionSettings.explosionSize;
             explosionSize += getPowerRating() * 2.0 / 100;
                     if (ticksExisted % 10 == 0) {
-                        Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
-                                !world.isRemote, STATS_CONFIG.explosionSettings.damageBlocks);
-                        if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-
-                            explosion.doExplosionA();
-                            explosion.doExplosionB(true);
-
-                        }
+                      world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, false);
                     }
             if (!world.getBlockState(below).isNormalCube()) {
                 setDead();

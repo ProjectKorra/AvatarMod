@@ -36,15 +36,7 @@ public class AbilityExplosion extends Ability {
                Vector hitAt = hit.getPosPrecise();
                 float explosionSize = STATS_CONFIG.explosionSettings.explosionSize;
                 explosionSize += ctx.getPowerRating() * 2.0 / 100;
-
-               Explosion explosion = new Explosion(world, entity, hitAt.x(), hitAt.y(), hitAt.z(), explosionSize,
-                       !world.isRemote, STATS_CONFIG.explosionSettings.damageBlocks);
-                if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-
-                     explosion.doExplosionA();
-                     explosion.doExplosionB(true);
-
-                }
+                world.createExplosion(entity, hitAt.x(), hitAt.y(), hitAt.z(), explosionSize, false);
             }
         }
     }

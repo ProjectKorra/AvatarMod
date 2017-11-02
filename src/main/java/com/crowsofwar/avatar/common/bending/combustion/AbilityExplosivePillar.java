@@ -40,6 +40,7 @@ public class AbilityExplosivePillar extends Ability {
             spawner.setOwner(entity);
             spawner.setPosition(entity.posX, entity.posY, entity.posZ);
             spawner.setVelocity(look.times(mult));
+            spawner.setFire(0);
             spawner.maxTicks(ticks);
             spawner.isUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
             world.spawnEntity(spawner);
