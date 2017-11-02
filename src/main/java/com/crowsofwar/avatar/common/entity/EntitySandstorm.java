@@ -5,7 +5,6 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -51,7 +50,9 @@ public class EntitySandstorm extends AvatarEntity {
 			setDead();
 		}
 
-		if (!world.isRemote && isBlockBelow()) {
+		// If a gap is detected between the ground (i.e. the sandstorm is hovering above the ground), move down
+		// and close the gap
+		if (!world.isRemote && isGroundGap()) {
 			setPosition(posX, posY - 1, posZ);
 		}
 
@@ -61,7 +62,7 @@ public class EntitySandstorm extends AvatarEntity {
 	 * Returns whether there is a gap between the sandstorm and the ground, between 1-3 blocks. Returns false if the
 	 * sandstorm is touching the ground, or the gap is larger than 3 blocks.
 	 */
-	private boolean isBlockBelow() {
+	private boolean isGroundGap() {
 
 		BlockPos pos = getPosition();
 		BlockPos belowPos = pos.down();
