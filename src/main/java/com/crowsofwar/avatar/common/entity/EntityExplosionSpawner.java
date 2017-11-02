@@ -77,18 +77,18 @@ public class EntityExplosionSpawner extends AvatarEntity {
             if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
                     world.getBlockState(below).getBlock().getSoundType().getBreakSound(), SoundCategory.PLAYERS, 1, 1, false);
 
-            float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+            float explosionSize = STATS_CONFIG.explosionSettings.explosionSize;
             explosionSize += getPowerRating() * 2.0 / 100;
+                    if (ticksExisted % 10 == 0) {
+                        Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
+                                !world.isRemote, STATS_CONFIG.explosionSettings.damageBlocks);
+                        if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 
-                    Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
-                            !world.isRemote, STATS_CONFIG.explosionSettings.damageBlocks);
-                    if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
+                            explosion.doExplosionA();
+                            explosion.doExplosionB(true);
 
-                        explosion.doExplosionA();
-                        explosion.doExplosionB(true);
-
+                        }
                     }
-
             if (!world.getBlockState(below).isNormalCube()) {
                 setDead();
             }
