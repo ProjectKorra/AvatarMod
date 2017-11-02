@@ -26,10 +26,17 @@ public class EntitySandstorm extends AvatarEntity {
 		movementHandler = new SandstormMovementHandler(this);
 		vulnerableToAirbending = true;
 		velocityMultiplier = 1;
+		stepHeight = 1;
 	}
 
 	@Override
 	public void onUpdate() {
+
+		// For "onGround = true":
+		// Hacky way to ensure stepHeight is respected. If onGround is false (like it would be), the stepHeight is
+		// ignored. This doesn't affect other logic since onUpdate reassigns onGround to the actual/correct value
+		onGround = true;
+
 		super.onUpdate();
 		if (!world.isRemote) {
 			movementHandler.update();
