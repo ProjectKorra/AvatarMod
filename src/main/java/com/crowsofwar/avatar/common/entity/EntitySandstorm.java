@@ -9,6 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntitySandstorm extends AvatarEntity {
@@ -45,6 +47,26 @@ public class EntitySandstorm extends AvatarEntity {
 		if (isCollided || ticksExisted >= 100) {
 			setDead();
 		}
+
+		if (isBlockBelow()) {
+			posY--;
+		}
+
+	}
+
+	/**
+	 * Returns whether there is exactly a one-block gap between the sandstorm and the ground.
+	 */
+	private boolean isBlockBelow() {
+		BlockPos pos = getPosition();
+		BlockPos downOne = pos.down();
+		BlockPos downTwo = pos.down(2);
+
+		boolean downOneEmpty = world.getBlockState(downOne).getCollisionBoundingBox(world, downOne) == null;
+		boolean downTwoSolid = world.isSideSolid(downTwo, EnumFacing.UP);
+
+		return downOneEmpty && downTwoSolid;
+
 	}
 
 	@Override
