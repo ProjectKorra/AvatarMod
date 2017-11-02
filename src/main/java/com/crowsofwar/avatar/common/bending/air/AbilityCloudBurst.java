@@ -67,14 +67,6 @@ public class AbilityCloudBurst extends Ability {
             if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) cloudball.setUnpredictable(0);
             world.spawnEntity(cloudball);
 
-            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST) && !world.isRemote) {
-                for (int i = 0; i<5; i++) {
-                    EntityCloudBall ball = new EntityCloudBall(world);
-                    ball.setPosition();
-
-                }
-
-            }
 
 
             data.addStatusControl(StatusControl.THROW_CLOUDBURST);

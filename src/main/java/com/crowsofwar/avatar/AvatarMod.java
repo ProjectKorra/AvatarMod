@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
+import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosivePillar;
 import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
@@ -247,6 +248,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityWaterCannon());
 		Abilities.register(new AbilityFireJump());
 		Abilities.register(new AbilityExplosion());
+		Abilities.register(new AbilityExplosivePillar());
 	}
 
 	private static void registerBendingStyles() {
