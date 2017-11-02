@@ -5,6 +5,9 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,24 +51,37 @@ public class EntitySandstorm extends AvatarEntity {
 			setDead();
 		}
 
-		if (isBlockBelow()) {
-			posY--;
+		if (!world.isRemote && isBlockBelow()) {
+			setPosition(posX, posY - 1, posZ);
 		}
 
 	}
 
 	/**
-	 * Returns whether there is exactly a one-block gap between the sandstorm and the ground.
+	 * Returns whether there is a gap between the sandstorm and the ground, between 1-3 blocks. Returns false if the
+	 * sandstorm is touching the ground, or the gap is larger than 3 blocks.
 	 */
 	private boolean isBlockBelow() {
+
 		BlockPos pos = getPosition();
-		BlockPos downOne = pos.down();
-		BlockPos downTwo = pos.down(2);
+		BlockPos belowPos = pos.down();
 
-		boolean downOneEmpty = world.getBlockState(downOne).getCollisionBoundingBox(world, downOne) == null;
-		boolean downTwoSolid = world.isSideSolid(downTwo, EnumFacing.UP);
+		// Make sure there is an actual gap - there should be an empty block below the sandstorm
+		IBlockState belowBlock = world.getBlockState(belowPos);
+		boolean liquid = belowBlock.getBlock() instanceof BlockLiquid;
+		if (belowBlock.getCollisionBoundingBox(world, belowPos) == null && !liquid) {
 
-		return downOneEmpty && downTwoSolid;
+			// Look up to 3 blocks under the sandstorm
+			for (int i = 0; i < 3; i++) {
+				BlockPos moreDown = pos.down(i + 2);
+				if (world.isSideSolid(moreDown, EnumFacing.UP)) {
+					// Found the ground block, and it's within 3 blocks from the sandstorm
+					return true;
+				}
+			}
+		}
+
+		return false;
 
 	}
 
