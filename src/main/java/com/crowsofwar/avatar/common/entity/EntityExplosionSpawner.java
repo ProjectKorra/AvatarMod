@@ -31,7 +31,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityExplosionSpawner extends AvatarEntity {
         private boolean unstoppable;
-        private float damageMult;
+
         private double maxTicksAlive;
         private float explosionStrength;
         private float frequency;
@@ -43,13 +43,9 @@ public class EntityExplosionSpawner extends AvatarEntity {
         public EntityExplosionSpawner(World world) {
             super(world);
             setSize(1, 1);
-            this.damageMult = 1.6F;
 
         }
 
-        public void setDamageMult(float mult) {
-            this.damageMult = mult;
-        }
         public void isUnstoppable (boolean isUnstoppable) {
             this.unstoppable = isUnstoppable;
         }
@@ -119,17 +115,6 @@ public class EntityExplosionSpawner extends AvatarEntity {
             int attacked = 0;
 
             // Push collided entities back
-            if (!world.isRemote) {
-                List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-                        entity -> entity != getOwner());
-                if (!collided.isEmpty()) {
-                    for (Entity entity : collided) {
-                        if (attackEntity(entity)) {
-                            attacked++;
-                        }
-                    }
-                }
-            }
 
             if (!world.isRemote && getOwner() != null) {
                 BendingData data = BendingData.get(getOwner());
@@ -154,21 +139,7 @@ public class EntityExplosionSpawner extends AvatarEntity {
             return false;
         }
 
-        private boolean attackEntity(Entity entity) {
 
-            if (!(entity instanceof EntityItem && entity.ticksExisted <=
-                    10) && canCollideWith(entity)) {
-
-                Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
-                entity.addVelocity(push.x(), push.y(), push.z());
-                AvatarUtils.afterVelocityAdded(entity);
-
-                DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
-                float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
-                return entity.attackEntityFrom(ds, damage);
-            }
-            return false;
-        }
     }
 
 
