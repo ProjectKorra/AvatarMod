@@ -28,19 +28,32 @@ public class AbilityExplosivePillar extends Ability {
             EntityExplosionSpawner spawner = new EntityExplosionSpawner(world);
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
             double mult = ctx.getLevel() >= 1 ? 14 : 8;
-
-            if (abilityData.getLevel() == 1) {
+            if (abilityData.getLevel() == 1 || abilityData.getLevel() == 2) {
                 spawner.setVelocity(look.times(mult * 5));
+                spawner.setExplosionStrength(1.25F);
+                spawner.setExplosionFrequency(8F);
+                spawner.spawnFlames(false);
 
+            }
+            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)){
+               spawner.setVelocity(look.times(mult*2));
+               spawner.setExplosionStrength(1F);
+               spawner.setExplosionFrequency(1F);
+               spawner.spawnFlames(true);
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
                 spawner.setVelocity(look.times(mult * 10));
+                spawner.setExplosionStrength(3F);
+                spawner.setExplosionFrequency(12F);
+                spawner.spawnFlames(false);
 
             }
             spawner.setOwner(entity);
+            spawner.spawnFlames(false);
+            spawner.setExplosionFrequency(10F);
+            spawner.setExplosionStrength(1F);
             spawner.setPosition(entity.posX, entity.posY, entity.posZ);
             spawner.setVelocity(look.times(mult));
-            spawner.setFire(0);
             spawner.maxTicks(ticks);
             spawner.isUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
             world.spawnEntity(spawner);

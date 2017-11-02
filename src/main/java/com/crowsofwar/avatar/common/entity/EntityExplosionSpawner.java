@@ -33,6 +33,9 @@ public class EntityExplosionSpawner extends AvatarEntity {
         private boolean unstoppable;
         private float damageMult;
         private double maxTicksAlive;
+        private float explosionStrength;
+        private float frequency;
+        private boolean spawnFlames;
 
         /**
          * @param world
@@ -51,6 +54,9 @@ public class EntityExplosionSpawner extends AvatarEntity {
             this.unstoppable = isUnstoppable;
         }
         public void maxTicks (float ticks) {this.maxTicksAlive = ticks;}
+        public void setExplosionStrength (float explosionStrength) {this.explosionStrength = explosionStrength;}
+        public void setExplosionFrequency (float explosionFrequency) {this.frequency = explosionFrequency;}
+        public void spawnFlames (boolean spawnFlames) {this.spawnFlames = spawnFlames;}
 
         @Override
         protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -77,10 +83,10 @@ public class EntityExplosionSpawner extends AvatarEntity {
             if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
                     world.getBlockState(below).getBlock().getSoundType().getBreakSound(), SoundCategory.PLAYERS, 1, 1, false);
 
-            float explosionSize = STATS_CONFIG.explosionSettings.explosionSize;
+            float explosionSize = STATS_CONFIG.explosionSettings.explosionSize * explosionStrength;
             explosionSize += getPowerRating() * 2.0 / 100;
-                    if (ticksExisted % 10 == 0) {
-                      world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, false);
+                    if (ticksExisted % frequency == 0) {
+                      world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, spawnFlames);
                     }
             if (!world.getBlockState(below).isNormalCube()) {
                 setDead();

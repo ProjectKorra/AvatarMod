@@ -32,11 +32,14 @@ public class AbilityExplosion extends Ability {
 
         if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
             Raytrace.Result hit = Raytrace.getTargetBlock(entity, 20);
+            float explosionSize = STATS_CONFIG.explosionSettings.explosionSize;
+            explosionSize += ctx.getPowerRating() * 2.0 / 100;
+            if (ctx.getLevel() == 1 || ctx.getLevel() ==2) {
+                explosionSize = STATS_CONFIG.explosionSettings.explosionSize * 1.25F;
+            }
             if (hit.hitSomething()) {
                Vector hitAt = hit.getPosPrecise();
-                float explosionSize = STATS_CONFIG.explosionSettings.explosionSize;
-                explosionSize += ctx.getPowerRating() * 2.0 / 100;
-                world.createExplosion(entity, hitAt.x(), hitAt.y(), hitAt.z(), explosionSize, false);
+               world.createExplosion(entity, hitAt.x(), hitAt.y(), hitAt.z(), explosionSize, false);
             }
         }
     }
