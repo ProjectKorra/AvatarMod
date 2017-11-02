@@ -33,7 +33,6 @@ public class AbilityExplosion extends Ability {
         if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
             Raytrace.Result hit = Raytrace.getTargetBlock(entity, 20);
             if (hit.hitSomething()) {
-                BlockPos hitAt1 = hit.getPos().toBlockPos();
                Vector hitAt = hit.getPosPrecise();
                 float explosionSize = STATS_CONFIG.explosionSettings.explosionSize;
                 explosionSize += ctx.getPowerRating() * 2.0 / 100;

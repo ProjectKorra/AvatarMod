@@ -16,6 +16,7 @@ public class Combustionbending extends BendingStyle {
 
     public Combustionbending(){
         addAbility("explosion");
+        addAbility("explosive_pillar");
 
         Color light = new Color(244, 240, 187);
         Color red = new Color(173, 64, 31);
