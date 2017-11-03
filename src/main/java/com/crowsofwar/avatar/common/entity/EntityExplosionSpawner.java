@@ -59,9 +59,6 @@ public class EntityExplosionSpawner extends AvatarEntity {
             if (!world.isRemote && ticksExisted >= maxTicksAlive) {
                 setDead();
             }
-            if(this.isDead){
-                Thread.dumpStack();
-            }
 
             BlockPos below = getPosition().offset(EnumFacing.DOWN);
             Block belowBlock = world.getBlockState(below).getBlock();
