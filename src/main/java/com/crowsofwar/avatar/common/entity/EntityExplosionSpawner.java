@@ -1,30 +1,18 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityEarthSpike;
-import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
-
-import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -35,7 +23,6 @@ public class EntityExplosionSpawner extends AvatarEntity {
         private double maxTicksAlive;
         private float explosionStrength;
         private float frequency;
-        private boolean spawnFlames;
 
         /**
          * @param world
@@ -43,6 +30,8 @@ public class EntityExplosionSpawner extends AvatarEntity {
         public EntityExplosionSpawner(World world) {
             super(world);
             setSize(1, 1);
+            isImmuneToExplosions();
+            isInvisible();
 
         }
 
@@ -52,7 +41,6 @@ public class EntityExplosionSpawner extends AvatarEntity {
         public void maxTicks (float ticks) {this.maxTicksAlive = ticks;}
         public void setExplosionStrength (float explosionStrength) {this.explosionStrength = explosionStrength;}
         public void setExplosionFrequency (float explosionFrequency) {this.frequency = explosionFrequency;}
-        public void spawnFlames (boolean spawnFlames) {this.spawnFlames = spawnFlames;}
 
         @Override
         protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -82,8 +70,9 @@ public class EntityExplosionSpawner extends AvatarEntity {
             float explosionSize = STATS_CONFIG.explosionSettings.explosionSize * explosionStrength;
             explosionSize += getPowerRating() * 2.0 / 100;
                     if (ticksExisted % frequency == 0) {
-                      world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, spawnFlames);
+                      world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, false);
                     }
+
             if (!world.getBlockState(below).isNormalCube()) {
                 setDead();
             }
@@ -126,7 +115,7 @@ public class EntityExplosionSpawner extends AvatarEntity {
 
         @Override
         protected boolean canCollideWith(Entity entity) {
-            if (entity instanceof EntityEarthSpike || entity instanceof com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner) {
+            if (entity instanceof EntityExplosionSpawner) {
                 return false;
             }
             return entity instanceof EntityLivingBase || super.canCollideWith(entity);

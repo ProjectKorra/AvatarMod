@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.avatar.common.entity.EntityExplosionSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -27,35 +28,69 @@ public class AbilityExplosivePillar extends Ability {
         if (bender.consumeChi(chi)){
             EntityExplosionSpawner spawner = new EntityExplosionSpawner(world);
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-            double mult = ctx.getLevel() >= 1 ? 14 : 8;
-            if (abilityData.getLevel() == 1 || abilityData.getLevel() == 2) {
-                spawner.setVelocity(look.times(mult * 5));
-                spawner.setExplosionStrength(1.25F);
+            double mult = ctx.getLevel() >= 0.5 ? 7 : 4;
+            if (abilityData.getLevel() <= 0) {
+                spawner.setOwner(entity);
+                spawner.setExplosionFrequency(10F);
+                spawner.setExplosionStrength(1F);
+                spawner.setPosition(entity.posX, entity.posY, entity.posZ);
+                spawner.setVelocity(look.times(mult));
+                spawner.maxTicks(ticks);
+                spawner.isUnstoppable(true);
+            }
+            if (abilityData.getLevel() == 1) {
+                spawner.setOwner(entity);
                 spawner.setExplosionFrequency(8F);
-                spawner.spawnFlames(false);
+                spawner.setExplosionStrength(1.25F);
+                spawner.setPosition(entity.posX, entity.posY, entity.posZ);
+                spawner.setVelocity(look.times(mult));
+                spawner.maxTicks(ticks * 1.5F);
 
             }
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)){
-               spawner.setVelocity(look.times(mult*2));
-               spawner.setExplosionStrength(1F);
-               spawner.setExplosionFrequency(1F);
-               spawner.spawnFlames(true);
-            }
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                spawner.setVelocity(look.times(mult * 10));
-                spawner.setExplosionStrength(3F);
-                spawner.setExplosionFrequency(12F);
-                spawner.spawnFlames(false);
+            if (abilityData.getLevel() == 2){
+                spawner.setOwner(entity);
+                spawner.setExplosionFrequency(6F);
+                spawner.setExplosionStrength(1.5F);
+                spawner.setPosition(entity.posX, entity.posY, entity.posZ);
+                spawner.setVelocity(look.times(mult));
+                spawner.maxTicks(ticks * 2F);
 
             }
-            spawner.setOwner(entity);
-            spawner.spawnFlames(false);
-            spawner.setExplosionFrequency(10F);
-            spawner.setExplosionStrength(1F);
-            spawner.setPosition(entity.posX, entity.posY, entity.posZ);
-            spawner.setVelocity(look.times(mult));
-            spawner.maxTicks(ticks);
-            spawner.isUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
+                spawner.setOwner(entity);
+                spawner.setExplosionFrequency(15F);
+                spawner.setExplosionStrength(2F);
+                spawner.setPosition(entity.posX, entity.posY, entity.posZ);
+                spawner.setVelocity(look.times(mult));
+                spawner.maxTicks(ticks * 2.5F);
+            }
+            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+
+                for (int i = 0; i < 3; i++) {
+                    Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+                    Vector direction2 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+                            45), 0);
+                    Vector direction3 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+                            335), 0);
+                    EntityExplosionSpawner explosionSpawner = new EntityExplosionSpawner(world);
+                    if (i == 0) {
+                        explosionSpawner.setVelocity(direction.times(mult));
+                    }
+                    if (i == 1){
+                        explosionSpawner.setVelocity(direction2.times(mult));
+                    }
+                    if (i == 2){
+                        explosionSpawner.setVelocity(direction3.times(mult));
+                    }
+                    explosionSpawner.setOwner(entity);
+                    explosionSpawner.setExplosionFrequency(5F);
+                    explosionSpawner.setExplosionStrength(1F);
+                    explosionSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
+                    explosionSpawner.maxTicks(ticks * 1.5F);
+                    world.spawnEntity(explosionSpawner);
+
+                }
+            }
             world.spawnEntity(spawner);
         }
     }
