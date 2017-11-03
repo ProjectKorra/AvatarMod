@@ -52,11 +52,17 @@ public class ModelSandstorm extends ModelBase {
 
 		float animationProgress = sandstorm.getAnimationProgress();
 
-		groundPart.rotateAngleY = (float) Math.toRadians(animationProgress * 20);
+		float fullRotation = (float) Math.PI * 2;
+
+		float topYaw = animationProgress / 60 * fullRotation;
+		float middleYaw = animationProgress / 20 * fullRotation;
+		float bottomYaw = animationProgress / 10 * fullRotation;
+
+		groundPart.rotateAngleY = bottomYaw - middleYaw;
 		groundPart.rotateAngleX = (float) (Math.sin(animationProgress / 60) * Math.toRadians(6));
-		mainPart.rotateAngleY = (float) Math.toRadians(animationProgress * -3);
+		mainPart.rotateAngleY = middleYaw;
 		mainPart.rotateAngleZ = (float) (Math.sin(animationProgress / 60) * Math.toRadians(4));
-		topPart.rotateAngleY = (float) Math.toRadians(animationProgress * 0.5);
+		topPart.rotateAngleY = topYaw - middleYaw;
 
 		sandstorm.setAnimationProgress(animationProgress + timePassed * strength * (float) velocityMultiplier);
 		sandstorm.setLastRenderAge(ageInTicks);
