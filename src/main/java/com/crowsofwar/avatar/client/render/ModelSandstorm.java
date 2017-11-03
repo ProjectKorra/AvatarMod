@@ -47,7 +47,9 @@ public class ModelSandstorm extends ModelBase {
 		double velocityMultiplier =  sandstorm.getVelocityMultiplier();
 		float strength = sandstorm.getStrength();
 
-		float partialTicks = ageInTicks - entityIn.ticksExisted;
+		// Time passed since this sandstorm was last rendered
+		float timePassed = ageInTicks - sandstorm.getLastRenderAge();
+
 		float animationProgress = sandstorm.getAnimationProgress();
 
 		groundPart.rotateAngleY = (float) Math.toRadians(animationProgress * 20);
@@ -56,7 +58,8 @@ public class ModelSandstorm extends ModelBase {
 		mainPart.rotateAngleZ = (float) (Math.sin(animationProgress / 60) * Math.toRadians(4));
 		topPart.rotateAngleY = (float) Math.toRadians(animationProgress * 0.5);
 
-		sandstorm.setAnimationProgress(animationProgress + partialTicks * strength * (float) velocityMultiplier);
+		sandstorm.setAnimationProgress(animationProgress + timePassed * strength * (float) velocityMultiplier);
+		sandstorm.setLastRenderAge(ageInTicks);
 
 	}
 

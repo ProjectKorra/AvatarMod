@@ -45,6 +45,13 @@ public class EntitySandstorm extends AvatarEntity {
 	@SideOnly(Side.CLIENT)
 	private float animationProgress;
 
+	/**
+	 * The sandstorm's previous ticksExisted the last time it was rendered. Note that the lastRenderAge also factors in
+	 * partial ticks.
+	 */
+	@SideOnly(Side.CLIENT)
+	private float lastRenderAge;
+
 	public EntitySandstorm(World world) {
 		super(world);
 		setSize(2.2f, 5.2f);
@@ -321,6 +328,16 @@ public class EntitySandstorm extends AvatarEntity {
 	@SideOnly(Side.CLIENT)
 	public void setAnimationProgress(float animationProgress) {
 		this.animationProgress = animationProgress;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public float getLastRenderAge() {
+		return lastRenderAge;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setLastRenderAge(float lastRenderAge) {
+		this.lastRenderAge = lastRenderAge;
 	}
 
 	@Override
