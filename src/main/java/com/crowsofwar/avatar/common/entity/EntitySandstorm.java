@@ -80,7 +80,7 @@ public class EntitySandstorm extends AvatarEntity {
 			movementHandler.update();
 		}
 
-		if (isCollided || ticksExisted >= 100) {
+		if (isCollided) {
 			setDead();
 		}
 
@@ -96,7 +96,7 @@ public class EntitySandstorm extends AvatarEntity {
 
 			List<Block> strengthBlocks = Arrays.asList(Blocks.SAND, Blocks.GRAVEL);
 			if (strengthBlocks.contains(groundBlock)) {
-				setStrength(getStrength() + 0.05f);
+				setStrength(getStrength() - 0.003f);
 			} else {
 				setStrength(getStrength() - 0.01f);
 			}
