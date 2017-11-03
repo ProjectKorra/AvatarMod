@@ -44,8 +44,23 @@ public class RenderSandstorm extends RenderModel<EntitySandstorm> {
 	 */
 	private void spawnParticles(EntitySandstorm sandstorm) {
 
+		int particlesPerSpawn = 3;
+		double spawnChance = 1;
+		if (sandstorm.getStrength() <= 0.7f) {
+			particlesPerSpawn = 2;
+			spawnChance = 0.6;
+		}
+		if (sandstorm.getStrength() <= 0.3f) {
+			particlesPerSpawn = 1;
+			spawnChance = 0.2;
+		}
+
+		if (RANDOM.nextDouble() >= spawnChance) {
+			return;
+		}
+
 		World world = sandstorm.world;
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < particlesPerSpawn; i++) {
 
 			double motionX = RANDOM.nextGaussian() * 0.15 + sandstorm.motionX * 0.3;
 			double motionY = Math.abs(RANDOM.nextGaussian()) * 0.1;
