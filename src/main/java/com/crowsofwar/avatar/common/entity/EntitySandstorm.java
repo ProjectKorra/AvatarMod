@@ -16,6 +16,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class EntitySandstorm extends AvatarEntity {
@@ -41,6 +42,7 @@ public class EntitySandstorm extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_VELOCITY_MULT, 1f);
+		dataManager.register(SYNC_STRENGTH, 1f);
 	}
 
 	@Override
@@ -243,6 +245,17 @@ public class EntitySandstorm extends AvatarEntity {
 		dataManager.set(SYNC_VELOCITY_MULT, velocityMultiplier);
 	}
 
+	/**
+	 * Gets the current strength of the sandstorm. This represents how powerful it is at any given moment. The strength is between 0 and 1.
+	 */
+	public float getStrength() {
+		return dataManager.get(SYNC_STRENGTH);
+	}
+
+	public void setStrength(float strength) {
+		dataManager.set(SYNC_STRENGTH, MathHelper.clamp(strength, 0, 1));
+	}
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
@@ -250,6 +263,7 @@ public class EntitySandstorm extends AvatarEntity {
 		setDamageContactingTargets(nbt.getBoolean("DamageContactingTargets"));
 		setVulnerableToAirbending(nbt.getBoolean("VulnerableToAirbending"));
 		setVelocityMultiplier(nbt.getFloat("VelocityMultiplier"));
+		setStrength(nbt.getFloat("Strength"));
 	}
 
 	@Override
@@ -259,6 +273,7 @@ public class EntitySandstorm extends AvatarEntity {
 		nbt.setBoolean("DamageContactingTargets", isDamageContactingTargets());
 		nbt.setBoolean("VulnerableToAirbending", isVulnerableToAirbending());
 		nbt.setFloat("VelocityMultiplier", getVelocityMultiplier());
+		nbt.setFloat("Strength", getStrength());
 	}
 
 }
