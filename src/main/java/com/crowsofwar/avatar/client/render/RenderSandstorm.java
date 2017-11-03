@@ -47,9 +47,9 @@ public class RenderSandstorm extends RenderModel<EntitySandstorm> {
 		World world = sandstorm.world;
 		for (int i = 0; i < 2; i++) {
 
-			double motionX = RANDOM.nextGaussian() * 0.15;
+			double motionX = RANDOM.nextGaussian() * 0.15 + sandstorm.motionX * 0.3;
 			double motionY = Math.abs(RANDOM.nextGaussian()) * 0.1;
-			double motionZ = RANDOM.nextGaussian() * 0.15;
+			double motionZ = RANDOM.nextGaussian() * 0.15 + sandstorm.motionZ * 0.3;
 
 			world.spawnParticle(EnumParticleTypes.CLOUD, sandstorm.posX, sandstorm.posY, sandstorm.posZ,
 					motionX, motionY, motionZ);
