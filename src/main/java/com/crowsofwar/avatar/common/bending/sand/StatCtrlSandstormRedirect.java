@@ -10,6 +10,8 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 /**
  * A Status Control which allows player to change the target velocity of the sandstorm. Then the
  * SandstormMovementHandler gradually transitions current velocity to the target velocity.
@@ -26,20 +28,21 @@ public class StatCtrlSandstormRedirect extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 
-		EntitySandstorm sandstorm = AvatarEntity.lookupOwnedEntity(world, EntitySandstorm
-				.class, entity);
-		if (sandstorm != null) {
+		List<EntitySandstorm> sandstorms = world.getEntities(EntitySandstorm.class, candidate -> candidate.getOwner() == entity);
+
+		if (!sandstorms.isEmpty()) {
 
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, 40, true);
 			if (raytrace.hitSomething()) {
-
 				Vector hitPos = raytrace.getPosPrecise();
 
-				Vector currentPos = Vector.getEntityPos(sandstorm);
-				Vector newVelocity = hitPos.minus(currentPos).withY(0).normalize();
-				newVelocity = newVelocity.times(15 * sandstorm.getVelocityMultiplier());
+				for (EntitySandstorm sandstorm : sandstorms) {
+					Vector currentPos = Vector.getEntityPos(sandstorm);
+					Vector newVelocity = hitPos.minus(currentPos).withY(0).normalize();
+					newVelocity = newVelocity.times(15 * sandstorm.getVelocityMultiplier());
 
-				sandstorm.getMovementHandler().setTargetVelocity(newVelocity);
+					sandstorm.getMovementHandler().setTargetVelocity(newVelocity);
+				}
 
 			}
 
