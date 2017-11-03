@@ -4,11 +4,9 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.avatar.common.entity.EntityExplosionSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -24,7 +22,7 @@ public class AbilityExplosivePillar extends Ability {
         AbilityData abilityData = ctx.getData().getAbilityData(this);
         float xp = abilityData.getTotalXp();
         float ticks = 100;
-        float chi =STATS_CONFIG.chiLightning+1;
+        float chi =STATS_CONFIG.chiExplosivePillar;
         if (bender.consumeChi(chi)){
             EntityExplosionSpawner spawner = new EntityExplosionSpawner(world);
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);

@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.config.ConfigStats;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -87,7 +86,7 @@ public class EntityExplosionSpawner extends AvatarEntity {
                 setDead();
             }
 
-            // Destroy non-solid blocks in the earthspike
+            // Destroy non-solid blocks in the spawner
             if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 
                 if (inBlock.getBlockHardness(world, getPosition()) == 0) {
@@ -104,21 +103,11 @@ public class EntityExplosionSpawner extends AvatarEntity {
             int attacked = 0;
 
             // Push collided entities back
-
-            if (!world.isRemote && getOwner() != null) {
-                BendingData data = BendingData.get(getOwner());
-                if (data != null) {
-                    data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
-                }
-            }
         }
 
         @Override
         protected boolean canCollideWith(Entity entity) {
-            if (entity instanceof EntityExplosionSpawner) {
-                return false;
-            }
-            return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+            return !(entity instanceof EntityExplosionSpawner) && (entity instanceof EntityLivingBase || super.canCollideWith(entity));
 
         }
 
