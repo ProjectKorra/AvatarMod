@@ -20,6 +20,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -35,6 +37,13 @@ public class EntitySandstorm extends AvatarEntity {
 	private boolean damageFlungTargets;
 	private boolean damageContactingTargets;
 	private boolean vulnerableToAirbending;
+
+	/**
+	 * How many ticks has the sandstorm been alive, used for animations. Normally this is just ticksExisted. However, when the
+	 * {@link #getStrength() strength} becomes low, the animation slows and animationProgress increases slower than normal.
+	 */
+	@SideOnly(Side.CLIENT)
+	private float animationProgress;
 
 	public EntitySandstorm(World world) {
 		super(world);
@@ -82,7 +91,7 @@ public class EntitySandstorm extends AvatarEntity {
 			if (strengthBlocks.contains(groundBlock)) {
 				setStrength(getStrength() + 0.05f);
 			} else {
-				setStrength(getStrength() - 0.03f);
+				setStrength(getStrength() - 0.01f);
 			}
 
 			if (getStrength() == 0) {
@@ -302,6 +311,16 @@ public class EntitySandstorm extends AvatarEntity {
 
 	public void setStrength(float strength) {
 		dataManager.set(SYNC_STRENGTH, MathHelper.clamp(strength, 0, 1));
+	}
+
+	@SideOnly(Side.CLIENT)
+	public float getAnimationProgress() {
+		return animationProgress;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setAnimationProgress(float animationProgress) {
+		this.animationProgress = animationProgress;
 	}
 
 	@Override
