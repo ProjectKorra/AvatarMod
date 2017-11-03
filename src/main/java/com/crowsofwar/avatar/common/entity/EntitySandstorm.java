@@ -10,6 +10,7 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -21,6 +22,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
 
 public class EntitySandstorm extends AvatarEntity {
 
@@ -72,7 +75,20 @@ public class EntitySandstorm extends AvatarEntity {
 		}
 
 		if (!world.isRemote) {
-			System.out.println(getGroundBlock());
+			IBlockState groundBlockState = getGroundBlock();
+			Block groundBlock = groundBlockState == null ? null : groundBlockState.getBlock();
+
+			List<Block> strengthBlocks = Arrays.asList(Blocks.SAND, Blocks.GRAVEL);
+			if (strengthBlocks.contains(groundBlock)) {
+				setStrength(getStrength() + 0.05f);
+			} else {
+				setStrength(getStrength() - 0.03f);
+			}
+
+			if (getStrength() == 0) {
+				setDead();
+			}
+
 		}
 
 	}
