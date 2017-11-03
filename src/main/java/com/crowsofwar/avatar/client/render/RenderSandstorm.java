@@ -29,6 +29,10 @@ public class RenderSandstorm extends RenderModel<EntitySandstorm> {
 		GlStateManager.translate(0, -2.5, 0);
 		GlStateManager.scale(3, 3, 3);
 
+		float baseSize = 0.8f;
+		float size = baseSize + entity.getStrength() * (1 - baseSize);
+		GlStateManager.scale(size, size, size);
+
 		float baseAlpha = 0.6f;
 		GlStateManager.color(1, 1, 1, baseAlpha + entity.getStrength() * (1 - baseAlpha));
 
