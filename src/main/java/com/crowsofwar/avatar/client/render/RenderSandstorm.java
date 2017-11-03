@@ -28,6 +28,10 @@ public class RenderSandstorm extends RenderModel<EntitySandstorm> {
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.translate(0, -2.5, 0);
 		GlStateManager.scale(3, 3, 3);
+
+		float baseAlpha = 0.6f;
+		GlStateManager.color(1, 1, 1, baseAlpha + entity.getStrength() * (1 - baseAlpha));
+
 	}
 
 	@Override
