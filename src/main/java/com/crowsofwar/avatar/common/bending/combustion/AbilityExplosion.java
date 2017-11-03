@@ -42,9 +42,11 @@ public class AbilityExplosion extends Ability {
             }
             if (ctx.getLevel() == 2) {
                 hit = Raytrace.getTargetBlock(entity, 30);
+                explosionSize = STATS_CONFIG.explosionSettings.explosionSize * 1.5F;
             }
             if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)){
-                hit = Raytrace.getTargetBlock(entity, 160);
+                hit = Raytrace.getTargetBlock(entity, 200);
+                explosionSize = STATS_CONFIG.explosionSettings.explosionSize * 1.5F;
             }
             if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)){
                 explosionSize = STATS_CONFIG.explosionSettings.explosionSize * 3F;

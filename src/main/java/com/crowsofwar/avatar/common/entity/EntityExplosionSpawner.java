@@ -53,8 +53,8 @@ public class EntityExplosionSpawner extends AvatarEntity {
         }
 
         @Override
-        public void onUpdate() {
-            super.onUpdate();
+        public void onEntityUpdate() {
+            super.onEntityUpdate();
 
             if (!world.isRemote && ticksExisted >= maxTicksAlive) {
                 setDead();
