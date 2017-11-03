@@ -98,7 +98,7 @@ public class EntitySandstorm extends AvatarEntity {
 			if (strengthBlocks.contains(groundBlock)) {
 				setStrength(getStrength() - 0.003f);
 			} else {
-				setStrength(getStrength() - 0.01f);
+				setStrength(getStrength() - 0.02f);
 			}
 
 			if (getStrength() == 0) {
