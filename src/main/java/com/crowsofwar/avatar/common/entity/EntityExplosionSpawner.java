@@ -68,7 +68,7 @@ public class EntityExplosionSpawner extends AvatarEntity {
 
             float explosionSize = STATS_CONFIG.explosionSettings.explosionSize * explosionStrength;
             explosionSize += getPowerRating() * 2.0 / 100;
-                    if (ticksExisted % frequency == 0) {
+                    if (ticksExisted >=5 && ticksExisted % frequency == 0) {
                       world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, false);
                     }
 
@@ -111,9 +111,9 @@ public class EntityExplosionSpawner extends AvatarEntity {
 
         }
 
-        @Override
+         @Override
         public boolean onCollideWithSolid() {
-            setDead();
+              setDead();
             return false;
         }
 

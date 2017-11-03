@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.combustion;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityExplosionSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -17,10 +18,11 @@ public class AbilityExplosivePillar extends Ability {
     @Override
     public void execute(AbilityContext ctx) {
         EntityLivingBase entity = ctx.getBenderEntity();
+        BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
         AbilityData abilityData = ctx.getData().getAbilityData(this);
-        float xp = abilityData.getTotalXp();
+        float xp = 4F;
         float ticks = 100;
         float chi =STATS_CONFIG.chiExplosivePillar;
         if (bender.consumeChi(chi)){
@@ -35,6 +37,8 @@ public class AbilityExplosivePillar extends Ability {
                 spawner.setVelocity(look.times(mult));
                 spawner.maxTicks(ticks);
                 spawner.isUnstoppable(true);
+                data.getAbilityData("explosive_pillar").addXp(xp);
+
             }
             if (abilityData.getLevel() == 1) {
                 spawner.setOwner(entity);
@@ -43,6 +47,7 @@ public class AbilityExplosivePillar extends Ability {
                 spawner.setPosition(entity.posX, entity.posY, entity.posZ);
                 spawner.setVelocity(look.times(mult));
                 spawner.maxTicks(ticks * 1.5F);
+                data.getAbilityData("explosive_pillar").addXp(xp - 1F);
 
             }
             if (abilityData.getLevel() == 2){
@@ -52,6 +57,7 @@ public class AbilityExplosivePillar extends Ability {
                 spawner.setPosition(entity.posX, entity.posY, entity.posZ);
                 spawner.setVelocity(look.times(mult));
                 spawner.maxTicks(ticks * 2F);
+                data.getAbilityData("explosive_pillar").addXp(xp - 2F);
 
             }
             if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
@@ -81,7 +87,7 @@ public class AbilityExplosivePillar extends Ability {
                         explosionSpawner.setVelocity(direction3.times(mult));
                     }
                     explosionSpawner.setOwner(entity);
-                    explosionSpawner.setExplosionFrequency(5F);
+                    explosionSpawner.setExplosionFrequency(3F);
                     explosionSpawner.setExplosionStrength(1F);
                     explosionSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
                     explosionSpawner.maxTicks(ticks * 1.5F);

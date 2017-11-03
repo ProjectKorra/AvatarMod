@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.combustion;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -21,8 +22,11 @@ public class AbilityExplosion extends Ability {
     @Override
     public void execute(AbilityContext ctx) {
         EntityLivingBase entity = ctx.getBenderEntity();
+        BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
+
+        float xp = 3F;
         float chi = STATS_CONFIG.chiExplosion;
         if (ctx.getLevel() == 2){
             chi *= 1.25;
@@ -54,6 +58,15 @@ public class AbilityExplosion extends Ability {
             if (hit.hitSomething()) {
                Vector hitAt = hit.getPosPrecise();
                world.createExplosion(entity, hitAt.x(), hitAt.y(), hitAt.z(), explosionSize, false);
+               if (ctx.getLevel() <= 0){
+                   data.getAbilityData("explosion").addXp(xp);
+               }
+               if (ctx.getLevel() == 1){
+                   data.getAbilityData("explosion").addXp(xp - 1F);
+               }
+               if (ctx.getLevel() == 2){
+                   data.getAbilityData("explosion").addXp(xp-2F);
+               }
             }
         }
     }
