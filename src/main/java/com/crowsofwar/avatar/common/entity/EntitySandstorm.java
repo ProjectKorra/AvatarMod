@@ -10,6 +10,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -17,20 +20,27 @@ import net.minecraft.world.World;
 
 public class EntitySandstorm extends AvatarEntity {
 
+	private static final DataParameter<Float> SYNC_VELOCITY_MULT = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_STRENGTH = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
+
 	private final SandstormMovementHandler movementHandler;
 
 	private boolean damageFlungTargets;
 	private boolean damageContactingTargets;
 	private boolean vulnerableToAirbending;
-	private double velocityMultiplier;
 
 	public EntitySandstorm(World world) {
 		super(world);
 		setSize(2.2f, 5.2f);
 		movementHandler = new SandstormMovementHandler(this);
 		vulnerableToAirbending = true;
-		velocityMultiplier = 1;
 		stepHeight = 1;
+	}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_VELOCITY_MULT, 1f);
 	}
 
 	@Override
@@ -225,12 +235,12 @@ public class EntitySandstorm extends AvatarEntity {
 		this.vulnerableToAirbending = vulnerableToAirbending;
 	}
 
-	public double getVelocityMultiplier() {
-		return velocityMultiplier;
+	public float getVelocityMultiplier() {
+		return dataManager.get(SYNC_VELOCITY_MULT);
 	}
 
-	public void setVelocityMultiplier(double velocityMultiplier) {
-		this.velocityMultiplier = velocityMultiplier;
+	public void setVelocityMultiplier(float velocityMultiplier) {
+		dataManager.set(SYNC_VELOCITY_MULT, velocityMultiplier);
 	}
 
 	@Override
@@ -239,7 +249,7 @@ public class EntitySandstorm extends AvatarEntity {
 		setDamageFlungTargets(nbt.getBoolean("DamageFlungTargets"));
 		setDamageContactingTargets(nbt.getBoolean("DamageContactingTargets"));
 		setVulnerableToAirbending(nbt.getBoolean("VulnerableToAirbending"));
-		setVelocityMultiplier(nbt.getDouble("VelocityMultiplier"));
+		setVelocityMultiplier(nbt.getFloat("VelocityMultiplier"));
 	}
 
 	@Override
@@ -248,7 +258,7 @@ public class EntitySandstorm extends AvatarEntity {
 		nbt.setBoolean("DamageFlungTargets", isDamageFlungTargets());
 		nbt.setBoolean("DamageContactingTargets", isDamageContactingTargets());
 		nbt.setBoolean("VulnerableToAirbending", isVulnerableToAirbending());
-		nbt.setDouble("VelocityMultiplier", getVelocityMultiplier());
+		nbt.setFloat("VelocityMultiplier", getVelocityMultiplier());
 	}
 
 }

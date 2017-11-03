@@ -29,12 +29,12 @@ public class AbilitySandstorm extends Ability {
 			// Determine stats based on experience
 
 			AbilityData abilityData = ctx.getAbilityData();
-			double speedMult = abilityData.getLevel() >= 1 ? 1 : 0.8;
+			float speedMult = abilityData.getLevel() >= 1 ? 1 : 0.8f;
 			boolean damageFlung = abilityData.getLevel() >= 2;
 			boolean damageContacting = false;
 			boolean vulnerableToAirbending = true;
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				speedMult = 1.4;
+				speedMult = 1.4f;
 				vulnerableToAirbending = false;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
