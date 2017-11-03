@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.AiCloudBall;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -11,14 +10,11 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
-import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -52,7 +48,7 @@ public class AbilityCloudBurst extends Ability {
                 target = playerPos.plus(getLookRectangular(entity).times(2.5));
             }
 
-            float damage = STATS_CONFIG.fireballSettings.damage;
+            float damage = 4F;
             damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
             damage += ctx.getPowerRating() / 100;
 
@@ -61,11 +57,31 @@ public class AbilityCloudBurst extends Ability {
             cloudball.setOwner(entity);
             cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
             cloudball.setDamage(damage);
-            cloudball.rotationPitch = entity.rotationPitch;
-            cloudball.rotationYaw = entity.rotationYaw;
-            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) cloudball.setSize(20);
-            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) cloudball.setUnpredictable(0);
+            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+                cloudball.setSize(20);
+                damage = 15;
+            }
+            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+                damage = 5;}
+
             world.spawnEntity(cloudball);
+            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)){
+                EntityCloudBall cloud = new EntityCloudBall(world);
+                Vector direction;
+                for (int i = 0; i <5; i ++){
+                if (ctx.isLookingAtBlock()) {
+                    direction = ctx.getLookPos();
+                } else {
+                    direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i *72)), 0).plus(getLookRectangular(entity).times(2.5));
+                }
+                cloud.setPosition(direction);
+                cloud.setOwner(entity);
+                cloud.setDamage(damage);
+                cloud.setBehavior(new CloudburstBehavior.PlayerControlled());
+                world.spawnEntity(cloud);
+
+                }
+            }
 
 
 
