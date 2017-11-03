@@ -73,9 +73,9 @@ public class AbilityExplosivePillar extends Ability {
                 for (int i = 0; i < 3; i++) {
                     Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
                     Vector direction2 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-                            45), 0);
+                            60), 0);
                     Vector direction3 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-                            335), 0);
+                            320), 0);
                     EntityExplosionSpawner explosionSpawner = new EntityExplosionSpawner(world);
                     if (i == 0) {
                         explosionSpawner.setVelocity(direction.times(mult));

@@ -43,10 +43,10 @@ public class WaterChargeHandler extends TickHandler {
 		AbilityData abilityData = getWaterCannonData(ctx);
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
-		float damage = 10;
+		float damage;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-		float size = 1;
+		float size;
 
 		if (world.isRemote) {
 			return false;
@@ -62,36 +62,30 @@ public class WaterChargeHandler extends TickHandler {
 				fireCannon(world, entity, damage, speed, size);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 						SoundCategory.PLAYERS, 1, 2);
-
-			}
-			if (duration >= 80) {
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 				return true;
+
 			}
+		}
+			if (duration >= 100) {
 
-		} else if (duration >= 100) {
+				if (abilityData == null) {
+					return true;
+				}
 
-			if (abilityData == null) {
 				return true;
-			}
-			speed += powerRating / 15;
-			if (abilityData.getLevel() == 1) {
-				damage = 11;
-			}
-
-				return  true;
 			}
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
 			damage = 8;
-
 			size = 1;
+
 			if (abilityData.getLevel() == 1) {
 				damage = 11;
 				size = 2;
 			}
-			if (abilityData.getLevel() == 2){
+			if (abilityData.getLevel() == 2) {
 				damage = 12;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -103,43 +97,44 @@ public class WaterChargeHandler extends TickHandler {
 			}
 			damage += powerRating / 30;
 
-				if (abilityData == null) {
-					return true;
-				}
-
-				if (abilityData.getLevel() == 1) {
-					damage = 11;
-					size = 2F;
-
-				}
-				if (abilityData.getLevel() == 2) {
-					damage = 12;
-				}
-				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-
-					damage = 17;
-					size = 0.5f;
-				}
-				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					size = 2;
-
-					damage = 20;
-					size = 2.5F;
-
-
-				}
-				damage += powerRating / 30;
-
-				fireCannon(world, entity, damage, speed, size);
-
-				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
-
-				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
-						SoundCategory.PLAYERS, 1, 2);
-
+			if (abilityData == null) {
 				return true;
+			}
+
+			if (abilityData.getLevel() == 1) {
+				damage = 11;
+				size = 1.1F;
 
 			}
+			if (abilityData.getLevel() == 2) {
+				damage = 12;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+
+				damage = 17;
+				size = 1.25f;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+
+				damage = 4;
+				size = 0.1F;
+
+
+			}
+			damage += powerRating / 30;
+
+			fireCannon(world, entity, damage, speed, size);
+
+			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+
+			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
+					SoundCategory.PLAYERS, 1, 2);
+
+			return true;
+
+		}
+
+
 
 
 
