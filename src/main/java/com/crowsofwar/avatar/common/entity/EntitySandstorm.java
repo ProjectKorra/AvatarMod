@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -18,6 +19,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class EntitySandstorm extends AvatarEntity {
 
@@ -68,6 +71,10 @@ public class EntitySandstorm extends AvatarEntity {
 			setPosition(posX, posY - 1, posZ);
 		}
 
+		if (!world.isRemote) {
+			System.out.println(getGroundBlock());
+		}
+
 	}
 
 	/**
@@ -95,6 +102,31 @@ public class EntitySandstorm extends AvatarEntity {
 		}
 
 		return false;
+
+	}
+
+	/**
+	 * Gets the first "ground" block that is up to 3 blocks under the sandstorm. If there are no "ground" blocks up to 3
+	 * meters directly under the sandstorm, returns null. Ground blocks are defined as any solid or liquid block.
+	 */
+	@Nullable
+	private IBlockState getGroundBlock() {
+
+		BlockPos pos = getPosition();
+
+		for (int i = 1; i <= 3; i++) {
+			BlockPos belowPos = pos.down(i);
+			IBlockState belowBlock = world.getBlockState(belowPos);
+
+			boolean liquid = belowBlock.getBlock() instanceof BlockLiquid;
+			if (world.isSideSolid(belowPos, EnumFacing.UP) || liquid) {
+				// Hit a ground block
+				return world.getBlockState(belowPos);
+			}
+
+		}
+
+		return null;
 
 	}
 
