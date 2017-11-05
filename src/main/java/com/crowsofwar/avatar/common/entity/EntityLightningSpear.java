@@ -81,6 +81,9 @@ public class EntityLightningSpear extends AvatarEntity {
             spear.rotationYaw = spear.getOwner().rotationYaw;
             spear.rotationPitch = spear.getOwner().rotationPitch;
         }**/
+        if (this.isDead){
+            removeStatCtrl();
+        }
         // TODO Temporary fix to avoid extra fireballs
         // Add hook or something
         if (getOwner() == null) {
