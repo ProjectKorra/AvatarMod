@@ -10,11 +10,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class AbilityEarthSpikes extends Ability {
+public class AbilityEarthspikes extends Ability {
 
 
 
-    public AbilityEarthSpikes() {
+    public AbilityEarthspikes() {
         super(Earthbending.ID, "earthspike");
     }
 

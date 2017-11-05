@@ -71,7 +71,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
                 world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
                 SoundCategory.PLAYERS, 1, 1, false);
         if (ticksExisted % 3 == 0 && !world.isRemote) {
-            EntityEarthSpike earthspike = new EntityEarthSpike(world);
+            EntityEarthspike earthspike = new EntityEarthspike(world);
             earthspike.posX = this.posX;
             earthspike.posY = this.posY;
             earthspike.posZ = this.posZ;
@@ -132,11 +132,8 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     @Override
     protected boolean canCollideWith(Entity entity) {
-        if (entity instanceof EntityEarthSpike || entity instanceof EntityEarthspikeSpawner) {
-            return false;
-        }
-        return entity instanceof EntityLivingBase || super.canCollideWith(entity);
-
+        return !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && (entity instanceof EntityLivingBase || super.canCollideWith(entity));
+        //Stops the earthspike from colliding with itself.
     }
 
     @Override

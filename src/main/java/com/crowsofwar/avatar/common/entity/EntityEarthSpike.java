@@ -37,11 +37,11 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  *
  * @author CrowsOfWar
  */
-public class EntityEarthSpike extends AvatarEntity {
+public class EntityEarthspike extends AvatarEntity {
 
 	private float damageMult;
 
-	public EntityEarthSpike(World world) {
+	public EntityEarthspike(World world) {
 		super(world);
 		setSize(1, 1);
 		this.damageMult = 1.6F;
@@ -64,7 +64,7 @@ public class EntityEarthSpike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthSpike || entity instanceof EntityEarthspikeSpawner) {
+		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
 			return false;
 		}
 		return entity instanceof EntityLivingBase || super.canCollideWith(entity);

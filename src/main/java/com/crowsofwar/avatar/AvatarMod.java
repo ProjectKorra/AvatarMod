@@ -173,7 +173,7 @@ public class AvatarMod {
 		registerEntity(EntitySandPrison.class, "sandprison");
 		registerEntity(EntityLightningArc.class, "lightningarc");
 		registerEntity(EntityCloudBall.class, "cloudburst");
-		registerEntity(EntityEarthSpike.class, "earthspike");
+		registerEntity(EntityEarthspike.class, "earthspike");
 		registerEntity(EntityLightningSpear.class, "lightning_spear");
 		registerEntity(EntityEarthspikeSpawner.class, "earthspike_spawner");
 		registerEntity(EntityWaterCannon.class, "water_cannon");
@@ -241,10 +241,9 @@ public class AvatarMod {
 		Abilities.register(new AbilityRestore());
 		Abilities.register(new AbilitySlipstream());
 		Abilities.register(new AbilityCleanse());
-		Abilities.register(new AbilityEarthSpikes());
+		Abilities.register(new AbilityEarthspikes());
 		Abilities.register(new AbilityLightningSpear());
 		Abilities.register(new AbilityPurify());
-		Abilities.register(new AbilityEarthSpikes());
 		Abilities.register(new AbilityWaterCannon());
 		Abilities.register(new AbilityFireJump());
 		Abilities.register(new AbilityExplosion());
