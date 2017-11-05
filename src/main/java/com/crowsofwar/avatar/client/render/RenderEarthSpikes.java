@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityEarthSpike;
+import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -29,7 +29,7 @@ import net.minecraft.util.ResourceLocation;
  *
  * @author CrowsOfWar
  */
-public class RenderEarthSpikes extends Render<EntityEarthSpike> {
+public class RenderEarthspikes extends Render<EntityEarthspike> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
             "textures/entity/earthspike.png");
@@ -39,13 +39,13 @@ public class RenderEarthSpikes extends Render<EntityEarthSpike> {
     /**
      * @param renderManager
      */
-    public RenderEarthSpikes(RenderManager renderManager) {
+    public RenderEarthspikes(RenderManager renderManager) {
         super(renderManager);
         this.model = new ModelEarthSpikes();
     }
 
     @Override
-    public void doRender(EntityEarthSpike entity, double x, double y, double z, float entityYaw,
+    public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw,
                          float partialTicks) {
 
         Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
@@ -67,7 +67,7 @@ public class RenderEarthSpikes extends Render<EntityEarthSpike> {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityEarthSpike entity) {
+    protected ResourceLocation getEntityTexture(EntityEarthspike entity) {
         return TEXTURE;
     }
 }

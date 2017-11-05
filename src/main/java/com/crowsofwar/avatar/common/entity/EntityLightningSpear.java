@@ -76,11 +76,16 @@ public class EntityLightningSpear extends AvatarEntity {
     public void onUpdate() {
         super.onUpdate();
         setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-
+        EntityLightningSpear spear = new EntityLightningSpear(world);
+        /*if (getOwner() != null) {
+            spear.rotationYaw = spear.getOwner().rotationYaw;
+            spear.rotationPitch = spear.getOwner().rotationPitch;
+        }**/
         // TODO Temporary fix to avoid extra fireballs
         // Add hook or something
         if (getOwner() == null) {
             setDead();
+            removeStatCtrl();
         }
 
     }
