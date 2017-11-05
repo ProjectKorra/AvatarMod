@@ -80,6 +80,7 @@ public class EntityFireball extends AvatarEntity {
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
+			removeStatCtrl();
 		}
 		
 	}

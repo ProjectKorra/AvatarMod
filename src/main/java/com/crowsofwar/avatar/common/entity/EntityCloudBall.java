@@ -69,6 +69,7 @@ public class EntityCloudBall extends AvatarEntity {
         // Add hook or something
         if (getOwner() == null) {
             setDead();
+            removeStatCtrl();
         }
 
     }
