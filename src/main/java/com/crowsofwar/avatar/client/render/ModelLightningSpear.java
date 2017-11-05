@@ -35,7 +35,7 @@ public class ModelLightningSpear extends ModelBase
       Shape2 = new ModelRenderer(this, 0, 0);
       Shape2.addBox(0F, 0F, 0F, 1, 1, 6);
       Shape2.setRotationPoint(0F, 19F, -3F);
-      Shape2.setTextureSize(109, 60);
+      Shape2.setTextureSize(64, 64);
       Shape2.mirror = true;
       setRotation(Shape2, 0F, 0F, 0F);
   }
