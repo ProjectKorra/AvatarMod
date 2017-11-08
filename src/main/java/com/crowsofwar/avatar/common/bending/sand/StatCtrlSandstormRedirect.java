@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.sand;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntitySandstorm;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -39,9 +38,9 @@ public class StatCtrlSandstormRedirect extends StatusControl {
 				for (EntitySandstorm sandstorm : sandstorms) {
 					Vector currentPos = Vector.getEntityPos(sandstorm);
 					Vector newVelocity = hitPos.minus(currentPos).withY(0).normalize();
-					newVelocity = newVelocity.times(15 * sandstorm.getVelocityMultiplier());
 
 					sandstorm.getMovementHandler().setTargetVelocity(newVelocity);
+					sandstorm.setVelocityMultiplier(sandstorm.getVelocityMultiplier() + 0.5f);
 				}
 
 			}

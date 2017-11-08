@@ -12,7 +12,17 @@ import javax.annotation.Nullable;
  */
 public class SandstormMovementHandler {
 
+	/**
+	 * The base speed for a sandstorm. The actual speed will be BASE_SPEED *
+	 * velocityMultiplier
+	 */
+	private static final double BASE_SPEED = 8;
+
 	private final EntitySandstorm sandstorm;
+
+	/**
+	 * Unit vector
+	 */
 	@Nullable
 	private Vector targetVelocity;
 
@@ -28,16 +38,41 @@ public class SandstormMovementHandler {
 	 * Only to be used server side
 	 */
 	public void update() {
+
 		if (targetVelocity != null) {
 
+			// Move towards the target velocity
+
+			double desiredSpeed = sandstorm.getVelocityMultiplier() * 8;
+			Vector desiredVelocity = targetVelocity.times(desiredSpeed);
+
+			// Transition between current velocity and target velocity by performing a weighted
+			// average
 
 			double changeFactor = 0.1;
 			sandstorm.setVelocity(sandstorm.velocity().times(1 - changeFactor).plus
-					(targetVelocity.times(changeFactor)));
+					(desiredVelocity.times(changeFactor)));
+
+		} else if (sandstorm.ticksExisted % 2 == 0) {
+
+			// Ensure the sandstorm is moving at the correct speed
+
+			// Don't do this when changing directions because keeping a constant speed interferes
+			// with process of changing directions - when turning around, speed SHOULD decrease
+			// temporarily
+
+			double desiredSpeed = sandstorm.getVelocityMultiplier() * 8;
+			Vector newVelocity = sandstorm.velocity().normalize().times(desiredSpeed);
+			sandstorm.setVelocity(newVelocity);
 
 		}
+
 	}
 
+	/**
+	 * Set the target velocity vector to the given value. Target velocity is a unit vector
+	 * pointing in the desired direction which the sandstorm will move towards.
+	 */
 	public void setTargetVelocity(@Nullable Vector targetVelocity) {
 		this.targetVelocity = targetVelocity;
 	}
