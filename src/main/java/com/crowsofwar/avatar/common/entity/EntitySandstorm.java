@@ -102,8 +102,10 @@ public class EntitySandstorm extends AvatarEntity {
 
 			if (DUST_BLOCKS.contains(groundBlock)) {
 				setStrength(getStrength() - 0.003f);
+				setVelocityMultiplier(getVelocityMultiplier() - 0.001f);
 			} else {
 				setStrength(getStrength() - 0.02f);
+				setVelocityMultiplier(getVelocityMultiplier() - 0.01f);
 			}
 
 			if (getStrength() == 0) {
