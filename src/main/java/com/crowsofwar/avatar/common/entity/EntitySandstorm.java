@@ -32,6 +32,12 @@ public class EntitySandstorm extends AvatarEntity {
 	private static final DataParameter<Float> SYNC_VELOCITY_MULT = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_STRENGTH = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
 
+	/**
+	 * Blocks that are considered "sand" like. When moving over these blocks, the sandstorm
+	 * weakens at a much smaller rate than normal.
+	 */
+	private static final List<Block> DUST_BLOCKS = Arrays.asList(Blocks.SAND, Blocks.GRAVEL);
+
 	private final SandstormMovementHandler movementHandler;
 
 	private boolean damageFlungTargets;
@@ -94,8 +100,7 @@ public class EntitySandstorm extends AvatarEntity {
 			IBlockState groundBlockState = getGroundBlock();
 			Block groundBlock = groundBlockState == null ? null : groundBlockState.getBlock();
 
-			List<Block> strengthBlocks = Arrays.asList(Blocks.SAND, Blocks.GRAVEL);
-			if (strengthBlocks.contains(groundBlock)) {
+			if (DUST_BLOCKS.contains(groundBlock)) {
 				setStrength(getStrength() - 0.003f);
 			} else {
 				setStrength(getStrength() - 0.02f);
