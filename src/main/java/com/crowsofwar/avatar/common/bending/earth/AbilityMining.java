@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
@@ -74,7 +75,6 @@ public class AbilityMining extends Ability {
 			// 4 = N 0x -z    5 = NE +x -z
 			// 6 = E +x 0z    7 = SE +x +z
 			//@formatter:on
-
 			int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
 			int x = 0, z = 0;
 			if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
@@ -82,17 +82,19 @@ public class AbilityMining extends Ability {
 			if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
 			if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
 
-			// Pitch: 0=forward, +1=90deg up, etc
+			getDirection(entity);
+
+			// Pitch: 0=forward, +1=45deg up, etc
 			// Use abs and post-mul to fix weirdness with negatives
-			
+
 			int pitch = (int) floor((abs(entity.rotationPitch) * 8 / 360) + 0.5) & 7;
 			pitch *= -abs(entity.rotationPitch) / entity.rotationPitch;
-			
+
 			// Each starting position of the ray to mine out
 			List<VectorI> rays = new ArrayList<>();
 			rays.add(new VectorI(entity.getPosition()));
 			rays.add(new VectorI(entity.getPosition().up()));
-			
+
 			// If yaw is diagonal; SW, NW, NE, SE
 			if (yaw % 2 == 1) {
 				rays.add(new VectorI(entity.getPosition().east()));
@@ -201,7 +203,33 @@ public class AbilityMining extends Ability {
 			return 0;
 		}
 	}
-	
+
+	/**
+	 * Gets the direction the entity is facing. Not a unit vector! Includes both yaw & pitch:
+	 * <ul>
+	 * <li>Yaw: Cardinal or intermediate directions (northwest, south, etc)</li>
+	 * <li>Pitch: </li>
+	 */
+	private Vector getDirection(EntityLivingBase entity) {
+
+		// Yaw of the entity, 0 = South, 1 = Southwest ... 6 = East, 7 = Southeast
+		int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
+		Vector yawVector = Vector.toRectangular(Math.toRadians(yaw * 360 / 8), 0);
+
+		// Pitch of the entity, 0=forward, +1=45deg up ...
+		int pitch = (int) floor((abs(entity.rotationPitch) * 8 / 360) + 0.5) & 7;
+		// Add sign to pitch - initially has no sign
+		pitch *= Math.signum(entity.rotationPitch);
+
+		Vector pitchVector = Vector.toRectangular(0, Math.toRadians(pitch * 360 / 8));
+
+		Vector look = Vector.getLookRectangular(entity);
+		System.out.println(yawVector);
+		System.out.println(pitchVector + " " + pitch);
+		return null;
+
+	}
+
 	/**
 	 * Breaks the block at the specified position, but doesn't break
 	 * non-bendable blocks. Returns false if not able to break (since the block
@@ -280,5 +308,5 @@ public class AbilityMining extends Ability {
 		Block block = world.getBlockState(pos).getBlock();
 		return block instanceof BlockOre || block instanceof BlockRedstoneOre;
 	}
-	
+
 }
