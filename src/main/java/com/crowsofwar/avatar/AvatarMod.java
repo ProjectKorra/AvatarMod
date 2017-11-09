@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.bending.lightning.*;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
+import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
@@ -176,6 +177,7 @@ public class AvatarMod {
 		registerEntity(EntityLightningSpear.class, "lightning_spear");
 		registerEntity(EntityEarthspikeSpawner.class, "earthspike_spawner");
 		registerEntity(EntityWaterCannon.class, "water_cannon");
+		registerEntity(EntitySandstorm.class, "sandstorm");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
@@ -247,6 +249,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityWaterCannon());
 		Abilities.register(new AbilityFireJump());
 		Abilities.register(new AbilityExplosion());
+		Abilities.register(new AbilitySandstorm());
 	}
 
 	private static void registerBendingStyles() {
