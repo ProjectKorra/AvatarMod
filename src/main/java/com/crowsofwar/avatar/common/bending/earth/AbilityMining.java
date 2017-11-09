@@ -81,7 +81,7 @@ public class AbilityMining extends Ability {
 			if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
 			if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
 			if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
-			
+
 			// Pitch: 0=forward, +1=90deg up, etc
 			// Use abs and post-mul to fix weirdness with negatives
 			
@@ -120,7 +120,7 @@ public class AbilityMining extends Ability {
 			// For keeping track of already inspected/to-be-inspected positions
 			// of ore blocks
 			// orePos: Position that needs to be inspected
-			// inspectedOrePos: Position that was already inspected (since the
+			// alreadyMinedOres: Position that was already inspected (since the
 			// queue items will be deleted)
 			Queue<BlockPos> oresToBeMined = new LinkedList<>();
 			Set<BlockPos> alreadyMinedOres = new HashSet<>();
@@ -135,7 +135,6 @@ public class AbilityMining extends Ability {
 					if (isBreakableOre(world, pos)) {
 						oresToBeMined.add(pos);
 						alreadyMinedOres.add(pos);
-						abilityData.addXp(SKILLS_CONFIG.miningBreakOre);
 					}
 					
 					// Stop at non-bendable blocks
@@ -149,7 +148,7 @@ public class AbilityMining extends Ability {
 			}
 			
 			if (abilityData.getPath() == SECOND) {
-				mineNextOre(world, oresToBeMined, alreadyMinedOres, ctx, 0);
+				mineNextOre(ctx, oresToBeMined, alreadyMinedOres, 0);
 			}
 			
 		}
@@ -231,20 +230,26 @@ public class AbilityMining extends Ability {
 	/**
 	 * Represents a step in the flood-fill algorithm to destroy ore veins. Looks
 	 * on the next flagged ore block and mines it, then inspects nearby blocks
-	 * and flags any ores for mining.
+	 * and flags any ores for mining. Finally, recursively calls mineNextOre again so the
+	 * floodfill process continues.
 	 * 
-	 * @param world
 	 * @param queue
 	 * @param alreadyInspected
 	 * @param ctx
+	 * @param oresMined How many ores have been mined so far. When calling this method from
+	 *                     outside, should be 0. When the method recursively calls itself, this
+	 *                     parameter increases. This allows the method to know when it has mined
+	 *                     enough ores and should stop
 	 */
-	private void mineNextOre(World world, Queue<BlockPos> queue, Set<BlockPos> alreadyInspected,
-			AbilityContext ctx, int i) {
-		
+	private void mineNextOre(AbilityContext ctx, Queue<BlockPos> queue, Set<BlockPos>
+			alreadyInspected, int oresMined) {
+
+		World world = ctx.getWorld();
 		BlockPos pos = queue.poll();
 		
-		if (breakBlock(pos, ctx, i * 3 + 20, 3)) {
-			i++;
+		if (breakBlock(pos, ctx, oresMined * 3 + 20, 3)) {
+			oresMined++;
+			ctx.getAbilityData().addXp(SKILLS_CONFIG.miningBreakOre);
 		}
 		
 		// Search nearby blocks, and flag ores for mining
@@ -265,8 +270,8 @@ public class AbilityMining extends Ability {
 		}
 		
 		// Inspect the next ore
-		if (!queue.isEmpty() && i < 15) {
-			mineNextOre(world, queue, alreadyInspected, ctx, i);
+		if (!queue.isEmpty() && oresMined < 15) {
+			mineNextOre(ctx, queue, alreadyInspected, oresMined);
 		}
 		
 	}
