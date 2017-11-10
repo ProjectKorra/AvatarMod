@@ -24,7 +24,6 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
@@ -68,52 +67,27 @@ public class AbilityMining extends Ability {
 			
 			AbilityData abilityData = ctx.getAbilityData();
 			abilityData.addXp(SKILLS_CONFIG.miningUse);
-			
-			//@formatter:off
-			// 0 = S 0x +z    1 = SW -x +z
-			// 2 = W -x 0z    3 = NW -x -z
-			// 4 = N 0x -z    5 = NE +x -z
-			// 6 = E +x 0z    7 = SE +x +z
-			//@formatter:on
-			int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
-			int x = 0, z = 0;
-			if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
-			if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
-			if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
-			if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
 
-			getDirection(entity);
-
-			// Pitch: 0=forward, +1=45deg up, etc
-			// Use abs and post-mul to fix weirdness with negatives
-
-			int pitch = (int) floor((abs(entity.rotationPitch) * 8 / 360) + 0.5) & 7;
-			pitch *= -abs(entity.rotationPitch) / entity.rotationPitch;
+			Vector direction = getDirection(entity);
 
 			// Each starting position of the ray to mine out
-			List<VectorI> rays = new ArrayList<>();
-			rays.add(new VectorI(entity.getPosition()));
-			rays.add(new VectorI(entity.getPosition().up()));
+			List<Vector> rays = new ArrayList<>();
+			rays.add(new Vector(entity.getPosition()));
+			rays.add(new Vector(entity.getPosition().up()));
 
-			// If yaw is diagonal; SW, NW, NE, SE
-			if (yaw % 2 == 1) {
-				rays.add(new VectorI(entity.getPosition().east()));
-				rays.add(new VectorI(entity.getPosition().east().up()));
+			// When yaw is diagonal (not along cardinal direction), add another ray of excavation
+			// because the excavated blocks would only be diagonal and you wouldn't be able to walk
+			// through them
+			if (direction.x() != 0 && direction.z() != 0) {
+				rays.add(new Vector(entity.getPosition().east()));
+				rays.add(new Vector(entity.getPosition().east().up()));
 			}
-			// Add height to excavating a stairway so you don't bump your head
-			if (pitch != 0) {
-				rays.add(new VectorI(entity.getPosition().up(2)));
+			// When excavating up/down (ie making a stairway), add height to so you don't bump
+			// your head
+			if (direction.y() != 0) {
+				rays.add(new Vector(entity.getPosition().up(2)));
 			}
 			
-			VectorI dir = new VectorI(x, pitch, z);
-			if (abs(pitch) == 2) {
-				dir.setX(0);
-				dir.setZ(0);
-				dir.setY(abs(pitch) / pitch);
-				rays.clear();
-				rays.add(new VectorI(entity.getPosition().up(pitch < 0 ? 0 : 1)));
-			}
-
 			int dist = getDistance(abilityData.getLevel(), abilityData.getPath());
 			dist += (int) (ctx.getPowerRating() / 40);
 			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
@@ -127,11 +101,11 @@ public class AbilityMining extends Ability {
 			Queue<BlockPos> oresToBeMined = new LinkedList<>();
 			Set<BlockPos> alreadyMinedOres = new HashSet<>();
 			
-			for (VectorI ray : rays) {
+			for (Vector ray : rays) {
 				
 				for (int i = 1; i <= dist; i++) {
-					
-					BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
+
+					BlockPos pos = ray.plus(direction.times(i)).toBlockPos();
 					Block block = world.getBlockState(pos).getBlock();
 					
 					if (isBreakableOre(world, pos)) {
