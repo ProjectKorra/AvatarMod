@@ -39,8 +39,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
-import static java.lang.Math.abs;
-import static java.lang.Math.floor;
 import static net.minecraft.init.Blocks.AIR;
 
 /**
@@ -69,25 +67,8 @@ public class AbilityMining extends Ability {
 			abilityData.addXp(SKILLS_CONFIG.miningUse);
 
 			Vector direction = getDirection(entity);
+			List<Vector> rays = getRaysStartPos(entity, direction);
 
-			// Each starting position of the ray to mine out
-			List<Vector> rays = new ArrayList<>();
-			rays.add(new Vector(entity.getPosition()));
-			rays.add(new Vector(entity.getPosition().up()));
-
-			// When yaw is diagonal (not along cardinal direction), add another ray of excavation
-			// because the excavated blocks would only be diagonal and you wouldn't be able to walk
-			// through them
-			if (direction.x() != 0 && direction.z() != 0) {
-				rays.add(new Vector(entity.getPosition().east()));
-				rays.add(new Vector(entity.getPosition().east().up()));
-			}
-			// When excavating up/down (ie making a stairway), add height to so you don't bump
-			// your head
-			if (direction.y() != 0) {
-				rays.add(new Vector(entity.getPosition().up(2)));
-			}
-			
 			int dist = getDistance(abilityData.getLevel(), abilityData.getPath());
 			dist += (int) (ctx.getPowerRating() / 40);
 			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
@@ -188,6 +169,36 @@ public class AbilityMining extends Ability {
 
 		Vector look = Vector.getLookRectangular(entity);
 		return new Vector(Math.round(look.x()), Math.round(look.y()), Math.round(look.z()));
+
+	}
+
+	/**
+	 * In the mining operation, the blocks are mined in multiple "rays", where one block gets
+	 * mined first and then it continues in one direction. This method gets the starting position
+	 * of each "ray", and then the same direction for every ray can be determined using
+	 * {@link #getDirection(EntityLivingBase)}.
+	 */
+	private List<Vector> getRaysStartPos(EntityLivingBase entity, Vector direction) {
+
+		// Each starting position of the ray to mine out
+		List<Vector> rays = new ArrayList<>();
+		rays.add(new Vector(entity.getPosition()));
+		rays.add(new Vector(entity.getPosition().up()));
+
+		// When yaw is diagonal (not along cardinal direction), add another ray of excavation
+		// because the excavated blocks would only be diagonal and you wouldn't be able to walk
+		// through them
+		if (direction.x() != 0 && direction.z() != 0) {
+			rays.add(new Vector(entity.getPosition().east()));
+			rays.add(new Vector(entity.getPosition().east().up()));
+		}
+		// When excavating up/down (ie making a stairway), add height to so you don't bump
+		// your head
+		if (direction.y() != 0) {
+			rays.add(new Vector(entity.getPosition().up(2)));
+		}
+
+		return rays;
 
 	}
 
