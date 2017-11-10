@@ -205,28 +205,15 @@ public class AbilityMining extends Ability {
 	}
 
 	/**
-	 * Gets the direction the entity is facing. Not a unit vector! Includes both yaw & pitch:
-	 * <ul>
-	 * <li>Yaw: Cardinal or intermediate directions (northwest, south, etc)</li>
-	 * <li>Pitch: </li>
+	 * Gets the direction the entity is facing. This is not a unit vector, but instead each
+	 * component is either -1, 0, or 1.
 	 */
 	private Vector getDirection(EntityLivingBase entity) {
 
-		// Yaw of the entity, 0 = South, 1 = Southwest ... 6 = East, 7 = Southeast
-		int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
-		Vector yawVector = Vector.toRectangular(Math.toRadians(yaw * 360 / 8), 0);
-
-		// Pitch of the entity, 0=forward, +1=45deg up ...
-		int pitch = (int) floor((abs(entity.rotationPitch) * 8 / 360) + 0.5) & 7;
-		// Add sign to pitch - initially has no sign
-		pitch *= Math.signum(entity.rotationPitch);
-
-		Vector pitchVector = Vector.toRectangular(0, Math.toRadians(pitch * 360 / 8));
+		// Just return the look vector, but each component is rounded (to either -1, 0, or 1)
 
 		Vector look = Vector.getLookRectangular(entity);
-		System.out.println(yawVector);
-		System.out.println(pitchVector + " " + pitch);
-		return null;
+		return new Vector(Math.round(look.x()), Math.round(look.y()), Math.round(look.z()));
 
 	}
 
