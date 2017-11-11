@@ -71,6 +71,7 @@ public class NodeConfig extends NodeFunctional {
 				ConfigClient.load();
 				ConfigChi.load();
 				ConfigMobs.load();
+				ConfigStats.STATS_CONFIG.loadBlocks();
 				
 			} catch (ConfigurationException e) {
 				
