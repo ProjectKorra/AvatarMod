@@ -20,7 +20,7 @@ public class AbilityWaterCannon extends Ability{
 		Bender bender = ctx.getBender();
 		BendingData data = ctx.getData();
 
-		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiLightning);
+		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiWaterCannon);
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
 
 		if (ctx.consumeWater(3)) {
