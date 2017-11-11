@@ -42,13 +42,16 @@ public class AvatarPlayerData extends PlayerData {
 
 	/**
 	 * For use by server thread only. This represents the ticksExisted value (Entity#ticksExisted)
-	 * when the last information packet to client was sent.
+	 * when the last information packet <strong>only about chi</strong> to client was sent.
+	 * <p>
+	 * Used to limit the amount of only-chi-related packets that are sent, since that is most
+	 * of the packets that try to be sent
 	 */
-	private int lastPacketTime;
+	private int lastChiPacketTime;
 
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
-		lastPacketTime = -1;
+		lastChiPacketTime = -1;
 
 		boolean isClient = !(player instanceof EntityPlayerMP);
 		
@@ -86,12 +89,11 @@ public class AvatarPlayerData extends PlayerData {
 		EntityPlayer player = this.getPlayerEntity();
 		if (player != null && !player.world.isRemote) {
 
-			// Don't send packets more than once a second
-			if (player.ticksExisted - lastPacketTime < 20 && lastPacketTime != -1) {
+			// Enforce limits for chi-only packets
+			if (!doesChiLimitPass(player)) {
 				return;
 			}
-			lastPacketTime = player.ticksExisted;
-			
+
 			// Look at who is tracking this player, to avoid unnecessarily
 			// sending packets to extra players
 			EntityTracker tracker = ((WorldServer) player.world).getEntityTracker();
@@ -112,6 +114,8 @@ public class AvatarPlayerData extends PlayerData {
 			AvatarMod.network.sendToAllAround(packet,
 					new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range));
 
+			changed.clear();
+
 		}
 		
 	}
@@ -120,6 +124,29 @@ public class AvatarPlayerData extends PlayerData {
 		return bendingData;
 	}
 
+	/**
+	 * To be called when sending an update packet. Performs rate limiting for chi only packets
+	 * (i.e., where the only value sent is the chi). They aren't as important as other data and
+	 * clog up the network.
+	 *
+	 * @return Whether the rate limit has approved the chi packet, or the packet wasn't about chi
+	 * anyways
+	 */
+	private boolean doesChiLimitPass(EntityPlayer player) {
+
+		if (changed.size() == 1 && changed.first() == DataCategory.CHI) {
+
+			// Don't send chi-only packets more than once a second
+			if (player.ticksExisted - lastChiPacketTime < 20 && lastChiPacketTime != -1) {
+				return false;
+			}
+			lastChiPacketTime = player.ticksExisted;
+
+		}
+
+		return true;
+
+	}
 
 	@Override
 	protected void saveChanges() {
