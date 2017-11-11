@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.minecraft.init.Blocks.*;
-
 /**
  * 
  * 
@@ -45,9 +43,6 @@ public class ConfigStats {
 			waveSettings = new AttackSettings(6, 6), //
 			airbladeSettings = new AttackSettings(4, .03), //
 			fireArcSettings = new AttackSettings(4, 1);
-	
-	@Load
-	public List<String> bendableBlocksNames;
 	
 	@Load
 	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
@@ -113,22 +108,45 @@ public class ConfigStats {
 	public boolean preventPickupBlockGriefing = false;
 
 	@Load
-	public List<String> sandBlocksNames = Arrays.asList("minecraft:sand", "minecraft:gravel");
+	public List<String> sandBlocksNames = Arrays.asList(
+			"minecraft:sand",
+			"minecraft:gravel");
+	@Load
+	public List<String> bendableBlocksNames = Arrays.asList(
+			"minecraft:stone",
+			"minecraft:sand",
+			"minecraft:sandstone",
+			"minecraft:cobblestone",
+			"minecraft:dirt",
+			"minecraft:gravel",
+			"minecraft:brick_block",
+			"minecraft:mossy_cobblestone",
+			"minecraft:stonebrick",
+			"minecraft:clay",
+			"minecraft:hardened_clay",
+			"minecraft:stained_hardened_clay",
+			"minecraft:coal_ore",
+			"minecraft:iron_ore",
+			"minecraft:emerald_ore",
+			"minecraft:gold_ore",
+			"minecraft:lapis_ore",
+			"minecraft:redstone_ore",
+			"minecraft:red_sandstone",
+			"minecraft:grass",
+			"minecraft:grass_path");
 
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
 
-	private ConfigStats() {
-		bendableBlocksNames = new ArrayList<>();
-		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
-				STONEBRICK, CLAY, HARDENED_CLAY, STAINED_HARDENED_CLAY, COAL_ORE, IRON_ORE, EMERALD_ORE,
-				GOLD_ORE, LAPIS_ORE, REDSTONE_ORE, RED_SANDSTONE, GRASS, GRASS_PATH);
-		
+	private ConfigStats() {}
+
+	public static void load() {
+		ConfigLoader.load(STATS_CONFIG, "avatar/stats.yml");
 	}
-	
-	private void addBendableBlock(Block... blocks) {
-		for (Block block : blocks)
-			bendableBlocksNames.add(Block.REGISTRY.getNameForObject(block).toString());
+
+	public void loadBlocks() {
+		bendableBlocks = STATS_CONFIG.loadBlocksList(bendableBlocksNames);
+		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
 	}
 
 	/**
@@ -149,15 +167,6 @@ public class ConfigStats {
 
 		return blocks;
 		
-	}
-	
-	public static void load() {
-		ConfigLoader.load(STATS_CONFIG, "avatar/stats.yml");
-	}
-	
-	public void loadBlocks() {
-		bendableBlocks = STATS_CONFIG.loadBlocksList(bendableBlocksNames);
-		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
 	}
 	
 	public static class AttackSettings {
