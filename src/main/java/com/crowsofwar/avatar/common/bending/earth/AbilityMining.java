@@ -73,6 +73,7 @@ public class AbilityMining extends Ability {
 			dist += (int) (ctx.getPowerRating() / 40);
 			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
 			fortune += (int) Math.ceil(ctx.getPowerRating() / 50);
+			int breakBlockTime = ctx.isMasterLevel(FIRST) ? 1 : 3;
 			
 			// For keeping track of already inspected/to-be-inspected positions
 			// of ore blocks
@@ -88,22 +89,25 @@ public class AbilityMining extends Ability {
 
 					BlockPos pos = ray.plus(direction.times(i)).toBlockPos();
 					Block block = world.getBlockState(pos).getBlock();
-					
+
+					// Mark any ores that were found; doesn't actually mine them yet
 					if (isBreakableOre(world, pos)) {
 						oresToBeMined.add(pos);
 						alreadyMinedOres.add(pos);
 					}
-					
-					// Stop at non-bendable blocks
-					int timeMultiplier = ctx.isMasterLevel(FIRST) ? 1 : 3;
-					if (!breakBlock(pos, ctx, i * timeMultiplier, fortune) && block != Blocks.AIR) {
+
+					// Actually break the block here
+					boolean success = breakBlock(pos, ctx, i * breakBlockTime, fortune);
+					// Stop at non-breakable blocks
+					if (!success && block != Blocks.AIR) {
 						break;
 					}
 					
 				}
 				
 			}
-			
+
+			// Here is where ore floodfill mining is actually performed
 			if (abilityData.getPath() == SECOND) {
 				mineNextOre(ctx, oresToBeMined, alreadyMinedOres, 0);
 			}
