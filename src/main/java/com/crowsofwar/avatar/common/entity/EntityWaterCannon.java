@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -24,9 +23,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
-
-	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
-			(EntityWaterCannon.class, AvatarDataSerializers.SERIALIZER_VECTOR);
 
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
 			(EntityWaterCannon.class, DataSerializers.FLOAT);
@@ -55,7 +51,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_ENDPOS, Vector.ZERO);
 		dataManager.register(SYNC_SIZE, 1.5f);
 	}
 
@@ -67,23 +62,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-
-		if (getOwner() != null) {
-			Vector controllerPos = Vector.getEyePos(getOwner());
-			Vector endPosition = getEndPos();
-			Vector position = controllerPos;
-
-			// position slightly below eye height
-			position = position.minusY(0.3);
-			// position slightly away from controller
-			position = position.plus(endPosition.minus(position).dividedBy(15));
-
-			setEndPos(position);
-
-			Vector newRotations = Vector.getRotationTo(position(), getEndPos());
-			rotationYaw = (float) Math.toDegrees(newRotations.y());
-			rotationPitch = (float) Math.toDegrees(newRotations.x());
-		}
 
 		if (stuckTo != null) {
 			setPosition(Vector.getEyePos(stuckTo));
@@ -191,14 +169,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		return new EntityWaterCannon.CannonControlPoint(this, index);
 	}
 
-	public Vector getEndPos() {
-		return dataManager.get(SYNC_ENDPOS);
-	}
-
-	public void setEndPos(Vector endPos) {
-		dataManager.set(SYNC_ENDPOS, endPos);
-	}
-
 	public float getDamage() {
 		return damage;
 	}
@@ -217,12 +187,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	public class CannonControlPoint extends ControlPoint {
 
-		private final int index;
-
 		public CannonControlPoint(EntityArc arc, int index) {
 			// Make control point closest to the player very small, so it has a cone appearance
 			super(arc, index == 1 ? 0.1f : 1.0f, 0, 0, 0);
-			this.index = index;
 		}
 
 	}

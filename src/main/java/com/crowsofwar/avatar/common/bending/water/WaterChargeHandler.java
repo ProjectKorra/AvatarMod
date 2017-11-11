@@ -118,7 +118,6 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setSizeMultiplier(size);
 
 		cannon.setPosition(Vector.getEyePos(entity));
-		cannon.setEndPos(Vector.getLookRectangular(entity));
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);
