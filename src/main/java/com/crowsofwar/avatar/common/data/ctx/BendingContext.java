@@ -17,15 +17,10 @@
 
 package com.crowsofwar.avatar.common.data.ctx;
 
-import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 
@@ -33,13 +28,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+
+import javax.annotation.Nullable;
 
 /**
  * Information when something is executed. Only is used server-side.
@@ -50,11 +43,12 @@ public class BendingContext {
 	
 	private final BendingData data;
 	private final Bender bender;
-	
-	private VectorI clientLookBlock;
-	private VectorI serverLookBlock;
-	private EnumFacing lookSide;
-	private Vector lookPos;
+
+	/**
+	 * The results of a raytrace which was performed client-side.
+	 */
+	@Nullable
+	private Raytrace.Result raytrace;
 	
 	/**
 	 * Create context for execution.
@@ -67,9 +61,7 @@ public class BendingContext {
 	public BendingContext(BendingData data, EntityLivingBase entity, Raytrace.Result raytrace) {
 		this.data = data;
 		this.bender = Bender.get(entity);
-		this.clientLookBlock = raytrace.getPos();
-		this.lookSide = raytrace.getSide();
-		this.lookPos = raytrace.getPosPrecise();
+		this.raytrace = raytrace;
 		verifyClientRaytrace();
 	}
 	
@@ -78,9 +70,7 @@ public class BendingContext {
 		
 		this.data = data;
 		this.bender = bender;
-		this.clientLookBlock = raytrace.getPos();
-		this.lookSide = raytrace.getSide();
-		this.lookPos = raytrace.getPosPrecise();
+		this.raytrace = raytrace;
 		verifyClientRaytrace();
 
 	}
@@ -100,48 +90,38 @@ public class BendingContext {
 	public World getWorld() {
 		return bender == null ? null : bender.getWorld();
 	}
-	
-	public VectorI getClientLookBlock() {
-		return clientLookBlock;
+
+	@Nullable
+	public VectorI getLookPosI() {
+		if (raytrace == null) {
+			return null;
+		}
+		return raytrace.getPos();
 	}
-	
-	/**
-	 * Get the side of the block the player is looking at
-	 * 
-	 * @return
-	 */
+
+	@Nullable
 	public EnumFacing getLookSide() {
-		return lookSide;
+		if (raytrace == null) {
+			return null;
+		}
+		return raytrace.getSide();
 	}
 	
 	/**
-	 * Returns whether the player is looking at a block right now without
-	 * verifying if the client is correct.
+	 * Returns whether the player is looking at a block right now
 	 */
 	public boolean isLookingAtBlock() {
-		return lookSide != null && clientLookBlock != null;
+		return raytrace != null;
 	}
-	
-	/**
-	 * Get the lookPos, unverified
-	 * 
-	 * @return
-	 */
+
+	@Nullable
 	public Vector getLookPos() {
-		return lookPos;
+		if (raytrace == null) {
+			return null;
+		}
+		return raytrace.getPosPrecise();
 	}
-	
-	/**
-	 * Returns whether the player is looking at a block right now. Checks for
-	 * hacking on the server. If on client side, then no checks are made.
-	 * 
-	 * @see #verifyClientLookBlock(double, double)
-	 */
-	public boolean isLookingAtBlock(double raycastDist, double maxDeviation) {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return isLookingAtBlock();
-		return lookSide != null && verifyClientLookBlock(raycastDist, maxDeviation) != null;
-	}
-	
+
 	/**
 	 * For certain circumstances, the client performs a raytrace and then sends the result to the server, which is
 	 * usable here (ex. {@link #isLookingAtBlock()}). Raytrace isn't performed on server since the server and client can
@@ -153,21 +133,17 @@ public class BendingContext {
 	 */
 	private void verifyClientRaytrace() {
 
-		if (clientLookBlock != null) {
+		if (raytrace != null) {
 
 			// Simply verify if the client's look-block is reasonable
 
 			Vector benderPos = Vector.getEntityPos(getBenderEntity());
-			Vector blockPos = clientLookBlock.precision();
+			Vector blockPos = getLookPos();
 			double dist = benderPos.dist(blockPos);
 
 			if (dist >= 5) {
 				AvatarLog.warnHacking(bender.getName(), "Sent suspicious raytrace block, ignoring");
-
-				clientLookBlock = null;
-				lookSide = null;
-				lookPos = null;
-
+				raytrace = null;
 			}
 
 		}
@@ -194,7 +170,7 @@ public class BendingContext {
 			return true;
 		}
 		
-		VectorI targetPos = getClientLookBlock();
+		VectorI targetPos = getLookPosI();
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
