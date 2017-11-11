@@ -91,7 +91,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			damageEntity(stuckTo, 0.5f);
 		}
 
-
 		if (velocity().equals(Vector.ZERO)) {
 			stuckTime++;
 			if (stuckTime == 1) {
@@ -126,11 +125,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity){
-			if (stuckTo == null && entity instanceof EntityLivingBase) {
-				stuckTo = (EntityLivingBase) entity;
-			}
+	protected void onCollideWithEntity(Entity entity) {
+		if (stuckTo == null && entity instanceof EntityLivingBase) {
+			stuckTo = (EntityLivingBase) entity;
 		}
+	}
 
 	/**
 	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
@@ -157,7 +156,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		DamageSource damageSource = createDamageSource(entity);
 		if (entity.attackEntityFrom(damageSource, damage *
 				damageModifier)) {
-
 
 			Vector velocity = getEntityPos(entity).minus(this.position()).normalize();
 			velocity = velocity.times(2);
