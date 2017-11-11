@@ -51,10 +51,10 @@ public class BendingContext {
 	private final BendingData data;
 	private final Bender bender;
 	
-	private final VectorI clientLookBlock;
+	private VectorI clientLookBlock;
 	private VectorI serverLookBlock;
-	private final EnumFacing lookSide;
-	private final Vector lookPos;
+	private EnumFacing lookSide;
+	private Vector lookPos;
 	
 	/**
 	 * Create context for execution.
@@ -70,6 +70,7 @@ public class BendingContext {
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
 		this.lookPos = raytrace.getPosPrecise();
+		verifyClientRaytrace();
 	}
 	
 	public BendingContext(BendingData data, EntityLivingBase entity, Bender bender,
@@ -80,7 +81,8 @@ public class BendingContext {
 		this.clientLookBlock = raytrace.getPos();
 		this.lookSide = raytrace.getSide();
 		this.lookPos = raytrace.getPosPrecise();
-		
+		verifyClientRaytrace();
+
 	}
 	
 	public BendingData getData() {
@@ -141,32 +143,35 @@ public class BendingContext {
 	}
 	
 	/**
-	 * Ensure that the client's targeted block is within range of the server's
-	 * targeted block. (To avoid hacking) On client side, simply returns the
-	 * client's targeted block.
-	 * 
-	 * @param raycastDist
-	 *            How far away can the block be?
-	 * @param maxDeviation
-	 *            How far away can server and client's target positions be?
-	 * 
-	 * @see Raytrace#getTargetBlock(EntityPlayer, double)
+	 * For certain circumstances, the client performs a raytrace and then sends the result to the server, which is
+	 * usable here (ex. {@link #isLookingAtBlock()}). Raytrace isn't performed on server since the server and client can
+	 * have minor discrepancies, so the server might think the player's rotation is 20 degrees off from what the client
+	 * thinks, resulting in glitchy raytracing.
+	 * <p>
+	 * Performed once to ensure that the client's targeted block is reasonable, to avoid hacking.
+	 *
 	 */
-	public VectorI verifyClientLookBlock(double raycastDist, double maxDeviation) {
-		if (clientLookBlock == null) return null;
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return clientLookBlock;
-		Result res = Raytrace.getTargetBlock(bender.getEntity(), raycastDist);
-		if (!res.hitSomething()) return null;
-		this.serverLookBlock = res.getPos();
-		double dist = serverLookBlock.dist(clientLookBlock);
-		if (dist <= maxDeviation) {
-			return clientLookBlock;
-		} else {
-			AvatarLog.warnHacking("unknown player",
-					"Client sent too far location " + "to look at block. (" + dist + ")");
-			Thread.dumpStack();
-			return serverLookBlock;
+	private void verifyClientRaytrace() {
+
+		if (clientLookBlock != null) {
+
+			// Simply verify if the client's look-block is reasonable
+
+			Vector benderPos = Vector.getEntityPos(getBenderEntity());
+			Vector blockPos = clientLookBlock.precision();
+			double dist = benderPos.dist(blockPos);
+
+			if (dist >= 5) {
+				AvatarLog.warnHacking(bender.getName(), "Sent suspicious raytrace block, ignoring");
+
+				clientLookBlock = null;
+				lookSide = null;
+				lookPos = null;
+
+			}
+
 		}
+
 	}
 
 	/**
