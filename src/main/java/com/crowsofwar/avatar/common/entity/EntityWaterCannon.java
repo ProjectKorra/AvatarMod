@@ -88,8 +88,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (stuckTo != null) {
 			setPosition(Vector.getEyePos(stuckTo));
 			setVelocity(Vector.ZERO);
-			  damageEntity(stuckTo, 0.5f);
-			}
+			damageEntity(stuckTo, 0.5f);
+		}
 
 
 		if (velocity().equals(Vector.ZERO)) {
@@ -112,20 +112,23 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	protected void updateCpBehavior() {
-		for (EntityWaterCannon.CannonControlPoint controlPoint : getControlPoints()) {
 
-			controlPoint.setPosition(controlPoint.getPosition
-					(ticksExisted));
+		// First control point (at front) should just follow water cannon
+		getControlPoint(0).setPosition(Vector.getEntityPos(this));
 
+		// Second control point (at back) should stay near the player
+		if (getOwner() != null) {
+			Vector eyePos = Vector.getEyePos(getOwner());
+			Vector directionToEnd = position().minus(eyePos).normalize();
+			getControlPoint(1).setPosition(eyePos.plus(directionToEnd));
 		}
+
 	}
 
 	@Override
 	protected void onCollideWithEntity(Entity entity){
 			if (stuckTo == null && entity instanceof EntityLivingBase) {
-
 				stuckTo = (EntityLivingBase) entity;
-
 			}
 		}
 
@@ -144,8 +147,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 	}
-
-
 
 	private void damageEntity(EntityLivingBase entity, float damageModifier) {
 
@@ -229,23 +230,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			// Make control point closest to the player very small, so it has a cone appearance
 			super(arc, index == 1 ? 0.1f : 1.0f, 0, 0, 0);
 			this.index = index;
-		}
-
-		public Vector getPosition(float ticks) {
-
-			float partialTicks = ticks - (int) ticks;
-			Vector arcPos = arc.position().plus(arc.velocity().dividedBy(20).times(partialTicks));
-
-			double targetDist = arcPos.dist(getEndPos()) / getControlPoints().size();
-			Vector dir = Vector.getLookRectangular(arc);
-
-			return arcPos.plus(dir.times(targetDist).times(index));
-
-		}
-
-		@Override
-		public Vector getInterpolatedPosition(float partialTicks) {
-			return getPosition(arc.ticksExisted + partialTicks);
 		}
 
 	}
