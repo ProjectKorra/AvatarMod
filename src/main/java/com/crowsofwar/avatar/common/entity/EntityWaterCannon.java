@@ -153,7 +153,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			return;
 		}
 
-		DamageSource damageSource = createDamageSource(entity);
+		DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
 		if (entity.attackEntityFrom(damageSource, damage *
 				damageModifier)) {
 
@@ -173,11 +173,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			}
 		}
 
-	}
-
-	private DamageSource createDamageSource(EntityLivingBase target) {
-		// TODO Custom Water Cannon DamageSource
-		return AvatarDamageSource.causeLightningDamage(target, getOwner());
 	}
 
 	@Override

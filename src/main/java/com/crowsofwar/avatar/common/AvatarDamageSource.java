@@ -149,4 +149,14 @@ public class AvatarDamageSource {
 				.setDamageBypassesArmor();
 	}
 
+	/**
+	 * Create a DamageSource for damage caused by a water cannon.
+	 *
+	 * @param hit   Who was hit by the water cannon
+	 * @param owner Who created the water cannon
+	 */
+	public static DamageSource causeWaterCannonDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_watercannon", hit, owner);
+	}
+
 }
