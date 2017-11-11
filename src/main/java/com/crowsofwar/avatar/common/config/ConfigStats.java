@@ -25,6 +25,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static net.minecraft.init.Blocks.*;
@@ -110,9 +111,13 @@ public class ConfigStats {
 	
 	@Load
 	public boolean preventPickupBlockGriefing = false;
-	
+
+	@Load
+	public List<String> sandBlocksNames = Arrays.asList("minecraft:sand", "minecraft:gravel");
+
 	public List<Block> bendableBlocks;
-	
+	public List<Block> sandBlocks;
+
 	private ConfigStats() {
 		bendableBlocksNames = new ArrayList<>();
 		addBendableBlock(STONE, SAND, SANDSTONE, COBBLESTONE, DIRT, GRAVEL, BRICK_BLOCK, MOSSY_COBBLESTONE,
@@ -125,19 +130,24 @@ public class ConfigStats {
 		for (Block block : blocks)
 			bendableBlocksNames.add(Block.REGISTRY.getNameForObject(block).toString());
 	}
-	
-	private void loadBendableBlocks() {
-		bendableBlocks = new ArrayList<>();
+
+	/**
+	 * Converts a list of block names to the Block instances.
+	 */
+	private List<Block> loadBlocksList(List<String> blocksNames) {
+		List<Block> blocks = new ArrayList<>();
 		
-		for (String blockName : bendableBlocksNames) {
+		for (String blockName : blocksNames) {
 			Block b = Block.REGISTRY.getObject(new ResourceLocation(blockName));
 			if (b == null) {
 				AvatarLog.warn(WarningType.CONFIGURATION,
-						"Invalid bendable blocks entry: " + blockName + "; does not exist");
+						"Invalid blocks entry: " + blockName + "; this block does not exist");
 			} else {
-				bendableBlocks.add(b);
+				blocks.add(b);
 			}
 		}
+
+		return blocks;
 		
 	}
 	
@@ -146,7 +156,8 @@ public class ConfigStats {
 	}
 	
 	public void loadBlocks() {
-		STATS_CONFIG.loadBendableBlocks();
+		bendableBlocks = STATS_CONFIG.loadBlocksList(bendableBlocksNames);
+		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
 	}
 	
 	public static class AttackSettings {
