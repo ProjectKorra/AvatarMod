@@ -39,10 +39,17 @@ public class AvatarPlayerData extends PlayerData {
 	 * Changed DataCategories since last sent a packet
 	 */
 	private SortedSet<DataCategory> changed;
-	
+
+	/**
+	 * For use by server thread only. This represents the ticksExisted value (Entity#ticksExisted)
+	 * when the last information packet to client was sent.
+	 */
+	private int lastPacketTime;
+
 	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
 		super(dataSaver, playerID, player);
-		
+		lastPacketTime = -1;
+
 		boolean isClient = !(player instanceof EntityPlayerMP);
 		
 		bendingData = new BendingData(this::save, this::saveAll);
@@ -78,6 +85,12 @@ public class AvatarPlayerData extends PlayerData {
 		PacketCPlayerData packet = new PacketCPlayerData(bendingData, playerID, changed);
 		EntityPlayer player = this.getPlayerEntity();
 		if (player != null && !player.world.isRemote) {
+
+			// Don't send packets more than once a second
+			if (player.ticksExisted - lastPacketTime < 20 && lastPacketTime != -1) {
+				return;
+			}
+			lastPacketTime = player.ticksExisted;
 			
 			// Look at who is tracking this player, to avoid unnecessarily
 			// sending packets to extra players
