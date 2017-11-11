@@ -27,16 +27,12 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 public class EntitySandstorm extends AvatarEntity {
 
 	private static final DataParameter<Float> SYNC_VELOCITY_MULT = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_STRENGTH = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
-
-	/**
-	 * Blocks that are considered "sand" like. When moving over these blocks, the sandstorm
-	 * weakens at a much smaller rate than normal.
-	 */
-	private static final List<Block> DUST_BLOCKS = Arrays.asList(Blocks.SAND, Blocks.GRAVEL);
 
 	private final SandstormMovementHandler movementHandler;
 
@@ -100,7 +96,7 @@ public class EntitySandstorm extends AvatarEntity {
 			IBlockState groundBlockState = getGroundBlock();
 			Block groundBlock = groundBlockState == null ? null : groundBlockState.getBlock();
 
-			if (DUST_BLOCKS.contains(groundBlock)) {
+			if (STATS_CONFIG.sandBlocks.contains(groundBlock)) {
 				setStrength(getStrength() - 0.003f);
 				setVelocityMultiplier(getVelocityMultiplier() - 0.001f);
 			} else {
