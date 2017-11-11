@@ -22,7 +22,7 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class EntityEarthspikeSpawner extends AvatarEntity {
+public class EntityEarthSpikeSpawner extends AvatarEntity {
 
     private boolean unstoppable;
     private float damageMult;
@@ -31,7 +31,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     /**
      * @param world
      */
-    public EntityEarthspikeSpawner(World world) {
+    public EntityEarthSpikeSpawner(World world) {
         super(world);
         setSize(1, 1);
         this.damageMult = 1.6F;
@@ -142,7 +142,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     @Override
     protected boolean canCollideWith(Entity entity) {
-        if (entity instanceof EntityEarthSpike || entity instanceof EntityEarthspikeSpawner) {
+        if (entity instanceof EntityEarthSpike || entity instanceof EntityEarthSpikeSpawner) {
             return false;
         }
         return entity instanceof EntityLivingBase || super.canCollideWith(entity);

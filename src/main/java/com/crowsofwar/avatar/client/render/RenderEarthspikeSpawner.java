@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
-import com.crowsofwar.avatar.common.entity.EntityRavine;
+import com.crowsofwar.avatar.common.entity.EntityEarthSpikeSpawner;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.entity.Render;
@@ -13,20 +12,20 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class RenderEarthspikeSpawner extends Render<EntityEarthspikeSpawner> {
+public class RenderEarthSpikeSpawner extends Render<EntityEarthSpikeSpawner> {
     private final Random random;
 
     /**
      * @param renderManager
      */
-    public RenderEarthspikeSpawner(RenderManager renderManager) {
+    public RenderEarthSpikeSpawner(RenderManager renderManager) {
         super(renderManager);
         this.random = new Random();
     }
 
     @Override
-    public void doRender(EntityEarthspikeSpawner entity, double x, double y, double z, float entityYaw,
-                         float partialTicks) {
+    public void doRender(EntityEarthSpikeSpawner entity, double x, double y, double z, float entityYaw,
+						 float partialTicks) {
         World world = entity.getEntityWorld();
         IBlockState blockState = world.getBlockState(entity.getPosition().offset(EnumFacing.DOWN));
         Block block = blockState.getBlock();
@@ -36,7 +35,7 @@ public class RenderEarthspikeSpawner extends Render<EntityEarthspikeSpawner> {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityEarthspikeSpawner entity) {
+    protected ResourceLocation getEntityTexture(EntityEarthSpikeSpawner entity) {
         return null;
     }
 

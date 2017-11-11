@@ -41,8 +41,6 @@ import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.*;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.item.AvatarDungeonLoot;
-import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
@@ -175,7 +173,7 @@ public class AvatarMod {
 		registerEntity(EntityCloudBall.class, "cloudburst");
 		registerEntity(EntityEarthSpike.class, "earthspike");
 		registerEntity(EntityLightningSpear.class, "lightning_spear");
-		registerEntity(EntityEarthspikeSpawner.class, "earthspike_spawner");
+		registerEntity(EntityEarthSpikeSpawner.class, "earthspike_spawner");
 		registerEntity(EntityWaterCannon.class, "water_cannon");
 		registerEntity(EntitySandstorm.class, "sandstorm");
 

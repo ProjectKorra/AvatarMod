@@ -64,7 +64,7 @@ public class EntityEarthSpike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthSpike || entity instanceof EntityEarthspikeSpawner) {
+		if (entity instanceof EntityEarthSpike || entity instanceof EntityEarthSpikeSpawner) {
 			return false;
 		}
 		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
