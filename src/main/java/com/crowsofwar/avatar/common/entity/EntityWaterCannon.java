@@ -61,7 +61,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	public int getAmountOfControlPoints() {
-		return 40;
+		return 2;
 	}
 
 	@Override
@@ -226,7 +226,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		private final int index;
 
 		public CannonControlPoint(EntityArc arc, int index) {
-			super(arc, 1.0f, 0, 0, 0);
+			// Make control point closest to the player very small, so it has a cone appearance
+			super(arc, index == 1 ? 0.1f : 1.0f, 0, 0, 0);
 			this.index = index;
 		}
 
