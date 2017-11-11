@@ -62,7 +62,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 		
 		if (floating != null) {
 			// TODO Verify look at block
-			VectorI looking = ctx.getClientLookBlock();
+			VectorI looking = ctx.getLookPosI();
 			EnumFacing lookingSide = ctx.getLookSide();
 			if (looking != null && lookingSide != null) {
 				looking.offset(lookingSide);

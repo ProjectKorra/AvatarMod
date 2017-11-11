@@ -82,7 +82,7 @@ public class AbilityWall extends Ability {
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 			
 			if (!ctx.isLookingAtBlock()) return;
-			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
+			BlockPos lookPos = ctx.getLookPosI().toBlockPos();
 			EntityWall wall = new EntityWall(world);
 			
 			Block lookBlock = world.getBlockState(lookPos).getBlock();

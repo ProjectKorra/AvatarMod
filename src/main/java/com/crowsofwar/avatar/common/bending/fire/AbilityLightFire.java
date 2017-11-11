@@ -56,9 +56,9 @@ public class AbilityLightFire extends Ability {
 		
 		World world = ctx.getWorld();
 		
-		VectorI looking = ctx.verifyClientLookBlock(-1, 5);
+		VectorI looking = ctx.getLookPosI();
 		EnumFacing side = ctx.getLookSide();
-		if (ctx.isLookingAtBlock(-1, 5)) {
+		if (ctx.isLookingAtBlock()) {
 			VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
 			setAt.offset(side);
 			BlockPos blockPos = setAt.toBlockPos();

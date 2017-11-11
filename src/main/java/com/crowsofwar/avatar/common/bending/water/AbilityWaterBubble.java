@@ -56,7 +56,7 @@ public class AbilityWaterBubble extends Ability {
 		World world = ctx.getWorld();
 		
 		if (ctx.isLookingAtBlock()) {
-			BlockPos lookPos = ctx.getClientLookBlock().toBlockPos();
+			BlockPos lookPos = ctx.getLookPosI().toBlockPos();
 			IBlockState lookingAtBlock = world.getBlockState(lookPos);
 			if (lookingAtBlock.getBlock() == Blocks.WATER) {
 				
