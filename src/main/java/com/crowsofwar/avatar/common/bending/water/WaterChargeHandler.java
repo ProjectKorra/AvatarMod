@@ -15,7 +15,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 
@@ -24,50 +23,43 @@ public class WaterChargeHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
 
-	/**
-	 * Gets AbilityData to be used for determining water cannon strength. This is normally the
-	 * bender's AbilityData, but in the case of redirection, it is the original bender's
-	 * AbilityData.
-	 */
-	@Nullable
-	private AbilityData getWaterCannonData(BendingContext ctx) {
-		return ctx.getData().getAbilityData("water_cannon");
-	}
-
 	@Override
 	public boolean tick(BendingContext ctx) {
-		AbilityData abilityData = getWaterCannonData(ctx);
+
+		AbilityData abilityData = ctx.getData().getAbilityData("water_cannon");
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
-		float damage = 10;
+		float damage = 4;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-		float size = 1;
+		float size = 0.1f;
 
 		if (world.isRemote) {
 			return false;
 		}
 
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
-			if (duration >= 40 && duration % 15 == 0 && duration <= 100){
-				damage = 4;
-				size = 0.1F;
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+
+			if (duration >= 40 && duration % 15 == 0 && duration <= 100) {
+
 				fireCannon(world, entity, damage, speed, size);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 						SoundCategory.PLAYERS, 1, 2);
 
+
 			}
-			if (duration >= 80){
+			if (duration >= 80) {
+
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 				return  true;
+
 			}
 
-		}
-		else if (duration >= 100) {
+		} else if (duration >= 100) {
 
 			double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 
