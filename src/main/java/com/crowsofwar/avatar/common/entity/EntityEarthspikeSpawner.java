@@ -23,6 +23,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
+
     private boolean unstoppable;
     private float damageMult;
     private double maxTicksAlive;
@@ -132,8 +133,10 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
     @Override
     protected boolean canCollideWith(Entity entity) {
-        return !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && (entity instanceof EntityLivingBase || super.canCollideWith(entity));
-        //Stops the earthspike from colliding with itself.
+        if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
+            return false;
+        }
+        return entity instanceof EntityLivingBase || super.canCollideWith(entity);
     }
 
     @Override

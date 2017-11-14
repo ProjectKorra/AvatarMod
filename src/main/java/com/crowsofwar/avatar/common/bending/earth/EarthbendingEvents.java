@@ -71,8 +71,8 @@ public class EarthbendingEvents {
 					BlockPos pos = sdb.getPos();
 					IBlockState blockState = world.getBlockState(pos);
 					Block block = blockState.getBlock();
-					block.dropBlockAsItem(world, pos, blockState, sdb.getFortune());
-					
+					destroyBlock(world, pos, sdb.isDrop(), sdb.getFortune());
+
 					iterator.remove();
 					
 				}

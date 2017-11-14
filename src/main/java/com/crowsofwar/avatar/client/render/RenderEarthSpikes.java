@@ -41,7 +41,7 @@ public class RenderEarthspikes extends Render<EntityEarthspike> {
      */
     public RenderEarthspikes(RenderManager renderManager) {
         super(renderManager);
-        this.model = new ModelEarthSpikes();
+        this.model = new ModelEarthspikes();
     }
 
     @Override

@@ -51,6 +51,7 @@ public class AbilityEarthspikes extends Ability {
             EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
             Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
             double mult = ctx.getLevel() >= 1 ? 14 : 8;
+            double speed = 4;
 
             if (abilityData.getLevel() == 1) {
                 earthspike.setVelocity(look.times(mult * 5));
@@ -78,9 +79,9 @@ public class AbilityEarthspikes extends Ability {
 
                     Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
                             i * 45), 0);
-                    Vector velocity = direction1.times(3);
-                    EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
+                    Vector velocity = direction1.times(speed);
 
+					EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
                     spawner.setVelocity(velocity);
                     spawner.maxTicks(ticks);
                     spawner.setOwner(entity);

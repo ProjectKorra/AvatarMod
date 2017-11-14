@@ -176,6 +176,10 @@ public class BendingContext {
 	 * First looks to see if looking at water block - any values >= 3 will also
 	 * consume the water block. Then, tries to see if there is a water pouch
 	 * with sufficient amount of water.
+	 * <p>
+	 * <b>NOTE:</b> If this is not working, ensure that the Ability constructor is calling
+	 * requireRaytrace, because otherwise no raytrace will be performed, and then this won't be able
+	 * to detect if the player is looking at water.
 	 */
 	public boolean consumeWater(int amount) {
 		

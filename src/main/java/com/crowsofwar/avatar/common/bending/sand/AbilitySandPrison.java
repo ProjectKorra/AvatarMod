@@ -10,7 +10,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -77,11 +76,14 @@ public class AbilitySandPrison extends Ability {
 		World world = target.world;
 		Block standingOn = world.getBlockState(pos).getBlock();
 
+		List<Block> blocksList;
 		if (allowEarthbendable) {
-			return ConfigStats.STATS_CONFIG.bendableBlocks.contains(standingOn);
+			blocksList = ConfigStats.STATS_CONFIG.bendableBlocks;
 		} else {
-			return standingOn == Blocks.SAND; // TODO configurable sand blocks
+			blocksList = ConfigStats.STATS_CONFIG.sandBlocks;
 		}
+
+		return blocksList.contains(standingOn);
 
 	}
 

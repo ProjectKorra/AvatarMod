@@ -23,7 +23,7 @@ import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.gorecore.util.VectorI;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
@@ -39,8 +39,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
-import static java.lang.Math.abs;
-import static java.lang.Math.floor;
 import static net.minecraft.init.Blocks.AIR;
 
 /**
@@ -67,89 +65,51 @@ public class AbilityMining extends Ability {
 			
 			AbilityData abilityData = ctx.getAbilityData();
 			abilityData.addXp(SKILLS_CONFIG.miningUse);
-			
-			//@formatter:off
-			// 0 = S 0x +z    1 = SW -x +z
-			// 2 = W -x 0z    3 = NW -x -z
-			// 4 = N 0x -z    5 = NE +x -z
-			// 6 = E +x 0z    7 = SE +x +z
-			//@formatter:on
 
-			int yaw = (int) floor((entity.rotationYaw * 8 / 360) + 0.5) & 7;
-			int x = 0, z = 0;
-			if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
-			if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
-			if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
-			if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
-			
-			// Pitch: 0=forward, +1=90deg up, etc
-			// Use abs and post-mul to fix weirdness with negatives
-			
-			int pitch = (int) floor((abs(entity.rotationPitch) * 8 / 360) + 0.5) & 7;
-			pitch *= -abs(entity.rotationPitch) / entity.rotationPitch;
-			
-			// Each starting position of the ray to mine out
-			List<VectorI> rays = new ArrayList<>();
-			rays.add(new VectorI(entity.getPosition()));
-			rays.add(new VectorI(entity.getPosition().up()));
-			
-			// If yaw is diagonal; SW, NW, NE, SE
-			if (yaw % 2 == 1) {
-				rays.add(new VectorI(entity.getPosition().east()));
-				rays.add(new VectorI(entity.getPosition().east().up()));
-			}
-			// Add height to excavating a stairway so you don't bump your head
-			if (pitch != 0) {
-				rays.add(new VectorI(entity.getPosition().up(2)));
-			}
-			
-			VectorI dir = new VectorI(x, pitch, z);
-			if (abs(pitch) == 2) {
-				dir.setX(0);
-				dir.setZ(0);
-				dir.setY(abs(pitch) / pitch);
-				rays.clear();
-				rays.add(new VectorI(entity.getPosition().up(pitch < 0 ? 0 : 1)));
-			}
+			Vector direction = getDirection(entity);
+			List<Vector> rays = getRaysStartPos(entity, direction);
 
 			int dist = getDistance(abilityData.getLevel(), abilityData.getPath());
 			dist += (int) (ctx.getPowerRating() / 40);
 			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
 			fortune += (int) Math.ceil(ctx.getPowerRating() / 50);
+			int breakBlockTime = ctx.isMasterLevel(FIRST) ? 1 : 3;
 			
 			// For keeping track of already inspected/to-be-inspected positions
 			// of ore blocks
 			// orePos: Position that needs to be inspected
-			// inspectedOrePos: Position that was already inspected (since the
+			// alreadyMinedOres: Position that was already inspected (since the
 			// queue items will be deleted)
 			Queue<BlockPos> oresToBeMined = new LinkedList<>();
 			Set<BlockPos> alreadyMinedOres = new HashSet<>();
 			
-			for (VectorI ray : rays) {
+			for (Vector ray : rays) {
 				
 				for (int i = 1; i <= dist; i++) {
-					
-					BlockPos pos = ray.plus(dir.times(i)).toBlockPos();
+
+					BlockPos pos = ray.plus(direction.times(i)).toBlockPos();
 					Block block = world.getBlockState(pos).getBlock();
-					
+
+					// Mark any ores that were found; doesn't actually mine them yet
 					if (isBreakableOre(world, pos)) {
 						oresToBeMined.add(pos);
 						alreadyMinedOres.add(pos);
-						abilityData.addXp(SKILLS_CONFIG.miningBreakOre);
 					}
-					
-					// Stop at non-bendable blocks
-					int timeMultiplier = ctx.isMasterLevel(FIRST) ? 1 : 3;
-					if (!breakBlock(pos, ctx, i * timeMultiplier, fortune) && block != Blocks.AIR) {
+
+					// Actually break the block here
+					boolean success = breakBlock(pos, ctx, i * breakBlockTime, fortune);
+					// Stop at non-breakable blocks
+					if (!success && block != Blocks.AIR) {
 						break;
 					}
 					
 				}
 				
 			}
-			
+
+			// Here is where ore floodfill mining is actually performed
 			if (abilityData.getPath() == SECOND) {
-				mineNextOre(world, oresToBeMined, alreadyMinedOres, ctx, 0);
+				mineNextOre(ctx, oresToBeMined, alreadyMinedOres, 0);
 			}
 			
 		}
@@ -202,7 +162,50 @@ public class AbilityMining extends Ability {
 			return 0;
 		}
 	}
-	
+
+	/**
+	 * Gets the direction the entity is facing. This is not a unit vector, but instead each
+	 * component is either -1, 0, or 1.
+	 */
+	private Vector getDirection(EntityLivingBase entity) {
+
+		// Just return the look vector, but each component is rounded (to either -1, 0, or 1)
+
+		Vector look = Vector.getLookRectangular(entity);
+		return new Vector(Math.round(look.x()), Math.round(look.y()), Math.round(look.z()));
+
+	}
+
+	/**
+	 * In the mining operation, the blocks are mined in multiple "rays", where one block gets
+	 * mined first and then it continues in one direction. This method gets the starting position
+	 * of each "ray", and then the same direction for every ray can be determined using
+	 * {@link #getDirection(EntityLivingBase)}.
+	 */
+	private List<Vector> getRaysStartPos(EntityLivingBase entity, Vector direction) {
+
+		// Each starting position of the ray to mine out
+		List<Vector> rays = new ArrayList<>();
+		rays.add(new Vector(entity.getPosition()));
+		rays.add(new Vector(entity.getPosition().up()));
+
+		// When yaw is diagonal (not along cardinal direction), add another ray of excavation
+		// because the excavated blocks would only be diagonal and you wouldn't be able to walk
+		// through them
+		if (direction.x() != 0 && direction.z() != 0) {
+			rays.add(new Vector(entity.getPosition().east()));
+			rays.add(new Vector(entity.getPosition().east().up()));
+		}
+		// When excavating up/down (ie making a stairway), add height to so you don't bump
+		// your head
+		if (direction.y() != 0) {
+			rays.add(new Vector(entity.getPosition().up(2)));
+		}
+
+		return rays;
+
+	}
+
 	/**
 	 * Breaks the block at the specified position, but doesn't break
 	 * non-bendable blocks. Returns false if not able to break (since the block
@@ -231,20 +234,26 @@ public class AbilityMining extends Ability {
 	/**
 	 * Represents a step in the flood-fill algorithm to destroy ore veins. Looks
 	 * on the next flagged ore block and mines it, then inspects nearby blocks
-	 * and flags any ores for mining.
+	 * and flags any ores for mining. Finally, recursively calls mineNextOre again so the
+	 * floodfill process continues.
 	 * 
-	 * @param world
 	 * @param queue
 	 * @param alreadyInspected
 	 * @param ctx
+	 * @param oresMined How many ores have been mined so far. When calling this method from
+	 *                     outside, should be 0. When the method recursively calls itself, this
+	 *                     parameter increases. This allows the method to know when it has mined
+	 *                     enough ores and should stop
 	 */
-	private void mineNextOre(World world, Queue<BlockPos> queue, Set<BlockPos> alreadyInspected,
-			AbilityContext ctx, int i) {
-		
+	private void mineNextOre(AbilityContext ctx, Queue<BlockPos> queue, Set<BlockPos>
+			alreadyInspected, int oresMined) {
+
+		World world = ctx.getWorld();
 		BlockPos pos = queue.poll();
 		
-		if (breakBlock(pos, ctx, i * 3 + 20, 3)) {
-			i++;
+		if (breakBlock(pos, ctx, oresMined * 3 + 20, 3)) {
+			oresMined++;
+			ctx.getAbilityData().addXp(SKILLS_CONFIG.miningBreakOre);
 		}
 		
 		// Search nearby blocks, and flag ores for mining
@@ -265,8 +274,8 @@ public class AbilityMining extends Ability {
 		}
 		
 		// Inspect the next ore
-		if (!queue.isEmpty() && i < 15) {
-			mineNextOre(world, queue, alreadyInspected, ctx, i);
+		if (!queue.isEmpty() && oresMined < 15) {
+			mineNextOre(ctx, queue, alreadyInspected, oresMined);
 		}
 		
 	}
@@ -275,5 +284,5 @@ public class AbilityMining extends Ability {
 		Block block = world.getBlockState(pos).getBlock();
 		return block instanceof BlockOre || block instanceof BlockRedstoneOre;
 	}
-	
+
 }

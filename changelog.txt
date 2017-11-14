@@ -9,3 +9,4 @@
 * Added Fire Jump
 * Added Water Cannon
 * Fixed some bugs
+* Server sends MUCH less packets to clients, reducing lag (hopefully)

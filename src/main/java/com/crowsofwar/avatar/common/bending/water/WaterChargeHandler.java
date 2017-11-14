@@ -15,66 +15,48 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
-
 
 public class WaterChargeHandler extends TickHandler {
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
 
-	/**
-	 * Gets AbilityData to be used for determining water cannon strength. This is normally the
-	 * bender's AbilityData, but in the case of redirection, it is the original bender's
-	 * AbilityData.
-	 */
-	@Nullable
-	private AbilityData getWaterCannonData(BendingContext ctx) {
-		return ctx.getData().getAbilityData("water_cannon");
-	}
-
 	@Override
 	public boolean tick(BendingContext ctx) {
+		AbilityData abilityData = ctx.getData().getAbilityData("water_cannon");
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
-		AbilityData abilityData = getWaterCannonData(ctx);
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
-		float damage;
+		float damage = 4;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-		float size;
+		float size = 0.1f;
 
 		if (world.isRemote) {
 			return false;
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+
+			// Fire once every 10 ticks
 			if (duration >= 40 && duration % 10 == 0 && duration <= 100) {
-				if (abilityData == null) {
-					return true;
-				}
-				damage = 4;
-				size = 0.1F;
+
 				fireCannon(world, entity, damage, speed, size);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 						SoundCategory.PLAYERS, 1, 2);
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+
 				return true;
 
 			}
+
 		}
-			if (duration >= 100) {
 
-				if (abilityData == null) {
-					return true;
-				}
-
-				return true;
-			}
+		if (duration >= 100) {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
@@ -119,7 +101,6 @@ public class WaterChargeHandler extends TickHandler {
 				damage = 4;
 				size = 0.1F;
 
-
 			}
 			damage += powerRating / 30;
 
@@ -131,12 +112,11 @@ public class WaterChargeHandler extends TickHandler {
 					SoundCategory.PLAYERS, 1, 2);
 
 			return true;
-
 		}
 
+		return false;
 
-
-
+	}
 
 	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,
 							float size) {
@@ -148,7 +128,6 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setSizeMultiplier(size);
 
 		cannon.setPosition(Vector.getEyePos(entity));
-		cannon.setEndPos(Vector.getLookRectangular(entity));
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);

@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.bending.fire.StatCtrlThrowFire;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlThrowFireball;
 import com.crowsofwar.avatar.common.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear;
+import com.crowsofwar.avatar.common.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateJump;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateStart;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowBubble;
@@ -76,7 +77,8 @@ public abstract class StatusControl {
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
 			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
 			SHIELD_SHATTER = new StatCtrlShieldShatter(),
-			DROP_WALL = new StatCtrlDropWall();
+			DROP_WALL = new StatCtrlDropWall(),
+			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect();
 	// @formatter:on
 	
 	private static int nextId = 0;
@@ -122,7 +124,7 @@ public abstract class StatusControl {
 	 *            Information for status control
 	 * @return Whether to remove it
 	 */
-	public abstract boolean execute(BendingContext ctx);
+	public abstract boolean  execute(BendingContext ctx);
 	
 	public int id() {
 		return id;

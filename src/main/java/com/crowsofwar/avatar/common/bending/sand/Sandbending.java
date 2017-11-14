@@ -19,6 +19,7 @@ public class Sandbending extends BendingStyle {
 	public Sandbending() {
 
 		addAbility("sand_prison");
+		addAbility("sandstorm");
 
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);

@@ -62,7 +62,8 @@ public class ConfigSkills {
 		sandPrisoned = 9,
 		iceShieldCreated = 2,
 		iceShieldProtected = 6,
-		icePrisoned = 10;
+		icePrisoned = 10,
+		sandstormPickedUp = 5;
 	// @formatter:on
 	
 	public static void load() {

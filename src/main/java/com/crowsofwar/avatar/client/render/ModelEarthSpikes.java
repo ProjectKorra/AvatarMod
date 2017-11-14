@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
  * Earthspike Up - talhanation
  * Created using Tabula 5.1.0
  */
-public class ModelEarthSpikes extends ModelBase {
+public class ModelEarthspikes extends ModelBase {
     public ModelRenderer shape1;
     public ModelRenderer shape4;
     public ModelRenderer shape7;
@@ -35,7 +35,7 @@ public class ModelEarthSpikes extends ModelBase {
     public ModelRenderer shape23;
     public ModelRenderer shape24;
 
-    public ModelEarthSpikes() {
+    public ModelEarthspikes() {
         this.textureWidth = 256;
         this.textureHeight = 128;
         this.shape3 = new ModelRenderer(this, 29, 0);

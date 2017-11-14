@@ -138,13 +138,3 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 }
-
-
-
-
-
-
-// Destroy non-solid blocks in the ravine
-
-
-
