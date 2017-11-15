@@ -46,6 +46,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -72,7 +73,9 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
@@ -632,6 +635,25 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 			return true;
 
+		}
+
+		// Temporary debug info -- only to be used in the development environment
+		if (!world.isRemote && stack.getItem() == Items.BONE) {
+			try {
+				// Use reflection to get currently executing tasks
+				Field field = EntityAITasks.class.getDeclaredField("executingTaskEntries");
+				field.setAccessible(true);
+				Set<EntityAITasks.EntityAITaskEntry> executingTasks = (Set<EntityAITasks.EntityAITaskEntry>) field.get(tasks);
+
+				System.out.println("Currently executing tasks:");
+				for (EntityAITasks.EntityAITaskEntry entry : executingTasks) {
+					System.out.println(" - " + entry.action);
+				}
+				System.out.println(".");
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		if (stack.getItem() == Items.NAME_TAG) {
