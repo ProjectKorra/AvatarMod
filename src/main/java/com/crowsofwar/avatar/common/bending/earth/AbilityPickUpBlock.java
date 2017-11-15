@@ -76,7 +76,7 @@ public class AbilityPickUpBlock extends Ability {
 			data.removeStatusControl(StatusControl.THROW_BLOCK);
 			data.removeStatusControl(StatusControl.PLACE_BLOCK);
 		} else {
-			VectorI target = ctx.verifyClientLookBlock(-1, 5);
+			VectorI target = ctx.getLookPosI();
 			if (target != null) {
 				
 				pickupBlock(ctx, target.toBlockPos());
