@@ -32,6 +32,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -252,6 +253,7 @@ public class Raytrace {
 		/**
 		 * Get the position of the block hit. Null if hit nothing
 		 */
+		@Nullable
 		public VectorI getPos() {
 			return pos;
 		}
@@ -259,6 +261,7 @@ public class Raytrace {
 		/**
 		 * Get the side of the block hit. Null if hit nothing
 		 */
+		@Nullable
 		public EnumFacing getSide() {
 			return side;
 		}
@@ -269,7 +272,8 @@ public class Raytrace {
 		public boolean hitSomething() {
 			return hit;
 		}
-		
+
+		@Nullable
 		public Vector getPosPrecise() {
 			return posPrecise;
 		}

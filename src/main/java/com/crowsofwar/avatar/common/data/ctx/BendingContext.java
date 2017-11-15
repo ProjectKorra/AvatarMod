@@ -139,12 +139,17 @@ public class BendingContext {
 
 			Vector benderPos = Vector.getEntityPos(getBenderEntity());
 			Vector blockPos = getLookPos();
-			double dist = benderPos.dist(blockPos);
+			if (blockPos != null) {
 
-			if (dist >= 5) {
-				AvatarLog.warnHacking(bender.getName(), "Sent suspicious raytrace block, ignoring");
-				raytrace = null;
+				double dist = benderPos.dist(blockPos);
+
+				if (dist >= 5) {
+					AvatarLog.warnHacking(bender.getName(), "Sent suspicious raytrace block, ignoring");
+					raytrace = null;
+				}
+
 			}
+
 
 		}
 
