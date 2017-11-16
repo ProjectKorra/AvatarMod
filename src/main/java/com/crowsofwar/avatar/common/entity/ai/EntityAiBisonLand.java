@@ -38,7 +38,14 @@ import static net.minecraft.util.math.MathHelper.floor;
 public class EntityAiBisonLand extends EntityAIBase {
 	
 	private final EntitySkyBison bison;
-	
+
+	/**
+	 * The "timestamp" of the last time the bison attempted to land. This is really the value of bison.ticksExisted the
+	 * last time a landing was attempted. Used to prevent bison from trying to land too often, which will hog all other
+	 * tasks and cause bison to become "frozen".
+	 */
+	private int lastLandAttempt;
+
 	public EntityAiBisonLand(EntitySkyBison bison) {
 		this.bison = bison;
 		setMutexBits(1);
@@ -46,12 +53,14 @@ public class EntityAiBisonLand extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		return bison.wantsGrass();
+		return bison.wantsGrass() && bison.ticksExisted - lastLandAttempt > 100;
 	}
 	
 	@Override
 	public void startExecuting() {
-		
+
+		lastLandAttempt = bison.ticksExisted;
+
 		World world = bison.world;
 		
 		int tries = 0;
@@ -135,8 +144,8 @@ public class EntityAiBisonLand extends EntityAIBase {
 		Vector direction = target.minus(current).normalize();
 		double range = current.dist(target);
 		Raytrace.Result raytrace = Raytrace.raytrace(bison.world, current, direction, range + 1, false);
-		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos().up();
-		return blockPos == null || blockPos.equals(target.toBlockPos());
+		Vector hitPos = raytrace.getPosPrecise() == null ? null : raytrace.getPosPrecise().plusY(1);
+		return hitPos == null || hitPos.sqrDist(target) <= 2;
 	}
 	
 	private boolean isSolidBlock(BlockPos pos) {
