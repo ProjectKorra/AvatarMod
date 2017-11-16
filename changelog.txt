@@ -13,3 +13,4 @@
 * Fix potential exploits with floating block pickup location, light fire location, etc
 
 > Fix sky bison landing zone detection false negatives
+> Fix sky bison getting "stuck" when it can't find a place to land
