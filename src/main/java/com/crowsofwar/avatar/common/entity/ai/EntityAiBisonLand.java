@@ -135,8 +135,8 @@ public class EntityAiBisonLand extends EntityAIBase {
 		Vector direction = target.minus(current).normalize();
 		double range = current.dist(target);
 		Raytrace.Result raytrace = Raytrace.raytrace(bison.world, current, direction, range + 1, false);
-		BlockPos blockPos = raytrace.getPos() == null ? null : raytrace.getPos().toBlockPos().up();
-		return blockPos == null || blockPos.equals(target.toBlockPos());
+		Vector hitPos = raytrace.getPosPrecise() == null ? null : raytrace.getPosPrecise().plusY(1);
+		return hitPos == null || hitPos.sqrDist(target) <= 2;
 	}
 	
 	private boolean isSolidBlock(BlockPos pos) {

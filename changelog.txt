@@ -11,3 +11,5 @@
 * Fixed some bugs
 * Server sends MUCH less packets to clients, reducing lag (hopefully)
 * Fix potential exploits with floating block pickup location, light fire location, etc
+
+> Fix sky bison landing zone detection false negatives
