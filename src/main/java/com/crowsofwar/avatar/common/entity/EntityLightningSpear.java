@@ -17,13 +17,11 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -76,11 +74,10 @@ public class EntityLightningSpear extends AvatarEntity {
     public void onUpdate() {
         super.onUpdate();
         setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-        EntityLightningSpear spear = new EntityLightningSpear(world);
-        /*if (getOwner() != null) {
-            spear.rotationYaw = spear.getOwner().rotationYaw;
-            spear.rotationPitch = spear.getOwner().rotationPitch;
-        }**/
+        if (getOwner() != null) {
+            rotationYaw = getOwner().rotationYaw;
+            rotationPitch = getOwner().rotationPitch;
+        }
         if (this.isDead){
             removeStatCtrl();
         }
