@@ -23,19 +23,19 @@ public class ModelLightningSpear extends ModelBase
   
   public ModelLightningSpear()
   {
-    textureWidth = 109;
-    textureHeight = 60;
+    textureWidth = 64;
+    textureHeight = 32;
     
       Shape1 = new ModelRenderer(this, 17, 0);
       Shape1.addBox(0F, 0F, 0F, 3, 3, 8);
       Shape1.setRotationPoint(-1F, 18F, -4F);
-      Shape1.setTextureSize(109, 60);
+      Shape1.setTextureSize(64, 32);
       Shape1.mirror = true;
       setRotation(Shape1, 0F, 0F, 0F);
       Shape2 = new ModelRenderer(this, 0, 0);
       Shape2.addBox(0F, 0F, 0F, 1, 1, 6);
       Shape2.setRotationPoint(0F, 19F, -3F);
-      Shape2.setTextureSize(64, 64);
+      Shape2.setTextureSize(64, 32);
       Shape2.mirror = true;
       setRotation(Shape2, 0F, 0F, 0F);
   }
