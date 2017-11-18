@@ -132,6 +132,10 @@ public class EntityLightningSpear extends AvatarEntity {
     @Override
     public boolean onCollideWithSolid() {
 
+        if (!(getBehavior() instanceof LightningSpearBehavior.Thrown)) {
+            return false;
+        }
+
         float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
         explosionSize *= getSize() / 30f;
         boolean destroyObsidian = false;
