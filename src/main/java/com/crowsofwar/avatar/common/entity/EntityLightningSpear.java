@@ -74,10 +74,6 @@ public class EntityLightningSpear extends AvatarEntity {
     public void onUpdate() {
         super.onUpdate();
         setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-        if (getOwner() != null) {
-            rotationYaw = getOwner().rotationYaw;
-            rotationPitch = getOwner().rotationPitch;
-        }
         if (this.isDead){
             removeStatCtrl();
         }
