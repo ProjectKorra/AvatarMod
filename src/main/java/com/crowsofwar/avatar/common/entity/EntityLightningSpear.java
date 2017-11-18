@@ -193,7 +193,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
     @Override
     public boolean shouldRenderInPass(int pass) {
-        return pass == 0 || pass == 1;
+        return pass == 1;
     }
 
     private void removeStatCtrl() {
