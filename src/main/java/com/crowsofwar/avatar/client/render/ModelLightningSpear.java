@@ -5,14 +5,14 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 /**
- * LightningSpear - CrowsOfWar
+ * ModelLightningSpear - CrowsOfWar
  * Created using Tabula 7.0.0
  */
-public class LightningSpear extends ModelBase {
+public class ModelLightningSpear extends ModelBase {
     public ModelRenderer shape1;
     public ModelRenderer shape2;
 
-    public LightningSpear() {
+    public ModelLightningSpear() {
         this.textureWidth = 64;
         this.textureHeight = 64;
         this.shape1 = new ModelRenderer(this, 0, 0);

@@ -48,8 +48,6 @@ public class RenderLightningSpear extends Render<EntityLightningSpear> {
     public void doRender(EntityLightningSpear entity, double x, double y, double z, float entityYaw,
                          float partialTicks) {
 
-		model = new LightningSpear();
-
         Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
         GlStateManager.enableBlend();
 
@@ -58,8 +56,8 @@ public class RenderLightningSpear extends Render<EntityLightningSpear> {
 
         // Should be rotating in degrees here...?
         // radians doesn't work
-//        GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
-//        GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+        GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
+        GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 
         model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
         GlStateManager.popMatrix();
