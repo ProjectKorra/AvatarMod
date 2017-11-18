@@ -7,7 +7,12 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntitySpectralArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -30,7 +35,7 @@ public class EntityCloudBall extends AvatarEntity {
     private AxisAlignedBB expandedHitbox;
 
     private float damage;
-    private int unpredictable;
+    private boolean absorbtion;
 
     /**
      * @param world
@@ -40,8 +45,8 @@ public class EntityCloudBall extends AvatarEntity {
         setSize(0.8f, 0.8f);
 
     }
-    public void setUnpredictable (int setUnpredictable) {
-        this.unpredictable = setUnpredictable;
+    public void canAbsorb (boolean canAbsorb) {
+        this.absorbtion = canAbsorb;
     }
 
     @Override
@@ -58,8 +63,6 @@ public class EntityCloudBall extends AvatarEntity {
         if (ticksExisted >= 250) {
             this.setDead();
         }
-        EntityCloudBall cloudBall = new EntityCloudBall(world);
-        Vector look = Vector.getLookRectangular(cloudBall);
 
       /*  if (!world.isRemote){
             Thread.dumpStack();
@@ -109,8 +112,8 @@ public class EntityCloudBall extends AvatarEntity {
     public boolean onCollideWithSolid() {
 
         if (getOwner() != null) {
-            AbilityData abilityData = BendingData.get(getOwner())
-                    .getAbilityData("cloudburst");
+            AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("cloudburst");
+            abilityData.addXp(3);
 
         }
 
@@ -118,6 +121,45 @@ public class EntityCloudBall extends AvatarEntity {
         return true;
 
     }
+
+    @Override
+    protected boolean canCollideWith(Entity entity) {
+        if (getOwner() != null) {
+            AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("cloudburst");
+
+            if (absorbtion) {
+                if (entity instanceof EntityFireball || entity instanceof EntityCloudBall || entity instanceof EntityAirblade || entity instanceof EntityLightningSpear || entity instanceof EntityFloatingBlock) {
+                    entity.setDead();
+                    damage += 3F;
+                    abilityData.addXp(4);
+                    return false;
+                }
+                if (entity instanceof EntityArrow) {
+                    entity.setDead();
+                    damage += 2F;
+                    abilityData.addXp(3);
+                    return false;
+                }
+                if (entity instanceof EntityThrowable) {
+                    entity.setDead();
+                    damage += 1F;
+                    abilityData.addXp(2);
+                    return false;
+                }
+
+            }
+
+            removeStatCtrl();
+            abilityData.addXp(2);
+        }
+        return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
+
+    }
+
+
+
+
+
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
