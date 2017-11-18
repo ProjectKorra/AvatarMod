@@ -90,6 +90,10 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
             entity.addVelocity(Vector.DOWN.times(1/12000));
 
+            Vector direction = entity.velocity().toSpherical();
+            entity.rotationYaw = (float) Math.toDegrees(direction.y());
+            entity.rotationPitch = (float) Math.toDegrees(direction.x());
+
             World world = entity.world;
             if (!entity.isDead) {
                 List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
