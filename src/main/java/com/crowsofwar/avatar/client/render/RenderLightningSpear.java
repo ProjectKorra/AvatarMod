@@ -48,7 +48,7 @@ public class RenderLightningSpear extends Render<EntityLightningSpear> {
     public void doRender(EntityLightningSpear entity, double x, double y, double z, float entityYaw,
                          float partialTicks) {
 
-		model = new ModelLightningSpear();
+		model = new LightningSpear();
 
         Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
         GlStateManager.enableBlend();
