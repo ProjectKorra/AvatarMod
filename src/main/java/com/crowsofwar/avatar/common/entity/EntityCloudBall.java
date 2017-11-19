@@ -4,10 +4,12 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +33,7 @@ public class EntityCloudBall extends AvatarEntity {
 
     private float damage;
     private boolean absorbtion;
+    private boolean chismash;
 
     /**
      * @param world
@@ -43,6 +46,9 @@ public class EntityCloudBall extends AvatarEntity {
     public void canAbsorb (boolean canAbsorb) {
         this.absorbtion = canAbsorb;
     }
+    public void canchiSmash (boolean canchiSmash) {
+       this.chismash = canchiSmash;
+   }
 
     @Override
     public void entityInit() {
@@ -121,29 +127,35 @@ public class EntityCloudBall extends AvatarEntity {
     @Override
     protected boolean canCollideWith(Entity entity) {
         if (getOwner() != null) {
-            AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("cloudburst");
 
 
             if (absorbtion) {
-                /*if (entity instanceof AvatarEntity) {
+                if (entity instanceof AvatarEntity) {
                     ((AvatarEntity) entity).isProjectile();
-                }**/
+                    entity.setDead();
+                    damage += 3F;
                     return false;
                 }
+
+
                 if (entity instanceof EntityArrow) {
                     entity.setDead();
                     damage += 2F;
-                   abilityData.addXp(3);
                     return false;
                 }
                 if (entity instanceof EntityThrowable) {
                     entity.setDead();
                     damage += 1F;
-                    abilityData.addXp(2);
                     return false;
                 }
-
             }
+            if (chismash){
+                if (entity instanceof EntityPlayer){
+
+                }
+            }
+
+        }
 
 
         return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
