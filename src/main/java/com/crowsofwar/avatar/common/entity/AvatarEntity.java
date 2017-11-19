@@ -376,6 +376,15 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
+	 * Returns whether the entity can be considered a projectile. Generally, an entity is
+	 * considered a projectile if it is meant to be thrown or flung some distance. Air entities
+	 * can be projectiles as well.
+	 */
+	public boolean isProjectile() {
+		return false;
+	}
+
+	/**
 	 * Break the block at the given position, playing sound/particles, and
 	 * dropping item
 	 */
