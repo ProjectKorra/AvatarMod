@@ -17,10 +17,8 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -29,7 +27,7 @@ import net.minecraft.util.ResourceLocation;
  *
  * @author CrowsOfWar
  */
-public class RenderLightningSpear extends Render<EntityLightningSpear> {
+public class RenderLightningSpear extends RenderModel<EntityLightningSpear> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
             "textures/entity/lightning_spear.png");
@@ -40,37 +38,18 @@ public class RenderLightningSpear extends Render<EntityLightningSpear> {
      * @param renderManager
      */
     public RenderLightningSpear(RenderManager renderManager) {
-        super(renderManager);
-        this.model = new ModelLightningSpear();
+        super(renderManager, new ModelLightningSpear());
     }
 
-    @Override
-    public void doRender(EntityLightningSpear entity, double x, double y, double z, float entityYaw,
-                         float partialTicks) {
+	@Override
+	protected void performGlTransforms(EntityLightningSpear entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		// Should be rotating in degrees here...?
+		// radians doesn't work
+		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
+		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+	}
 
-        if (entity.isInvisible()) {
-            return;
-        }
-
-        Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-        GlStateManager.enableBlend();
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-
-        // Should be rotating in degrees here...?
-        // radians doesn't work
-        GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
-        GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-
-        model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
-        GlStateManager.popMatrix();
-
-        GlStateManager.disableBlend();
-
-    }
-
-    @Override
+	@Override
     protected ResourceLocation getEntityTexture(EntityLightningSpear entity) {
         return TEXTURE;
     }
