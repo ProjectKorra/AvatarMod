@@ -49,13 +49,15 @@ public class LightningFloodFill {
 	}
 
 	/**
-	 * Ticks the flood fill algorithm
+	 * Ticks the flood fill algorithm. Returns true if the flood fill algorithm has finished.
 	 */
-	public void tick() {
+	public boolean tick() {
 
 		for (int i = 0; i < 20 && !waterBlocksQueue.isEmpty(); i++) {
 			processBlock();
 		}
+
+		return waterBlocksQueue.isEmpty();
 
 	}
 

@@ -30,6 +30,10 @@ public class RenderModel<T extends Entity> extends Render<T> {
 	public void doRender(T entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
 
+		if (entity.isInvisible()) {
+			return;
+		}
+
 		Minecraft.getMinecraft().renderEngine.bindTexture(getEntityTexture(entity));
 		GlStateManager.enableBlend();
 

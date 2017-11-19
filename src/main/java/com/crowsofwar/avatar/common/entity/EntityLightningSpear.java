@@ -16,22 +16,27 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -58,6 +63,11 @@ public class EntityLightningSpear extends AvatarEntity {
     private float damage;
 
     /**
+     * Handles electrocution of nearby entities when the lightning spear touches water
+     */
+    private LightningFloodFill floodFill;
+
+    /**
      * @param world
      */
     public EntityLightningSpear(World world) {
@@ -76,11 +86,6 @@ public class EntityLightningSpear extends AvatarEntity {
     public void onUpdate() {
         super.onUpdate();
         setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-        EntityLightningSpear spear = new EntityLightningSpear(world);
-        /*if (getOwner() != null) {
-            spear.rotationYaw = spear.getOwner().rotationYaw;
-            spear.rotationPitch = spear.getOwner().rotationPitch;
-        }**/
         if (this.isDead){
             removeStatCtrl();
         }
@@ -91,20 +96,42 @@ public class EntityLightningSpear extends AvatarEntity {
             removeStatCtrl();
         }
 
+        // Electrocute enemies in water
+        if (inWater) {
+
+            // When in the water, lightning spear should disappear, but also keep
+            // electrocuting entities. If the lightning spear was simply removed, flood fill
+            // processing (i.e. electrocution) would end, so don't do that. Instead make it
+            // invisible and remove once process is complete.
+            // A hack but it works :\
+            setInvisible(true);
+            setVelocity(Vector.ZERO);
+
+        }
+        if (inWater && !world.isRemote) {
+            if (floodFill == null) {
+                floodFill = new LightningFloodFill(world, getPosition(), 12,
+                        this::handleWaterElectrocution);
+            }
+            if (floodFill.tick()) {
+                // Remove lightning spear when it's finished electrocuting
+                setDead();
+            }
+        }
+
     }
 
-    @Override
-    public boolean onMajorWaterContact() {
-        spawnExtinguishIndicators();
-        removeStatCtrl();
-        setDead();
-        return true;
-    }
+    /**
+     * When a lightning spear hits water, electricity spreads through the water and nearby
+     * entities are electrocuted. This method is called when an entity gets electrocuted.
+     */
+    private void handleWaterElectrocution(Entity entity) {
 
-    @Override
-    public boolean onMinorWaterContact() {
-        spawnExtinguishIndicators();
-        return false;
+        // Uses same DamageSource as lightning arc; this is intentional
+        DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
+
+        entity.attackEntityFrom(damageSource, damage / 2);
+
     }
 
     public LightningSpearBehavior getBehavior() {
@@ -139,6 +166,10 @@ public class EntityLightningSpear extends AvatarEntity {
     @Override
     public boolean onCollideWithSolid() {
 
+        if (!(getBehavior() instanceof LightningSpearBehavior.Thrown)) {
+            return false;
+        }
+
         float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
         explosionSize *= getSize() / 30f;
         boolean destroyObsidian = false;
@@ -168,6 +199,9 @@ public class EntityLightningSpear extends AvatarEntity {
                 }
             }
         }
+
+        world.playSound(posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory
+                .PLAYERS, 1, 1, false);
 
         setDead();
         return true;
@@ -200,7 +234,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
     @Override
     public boolean shouldRenderInPass(int pass) {
-        return pass == 0 || pass == 1;
+        return pass == 1;
     }
 
     private void removeStatCtrl() {

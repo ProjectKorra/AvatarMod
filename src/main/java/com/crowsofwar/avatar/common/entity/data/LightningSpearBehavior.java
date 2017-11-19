@@ -18,10 +18,8 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -91,6 +89,10 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             }
 
             entity.addVelocity(Vector.DOWN.times(1/12000));
+
+            Vector direction = entity.velocity().toSpherical();
+            entity.rotationYaw = (float) Math.toDegrees(direction.y());
+            entity.rotationPitch = (float) Math.toDegrees(direction.x());
 
             World world = entity.world;
             if (!entity.isDead) {
@@ -167,11 +169,14 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
             entity.setVelocity(motion);
 
+            Vector direction = entity.position().minus(Vector.getEyePos(owner)).toSpherical();
+            entity.rotationYaw = (float) Math.toDegrees(direction.y());
+            entity.rotationPitch = (float) Math.toDegrees(direction.x());
 
-                int size = entity.getSize();
-                if (size < 60 && entity.ticksExisted % 4 == 0) {
-                    entity.setSize(size + 1);
-                }
+            int size = entity.getSize();
+            if (size < 60 && entity.ticksExisted % 4 == 0) {
+                entity.setSize(size + 1);
+            }
 
 
             return this;

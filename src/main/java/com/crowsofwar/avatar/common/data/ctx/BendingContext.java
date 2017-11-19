@@ -111,7 +111,7 @@ public class BendingContext {
 	 * Returns whether the player is looking at a block right now
 	 */
 	public boolean isLookingAtBlock() {
-		return raytrace != null;
+		return raytrace != null && raytrace.hitSomething();
 	}
 
 	@Nullable
