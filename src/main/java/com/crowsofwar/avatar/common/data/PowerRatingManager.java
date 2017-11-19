@@ -33,7 +33,8 @@ public class PowerRatingManager {
 		modifier.setTicks(20);
 	}
 
-	public void removeModifier(PowerRatingModifier modifier) {
+	public void removeModifier(PowerRatingModifier modifier, BendingContext ctx) {
+		modifier.onRemoval(ctx);
 		modifiers.remove(modifier);
 	}
 
@@ -56,6 +57,7 @@ public class PowerRatingManager {
 		while (iterator.hasNext()) {
 			PowerRatingModifier modifier = iterator.next();
 			if (modifier.onUpdate(ctx)) {
+				modifier.onRemoval(ctx);
 				iterator.remove();
 			}
 		}

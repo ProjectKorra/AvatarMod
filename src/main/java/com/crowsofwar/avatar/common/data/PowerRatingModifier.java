@@ -34,6 +34,11 @@ public abstract class PowerRatingModifier {
 		return ticks <= 0;
 	}
 
+	/**
+	 * Called when the power rating modifier has been removed.
+	 */
+	public void onRemoval(BendingContext ctx) {}
+
 	@Override
 	public boolean equals(Object obj) {
 		return obj.getClass() == this.getClass();
