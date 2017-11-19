@@ -21,11 +21,10 @@ import com.crowsofwar.avatar.client.AvatarShaderUtils;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.bending.fire.PurifyPowerModifier;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
+import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
@@ -100,7 +99,7 @@ public class AvatarUiRenderer extends Gui {
 		renderAirBubbleHealth(resolution);
 		renderIceShieldHealth(resolution);
 		renderPrisonCracks(resolution);
-		applyBuffShaders();
+		applyVisionShader();
 
 	}
 	
@@ -374,16 +373,20 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	/**
-	 * Applies shaders to modify vision if the player is currently under a buff ability
+	 * Applies shaders to modify vision to match the current Vision of the player.
+	 *
+	 * @see BendingData#getVision()
+	 * @see Vision
 	 */
-	private void applyBuffShaders() {
+	private void applyVisionShader() {
 
 		BendingData data = BendingData.get(mc.player);
+		Vision vision = data.getVision();
 
-		// Test each power rating manager for modifiers
+		System.out.println(vision);
 
-		if (testBuffAbilityActive(data, Firebending.ID, PurifyPowerModifier.class)) {
-			AvatarShaderUtils.useShader(PURIFY_VISION_SHADER);
+		if (vision != null) {
+			AvatarShaderUtils.useShader(vision.getShaderLocation());
 		} else {
 			AvatarShaderUtils.stopUsingShader();
 		}
