@@ -16,19 +16,23 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -54,6 +58,11 @@ public class EntityLightningSpear extends AvatarEntity {
     private AxisAlignedBB expandedHitbox;
 
     private float damage;
+
+    /**
+     * Handles electrocution of nearby entities when the lightning spear touches water
+     */
+    private LightningFloodFill floodFill;
 
     /**
      * @param world
@@ -83,6 +92,28 @@ public class EntityLightningSpear extends AvatarEntity {
             setDead();
             removeStatCtrl();
         }
+
+        // Electrocute enemies in water
+        if (inWater && !world.isRemote) {
+            if (floodFill == null) {
+                floodFill = new LightningFloodFill(world, getPosition(), 12,
+                        this::handleWaterElectrocution);
+            }
+            floodFill.tick();
+        }
+
+    }
+
+    /**
+     * When a lightning spear hits water, electricity spreads through the water and nearby
+     * entities are electrocuted. This method is called when an entity gets electrocuted.
+     */
+    private void handleWaterElectrocution(Entity entity) {
+
+        // Uses same DamageSource as lightning arc; this is intentional
+        DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
+
+        entity.attackEntityFrom(damageSource, damage / 2);
 
     }
 
