@@ -1,20 +1,16 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
-import com.crowsofwar.avatar.common.bending.earth.Earthbending;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
@@ -164,7 +160,9 @@ public class EntityCloudBall extends AvatarEntity {
                         for (UUID uuid : data.getAllBendingIds()) {
                             CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
                             cloudModifier.setTicks(100);
-                            data.getPowerRatingManager(uuid).addModifier(cloudModifier);
+                            data.getPowerRatingManager(uuid).addModifier(cloudModifier, new
+                                    BendingContext(data, (EntityLivingBase) entity, new Raytrace
+									.Result()));
                         }
 
                     }

@@ -35,6 +35,11 @@ public abstract class PowerRatingModifier {
 	}
 
 	/**
+	 * Called when the power rating modifier has been activated.
+	 */
+	public void onAdded(BendingContext ctx) {}
+
+	/**
 	 * Called when the power rating modifier has been removed.
 	 */
 	public void onRemoval(BendingContext ctx) {}

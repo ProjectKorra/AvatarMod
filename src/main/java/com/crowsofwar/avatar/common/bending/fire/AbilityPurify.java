@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.air.AirJumpPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -77,7 +76,7 @@ public class AbilityPurify extends Ability {
 
             PurifyPowerModifier modifier = new PurifyPowerModifier();
             modifier.setTicks(20+(20*abilityData.getLevel()));
-            data.getPowerRatingManager(getBendingId()).addModifier(new PurifyPowerModifier());
+            data.getPowerRatingManager(getBendingId()).addModifier(new PurifyPowerModifier(), ctx);
         }
     }
 }

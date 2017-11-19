@@ -74,7 +74,7 @@ public class AbilityRestore extends Ability {
 
 			RestorePowerModifier modifier = new RestorePowerModifier();
 			modifier.setTicks(20 + (20 * abilityData.getLevel()));
-			data.getPowerRatingManager(getBendingId()).addModifier(new RestorePowerModifier());
+			data.getPowerRatingManager(getBendingId()).addModifier(new RestorePowerModifier(), ctx);
 		}
 
 	}
