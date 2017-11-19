@@ -210,4 +210,10 @@ public class EntityFireball extends AvatarEntity {
 		}
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+
 }

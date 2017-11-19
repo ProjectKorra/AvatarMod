@@ -348,5 +348,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 	protected boolean canCollideWith(Entity entity) {
 		return false;
 	}
-	
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+
 }

@@ -191,6 +191,11 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 		return pass == 1;
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
 	/**
 	 * Returns the amount of control points which will be created.
 	 */

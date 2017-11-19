@@ -156,6 +156,11 @@ public class EntityCloudBall extends AvatarEntity {
         }
     }
 
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
+
 }
 
 

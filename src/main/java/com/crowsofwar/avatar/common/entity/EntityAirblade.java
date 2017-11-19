@@ -236,5 +236,10 @@ public class EntityAirblade extends AvatarEntity {
 		nbt.setBoolean("Piercing", pierceArmor);
 		nbt.setBoolean("ChainAttack", chainAttack);
 	}
-	
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
 }
