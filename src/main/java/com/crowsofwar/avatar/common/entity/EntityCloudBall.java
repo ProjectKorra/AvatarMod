@@ -6,21 +6,16 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntitySpectralArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityCloudBall extends AvatarEntity {
     /**
@@ -130,13 +125,16 @@ public class EntityCloudBall extends AvatarEntity {
 
 
             if (absorbtion) {
-                if (entity instanceof AvatarEntity)
+                if (entity instanceof EntityFireball || entity instanceof EntityCloudBall || entity instanceof EntityAirblade || entity instanceof EntityLightningSpear || entity instanceof EntityFloatingBlock) {
+                    entity.setDead();
+                    damage += 3F;
+                    abilityData.addXp(4);
                     return false;
                 }
                 if (entity instanceof EntityArrow) {
                     entity.setDead();
                     damage += 2F;
-                   abilityData.addXp(3);
+                    abilityData.addXp(3);
                     return false;
                 }
                 if (entity instanceof EntityThrowable) {
@@ -148,7 +146,9 @@ public class EntityCloudBall extends AvatarEntity {
 
             }
 
-
+            removeStatCtrl();
+            abilityData.addXp(2);
+        }
         return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
 
     }
