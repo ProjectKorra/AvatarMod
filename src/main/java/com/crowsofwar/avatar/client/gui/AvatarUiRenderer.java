@@ -17,11 +17,15 @@
 
 package com.crowsofwar.avatar.client.gui;
 
+import com.crowsofwar.avatar.client.AvatarShaderUtils;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.fire.PurifyPowerModifier;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
@@ -33,6 +37,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.GuiIngameForge;
@@ -60,7 +65,10 @@ import static net.minecraft.client.renderer.GlStateManager.*;
  */
 @SideOnly(Side.CLIENT)
 public class AvatarUiRenderer extends Gui {
-	
+
+	private static final ResourceLocation PURIFY_VISION_SHADER = new ResourceLocation
+			("avatarmod", "shaders/post/purify.json");
+
 	public static AvatarUiRenderer instance;
 	
 	private RadialMenu currentBendingMenu;
@@ -92,15 +100,7 @@ public class AvatarUiRenderer extends Gui {
 		renderAirBubbleHealth(resolution);
 		renderIceShieldHealth(resolution);
 		renderPrisonCracks(resolution);
-
-		if (mc.entityRenderer.getShaderGroup() == null || true) {
-//			Minecraft.getMinecraft().entityRenderer.loadShader(new ResourceLocation
-//					("avatarmod", "shaders/post/creeper.json"));
-		}
-
-		System.out.println(mc.entityRenderer.getShaderGroup().getShaderGroupName());
-
-
+		applyBuffShaders();
 
 	}
 	
@@ -372,7 +372,34 @@ public class AvatarUiRenderer extends Gui {
 		}
 		
 	}
-	
+
+	/**
+	 * Applies shaders to modify vision if the player is currently under a buff ability
+	 */
+	private void applyBuffShaders() {
+
+		BendingData data = BendingData.get(mc.player);
+
+		// Test each power rating manager for modifiers
+
+		if (testBuffAbilityActive(data, Firebending.ID, PurifyPowerModifier.class)) {
+			AvatarShaderUtils.useShader(PURIFY_VISION_SHADER);
+		} else {
+			AvatarShaderUtils.stopUsingShader();
+		}
+
+	}
+
+	/**
+	 * Returns whether the given buff ability is active
+	 */
+	private boolean testBuffAbilityActive(BendingData data, UUID uuid, Class<? extends
+			PowerRatingModifier> modifier) {
+
+		return data.hasBendingId(uuid) && data.getPowerRatingManager(uuid).hasModifier(modifier);
+
+	}
+
 	public static void openBendingGui(UUID bending) {
 		
 		BendingStyle controller = BendingStyles.get(bending);
