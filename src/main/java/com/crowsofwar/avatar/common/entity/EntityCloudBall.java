@@ -125,16 +125,13 @@ public class EntityCloudBall extends AvatarEntity {
 
 
             if (absorbtion) {
-                if (entity instanceof EntityFireball || entity instanceof EntityCloudBall || entity instanceof EntityAirblade || entity instanceof EntityLightningSpear || entity instanceof EntityFloatingBlock) {
-                    entity.setDead();
-                    damage += 3F;
-                    abilityData.addXp(4);
+                if (entity instanceof AvatarEntity)
                     return false;
                 }
                 if (entity instanceof EntityArrow) {
                     entity.setDead();
                     damage += 2F;
-                    abilityData.addXp(3);
+                   abilityData.addXp(3);
                     return false;
                 }
                 if (entity instanceof EntityThrowable) {
@@ -146,9 +143,7 @@ public class EntityCloudBall extends AvatarEntity {
 
             }
 
-            removeStatCtrl();
-            abilityData.addXp(2);
-        }
+
         return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
 
     }
