@@ -92,7 +92,16 @@ public class AvatarUiRenderer extends Gui {
 		renderAirBubbleHealth(resolution);
 		renderIceShieldHealth(resolution);
 		renderPrisonCracks(resolution);
-		
+
+		if (mc.entityRenderer.getShaderGroup() == null || true) {
+//			Minecraft.getMinecraft().entityRenderer.loadShader(new ResourceLocation
+//					("avatarmod", "shaders/post/creeper.json"));
+		}
+
+		System.out.println(mc.entityRenderer.getShaderGroup().getShaderGroupName());
+
+
+
 	}
 	
 	private void renderRadialMenu(ScaledResolution resolution) {
