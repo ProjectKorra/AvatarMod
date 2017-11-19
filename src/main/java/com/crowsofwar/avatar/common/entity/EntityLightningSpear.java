@@ -86,20 +86,6 @@ public class EntityLightningSpear extends AvatarEntity {
 
     }
 
-    @Override
-    public boolean onMajorWaterContact() {
-        spawnExtinguishIndicators();
-        removeStatCtrl();
-        setDead();
-        return true;
-    }
-
-    @Override
-    public boolean onMinorWaterContact() {
-        spawnExtinguishIndicators();
-        return false;
-    }
-
     public LightningSpearBehavior getBehavior() {
         return dataManager.get(SYNC_BEHAVIOR);
     }
