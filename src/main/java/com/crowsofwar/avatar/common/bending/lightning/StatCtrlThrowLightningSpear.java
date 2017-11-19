@@ -17,7 +17,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 
 public class StatCtrlThrowLightningSpear extends StatusControl {
     public StatCtrlThrowLightningSpear() {
-        super(10, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
+        super(15, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
     }
 
     @Override

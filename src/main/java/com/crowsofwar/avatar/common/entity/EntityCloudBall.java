@@ -125,7 +125,9 @@ public class EntityCloudBall extends AvatarEntity {
 
 
             if (absorbtion) {
-                if (entity instanceof AvatarEntity)
+                /*if (entity instanceof AvatarEntity) {
+                    ((AvatarEntity) entity).isProjectile();
+                }**/
                     return false;
                 }
                 if (entity instanceof EntityArrow) {
