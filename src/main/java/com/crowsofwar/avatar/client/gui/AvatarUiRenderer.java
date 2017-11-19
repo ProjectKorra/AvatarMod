@@ -383,8 +383,6 @@ public class AvatarUiRenderer extends Gui {
 		BendingData data = BendingData.get(mc.player);
 		Vision vision = data.getVision();
 
-		System.out.println(vision);
-
 		if (vision != null) {
 			AvatarShaderUtils.useShader(vision.getShaderLocation());
 		} else {

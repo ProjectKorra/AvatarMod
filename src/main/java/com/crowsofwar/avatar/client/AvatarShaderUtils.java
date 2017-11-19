@@ -32,7 +32,7 @@ public class AvatarShaderUtils {
 	 * if the shader has already been equipped.
 	 */
 	public static void useShader(ResourceLocation shader) {
-		if (!getCurrentShader().equals(shader.toString())) {
+		if (getCurrentShader() == null || !getCurrentShader().equals(shader.toString())) {
 			getEntityRenderer().loadShader(shader);
 		}
 	}
