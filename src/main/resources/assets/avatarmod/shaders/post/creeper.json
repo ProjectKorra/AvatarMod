@@ -1,6 +1,7 @@
 {
     "targets": [
-        "swap"
+        "swap",
+        "swap2"
     ],
     "passes": [
         {
@@ -9,22 +10,32 @@
             "outtarget": "swap",
             "uniforms": [
                 {
+                    "_c1": "Each component of the red matrix corresponds to how much each RGB",
+                    "_c2": "contributes to the overall red color displayed on screen. Ex. if 3rd",
+                    "_c3": "number is 0.5, that means normally blue pixels would add 50% to red",
+                    "_c4": "on the screen",
+
                     "name": "RedMatrix",
-                    "values": [ 0.3, 0.59, 0.11 ]
+                    "values": [ 1.0, 0.1, 0.1 ]
                 },
                 {
                     "name": "GreenMatrix",
-                    "values": [ 0.3, 0.59, 0.11 ]
+                    "values": [ 0.5, 0, 0 ]
                 },
                 {
                     "name": "BlueMatrix",
-                    "values": [ 0.0, 0.0, 0.0 ]
+                    "values": [ 0.0, 0.2, 0.2 ]
                 }
             ]
         },
         {
-            "name": "bits",
+            "name": "blur",
             "intarget": "swap",
+            "outtarget": "swap2"
+        },
+        {
+            "name": "bits",
+            "intarget": "swap2",
             "outtarget": "minecraft:main",
             "uniforms": [
                 {
