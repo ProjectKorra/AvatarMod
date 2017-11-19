@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -94,12 +95,26 @@ public class EntityLightningSpear extends AvatarEntity {
         }
 
         // Electrocute enemies in water
+        if (inWater) {
+
+            // When in the water, lightning spear should disappear, but also keep
+            // electrocuting entities. If the lightning spear was simply removed, flood fill
+            // processing (i.e. electrocution) would end, so don't do that. Instead make it
+            // invisible and remove once process is complete.
+            // A hack but it works :\
+            setInvisible(true);
+            setVelocity(Vector.ZERO);
+
+        }
         if (inWater && !world.isRemote) {
             if (floodFill == null) {
                 floodFill = new LightningFloodFill(world, getPosition(), 12,
                         this::handleWaterElectrocution);
             }
-            floodFill.tick();
+            if (floodFill.tick()) {
+                // Remove lightning spear when it's finished electrocuting
+                setDead();
+            }
         }
 
     }
