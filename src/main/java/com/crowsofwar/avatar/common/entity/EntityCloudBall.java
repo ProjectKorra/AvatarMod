@@ -24,6 +24,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
+import static com.google.gson.internal.bind.TypeAdapters.UUID;
+
 public class EntityCloudBall extends AvatarEntity {
     /**
      * @param world
@@ -65,9 +67,9 @@ public class EntityCloudBall extends AvatarEntity {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        CloudburstBehavior.Thrown thrown = new CloudburstBehavior.Thrown();
+
         setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
-        if (ticksExisted >= 250 && this.getBehavior() == thrown) {
+        if (ticksExisted >= 250 && this.getBehavior() instanceof CloudburstBehavior.Thrown) {
             this.setDead();
         }
 
@@ -160,10 +162,9 @@ public class EntityCloudBall extends AvatarEntity {
                         BendingData data = BendingData.get((EntityLivingBase) entity);
                         CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
                         cloudModifier.setTicks(100);
-                        data.getPowerRatingManager(Airbending.ID).addModifier(new CloudburstPowerModifier());
-                        data.getPowerRatingManager(Firebending.ID).addModifier(new CloudburstPowerModifier());
-                        data.getPowerRatingManager(Waterbending.ID).addModifier(new CloudburstPowerModifier());
-                        data.getPowerRatingManager(Earthbending.ID).addModifier(new CloudburstPowerModifier());
+                        //for (UUID uuid : data.getActiveBendingId()) {
+                          //  data.getPowerRatingManager(uuid).addModifier(cloudModifier);
+                        //}
 
                     }
                 }
