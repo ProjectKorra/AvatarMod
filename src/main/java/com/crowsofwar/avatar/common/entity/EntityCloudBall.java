@@ -24,7 +24,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
-import static com.google.gson.internal.bind.TypeAdapters.UUID;
+import java.util.UUID;
+
 
 public class EntityCloudBall extends AvatarEntity {
     /**
@@ -161,10 +162,11 @@ public class EntityCloudBall extends AvatarEntity {
                     if (Bender.isBenderSupported((EntityLivingBase) entity)) {
                         BendingData data = BendingData.get((EntityLivingBase) entity);
                         CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
-                        cloudModifier.setTicks(100);
-                        //for (UUID uuid : data.getActiveBendingId()) {
-                          //  data.getPowerRatingManager(uuid).addModifier(cloudModifier);
-                        //}
+
+                        for (UUID uuid : data.getAllBendingIds()) {
+                            cloudModifier.setTicks(100);
+                            data.getPowerRatingManager(uuid).addModifier(cloudModifier);
+                        }
 
                     }
                 }
