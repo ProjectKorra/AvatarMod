@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 public class RenderModel<T extends Entity> extends Render<T> {
 
 	protected ModelBase model;
+	private boolean glowing;
 
 	public RenderModel(RenderManager renderManager, ModelBase model) {
 		super(renderManager);
@@ -37,12 +38,20 @@ public class RenderModel<T extends Entity> extends Render<T> {
 		Minecraft.getMinecraft().renderEngine.bindTexture(getEntityTexture(entity));
 		GlStateManager.enableBlend();
 
+		if (glowing) {
+			GlStateManager.disableLighting();
+		}
+
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		performGlTransforms(entity, x, y, z, entityYaw, partialTicks);
 		model.render(entity, 0, 0, entity.ticksExisted + partialTicks, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();
 		GlStateManager.color(1, 1, 1, 1);
+
+		if (glowing) {
+			GlStateManager.enableLighting();
+		}
 
 		GlStateManager.disableBlend();
 
@@ -60,6 +69,14 @@ public class RenderModel<T extends Entity> extends Render<T> {
 	protected void performGlTransforms(T entity, double x, double y, double z, float entityYaw,
 									 float partialTicks) {
 
+	}
+
+	/**
+	 * Make the model "glowing" so that it appears at full brightness regardless of the actual
+	 * lighting.
+	 */
+	protected void setGlowing() {
+		glowing = true;
 	}
 
 }
