@@ -60,6 +60,7 @@ public class AbilityCloudBurst extends Ability {
             if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
                 cloudball.setSize(20);
                 damage = 15;
+                cloudball.canchiSmash(true);
             }
             if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
                 damage = 5F;

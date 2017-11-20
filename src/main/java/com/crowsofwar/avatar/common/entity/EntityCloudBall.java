@@ -1,6 +1,11 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -150,8 +155,17 @@ public class EntityCloudBall extends AvatarEntity {
                 }
             }
             if (chismash){
-                if (entity instanceof EntityPlayer){
+                if (entity instanceof EntityLivingBase) {
+                    if (Bender.isBenderSupported((EntityLivingBase) entity)) {
+                        BendingData data = BendingData.get((EntityLivingBase) entity);
+                        CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
+                        cloudModifier.setTicks(100);
+                        data.getPowerRatingManager(Airbending.ID).addModifier(new CloudburstPowerModifier());
+                        data.getPowerRatingManager(Firebending.ID).addModifier(new CloudburstPowerModifier());
+                        data.getPowerRatingManager(Waterbending.ID).addModifier(new CloudburstPowerModifier());
+                        data.getPowerRatingManager(Earthbending.ID).addModifier(new CloudburstPowerModifier());
 
+                    }
                 }
             }
 
