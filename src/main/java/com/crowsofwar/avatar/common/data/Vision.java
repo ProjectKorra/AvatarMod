@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public enum Vision {
 
-	PURIFY("shaders/post/creeper.json");
+	PURIFY("shaders/post/purify.json");
 
 	private final ResourceLocation shaderLocation;
 
