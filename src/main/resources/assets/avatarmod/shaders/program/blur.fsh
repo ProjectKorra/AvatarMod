@@ -1,4 +1,4 @@
-#version 120
+#version 330
 
 uniform sampler2D DiffuseSampler;
 
@@ -9,8 +9,78 @@ uniform vec2 InSize;
 
 uniform vec2 BlurDir;
 
+// Clamps the x/y values of given coordinate between 0 and 1
+// shadertoy is fine with values outside of this range, but for some reason
+// this causes huge issues within minecraft
+vec2 fixCoordinate(vec2 coord) {
+    while (coord.x > 1) coord.x -= 1;
+    while (coord.y > 1) coord.y -= 1;
+    while (coord.x < 0) coord.x += 1;
+    while (coord.y < 0) coord.y += 1;
+    return coord;
+}
+
+vec2 toPolar(vec2 inputt) {
+    vec2 cartesian = (inputt - vec2(0.5, 0.5));
+    float angle = (atan(cartesian.y, cartesian.x));
+    float dist = sqrt(cartesian.y * cartesian.y + cartesian.x * cartesian.x);
+    return fixCoordinate(vec2(dist, angle));
+}
+
+vec2 toRectangular(vec2 inputt) {
+    float angle = inputt.y;
+    float dist = inputt.x;
+    return vec2(dist * cos(angle), dist * sin(angle)) + vec2(0.5, 0.5);
+}
+
+
 void main() {
-    gl_FragColor = vec4(texture2D(DiffuseSampler, texCoord).r, 0.0, 0.0, 1.0);
+
+    mat3 kernelRegular;
+    kernelRegular[0][0] = 0.0;
+    kernelRegular[0][1] = 0.0;
+    kernelRegular[0][2] = 0.0;
+    kernelRegular[1][0] = 0.0;
+    kernelRegular[1][1] = 1.0;
+    kernelRegular[1][2] = 0.0;
+    kernelRegular[2][0] = 0.0;
+    kernelRegular[2][1] = 0.0;
+    kernelRegular[2][2] = 0.0;
+
+    mat3 kernelHoriz;
+    kernelHoriz[0][0] = 0.0;
+    kernelHoriz[0][1] = 0.3;
+    kernelHoriz[0][2] = 0.0;
+    kernelHoriz[1][0] = 0.0;
+    kernelHoriz[1][1] = 0.4;
+    kernelHoriz[1][2] = 0.0;
+    kernelHoriz[2][0] = 0.0;
+    kernelHoriz[2][1] = 0.4;
+    kernelHoriz[2][2] = 0.0;
+
+    mat3 kernel = kernelHoriz;
+// 	mat3 kernel = kernelRegular;
+
+       vec4 sum = vec4(0, 0, 0, 1);
+    vec2 uv = texCoord;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            vec2 offset = vec2(i - 1, j - 1);
+            float pixelWeight = kernel[i][j];
+            vec2 newCoord = toPolar(uv) + offset;
+            vec4 blurredPixel = texture2D(DiffuseSampler, toRectangular(newCoord));
+            vec4 unblurredPixel = texture2D(DiffuseSampler, uv);
+            sum += pixelWeight * vec4(blurredPixel.r, blurredPixel.g, unblurredPixel.b, 1.0);
+            //sum += pixelWeight * blurredPixel;
+            //sum += pixelWeight * texture2D(DiffuseSampler, newCoord);
+        }
+    }
+
+gl_FragColor = sum;
+//gl_FragColor = texture2D(DiffuseSampler, fixCoordinate(toPolar(texCoord)));
+
+//    gl_FragColor = vec4(texture2D(DiffuseSampler, texCoord).r, 0.0, 0.0, 1.0);
     /*vec4 blurred = vec4(0.0);
     float totalStrength = 0.0;
     float totalAlpha = 0.0;
