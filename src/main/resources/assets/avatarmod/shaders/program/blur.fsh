@@ -81,8 +81,16 @@ void main() {
             vec2 newCoord = toPolar(uv) + offsetCoordinate;
             vec4 blurredPixel = texture2D(DiffuseSampler, fixCoordinate(toRectangular(newCoord)));
             vec4 unblurredPixel = texture2D(DiffuseSampler, uv);
-            sum += pixelWeight * vec4(blurredPixel.r, blurredPixel.g, blurredPixel.b, 1.0);
 
+            float blurWeight = toPolar(uv).x * 2.0;
+            if (blurWeight > 1) blurWeight = 1;
+
+            // Colorize blurredPixel
+            blurredPixel.g *= 0.5;
+            blurredPixel.b *= 0.5;
+
+            vec4 weightedBlur = blurredPixel * blurWeight + unblurredPixel * (1 - blurWeight);
+            sum += pixelWeight * weightedBlur;
 
         }
     }
