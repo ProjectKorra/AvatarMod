@@ -24,7 +24,7 @@ vec2 toPolar(vec2 inputt) {
     vec2 cartesian = (inputt - vec2(0.5, 0.5));
     float angle = (atan(cartesian.y, cartesian.x));
     float dist = sqrt(cartesian.y * cartesian.y + cartesian.x * cartesian.x);
-    return fixCoordinate(vec2(dist, angle));
+    return (vec2(dist, angle));
 }
 
 vec2 toRectangular(vec2 inputt) {
@@ -55,7 +55,7 @@ void main() {
     kernelHoriz[1][1] = 0.4;
     kernelHoriz[1][2] = 0.0;
     kernelHoriz[2][0] = 0.0;
-    kernelHoriz[2][1] = 0.4;
+    kernelHoriz[2][1] = 0.3;
     kernelHoriz[2][2] = 0.0;
 
     mat3 kernel = kernelHoriz;
@@ -66,19 +66,29 @@ void main() {
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
+/*
             vec2 offset = vec2(i - 1, j - 1);
             float pixelWeight = kernel[i][j];
-            vec2 newCoord = toPolar(uv) + offset;
-            vec4 blurredPixel = texture2D(DiffuseSampler, toRectangular(newCoord));
+
+            vec2 newCoord = fixCoordinate(toPolar(uv) + offset*3.0);
+            vec4 blurredPixel = texture2D(DiffuseSampler, newCoord);
+
+            sum += pixelWeight * blurredPixel;
+*/
+
+            vec2 offsetCoordinate = vec2(i - 1, j - 1) * 0.01;
+            float pixelWeight = kernel[i - 1][j - 1];
+            vec2 newCoord = toPolar(uv) + offsetCoordinate;
+            vec4 blurredPixel = texture2D(DiffuseSampler, fixCoordinate(toRectangular(newCoord)));
             vec4 unblurredPixel = texture2D(DiffuseSampler, uv);
-            sum += pixelWeight * vec4(blurredPixel.r, blurredPixel.g, unblurredPixel.b, 1.0);
-            //sum += pixelWeight * blurredPixel;
-            //sum += pixelWeight * texture2D(DiffuseSampler, newCoord);
+            sum += pixelWeight * vec4(blurredPixel.r, blurredPixel.g, blurredPixel.b, 1.0);
+
+
         }
     }
 
 gl_FragColor = sum;
-//gl_FragColor = texture2D(DiffuseSampler, fixCoordinate(toPolar(texCoord)));
+//gl_FragColor = texture2D(DiffuseSampler, toRectangular(toPolar(texCoord)));
 
 //    gl_FragColor = vec4(texture2D(DiffuseSampler, texCoord).r, 0.0, 0.0, 1.0);
     /*vec4 blurred = vec4(0.0);
