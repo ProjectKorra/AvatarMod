@@ -1,13 +1,22 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
-import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -15,7 +24,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import java.util.UUID;
+
 
 public class EntityCloudBall extends AvatarEntity {
     /**
@@ -30,7 +40,8 @@ public class EntityCloudBall extends AvatarEntity {
     private AxisAlignedBB expandedHitbox;
 
     private float damage;
-    private int unpredictable;
+    private boolean absorbtion;
+    private boolean chismash;
 
     /**
      * @param world
@@ -40,9 +51,12 @@ public class EntityCloudBall extends AvatarEntity {
         setSize(0.8f, 0.8f);
 
     }
-    public void setUnpredictable (int setUnpredictable) {
-        this.unpredictable = setUnpredictable;
+    public void canAbsorb (boolean canAbsorb) {
+        this.absorbtion = canAbsorb;
     }
+    public void canchiSmash (boolean canchiSmash) {
+       this.chismash = canchiSmash;
+   }
 
     @Override
     public void entityInit() {
@@ -54,12 +68,11 @@ public class EntityCloudBall extends AvatarEntity {
     @Override
     public void onUpdate() {
         super.onUpdate();
+
         setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
-        if (ticksExisted >= 250) {
+        if (ticksExisted >= 250 && this.getBehavior() instanceof CloudburstBehavior.Thrown) {
             this.setDead();
         }
-        EntityCloudBall cloudBall = new EntityCloudBall(world);
-        Vector look = Vector.getLookRectangular(cloudBall);
 
       /*  if (!world.isRemote){
             Thread.dumpStack();
@@ -109,8 +122,8 @@ public class EntityCloudBall extends AvatarEntity {
     public boolean onCollideWithSolid() {
 
         if (getOwner() != null) {
-            AbilityData abilityData = BendingData.get(getOwner())
-                    .getAbilityData("cloudburst");
+            AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("cloudburst");
+            abilityData.addXp(3);
 
         }
 
@@ -118,6 +131,57 @@ public class EntityCloudBall extends AvatarEntity {
         return true;
 
     }
+
+    @Override
+    protected boolean canCollideWith(Entity entity) {
+        if (getOwner() != null) {
+
+
+            if (absorbtion) {
+                if (entity instanceof AvatarEntity) {
+                    ((AvatarEntity) entity).isProjectile();
+                    entity.setDead();
+                    damage += 3F;
+                    return false;
+                }
+
+
+                if (entity instanceof EntityArrow) {
+                    entity.setDead();
+                    damage += 2F;
+                    return false;
+                }
+                if (entity instanceof EntityThrowable) {
+                    entity.setDead();
+                    damage += 1F;
+                    return false;
+                }
+            }
+            if (chismash){
+                if (entity instanceof EntityLivingBase) {
+                    if (Bender.isBenderSupported((EntityLivingBase) entity)) {
+                        BendingData data = BendingData.get((EntityLivingBase) entity);
+                        for (UUID uuid : data.getAllBendingIds()) {
+                            CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
+                            cloudModifier.setTicks(100);
+                            data.getPowerRatingManager(uuid).addModifier(cloudModifier);
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+
+        return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
+
+    }
+
+
+
+
+
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {

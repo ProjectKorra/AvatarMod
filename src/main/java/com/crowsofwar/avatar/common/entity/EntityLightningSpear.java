@@ -85,6 +85,7 @@ public class EntityLightningSpear extends AvatarEntity {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
         setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
         if (this.isDead){
             removeStatCtrl();
@@ -92,6 +93,10 @@ public class EntityLightningSpear extends AvatarEntity {
         // TODO Temporary fix to avoid extra fireballs
         // Add hook or something
         if (getOwner() == null) {
+            if (this.getBehavior() == controlled) {
+            this.rotationYaw = this.getOwner().rotationYaw;
+            this.rotationPitch = this.getOwner().rotationPitch;
+            }
             setDead();
             removeStatCtrl();
         }
