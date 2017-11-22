@@ -160,8 +160,8 @@ public class EntityCloudBall extends AvatarEntity {
             if (chismash){
                 if (entity instanceof EntityLivingBase) {
                     if (Bender.isBenderSupported((EntityLivingBase) entity)) {
+                        BendingData data = BendingData.get((EntityLivingBase) entity);
                         for (UUID uuid : data.getAllBendingIds()) {
-                            BendingData data = BendingData.get((EntityLivingBase) entity);
                             CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
                             cloudModifier.setTicks(100);
                             data.getPowerRatingManager(uuid).addModifier(cloudModifier);
