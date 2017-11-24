@@ -66,7 +66,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 public class AvatarUiRenderer extends Gui {
 
 	private static final ResourceLocation PURIFY_VISION_SHADER = new ResourceLocation
-			("avatarmod", "shaders/post/purify.json");
+			("avatarmod", "shaders/post/purify_weak.json");
 
 	public static AvatarUiRenderer instance;
 	

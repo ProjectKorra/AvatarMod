@@ -8,7 +8,18 @@ import net.minecraft.util.ResourceLocation;
  */
 public enum Vision {
 
-	PURIFY("shaders/post/purify.json");
+	/**
+	 * Vision to be used in Purify ability in level I-II
+	 */
+	PURIFY_WEAK("shaders/post/purify_weak.json"),
+	/**
+	 * Vision to be used in Purify ability in Level III
+	 */
+	PURIFY_MEDIUM("shaders/post/purify_medium.json"),
+	/**
+	 * Vision to be used in Purify ability in Level IV
+	 */
+	PURIFY_POWERFUL("shaders/post/purify_powerful.json");
 
 	private final ResourceLocation shaderLocation;
 

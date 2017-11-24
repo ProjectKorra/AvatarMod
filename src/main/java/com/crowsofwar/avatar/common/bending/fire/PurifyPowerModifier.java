@@ -28,16 +28,36 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
     }
 
+	/**
+	 * Different Visions are used as the player levels up to make it seem more powerful. Gets the
+	 * appropriate vision to be used for the current level.
+	 */
+	private Vision getVision(BendingContext ctx) {
+		
+		AbilityData abilityData = ctx.getData().getAbilityData("purify");
+		switch (abilityData.getLevel()) {
+			case 0:
+			case 1:
+				return Vision.PURIFY_WEAK;
+			case 2:
+				return Vision.PURIFY_MEDIUM;
+			case 3:
+			default:
+				return Vision.PURIFY_POWERFUL;
+		}
+
+	}
+
 	@Override
 	public void onAdded(BendingContext ctx) {
 		if (ctx.getData().getVision() == null) {
-			ctx.getData().setVision(Vision.PURIFY);
+			ctx.getData().setVision(getVision(ctx));
 		}
 	}
 
 	@Override
 	public void onRemoval(BendingContext ctx) {
-    	if (ctx.getData().getVision() == Vision.PURIFY) {
+    	if (ctx.getData().getVision() == getVision(ctx)) {
 			ctx.getData().setVision(null);
 		}
 	}
