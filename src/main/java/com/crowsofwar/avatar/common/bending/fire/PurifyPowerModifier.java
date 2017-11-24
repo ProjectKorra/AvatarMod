@@ -32,7 +32,15 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
-		ctx.getBenderEntity().setFire(1);
+
+		// Intermittently light on fire
+		if (ctx.getBenderEntity().ticksExisted % 20 == 0) {
+			// 30% chance per second to be lit on fire
+			if (Math.random() < 0.3) {
+				ctx.getBenderEntity().setFire(2);
+			}
+		}
+
 		return super.onUpdate(ctx);
 	}
 }
