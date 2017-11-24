@@ -20,7 +20,7 @@ void main() {
 
     vec4 finalColor = vec4(0.0, 0.0, 0.0, 1.0);
 
-    vec3 rgbCoordModify = vec3(3.0, 0.0, 0.0);
+    vec3 rgbCoordModify = vec3(0.03, 0.0, 0.0);
 
     for (int i = 0; i < 3; i++) {
         vec2 offset = vec2(0.0, rgbCoordModify[i]);
