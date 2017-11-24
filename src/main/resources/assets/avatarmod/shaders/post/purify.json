@@ -27,7 +27,7 @@
             "outtarget": "previous"
         },
         {
-            "name": "avatarmod:blur",
+            "name": "avatarmod:adrenaline",
             "intarget": "swap",
             "outtarget": "minecraft:main",
             "uniforms": [

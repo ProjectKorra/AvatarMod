@@ -5,7 +5,7 @@
         "dstrgb": "1-srcalpha"
     },
     "vertex": "blit",
-    "fragment": "avatarmod:blur",
+    "fragment": "avatarmod:adrenaline",
     "attributes": [ "Position" ],
     "samplers": [
         { "name": "DiffuseSampler" }
