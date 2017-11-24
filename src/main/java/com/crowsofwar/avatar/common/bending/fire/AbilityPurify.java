@@ -76,7 +76,7 @@ public class AbilityPurify extends Ability {
 
             PurifyPowerModifier modifier = new PurifyPowerModifier();
             modifier.setTicks(20+(20*abilityData.getLevel()));
-            data.getPowerRatingManager(getBendingId()).addModifier(new PurifyPowerModifier(), ctx);
+            data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
         }
     }
 }

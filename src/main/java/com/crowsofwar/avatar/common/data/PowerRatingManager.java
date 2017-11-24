@@ -31,7 +31,6 @@ public class PowerRatingManager {
 	public void addModifier(PowerRatingModifier modifier, BendingContext ctx) {
 		modifier.onAdded(ctx);
 		modifiers.add(modifier);
-		modifier.setTicks(20);
 	}
 
 	public void removeModifier(PowerRatingModifier modifier, BendingContext ctx) {

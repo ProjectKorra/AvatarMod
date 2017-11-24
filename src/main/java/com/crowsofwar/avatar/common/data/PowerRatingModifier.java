@@ -10,7 +10,7 @@ public abstract class PowerRatingModifier {
 	/**
 	 * The amount of time left in this modifier. -1 for infinite modifier duration
 	 */
-	private int ticks;
+	private int ticks = 20;
 
 	public abstract double get(BendingContext ctx);
 
