@@ -1,4 +1,4 @@
-#version 110
+#version 120
 
 uniform sampler2D DiffuseSampler;
 varying vec2 texCoord;
@@ -18,15 +18,16 @@ vec2 toRectangular(vec2 inputt) {
 
 void main() {
 
-    vec3 finalColor = vec3(0.0, 0.0, 0.0);
+    vec4 finalColor = vec4(0.0, 0.0, 0.0, 1.0);
 
     vec3 rgbCoordModify = vec3(3.0, 0.0, 0.0);
 
     for (int i = 0; i < 3; i++) {
         vec2 offset = vec2(0.0, rgbCoordModify[i]);
-        float modifiedCoord = toRectangular(toPolar(texCoord) + offset);
+        vec2 modifiedCoord = toRectangular(toPolar(texCoord) + offset);
         finalColor[i] = texture2D(DiffuseSampler, modifiedCoord)[i];
     }
 
     gl_FragColor = finalColor;
+
 }
