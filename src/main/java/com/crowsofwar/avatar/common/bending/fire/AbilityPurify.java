@@ -6,11 +6,11 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static net.minecraft.init.MobEffects.*;
 
 public class AbilityPurify extends Ability {
 
@@ -36,41 +36,41 @@ public class AbilityPurify extends Ability {
 		}
 
 		if (bender.consumeChi(chi)) {
-			float xp = SKILLS_CONFIG.buffUsed;
 
-			entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
-			data.getAbilityData("purify").addXp(xp);
-
-			if (abilityData.getLevel() == 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
-				data.getAbilityData("purify").addXp(xp);
+			// 1s base + 2s per level
+			int duration = 20 + 40 * abilityData.getLevel();
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				duration = 200;
 			}
 
-			if (abilityData.getLevel() == 2) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100));
-				data.getAbilityData("purify").addXp(xp);
+			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				effectLevel = 2;
 			}
 
-			if (data.getAbilityData("purify").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 100, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
+			entity.addPotionEffect(new PotionEffect(STRENGTH, duration,effectLevel));
+
+			if (abilityData.getLevel() >= 1) {
+				entity.addPotionEffect(new PotionEffect(SPEED, duration, effectLevel));
 			}
 
-			if (data.getAbilityData("purify").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 200));
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 200, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, 200, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 200));
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				entity.addPotionEffect(new PotionEffect(HEALTH_BOOST, duration, effectLevel));
 			}
 
-			PurifyPowerModifier modifier = new PurifyPowerModifier();
-			modifier.setTicks(20+(20*abilityData.getLevel()));
-			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+			if (data.hasBendingId(getBendingId())) {
+
+				PurifyPowerModifier modifier = new PurifyPowerModifier();
+				modifier.setTicks(duration);
+
+				// Ignore warning; we know manager != null if they have the bending style
+				//noinspection ConstantConditions
+				data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+
+			}
+
+			abilityData.addXp(SKILLS_CONFIG.buffUsed);
+
 		}
 	}
 }
