@@ -30,5 +30,10 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 		}
 	}
 
+	@Override
+	public boolean onUpdate(BendingContext ctx) {
+		ctx.getBenderEntity().setFire(1);
+		return super.onUpdate(ctx);
+	}
 }
 
