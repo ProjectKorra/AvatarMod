@@ -9,17 +9,29 @@ import net.minecraft.util.ResourceLocation;
 public enum Vision {
 
 	/**
-	 * Vision to be used in Purify ability in level I-II
+	 * Purify vision for level I-II
 	 */
 	PURIFY_WEAK("shaders/post/purify_weak.json"),
 	/**
-	 * Vision to be used in Purify ability in Level III
+	 * Purify vision for Level III
 	 */
 	PURIFY_MEDIUM("shaders/post/purify_medium.json"),
 	/**
-	 * Vision to be used in Purify ability in Level IV
+	 * Purify vision for Level IV
 	 */
-	PURIFY_POWERFUL("shaders/post/purify_powerful.json");
+	PURIFY_POWERFUL("shaders/post/purify_powerful.json"),
+	/**
+	 * Slipstream vision for level I-II
+	 */
+	SLIPSTREAM_WEAK("shaders/post/slipstream_weak.json"),
+	/**
+	 * Slipstream vision for level III
+	 */
+	SLIPSTREAM_MEDIUM("shaders/post/slipstream_medium.json"),
+	/**
+	 * Slipstream vision for level IV
+	 */
+	SLIPSTREAM_POWERFUL("shaders/post/slipstream_powerful.json");
 
 	private final ResourceLocation shaderLocation;
 
