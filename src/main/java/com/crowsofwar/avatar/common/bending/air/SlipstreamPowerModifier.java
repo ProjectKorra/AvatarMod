@@ -25,16 +25,37 @@ public class SlipstreamPowerModifier extends PowerRatingModifier {
 
 	}
 
+	/**
+	 * Different Visions are used as the player levels up to make it seem more powerful. Gets the
+	 * appropriate vision to be used for the current level.
+	 */
+	private Vision getVision(BendingContext ctx) {
+
+		AbilityData abilityData = ctx.getData().getAbilityData("slipstream");
+		switch (abilityData.getLevel()) {
+			case 0:
+			case 1:
+				return Vision.SLIPSTREAM_WEAK;
+			case 2:
+				return Vision.SLIPSTREAM_MEDIUM;
+			case 3:
+			default:
+				return Vision.SLIPSTREAM_POWERFUL;
+		}
+
+	}
+
 	@Override
 	public void onAdded(BendingContext ctx) {
-		if (ctx.getData().getVision() == null) {
-			ctx.getData().setVision(Vision.SLIPSTREAM);
+			if (ctx.getData().getVision() == null) {
+			ctx.getData().setVision(getVision(ctx));
 		}
 	}
 
 	@Override
 	public void onRemoval(BendingContext ctx) {
-		if (ctx.getData().getVision() == Vision.SLIPSTREAM) {
+		Vision vision = ctx.getData().getVision();
+		if (vision != null && vision.name().startsWith("SLIPSTREAM")) {
 			ctx.getData().setVision(null);
 		}
 	}
