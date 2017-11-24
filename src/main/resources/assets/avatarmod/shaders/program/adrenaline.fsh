@@ -14,17 +14,6 @@ uniform vec3 ColorMult = vec3(1.0, 1.0, 1.0);
 
 uniform float BlurAmount = 0.01;
 
-// Clamps the x/y values of given coordinate between 0 and 1
-// shadertoy is fine with values outside of this range, but for some reason
-// this causes huge issues within minecraft
-vec2 fixCoordinate(vec2 coord) {
-    while (coord.x > 1) coord.x -= 1;
-    while (coord.y > 1) coord.y -= 1;
-    while (coord.x < 0) coord.x += 1;
-    while (coord.y < 0) coord.y += 1;
-    return coord;
-}
-
 vec2 toPolar(vec2 inputt) {
     vec2 cartesian = (inputt - vec2(0.5, 0.5));
     float angle = (atan(cartesian.y, cartesian.x));
@@ -64,10 +53,10 @@ void main() {
         for (int j = 0; j < 3; j++) {
 
             vec2 offsetCoordinate = vec2(i - 1, j - 1) * BlurAmount;
-            float pixelWeight = kernel[i - 1][j - 1];
+            float pixelWeight = kernel[i][j];
 
             vec2 newCoord = toRectangular(toPolar(texCoord) + offsetCoordinate);
-            vec4 blurredPixel = texture2D(DiffuseSampler, fixCoordinate(newCoord));
+            vec4 blurredPixel = texture2D(DiffuseSampler, newCoord);
             vec4 unblurredPixel = texture2D(DiffuseSampler, texCoord);
 
             // Most pixels are a mixed of radial blur and regular
