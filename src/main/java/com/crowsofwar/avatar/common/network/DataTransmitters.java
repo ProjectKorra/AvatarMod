@@ -193,5 +193,20 @@ public class DataTransmitters {
 			return id;
 		}
 	};
+
+	public static final DataTransmitter<Vision> VISION = new DataTransmitter<Vision>() {
+
+		@Override
+		public void write(ByteBuf buf, Vision vision) {
+			buf.writeInt(vision == null ? -1 : vision.ordinal());
+		}
+
+		@Override
+		public Vision read(ByteBuf buf, BendingData data) {
+			int id = buf.readInt();
+			return id == -1 ? null : Vision.values()[id];
+		}
+
+	};
 	
 }

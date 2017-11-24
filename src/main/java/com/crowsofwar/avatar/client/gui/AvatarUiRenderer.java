@@ -17,11 +17,14 @@
 
 package com.crowsofwar.avatar.client.gui;
 
+import com.crowsofwar.avatar.client.AvatarShaderUtils;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.PowerRatingModifier;
+import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
@@ -33,6 +36,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.GuiIngameForge;
@@ -60,7 +64,10 @@ import static net.minecraft.client.renderer.GlStateManager.*;
  */
 @SideOnly(Side.CLIENT)
 public class AvatarUiRenderer extends Gui {
-	
+
+	private static final ResourceLocation PURIFY_VISION_SHADER = new ResourceLocation
+			("avatarmod", "shaders/post/purify_weak.json");
+
 	public static AvatarUiRenderer instance;
 	
 	private RadialMenu currentBendingMenu;
@@ -92,7 +99,8 @@ public class AvatarUiRenderer extends Gui {
 		renderAirBubbleHealth(resolution);
 		renderIceShieldHealth(resolution);
 		renderPrisonCracks(resolution);
-		
+		applyVisionShader();
+
 	}
 	
 	private void renderRadialMenu(ScaledResolution resolution) {
@@ -363,7 +371,36 @@ public class AvatarUiRenderer extends Gui {
 		}
 		
 	}
-	
+
+	/**
+	 * Applies shaders to modify vision to match the current Vision of the player.
+	 *
+	 * @see BendingData#getVision()
+	 * @see Vision
+	 */
+	private void applyVisionShader() {
+
+		BendingData data = BendingData.get(mc.player);
+		Vision vision = data.getVision();
+
+		if (vision != null) {
+			AvatarShaderUtils.useShader(vision.getShaderLocation());
+		} else {
+			AvatarShaderUtils.stopUsingShader();
+		}
+
+	}
+
+	/**
+	 * Returns whether the given buff ability is active
+	 */
+	private boolean testBuffAbilityActive(BendingData data, UUID uuid, Class<? extends
+			PowerRatingModifier> modifier) {
+
+		return data.hasBendingId(uuid) && data.getPowerRatingManager(uuid).hasModifier(modifier);
+
+	}
+
 	public static void openBendingGui(UUID bending) {
 		
 		BendingStyle controller = BendingStyles.get(bending);

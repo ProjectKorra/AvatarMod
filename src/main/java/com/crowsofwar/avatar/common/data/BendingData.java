@@ -84,6 +84,7 @@ public class BendingData {
 	private Chi chi;
 	private MiscData miscData;
 	private Map<UUID, PowerRatingManager> powerRatingManagers;
+	private Vision vision;
 
 	/**
 	 * Create a new BendingData
@@ -446,6 +447,22 @@ public class BendingData {
 	 */
 	public List<PowerRatingManager> getPowerRatingManagers() {
 		return new ArrayList<>(powerRatingManagers.values());
+	}
+
+	// ================================================================================
+	// VISION
+	// ================================================================================
+
+	@Nullable
+	public Vision getVision() {
+		return vision;
+	}
+
+	public void setVision(@Nullable  Vision vision) {
+		if (this.vision != vision) {
+			this.vision = vision;
+			save(DataCategory.VISION);
+		}
 	}
 
 	// ================================================================================

@@ -28,12 +28,13 @@ public class PowerRatingManager {
 		return MathHelper.clamp(result, -100, 100);
 	}
 
-	public void addModifier(PowerRatingModifier modifier) {
+	public void addModifier(PowerRatingModifier modifier, BendingContext ctx) {
+		modifier.onAdded(ctx);
 		modifiers.add(modifier);
-		modifier.setTicks(20);
 	}
 
-	public void removeModifier(PowerRatingModifier modifier) {
+	public void removeModifier(PowerRatingModifier modifier, BendingContext ctx) {
+		modifier.onRemoval(ctx);
 		modifiers.remove(modifier);
 	}
 
@@ -56,6 +57,7 @@ public class PowerRatingManager {
 		while (iterator.hasNext()) {
 			PowerRatingModifier modifier = iterator.next();
 			if (modifier.onUpdate(ctx)) {
+				modifier.onRemoval(ctx);
 				iterator.remove();
 			}
 		}

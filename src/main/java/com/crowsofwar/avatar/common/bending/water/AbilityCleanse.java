@@ -69,7 +69,7 @@ public class AbilityCleanse extends Ability {
             }
             CleansePowerModifier modifier = new CleansePowerModifier();
             modifier.setTicks(20+(20*abilityData.getLevel()));
-            data.getPowerRatingManager(getBendingId()).addModifier(new CleansePowerModifier());
+            data.getPowerRatingManager(getBendingId()).addModifier(new CleansePowerModifier(), ctx);
             }
         }
     }

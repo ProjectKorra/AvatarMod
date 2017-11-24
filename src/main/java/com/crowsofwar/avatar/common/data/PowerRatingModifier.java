@@ -10,7 +10,7 @@ public abstract class PowerRatingModifier {
 	/**
 	 * The amount of time left in this modifier. -1 for infinite modifier duration
 	 */
-	private int ticks;
+	private int ticks = 20;
 
 	public abstract double get(BendingContext ctx);
 
@@ -33,6 +33,16 @@ public abstract class PowerRatingModifier {
 		ticks--;
 		return ticks <= 0;
 	}
+
+	/**
+	 * Called when the power rating modifier has been activated.
+	 */
+	public void onAdded(BendingContext ctx) {}
+
+	/**
+	 * Called when the power rating modifier has been removed.
+	 */
+	public void onRemoval(BendingContext ctx) {}
 
 	@Override
 	public boolean equals(Object obj) {
