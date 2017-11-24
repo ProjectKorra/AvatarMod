@@ -9,6 +9,9 @@ uniform vec2 InSize;
 
 uniform vec2 BlurDir;
 
+// Multiplier for each RGB value of the colors
+uniform vec3 ColorMult = vec3(1.0, 1.0, 1.0);
+
 // Clamps the x/y values of given coordinate between 0 and 1
 // shadertoy is fine with values outside of this range, but for some reason
 // this causes huge issues within minecraft
@@ -86,8 +89,8 @@ void main() {
             if (blurWeight > 1) blurWeight = 1;
 
             // Colorize blurredPixel
-            blurredPixel.g *= 0.5;
-            blurredPixel.b *= 0.5;
+            // multiply each component of blurredPixel by each component of ColorMult
+            blurredPixel *= vec4(ColorMult, 1.0);
 
             vec4 weightedBlur = blurredPixel * blurWeight + unblurredPixel * (1 - blurWeight);
             sum += pixelWeight * weightedBlur;
