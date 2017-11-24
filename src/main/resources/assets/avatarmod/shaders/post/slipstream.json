@@ -6,7 +6,17 @@
         {
             "name": "avatarmod:radial_deconverge",
             "intarget": "minecraft:main",
-            "outtarget": "swap"
+            "outtarget": "swap",
+            "uniforms": [
+                {
+                    "name": "CoordModifyX",
+                    "values": [ 0.0, 0.0, 0.01 ]
+                },
+                {
+                    "name": "CoordModifyY",
+                    "values": [ 0.0, 0.0, 0.01 ]
+                }
+            ]
         },
         {
             "name": "avatarmod:adrenaline",
