@@ -39,84 +39,51 @@ vec2 toRectangular(vec2 inputt) {
 
 void main() {
 
-    mat3 kernelRegular;
-    kernelRegular[0][0] = 0.0;
-    kernelRegular[0][1] = 0.0;
-    kernelRegular[0][2] = 0.0;
-    kernelRegular[1][0] = 0.0;
-    kernelRegular[1][1] = 1.0;
-    kernelRegular[1][2] = 0.0;
-    kernelRegular[2][0] = 0.0;
-    kernelRegular[2][1] = 0.0;
-    kernelRegular[2][2] = 0.0;
+    // Convolution kernel used for blurring after has everything been converted to polar coordinates
+    // Usage: kernel[x][y]
+    mat3 kernel;
+    kernel[0][0] = 0.0;
+    kernel[0][1] = 0.3;
+    kernel[0][2] = 0.0;
+    kernel[1][0] = 0.0;
+    kernel[1][1] = 0.4;
+    kernel[1][2] = 0.0;
+    kernel[2][0] = 0.0;
+    kernel[2][1] = 0.3;
+    kernel[2][2] = 0.0;
 
-    mat3 kernelHoriz;
-    kernelHoriz[0][0] = 0.0;
-    kernelHoriz[0][1] = 0.3;
-    kernelHoriz[0][2] = 0.0;
-    kernelHoriz[1][0] = 0.0;
-    kernelHoriz[1][1] = 0.4;
-    kernelHoriz[1][2] = 0.0;
-    kernelHoriz[2][0] = 0.0;
-    kernelHoriz[2][1] = 0.3;
-    kernelHoriz[2][2] = 0.0;
+    // Blurring is performed by (sortof) averaging pixels value + all pixels around it.
+    // Convolution kernel dictates the "weight" of each pixel depending on its position relative
+    // to the pixel - for example, top right means kernel[2][1] which is 0; topright no influence
+    vec4 sum = vec4(0, 0, 0, 1);
 
-    mat3 kernel = kernelHoriz;
-// 	mat3 kernel = kernelRegular;
-
-       vec4 sum = vec4(0, 0, 0, 1);
-    vec2 uv = texCoord;
-
+    // Calculate the sum based on all nearby pixels
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-/*
-            vec2 offset = vec2(i - 1, j - 1);
-            float pixelWeight = kernel[i][j];
-
-            vec2 newCoord = fixCoordinate(toPolar(uv) + offset*3.0);
-            vec4 blurredPixel = texture2D(DiffuseSampler, newCoord);
-
-            sum += pixelWeight * blurredPixel;
-*/
 
             vec2 offsetCoordinate = vec2(i - 1, j - 1) * 0.01;
             float pixelWeight = kernel[i - 1][j - 1];
-            vec2 newCoord = toPolar(uv) + offsetCoordinate;
-            vec4 blurredPixel = texture2D(DiffuseSampler, fixCoordinate(toRectangular(newCoord)));
-            vec4 unblurredPixel = texture2D(DiffuseSampler, uv);
 
-            float blurWeight = toPolar(uv).x * 2.0;
+            vec2 newCoord = toRectangular(toPolar(texCoord) + offsetCoordinate);
+            vec4 blurredPixel = texture2D(DiffuseSampler, fixCoordinate(newCoord));
+            vec4 unblurredPixel = texture2D(DiffuseSampler, texCoord);
+
+            // Most pixels are a mixed of radial blur and regular
+            // More blurWeight means it is more radial blurred
+            float blurWeight = toPolar(texCoord).x * 2.0;
             if (blurWeight > 1) blurWeight = 1;
 
             // Colorize blurredPixel
             // multiply each component of blurredPixel by each component of ColorMult
             blurredPixel *= vec4(ColorMult, 1.0);
 
+            // Perform weighted average and add this nearby pixel's value to sum to be averaged
             vec4 weightedBlur = blurredPixel * blurWeight + unblurredPixel * (1 - blurWeight);
             sum += pixelWeight * weightedBlur;
 
         }
     }
 
-gl_FragColor = sum;
-//gl_FragColor = texture2D(DiffuseSampler, toRectangular(toPolar(texCoord)));
+    gl_FragColor = sum;
 
-//    gl_FragColor = vec4(texture2D(DiffuseSampler, texCoord).r, 0.0, 0.0, 1.0);
-    /*vec4 blurred = vec4(0.0);
-    float totalStrength = 0.0;
-    float totalAlpha = 0.0;
-    float totalSamples = 0.0;
-    for(float r = -Radius; r <= Radius; r += 1.0) {
-        vec4 sample = texture2D(DiffuseSampler, texCoord + oneTexel * r * BlurDir);
-
-		// Accumulate average alpha
-        totalAlpha = totalAlpha + sample.a;
-        totalSamples = totalSamples + 1.0;
-
-		// Accumulate smoothed blur
-        float strength = 1.0 - abs(r / Radius);
-        totalStrength = totalStrength + strength;
-        blurred = blurred + sample;
-    }
-    gl_FragColor = vec4(blurred.rgb / (Radius * 2.0 + 1.0), totalAlpha);*/
 }
