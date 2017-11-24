@@ -10,9 +10,21 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 public class PurifyPowerModifier extends PowerRatingModifier {
     @Override
     public double get(BendingContext ctx) {
+
     	BendingData data = ctx.getData();
-        AbilityData abilityData = data.getAbilityData(new AbilityPurify());
-        return 10+(3*abilityData.getLevel());
+        AbilityData abilityData = data.getAbilityData("purify");
+
+		double modifier = 20;
+		if (abilityData.getLevel() >= 1) {
+			modifier = 30;
+		}
+		if (abilityData.getLevel() == 3) {
+			modifier = 60;
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			modifier = 100;
+		}
+		return modifier;
 
     }
 

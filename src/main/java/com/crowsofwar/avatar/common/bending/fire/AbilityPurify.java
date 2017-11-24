@@ -37,8 +37,8 @@ public class AbilityPurify extends Ability {
 
 		if (bender.consumeChi(chi)) {
 
-			// 1s base + 2s per level
-			int duration = 20 + 40 * abilityData.getLevel();
+			// 3s base + 2s per level
+			int duration = 60 + 40 * abilityData.getLevel();
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				duration = 200;
 			}
@@ -48,7 +48,11 @@ public class AbilityPurify extends Ability {
 				effectLevel = 2;
 			}
 
-			entity.addPotionEffect(new PotionEffect(STRENGTH, duration,effectLevel));
+			entity.addPotionEffect(new PotionEffect(STRENGTH, duration, effectLevel + 1));
+
+			if (abilityData.getLevel() < 2) {
+				entity.setFire(1);
+			}
 
 			if (abilityData.getLevel() >= 1) {
 				entity.addPotionEffect(new PotionEffect(SPEED, duration, effectLevel));
