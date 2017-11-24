@@ -46,6 +46,9 @@ public class AbilitySlipstream extends Ability {
 			int duration = 80 + 20 * abilityData.getLevel();
 
 			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				effectLevel = 2;
+			}
 
 			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel));
 			data.getAbilityData("slipstream").addXp(xp);
@@ -56,10 +59,6 @@ public class AbilitySlipstream extends Ability {
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration));
-			}
-
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-
 			}
 
 			SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();
