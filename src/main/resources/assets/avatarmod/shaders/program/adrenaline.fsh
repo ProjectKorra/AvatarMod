@@ -12,6 +12,8 @@ uniform vec2 BlurDir;
 // Multiplier for each RGB value of the colors
 uniform vec3 ColorMult = vec3(1.0, 1.0, 1.0);
 
+uniform float BlurAmount = 0.01;
+
 // Clamps the x/y values of given coordinate between 0 and 1
 // shadertoy is fine with values outside of this range, but for some reason
 // this causes huge issues within minecraft
@@ -61,7 +63,7 @@ void main() {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
 
-            vec2 offsetCoordinate = vec2(i - 1, j - 1) * 0.01;
+            vec2 offsetCoordinate = vec2(i - 1, j - 1) * BlurAmount;
             float pixelWeight = kernel[i - 1][j - 1];
 
             vec2 newCoord = toRectangular(toPolar(texCoord) + offsetCoordinate);
