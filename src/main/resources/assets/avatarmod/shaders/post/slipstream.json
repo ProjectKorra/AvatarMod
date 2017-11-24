@@ -4,7 +4,7 @@
     ],
     "passes": [
         {
-            "name": "deconverge",
+            "name": "avatarmod:radial_deconverge",
             "intarget": "minecraft:main",
             "outtarget": "swap"
         },
