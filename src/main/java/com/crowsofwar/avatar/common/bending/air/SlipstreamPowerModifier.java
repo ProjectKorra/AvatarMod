@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
+import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 public class SlipstreamPowerModifier extends PowerRatingModifier {
@@ -20,6 +21,20 @@ public class SlipstreamPowerModifier extends PowerRatingModifier {
 
 		return modifier;
 
+	}
+
+	@Override
+	public void onAdded(BendingContext ctx) {
+		if (ctx.getData().getVision() == null) {
+			ctx.getData().setVision(Vision.SLIPSTREAM);
+		}
+	}
+
+	@Override
+	public void onRemoval(BendingContext ctx) {
+		if (ctx.getData().getVision() == Vision.SLIPSTREAM) {
+			ctx.getData().setVision(null);
+		}
 	}
 
 }

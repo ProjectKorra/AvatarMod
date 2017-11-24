@@ -19,7 +19,8 @@ public enum Vision {
 	/**
 	 * Vision to be used in Purify ability in Level IV
 	 */
-	PURIFY_POWERFUL("shaders/post/purify_powerful.json");
+	PURIFY_POWERFUL("shaders/post/purify_powerful.json"),
+	SLIPSTREAM("shaders/post/slipstream.json");
 
 	private final ResourceLocation shaderLocation;
 

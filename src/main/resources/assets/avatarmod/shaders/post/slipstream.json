@@ -1,0 +1,17 @@
+{
+    "targets": [
+        "swap"
+    ],
+    "passes": [
+        {
+            "name": "deconverge",
+            "intarget": "minecraft:main",
+            "outtarget": "swap"
+        },
+        {
+            "name": "avatarmod:adrenaline",
+            "intarget": "swap",
+            "outtarget": "minecraft:main"
+        }
+    ]
+}
