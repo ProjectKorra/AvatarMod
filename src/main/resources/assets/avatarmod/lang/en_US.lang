@@ -273,6 +273,14 @@ avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they
 avatar.ability.sandstorm.lvl4_1=Strong gusts ;; Sandstorm moves much faster and isn't disrupted by airbending
 avatar.ability.sandstorm.lvl4_2=Harsh grains ;; Whirling sand grains cause continuous minor damage to targets
 
+avatar.ability.purify=Immolate
+avatar.ability.purify.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process
+avatar.ability.purify.lvl1=You have minor buffs, but are apt to hurt yourself
+avatar.ability.purify.lvl2=Stronger buff to firebending and speed buff
+avatar.ability.purify.lvl3=Stronger potion effects and don't burn every time
+avatar.ability.purify.lvl4_1=Fire tolerance ;; Much longer duration, health boost effect
+avatar.ability.purify.lvl4_2=Inferno ;; Much more powerful effects
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
