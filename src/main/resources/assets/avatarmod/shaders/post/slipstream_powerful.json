@@ -10,11 +10,11 @@
             "uniforms": [
                 {
                     "name": "CoordModifyX",
-                    "values": [ 0.0, 0.0, 0.01 ]
+                    "values": [ -0.005, 0.005, 0.015 ]
                 },
                 {
                     "name": "CoordModifyY",
-                    "values": [ 0.0, 0.0, 0.01 ]
+                    "values": [ 0.005, -0.005, 0.015 ]
                 }
             ]
         },
@@ -25,7 +25,11 @@
             "uniforms": [
                 {
                     "name": "ColorMult",
-                    "values": [ 1.3, 1.3, 1.3 ]
+                    "values": [ 1.5, 1.5, 1.5 ]
+                },
+                {
+                    "name": "BlurAmount",
+                    "values": [ 0.02 ]
                 }
             ]
         }
