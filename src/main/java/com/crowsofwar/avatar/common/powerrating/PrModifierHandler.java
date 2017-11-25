@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.powerrating;
 
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
+import com.crowsofwar.avatar.common.bending.earth.EarthbendingJingModifier;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -37,6 +39,11 @@ public class PrModifierHandler {
 			if (bendingId.equals(Waterbending.ID)) {
 				if (!manager.hasModifier(WaterbendingMoonBonus.class)) {
 					manager.addModifier(new WaterbendingMoonBonus(), ctx);
+				}
+			}
+			if (bendingId.equals(Earthbending.ID)) {
+				if (!manager.hasModifier(EarthbendingJingModifier.class)) {
+					manager.addModifier(new EarthbendingJingModifier(), ctx);
 				}
 			}
 
