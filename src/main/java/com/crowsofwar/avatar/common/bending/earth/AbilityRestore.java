@@ -57,7 +57,7 @@ public class AbilityRestore extends Ability {
 			data.getAbilityData("restore").addXp(xp);
 
 			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 1, effectLevel));
+				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1, effectLevel));
 
 			}
 			if (abilityData.getLevel() >= 2) {
