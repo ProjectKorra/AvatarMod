@@ -40,6 +40,10 @@ public class AbilityRestore extends Ability {
 			chi *= 2.5F;
 		}
 		if (bender.consumeChi(chi)) {
+
+			// 3s + 2.5s per level
+			int duration = 60 + 50 * abilityData.getLevel();
+
 			float xp = SKILLS_CONFIG.buffUsed;
 
 			entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1));
@@ -47,33 +51,33 @@ public class AbilityRestore extends Ability {
 
 			if (abilityData.getLevel() == 1) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 100));
+				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, duration));
 				data.getAbilityData("restore").addXp(xp);
 
 			}
 			if (abilityData.getLevel() == 2) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
+				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration));
 				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 100));
+				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, duration));
 				data.getAbilityData("restore").addXp(xp);
 
 			}
 			if (data.getAbilityData("restore").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
+				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, 1));
 				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 300, 1));
+				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, duration, 1));
 
 			}
 			if (data.getAbilityData("restore").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
+				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration));
 				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
+				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
 			}
 
 			RestorePowerModifier modifier = new RestorePowerModifier();
-			modifier.setTicks(20 + (20 * abilityData.getLevel()));
+			modifier.setTicks(duration);
 			data.getPowerRatingManager(getBendingId()).addModifier(new RestorePowerModifier(), ctx);
 		}
 
