@@ -49,8 +49,13 @@ public class EarthbendingJingModifier extends PowerRatingModifier {
 		float userHealth = entity.getHealth() / entity.getMaxHealth();
 		float opponentHealth = getNearbyHealth(ctx);
 
+		// No opponents nearby
 		if (opponentHealth == 0) {
 			return 0;
+		}
+		// Consider full health in creative mdoe
+		if (ctx.getBender().isCreativeMode()) {
+			userHealth = 1;
 		}
 
 		float diff = userHealth - opponentHealth;
@@ -82,6 +87,13 @@ public class EarthbendingJingModifier extends PowerRatingModifier {
 
 		float average = 0;
 		for (EntityLivingBase benderEntity : benders) {
+
+			// Ignore players on creative mode
+			Bender bender = Bender.get(benderEntity);
+			if (bender.isCreativeMode()) {
+				continue;
+			}
+
 			float healthPercent = benderEntity.getHealth() / benderEntity.getMaxHealth();
 			average += healthPercent / benders.size();
 		}
