@@ -49,6 +49,10 @@ public class EarthbendingJingModifier extends PowerRatingModifier {
 		float userHealth = entity.getHealth() / entity.getMaxHealth();
 		float opponentHealth = getNearbyHealth(ctx);
 
+		if (opponentHealth == 0) {
+			return 0;
+		}
+
 		float diff = userHealth - opponentHealth;
 		return diff * 50;
 
