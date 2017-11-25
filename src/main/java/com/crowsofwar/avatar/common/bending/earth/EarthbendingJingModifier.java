@@ -13,7 +13,7 @@ import java.util.List;
  * Power rating modifier for earthbending which increases power rating if the earthbender has
  * higher health than nearby opponents.
  */
-public class JingPowerModifier extends PowerRatingModifier {
+public class EarthbendingJingModifier extends PowerRatingModifier {
 
 	/**
 	 * The value of the modifier the last time it was calculated. Since calculating this modifier
