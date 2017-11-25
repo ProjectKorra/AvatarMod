@@ -71,7 +71,12 @@ public class AbilityRestore extends Ability {
 
 			RestorePowerModifier modifier = new RestorePowerModifier();
 			modifier.setTicks(duration);
-			data.getPowerRatingManager(getBendingId()).addModifier(new RestorePowerModifier(), ctx);
+
+			// Ignore warning; we know manager != null if they have the bending style
+			//noinspection ConstantConditions
+			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+
+
 		}
 
 	}
