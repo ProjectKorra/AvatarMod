@@ -20,20 +20,37 @@ public class JingPowerModifier extends PowerRatingModifier {
 	 * is a bit expensive, when it has been calculated recently, it just uses that old value in
 	 * the cache instead of re-calculating again.
 	 */
-	float cachedValue;
+	private float cachedValue;
 
 	/**
 	 * The "timestamp" of the last time this modifier was calculated, is actually the entity's
 	 * ticksExisted
 	 */
-	float cachedTime;
+	private float cachedTime = -1;
 
 	@Override
 	public double get(BendingContext ctx) {
 
+		float currentTime = ctx.getBenderEntity().ticksExisted;
 
+		if (currentTime - cachedTime > 40 || cachedTime == -1) {
+			cachedTime = currentTime;
+			cachedValue = calculateValue(ctx);
+		}
 
-		return 0;
+		return cachedValue;
+
+	}
+
+	private float calculateValue(BendingContext ctx) {
+
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		float userHealth = entity.getHealth() / entity.getMaxHealth();
+		float opponentHealth = getNearbyHealth(ctx);
+
+		float diff = userHealth - opponentHealth;
+		return diff * 50;
 
 	}
 
