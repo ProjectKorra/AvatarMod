@@ -44,6 +44,7 @@ public class AbilityRestore extends Ability {
 			// 3s + 2.5s per level
 			int duration = 60 + 50 * abilityData.getLevel();
 			int effectLevel = 0;
+			int slownessLevel = abilityData.getLevel() >= 2 ? 1 : 0;
 
 			if (data.getAbilityData("restore").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				effectLevel = 1;
@@ -52,6 +53,7 @@ public class AbilityRestore extends Ability {
 			float xp = SKILLS_CONFIG.buffUsed;
 
 			entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, duration, effectLevel));
+			entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, slownessLevel));
 			data.getAbilityData("restore").addXp(xp);
 
 			if (abilityData.getLevel() >= 1) {
