@@ -31,7 +31,19 @@ public enum Vision {
 	/**
 	 * Slipstream vision for level IV
 	 */
-	SLIPSTREAM_POWERFUL("shaders/post/slipstream_powerful.json");
+	SLIPSTREAM_POWERFUL("shaders/post/slipstream_powerful.json"),
+	/**
+	 * Restore vision for level I-II
+	 */
+	RESTORE_WEAK("shaders/post/restore_weak.json"),
+	/**
+	 * Restore vision for level III
+	 */
+	RESTORE_MEDIUM("shaders/post/restore_medium.json"),
+	/**
+	 * Restore vision for level IV
+	 */
+	RESTORE_POWERFUL("shaders/post/restore_powerful.json");
 
 	private final ResourceLocation shaderLocation;
 

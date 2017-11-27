@@ -1,0 +1,53 @@
+{
+    "targets": [
+        "swap",
+        "swap2"
+    ],
+    "passes": [
+        {
+            "name": "avatarmod:fisheye",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "uniforms": [
+                {
+                    "name": "Amount",
+                    "values": [ 0.1 ]
+                },
+                {
+                    "name": "Zoom",
+                    "values": [ 0.05 ]
+                }
+            ]
+        },
+        {
+            "name": "color_convolve",
+            "intarget": "swap",
+            "outtarget": "swap2",
+            "uniforms": [
+                {
+                    "name": "Saturation",
+                    "values": [ 0.6 ]
+                },
+                {
+                    "name": "ColorScale",
+                    "values": [ 1.0, 1.2, 1.0 ]
+                }
+            ]
+        },
+        {
+            "name": "avatarmod:adrenaline",
+            "intarget": "swap2",
+            "outtarget": "minecraft:main",
+            "uniforms": [
+                {
+                    "name": "ColorMult",
+                    "values": [ 1.1, 1.0, 1.0 ]
+                },
+                {
+                    "name": "BlurAmount",
+                    "values": [ 0.001 ]
+                }
+            ]
+        }
+    ]
+}

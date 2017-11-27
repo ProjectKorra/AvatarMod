@@ -22,59 +22,62 @@ public class AbilityRestore extends Ability {
 
 	@Override
 	public void execute(AbilityContext ctx) {
+
 		BendingData data = ctx.getData();
 		AbilityData abilityData = data.getAbilityData(this);
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		float chi = STATS_CONFIG.chiBuff;
+
 		if (abilityData.getLevel() == 1) {
 			chi *= 1.5f;
 		}
 		if (abilityData.getLevel() == 2) {
 			chi *= 2f;
 		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+		if (abilityData.getLevel() == 3) {
 			chi *= 2.5F;
 		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			chi *= 2.5F;
-		}
+
 		if (bender.consumeChi(chi)) {
-			float xp = SKILLS_CONFIG.buffUsed;
 
-			entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1));
-			data.getAbilityData("restore").addXp(xp);
+			abilityData.addXp(SKILLS_CONFIG.buffUsed);
 
-			if (abilityData.getLevel() == 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 100));
-				data.getAbilityData("restore").addXp(xp);
+			// 3s + 2.5s per level
+			int duration = 60 + 50 * abilityData.getLevel();
+			int effectLevel = 0;
+			int slownessLevel = abilityData.getLevel() >= 2 ? 1 : 2;
+			int regenLevel = abilityData.getLevel() >= 2 ? 1 : 0;
 
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				effectLevel = 1;
 			}
-			if (abilityData.getLevel() == 2) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 100));
-				data.getAbilityData("restore").addXp(xp);
 
-			}
-			if (data.getAbilityData("restore").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 300, 1));
+			// Add potion effects
 
+			entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, duration, effectLevel));
+			entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, slownessLevel));
+
+			if (abilityData.getLevel() >= 1) {
+				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 1, regenLevel));
 			}
-			if (data.getAbilityData("restore").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 100));
-				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
+			if (abilityData.getLevel() >= 2) {
+				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel));
 			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
+			}
+
+			// Apply power rating modifier
 
 			RestorePowerModifier modifier = new RestorePowerModifier();
-			modifier.setTicks(20 + (20 * abilityData.getLevel()));
-			data.getPowerRatingManager(getBendingId()).addModifier(new RestorePowerModifier(), ctx);
+			modifier.setTicks(duration);
+
+			// Ignore warning; we know manager != null if they have the bending style
+			//noinspection ConstantConditions
+			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+
 		}
 
 	}
