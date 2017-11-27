@@ -1,16 +1,32 @@
 {
     "targets": [
-        "swap"
+        "swap",
+        "swap2"
     ],
     "passes": [
         {
-            "name": "sobel",
+            "name": "blit",
             "intarget": "minecraft:main",
             "outtarget": "swap"
         },
         {
-            "name": "blit",
+            "name": "color_convolve",
             "intarget": "swap",
+            "outtarget": "swap2",
+            "uniforms": [
+                {
+                    "name": "Saturation",
+                    "values": [ 0.2 ]
+                },
+                {
+                    "name": "ColorScale",
+                    "values": [ 1.0, 2.0, 1.0 ]
+                }
+            ]
+        },
+        {
+            "name": "blit",
+            "intarget": "swap2",
             "outtarget": "minecraft:main"
         }
     ]
