@@ -33,7 +33,7 @@ public enum Vision {
 	 */
 	SLIPSTREAM_POWERFUL("shaders/post/slipstream_powerful.json"),
 
-	RESTORE("shaders/post/restore.json");
+	RESTORE("shaders/post/restore_medium.json");
 
 	private final ResourceLocation shaderLocation;
 
