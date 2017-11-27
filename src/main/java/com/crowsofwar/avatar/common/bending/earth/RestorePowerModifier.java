@@ -23,17 +23,38 @@ public class RestorePowerModifier extends PowerRatingModifier {
 
 	}
 
+	/**
+	 * Different Visions are used as the player levels up to make it seem more powerful. Gets the
+	 * appropriate vision to be used for the current level.
+	 */
+	private Vision getVision(BendingContext ctx) {
+
+		AbilityData abilityData = ctx.getData().getAbilityData("restore");
+		switch (abilityData.getLevel()) {
+			case 0:
+			case 1:
+				return Vision.RESTORE_WEAK;
+			case 2:
+				return Vision.RESTORE_MEDIUM;
+			case 3:
+			default:
+				return Vision.RESTORE_POWERFUL;
+		}
+
+	}
+
 	@Override
 	public void onAdded(BendingContext ctx) {
 		if (ctx.getData().getVision() == null) {
-			ctx.getData().setVision(Vision.RESTORE);
+			ctx.getData().setVision(getVision(ctx));
 		}
 		super.onAdded(ctx);
 	}
 
 	@Override
 	public void onRemoval(BendingContext ctx) {
-		if (ctx.getData().getVision().name().startsWith("RESTORE")) {
+		Vision vision = ctx.getData().getVision();
+		if (vision != null && vision.name().startsWith("RESTORE")) {
 			ctx.getData().setVision(null);
 		}
 		super.onRemoval(ctx);
