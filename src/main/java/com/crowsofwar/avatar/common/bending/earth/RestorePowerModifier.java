@@ -14,9 +14,9 @@ public class RestorePowerModifier extends PowerRatingModifier {
 		BendingData data = ctx.getData();
 		AbilityData abilityData = data.getAbilityData("restore");
 
-		double modifier = abilityData.getLevel() >= 1 ? 25 : 15;
+		double modifier = abilityData.getLevel() >= 1 ? 40 : 25;
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			modifier = 40;
+			modifier = 80;
 		}
 
 		return modifier;
