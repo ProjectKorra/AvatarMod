@@ -1,49 +1,46 @@
-#version 130
+#version 110
 
 uniform sampler2D DiffuseSampler;
-
 varying vec2 texCoord;
-varying vec2 oneTexel;
 
-vec3 hue(float h) {
-    float r = abs(h * 6.0 - 3.0) - 1.0;
-    float g = 2 - abs(h * 6.0 - 2.0);
-    float b = 2 - abs(h * 6.0 - 4.0);
-    return clamp(vec3(r,g,b), 0.0, 1.0);
+uniform float Time;
+
+float rand(vec2 n) {
+	return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
 }
 
-vec3 HSVtoRGB(vec3 hsv) {
-    return ((hue(hsv.x) - 1.0) * hsv.y + 1.0) * hsv.z;
+float noise(vec2 p){
+	vec2 ip = floor(p);
+	vec2 u = fract(p);
+	u = u*u*(3.0-2.0*u);
+
+	float res = mix(
+		mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+		mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+	return res*res;
 }
 
-vec3 RGBtoHSV(vec3 rgb) {
-    vec3 hsv = vec3(0.0);
-    hsv.z = max(rgb.r, max(rgb.g, rgb.b));
-    float min = min(rgb.r, min(rgb.g, rgb.b));
-    float c = hsv.z - min;
-
-    if (c != 0)
-    {
-        hsv.y = c / hsv.z;
-        vec3 delta = (hsv.z - rgb) / c;
-        delta.rgb -= delta.brg;
-        delta.rg += vec2(2.0, 4.0);
-        if (rgb.r >= hsv.z) {
-            hsv.x = delta.b;
-        } else if (rgb.g >= hsv.z) {
-            hsv.x = delta.r;
-        } else {
-            hsv.x = delta.g;
-        }
-        hsv.x = fract(hsv.x / 6.0);
-    }
-    return hsv;
+vec2 toPolar(vec2 inputt) {
+    vec2 cartesian = inputt - vec2(0.5, 0.5);
+    float angle = atan(cartesian.y, cartesian.x);
+    float dist = sqrt(cartesian.y * cartesian.y + cartesian.x * cartesian.x);
+    return vec2(dist, angle);
 }
 
-void main(){
-    vec4 color = texture2D(DiffuseSampler, texCoord);
-    color.g *= 2;
-    gl_FragColor = color;
+vec2 toRectangular(vec2 inputt) {
+    float angle = inputt.y;
+    float dist = inputt.x;
+    return vec2(dist * cos(angle), dist * sin(angle)) + vec2(0.5, 0.5);
+}
 
+void main() {
+    vec2 polar = toPolar(texCoord);
+    polar.x = polar.x * (1.0 + 0.2 * polar.x*polar.x);
+    polar.x *= 0.9;
+	gl_FragColor = texture2D(DiffuseSampler, toRectangular(polar));
 
+//	float noise = noise(texCoord * 100.0 + vec2(Time * 1000.0, 0.0));
+//	gl_FragColor += vec4(noise, noise, noise, 1.0) * 0.02;
+
+//	fragColor = texture(iChannel0, uv);
 }

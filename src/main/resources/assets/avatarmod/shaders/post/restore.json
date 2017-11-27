@@ -5,7 +5,7 @@
     ],
     "passes": [
         {
-            "name": "blit",
+            "name": "avatarmod:replacewhite",
             "intarget": "minecraft:main",
             "outtarget": "swap"
         },
@@ -25,9 +25,19 @@
             ]
         },
         {
-            "name": "blit",
+            "name": "avatarmod:adrenaline",
             "intarget": "swap2",
-            "outtarget": "minecraft:main"
+            "outtarget": "minecraft:main",
+            "uniforms": [
+                {
+                    "name": "ColorMult",
+                    "values": [ 1.3, 1.2, 1.2 ]
+                },
+                {
+                    "name": "BlurAmount",
+                    "values": [ 0.002 ]
+                }
+            ]
         }
     ]
 }
