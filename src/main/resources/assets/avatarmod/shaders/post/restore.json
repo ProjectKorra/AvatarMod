@@ -5,9 +5,19 @@
     ],
     "passes": [
         {
-            "name": "avatarmod:replacewhite",
+            "name": "avatarmod:fisheye",
             "intarget": "minecraft:main",
-            "outtarget": "swap"
+            "outtarget": "swap",
+            "uniforms": [
+                {
+                    "name": "Amount",
+                    "values": [ 0.2 ]
+                },
+                {
+                    "name": "Zoom",
+                    "values": [ 0.1 ]
+                }
+            ]
         },
         {
             "name": "color_convolve",
