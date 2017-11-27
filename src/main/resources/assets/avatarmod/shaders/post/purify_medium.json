@@ -33,7 +33,7 @@
             "uniforms": [
                 {
                     "name": "ColorMult",
-                    "values": [ 1.0, 0.5, 0.5 ]
+                    "values": [ 1.0, 0.6, 0.5 ]
                 },
                 {
                     "name": "BlurAmount",
