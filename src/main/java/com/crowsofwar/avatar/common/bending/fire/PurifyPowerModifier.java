@@ -57,7 +57,8 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
 	@Override
 	public void onRemoval(BendingContext ctx) {
-		if (ctx.getData().getVision().name().startsWith("PURIFY")) {
+		Vision vision = ctx.getData().getVision();
+		if (vision != null && vision.name().startsWith("PURIFY")) {
 			ctx.getData().setVision(null);
 		}
 	}
