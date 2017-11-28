@@ -68,8 +68,16 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
 		// Intermittently light on fire
 		if (ctx.getBenderEntity().ticksExisted % 20 == 0) {
+
+			AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "purify");
+
+			double chance = 0.3;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				chance = 0.6;
+			}
+
 			// 30% chance per second to be lit on fire
-			if (Math.random() < 0.3) {
+			if (Math.random() < chance) {
 				ctx.getBenderEntity().setFire(2);
 			}
 		}
