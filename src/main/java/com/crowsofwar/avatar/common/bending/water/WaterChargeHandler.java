@@ -24,85 +24,65 @@ public class WaterChargeHandler extends TickHandler {
 
 	@Override
 	public boolean tick(BendingContext ctx) {
+
 		AbilityData abilityData = ctx.getData().getAbilityData("water_cannon");
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+
 		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 		float damage = 4;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
-		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 		float size = 0.1f;
+		int durationToFire = 100;
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			durationToFire = 50;
+		}
 
 		if (world.isRemote) {
 			return false;
 		}
 
+		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
+
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
-			// Fire once every 10 ticks
-			if (duration >= 40 && duration % 10 == 0 && duration <= 100) {
+			damage = 4;
+			size = 0.1f;
+
+			// Fire once every 10 ticks, until we get to 100 ticks
+			// So at fire at 60, 70, 80, 90, 100
+			if (duration >= 60 && duration % 10 == 0) {
 
 				fireCannon(world, entity, damage, speed, size);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 						SoundCategory.PLAYERS, 1, 2);
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-				return true;
+				return duration >= 100;
 
 			}
 
-		}
-
-		if (duration >= 100) {
+		} else if (duration >= durationToFire) {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
-			damage = 8;
+			damage = 8 + (float) powerRating / 30;
 			size = 1;
 
-			if (abilityData.getLevel() == 1) {
+			if (abilityData.getLevel() >= 1) {
 				damage = 11;
-				size = 2;
+				size = 1.1f;
 			}
-			if (abilityData.getLevel() == 2) {
+			if (abilityData.getLevel() >= 2) {
 				damage = 12;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = 20;
-				size = 2.5F;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				size = 2;
-			}
-			damage += powerRating / 30;
-
-			if (abilityData == null) {
-				return true;
-			}
-
-			if (abilityData.getLevel() == 1) {
-				damage = 11;
-				size = 1.1F;
-
-			}
-			if (abilityData.getLevel() == 2) {
-				damage = 12;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-
 				damage = 17;
 				size = 1.25f;
 			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-
-				damage = 4;
-				size = 0.1F;
-
-			}
-			damage += powerRating / 30;
 
 			fireCannon(world, entity, damage, speed, size);
 

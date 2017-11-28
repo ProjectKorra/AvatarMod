@@ -16,13 +16,13 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
 		double modifier = 20;
 		if (abilityData.getLevel() >= 1) {
-			modifier = 30;
+			modifier = 25;
 		}
 		if (abilityData.getLevel() == 3) {
-			modifier = 60;
+			modifier = 40;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			modifier = 100;
+			modifier = 60;
 		}
 		return modifier;
 
@@ -57,7 +57,8 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
 	@Override
 	public void onRemoval(BendingContext ctx) {
-		if (ctx.getData().getVision().name().startsWith("PURIFY")) {
+		Vision vision = ctx.getData().getVision();
+		if (vision != null && vision.name().startsWith("PURIFY")) {
 			ctx.getData().setVision(null);
 		}
 	}
@@ -67,8 +68,16 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
 		// Intermittently light on fire
 		if (ctx.getBenderEntity().ticksExisted % 20 == 0) {
+
+			AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "purify");
+
+			double chance = 0.3;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				chance = 0.6;
+			}
+
 			// 30% chance per second to be lit on fire
-			if (Math.random() < 0.3) {
+			if (Math.random() < chance) {
 				ctx.getBenderEntity().setFire(2);
 			}
 		}

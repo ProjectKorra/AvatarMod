@@ -63,4 +63,16 @@ public class PowerRatingManager {
 		}
 	}
 
+	/**
+	 * Removes all power rating modifiers from this manager.
+	 */
+	public void clearModifiers(BendingContext ctx) {
+		Iterator<PowerRatingModifier> iterator = modifiers.iterator();
+		while (iterator.hasNext()) {
+			PowerRatingModifier modifier = iterator.next();
+			modifier.onRemoval(ctx);
+			iterator.remove();
+		}
+	}
+
 }

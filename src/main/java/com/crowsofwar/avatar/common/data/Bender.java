@@ -259,6 +259,24 @@ public abstract class Bender {
 
 	}
 
+	public void onDeath() {
+
+		BendingContext ctx = new BendingContext(getData(), getEntity(), new Raytrace.Result());
+
+		BendingData data = getData();
+
+		for (UUID bendingId : data.getAllBendingIds()) {
+			PowerRatingManager manager = data.getPowerRatingManager(bendingId);
+			//noinspection ConstantConditions
+			manager.clearModifiers(ctx);
+		}
+
+		Chi chi = data.chi();
+		chi.setTotalChi(chi.getMaxChi());
+		chi.setAvailableChi(chi.getTotalChi() * CHI_CONFIG.availableThreshold);
+
+	}
+
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */

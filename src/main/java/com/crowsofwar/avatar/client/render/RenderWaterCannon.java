@@ -14,7 +14,7 @@ public class RenderWaterCannon extends RenderArc {
     private final ParticleSpawner particleSpawner;
 
     public RenderWaterCannon(RenderManager renderManager) {
-        super(renderManager, false);
+        super(renderManager, true);
         enableFullBrightness();
         particleSpawner = new ClientParticleSpawner();
     }
