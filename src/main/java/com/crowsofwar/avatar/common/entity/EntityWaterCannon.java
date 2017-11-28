@@ -97,7 +97,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			Vector eyePos = Vector.getEyePos(getOwner());
 			Vector directionToEnd = position().minus(eyePos).normalize();
-			getControlPoint(1).setPosition(eyePos.plus(directionToEnd));
+			getControlPoint(1).setPosition(eyePos.plus(directionToEnd.times(0.5)));
 		}
 
 	}
