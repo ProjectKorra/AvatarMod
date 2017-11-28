@@ -24,21 +24,28 @@ public class WaterChargeHandler extends TickHandler {
 
 	@Override
 	public boolean tick(BendingContext ctx) {
+
 		AbilityData abilityData = ctx.getData().getAbilityData("water_cannon");
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+
 		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 		float damage = 4;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
-		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 		float size = 0.1f;
+		int durationToFire = 100;
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			durationToFire = 50;
+		}
 
 		if (world.isRemote) {
 			return false;
 		}
+
+		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
@@ -56,7 +63,7 @@ public class WaterChargeHandler extends TickHandler {
 
 		}
 
-		if (duration >= 100) {
+		if (duration >= durationToFire) {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
@@ -78,10 +85,6 @@ public class WaterChargeHandler extends TickHandler {
 				size = 2;
 			}
 			damage += powerRating / 30;
-
-			if (abilityData == null) {
-				return true;
-			}
 
 			if (abilityData.getLevel() == 1) {
 				damage = 11;
