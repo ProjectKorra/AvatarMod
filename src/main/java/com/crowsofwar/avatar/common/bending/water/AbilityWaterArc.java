@@ -70,7 +70,7 @@ public class AbilityWaterArc extends Ability {
 				removeExisting(ctx);
 
 				float damageMult = 1 + ctx.getData().getAbilityData(this).getXp() / 200;
-				damageMult += ctx.getPowerRating() / 200;
+				damageMult *= ctx.getPowerRatingDamageMod();
 
 				EntityWaterArc water = new EntityWaterArc(world);
 				water.setOwner(entity);

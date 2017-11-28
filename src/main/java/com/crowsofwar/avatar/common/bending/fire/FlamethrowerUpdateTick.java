@@ -113,6 +113,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				flames.setVelocity(look.times(speedMult).plus(getVelocity(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setLightsFires(lightsFires);
+				flames.setDamageMult(bender.getDamageMult(Firebending.ID));
 				world.spawnEntity(flames);
 				
 				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
