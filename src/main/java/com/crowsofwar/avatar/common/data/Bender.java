@@ -259,6 +259,9 @@ public abstract class Bender {
 
 	}
 
+	public void onDeath() {
+	}
+
 	/**
 	 * Creates an appropriate Bender instance for that entity
 	 */
