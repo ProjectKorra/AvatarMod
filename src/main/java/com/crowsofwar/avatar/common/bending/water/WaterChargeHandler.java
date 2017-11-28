@@ -49,15 +49,16 @@ public class WaterChargeHandler extends TickHandler {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
-			// Fire once every 10 ticks
-			if (duration >= 40 && duration % 10 == 0 && duration <= 100) {
+			// Fire once every 10 ticks, until we get to 100 ticks
+			// So at fire at 60, 70, 80, 90, 100
+			if (duration >= 60 && duration % 10 == 0) {
 
 				fireCannon(world, entity, damage, speed, size);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 						SoundCategory.PLAYERS, 1, 2);
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-				return true;
+				return duration >= 100;
 
 			}
 
