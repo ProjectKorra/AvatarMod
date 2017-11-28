@@ -63,11 +63,14 @@ public class AbilityRavine extends Ability {
 			double speed = ctx.getLevel() >= 1 ? 14 : 8;
 			speed += ctx.getPowerRating() / 25;
 
+			float damage = 0.75f + xp / 100;
+			damage *= ctx.getPowerRatingDamageMod();
+
 			EntityRavine ravine = new EntityRavine(world);
 			ravine.setOwner(entity);
 			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
 			ravine.setVelocity(look.times(speed));
-			ravine.setDamageMult(.75f + xp / 100);
+			ravine.setDamageMult(damage);
 			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			ravine.setDropEquipment(ctx.isMasterLevel(AbilityTreePath.SECOND));

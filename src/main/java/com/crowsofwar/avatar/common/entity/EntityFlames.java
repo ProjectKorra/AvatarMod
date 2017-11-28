@@ -48,7 +48,8 @@ public class EntityFlames extends AvatarEntity {
 	private EntityLivingBase owner;
 	
 	private boolean lightsFires;
-	
+	private double damageMult;
+
 	/**
 	 * @param worldIn
 	 */
@@ -133,6 +134,7 @@ public class EntityFlames extends AvatarEntity {
 				if (abilityData.getTotalXp() >= 50) {
 					additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
 				}
+				additionalDamage *= damageMult;
 				entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
 						additionalDamage);
 				
@@ -169,5 +171,9 @@ public class EntityFlames extends AvatarEntity {
 	public void setLightsFires(boolean lightsFires) {
 		this.lightsFires = lightsFires;
 	}
-	
+
+	public void setDamageMult(double damageMult) {
+		this.damageMult = damageMult;
+	}
+
 }

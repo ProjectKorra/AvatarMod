@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -29,6 +30,7 @@ public class WaterChargeHandler extends TickHandler {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+		Bender bender = ctx.getBender();
 
 		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 		int duration = data.getTickHandlerDuration(this);
@@ -49,7 +51,7 @@ public class WaterChargeHandler extends TickHandler {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
-			damage = 4;
+			damage = (float) (4 * bender.getDamageMult(Waterbending.ID));
 			size = 0.1f;
 
 			// Fire once every 10 ticks, until we get to 100 ticks
@@ -69,7 +71,7 @@ public class WaterChargeHandler extends TickHandler {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
-			damage = 8 + (float) powerRating / 30;
+			damage = 8;
 			size = 1;
 
 			if (abilityData.getLevel() >= 1) {
@@ -84,6 +86,7 @@ public class WaterChargeHandler extends TickHandler {
 				size = 1.25f;
 			}
 
+			damage *= bender.getDamageMult(Waterbending.ID);
 			fireCannon(world, entity, damage, speed, size);
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);

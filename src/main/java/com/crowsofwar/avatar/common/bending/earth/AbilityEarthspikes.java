@@ -67,7 +67,7 @@ public class AbilityEarthspikes extends Ability {
                 earthspike.setOwner(entity);
                 earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
                 earthspike.setVelocity(look.times(mult));
-                earthspike.setDamageMult(damage + xp / 100);
+                earthspike.setDamageMult((float) (damage * ctx.getPowerRatingDamageMod()));
                 earthspike.maxTicks(ticks);
                 earthspike.isUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
                 world.spawnEntity(earthspike);

@@ -63,11 +63,15 @@ public class AbilityAirblade extends Ability {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();
+
+		float damage = STATS_CONFIG.airbladeSettings.damage;
+		damage *= 1 + xp * .015f;
+		damage *= ctx.getPowerRatingDamageMod();
 		
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 30 : 20));
-		airblade.setDamage(STATS_CONFIG.airbladeSettings.damage * (1 + xp * .015f));
+		airblade.setDamage(damage);
 		airblade.setOwner(entity);
 		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));
 		airblade.setChainAttack(abilityData.isMasterPath(FIRST));

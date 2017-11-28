@@ -58,7 +58,7 @@ public class AbilityIceBurst extends Ability {
 
 		AbilityData abilityData = ctx.getAbilityData();
 		double damageMult = abilityData.getLevel() >= 1 ? 1.25 : 1;
-		damageMult += ctx.getPowerRating() / 200f;
+		damageMult *= ctx.getPowerRatingDamageMod();
 		float[] shardPitchAngles = { -10, 10 };
 		boolean targetMobs = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST);
 		float health = abilityData.getLevel() >= 2 ? 12 : 8;
