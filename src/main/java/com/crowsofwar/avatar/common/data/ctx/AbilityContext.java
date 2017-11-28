@@ -67,8 +67,22 @@ public class AbilityContext extends BendingContext {
 		return getLevel() == 3 && getPath() == path;
 	}
 
+	/**
+	 * Gets the current power rating, from -100 to +100.
+	 */
 	public double getPowerRating() {
 		return powerRating;
+	}
+
+	/**
+	 * Gets the power rating, but in the range 0.25 to 2.0 for convenience in damage calculations.
+	 * <ul>
+	 *     <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
+	 *     <li>0 power rating gives 1; damage would be the same as normal</li>
+	 *     <li>100 power rating gives 2; damage would be twice as much as usual</li>
+	 */
+	public double getPowerRatingDamageMod() {
+		return getBender().getDamageMult(ability.getBendingId());
 	}
 
 }
