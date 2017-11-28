@@ -271,6 +271,10 @@ public abstract class Bender {
 			manager.clearModifiers(ctx);
 		}
 
+		Chi chi = data.chi();
+		chi.setTotalChi(chi.getMaxChi());
+		chi.setAvailableChi(chi.getTotalChi() * CHI_CONFIG.availableThreshold);
+
 	}
 
 	/**
