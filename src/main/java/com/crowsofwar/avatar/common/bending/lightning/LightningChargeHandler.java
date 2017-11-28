@@ -78,7 +78,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 			}
 
 			speed += powerRating / 15;
-			damage += powerRating / 50;
+			damage *= ctx.getBender().getDamageMult(Lightningbending.ID);
 
 			fireLightning(world, entity, damage, speed, size, turbulenceValues);
 

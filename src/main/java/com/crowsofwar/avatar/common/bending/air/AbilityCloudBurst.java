@@ -49,8 +49,8 @@ public class AbilityCloudBurst extends Ability {
             }
 
             float damage = 4F;
-            damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
-            damage += ctx.getPowerRating() / 100;
+			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
+			damage *= ctx.getPowerRatingDamageMod();
 
             EntityCloudBall cloudball = new EntityCloudBall(world);
             cloudball.setPosition(target);

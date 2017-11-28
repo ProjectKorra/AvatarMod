@@ -31,8 +31,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -81,7 +79,7 @@ public class AbilityCreateWave extends Ability {
 						System.out.println(wave.rotationYaw);
 
 						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
-						damageMult += ctx.getPowerRating() / 200f;
+						damageMult *= ctx.getPowerRatingDamageMod();
 						wave.setDamageMultiplier(damageMult);
 						wave.setWaveSize(ctx.getLevel() >= 2 ? 3 : 2);
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {

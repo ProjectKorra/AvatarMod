@@ -114,6 +114,22 @@ public abstract class Bender {
 	}
 
 	/**
+	 * Gets the power rating, but in the range 0.25 to 2.0 for convenience in damage calculations.
+	 * <ul>
+	 *     <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
+	 *     <li>0 power rating gives 1; damage would be the same as normal</li>
+	 *     <li>100 power rating gives 2; damage would be twice as much as usual</li>
+	 */
+	public double getDamageMult(UUID bendingId) {
+		double powerRating = calcPowerRating(bendingId);
+		if (powerRating < 0) {
+			return 0.0075 * powerRating + 1;
+		} else {
+			return 0.01 * powerRating + 1;
+		}
+	}
+
+	/**
 	 * Checks whether the Bender can use that given ability.
 	 */
 	protected boolean canUseAbility(Ability ability) {

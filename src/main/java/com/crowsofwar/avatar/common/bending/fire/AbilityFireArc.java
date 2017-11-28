@@ -67,14 +67,14 @@ public class AbilityFireArc extends Ability {
 
 			removeExisting(ctx);
 
-			float damage = ctx.getLevel() >= 2 ? 2 : 1;
-			damage += ctx.getPowerRating() / 200f;
+			float damageMult = ctx.getLevel() >= 2 ? 2 : 1;
+			damageMult *= ctx.getPowerRatingDamageMod();
 
 			EntityFireArc fire = new EntityFireArc(world);
 			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
 			fire.setBehavior(new FireArcBehavior.PlayerControlled());
 			fire.setOwner(entity);
-			fire.setDamageMult(damage);
+			fire.setDamageMult(damageMult);
 			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			world.spawnEntity(fire);
 
