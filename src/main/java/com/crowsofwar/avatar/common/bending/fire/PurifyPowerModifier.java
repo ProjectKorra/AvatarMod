@@ -16,13 +16,13 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
 		double modifier = 20;
 		if (abilityData.getLevel() >= 1) {
-			modifier = 30;
+			modifier = 25;
 		}
 		if (abilityData.getLevel() == 3) {
-			modifier = 60;
+			modifier = 40;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			modifier = 100;
+			modifier = 60;
 		}
 		return modifier;
 
