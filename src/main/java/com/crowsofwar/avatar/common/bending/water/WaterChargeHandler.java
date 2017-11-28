@@ -49,6 +49,9 @@ public class WaterChargeHandler extends TickHandler {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
+			damage = 4;
+			size = 0.1f;
+
 			// Fire once every 10 ticks, until we get to 100 ticks
 			// So at fire at 60, 70, 80, 90, 100
 			if (duration >= 60 && duration % 10 == 0) {
@@ -62,51 +65,24 @@ public class WaterChargeHandler extends TickHandler {
 
 			}
 
-		}
-
-		if (duration >= durationToFire) {
+		} else if (duration >= durationToFire) {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
-			damage = 8;
+			damage = 8 + (float) powerRating / 30;
 			size = 1;
 
-			if (abilityData.getLevel() == 1) {
+			if (abilityData.getLevel() >= 1) {
 				damage = 11;
-				size = 2;
+				size = 1.1f;
 			}
-			if (abilityData.getLevel() == 2) {
+			if (abilityData.getLevel() >= 2) {
 				damage = 12;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = 20;
-				size = 2.5F;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				size = 2;
-			}
-			damage += powerRating / 30;
-
-			if (abilityData.getLevel() == 1) {
-				damage = 11;
-				size = 1.1F;
-
-			}
-			if (abilityData.getLevel() == 2) {
-				damage = 12;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-
 				damage = 17;
 				size = 1.25f;
 			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-
-				damage = 4;
-				size = 0.1F;
-
-			}
-			damage += powerRating / 30;
 
 			fireCannon(world, entity, damage, speed, size);
 
