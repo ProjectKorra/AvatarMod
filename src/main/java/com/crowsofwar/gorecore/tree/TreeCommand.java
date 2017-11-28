@@ -158,7 +158,8 @@ public abstract class TreeCommand implements ICommand {
 						.getCompletionSuggestions(sender, sentArgs[sentArgs.length - 1].toLowerCase());
 				
 				String lastArg = sentArgs[sentArgs.length - 1];
-				List<String> ret = suggestions.stream().filter(suggestion -> suggestion.startsWith(lastArg))
+				List<String> ret = suggestions.stream()
+						.filter(suggest -> suggest.toLowerCase().startsWith(lastArg.toLowerCase()))
 						.collect(Collectors.toList());
 				return ret;
 				

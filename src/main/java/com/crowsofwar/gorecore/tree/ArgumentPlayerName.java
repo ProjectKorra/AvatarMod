@@ -17,11 +17,11 @@
 
 package com.crowsofwar.gorecore.tree;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.command.ICommandSender;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An argument for a player's username. Supports tab completion if the player is
