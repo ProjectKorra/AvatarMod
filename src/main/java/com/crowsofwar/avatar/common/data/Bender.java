@@ -260,6 +260,17 @@ public abstract class Bender {
 	}
 
 	public void onDeath() {
+
+		BendingContext ctx = new BendingContext(getData(), getEntity(), new Raytrace.Result());
+
+		BendingData data = getData();
+
+		for (UUID bendingId : data.getAllBendingIds()) {
+			PowerRatingManager manager = data.getPowerRatingManager(bendingId);
+			//noinspection ConstantConditions
+			manager.clearModifiers(ctx);
+		}
+
 	}
 
 	/**
