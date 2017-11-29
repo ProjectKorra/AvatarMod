@@ -19,12 +19,10 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -174,12 +172,11 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		Bender bender = Bender.get(player);
 
-		BendingData data = BendingData.get(player);
-		if (data.hasBendingId(Airbending.ID)) {
+		if (bender.knowsWallJump() != null) {
 
 			//noinspection ConstantConditions
 			if (bender.canWallJump()) {
-				bender.doWallJump(AvatarParticles.getParticleAir());
+				bender.doWallJump(bender.knowsWallJump());
 			}
 
 		}
