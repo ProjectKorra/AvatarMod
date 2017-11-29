@@ -22,12 +22,15 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.entity.EntityLightningArc;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -292,6 +295,55 @@ public abstract class Bender {
 		chi.setAvailableChi(chi.getTotalChi() * CHI_CONFIG.availableThreshold);
 
 	}
+
+	public boolean canWallJump() {
+
+		EntityLivingBase entity = getEntity();
+		World world = getWorld();
+
+		// Detect whether the player is horizontally collided (i.e. touching a wall)
+		// Calculation different between client/server b/c client has isCollidedVertically
+		// properly setup, while server doesn't and needs trickier calculation
+
+		boolean collidedWithWall;
+		if (getWorld().isRemote) {
+			collidedWithWall = entity.isCollidedHorizontally && !entity.isCollidedVertically;
+		} else {
+			Vector normal = null;
+			Block block = null;
+			{
+				BlockPos pos = new BlockPos(entity).north();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.NORTH;
+					block = world.getBlockState(pos).getBlock();
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(entity).south();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.SOUTH;
+					block = world.getBlockState(pos).getBlock();
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(entity).east();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.EAST;
+					block = world.getBlockState(pos).getBlock();
+				}
+			}
+			{
+				BlockPos pos = new BlockPos(entity).west();
+				if (!world.isAirBlock(pos)) {
+					normal = Vector.WEST;
+					block = world.getBlockState(pos).getBlock();
+				}
+			}
+			collidedWithWall = normal != null;
+		}
+
+	}
+
 
 	/**
 	 * Creates an appropriate Bender instance for that entity
