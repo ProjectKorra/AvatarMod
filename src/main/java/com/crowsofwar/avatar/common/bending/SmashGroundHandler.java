@@ -16,16 +16,16 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * 
@@ -36,7 +36,7 @@ public class SmashGroundHandler extends TickHandler {
 	
 	@Override
 	public boolean tick(BendingContext ctx) {
-		
+
 		EntityLivingBase target = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		
@@ -44,8 +44,8 @@ public class SmashGroundHandler extends TickHandler {
 			
 			if (target.onGround) {
 				
-				double range = 3;
-				
+				double range = getRange();
+
 				World world = target.world;
 				AxisAlignedBB box = new AxisAlignedBB(target.posX - range, target.posY - range,
 						target.posZ - range, target.posX + range, target.posY + range, target.posZ + range);
@@ -53,7 +53,7 @@ public class SmashGroundHandler extends TickHandler {
 				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 				for (EntityLivingBase entity : nearby) {
 					if (entity != target) {
-						entity.attackEntityFrom(AvatarDamageSource.causeSmashDamage(entity, target), 5);
+						smashEntity(target, entity);
 					}
 				}
 				
@@ -64,5 +64,25 @@ public class SmashGroundHandler extends TickHandler {
 		
 		return false;
 	}
-	
+
+	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
+		entity.attackEntityFrom(AvatarDamageSource.causeSmashDamage(entity, target), 5);
+
+		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
+		velocity = velocity.withY(1).times(getSpeed() / 20);
+		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
+
+	}
+
+	protected double getRange() {
+		return 3;
+	}
+
+	/**
+	 * The speed applied to hit entities, in m/s
+	 */
+	protected double getSpeed() {
+		return 3;
+	}
+
 }

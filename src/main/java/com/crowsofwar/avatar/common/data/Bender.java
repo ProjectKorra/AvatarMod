@@ -22,10 +22,10 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -43,7 +43,9 @@ import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
  * @author CrowsOfWar
  */
 public abstract class Bender {
-	
+
+	protected WallJumpManager wallJumpManager = new WallJumpManager(this);
+
 	/**
 	 * For players, returns the username. For mobs, returns the mob's name (e.g.
 	 * Chicken).
@@ -291,6 +293,10 @@ public abstract class Bender {
 		chi.setTotalChi(chi.getMaxChi());
 		chi.setAvailableChi(chi.getTotalChi() * CHI_CONFIG.availableThreshold);
 
+	}
+
+	public WallJumpManager getWallJumpManager() {
+		return wallJumpManager;
 	}
 
 	/**

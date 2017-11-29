@@ -19,16 +19,15 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.WallJumpManager;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -37,19 +36,12 @@ import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -58,8 +50,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * Implements IPacketHandler. Acts as a packet handler for integrated and
@@ -181,71 +171,16 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleWallJump(PacketSWallJump packet, MessageContext ctx) {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		World world = player.world;
-		
-		BendingData data = BendingData.get(player);
-		if (data.hasBendingId(Airbending.ID) && !data.getMiscData().isWallJumping()
-				&& data.getMiscData().getTimeInAir() >= STATS_CONFIG.wallJumpDelay) {
-			
-			data.getMiscData().setWallJumping(true);
-			
-			// Detect direction to jump
-			Vector normal = Vector.UP;
-			Block block = null;
-			{
-				BlockPos pos = new BlockPos(player).north();
-				if (!world.isAirBlock(pos)) {
-					normal = Vector.NORTH;
-					block = world.getBlockState(pos).getBlock();
-				}
-			}
-			{
-				BlockPos pos = new BlockPos(player).south();
-				if (!world.isAirBlock(pos)) {
-					normal = Vector.SOUTH;
-					block = world.getBlockState(pos).getBlock();
-				}
-			}
-			{
-				BlockPos pos = new BlockPos(player).east();
-				if (!world.isAirBlock(pos)) {
-					normal = Vector.EAST;
-					block = world.getBlockState(pos).getBlock();
-				}
-			}
-			{
-				BlockPos pos = new BlockPos(player).west();
-				if (!world.isAirBlock(pos)) {
-					normal = Vector.WEST;
-					block = world.getBlockState(pos).getBlock();
-				}
-			}
-			
-			if (normal != Vector.UP) {
-				
-				Vector velocity = new Vector(player.motionX, player.motionY, player.motionZ);
-				Vector n = velocity.reflect(normal).times(4).minus(normal.times(0.5)).withY(0.5);
-				n = n.plus(Vector.getLookRectangular(player).times(.8));
-				
-				if (n.sqrMagnitude() > 1) {
-					n = n.normalize().times(1);
-				}
+		Bender bender = Bender.get(player);
+		WallJumpManager jumpManager = bender.getWallJumpManager();
 
-				// can't use setVelocity since that is Client SideOnly
-				player.motionX = n.x();
-				player.motionY = n.y();
-				player.motionZ = n.z();
-				player.connection.sendPacket(new SPacketEntityVelocity(player));
-				
-				new NetworkParticleSpawner().spawnParticles(world, AvatarParticles.getParticleAir(), 4, 10,
-						new Vector(player).plus(n), n.times(3));
-				world.playSound(null, new BlockPos(player), block.getSoundType().getBreakSound(),
-						SoundCategory.PLAYERS, 1, 0.6f);
-				
-				data.getMiscData().setFallAbsorption(3);
-				
+		if (jumpManager.knowsWallJump()) {
+
+			//noinspection ConstantConditions
+			if (jumpManager.canWallJump()) {
+				jumpManager.doWallJump(jumpManager.getWallJumpParticleType());
 			}
-			
+
 		}
 		
 		return null;
