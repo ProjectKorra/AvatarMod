@@ -17,8 +17,10 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
@@ -361,6 +363,31 @@ public abstract class Bender {
 
 		return collidedWithWall && !md.isWallJumping() && md.getTimeInAir() >= STATS_CONFIG
 				.wallJumpDelay;
+
+	}
+
+	/**
+	 * Returns whether the bender has the necessary skills/abilities to actually wall jump.
+	 * Different from {@link #canWallJump()} since that is whether the bender physically is in a
+	 * situation where they could theoretically wall jump if they knew how.
+	 *
+	 * @return If the bender can wall jump, gives the type of particles spawned when they wall
+	 * jump. If the bender cannot wall jump, returns null.
+	 */
+	@Nullable
+	public EnumParticleTypes knowsWallJump() {
+
+		// Fire jumping?
+		if (getData().hasTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER)) {
+			return AvatarParticles.getParticleFlames();
+		}
+
+		// Airbender?
+		if (getData().hasBending(BendingStyles.get("airbending"))) {
+			return AvatarParticles.getParticleAir();
+		}
+
+		return null;
 
 	}
 
