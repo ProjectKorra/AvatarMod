@@ -112,36 +112,5 @@ public class StatCtrlFireJump extends StatusControl {
 
 	}
 
-	/**
-	 * Lights nearby entities on fire
-	 */
-	private void attackNearbyEntities(BendingContext ctx, double radius, double speed) {
-
-		EntityLivingBase entity = ctx.getBenderEntity();
-		AxisAlignedBB aabb = new AxisAlignedBB(
-				entity.posX - radius, entity.posY - radius, entity.posZ - radius,
-				entity.posX + radius, entity.posY + radius, entity.posZ + radius);
-
-		List<EntityLivingBase> targets = ctx.getWorld().getEntitiesWithinAABB(EntityLivingBase
-				.class, aabb);
-
-		for (EntityLivingBase target : targets) {
-
-			// Filter out targets that aren't in the desired radius
-			// AABB does this sorta but it's a box shape instead of circle shape
-			if (target.getDistanceSqToEntity(entity) > radius * radius) {
-				continue;
-			}
-
-			target.setFire(3);
-
-			Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-			velocity = velocity.times(speed / 20);
-			target.addVelocity(velocity.x(), velocity.y(), velocity.z());
-
-		}
-
-	}
-
 }
 
