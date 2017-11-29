@@ -44,8 +44,8 @@ public class SmashGroundHandler extends TickHandler {
 			
 			if (target.onGround) {
 				
-				double range = 3;
-				
+				double range = getRange();
+
 				World world = target.world;
 				AxisAlignedBB box = new AxisAlignedBB(target.posX - range, target.posY - range,
 						target.posZ - range, target.posX + range, target.posY + range, target.posZ + range);
@@ -69,9 +69,20 @@ public class SmashGroundHandler extends TickHandler {
 		entity.attackEntityFrom(AvatarDamageSource.causeSmashDamage(entity, target), 5);
 
 		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-		velocity = velocity.times(3.0 / 20);
+		velocity = velocity.times(getSpeed() / 20);
 		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 
+	}
+
+	protected double getRange() {
+		return 3;
+	}
+
+	/**
+	 * The speed applied to hit entities, in m/s
+	 */
+	protected double getSpeed() {
+		return 3;
 	}
 
 }
