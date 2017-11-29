@@ -14,7 +14,7 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.bending.air;
+package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
-public class AirbendingEvents {
+public class WallJumpEvents {
 	
 	private static void tick(EntityPlayer player, World world, BendingData data) {
 		MiscData miscData = data.getMiscData();
@@ -54,9 +54,7 @@ public class AirbendingEvents {
 		EntityPlayer player = e.player;
 		World world = player.world;
 		BendingData data = BendingData.get(player);
-		if (data.hasBendingId(Airbending.ID)) {
-			tick(player, world, data);
-		}
+		tick(player, world, data);
 	}
 
 }
