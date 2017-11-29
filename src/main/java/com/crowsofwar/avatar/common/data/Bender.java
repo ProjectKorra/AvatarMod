@@ -30,6 +30,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -344,6 +345,37 @@ public abstract class Bender {
 
 	}
 
+	@Nullable
+	private Vector getHorizontalCollisionNormal() {
+		EntityLivingBase entity = getEntity();
+		BlockPos pos = new BlockPos(entity);
+		for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+
+			BlockPos adjusted = pos.offset(facing);
+			if (!getWorld().isAirBlock(adjusted)) {
+				return new Vector(facing.getDirectionVec());
+			}
+
+		}
+
+		return null;
+	}
+
+	@Nullable
+	private Block getHorizontalCollisionBlock() {
+		EntityLivingBase entity = getEntity();
+		BlockPos pos = new BlockPos(entity);
+		for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+
+			BlockPos adjusted = pos.offset(facing);
+			if (!getWorld().isAirBlock(adjusted)) {
+				return getWorld().getBlockState(adjusted).getBlock();
+			}
+
+		}
+
+		return null;
+	}
 
 	/**
 	 * Creates an appropriate Bender instance for that entity
