@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * A wrapper for any mob/player that can bend to provide greater abstraction
@@ -297,10 +298,13 @@ public abstract class Bender {
 
 	}
 
+	/**
+	 * Returns whether the bender can physically wall jump regardless of their bending ability -
+	 * whether they are at a wall etc.
+	 */
 	public boolean canWallJump() {
 
 		EntityLivingBase entity = getEntity();
-		World world = getWorld();
 
 		// Detect whether the player is horizontally collided (i.e. touching a wall)
 		// Calculation different between client/server b/c client has isCollidedVertically
@@ -310,38 +314,13 @@ public abstract class Bender {
 		if (getWorld().isRemote) {
 			collidedWithWall = entity.isCollidedHorizontally && !entity.isCollidedVertically;
 		} else {
-			Vector normal = null;
-			Block block = null;
-			{
-				BlockPos pos = new BlockPos(entity).north();
-				if (!world.isAirBlock(pos)) {
-					normal = Vector.NORTH;
-					block = world.getBlockState(pos).getBlock();
-				}
-			}
-			{
-				BlockPos pos = new BlockPos(entity).south();
-				if (!world.isAirBlock(pos)) {
-					normal = Vector.SOUTH;
-					block = world.getBlockState(pos).getBlock();
-				}
-			}
-			{
-				BlockPos pos = new BlockPos(entity).east();
-				if (!world.isAirBlock(pos)) {
-					normal = Vector.EAST;
-					block = world.getBlockState(pos).getBlock();
-				}
-			}
-			{
-				BlockPos pos = new BlockPos(entity).west();
-				if (!world.isAirBlock(pos)) {
-					normal = Vector.WEST;
-					block = world.getBlockState(pos).getBlock();
-				}
-			}
-			collidedWithWall = normal != null;
+			collidedWithWall = getHorizontalCollisionBlock() != null;
 		}
+
+		MiscData md = getData().getMiscData();
+
+		return collidedWithWall && !md.isWallJumping() && md.getTimeInAir() >= STATS_CONFIG
+				.wallJumpDelay;
 
 	}
 
