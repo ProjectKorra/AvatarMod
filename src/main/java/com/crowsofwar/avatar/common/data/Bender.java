@@ -17,27 +17,17 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -45,7 +35,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * A wrapper for any mob/player that can bend to provide greater abstraction
@@ -54,7 +43,9 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * @author CrowsOfWar
  */
 public abstract class Bender {
-	
+
+	protected WallJumpManager wallJumpManager = new WallJumpManager(this);
+
 	/**
 	 * For players, returns the username. For mobs, returns the mob's name (e.g.
 	 * Chicken).
@@ -304,130 +295,8 @@ public abstract class Bender {
 
 	}
 
-	public void doWallJump(EnumParticleTypes particles) {
-
-		World world = getWorld();
-		EntityLivingBase entity = getEntity();
-
-		Vector normal = getHorizontalCollisionNormal();
-		Block block = getHorizontalCollisionBlock();
-
-		if (normal != Vector.UP) {
-
-			Vector velocity = new Vector(entity.motionX, entity.motionY, entity.motionZ);
-			Vector n = velocity.reflect(normal).times(4).minus(normal.times(0.5)).withY(0.5);
-			n = n.plus(Vector.getLookRectangular(entity).times(.8));
-
-			if (n.sqrMagnitude() > 1) {
-				n = n.normalize().times(1);
-			}
-
-			// can't use setVelocity since that is Client SideOnly
-			entity.motionX = n.x();
-			entity.motionY = n.y();
-			entity.motionZ = n.z();
-			AvatarUtils.afterVelocityAdded(entity);
-
-			new NetworkParticleSpawner().spawnParticles(world, particles, 4, 10, new Vector
-					(entity).plus(n), n.times(3));
-			world.playSound(null, new BlockPos(entity), block.getSoundType().getBreakSound(),
-					SoundCategory.PLAYERS, 1, 0.6f);
-
-			getData().getMiscData().setFallAbsorption(3);
-			getData().getMiscData().setWallJumping(true);
-
-		}
-
-	}
-
-	/**
-	 * Returns whether the bender can physically wall jump regardless of their bending ability -
-	 * whether they are at a wall etc.
-	 */
-	public boolean canWallJump() {
-
-		EntityLivingBase entity = getEntity();
-
-		// Detect whether the player is horizontally collided (i.e. touching a wall)
-		// Calculation different between client/server b/c client has isCollidedVertically
-		// properly setup, while server doesn't and needs trickier calculation
-
-		boolean collidedWithWall;
-		if (getWorld().isRemote) {
-			collidedWithWall = entity.isCollidedHorizontally && !entity.isCollidedVertically;
-		} else {
-			collidedWithWall = getHorizontalCollisionBlock() != null;
-		}
-
-		MiscData md = getData().getMiscData();
-
-		return collidedWithWall && !md.isWallJumping() && md.getTimeInAir() >= STATS_CONFIG
-				.wallJumpDelay;
-
-	}
-
-	/**
-	 * Returns whether the bender has the necessary skills/abilities to actually wall jump.
-	 * Different from {@link #canWallJump()} since that is whether the bender physically is in a
-	 * situation where they could theoretically wall jump if they knew how.
-	 */
-	public boolean knowsWallJump() {
-		return getWallJumpParticleType() != null;
-	}
-
-	/**
-	 * @return If the bender knows how to wall jump, gives the type of particles spawned when they
-	 * wall jump. If the bender does not know how to wall jump, returns null.
-	 *
-	 * @see #knowsWallJump()
-	 */
-	@Nullable
-	public EnumParticleTypes getWallJumpParticleType() {
-
-		// Fire jumping?
-		if (getData().hasTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER)) {
-			return AvatarParticles.getParticleFlames();
-		}
-
-		// Airbender?
-		if (getData().hasBending(BendingStyles.get("airbending"))) {
-			return AvatarParticles.getParticleAir();
-		}
-
-		return null;
-
-	}
-
-	@Nullable
-	private Vector getHorizontalCollisionNormal() {
-		EntityLivingBase entity = getEntity();
-		BlockPos pos = new BlockPos(entity);
-		for (EnumFacing facing : EnumFacing.HORIZONTALS) {
-
-			BlockPos adjusted = pos.offset(facing);
-			if (!getWorld().isAirBlock(adjusted)) {
-				return new Vector(facing.getDirectionVec());
-			}
-
-		}
-
-		return null;
-	}
-
-	@Nullable
-	private Block getHorizontalCollisionBlock() {
-		EntityLivingBase entity = getEntity();
-		BlockPos pos = new BlockPos(entity);
-		for (EnumFacing facing : EnumFacing.HORIZONTALS) {
-
-			BlockPos adjusted = pos.offset(facing);
-			if (!getWorld().isAirBlock(adjusted)) {
-				return getWorld().getBlockState(adjusted).getBlock();
-			}
-
-		}
-
-		return null;
+	public WallJumpManager getWallJumpManager() {
+		return wallJumpManager;
 	}
 
 	/**
