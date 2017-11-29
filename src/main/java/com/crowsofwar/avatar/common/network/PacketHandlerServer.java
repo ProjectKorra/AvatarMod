@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.WallJumpManager;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
@@ -171,12 +172,13 @@ public class PacketHandlerServer implements IPacketHandler {
 		
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		Bender bender = Bender.get(player);
+		WallJumpManager jumpManager = bender.getWallJumpManager();
 
-		if (bender.knowsWallJump()) {
+		if (jumpManager.knowsWallJump()) {
 
 			//noinspection ConstantConditions
-			if (bender.canWallJump()) {
-				bender.doWallJump(bender.getWallJumpParticleType());
+			if (jumpManager.canWallJump()) {
+				jumpManager.doWallJump(jumpManager.getWallJumpParticleType());
 			}
 
 		}

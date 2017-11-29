@@ -36,7 +36,8 @@ public class WallJumpEvents {
 	private static void tick(EntityPlayer player, World world, BendingData data) {
 		MiscData miscData = data.getMiscData();
 		Bender bender = Bender.get(player);
-		if (player == GoreCore.proxy.getClientSidePlayer() && bender.canWallJump()) {
+		if (player == GoreCore.proxy.getClientSidePlayer() && bender.getWallJumpManager()
+				.canWallJump()) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
