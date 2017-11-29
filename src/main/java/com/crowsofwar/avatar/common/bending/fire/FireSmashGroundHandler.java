@@ -24,11 +24,17 @@ import net.minecraft.entity.EntityLivingBase;
  *
  * @author CrowsOfWar
  */
-public class SmashGroundFireHandler extends SmashGroundHandler {
+public class FireSmashGroundHandler extends SmashGroundHandler {
 
 	@Override
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
 		super.smashEntity(target, entity);
 		target.setFire(4);
 	}
+
+	@Override
+	protected double getRange() {
+		return 2;
+	}
+
 }
