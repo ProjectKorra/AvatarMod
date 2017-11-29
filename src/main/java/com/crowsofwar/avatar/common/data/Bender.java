@@ -24,13 +24,17 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -295,6 +299,41 @@ public abstract class Bender {
 		Chi chi = data.chi();
 		chi.setTotalChi(chi.getMaxChi());
 		chi.setAvailableChi(chi.getTotalChi() * CHI_CONFIG.availableThreshold);
+
+	}
+
+	public void doWallJump(EnumParticleTypes particles) {
+
+		World world = getWorld();
+		EntityLivingBase entity = getEntity();
+
+		Vector normal = getHorizontalCollisionNormal();
+		Block block = getHorizontalCollisionBlock();
+
+		if (normal != Vector.UP) {
+
+			Vector velocity = new Vector(entity.motionX, entity.motionY, entity.motionZ);
+			Vector n = velocity.reflect(normal).times(4).minus(normal.times(0.5)).withY(0.5);
+			n = n.plus(Vector.getLookRectangular(entity).times(.8));
+
+			if (n.sqrMagnitude() > 1) {
+				n = n.normalize().times(1);
+			}
+
+			// can't use setVelocity since that is Client SideOnly
+			entity.motionX = n.x();
+			entity.motionY = n.y();
+			entity.motionZ = n.z();
+			AvatarUtils.afterVelocityAdded(entity);
+
+			new NetworkParticleSpawner().spawnParticles(world, particles, 4, 10, new Vector
+					(entity).plus(n), n.times(3));
+			world.playSound(null, new BlockPos(entity), block.getSoundType().getBreakSound(),
+					SoundCategory.PLAYERS, 1, 0.6f);
+
+			getData().getMiscData().setFallAbsorption(3);
+
+		}
 
 	}
 
