@@ -187,7 +187,7 @@ avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thr
 
 avatar.ability.wave=Wave
 avatar.ability.wave.desc=Summon a wave of water to destroy your enemies. Only works when they are in water.
-avatar.ability.wave.lvl1=Slow wave to drown enemies
+avatar.ability.wave.lvl1=Make your enemies wave goodbye
 avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
 avatar.ability.wave.lvl4_1=Water spray ;; Creates minor explosion upon contact with enemy
