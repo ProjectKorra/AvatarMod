@@ -172,11 +172,11 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		Bender bender = Bender.get(player);
 
-		if (bender.knowsWallJump() != null) {
+		if (bender.knowsWallJump()) {
 
 			//noinspection ConstantConditions
 			if (bender.canWallJump()) {
-				bender.doWallJump(bender.knowsWallJump());
+				bender.doWallJump(bender.getWallJumpParticleType());
 			}
 
 		}

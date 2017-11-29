@@ -370,12 +370,19 @@ public abstract class Bender {
 	 * Returns whether the bender has the necessary skills/abilities to actually wall jump.
 	 * Different from {@link #canWallJump()} since that is whether the bender physically is in a
 	 * situation where they could theoretically wall jump if they knew how.
+	 */
+	public boolean knowsWallJump() {
+		return getWallJumpParticleType() != null;
+	}
+
+	/**
+	 * @return If the bender knows how to wall jump, gives the type of particles spawned when they
+	 * wall jump. If the bender does not know how to wall jump, returns null.
 	 *
-	 * @return If the bender can wall jump, gives the type of particles spawned when they wall
-	 * jump. If the bender cannot wall jump, returns null.
+	 * @see #knowsWallJump()
 	 */
 	@Nullable
-	public EnumParticleTypes knowsWallJump() {
+	public EnumParticleTypes getWallJumpParticleType() {
 
 		// Fire jumping?
 		if (getData().hasTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER)) {
