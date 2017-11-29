@@ -19,27 +19,24 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.MiscData;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AirbendingEvents {
 	
 	private static void tick(EntityPlayer player, World world, BendingData data) {
 		MiscData miscData = data.getMiscData();
-		if (player == GoreCore.proxy.getClientSidePlayer() && player.isCollidedHorizontally
-				&& !player.isCollidedVertically && miscData.getTimeInAir() >= STATS_CONFIG
-				.wallJumpDelay) {
+		Bender bender = Bender.get(player);
+		if (player == GoreCore.proxy.getClientSidePlayer() && bender.canWallJump()) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}

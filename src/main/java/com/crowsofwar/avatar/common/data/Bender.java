@@ -332,6 +332,7 @@ public abstract class Bender {
 					SoundCategory.PLAYERS, 1, 0.6f);
 
 			getData().getMiscData().setFallAbsorption(3);
+			getData().getMiscData().setWallJumping(true);
 
 		}
 
