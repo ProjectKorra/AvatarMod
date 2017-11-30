@@ -8,7 +8,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-
+import net.minecraft.util.math.MathHelper;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -42,32 +42,25 @@ public class AbilityCleanse extends Ability {
 
 			// Duration: 5-10s
 			int duration = abilityData.getLevel() < 2 ? 100 : 200;
+			int regenLevel = MathHelper.clamp(abilityData.getLevel(), 0, 2);
 
-			entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration));
 			abilityData.addXp(SKILLS_CONFIG.buffUsed);
 
-			if (abilityData.getLevel() == 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration));
-				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration));
-			}
+            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, regenLevel));
 
-			if (abilityData.getLevel() == 2) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration));
-				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration, 1));
+			if (abilityData.getLevel() >= 2) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, duration));
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, duration, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 0, 0));
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, 2));
-				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration, 1));
-				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, 1));
 			}
 
 			CleansePowerModifier modifier = new CleansePowerModifier();
