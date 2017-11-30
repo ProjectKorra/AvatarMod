@@ -231,7 +231,7 @@ avatar.ability.air_jump.lvl4_2=Ground pound ;; Attack nearby enemies on land
 
 avatar.ability.airblade=Airblade
 avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh. Can be deadly in quick succession.
-avatar.ability.airblade.lvl1=Base ability
+avatar.ability.airblade.lvl1=Slice n' Dice!
 avatar.ability.airblade.lvl2=Higher speeds and damage
 avatar.ability.airblade.lvl3=Can now cut blocks
 avatar.ability.airblade.lvl4_1=Chainblade ;; Bounces through multiple enemies
