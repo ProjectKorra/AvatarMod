@@ -6,9 +6,14 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -70,5 +75,38 @@ public class AbilityCleanse extends Ability {
 		}
 
 	}
+
+    /**
+     * Applies the given potion effect to all nearby players in the given range, excluding the
+     * caster. Range is in blocks.
+     */
+	private void applyGroupEffect(AbilityContext ctx, PotionEffect effect, int radius) {
+
+        World world = ctx.getWorld();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        AxisAlignedBB aabb = new AxisAlignedBB(
+                entity.posX - radius, entity.posY - radius, entity.posZ - radius,
+                entity.posX + radius, entity.posY + radius, entity.posZ + radius);
+
+        List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
+
+        for (EntityPlayer player : players) {
+
+        	// Initial aabb check was rectangular, need to check distance for truly circular radius
+            if (player.getDistanceSqToEntity(entity) > radius * radius) {
+				continue;
+            }
+
+            // Ignore the caster
+			if (player == entity) {
+            	continue;
+			}
+
+            player.addPotionEffect(effect);
+
+        }
+
+    }
+
 }
 
