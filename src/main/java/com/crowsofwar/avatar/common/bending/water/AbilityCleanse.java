@@ -51,6 +51,8 @@ public class AbilityCleanse extends Ability {
 
 			abilityData.addXp(SKILLS_CONFIG.buffUsed);
 
+			// Apply basic potion effects
+
             entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, regenLevel));
 
 			if (abilityData.getLevel() >= 2) {
@@ -68,7 +70,8 @@ public class AbilityCleanse extends Ability {
 				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, 1));
 			}
 
-			// Perform group heal
+			// Perform group heal?
+
 			if (abilityData.getLevel() >= 1) {
 
 				int groupLevel = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)
@@ -82,9 +85,13 @@ public class AbilityCleanse extends Ability {
 
 			}
 
+			// Apply power modifier
+
 			CleansePowerModifier modifier = new CleansePowerModifier();
 			modifier.setTicks(duration);
-			data.getPowerRatingManager(getBendingId()).addModifier(new CleansePowerModifier(), ctx);
+			// Ignore warning; we know they have the bending, so manager for that bending != null
+			//noinspection ConstantConditions
+			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 
 		}
 
