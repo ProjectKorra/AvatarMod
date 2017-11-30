@@ -40,22 +40,18 @@ public class AbilityCleanse extends Ability {
 
 		if (bender.consumeChi(chi)) {
 
-			float xp = SKILLS_CONFIG.buffUsed;
-
 			entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 100));
-			abilityData.addXp(xp);
+			abilityData.addXp(SKILLS_CONFIG.buffUsed);
 
 			if (abilityData.getLevel() == 1) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
 				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 100));
-				abilityData.addXp(xp);
 			}
 
 			if (abilityData.getLevel() == 2) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200));
 				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 200, 1));
 				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 100));
-				abilityData.addXp(xp);
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
