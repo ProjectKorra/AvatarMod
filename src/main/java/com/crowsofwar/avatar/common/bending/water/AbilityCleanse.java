@@ -68,6 +68,20 @@ public class AbilityCleanse extends Ability {
 				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, 1));
 			}
 
+			// Perform group heal
+			if (abilityData.getLevel() >= 1) {
+
+				int groupLevel = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)
+						? 1 : 0;
+				int groupDuration = abilityData.getLevel() == 3 ? 100 : 60;
+				int groupRadius = abilityData.getLevel() >= 2 ? 6 : 4;
+
+				PotionEffect effect = new PotionEffect(MobEffects.REGENERATION, groupDuration,
+						groupLevel);
+				applyGroupEffect(ctx, effect, groupRadius);
+
+			}
+
 			CleansePowerModifier modifier = new CleansePowerModifier();
 			modifier.setTicks(duration);
 			data.getPowerRatingManager(getBendingId()).addModifier(new CleansePowerModifier(), ctx);
