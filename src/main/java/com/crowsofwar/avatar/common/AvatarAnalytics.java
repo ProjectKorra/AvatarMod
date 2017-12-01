@@ -24,7 +24,7 @@ public class AvatarAnalytics {
 		try {
 
 			HttpClient httpclient = HttpClients.createDefault();
-			HttpPost httppost = new HttpPost("http://www.a-domain.com/foo/");
+			HttpPost httppost = new HttpPost(url);
 
 			// Request parameters and other properties.
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
