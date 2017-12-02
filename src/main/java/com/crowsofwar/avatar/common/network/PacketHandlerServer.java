@@ -121,7 +121,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		Bender bender = Bender.get(player);
 		if (bender != null) {
 			bender.executeAbility(packet.getAbility(), packet.getRaytrace());
-			AvatarAnalytics.pushEvent(getAbilityExecutionEvent(packet.getAbility().getName()));
+			AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(packet.getAbility().getName()));
 		}
 
 		return null;

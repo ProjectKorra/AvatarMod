@@ -27,7 +27,7 @@ public class AnalyticsManager {
 		}
 		if (e instanceof TickEvent.ClientTickEvent || e instanceof TickEvent.ServerTickEvent) {
 
-			int unsent = AvatarAnalytics.getUnsentEventsAmount();
+			int unsent = AvatarAnalytics.INSTANCE.getUnsentEventsAmount();
 
 			if (unsent >= 10) {
 				uploadEvents();
@@ -48,7 +48,7 @@ public class AnalyticsManager {
 
 	private static void uploadEvents() {
 		lastSendTime = System.currentTimeMillis();
-		AvatarAnalytics.uploadEvents();
+		AvatarAnalytics.INSTANCE.uploadEvents();
 		System.out.println("uploaded");
 	}
 
