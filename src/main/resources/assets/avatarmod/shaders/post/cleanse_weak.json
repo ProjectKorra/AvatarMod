@@ -1,0 +1,45 @@
+{
+    "targets": [
+        "swap"
+    ],
+    "passes": [
+        {
+            "name": "color_convolve",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "uniforms": [
+                {
+                    "name": "RedMatrix",
+                    "values": [ 0.8, 0.0, 0.0 ]
+                },
+                {
+                    "name": "GreenMatrix",
+                    "values": [ 0.0, 0.95, 0.0 ]
+                },
+                {
+                    "name": "BlueMatrix",
+                    "values": [ 0.0, 0.0, 1.0 ]
+                },
+                {
+                    "name": "Saturation",
+                    "values": [ 1.1 ]
+                }
+            ]
+        },
+        {
+            "name": "avatarmod:adrenaline",
+            "intarget": "swap",
+            "outtarget": "minecraft:main",
+            "uniforms": [
+                {
+                    "name": "BlurAmount",
+                    "values": [ 0.002 ]
+                },
+                {
+                    "name": "ColorMult",
+                    "values": [ 1.0, 1.1, 1.2 ]
+                }
+            ]
+        }
+    ]
+}
