@@ -2,15 +2,17 @@ package com.crowsofwar.avatar.common.analytics;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 
 public class AvatarAnalytics {
 
@@ -43,7 +45,7 @@ public class AvatarAnalytics {
 		post("https://www.google-analytics.com/collect", params);
 	}
 
-	private static void post(String url, Map<String, String> params) {
+	private static void post(String url, String... payloads) {
 
 		// https://stackoverflow.com/questions/3324717/sending-http-post-request-in-java
 
@@ -52,15 +54,12 @@ public class AvatarAnalytics {
 			HttpClient httpclient = HttpClients.createDefault();
 			HttpPost httppost = new HttpPost(url);
 
-			// Request parameters and other properties.
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-
-			Set<Map.Entry<String, String>> entries = params.entrySet();
-			for (Map.Entry<String, String> entry : entries) {
-				nameValuePairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+			String contents = "";
+			for (String payload : payloads) {
+				contents += payload + "\n";
 			}
 
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+			httppost.setEntity(new StringEntity(contents, ContentType.create("text/plain", "UTF-8")));
 
 			//Execute and get the response.
 			HttpResponse response = httpclient.execute(httppost);
