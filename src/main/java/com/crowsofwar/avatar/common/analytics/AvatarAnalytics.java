@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common;
+package com.crowsofwar.avatar.common.analytics;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
