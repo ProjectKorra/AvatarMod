@@ -1,13 +1,10 @@
 package com.crowsofwar.avatar.common.analytics;
 
-public enum AnalyticEvent {
-
-	TEST_1("test", "one"),
-	TEST_2("test", "two");
+public class AnalyticEvent {
 
 	private final String category, name;
 
-	AnalyticEvent(String category, String name) {
+	public AnalyticEvent(String category, String name) {
 		this.category = category;
 		this.name = name;
 	}
