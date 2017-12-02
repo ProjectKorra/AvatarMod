@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.analytics;
 
+import com.crowsofwar.avatar.common.config.ConfigClient;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -31,14 +32,18 @@ public class AnalyticsUtils {
 	 * Makes a request to the GA API
 	 */
 	public static void makeSingleApiRequest(String params) {
-		post("https://www.google-analytics.com/collect", params);
+		if (ConfigClient.CLIENT_CONFIG.enableAnalytics) {
+			post("https://www.google-analytics.com/collect", params);
+		}
 	}
 
 	/**
 	 * Makes a request to the GA API
 	 */
 	public static void makeBatchApiRequest(String params) {
-		post("https://www.google-analytics.com/batch", params);
+		if (ConfigClient.CLIENT_CONFIG.enableAnalytics) {
+			post("https://www.google-analytics.com/batch", params);
+		}
 	}
 
 	public static void post(String url, String payload) {

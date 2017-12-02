@@ -53,6 +53,9 @@ public class ConfigClient {
 	@Load
 	private Map<String, Boolean> nameConflicts = new HashMap<>();
 	public Map<Ability, Boolean> conflicts = new HashMap<>();
+
+	@Load
+	public boolean enableAnalytics = true;
 	
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
