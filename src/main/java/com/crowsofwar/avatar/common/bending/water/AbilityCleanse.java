@@ -14,6 +14,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -79,9 +80,9 @@ public class AbilityCleanse extends Ability {
 				int groupDuration = abilityData.getLevel() == 3 ? 100 : 60;
 				int groupRadius = abilityData.getLevel() >= 2 ? 6 : 4;
 
-				PotionEffect effect = new PotionEffect(MobEffects.REGENERATION, groupDuration,
+				PotionEffect groupEffect = new PotionEffect(MobEffects.REGENERATION, groupDuration,
 						groupLevel);
-				applyGroupEffect(ctx, effect, groupRadius);
+				applyGroupEffect(ctx, groupRadius, player -> player.addPotionEffect(groupEffect));
 
 			}
 
@@ -98,10 +99,10 @@ public class AbilityCleanse extends Ability {
 	}
 
     /**
-     * Applies the given potion effect to all nearby players in the given range, excluding the
+     * Applies the given effect to all nearby players in the given range, excluding the
      * caster. Range is in blocks.
      */
-	private void applyGroupEffect(AbilityContext ctx, PotionEffect effect, int radius) {
+	private void applyGroupEffect(AbilityContext ctx, int radius, Consumer<EntityPlayer> effect) {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
@@ -123,7 +124,7 @@ public class AbilityCleanse extends Ability {
             	continue;
 			}
 
-            player.addPotionEffect(effect);
+			effect.accept(player);
 
         }
 
