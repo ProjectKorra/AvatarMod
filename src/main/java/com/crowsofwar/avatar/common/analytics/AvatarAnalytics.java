@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.analytics;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.server.AvatarServerProxy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -41,6 +42,8 @@ public class AvatarAnalytics {
 		params += "&cd3=" + language;
 		params += "&cd2=" + AvatarMod.proxy.isOptifinePresent();
 		params += "&cm1=" + mods;
+		params += "&an=av2";
+		params += "&av=" + AvatarInfo.VERSION;
 		params += "&sc=start";
 
 		AnalyticsUtils.makeSingleApiRequest(params);
