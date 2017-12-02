@@ -34,6 +34,7 @@ public class EventAnalytics {
 	public void uploadEvents() {
 		AnalyticEvent[] queuedEventsArray = queuedEvents.toArray(new AnalyticEvent[0]);
 		sendEvents(queuedEventsArray);
+		queuedEvents.clear();
 	}
 
 	/**
