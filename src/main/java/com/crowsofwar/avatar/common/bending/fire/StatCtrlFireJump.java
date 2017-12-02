@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -96,8 +97,12 @@ public class StatCtrlFireJump extends StatusControl {
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
 			data.addTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER);
-			data.addTickHandler(abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST) ?
-					TickHandler.SMASH_GROUND_FIRE : TickHandler.SMASH_GROUND_FIRE_BIG);
+			data.addTickHandler(abilityData.getLevel() >= 2 ?
+					TickHandler.SMASH_GROUND_FIRE_BIG : TickHandler.SMASH_GROUND_FIRE);
+
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damageNearbyEntities(ctx, 5, 3);
+			}
 
 			abilityData.addXp(STATS_CONFIG.chiAirJump);
 
@@ -109,6 +114,30 @@ public class StatCtrlFireJump extends StatusControl {
 		}
 
 		return false;
+
+	}
+
+	private void damageNearbyEntities(BendingContext ctx, double range, double speed) {
+
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		World world = entity.world;
+		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
+				entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
+
+		List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+		for (EntityLivingBase target : nearby) {
+			if (target != entity) {
+				target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), 5);
+
+				Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
+				velocity = velocity.withY(1).times(speed / 20);
+				target.addVelocity(velocity.x(), velocity.y(), velocity.z());
+
+				target.setFire(3);
+
+			}
+		}
 
 	}
 
