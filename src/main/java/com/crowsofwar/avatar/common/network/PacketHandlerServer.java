@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.network;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -50,6 +51,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.analytics.AnalyticEvents.getAbilityExecutionEvent;
 
 /**
  * Implements IPacketHandler. Acts as a packet handler for integrated and
@@ -118,6 +121,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		Bender bender = Bender.get(player);
 		if (bender != null) {
 			bender.executeAbility(packet.getAbility(), packet.getRaytrace());
+			AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(packet.getAbility().getName()));
 		}
 
 		return null;

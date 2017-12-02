@@ -17,7 +17,11 @@
 
 package com.crowsofwar.avatar;
 
-import com.crowsofwar.avatar.common.*;
+import com.crowsofwar.avatar.common.AvatarChatMessages;
+import com.crowsofwar.avatar.common.AvatarCommonProxy;
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.AvatarPlayerTick;
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
@@ -29,7 +33,10 @@ import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
-import com.crowsofwar.avatar.common.bending.lightning.*;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRedirect;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
@@ -86,7 +93,7 @@ public class AvatarMod {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
-		
+
 		AvatarLog.log = e.getModLog();
 		
 		ConfigStats.load();
@@ -142,7 +149,7 @@ public class AvatarMod {
 		
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
 		});
-		
+
 	}
 	
 	@EventHandler
@@ -193,7 +200,7 @@ public class AvatarMod {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-		
+		AvatarAnalytics.INSTANCE.init();
 	}
 	
 	@EventHandler

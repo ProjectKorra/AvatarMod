@@ -24,6 +24,7 @@ import com.crowsofwar.gorecore.config.Load;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * 
@@ -53,6 +54,12 @@ public class ConfigClient {
 	@Load
 	private Map<String, Boolean> nameConflicts = new HashMap<>();
 	public Map<Ability, Boolean> conflicts = new HashMap<>();
+
+	@Load
+	public boolean enableAnalytics = true;
+
+	@Load
+	private String analyticsId = UUID.randomUUID().toString();
 	
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
@@ -103,5 +110,26 @@ public class ConfigClient {
 		
 		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
 	}
-	
+
+	public UUID getAnalyticsId() {
+
+		UUID id;
+
+		try {
+
+			id = UUID.fromString(analyticsId);
+
+		} catch (IllegalArgumentException e) {
+
+			id = UUID.randomUUID();
+			analyticsId = id.toString();
+
+		}
+
+		return id;
+
+	}
+
+
+
 }
