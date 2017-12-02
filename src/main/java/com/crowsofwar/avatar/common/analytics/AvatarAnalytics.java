@@ -14,8 +14,25 @@ import java.util.*;
 
 public class AvatarAnalytics {
 
+	private static final Queue<AnalyticEvent> events = new LinkedList<>();
+
+	public static void pushEvent(AnalyticEvent event) {
+		events.add(event);
+	}
+
+	public static void sendEvents() {
+		while (!events.isEmpty()) {
+			sendEvent(events.poll());
+		}
+	}
+
 	public static void main(String[] args) {
 
+
+
+	}
+
+	private void sendEvent(AnalyticEvent event) {
 		Map<String, String> params = new HashMap<>();
 		params.put("v", "1");
 		params.put("tid", "UA-110529537-1");
@@ -24,7 +41,6 @@ public class AvatarAnalytics {
 		params.put("ec", "test_desktop");
 		params.put("ea", "test1");
 		post("https://www.google-analytics.com/collect", params);
-
 	}
 
 	private static void post(String url, Map<String, String> params) {
