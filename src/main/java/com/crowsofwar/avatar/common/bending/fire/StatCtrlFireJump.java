@@ -50,15 +50,15 @@ public class StatCtrlFireJump extends StatusControl {
 		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
 
 			int lvl = abilityData.getLevel();
-			double multiplier = 0.75;
+			double jumpMultiplier = 0.75;
 			if (lvl >= 1) {
-				multiplier = 1.1;
+				jumpMultiplier = 0.7;
 			}
 			if (lvl >= 2) {
-				multiplier = 1.3;
+				jumpMultiplier = 0.9;
 			}
 			if (lvl >= 3) {
-				multiplier = 1.5;
+				jumpMultiplier = 1.1;
 			}
 
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
@@ -66,7 +66,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 			Vector velocity = rotations.toRectangular();
 			velocity = velocity.withY(Math.pow(velocity.y(), .1));
-			velocity = velocity.times(multiplier);
+			velocity = velocity.times(jumpMultiplier);
 			if (!onGround) {
 				velocity = velocity.times(1);
 				entity.motionX = 0;
