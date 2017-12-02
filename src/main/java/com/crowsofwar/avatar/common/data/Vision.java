@@ -45,7 +45,7 @@ public enum Vision {
 	 */
 	RESTORE_POWERFUL("shaders/post/restore_powerful.json"),
 
-	CLEANSE("shaders/post/cleanse.json");
+	CLEANSE("shaders/post/cleanse_medium.json");
 
 	private final ResourceLocation shaderLocation;
 
