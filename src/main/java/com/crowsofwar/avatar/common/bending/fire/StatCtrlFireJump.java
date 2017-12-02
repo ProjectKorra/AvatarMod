@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -48,7 +49,7 @@ public class StatCtrlFireJump extends StatusControl {
 				entity.getEntityBoundingBox().grow(0, 0.5, 0));
 		boolean onGround = !collideWithGround.isEmpty();
 
-		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
+		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiFireJump))) {
 
 			int lvl = abilityData.getLevel();
 			double jumpMultiplier = 0.75;
@@ -104,7 +105,7 @@ public class StatCtrlFireJump extends StatusControl {
 				damageNearbyEntities(ctx, 5, 3);
 			}
 
-			abilityData.addXp(STATS_CONFIG.chiAirJump);
+			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
 					SoundCategory.PLAYERS, 1, .7f);
