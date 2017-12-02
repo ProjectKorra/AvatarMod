@@ -1,19 +1,15 @@
 package com.crowsofwar.avatar.common.analytics;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 
-import java.io.InputStream;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class AvatarAnalytics {
+public class EventAnalytics {
 
 	public static final String GA_TRACKING_ID = "UA-110529537-1";
 	public static final String GA_CLIENT_ID = "1";
@@ -23,37 +19,36 @@ public class AvatarAnalytics {
 	 */
 	public static final int MAX_BULK_EVENTS = 20;
 
-	private static final Queue<AnalyticEvent> queuedEvents = new LinkedList<>();
+	private final Queue<AnalyticEvent> queuedEvents = new LinkedList<>();
 
-	public static void pushEvent(AnalyticEvent event) {
+	/**
+	 * Adds the given events to the queue to be sent later.
+	 */
+	public void pushEvent(AnalyticEvent event) {
 		queuedEvents.add(event);
 	}
 
-	public static void pushEvents(AnalyticEvent... events) {
+	/**
+	 * Adds the given events to the queue to be sent later.
+	 */
+	public void pushEvents(AnalyticEvent... events) {
 		for (AnalyticEvent event : events) {
 			queuedEvents.add(event);
 		}
 	}
 
-	public static void sendEvents() {
-		while (!queuedEvents.isEmpty()) {
-			sendEvent(queuedEvents.poll());
-		}
+	/**
+	 * Sends all currently queued events to the server
+	 */
+	public void uploadEvents() {
+		AnalyticEvent[] queuedEventsArray = queuedEvents.toArray(new AnalyticEvent[0]);
+		sendEvents(queuedEventsArray);
 	}
 
-	public static void main(String[] args) {
-
-
-		AnalyticEvent[] events = new AnalyticEvent[30];
-		Arrays.fill(events, AnalyticEvent.TEST_1);
-		sendEvents(events);
-//		pushEvents(AnalyticEvent.TEST_1, AnalyticEvent.TEST_2);
-
-//		post("https://www.google-analytics.com/batch", "v=1&t=event&tid=UA-110529537-1&cid=3&ec=category&ea=actionmoviehero", "v=1&t=event&tid=UA-110529537-1&cid=3&ec=category&ea=actionmoviehero2");
-
-	}
-
-	private static String getEventParameters(AnalyticEvent event) {
+	/**
+	 * Gets the appropriate parameters to use when sending the event to google
+	 */
+	private String getEventParameters(AnalyticEvent event) {
 		String params = "v=1";
 		params += "&tid=" + GA_TRACKING_ID;
 		params += "&cid=" + GA_CLIENT_ID;
@@ -63,14 +58,10 @@ public class AvatarAnalytics {
 		return params;
 	}
 
-	private static void sendEvent(AnalyticEvent event) {
-		post("https://www.google-analytics.com/collect", getEventParameters(event));
-	}
-
 	/**
-	 * @return the amount of events that were unsent
+	 * Sends the given events to the server through an HTTP post request.
 	 */
-	private static void sendEvents(AnalyticEvent... events) {
+	private void sendEvents(AnalyticEvent... events) {
 
 		// Must only allow up to MAX_BULK_EVENTS in each POST request, which results in this
 		// algorithm
@@ -106,34 +97,18 @@ public class AvatarAnalytics {
 
 	}
 
-	private static void post(String url, String... payloads) {
+	private void post(String url, String payload) {
 
 		// https://stackoverflow.com/questions/3324717/sending-http-post-request-in-java
 
 		try {
 
-			HttpClient httpclient = HttpClients.createDefault();
-			HttpPost httppost = new HttpPost(url);
+			HttpClient client = HttpClients.createDefault();
+			HttpPost post = new HttpPost(url);
 
-			String contents = "";
-			for (String payload : payloads) {
-				contents += payload + "\n";
-			}
+			post.setEntity(new StringEntity(payload, ContentType.create("text/plain", "UTF-8")));
 
-			httppost.setEntity(new StringEntity(contents, ContentType.create("text/plain", "UTF-8")));
-
-			//Execute and get the response.
-			HttpResponse response = httpclient.execute(httppost);
-			HttpEntity entity = response.getEntity();
-
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				try {
-					// do something useful
-				} finally {
-					instream.close();
-				}
-			}
+			client.execute(post);
 
 		} catch (Exception e) {
 			e.printStackTrace();
