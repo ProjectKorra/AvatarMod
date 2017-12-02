@@ -6,13 +6,15 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 
+import java.util.UUID;
+
 /**
  * @author CrowsOfWar
  */
 public class AnalyticsUtils {
 
 	public static final String GA_TRACKING_ID = "UA-110529537-1";
-	public static final String GA_CLIENT_ID = "1";
+	public static final String GA_CLIENT_ID = UUID.randomUUID().toString();
 
 	/**
 	 * Gets the basic parameters to be sent in any GA API request. Then other parameters can be
