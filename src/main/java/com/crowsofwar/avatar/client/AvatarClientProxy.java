@@ -55,6 +55,7 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -239,6 +240,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public void registerItemModels() {
 		AvatarItemRenderRegister.register();
+	}
+
+	@Override
+	public boolean isOptifinePresent() {
+		return FMLClientHandler.instance().hasOptifine();
 	}
 
 	/**

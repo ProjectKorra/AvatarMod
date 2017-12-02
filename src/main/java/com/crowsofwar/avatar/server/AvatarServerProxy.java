@@ -86,4 +86,9 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	@Override
 	public void registerItemModels() {}
 
+	@Override
+	public boolean isOptifinePresent() {
+		return false;
+	}
+
 }

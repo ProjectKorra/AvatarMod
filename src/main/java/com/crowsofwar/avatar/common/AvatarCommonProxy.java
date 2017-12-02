@@ -97,4 +97,6 @@ public interface AvatarCommonProxy {
 	 */
 	public void registerItemModels();
 
+	boolean isOptifinePresent();
+
 }
