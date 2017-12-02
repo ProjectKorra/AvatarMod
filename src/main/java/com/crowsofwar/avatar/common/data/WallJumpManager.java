@@ -59,7 +59,7 @@ public class WallJumpManager {
 			world.playSound(null, new BlockPos(entity), block.getSoundType().getBreakSound(),
 					SoundCategory.PLAYERS, 1, 0.6f);
 
-			bender.getData().getMiscData().setFallAbsorption(3);
+			bender.getData().getMiscData().addFallAbsorption(3);
 			bender.getData().getMiscData().setWallJumping(true);
 
 		}
