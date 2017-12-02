@@ -11,11 +11,11 @@
             "uniforms": [
                 {
                     "name": "RedMatrix",
-                    "values": [ 0.5, 0.0, 0.0 ]
+                    "values": [ 0.7, 0.0, 0.0 ]
                 },
                 {
                     "name": "GreenMatrix",
-                    "values": [ 0.0, 0.7, 0.0 ]
+                    "values": [ 0.0, 0.9, 0.0 ]
                 },
                 {
                     "name": "BlueMatrix",
@@ -23,7 +23,7 @@
                 },
                 {
                     "name": "Saturation",
-                    "values": [ 1.0 ]
+                    "values": [ 1.2 ]
                 }
             ]
         },
@@ -35,17 +35,21 @@
                 {
                     "name": "BlurAmount",
                     "values": [ 0.005 ]
+                },
+                {
+                    "name": "ColorMult",
+                    "values": [ 1.0, 1.2, 1.4 ]
                 }
             ]
         },
         {
-            "name": "avatarmod:fisheye",
+            "name": "avatarmod:radial_deconverge",
             "intarget": "swap2",
             "outtarget": "minecraft:main",
             "uniforms": [
                 {
-                    "name": "Amount",
-                    "values": [ -0.2 ]
+                    "name": "CoordModifyX",
+                    "values": [ 0.0, 0.0, 0.0001 ]
                 }
             ]
         }
