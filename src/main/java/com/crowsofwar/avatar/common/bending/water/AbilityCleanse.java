@@ -83,6 +83,7 @@ public class AbilityCleanse extends Ability {
 				PotionEffect groupEffect = new PotionEffect(MobEffects.REGENERATION, groupDuration,
 						groupLevel);
 				applyGroupEffect(ctx, groupRadius, player -> player.addPotionEffect(groupEffect));
+				applyGroupEffect(ctx, groupRadius, this::addChiBonus);
 
 			}
 
@@ -129,6 +130,18 @@ public class AbilityCleanse extends Ability {
         }
 
     }
+
+	/**
+	 * Grants the player a chi bonus
+	 */
+	private void addChiBonus(EntityPlayer player) {
+
+		BendingData data = BendingData.get(player);
+		data.chi().changeTotalChi(STATS_CONFIG.cleanseChiGroupBonus);
+		data.chi().changeAvailableChi(STATS_CONFIG.cleanseChiGroupBonus);
+
+	}
+
 
 }
 

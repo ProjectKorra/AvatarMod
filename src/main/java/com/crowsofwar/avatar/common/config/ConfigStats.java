@@ -111,6 +111,9 @@ public class ConfigStats {
 	public boolean preventPickupBlockGriefing = false;
 
 	@Load
+	public float cleanseChiGroupBonus = 2f;
+
+	@Load
 	public List<String> sandBlocksNames = Arrays.asList(
 			"minecraft:sand",
 			"minecraft:gravel");
