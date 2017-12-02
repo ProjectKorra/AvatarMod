@@ -35,16 +35,20 @@ public class AvatarAnalytics {
 
 	}
 
-	public void pushEvent(AnalyticEvent event) {
-		events.pushEvent(event);
+	public static void pushEvent(AnalyticEvent event) {
+		INSTANCE.events.pushEvent(event);
 	}
 
-	public void uploadEvents() {
-		events.uploadEvents();
+	public static void uploadEvents() {
+		INSTANCE.events.uploadEvents();
 	}
 
-	public void pushEvents(AnalyticEvent... events) {
-		this.events.pushEvents(events);
+	public static void pushEvents(AnalyticEvent... events) {
+		INSTANCE.events.pushEvents(events);
+	}
+
+	public static int getUnsentEventsAmount() {
+		return INSTANCE.events.getUnsentEventsAmount();
 	}
 
 }

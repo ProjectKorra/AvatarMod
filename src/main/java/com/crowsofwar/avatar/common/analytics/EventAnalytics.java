@@ -37,6 +37,13 @@ public class EventAnalytics {
 	}
 
 	/**
+	 * Get the amount of unset events
+	 */
+	public int getUnsentEventsAmount() {
+		return queuedEvents.size();
+	}
+
+	/**
 	 * Gets the appropriate parameters to use when sending the event to google
 	 */
 	private String getEventParameters(AnalyticEvent event) {
