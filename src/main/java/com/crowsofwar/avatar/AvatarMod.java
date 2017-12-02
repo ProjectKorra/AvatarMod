@@ -150,8 +150,6 @@ public class AvatarMod {
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
 		});
 
-		AvatarAnalytics.INSTANCE.init();
-		
 	}
 	
 	@EventHandler
@@ -202,7 +200,7 @@ public class AvatarMod {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-		
+		AvatarAnalytics.INSTANCE.init();
 	}
 	
 	@EventHandler
