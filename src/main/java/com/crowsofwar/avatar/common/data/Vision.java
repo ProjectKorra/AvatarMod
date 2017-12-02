@@ -44,8 +44,18 @@ public enum Vision {
 	 * Restore vision for level IV
 	 */
 	RESTORE_POWERFUL("shaders/post/restore_powerful.json"),
-
-	CLEANSE("shaders/post/cleanse_medium.json");
+	/**
+	 * Cleanse vision for level I-II
+	 */
+	CLEANSE_WEAK("shaders/post/cleanse_weak.json"),
+	/**
+	 * Cleanse vision for level III
+	 */
+	CLEANSE_MEDIUM("shaders/post/cleanse_medium.json"),
+	/**
+	 * Cleanse vision for level IV
+	 */
+	CLEANSE_POWERFUL("shaders/post/cleanse_powerful.json");
 
 	private final ResourceLocation shaderLocation;
 

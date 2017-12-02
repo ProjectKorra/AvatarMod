@@ -31,7 +31,19 @@ public class CleansePowerModifier extends PowerRatingModifier {
 	 * appropriate vision to be used for the current level.
 	 */
 	private Vision getVision(BendingContext ctx) {
-		return Vision.CLEANSE;
+
+		AbilityData abilityData = ctx.getData().getAbilityData("cleanse");
+		switch (abilityData.getLevel()) {
+			case 0:
+			case 1:
+				return Vision.CLEANSE_WEAK;
+			case 2:
+				return Vision.CLEANSE_MEDIUM;
+			case 3:
+			default:
+				return Vision.CLEANSE_POWERFUL;
+		}
+
 	}
 
 	@Override
