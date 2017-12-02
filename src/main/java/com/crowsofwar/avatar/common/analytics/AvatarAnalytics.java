@@ -9,6 +9,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,6 +17,11 @@ public class AvatarAnalytics {
 
 	public static final String GA_TRACKING_ID = "UA-110529537-1";
 	public static final String GA_CLIENT_ID = "1";
+
+	/**
+	 * Maximum amount of events that can be sent in bulk
+	 */
+	public static final int MAX_BULK_EVENTS = 20;
 
 	private static final Queue<AnalyticEvent> queuedEvents = new LinkedList<>();
 
@@ -38,6 +44,15 @@ public class AvatarAnalytics {
 	public static void main(String[] args) {
 
 
+		AnalyticEvent[] events = new AnalyticEvent[30];
+		Arrays.fill(events, AnalyticEvent.TEST_1);
+		sendEvents(events);
+//		pushEvents(AnalyticEvent.TEST_1, AnalyticEvent.TEST_2);
+
+//		post("https://www.google-analytics.com/batch", "v=1&t=event&tid=UA-110529537-1&cid=3&ec=category&ea=actionmoviehero", "v=1&t=event&tid=UA-110529537-1&cid=3&ec=category&ea=actionmoviehero2");
+
+	}
+
 	private static String getEventParameters(AnalyticEvent event) {
 		String params = "v=1";
 		params += "&tid=" + GA_TRACKING_ID;
@@ -52,12 +67,43 @@ public class AvatarAnalytics {
 		post("https://www.google-analytics.com/collect", getEventParameters(event));
 	}
 
+	/**
+	 * @return the amount of events that were unsent
+	 */
 	private static void sendEvents(AnalyticEvent... events) {
-		String params = "";
-		for (AnalyticEvent event : events) {
-			params += getEventParameters(event) + "\n";
+
+		// Must only allow up to MAX_BULK_EVENTS in each POST request, which results in this
+		// algorithm
+		// In each "round", i.e. execution of while loop, one batch request is sent, containing
+		// several of the events, up to MAX_BULK_EVENTS.
+		// Keep track of
+		// 1) Total events sent so far (sentEvents); needed to keep track of overall which events
+		//    still need sending
+		// 2) Events sent in this round (sentHere); lets us know when to end the round (once
+		//    MAX_BULK_EVENTS has been reached)
+
+		int sentEvents = 0;
+
+		while (events.length - sentEvents > 0) {
+
+			String params = "";
+			int sentHere = 0;
+			for (; sentEvents < events.length && sentHere < MAX_BULK_EVENTS; sentHere++) {
+
+				params += getEventParameters(events[sentEvents]) + "\n";
+				sentEvents++;
+
+			}
+
+			// In case there's only 1 being sent, just use regular endpoint
+			String url = sentHere == 1 ? "https://www.google-analytics.com/collect"
+					: "https://www.google-analytics.com/batch";
+
+			post(url, params);
+
 		}
-		post("https://www.google-analytics.com/batch", params);
+
+
 	}
 
 	private static void post(String url, String... payloads) {
