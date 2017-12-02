@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -47,18 +49,18 @@ public class StatCtrlFireJump extends StatusControl {
 				entity.getEntityBoundingBox().grow(0, 0.5, 0));
 		boolean onGround = !collideWithGround.isEmpty();
 
-		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
+		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiFireJump))) {
 
 			int lvl = abilityData.getLevel();
-			double multiplier = 0.75;
+			double jumpMultiplier = 0.75;
 			if (lvl >= 1) {
-				multiplier = 1.1;
+				jumpMultiplier = 0.7;
 			}
 			if (lvl >= 2) {
-				multiplier = 1.3;
+				jumpMultiplier = 0.9;
 			}
 			if (lvl >= 3) {
-				multiplier = 1.5;
+				jumpMultiplier = 1.1;
 			}
 
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
@@ -66,7 +68,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 			Vector velocity = rotations.toRectangular();
 			velocity = velocity.withY(Math.pow(velocity.y(), .1));
-			velocity = velocity.times(multiplier);
+			velocity = velocity.times(jumpMultiplier);
 			if (!onGround) {
 				velocity = velocity.times(1);
 				entity.motionX = 0;
@@ -96,10 +98,14 @@ public class StatCtrlFireJump extends StatusControl {
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
 			data.addTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER);
-			data.addTickHandler(abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST) ?
-					TickHandler.SMASH_GROUND_FIRE : TickHandler.SMASH_GROUND_FIRE_BIG);
+			data.addTickHandler(abilityData.getLevel() >= 2 ?
+					TickHandler.SMASH_GROUND_FIRE_BIG : TickHandler.SMASH_GROUND_FIRE);
 
-			abilityData.addXp(STATS_CONFIG.chiAirJump);
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damageNearbyEntities(ctx, 5, 3);
+			}
+
+			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
 					SoundCategory.PLAYERS, 1, .7f);
@@ -109,6 +115,30 @@ public class StatCtrlFireJump extends StatusControl {
 		}
 
 		return false;
+
+	}
+
+	private void damageNearbyEntities(BendingContext ctx, double range, double speed) {
+
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		World world = entity.world;
+		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
+				entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
+
+		List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+		for (EntityLivingBase target : nearby) {
+			if (target != entity) {
+				target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), 5);
+
+				Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
+				velocity = velocity.withY(1).times(speed / 20);
+				target.addVelocity(velocity.x(), velocity.y(), velocity.z());
+
+				target.setFire(3);
+
+			}
+		}
 
 	}
 

@@ -89,7 +89,8 @@ public class ConfigStats {
 			chiIceShieldCreate = 4,
 			chiIceShieldProtect = 0.15f,
 			chiSandstorm = 3f,
-			chiWaterCannon = 5f;
+			chiWaterCannon = 5f,
+			chiFireJump = 2f;
 	// @formatter:on
 
 	@Load

@@ -40,6 +40,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -123,7 +124,7 @@ public class StatCtrlAirJump extends StatusControl {
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
 				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}
-			abilityData.addXp(STATS_CONFIG.chiAirJump);
+			abilityData.addXp(SKILLS_CONFIG.airJump);
 			
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);

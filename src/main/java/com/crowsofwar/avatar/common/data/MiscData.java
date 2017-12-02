@@ -103,6 +103,11 @@ public class MiscData {
 		if (fallAbsorption == 0 || fallAbsorption > this.fallAbsorption) this.fallAbsorption = fallAbsorption;
 	}
 
+	public void addFallAbsorption(float fallAbsorption) {
+		if (fallAbsorption < 0) fallAbsorption = 0;
+		this.fallAbsorption += fallAbsorption;
+	}
+
 	public int getTimeInAir() {
 		return timeInAir;
 	}
