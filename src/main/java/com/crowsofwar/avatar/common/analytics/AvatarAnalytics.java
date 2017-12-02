@@ -9,12 +9,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 public class AvatarAnalytics {
+
+	public static final String GA_TRACKING_ID = "UA-110529537-1";
+	public static final String GA_CLIENT_ID = "1";
 
 	private static final Queue<AnalyticEvent> events = new LinkedList<>();
 
@@ -31,18 +32,26 @@ public class AvatarAnalytics {
 	public static void main(String[] args) {
 
 
-
+	private static String getEventParameters(AnalyticEvent event) {
+		String params = "v=1";
+		params += "&tid=" + GA_TRACKING_ID;
+		params += "&cid=" + GA_CLIENT_ID;
+		params += "&t=event";
+		params += "&ec=" + event.getCategory();
+		params += "&ea=" + event.getAction();
+		return params;
 	}
 
-	private void sendEvent(AnalyticEvent event) {
-		Map<String, String> params = new HashMap<>();
-		params.put("v", "1");
-		params.put("tid", "UA-110529537-1");
-		params.put("cid", "2");
-		params.put("t", "event");
-		params.put("ec", "test_desktop");
-		params.put("ea", "test1");
-		post("https://www.google-analytics.com/collect", params);
+	private static void sendEvent(AnalyticEvent event) {
+		post("https://www.google-analytics.com/collect", getEventParameters(event));
+	}
+
+	private static void sendEvents(AnalyticEvent... events) {
+		String params = "";
+		for (AnalyticEvent event : events) {
+			params += getEventParameters(event) + "\n";
+		}
+		post("https://www.google-analytics.com/batch", params);
 	}
 
 	private static void post(String url, String... payloads) {

@@ -12,4 +12,12 @@ public enum AnalyticEvent {
 		this.name = name;
 	}
 
+	public String getCategory() {
+		return category;
+	}
+
+	public String getAction() {
+		return name;
+	}
+
 }
