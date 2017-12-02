@@ -17,15 +17,21 @@ public class AvatarAnalytics {
 	public static final String GA_TRACKING_ID = "UA-110529537-1";
 	public static final String GA_CLIENT_ID = "1";
 
-	private static final Queue<AnalyticEvent> events = new LinkedList<>();
+	private static final Queue<AnalyticEvent> queuedEvents = new LinkedList<>();
 
 	public static void pushEvent(AnalyticEvent event) {
-		events.add(event);
+		queuedEvents.add(event);
+	}
+
+	public static void pushEvents(AnalyticEvent... events) {
+		for (AnalyticEvent event : events) {
+			queuedEvents.add(event);
+		}
 	}
 
 	public static void sendEvents() {
-		while (!events.isEmpty()) {
-			sendEvent(events.poll());
+		while (!queuedEvents.isEmpty()) {
+			sendEvent(queuedEvents.poll());
 		}
 	}
 
