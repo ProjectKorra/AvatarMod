@@ -38,7 +38,25 @@ public class AvatarAnalytics {
 		params += "&cdIsServer=" + isServer;
 		params += "&cdLanguage=" + language;
 		params += "&cdIsOptifine=" + AvatarMod.proxy.isOptifinePresent();
+		params += "&sc=start";
 
+		AnalyticsUtils.makeSingleApiRequest(params);
+
+		Runtime.getRuntime().addShutdownHook(new Thread(AvatarAnalytics.INSTANCE::onExit));
+
+	}
+
+	/**
+	 * Called when Minecraft is exited, to send statistics/information on shutdown
+	 */
+	public void onExit() {
+
+		// Send sessionTime metric to google
+		String params = AnalyticsUtils.getBasicParameters();
+		params += "&t=event";
+		params += "&ec=userstats";
+		params += "&ea=userstats_end";
+		params += "&sc=end";
 		AnalyticsUtils.makeSingleApiRequest(params);
 
 	}
