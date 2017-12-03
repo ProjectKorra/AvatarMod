@@ -32,6 +32,13 @@ import javax.annotation.Nullable;
 public class AvatarDamageSource {
 
 	/**
+	 * Returns whether the given damage was inflicted using an Avatar damage source.
+	 */
+	public static boolean isAvatarDamageSource(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_");
+	}
+
+	/**
 	 * Create a DamageSource for damage caused by a floating block.
 	 *
 	 * @param hit   Who was hit by floating block

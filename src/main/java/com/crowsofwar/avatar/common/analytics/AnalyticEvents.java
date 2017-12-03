@@ -20,8 +20,8 @@ public class AnalyticEvents {
 	/**
 	 * Event to be used when a player kills another player with an ability
 	 */
-	public static AnalyticEvent onPvpKillWithAbility(String abilityName, String levelDesc) {
-		return new AnalyticEvent("Killed", "player > player", abilityName + " " + levelDesc);
+	public static AnalyticEvent onPvpKillWithAbility(String damageSourceName) {
+		return new AnalyticEvent("Killed", "player > player", damageSourceName);
 	}
 
 	/**
