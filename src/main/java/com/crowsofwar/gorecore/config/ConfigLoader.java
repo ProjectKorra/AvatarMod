@@ -84,8 +84,15 @@ public class ConfigLoader {
 	 * config files.
 	 */
 	private final boolean ignoreConfigFile;
-	
-	private ConfigLoader(String path, Object obj, Map<String, ?> data, boolean ignoreConfigFile) {
+
+	/**
+	 * See {@link #ignoreConfigFile}. If this is true, the config file will never be ignored, and
+	 * the IGNORE_CONFIG_FILE key will not be present.
+	 */
+	private final boolean neverIgnoreConfig;
+
+	private ConfigLoader(String path, Object obj, Map<String, ?> data, boolean ignoreConfigFile,
+						 boolean neverIgnoreConfig) {
 		this.path = path;
 		this.obj = obj;
 		this.data = data == null ? new HashMap<>() : data;
@@ -93,6 +100,7 @@ public class ConfigLoader {
 		this.representer = new Representer();
 		this.classTags = new ArrayList<>();
 		this.ignoreConfigFile = ignoreConfigFile;
+		this.neverIgnoreConfig = neverIgnoreConfig;
 	}
 	
 	/**
@@ -295,7 +303,7 @@ public class ConfigLoader {
 				loadedObject = to.newInstance();
 				
 				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name),
-						this.ignoreConfigFile);
+						this.ignoreConfigFile, this.neverIgnoreConfig);
 				loader.load();
 				usedValues.put(name, loader.dump());
 				
@@ -343,14 +351,16 @@ public class ConfigLoader {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config/" + path)));
 			
 			String write = "";
-			if (ignoreConfigFile) {
-				write += "# WARNING : Any changes to this config file will not take effect!!\n";
-				write += "# To fix this, set 'IGNORE_CONFIG_FILE: true' --> 'IGNORE_CONFIG_FILE: false'\n";
-				write += "# This was done to prevent default values in new versions from being overriden\n";
-				write += "# by outdated config files. By doing this, you will no longer recieve any new\n";
-				write += "# config defaults...\n\n";
+			if (!neverIgnoreConfig) {
+				if (ignoreConfigFile) {
+					write += "# WARNING : Any changes to this config file will not take effect!!\n";
+					write += "# To fix this, set 'IGNORE_CONFIG_FILE: true' --> 'IGNORE_CONFIG_FILE: false'\n";
+					write += "# This was done to prevent default values in new versions from being overriden\n";
+					write += "# by outdated config files. By doing this, you will no longer recieve any new\n";
+					write += "# config defaults...\n\n";
+				}
+				write += "IGNORE_CONFIG_FILE: " + ignoreConfigFile + "\n\n";
 			}
-			write += "IGNORE_CONFIG_FILE: " + ignoreConfigFile + "\n\n";
 			write += dump();
 			write = write.replace("\n", System.getProperty("line.separator"));
 			
@@ -423,7 +433,7 @@ public class ConfigLoader {
 	 * @see #load(Object, String, boolean)
 	 */
 	public static void load(Object obj, String path) {
-		load(obj, path, true);
+		load(obj, path, false);
 	}
 
 	/**
@@ -467,7 +477,7 @@ public class ConfigLoader {
 
 		}
 
-		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting);
+		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting, neverIgnoreConfig);
 		loader.load();
 		loader.save();
 	}
@@ -484,7 +494,7 @@ public class ConfigLoader {
 				}
 			}
 			
-			ConfigLoader loader = new ConfigLoader(path, obj, map, false);
+			ConfigLoader loader = new ConfigLoader(path, obj, map, false, false);
 			loader.usedValues.putAll(map);
 			loader.save();
 			
