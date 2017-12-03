@@ -107,6 +107,7 @@ public class AvatarAnalytics {
 		params += "&t=event";
 		params += "&ec=" + event.getCategory();
 		params += "&ea=" + event.getAction();
+		params += "&qt=" + (System.currentTimeMillis() - event.getCreationTime());
 		return params;
 	}
 

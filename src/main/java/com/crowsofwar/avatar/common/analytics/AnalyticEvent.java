@@ -12,11 +12,13 @@ package com.crowsofwar.avatar.common.analytics;
 public class AnalyticEvent {
 
 	private final String category, name;
+	private final long creationTime;
 
 	// To be obtained with AnalyticEvents
 	AnalyticEvent(String category, String name) {
 		this.category = category;
 		this.name = name;
+		this.creationTime = System.currentTimeMillis();
 	}
 
 	public String getCategory() {
@@ -25,6 +27,10 @@ public class AnalyticEvent {
 
 	public String getAction() {
 		return name;
+	}
+
+	public long getCreationTime() {
+		return creationTime;
 	}
 
 }
