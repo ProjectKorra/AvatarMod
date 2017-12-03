@@ -11,4 +11,8 @@ public class AnalyticEvents {
 		return new AnalyticEvent("AbilityExecute", abilityName);
 	}
 
+	public static AnalyticEvent getAbilityUpgradeEvent(String abilityName, int newLevel) {
+		return new AnalyticEvent("Ability Upgraded", abilityName);
+	}
+
 }
