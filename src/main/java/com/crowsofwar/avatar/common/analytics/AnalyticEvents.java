@@ -35,7 +35,7 @@ public class AnalyticEvents {
 	 * Event to be used when an AV2 mob kills another player with an ability
 	 */
 	public static AnalyticEvent onPlayerDeathWithMob(String mobName) {
-		return new AnalyticEvent("Killed", "player > " + mobName);
+		return new AnalyticEvent("Killed", mobName + " > player");
 	}
 
 }
