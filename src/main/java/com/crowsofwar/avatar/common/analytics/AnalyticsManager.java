@@ -41,11 +41,6 @@ public class AnalyticsManager {
 
 	}
 
-	@SubscribeEvent
-	public static void onShutdown(WorldEvent.Unload e) {
-		uploadEvents();
-	}
-
 	private static void uploadEvents() {
 		lastSendTime = System.currentTimeMillis();
 		AvatarAnalytics.INSTANCE.uploadEvents();
