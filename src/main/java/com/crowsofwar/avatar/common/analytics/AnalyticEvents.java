@@ -53,4 +53,11 @@ public class AnalyticEvents {
 		return new AnalyticEvent("Misc", "Restored chi from sleep");
 	}
 
+	/**
+	 * Event to be used when a player tames a bison
+	 */
+	public static AnalyticEvent onBisonTamed() {
+		return new AnalyticEvent("Bison", "tamed");
+	}
+
 }
