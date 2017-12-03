@@ -60,4 +60,11 @@ public class AnalyticEvents {
 		return new AnalyticEvent("Bison", "tamed");
 	}
 
+	/**
+	 * Event to be used when a sky bison defends/helps its owner against an enemy
+	 */
+	public static AnalyticEvent onBisonDefend(String targetEntity) {
+		return new AnalyticEvent("Bison", "defend vs " + targetEntity);
+	}
+
 }
