@@ -31,6 +31,8 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
+
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
@@ -58,14 +60,26 @@ public class AvatarScrollDrops {
 				entityItem.setDefaultPickupDelay();
 				e.getDrops().add(entityItem);
 
-				String entityName = EntityList.getEntityString(entity);
-				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onMobScrollDrop(entityName,
-						type.name().toLowerCase()));
-				
 			}
 			
 		}
-		
+
+		// Send analytics for any entities that dropped scrolls
+
+		List<EntityItem> drops = e.getDrops();
+
+		for (EntityItem drop : drops) {
+			ItemStack stack = drop.getItem();
+			if (stack.getItem() == AvatarItems.itemScroll) {
+
+				ScrollType type = ScrollType.values()[stack.getMetadata()];
+				String entityName = EntityList.getEntityString(entity);
+				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onMobScrollDrop(entityName,
+						type.name().toLowerCase()));
+
+			}
+		}
+
 	}
 	
 }
