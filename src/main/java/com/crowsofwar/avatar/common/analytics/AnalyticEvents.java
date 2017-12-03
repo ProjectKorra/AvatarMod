@@ -46,4 +46,11 @@ public class AnalyticEvents {
 		return new AnalyticEvent("Misc", "out of chi");
 	}
 
+	/**
+	 * Event to be used when a player sleeps in bed and restores chi
+	 */
+	public static AnalyticEvent onSleepRestoration() {
+		return new AnalyticEvent("Misc", "Restored chi from sleep");
+	}
+
 }
