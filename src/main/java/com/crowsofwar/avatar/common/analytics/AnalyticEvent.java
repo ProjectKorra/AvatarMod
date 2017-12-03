@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.analytics;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * Keeps track of a single event that can be recorded as a statistic. This can then be sent online
