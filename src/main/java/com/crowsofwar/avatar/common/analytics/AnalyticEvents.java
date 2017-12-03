@@ -89,4 +89,11 @@ public class AnalyticEvents {
 				+ scrollType);
 	}
 
+	/**
+	 * Event to be used when a player used the /avatar command
+	 */
+	public static AnalyticEvent onAvatarCommand() {
+		return new AnalyticEvent("Misc", "used /avatar command");
+	}
+
 }
