@@ -71,15 +71,19 @@ public class AvatarAnalytics {
 	 * Adds the given events to the queue to be sent later.
 	 */
 	public void pushEvent(AnalyticEvent event) {
-		queuedEvents.add(event);
+		synchronized (queuedEvents) {
+			queuedEvents.add(event);
+		}
 	}
 
 	/**
 	 * Adds the given events to the queue to be sent later.
 	 */
 	public void pushEvents(AnalyticEvent... events) {
-		for (AnalyticEvent event : events) {
-			queuedEvents.add(event);
+		synchronized (queuedEvents) {
+			for (AnalyticEvent event : events) {
+				queuedEvents.add(event);
+			}
 		}
 	}
 
@@ -87,16 +91,20 @@ public class AvatarAnalytics {
 	 * Sends all currently queued events to the server
 	 */
 	public void uploadEvents() {
-		AnalyticEvent[] queuedEventsArray = queuedEvents.toArray(new AnalyticEvent[0]);
-		sendEvents(queuedEventsArray);
-		queuedEvents.clear();
+		synchronized (queuedEvents) {
+			AnalyticEvent[] queuedEventsArray = queuedEvents.toArray(new AnalyticEvent[0]);
+			sendEvents(queuedEventsArray);
+			queuedEvents.clear();
+		}
 	}
 
 	/**
 	 * Get the amount of unset events
 	 */
 	public int getUnsentEventsAmount() {
-		return queuedEvents.size();
+		synchronized (queuedEvents) {
+			return queuedEvents.size();
+		}
 	}
 
 	/**
@@ -104,9 +112,11 @@ public class AvatarAnalytics {
 	 * fired. If no new events need to be sent, returns -1.
 	 */
 	public long getLatestEventTime() {
-		if (!queuedEvents.isEmpty()) {
-			AnalyticEvent latestEvent = queuedEvents.getLast();
-			return System.currentTimeMillis() - latestEvent.getCreationTime();
+		synchronized (queuedEvents) {
+			if (!queuedEvents.isEmpty()) {
+				AnalyticEvent latestEvent = queuedEvents.getLast();
+				return System.currentTimeMillis() - latestEvent.getCreationTime();
+			}
 		}
 		return -1;
 	}
