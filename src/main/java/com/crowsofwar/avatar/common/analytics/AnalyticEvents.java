@@ -39,4 +39,11 @@ public class AnalyticEvents {
 		return new AnalyticEvent("Killed", mobName + " > player");
 	}
 
+	/**
+	 * Event to be used when a player runs out of chi
+	 */
+	public static AnalyticEvent onOutOfChi() {
+		return new AnalyticEvent("Misc", "out of chi");
+	}
+
 }
