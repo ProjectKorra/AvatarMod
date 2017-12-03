@@ -17,19 +17,8 @@
 
 package com.crowsofwar.gorecore.config;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
-
+import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.Level;
 import org.yaml.snakeyaml.DumperOptions;
@@ -40,8 +29,13 @@ import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
-import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * A configuration loader. It populates the fields of an object, with data from
@@ -424,7 +418,14 @@ public class ConfigLoader {
 		}
 		
 	}
-	
+
+	/**
+	 * @see #load(Object, String, boolean)
+	 */
+	public static void load(Object obj, String path) {
+		load(obj, path, true);
+	}
+
 	/**
 	 * Populate the object's fields marked with with {@link Load} with data from
 	 * the configuration file.
@@ -441,24 +442,31 @@ public class ConfigLoader {
 	 * {@link HasCustomLoader custom loader} is specified, ConfigLoader will
 	 * call that loader to perform any additional modifications after loading
 	 * the @Load fields.
-	 * 
+	 *
 	 * @param obj
 	 *            Object to load
 	 * @param path
 	 *            Path to the configuration file, from ".minecraft/config/"
+	 * @param neverIgnoreConfig Whether never to ignore config file as specified by
+	 *                             IGNORE_CONFIG_FILE setting
 	 */
-	public static void load(Object obj, String path) {
+	public static void load(Object obj, String path, boolean neverIgnoreConfig) {
 		Map<String, Object> map = loadMap(path);
-		
-		// Determine whether IGNORE_CONFIG_FILE is true or false
-		Object ignoreObject = map.get("IGNORE_CONFIG_FILE");
-		boolean ignoreSetting;
-		if (ignoreObject == null || !(ignoreObject instanceof Boolean)) {
-			ignoreSetting = true;
-		} else {
-			ignoreSetting = (boolean) ignoreObject;
+
+		boolean ignoreSetting = false;
+
+		if (!neverIgnoreConfig) {
+
+			// Determine whether IGNORE_CONFIG_FILE is true or false
+			Object ignoreObject = map.get("IGNORE_CONFIG_FILE");
+			if (ignoreObject == null || !(ignoreObject instanceof Boolean)) {
+				ignoreSetting = true;
+			} else {
+				ignoreSetting = (boolean) ignoreObject;
+			}
+
 		}
-		
+
 		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting);
 		loader.load();
 		loader.save();
