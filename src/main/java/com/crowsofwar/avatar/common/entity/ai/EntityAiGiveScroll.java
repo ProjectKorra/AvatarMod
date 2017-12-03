@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
+import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.util.Vector;
@@ -92,6 +94,8 @@ public class EntityAiGiveScroll extends EntityAIBase {
 			world.spawnEntity(entityItem);
 			
 			target = null;
+
+			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onNpcTrade());
 			
 		}
 		

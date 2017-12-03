@@ -67,4 +67,18 @@ public class AnalyticEvents {
 		return new AnalyticEvent("Bison", "defend vs " + targetEntity);
 	}
 
+	/**
+	 * Event to be used when a player trades with an NPC bender to get a scroll
+	 */
+	public static AnalyticEvent onNpcTrade() {
+		return new AnalyticEvent("Scrolls", "NPC trade");
+	}
+
+	/**
+	 * Event to be used when a player exhausts an NPC's trading supply of scrolls
+	 */
+	public static AnalyticEvent onNpcNoScrolls() {
+		return new AnalyticEvent("Misc", "NPC supply exhausted");
+	}
+
 }
