@@ -17,8 +17,10 @@
 
 package com.crowsofwar.avatar.common.entity.ai;
 
+import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 
@@ -64,7 +66,13 @@ public class EntityAiBisonDefendOwner extends EntityAITarget {
 		if (entitylivingbase != null) {
 			this.timestamp = entitylivingbase.getRevengeTimer();
 		}
+
+		// Record analytics
+		String targetName = EntityList.getEntityString(ownersTarget);
+		AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onBisonDefend(targetName));
 		
 		super.startExecuting();
 	}
+
+
 }

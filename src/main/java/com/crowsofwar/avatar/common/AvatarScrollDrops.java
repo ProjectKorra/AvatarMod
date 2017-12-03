@@ -16,21 +16,24 @@
 */
 package com.crowsofwar.avatar.common;
 
-import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarScrollDrops {
@@ -56,11 +59,27 @@ public class AvatarScrollDrops {
 						stack);
 				entityItem.setDefaultPickupDelay();
 				e.getDrops().add(entityItem);
-				
+
 			}
 			
 		}
-		
+
+		// Send analytics for any entities that dropped scrolls
+
+		List<EntityItem> drops = e.getDrops();
+
+		for (EntityItem drop : drops) {
+			ItemStack stack = drop.getItem();
+			if (stack.getItem() == AvatarItems.itemScroll) {
+
+				ScrollType type = ScrollType.values()[stack.getMetadata()];
+				String entityName = EntityList.getEntityString(entity);
+				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onMobScrollDrop(entityName,
+						type.name().toLowerCase()));
+
+			}
+		}
+
 	}
 	
 }

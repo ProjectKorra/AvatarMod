@@ -20,6 +20,8 @@ package com.crowsofwar.avatar.common.network;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
+import com.crowsofwar.avatar.common.analytics.AnalyticEvent;
+import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
@@ -121,7 +123,12 @@ public class PacketHandlerServer implements IPacketHandler {
 		Bender bender = Bender.get(player);
 		if (bender != null) {
 			bender.executeAbility(packet.getAbility(), packet.getRaytrace());
-			AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(packet.getAbility().getName()));
+
+			// Send analytics
+			String abilityName = packet.getAbility().getName();
+			String level = AbilityData.get(player, abilityName).getLevelDesc();
+			AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(abilityName, level));
+
 		}
 
 		return null;
@@ -243,7 +250,13 @@ public class PacketHandlerServer implements IPacketHandler {
 							activeSlot.putStack(ItemStack.EMPTY);
 							abilityData.addLevel();
 							abilityData.setXp(0);
-							
+
+							// Send analytics
+							String name = abilityData.getAbilityName();
+							String desc = abilityData.getLevelDesc();
+							AnalyticEvent e = AnalyticEvents.getAbilityUpgradeEvent(name, desc);
+							AvatarAnalytics.INSTANCE.pushEvent(e);
+
 						}
 						
 					}

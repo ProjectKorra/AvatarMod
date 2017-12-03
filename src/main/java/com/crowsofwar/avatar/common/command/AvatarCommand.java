@@ -18,12 +18,17 @@
 package com.crowsofwar.avatar.common.command;
 
 import com.crowsofwar.avatar.common.AvatarChatMessages;
+import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.gorecore.tree.ICommandNode;
 import com.crowsofwar.gorecore.tree.ITypeConverter;
 import com.crowsofwar.gorecore.tree.NodeBranch;
 import com.crowsofwar.gorecore.tree.TreeCommand;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -83,5 +88,10 @@ public class AvatarCommand extends TreeCommand {
 		return new ICommandNode[] { branchBending, new NodeConfig(), branchAbility, new NodeXpSet() };
 		
 	}
-	
+
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
+		super.execute(server, sender, arguments);
+		AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onAvatarCommand());
+	}
 }

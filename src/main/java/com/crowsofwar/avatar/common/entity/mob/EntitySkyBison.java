@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
@@ -577,6 +579,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger((EntityPlayerMP) player, new
 						ItemStack(AvatarItems.itemBisonWhistle), 0);
 
+			}
+
+			// Send bison tamed analytic
+			if (!world.isRemote) {
+				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onBisonTamed());
 			}
 
 			return true;

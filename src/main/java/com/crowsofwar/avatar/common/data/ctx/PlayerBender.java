@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.data.ctx;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
@@ -120,6 +122,10 @@ public class PlayerBender extends Bender {
 
 		if (!result) {
 			sendMessage("avatar.nochi");
+
+			// Send out of chi analytic
+			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onOutOfChi());
+
 		}
 
 		return result;

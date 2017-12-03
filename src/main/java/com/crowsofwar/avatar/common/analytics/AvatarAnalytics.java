@@ -6,8 +6,8 @@ import com.crowsofwar.avatar.server.AvatarServerProxy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * @author CrowsOfWar
@@ -21,7 +21,7 @@ public class AvatarAnalytics {
 
 	public static final AvatarAnalytics INSTANCE = new AvatarAnalytics();
 
-	private final Queue<AnalyticEvent> queuedEvents;
+	private final Deque<AnalyticEvent> queuedEvents;
 
 	public AvatarAnalytics() {
 		queuedEvents = new LinkedList<>();
@@ -71,15 +71,19 @@ public class AvatarAnalytics {
 	 * Adds the given events to the queue to be sent later.
 	 */
 	public void pushEvent(AnalyticEvent event) {
-		queuedEvents.add(event);
+		synchronized (queuedEvents) {
+			queuedEvents.add(event);
+		}
 	}
 
 	/**
 	 * Adds the given events to the queue to be sent later.
 	 */
 	public void pushEvents(AnalyticEvent... events) {
-		for (AnalyticEvent event : events) {
-			queuedEvents.add(event);
+		synchronized (queuedEvents) {
+			for (AnalyticEvent event : events) {
+				queuedEvents.add(event);
+			}
 		}
 	}
 
@@ -87,16 +91,34 @@ public class AvatarAnalytics {
 	 * Sends all currently queued events to the server
 	 */
 	public void uploadEvents() {
-		AnalyticEvent[] queuedEventsArray = queuedEvents.toArray(new AnalyticEvent[0]);
-		sendEvents(queuedEventsArray);
-		queuedEvents.clear();
+		synchronized (queuedEvents) {
+			AnalyticEvent[] queuedEventsArray = queuedEvents.toArray(new AnalyticEvent[0]);
+			sendEvents(queuedEventsArray);
+			queuedEvents.clear();
+		}
 	}
 
 	/**
 	 * Get the amount of unset events
 	 */
 	public int getUnsentEventsAmount() {
-		return queuedEvents.size();
+		synchronized (queuedEvents) {
+			return queuedEvents.size();
+		}
+	}
+
+	/**
+	 * Gets the amount of time (in milliseconds) since the latest <strong>unsent</strong> event was
+	 * fired. If no new events need to be sent, returns -1.
+	 */
+	public long getLatestEventTime() {
+		synchronized (queuedEvents) {
+			if (!queuedEvents.isEmpty()) {
+				AnalyticEvent latestEvent = queuedEvents.getLast();
+				return System.currentTimeMillis() - latestEvent.getCreationTime();
+			}
+		}
+		return -1;
 	}
 
 	/**
@@ -107,6 +129,12 @@ public class AvatarAnalytics {
 		params += "&t=event";
 		params += "&ec=" + event.getCategory();
 		params += "&ea=" + event.getAction();
+
+		if (event.hasLabel()) {
+			params += "&el=" + event.getLabel();
+		}
+
+		params += "&qt=" + (System.currentTimeMillis() - event.getCreationTime());
 		return params;
 	}
 

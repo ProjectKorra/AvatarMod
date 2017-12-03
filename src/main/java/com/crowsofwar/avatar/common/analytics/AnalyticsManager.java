@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.analytics;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -33,17 +32,12 @@ public class AnalyticsManager {
 				uploadEvents();
 			}
 
-			if (unsent > 0 && System.currentTimeMillis() - lastSendTime > 20 * 1000) {
+			if (unsent > 0 && AvatarAnalytics.INSTANCE.getLatestEventTime() > 10000) {
 				uploadEvents();
 			}
 
 		}
 
-	}
-
-	@SubscribeEvent
-	public static void onShutdown(WorldEvent.Unload e) {
-		uploadEvents();
 	}
 
 	private static void uploadEvents() {

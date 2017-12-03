@@ -79,7 +79,7 @@ public class AbilityData {
 	public int getLevel() {
 		return level;
 	}
-	
+
 	/**
 	 * Sets the current level of the ability to the given amount. Clamps between
 	 * 0 and MAX_LEVEL. Marks dirty, but does not sync.
@@ -98,6 +98,18 @@ public class AbilityData {
 	 */
 	public void addLevel() {
 		setLevel(level + 1);
+	}
+
+	/**
+	 * Gets a string representing both the level, and the path (if this is upgraded to level IV).
+	 * For example, "lvl2" or "lvl4_1"; levels reported here start at 1.
+	 */
+	public String getLevelDesc() {
+		String str = "lvl" + (level + 1);
+		if (level == 3) {
+			str += "_" + path.ordinal();
+		}
+		return str;
 	}
 	
 	/**

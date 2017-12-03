@@ -17,19 +17,8 @@
 
 package com.crowsofwar.gorecore.config;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
-
+import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.Level;
 import org.yaml.snakeyaml.DumperOptions;
@@ -40,8 +29,13 @@ import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
-import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * A configuration loader. It populates the fields of an object, with data from
@@ -90,8 +84,15 @@ public class ConfigLoader {
 	 * config files.
 	 */
 	private final boolean ignoreConfigFile;
-	
-	private ConfigLoader(String path, Object obj, Map<String, ?> data, boolean ignoreConfigFile) {
+
+	/**
+	 * See {@link #ignoreConfigFile}. If this is true, the config file will never be ignored, and
+	 * the IGNORE_CONFIG_FILE key will not be present.
+	 */
+	private final boolean neverIgnoreConfig;
+
+	private ConfigLoader(String path, Object obj, Map<String, ?> data, boolean ignoreConfigFile,
+						 boolean neverIgnoreConfig) {
 		this.path = path;
 		this.obj = obj;
 		this.data = data == null ? new HashMap<>() : data;
@@ -99,6 +100,7 @@ public class ConfigLoader {
 		this.representer = new Representer();
 		this.classTags = new ArrayList<>();
 		this.ignoreConfigFile = ignoreConfigFile;
+		this.neverIgnoreConfig = neverIgnoreConfig;
 	}
 	
 	/**
@@ -301,7 +303,7 @@ public class ConfigLoader {
 				loadedObject = to.newInstance();
 				
 				ConfigLoader loader = new ConfigLoader(path, loadedObject, (Map) data.get(name),
-						this.ignoreConfigFile);
+						this.ignoreConfigFile, this.neverIgnoreConfig);
 				loader.load();
 				usedValues.put(name, loader.dump());
 				
@@ -349,14 +351,16 @@ public class ConfigLoader {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config/" + path)));
 			
 			String write = "";
-			if (ignoreConfigFile) {
-				write += "# WARNING : Any changes to this config file will not take effect!!\n";
-				write += "# To fix this, set 'IGNORE_CONFIG_FILE: true' --> 'IGNORE_CONFIG_FILE: false'\n";
-				write += "# This was done to prevent default values in new versions from being overriden\n";
-				write += "# by outdated config files. By doing this, you will no longer recieve any new\n";
-				write += "# config defaults...\n\n";
+			if (!neverIgnoreConfig) {
+				if (ignoreConfigFile) {
+					write += "# WARNING : Any changes to this config file will not take effect!!\n";
+					write += "# To fix this, set 'IGNORE_CONFIG_FILE: true' --> 'IGNORE_CONFIG_FILE: false'\n";
+					write += "# This was done to prevent default values in new versions from being overriden\n";
+					write += "# by outdated config files. By doing this, you will no longer recieve any new\n";
+					write += "# config defaults...\n\n";
+				}
+				write += "IGNORE_CONFIG_FILE: " + ignoreConfigFile + "\n\n";
 			}
-			write += "IGNORE_CONFIG_FILE: " + ignoreConfigFile + "\n\n";
 			write += dump();
 			write = write.replace("\n", System.getProperty("line.separator"));
 			
@@ -424,7 +428,14 @@ public class ConfigLoader {
 		}
 		
 	}
-	
+
+	/**
+	 * @see #load(Object, String, boolean)
+	 */
+	public static void load(Object obj, String path) {
+		load(obj, path, false);
+	}
+
 	/**
 	 * Populate the object's fields marked with with {@link Load} with data from
 	 * the configuration file.
@@ -441,25 +452,32 @@ public class ConfigLoader {
 	 * {@link HasCustomLoader custom loader} is specified, ConfigLoader will
 	 * call that loader to perform any additional modifications after loading
 	 * the @Load fields.
-	 * 
+	 *
 	 * @param obj
 	 *            Object to load
 	 * @param path
 	 *            Path to the configuration file, from ".minecraft/config/"
+	 * @param neverIgnoreConfig Whether never to ignore config file as specified by
+	 *                             IGNORE_CONFIG_FILE setting
 	 */
-	public static void load(Object obj, String path) {
+	public static void load(Object obj, String path, boolean neverIgnoreConfig) {
 		Map<String, Object> map = loadMap(path);
-		
-		// Determine whether IGNORE_CONFIG_FILE is true or false
-		Object ignoreObject = map.get("IGNORE_CONFIG_FILE");
-		boolean ignoreSetting;
-		if (ignoreObject == null || !(ignoreObject instanceof Boolean)) {
-			ignoreSetting = true;
-		} else {
-			ignoreSetting = (boolean) ignoreObject;
+
+		boolean ignoreSetting = false;
+
+		if (!neverIgnoreConfig) {
+
+			// Determine whether IGNORE_CONFIG_FILE is true or false
+			Object ignoreObject = map.get("IGNORE_CONFIG_FILE");
+			if (ignoreObject == null || !(ignoreObject instanceof Boolean)) {
+				ignoreSetting = true;
+			} else {
+				ignoreSetting = (boolean) ignoreObject;
+			}
+
 		}
-		
-		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting);
+
+		ConfigLoader loader = new ConfigLoader(path, obj, map, ignoreSetting, neverIgnoreConfig);
 		loader.load();
 		loader.save();
 	}
@@ -476,7 +494,7 @@ public class ConfigLoader {
 				}
 			}
 			
-			ConfigLoader loader = new ConfigLoader(path, obj, map, false);
+			ConfigLoader loader = new ConfigLoader(path, obj, map, false, false);
 			loader.usedValues.putAll(map);
 			loader.save();
 			
