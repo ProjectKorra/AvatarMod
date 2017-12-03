@@ -81,4 +81,12 @@ public class AnalyticEvents {
 		return new AnalyticEvent("Misc", "NPC supply exhausted");
 	}
 
+	/**
+	 * Event to be used when a mob drops a scroll
+	 */
+	public static AnalyticEvent onMobScrollDrop(String mobName, String scrollType) {
+		return new AnalyticEvent("Scrolls", "mob dropped scroll", mobName + " dropped "
+				+ scrollType);
+	}
+
 }
