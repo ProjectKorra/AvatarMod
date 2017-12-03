@@ -25,7 +25,8 @@ public class AnalyticEvents {
 	}
 
 	/**
-	 * Event to be used when a player kills an AV2 mob
+	 * Event to be used when a player kills any mob. Note: Not actually used if it was a regular mob
+	 * killed with non-AV2 means.
 	 */
 	public static AnalyticEvent onMobKill(String mobName, DamageSource damageSource) {
 		return new AnalyticEvent("Killed", "player > " + mobName, damageSource.damageType);

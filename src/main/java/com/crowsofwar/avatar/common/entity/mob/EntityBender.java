@@ -16,16 +16,11 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -72,17 +67,6 @@ public abstract class EntityBender extends EntityCreature {
 	public void onUpdate() {
 		super.onUpdate();
 		bender.onUpdate();
-	}
-
-	@Override
-	public void onDeath(DamageSource cause) {
-		super.onDeath(cause);
-
-		if (cause.getTrueSource() instanceof EntityPlayer) {
-			String mobName = EntityList.getEntityString(this);
-			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onMobKill(mobName, cause));
-		}
-
 	}
 
 	public Bender getBender() {
