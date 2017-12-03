@@ -20,6 +20,8 @@ package com.crowsofwar.avatar.common.network;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
+import com.crowsofwar.avatar.common.analytics.AnalyticEvent;
+import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
@@ -248,7 +250,13 @@ public class PacketHandlerServer implements IPacketHandler {
 							activeSlot.putStack(ItemStack.EMPTY);
 							abilityData.addLevel();
 							abilityData.setXp(0);
-							
+
+							// Send analytics
+							String name = abilityData.getAbilityName();
+							String desc = abilityData.getLevelDesc();
+							AnalyticEvent e = AnalyticEvents.getAbilityUpgradeEvent(name, desc);
+							AvatarAnalytics.INSTANCE.pushEvent(e);
+
 						}
 						
 					}
