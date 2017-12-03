@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class AvatarPlayerDeath {
 
 	@SubscribeEvent
-	public void onPlayerDeath(LivingDeathEvent e) {
+	public static void onPlayerDeath(LivingDeathEvent e) {
 
 		EntityLivingBase died = e.getEntityLiving();
 		if (died instanceof EntityPlayer) {
@@ -39,7 +39,7 @@ public class AvatarPlayerDeath {
 	/**
 	 * Possibly sends analytics for the player being killed by PvP or Av2 entity.
 	 */
-	private void sendDeathAnalytic(LivingDeathEvent e) {
+	private static void sendDeathAnalytic(LivingDeathEvent e) {
 
 		if (!e.getEntity().world.isRemote) {
 			DamageSource source = e.getSource();
