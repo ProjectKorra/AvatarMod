@@ -14,7 +14,7 @@ public class ConfigAnalytics {
 
 	@Load
 	private String analyticsIdStr = UUID.randomUUID().toString();
-	public UUID analyicsId;
+	public UUID analyticsId;
 
 	@Load
 	public boolean analyticsEnabled = true;
@@ -28,11 +28,11 @@ public class ConfigAnalytics {
 
 		try {
 
-			analyicsId = UUID.fromString(analyticsIdStr);
+			analyticsId = UUID.fromString(analyticsIdStr);
 
 		} catch (IllegalArgumentException e) {
 
-			analyicsId = UUID.randomUUID();
+			analyticsId = UUID.randomUUID();
 			analyticsEnabled = false;
 			AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Invalid analytics id string, " +
 					"analytics temporarily disabled. Suggested to edit analytics.yml and set " +

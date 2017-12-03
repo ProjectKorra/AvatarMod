@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.analytics;
 
 import com.crowsofwar.avatar.common.config.ConfigAnalytics;
-import com.crowsofwar.avatar.common.config.ConfigClient;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -22,7 +21,7 @@ public class AnalyticsUtils {
 	public static String getBasicParameters() {
 		String params = "v=1";
 		params += "&tid=" + GA_TRACKING_ID;
-		params += "&cid=" + ConfigAnalytics.ANALYTICS_CONFIG.getAnalyticsId();
+		params += "&cid=" + ConfigAnalytics.ANALYTICS_CONFIG.analyticsId;
 		return params;
 	}
 
@@ -30,7 +29,7 @@ public class AnalyticsUtils {
 	 * Makes a request to the GA API
 	 */
 	public static void makeSingleApiRequest(String params) {
-		if (ConfigAnalytics.ANALYTICS_CONFIG.enableAnalytics) {
+		if (ConfigAnalytics.ANALYTICS_CONFIG.analyticsEnabled) {
 			post("https://www.google-analytics.com/collect", params);
 		}
 	}
@@ -39,7 +38,7 @@ public class AnalyticsUtils {
 	 * Makes a request to the GA API
 	 */
 	public static void makeBatchApiRequest(String params) {
-		if (ConfigAnalytics.ANALYTICS_CONFIG.enableAnalytics) {
+		if (ConfigAnalytics.ANALYTICS_CONFIG.analyticsEnabled) {
 			post("https://www.google-analytics.com/batch", params);
 		}
 	}
