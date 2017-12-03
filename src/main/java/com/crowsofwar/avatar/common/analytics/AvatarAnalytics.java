@@ -129,6 +129,11 @@ public class AvatarAnalytics {
 		params += "&t=event";
 		params += "&ec=" + event.getCategory();
 		params += "&ea=" + event.getAction();
+
+		if (event.hasLabel()) {
+			params += "&el=" + event.getLabel();
+		}
+
 		params += "&qt=" + (System.currentTimeMillis() - event.getCreationTime());
 		return params;
 	}
