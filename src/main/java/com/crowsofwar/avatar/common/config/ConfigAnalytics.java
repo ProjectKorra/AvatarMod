@@ -29,7 +29,7 @@ public class ConfigAnalytics {
 		try {
 
 			analyicsId = UUID.fromString(analyticsIdStr);
-			
+
 		} catch (IllegalArgumentException e) {
 
 			analyicsId = UUID.randomUUID();
