@@ -128,6 +128,14 @@ avatar.ability.mine_blocks.lvl3=Fortune level I when mining
 avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
 avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
 
+avatar.ability.restore=Restore
+avatar.ability.restore.desc= Use the energy of the earth to aid you in combat, increasing your toughness.
+avatar.ability.restore.lvl1= Gain Resistance, but at the cost of your speed.
+avatar.ability.restore.lvl2= You can draw energy from the surrounding area to slowly heal yourself.
+avatar.ability.restore.lvl3= The amount of speed you lose is decreased, and your regeneration speed is increased. You also receive strength.
+avatar.ability.restore.lvl4_1= Guardian of Life ;; Your strength and resistance are increased.
+avatar.ability.restore.lvl4_2= Sustenance of Life ;; You receive instantaneous health, and your hunger disappears.
+
 avatar.ability.light_fire=Light Fire
 avatar.ability.light_fire.desc=A small, utility type ability to light fires. It's less practical in combat than some other abilities.
 avatar.ability.light_fire.fail=You weren't able to light the fire. Maybe you should try again...
@@ -161,6 +169,14 @@ avatar.ability.fireball.lvl3=Tons more damage upon direct hit
 avatar.ability.fireball.lvl4_1=Focused explosion ;; Can sometimes destroy obsidian
 avatar.ability.fireball.lvl4_2=Charged explosion ;; Takes a few seconds to charge, larger explosion when charged
 
+avatar.ability.purify=Immolate
+avatar.ability.purify.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process
+avatar.ability.purify.lvl1=You have minor buffs, but are apt to hurt yourself
+avatar.ability.purify.lvl2=Stronger buff to firebending and speed buff
+avatar.ability.purify.lvl3=Stronger potion effects and don't burn every time
+avatar.ability.purify.lvl4_1=Fire tolerance ;; Much longer duration, health boost effect
+avatar.ability.purify.lvl4_2=Inferno ;; Much more powerful effects
+
 avatar.ability.water_arc=Water Arc
 avatar.ability.water_arc.desc=One of waterbending's most common attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby.
 avatar.ability.water_arc.lvl1=Basic water arc
@@ -192,6 +208,8 @@ avatar.ability.water_skate.lvl2=Can use abilities while skating
 avatar.ability.water_skate.lvl3=Much faster
 avatar.ability.water_skate.lvl4_1=Balanced skating ;; Can skate even on flowing water
 avatar.ability.water_skate.lvl4_2=Watery impact ;; Smash the ground after jumping
+
+avatar.ability.cleanse=Cleanse
 
 avatar.ability.air_gust=Air Gust
 avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
@@ -273,13 +291,6 @@ avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they
 avatar.ability.sandstorm.lvl4_1=Strong gusts ;; Sandstorm moves much faster and isn't disrupted by airbending
 avatar.ability.sandstorm.lvl4_2=Harsh grains ;; Whirling sand grains cause continuous minor damage to targets
 
-avatar.ability.purify=Immolate
-avatar.ability.purify.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process
-avatar.ability.purify.lvl1=You have minor buffs, but are apt to hurt yourself
-avatar.ability.purify.lvl2=Stronger buff to firebending and speed buff
-avatar.ability.purify.lvl3=Stronger potion effects and don't burn every time
-avatar.ability.purify.lvl4_1=Fire tolerance ;; Much longer duration, health boost effect
-avatar.ability.purify.lvl4_2=Inferno ;; Much more powerful effects
 
 avatar.ability.undefined=???
 
