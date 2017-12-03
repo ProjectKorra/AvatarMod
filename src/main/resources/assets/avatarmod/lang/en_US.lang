@@ -131,6 +131,15 @@ avatar.ability.mine_blocks.lvl3=Fortune level I when mining
 avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
 avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
 
+avatar.ability.restore=Restore
+avatar.ability.restore.desc= Use the energy of the earth to aid you in combat, increasing your toughness.
+avatar.ability.restore.lvl1= Gain Resistance, but at the cost of your speed.
+avatar.ability.restore.lvl2= You can draw energy from the surrounding area to slowly heal yourself.
+avatar.ability.restore.lvl3= The amount of speed you lose is decreased, and your regeneration speed is increased. You also receive strength.
+avatar.ability.restore.lvl4_1= Guardian of Life ;; Your strength and resistance are increased.
+avatar.ability.restore.lvl4_2= Sustenance of Life ;; You receive instantaneous health, and your hunger disappears.
+
+
 avatar.ability.light_fire=Light Fire
 avatar.ability.light_fire.desc=A small, utility type ability to light fires. It's less practical in combat than some other abilities.
 avatar.ability.light_fire.fail=You weren't able to light the fire. Maybe you should try again...
