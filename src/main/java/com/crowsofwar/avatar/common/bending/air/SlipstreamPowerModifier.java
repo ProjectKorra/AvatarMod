@@ -72,14 +72,14 @@ public class SlipstreamPowerModifier extends PowerRatingModifier {
 
 			if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				invisibilityChance = 0.4;
-				invisibilityChance = 40;
+				invisiblityDuration = 40;
 			}
 
 			// Intermittently grant invisibility
 			if (ctx.getBenderEntity().ticksExisted % 20 == 0) {
 				// 40% chance per second for invisibility
-				if (Math.random() < 0.3) {
-					PotionEffect effect = new PotionEffect(MobEffects.INVISIBILITY, 40);
+				if (Math.random() < invisibilityChance) {
+					PotionEffect effect = new PotionEffect(MobEffects.INVISIBILITY, invisiblityDuration);
 					ctx.getBenderEntity().addPotionEffect(effect);
 				}
 			}

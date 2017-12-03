@@ -229,7 +229,7 @@ avatar.ability.slipstream=Slipstream
 avatar.ability.slipstream.desc=Surround yourself in a veil of air, increasing your movement speed.
 avatar.ability.slipstream.lvl1=Basic speed boost
 avatar.ability.slipstream.lvl2=Increase your jumping height
-avatar.ability.slipstream.lvl3=Intermittently become invisible and increase the power of the buffs
+avatar.ability.slipstream.lvl3=Intermittently become invisible and increase the power of the buffs.
 avatar.ability.slipstream.lvl4_1=Divine Breeze ;; Become stronger in melee and airbending combat
 avatar.ability.slipstream.lvl4_2=Run like the wind ;; Become invisible more often and potion effects are stronger
 
