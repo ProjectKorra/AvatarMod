@@ -1,14 +1,14 @@
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
-public class SlipstreamPowerModifier extends PowerRatingModifier {
+public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 	@Override
 	public double get(BendingContext ctx) {
@@ -23,41 +23,6 @@ public class SlipstreamPowerModifier extends PowerRatingModifier {
 
 		return modifier;
 
-	}
-
-	/**
-	 * Different Visions are used as the player levels up to make it seem more powerful. Gets the
-	 * appropriate vision to be used for the current level.
-	 */
-	private Vision getVision(BendingContext ctx) {
-
-		AbilityData abilityData = ctx.getData().getAbilityData("slipstream");
-		switch (abilityData.getLevel()) {
-			case 0:
-			case 1:
-				return Vision.SLIPSTREAM_WEAK;
-			case 2:
-				return Vision.SLIPSTREAM_MEDIUM;
-			case 3:
-			default:
-				return Vision.SLIPSTREAM_POWERFUL;
-		}
-
-	}
-
-	@Override
-	public void onAdded(BendingContext ctx) {
-			if (ctx.getData().getVision() == null) {
-			ctx.getData().setVision(getVision(ctx));
-		}
-	}
-
-	@Override
-	public void onRemoval(BendingContext ctx) {
-		Vision vision = ctx.getData().getVision();
-		if (vision != null && vision.name().startsWith("SLIPSTREAM")) {
-			ctx.getData().setVision(null);
-		}
 	}
 
 	@Override
@@ -87,6 +52,17 @@ public class SlipstreamPowerModifier extends PowerRatingModifier {
 		}
 
 		return super.onUpdate(ctx);
+	}
+
+	@Override
+	protected Vision[] getVisions() {
+		return new Vision[] { Vision.SLIPSTREAM_WEAK, Vision.SLIPSTREAM_MEDIUM,
+				Vision.SLIPSTREAM_POWERFUL };
+	}
+
+	@Override
+	protected String getAbilityName() {
+		return "slipstream";
 	}
 
 }

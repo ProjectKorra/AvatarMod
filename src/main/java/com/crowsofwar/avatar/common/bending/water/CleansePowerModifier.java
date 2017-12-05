@@ -1,12 +1,12 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
-public class CleansePowerModifier extends PowerRatingModifier {
+public class CleansePowerModifier extends BuffPowerModifier {
 
 	@Override
 	public double get(BendingContext ctx) {
@@ -26,39 +26,14 @@ public class CleansePowerModifier extends PowerRatingModifier {
 
 	}
 
-	/**
-	 * Different Visions are used as the player levels up to make it seem more powerful. Gets the
-	 * appropriate vision to be used for the current level.
-	 */
-	private Vision getVision(BendingContext ctx) {
-
-		AbilityData abilityData = ctx.getData().getAbilityData("cleanse");
-		switch (abilityData.getLevel()) {
-			case 0:
-			case 1:
-				return Vision.CLEANSE_WEAK;
-			case 2:
-				return Vision.CLEANSE_MEDIUM;
-			case 3:
-			default:
-				return Vision.CLEANSE_POWERFUL;
-		}
-
+	@Override
+	protected Vision[] getVisions() {
+		return new Vision[] { Vision.CLEANSE_WEAK, Vision.CLEANSE_MEDIUM, Vision.CLEANSE_POWERFUL };
 	}
 
 	@Override
-	public void onAdded(BendingContext ctx) {
-		if (ctx.getData().getVision() == null) {
-			ctx.getData().setVision(getVision(ctx));
-		}
-	}
-
-	@Override
-	public void onRemoval(BendingContext ctx) {
-		Vision vision = ctx.getData().getVision();
-		if (vision != null && vision.name().startsWith("CLEANSE")) {
-			ctx.getData().setVision(null);
-		}
+	protected String getAbilityName() {
+		return "cleanse";
 	}
 
 }
