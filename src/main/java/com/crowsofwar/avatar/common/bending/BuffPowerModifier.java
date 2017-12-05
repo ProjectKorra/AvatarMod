@@ -30,6 +30,7 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 			case 1:
 				return getVisions()[0];
 			case 2:
+			case -1:
 				return getVisions()[1];
 			case 3:
 			default:
