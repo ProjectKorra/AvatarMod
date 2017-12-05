@@ -39,11 +39,11 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 	}
 
 	@Override
-	public void onAdded(BendingContext ctx) {
+	public boolean onUpdate(BendingContext ctx) {
 		if (ctx.getData().getVision() == null) {
 			ctx.getData().setVision(getVision(ctx));
 		}
-		super.onAdded(ctx);
+		return super.onUpdate(ctx);
 	}
 
 	@Override
