@@ -5,6 +5,13 @@ import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
+/**
+ * "Buff abilities", abilities which apply temporary bending and other boosts, usually have a
+ * power rating modifier to temporarily increase bending power. Therefore, they all have power
+ * rating modifiers. This is the superclass for all buff ability related power modifiers.
+ *
+ * @author CrowsOfWar
+ */
 public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 	/**
