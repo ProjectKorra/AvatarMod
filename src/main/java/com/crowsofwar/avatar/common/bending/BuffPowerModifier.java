@@ -48,8 +48,9 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 	@Override
 	public void onRemoval(BendingContext ctx) {
+		Vision[] visions = getVisions();
 		Vision vision = ctx.getData().getVision();
-		if (vision != null && vision.name().startsWith("RESTORE")) {
+		if (vision == visions[0] || vision == visions[1] || vision == visions[2]) {
 			ctx.getData().setVision(null);
 		}
 		super.onRemoval(ctx);
