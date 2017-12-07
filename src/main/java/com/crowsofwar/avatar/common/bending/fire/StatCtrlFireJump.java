@@ -63,8 +63,23 @@ public class StatCtrlFireJump extends StatusControl {
 				jumpMultiplier = 1.1;
 			}
 
+			// Calculate direction to jump -- in the direction the player is currently already going
+
+			// For some reason, velocity is 0 here when player is walking, so must instead
+			// calculate using delta position
+			Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ -
+					entity.lastTickPosZ);
+			double currentYaw = Vector.getRotationTo(Vector.ZERO, deltaPos).y();
+
+			// Just go forwards if not moving right now
+			if (deltaPos.sqrMagnitude() <= 0.001) {
+				currentYaw = Math.toRadians(entity.rotationYaw);
+			}
+
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
-					Math.toRadians(entity.rotationYaw), 0);
+					currentYaw, 0);
+
+			// Calculate velocity to move bender
 
 			Vector velocity = rotations.toRectangular();
 
