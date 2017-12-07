@@ -52,6 +52,11 @@ public class AbilityIceBurst extends Ability {
 			return;
 		}
 
+		// Don't allow 2 ice shields at once
+		if (data.hasStatusControl(StatusControl.SHIELD_SHATTER)) {
+			return;
+		}
+
 		EntityIceShield shield = new EntityIceShield(world);
 		shield.copyLocationAndAnglesFrom(entity);
 		shield.setOwner(entity);
