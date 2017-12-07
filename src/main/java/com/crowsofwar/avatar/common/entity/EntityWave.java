@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -97,7 +96,7 @@ public class EntityWave extends AvatarEntity {
 			}
 		}
 
-		if (ticksExisted > 7000 || world.getBlockState(getPosition()).getBlock() != Blocks.WATER) {
+		if (ticksExisted > 7000) {
 			setDead();
 		}
 
@@ -108,6 +107,12 @@ public class EntityWave extends AvatarEntity {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onMajorWaterContact();
 		}
+	}
+
+	@Override
+	public boolean onCollideWithSolid() {
+		setDead();
+		return true;
 	}
 
 	@Override
