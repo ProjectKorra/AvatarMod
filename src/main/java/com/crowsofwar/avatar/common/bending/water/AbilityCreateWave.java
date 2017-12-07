@@ -76,7 +76,6 @@ public class AbilityCreateWave extends Ability {
 						wave.setVelocity(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
-						System.out.println(wave.rotationYaw);
 
 						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
 						damageMult *= ctx.getPowerRatingDamageMod();
@@ -85,6 +84,7 @@ public class AbilityCreateWave extends Ability {
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 							wave.setWaveSize(5);
 						}
+						wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
 						world.spawnEntity(wave);
 
 					}
