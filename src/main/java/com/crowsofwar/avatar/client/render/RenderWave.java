@@ -17,13 +17,8 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.GlStateManager;
-
 import com.crowsofwar.avatar.common.entity.EntityWave;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -32,45 +27,28 @@ import net.minecraft.util.ResourceLocation;
  * 
  * @author CrowsOfWar
  */
-public class RenderWave extends Render<EntityWave> {
+public class RenderWave extends RenderModel<EntityWave> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/wave.png");
-
-	private ModelBase model;
 
 	/**
 	 * @param renderManager
 	 */
 	public RenderWave(RenderManager renderManager) {
-		super(renderManager);
-		this.model = new ModelWave();
+		super(renderManager, new ModelWave());
 	}
 
 	@Override
-	public void doRender(EntityWave entity, double x, double y, double z, float entityYaw,
-						 float partialTicks) {
-
-
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		GlStateManager.enableBlend();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
-
-
+	protected void performGlTransforms(EntityWave entity, double x, double y, double z, float
+			entityYaw, float partialTicks) {
 		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
-
-		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
-		GlStateManager.popMatrix();
-
-		GlStateManager.disableBlend();
-
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityWave entity) {
 		return TEXTURE;
 	}
+
 }
 
