@@ -59,9 +59,7 @@ public class RenderWave extends Render<EntityWave> {
 		GlStateManager.translate(x, y, z);
 
 
-		GlStateManager.rotate(entity.rotationYaw, 0, 1, 0);
-
-		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
 
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();
