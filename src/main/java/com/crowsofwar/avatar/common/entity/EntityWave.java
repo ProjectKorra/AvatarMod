@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -90,11 +89,8 @@ public class EntityWave extends AvatarEntity {
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
 				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), STATS_CONFIG.waveSettings.damage * damageMult);
 			}
-			if (!collided.isEmpty()) {
-				BendingData data = Bender.get(owner).getData();
-				if (data != null) {
-					data.getAbilityData("wall").addXp(SKILLS_CONFIG.waveHit);
-				}
+			if (!collided.isEmpty() && owner != null) {
+				AbilityData.get(owner, "wave").addXp(SKILLS_CONFIG.waveHit);
 			}
 		}
 		
