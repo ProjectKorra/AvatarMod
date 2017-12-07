@@ -190,7 +190,7 @@ avatar.ability.wave.desc=Summon a wave of water to destroy your enemies. Only wo
 avatar.ability.wave.lvl1=Slow wave to drown enemies
 avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
-avatar.ability.wave.lvl4_1=Tsunami ;; Much larger and affects creatures on land
+avatar.ability.wave.lvl4_1=Water spray ;; Creates minor explosion upon contact with enemy
 avatar.ability.wave.lvl4_2=Force wave ;; Very fast waves
 
 avatar.ability.water_bubble=Water Bubble
