@@ -19,8 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,7 +40,7 @@ public class EntityWave extends AvatarEntity {
 			DataSerializers.FLOAT);
 	
 	private float damageMult;
-	private int timeOnLand;
+	private boolean createExplosion;
 	
 	public EntityWave(World world) {
 		super(world);
@@ -88,22 +86,21 @@ public class EntityWave extends AvatarEntity {
 				motion = motion.withY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
 				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), STATS_CONFIG.waveSettings.damage * damageMult);
+
+				if (createExplosion) {
+					world.createExplosion(null, posX, posY, posZ, 2, false);
+				}
+
 			}
 			if (!collided.isEmpty() && owner != null) {
 				AbilityData.get(owner, "wave").addXp(SKILLS_CONFIG.waveHit);
 			}
 		}
-		
-		if (ticksExisted > 7000) {
+
+		if (ticksExisted > 7000 || world.getBlockState(getPosition()).getBlock() != Blocks.WATER) {
 			setDead();
 		}
-		if (!world.isRemote && world.getBlockState(getPosition()).getBlock() != Blocks.WATER) {
-			timeOnLand++;
-			if (timeOnLand >= maxTimeOnLand()) {
-				setDead();
-			}
-		}
-		
+
 	}
 
 	@Override
@@ -111,16 +108,6 @@ public class EntityWave extends AvatarEntity {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onMajorWaterContact();
 		}
-	}
-
-	private int maxTimeOnLand() {
-		if (getOwner() != null) {
-			AbilityData data = BendingData.get(getOwner()).getAbilityData("wall");
-			if (data.isMasterPath(AbilityTreePath.FIRST)) {
-				return 30;
-			}
-		}
-		return 0;
 	}
 
 	@Override
@@ -137,5 +124,9 @@ public class EntityWave extends AvatarEntity {
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
 	}
-	
+
+	public void setCreateExplosion(boolean createExplosion) {
+		this.createExplosion = createExplosion;
+	}
+
 }
