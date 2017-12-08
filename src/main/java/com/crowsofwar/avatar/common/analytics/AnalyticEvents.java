@@ -14,7 +14,11 @@ public class AnalyticEvents {
 	}
 
 	public static AnalyticEvent getAbilityUpgradeEvent(String abilityName, String levelDesc) {
-		return new AnalyticEvent("Ability upgrades", abilityName, levelDesc);
+		String category = "Ability upgrades";
+		if (levelDesc.equals("lvl1")) {
+			category = "Ability unlocked";
+		}
+		return new AnalyticEvent(category, abilityName, levelDesc);
 	}
 
 	/**
