@@ -13,6 +13,8 @@ avatar.BendingCycleRight=Cycle Bending Right
 avatar.Skills=Skills Menu
 avatar.TransferBison=Confirm Bison Transfer
 
+avatar.combustionbending=Combustionbending
+avatar.combustionbending.denonym=Combustionbender
 avatar.earthbending=Earthbending
 avatar.earthbending.demonym=Earthbender
 avatar.firebending=Firebending
@@ -24,6 +26,7 @@ avatar.airbending.demonym=Airbender
 avatar.lightningbending.demonym=Lightningbender
 avatar.icebending.demonym=Icebender
 avatar.sandbending.demonym=Sandbending
+
 avatar.all=Universal
 
 avatar.cmd.bending=Manage a player's bending controllers.
@@ -187,7 +190,7 @@ avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thr
 
 avatar.ability.wave=Wave
 avatar.ability.wave.desc=Summon a wave of water to destroy your enemies. Only works when they are in water.
-avatar.ability.wave.lvl1=Slow wave to drown enemies
+avatar.ability.wave.lvl1=Make your enemies wave goodbye
 avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
 avatar.ability.wave.lvl4_1=Water spray ;; Creates minor explosion upon contact with enemy
@@ -228,7 +231,7 @@ avatar.ability.air_jump.lvl4_2=Ground pound ;; Attack nearby enemies on land
 
 avatar.ability.airblade=Airblade
 avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh. Can be deadly in quick succession.
-avatar.ability.airblade.lvl1=Base ability
+avatar.ability.airblade.lvl1=Slice n' Dice!
 avatar.ability.airblade.lvl2=Higher speeds and damage
 avatar.ability.airblade.lvl3=Can now cut blocks
 avatar.ability.airblade.lvl4_1=Chainblade ;; Bounces through multiple enemies
@@ -250,7 +253,7 @@ avatar.ability.slipstream.lvl3=Intermittently become invisible and increase the 
 avatar.ability.slipstream.lvl4_1=Divine Breeze ;; Become stronger in melee and airbending combat
 avatar.ability.slipstream.lvl4_2=Run like the wind ;; Become invisible more often and potion effects are stronger
 
-avatar.ability.lightning_arc=Lightning Bolt
+avatar.ability.lightning_arc=Lightning Arc
 avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your enemies!
 avatar.ability.lightning_arc.lvl1=Intimidate potential boyfriends
 avatar.ability.lightning_arc.lvl2=Lightning travels faster
@@ -263,7 +266,7 @@ avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent t
 avatar.ability.ice_prison.lvl1=Delay your attackers.
 avatar.ability.ice_prison.lvl2=The prison lasts slightly longer.
 avatar.ability.ice_prison.lvl3=The prisoner takes damage when the ice shatters.
-avatar.ability.ice_prison.lvl4_1=Continuous punishment ;; The prisoner continually takes damage throughout the imprisonment.
+avatar.ability.ice_prison.lvl4_1=Frostbite ;; The prisoner continually takes damage throughout the imprisonment.
 avatar.ability.ice_prison.lvl4_2=Glacier ice ;; The ice cannot be melted by the sun or firebending.
 
 avatar.ability.sand_prison=Sand Prison
@@ -279,7 +282,7 @@ avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.
 avatar.ability.ice_burst.lvl1=Protect yourself from damage
 avatar.ability.ice_burst.lvl2=The shards deal slightly more damage.
 avatar.ability.ice_burst.lvl3=The shield has a little more health.
-avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically target monsters
+avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically target monsters; awesome for getting rid of annoying friends.
 avatar.ability.ice_burst.lvl4_2=Hardened ice ;; The ice shield has much more health
 
 avatar.ability.sandstorm=Sandstorm

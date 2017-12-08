@@ -14,8 +14,13 @@ Otter penguin models & textures by talhanation
 Sand prison models by talhanation
  model code cleanup by CrowsOfWar
 
-Radial menu, ability icons by EduMC
+Most radial menu and ability card icons by EduMC
 Airbender/firebender skins by EduMC
+
+Ability icons by FavouriteDragon: ice_prison, ice_burst, fire_jump, sandstorm, explosion, cleanse,
+  cloudburst, earthspike, lightning_arc, lighting_lightning_spear, lightning_strike, purify,
+  restore, slipstream, water_cannon
+Lightning status control icon by FavouriteDragon
 
 Sky bison model/texture by Captn_Dubz
 

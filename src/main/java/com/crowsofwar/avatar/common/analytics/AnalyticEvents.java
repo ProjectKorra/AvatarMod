@@ -14,7 +14,11 @@ public class AnalyticEvents {
 	}
 
 	public static AnalyticEvent getAbilityUpgradeEvent(String abilityName, String levelDesc) {
-		return new AnalyticEvent("Ability upgrades", abilityName, levelDesc);
+		String category = "Ability upgrades";
+		if (levelDesc.equals("lvl1")) {
+			category = "Ability unlocked";
+		}
+		return new AnalyticEvent(category, abilityName, levelDesc);
 	}
 
 	/**
@@ -94,6 +98,13 @@ public class AnalyticEvents {
 	 */
 	public static AnalyticEvent onAvatarCommand() {
 		return new AnalyticEvent("Misc", "used /avatar command");
+	}
+
+	/**
+	 * Event to be used when one player gave another player a scroll
+	 */
+	public static AnalyticEvent onScrollShared(String scrollType) {
+		return new AnalyticEvent("Scrolls", "shared scroll", scrollType);
 	}
 
 }

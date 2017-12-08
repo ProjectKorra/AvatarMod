@@ -83,7 +83,7 @@ public class WaterChargeHandler extends TickHandler {
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = 17;
-				size = 1.25f;
+				size = 2f;
 			}
 
 			damage *= bender.getDamageMult(Waterbending.ID);
