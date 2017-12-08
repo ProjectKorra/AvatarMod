@@ -52,22 +52,44 @@ public class StatCtrlFireJump extends StatusControl {
 		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiFireJump))) {
 
 			int lvl = abilityData.getLevel();
-			double jumpMultiplier = 0.75;
+			double jumpMultiplier = 0.2;
+			float fallAbsorption = 3;
 			if (lvl >= 1) {
-				jumpMultiplier = 0.7;
+				jumpMultiplier = 0.3;
+				fallAbsorption = 4;
 			}
 			if (lvl >= 2) {
-				jumpMultiplier = 0.9;
+				jumpMultiplier = 0.4;
+				fallAbsorption = 5;
 			}
-			if (lvl >= 3) {
-				jumpMultiplier = 1.1;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				jumpMultiplier = 0.6;
+				fallAbsorption = 8;
+			}
+
+			// Calculate direction to jump -- in the direction the player is currently already going
+
+			// For some reason, velocity is 0 here when player is walking, so must instead
+			// calculate using delta position
+			Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ -
+					entity.lastTickPosZ);
+			double currentYaw = Vector.getRotationTo(Vector.ZERO, deltaPos).y();
+
+			// Just go forwards if not moving right now
+			if (deltaPos.sqrMagnitude() <= 0.001) {
+				currentYaw = Math.toRadians(entity.rotationYaw);
 			}
 
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
-					Math.toRadians(entity.rotationYaw), 0);
+					currentYaw, 0);
+
+			// Calculate velocity to move bender
 
 			Vector velocity = rotations.toRectangular();
-			velocity = velocity.withY(Math.pow(velocity.y(), .1));
+
+			velocity = velocity.withX(velocity.x() * 2);
+			velocity = velocity.withZ(velocity.z() * 2);
+
 			velocity = velocity.times(jumpMultiplier);
 			if (!onGround) {
 				velocity = velocity.times(1);
@@ -83,17 +105,6 @@ public class StatCtrlFireJump extends StatusControl {
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20,
 					new Vector(entity), new Vector(1, 0, 1));
-
-			float fallAbsorption = 0;
-			if (lvl == 0) {
-				fallAbsorption = 6;
-			} else if (lvl == 1) {
-				fallAbsorption = 11;
-			} else if (lvl == 2) {
-				fallAbsorption = 14;
-			} else if (lvl == 3) {
-				fallAbsorption = 17;
-			}
 
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
