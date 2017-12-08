@@ -100,4 +100,11 @@ public class AnalyticEvents {
 		return new AnalyticEvent("Misc", "used /avatar command");
 	}
 
+	/**
+	 * Event to be used when one player gave another player a scroll
+	 */
+	public static AnalyticEvent onScrollShared(String scrollType) {
+		return new AnalyticEvent("Scrolls", "shared scroll", scrollType);
+	}
+
 }
