@@ -58,7 +58,7 @@ public class AvatarInfo {
 	 * Accessed via {@link #IS_PRODUCTION}, {@link #IS_PREVIEW},
 	 * {@link #IS_DEVELOPMENT}
 	 */
-	private static final int VERSION_TYPE = 1;
+	private static final int VERSION_TYPE = 2;
 	
 	// Not adjustable / automatically calculated
 	
@@ -69,7 +69,7 @@ public class AvatarInfo {
 	public static final boolean IS_DEVELOPMENT = VERSION_TYPE == 1;
 	public static final boolean IS_PREVIEW = VERSION_TYPE >= 2;
 	
-	public static final String MC_VERSION = "1.12.1";
+	public static final String MC_VERSION = "1.12.2";
 	public static final String VERSION = DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
 			+ (IS_PRODUCTION ? "" : (IS_PREVIEW ? "_preview" + (VERSION_TYPE - 1) : "_dev"));
 	
