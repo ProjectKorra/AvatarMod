@@ -161,8 +161,8 @@ public class EntityCloudBall extends AvatarEntity {
                             CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
                             cloudModifier.setTicks(100);
                             data.getPowerRatingManager(uuid).addModifier(cloudModifier, new
-                                    BendingContext(data, (EntityLivingBase) entity, new Raytrace
-									.Result()));
+                                    BendingContext(data, (EntityLivingBase) entity, new
+                                    Raytrace.Result()));
                         }
 
                     }
