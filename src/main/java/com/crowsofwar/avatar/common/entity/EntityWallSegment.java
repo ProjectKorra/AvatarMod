@@ -99,6 +99,11 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		return wallReference.getEntity();
 	}
 
+	@Override
+	public boolean isShield() {
+		return true;
+	}
+
 	/**
 	 * Allows this segment to reference the wall, and allows the wall to
 	 * reference this segment.
