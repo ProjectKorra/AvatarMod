@@ -59,7 +59,7 @@ public class AbilityAirBubble extends Ability {
 			ctx.getBender().sendMessage("avatar.airBubbleElytra");
 		}
 
-		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
+		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk ) {
 			
 			if (!bender.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 			
