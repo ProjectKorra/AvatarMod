@@ -385,6 +385,16 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
+	 * Returns whether the entity can be considered a shield. Gerenally,
+	 * an entity is considered a shield if it blocks other entities.
+	 * Air Bubble and Wall are both shields.
+	 *
+	 */
+	public boolean isShield() {
+		return  false;
+	}
+
+	/**
 	 * Break the block at the given position, playing sound/particles, and
 	 * dropping item
 	 */
