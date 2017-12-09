@@ -34,6 +34,11 @@ public class AbilityWaterSkate extends Ability {
 	}
 
 	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
+	@Override
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.SKATING_START);

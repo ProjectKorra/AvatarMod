@@ -47,7 +47,12 @@ public class AbilityWaterBubble extends Ability {
 		super(Waterbending.ID, "water_bubble");
 		requireRaytrace(-1, false);
 	}
-	
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();

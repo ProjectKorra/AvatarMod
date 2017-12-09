@@ -44,7 +44,12 @@ public class AbilityIcePrison extends Ability {
 	public AbilityIcePrison() {
 		super(Icebending.ID, "ice_prison");
 	}
-	
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
 	@Override
 	public void execute(AbilityContext ctx) {
 

@@ -26,6 +26,11 @@ public class AbilityCleanse extends Ability {
 	}
 
 	@Override
+	public boolean isBuff() {
+		return true;
+	}
+
+	@Override
 	public void execute(AbilityContext ctx) {
 
 		BendingData data = ctx.getData();

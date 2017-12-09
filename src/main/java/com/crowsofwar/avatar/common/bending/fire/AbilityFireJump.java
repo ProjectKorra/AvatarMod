@@ -20,6 +20,11 @@ public class AbilityFireJump extends Ability {
     }
 
     @Override
+    public boolean isUtility() {
+        return true;
+    }
+
+    @Override
     public void execute(AbilityContext ctx) {
 
         BendingData data = ctx.getData();

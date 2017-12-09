@@ -29,6 +29,12 @@ public class AbilitySandPrison extends Ability {
 		super(Sandbending.ID, "sand_prison");
 	}
 
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
 	@Override
 	public void execute(AbilityContext ctx) {
 

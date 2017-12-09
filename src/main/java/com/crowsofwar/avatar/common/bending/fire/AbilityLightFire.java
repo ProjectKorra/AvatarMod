@@ -50,7 +50,12 @@ public class AbilityLightFire extends Ability {
 		requireRaytrace(-1, false);
 		particles = new NetworkParticleSpawner();
 	}
-	
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		
