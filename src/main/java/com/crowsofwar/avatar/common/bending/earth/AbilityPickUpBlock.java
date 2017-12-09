@@ -51,6 +51,11 @@ public class AbilityPickUpBlock extends Ability {
 
 	private final Random random;
 
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
 	public AbilityPickUpBlock() {
 		super(Earthbending.ID, "pickup_block");
 		this.random = new Random();

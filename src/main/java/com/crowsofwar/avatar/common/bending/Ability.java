@@ -68,6 +68,25 @@ public abstract class Ability {
 		return 15;
 	}
 
+	/*
+		Generally used for abilities that grant you stat boosts.
+	 */
+	public boolean isBuff() {
+		return false;
+	}
+
+
+	/**
+	 * Generally used for abilities that help with evreryday tasks, such as mining,
+	 * moving water sources, or just moving around.
+	 * Ex: Mine Blocks, Air Jump, and Water Bubble are all utility
+	 * Abilities.
+	 */
+
+	public boolean isUtility() {
+		return false;
+	}
+
 	/**
 	 * Require that a raycast be sent prior to {@link #execute(AbilityContext)}.
 	 * Information for the raytrace will then be available through the

@@ -39,7 +39,12 @@ public class AbilityAirJump extends Ability {
 	public AbilityAirJump() {
 		super(Airbending.ID, "air_jump");
 	}
-	
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		

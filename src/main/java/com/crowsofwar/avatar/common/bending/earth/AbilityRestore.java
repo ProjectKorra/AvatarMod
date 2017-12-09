@@ -17,6 +17,11 @@ public class AbilityRestore extends Ability {
 		super(Earthbending.ID, "restore");
 	}
 
+	@Override
+	public boolean isBuff() {
+		return true;
+	}
+
 	// Note: Restore does not use power rating since it's designed as a buff ability, and it could result in
 	// "overpowering" for buffs to enhance more buffs
 

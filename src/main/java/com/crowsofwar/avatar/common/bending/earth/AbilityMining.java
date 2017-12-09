@@ -51,7 +51,12 @@ public class AbilityMining extends Ability {
 	public AbilityMining() {
 		super(Earthbending.ID, "mine_blocks");
 	}
-	
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
 	@Override
 	public void execute(AbilityContext ctx) {
 
