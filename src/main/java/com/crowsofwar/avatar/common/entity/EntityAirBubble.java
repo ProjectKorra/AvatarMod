@@ -266,7 +266,12 @@ public class EntityAirBubble extends EntityShield {
 			}
 		}
 	}
-	
+
+	@Override
+	public boolean isShield() {
+		return true;
+	}
+
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 

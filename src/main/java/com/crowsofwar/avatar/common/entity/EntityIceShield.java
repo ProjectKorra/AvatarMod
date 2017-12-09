@@ -87,7 +87,12 @@ public class EntityIceShield extends EntityShield {
 	public EntityLivingBase getController() {
 		return getOwner();
 	}
-	
+
+	@Override
+	public boolean isShield() {
+		return true;
+	}
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();

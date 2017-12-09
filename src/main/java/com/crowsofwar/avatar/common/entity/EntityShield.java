@@ -211,6 +211,11 @@ public abstract class EntityShield extends AvatarEntity {
 	 */
 	protected abstract void onDeath();
 
+	@Override
+	public boolean isShield() {
+		return true;
+	}
+
 	public float getHealth() {
 		return dataManager.get(SYNC_HEALTH);
 	}

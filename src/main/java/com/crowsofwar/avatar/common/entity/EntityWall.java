@@ -143,7 +143,12 @@ public class EntityWall extends AvatarEntity {
 	public EnumFacing getDirection() {
 		return EnumFacing.values()[dataManager.get(SYNC_DIRECTION)];
 	}
-	
+
+	@Override
+	public boolean isShield() {
+		return true;
+	}
+
 	public void setDirection(EnumFacing direction) {
 		if (direction.getAxis().isVertical())
 			throw new IllegalArgumentException("Cannot face up/down: " + direction);
