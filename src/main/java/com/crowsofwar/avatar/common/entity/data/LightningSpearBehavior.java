@@ -131,8 +131,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
             }
 
             // Remove the fireball & spawn particles
-            if (!entity.world.isRemote) entity.setDead();
-            entity.onCollideWithSolid();
+            if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
         }
 
         @Override

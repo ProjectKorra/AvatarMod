@@ -14,26 +14,31 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
 public class StatCtrlThrowLightningSpear extends StatusControl {
-    public StatCtrlThrowLightningSpear() {
-        super(14, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
-    }
+	public StatCtrlThrowLightningSpear() {
+		super(14, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
+	}
 
-    @Override
-    public boolean execute(BendingContext ctx) {
-        EntityLivingBase entity = ctx.getBenderEntity();
-        World world = ctx.getWorld();
+	@Override
+	public boolean execute(BendingContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+		World world = ctx.getWorld();
 
-        EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, entity);
+		EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, entity);
 
-        if (spear != null) {
-            AbilityData abilityData = ctx.getData().getAbilityData("lightning_spear");
-            double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
-            spear.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
-            spear.setBehavior(new LightningSpearBehavior.Thrown());
-        }
+		if (spear != null) {
+			AbilityData abilityData = ctx.getData().getAbilityData("lightning_spear");
+			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 
-        return true;
-    }
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				speedMult = 45;
+			}
+
+			spear.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
+			spear.setBehavior(new LightningSpearBehavior.Thrown());
+		}
+
+		return true;
+	}
 
 }
 

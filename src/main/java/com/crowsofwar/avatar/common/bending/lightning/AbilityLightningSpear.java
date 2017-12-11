@@ -82,6 +82,7 @@ public class AbilityLightningSpear extends Ability {
 			spear.setDamage(damage);
 			spear.rotationPitch = entity.rotationPitch;
 			spear.rotationYaw = entity.rotationYaw;
+			spear.setPiercing(abilityData.isMasterPath(AbilityTreePath.FIRST));
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) spear.setSize(20);
 			world.spawnEntity(spear);
 
