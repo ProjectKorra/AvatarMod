@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -42,54 +43,61 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
  */
 public class AbilityLightningSpear extends Ability {
 
-    public AbilityLightningSpear() {
-        super(Firebending.ID, "lightning_spear");
-        requireRaytrace(2.5, false);
-    }
+	public AbilityLightningSpear() {
+		super(Firebending.ID, "lightning_spear");
+		requireRaytrace(2.5, false);
+	}
 
-    @Override
-    public void execute(AbilityContext ctx) {
+	@Override
+	public void execute(AbilityContext ctx) {
 
-        EntityLivingBase entity = ctx.getBenderEntity();
-        Bender bender = ctx.getBender();
-        World world = ctx.getWorld();
-        BendingData data = ctx.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
+		BendingData data = ctx.getData();
+		AbilityData abilityData = ctx.getAbilityData();
 
-        if (data.hasStatusControl(StatusControl.THROW_LIGHTNINSPEAR)) return;
+		if (data.hasStatusControl(StatusControl.THROW_LIGHTNINSPEAR)) return;
 
-        if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
+		if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
 
-            Vector target;
-            if (ctx.isLookingAtBlock()) {
-                target = ctx.getLookPos();
-            } else {
-                Vector playerPos = getEyePos(entity);
-                target = playerPos.plus(getLookRectangular(entity).times(2.5));
-            }
+			Vector target;
+			if (ctx.isLookingAtBlock()) {
+				target = ctx.getLookPos();
+			} else {
+				Vector playerPos = getEyePos(entity);
+				target = playerPos.plus(getLookRectangular(entity).times(2.5));
+			}
 
-            float damage = 6F;
-            damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
-            damage *= ctx.getPowerRatingDamageMod();
+			float damage = 5F;
+			if (abilityData.getLevel() >= 2) {
+				damage = 8;
+			}
+			damage *= ctx.getPowerRatingDamageMod();
 
-            EntityLightningSpear spear = new EntityLightningSpear(world);
-            spear.setPosition(target);
-            spear.setOwner(entity);
-            spear.setBehavior(new LightningSpearBehavior.PlayerControlled());
-            spear.setDamage(damage);
-            spear.rotationPitch = entity.rotationPitch;
-            spear.rotationYaw = entity.rotationYaw;
-            if (ctx.isMasterLevel(AbilityTreePath.SECOND)) spear.setSize(20);
-            world.spawnEntity(spear);
+			EntityLightningSpear spear = new EntityLightningSpear(world);
+			spear.setPosition(target);
+			spear.setOwner(entity);
+			spear.setBehavior(new LightningSpearBehavior.PlayerControlled());
+			spear.setDamage(damage);
+			spear.rotationPitch = entity.rotationPitch;
+			spear.rotationYaw = entity.rotationYaw;
+			spear.setPiercing(abilityData.isMasterPath(AbilityTreePath.FIRST));
+			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+				spear.setSize(20);
+				spear.setGroupAttack(true);
+			}
+			world.spawnEntity(spear);
 
-            data.addStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
+			data.addStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
 
-        }
+		}
 
-    }
+	}
 
-    @Override
-    public BendingAi getAi(EntityLiving entity, Bender bender) {
-        return new AiLightningSpear(this, entity, bender);
-    }
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiLightningSpear(this, entity, bender);
+	}
 
 }
