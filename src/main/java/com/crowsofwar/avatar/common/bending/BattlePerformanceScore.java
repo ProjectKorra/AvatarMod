@@ -64,7 +64,7 @@ public class BattlePerformanceScore {
 	 * -100 to 100 (0 is neutral).
 	 */
 	public double getScore() {
-		return 0;
+		return score;
 	}
 
 	public void setScore(double score) {
