@@ -89,7 +89,7 @@ public class BattlePerformanceScore {
 
 		// not sure how to explain this but got it using math. K then...
 		double k = 10000 / (max - min);
-		return -2 * Math.signum(currentScore) * (currentScore * currentScore + k * min) / min;
+		return -Math.signum(currentScore) * (currentScore * currentScore + k * min) / k;
 
 	}
 

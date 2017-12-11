@@ -33,7 +33,7 @@ public class AirbendingPerformanceChiBonus {
 
 			if (data.hasBendingId(Airbending.ID)) {
 
-				double performanceScore = bender.getPerformance().getScore();
+				double performanceScore = data.getPerformance().getScore();
 
 				if (performanceScore > 20) {
 
