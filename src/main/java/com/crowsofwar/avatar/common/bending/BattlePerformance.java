@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.data.Bender;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -14,6 +16,10 @@ import net.minecraft.util.math.MathHelper;
  * @author CrowsOfWar
  */
 public class BattlePerformance {
+
+	public static final double SCORE_MOD_SMALL = 14;
+	public static final double SCORE_MOD_MEDIUM = 22;
+	public static final double SCORE_MOD_LARGE = 35;
 
 	private double score;
 
@@ -30,6 +36,18 @@ public class BattlePerformance {
 	 */
 	public void modifyScore(double amount) {
 		score = MathHelper.clamp(score + amount, -100, 100);
+	}
+
+	public static void addSmallScore(EntityLivingBase entity) {
+		Bender.get(entity).getPerformance().modifyScore(SCORE_MOD_SMALL);
+	}
+
+	public static void addMediumScore(EntityLivingBase entity) {
+		Bender.get(entity).getPerformance().modifyScore(SCORE_MOD_MEDIUM);
+	}
+
+	public static void addLargeScore(EntityLivingBase entity) {
+		Bender.get(entity).getPerformance().modifyScore(SCORE_MOD_LARGE);
 	}
 
 	/**
