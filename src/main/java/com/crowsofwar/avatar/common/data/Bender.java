@@ -47,8 +47,6 @@ public abstract class Bender {
 
 	protected WallJumpManager wallJumpManager = new WallJumpManager(this);
 
-	private BattlePerformanceScore performance = new BattlePerformanceScore();
-
 	/**
 	 * For players, returns the username. For mobs, returns the mob's name (e.g.
 	 * Chicken).
@@ -278,7 +276,7 @@ public abstract class Bender {
 			PrModifierHandler.addPowerRatingModifiers(this);
 		}
 
-		performance.update();
+		data.getPerformance().update();
 
 	}
 
@@ -302,10 +300,6 @@ public abstract class Bender {
 
 	public WallJumpManager getWallJumpManager() {
 		return wallJumpManager;
-	}
-
-	public BattlePerformanceScore getPerformance() {
-		return performance;
 	}
 
 	/**

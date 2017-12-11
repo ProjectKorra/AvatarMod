@@ -67,6 +67,10 @@ public class BattlePerformanceScore {
 		return 0;
 	}
 
+	public void setScore(double score) {
+		this.score = score;
+	}
+
 	/**
 	 * Attaining a high battle performance score is temporary; it passively moves towards zero every
 	 * second. Gets the amount of score to change per second, given the current score. Values of

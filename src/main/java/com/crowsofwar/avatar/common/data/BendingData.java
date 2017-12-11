@@ -80,6 +80,7 @@ public class BendingData {
 	private final Map<String, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
 	private final Map<TickHandler, Integer> tickHandlerDuration;
+	private final BattlePerformanceScore performance;
 	private UUID activeBending;
 	private Chi chi;
 	private MiscData miscData;
@@ -105,6 +106,7 @@ public class BendingData {
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
 		powerRatingManagers = new HashMap<>();
+		performance = new BattlePerformanceScore();
 	}
 
 	// ================================================================================
@@ -466,6 +468,14 @@ public class BendingData {
 	}
 
 	// ================================================================================
+	// BATTLE PERFORMANCE
+	// ================================================================================
+
+	public BattlePerformanceScore getPerformance() {
+		return performance;
+	}
+
+	// ================================================================================
 	// MISC
 	// ================================================================================
 
@@ -511,6 +521,8 @@ public class BendingData {
 				writeTo,
 				"TickHandlers");
 
+		writeTo.setDouble("BattlePerformance", getPerformance().getScore());
+
 		// @formatter:on
 
 	}
@@ -551,6 +563,8 @@ public class BendingData {
 		for (TickHandler tickHandler : tickHandlers) {
 			tickHandlerDuration.putIfAbsent(tickHandler, 0);
 		}
+
+		getPerformance().setScore(readFrom.getDouble("BattlePerformance"));
 
 		// @formatter:on
 
