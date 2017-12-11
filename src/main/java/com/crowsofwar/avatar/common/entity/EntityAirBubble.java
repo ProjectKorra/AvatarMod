@@ -105,92 +105,89 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-
-
-			EntityLivingBase owner = getOwner();
-			if (owner == null) {
-				return;
-			}
-
-			if (owner.isDead) {
-				dissipateSmall();
-				return;
-			}
-
-			setPosition(owner.posX, owner.posY, owner.posZ);
-
-			if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
-				owner.setAir(Math.min(airLeft, 300));
-				airLeft--;
-			}
-
-			Bender ownerBender = Bender.get(getOwner());
-			if (!world.isRemote
-					&& !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
-
-				dissipateSmall();
-
-			}
-
-			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-			if (!elytraOk) {
-				ownerBender.sendMessage("avatar.airBubbleElytra");
-				dissipateSmall();
-			}
-
-			if (!isDissipating()) {
-				IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
-					attribute.applyModifier(SLOW_ATTR);
-				}
-
-				if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
-
-					owner.motionY += 0.03;
-
-					if (doesAllowHovering()) {
-
-						if (doesAllowHovering() && !owner.isSneaking()) {
-							handleHovering();
-						} else {
-							owner.motionY += 0.03;
-						}
-					}
-
-				}
-
-			}
-
-			float size = getSize();
-
-			if (isDissipatingLarge()) {
-				setDissipateTime(getDissipateTime() + 1);
-				float mult = 1 + getDissipateTime() / 10f;
-				setSize(size * mult, size * mult);
-				if (getDissipateTime() >= 10) {
-					setDead();
-				}
-			} else if (isDissipatingSmall()) {
-				setDissipateTime(getDissipateTime() - 1);
-				float mult = 1 + getDissipateTime() / 40f;
-				setSize(size * mult, size * mult);
-				if (getDissipateTime() <= -10) {
-					setDead();
-				}
-			} else {
-				setSize(size, size);
-			}
-
+		
+		EntityLivingBase owner = getOwner();
+		if (owner == null) {
+			return;
 		}
 
-		/**
-		 * Handles hovering logic to make the owner hover. Preconditions (not in water, owner
-		 * present, etc) are handled by the caller
-		 */
+		if (owner.isDead) {
+			dissipateSmall();
+			return;
+		}
 
+		setPosition(owner.posX, owner.posY, owner.posZ);
+
+		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
+			owner.setAir(Math.min(airLeft, 300));
+			airLeft--;
+		}
+
+		Bender ownerBender = Bender.get(getOwner());
+		if (!world.isRemote
+				&& !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
+
+			dissipateSmall();
+
+		}
+		
+		ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+		if (!elytraOk) {
+			ownerBender.sendMessage("avatar.airBubbleElytra");
+			dissipateSmall();
+		}
+		
+		if (!isDissipating()) {
+			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
+				attribute.applyModifier(SLOW_ATTR);
+			}
+			
+			if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
+				
+				owner.motionY += 0.03;
+				
+				if (doesAllowHovering()) {
+					
+					if (doesAllowHovering() && !owner.isSneaking()) {
+						handleHovering();
+					} else {
+						owner.motionY += 0.03;
+					}
+				}
+				
+			}
+			
+		}
+		
+		float size = getSize();
+		
+		if (isDissipatingLarge()) {
+			setDissipateTime(getDissipateTime() + 1);
+			float mult = 1 + getDissipateTime() / 10f;
+			setSize(size * mult, size * mult);
+			if (getDissipateTime() >= 10) {
+				setDead();
+			}
+		} else if (isDissipatingSmall()) {
+			setDissipateTime(getDissipateTime() - 1);
+			float mult = 1 + getDissipateTime() / 40f;
+			setSize(size * mult, size * mult);
+			if (getDissipateTime() <= -10) {
+				setDead();
+			}
+		} else {
+			setSize(size, size);
+		}
+		
+	}
+
+	/**
+	 * Handles hovering logic to make the owner hover. Preconditions (not in water, owner
+	 * present, etc) are handled by the caller
+	 */
 	private void handleHovering() {
-
 
 		if (getOwner() != null) {
 			getOwner().fallDistance = 0;
@@ -252,8 +249,6 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 	}
-
-
 	
 	@Override
 	public void setDead() {
@@ -274,25 +269,23 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
+		
+		double mult = -2;
+		if (isDissipatingLarge()) mult = -4;
+		Vector vel = position().minus(getEntityPos(entity));
+		vel = vel.normalize().times(mult).plusY(0.3f);
 
+		entity.motionX = vel.x();
+		entity.motionY = vel.y();
+		entity.motionZ = vel.z();
 
-			double mult = -2;
-			if (isDissipatingLarge()) mult = -4;
-			Vector vel = position().minus(getEntityPos(entity));
-			vel = vel.normalize().times(mult).plusY(0.3f);
-
-			entity.motionX = vel.x();
-			entity.motionY = vel.y();
-			entity.motionZ = vel.z();
-
-			if (entity instanceof AvatarEntity) {
-				AvatarEntity avent = (AvatarEntity) entity;
-				avent.setVelocity(vel);
-			}
-			entity.isAirBorne = true;
-			AvatarUtils.afterVelocityAdded(entity);
+		if (entity instanceof AvatarEntity) {
+			AvatarEntity avent = (AvatarEntity) entity;
+			avent.setVelocity(vel);
 		}
-
+		entity.isAirBorne = true;
+		AvatarUtils.afterVelocityAdded(entity);
+	}
 	
 	@Override
 	protected boolean canCollideWith(Entity entity) {
