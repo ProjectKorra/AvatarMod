@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
 
@@ -39,23 +39,23 @@ public class BattlePerformanceScore {
 	}
 
 	public static void addSmallScore(EntityLivingBase entity) {
-		Bender bender = Bender.get(entity);
-		if (bender != null) {
-			bender.getPerformance().modifyScore(SCORE_MOD_SMALL);
+		BendingData bendingData = BendingData.get(entity);
+		if (bendingData != null) {
+			bendingData.getPerformance().modifyScore(50);
 		}
 	}
 
 	public static void addMediumScore(EntityLivingBase entity) {
-		Bender bender = Bender.get(entity);
-		if (bender != null) {
-			bender.getPerformance().modifyScore(SCORE_MOD_MEDIUM);
+		BendingData bendingData = BendingData.get(entity);
+		if (bendingData != null) {
+			bendingData.getPerformance().modifyScore(50);
 		}
 	}
 
 	public static void addLargeScore(EntityLivingBase entity) {
-		Bender bender = Bender.get(entity);
-		if (bender != null) {
-			bender.getPerformance().modifyScore(SCORE_MOD_LARGE);
+		BendingData bendingData = BendingData.get(entity);
+		if (bendingData != null) {
+			bendingData.getPerformance().modifyScore(50);
 		}
 	}
 
