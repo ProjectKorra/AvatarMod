@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.Chi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
@@ -40,7 +41,11 @@ public class AirbendingPerformanceChiBonus {
 					// Grant chi boost
 					double boostPercent = getChiMultiplier(performanceScore) - 1;
 					float chiBoost = (float) (CHI_CONFIG.availablePerSecond / 20f * boostPercent);
-					data.chi().changeAvailableChi(chiBoost);
+
+					Chi chi = data.chi();
+					if (chi.getAvailableChi() < chi.getAvailableMaxChi()) {
+						data.chi().changeAvailableChi(chiBoost);
+					}
 
 				}
 
