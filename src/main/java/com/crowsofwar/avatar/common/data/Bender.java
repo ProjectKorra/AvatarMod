@@ -47,7 +47,7 @@ public abstract class Bender {
 
 	protected WallJumpManager wallJumpManager = new WallJumpManager(this);
 
-	private BattlePerformanceScore performance;
+	private BattlePerformanceScore performance = new BattlePerformanceScore();
 
 	/**
 	 * For players, returns the username. For mobs, returns the mob's name (e.g.

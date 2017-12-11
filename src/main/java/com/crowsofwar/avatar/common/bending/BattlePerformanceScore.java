@@ -39,15 +39,24 @@ public class BattlePerformanceScore {
 	}
 
 	public static void addSmallScore(EntityLivingBase entity) {
-		Bender.get(entity).getPerformance().modifyScore(SCORE_MOD_SMALL);
+		Bender bender = Bender.get(entity);
+		if (bender != null) {
+			bender.getPerformance().modifyScore(SCORE_MOD_SMALL);
+		}
 	}
 
 	public static void addMediumScore(EntityLivingBase entity) {
-		Bender.get(entity).getPerformance().modifyScore(SCORE_MOD_MEDIUM);
+		Bender bender = Bender.get(entity);
+		if (bender != null) {
+			bender.getPerformance().modifyScore(SCORE_MOD_MEDIUM);
+		}
 	}
 
 	public static void addLargeScore(EntityLivingBase entity) {
-		Bender.get(entity).getPerformance().modifyScore(SCORE_MOD_LARGE);
+		Bender bender = Bender.get(entity);
+		if (bender != null) {
+			bender.getPerformance().modifyScore(SCORE_MOD_LARGE);
+		}
 	}
 
 	/**
