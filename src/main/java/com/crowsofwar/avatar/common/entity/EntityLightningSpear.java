@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformance;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -149,7 +149,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 		entity.attackEntityFrom(damageSource, damage / 2);
 
-		BattlePerformance.addLargeScore(getOwner());
+		BattlePerformanceScore.addLargeScore(getOwner());
 
 	}
 

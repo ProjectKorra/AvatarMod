@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.data;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BattlePerformance;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
@@ -47,7 +47,7 @@ public abstract class Bender {
 
 	protected WallJumpManager wallJumpManager = new WallJumpManager(this);
 
-	private BattlePerformance performance;
+	private BattlePerformanceScore performance;
 
 	/**
 	 * For players, returns the username. For mobs, returns the mob's name (e.g.
@@ -304,7 +304,7 @@ public abstract class Bender {
 		return wallJumpManager;
 	}
 
-	public BattlePerformance getPerformance() {
+	public BattlePerformanceScore getPerformance() {
 		return performance;
 	}
 

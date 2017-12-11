@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BattlePerformance;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
@@ -236,7 +236,7 @@ public class EntitySandstorm extends AvatarEntity {
 	private void onPickupEntity() {
 		if (getOwner() != null) {
 			AbilityData.get(getOwner(), "sandstorm").addXp(ConfigSkills.SKILLS_CONFIG.sandstormPickedUp);
-			BattlePerformance.addMediumScore(getOwner());
+			BattlePerformanceScore.addMediumScore(getOwner());
 		}
 	}
 

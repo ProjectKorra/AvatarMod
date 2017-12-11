@@ -15,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
  *
  * @author CrowsOfWar
  */
-public class BattlePerformance {
+public class BattlePerformanceScore {
 
 	public static final double SCORE_MOD_SMALL = 14;
 	public static final double SCORE_MOD_MEDIUM = 22;

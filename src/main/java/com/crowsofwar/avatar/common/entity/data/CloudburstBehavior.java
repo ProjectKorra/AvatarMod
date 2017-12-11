@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformance;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -95,7 +95,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall>{
             collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
                     entity.getDamage());
 
-            BattlePerformance.addMediumScore(entity.getOwner());
+            BattlePerformanceScore.addMediumScore(entity.getOwner());
 
 
             Vector motion = entity.velocity().dividedBy(20);

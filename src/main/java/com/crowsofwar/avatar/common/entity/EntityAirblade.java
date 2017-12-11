@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformance;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -120,7 +120,7 @@ public class EntityAirblade extends AvatarEntity {
 		if (chainAttack) {
 			if (successfulHit) {
 
-				BattlePerformance.addMediumScore(getOwner());
+				BattlePerformanceScore.addMediumScore(getOwner());
 
 				AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
 				Predicate<EntityLivingBase> notFriendly =//

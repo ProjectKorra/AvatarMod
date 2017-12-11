@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformance;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -115,7 +115,7 @@ public class EntityEarthspike extends AvatarEntity {
 				if (getOwner() != null) {
 					BendingData data = BendingData.get(getOwner());
 					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
-					BattlePerformance.addMediumScore(getOwner());
+					BattlePerformanceScore.addMediumScore(getOwner());
 				}
 
 			}

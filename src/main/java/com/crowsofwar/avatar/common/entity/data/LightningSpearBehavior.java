@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformance;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
@@ -121,7 +121,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			double speed = entity.velocity().magnitude();
 			collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
 					entity.getDamage());
-			BattlePerformance.addMediumScore(entity.getOwner());
+			BattlePerformanceScore.addMediumScore(entity.getOwner());
 
 			Vector motion = entity.velocity().dividedBy(5);
 			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
