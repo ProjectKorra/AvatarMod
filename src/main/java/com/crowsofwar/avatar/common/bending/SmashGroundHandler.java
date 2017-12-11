@@ -67,6 +67,7 @@ public class SmashGroundHandler extends TickHandler {
 
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
 		entity.attackEntityFrom(AvatarDamageSource.causeSmashDamage(entity, target), 5);
+		BattlePerformance.addLargeScore(entity);
 
 		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
 		velocity = velocity.withY(1).times(getSpeed() / 20);

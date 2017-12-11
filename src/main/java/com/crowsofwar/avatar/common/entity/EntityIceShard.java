@@ -72,7 +72,7 @@ public class EntityIceShard extends Entity {
 			collided.attackEntityFrom(source, 5 * (float) damageMult);
 			
 			shatter();
-			
+
 		}
 		
 	}

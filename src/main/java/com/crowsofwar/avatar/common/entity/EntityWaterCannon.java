@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformance;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -134,6 +135,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
 		if (entity.attackEntityFrom(damageSource, damage *
 				damageModifier)) {
+
+			BattlePerformance.addLargeScore(getOwner());
 
 			Vector velocity = getEntityPos(entity).minus(this.position()).normalize();
 			velocity = velocity.times(2);

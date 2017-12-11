@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BattlePerformance;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -276,6 +277,9 @@ public class EntitySandPrison extends AvatarEntity {
 		prison.setStats(AbilityData.get(owner, "sand_prison"), powerRating);
 
 		world.spawnEntity(prison);
+
+		BattlePerformance.addLargeScore(owner);
+
 	}
 
 }

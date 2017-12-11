@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformance;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -108,6 +109,8 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
 						STATS_CONFIG.fireballSettings.damage * entity.getDamageMult());
 				collided.setFire(3);
+
+				BattlePerformance.addMediumScore(entity.getOwner());
 				
 				if (!entity.world.isRemote) {
 					BendingData data = Bender.get(entity.getOwner()).getData();

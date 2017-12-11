@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformance;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -137,6 +138,7 @@ public class EntityFlames extends AvatarEntity {
 				additionalDamage *= damageMult;
 				entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
 						additionalDamage);
+				BattlePerformance.addSmallScore(owner);
 				
 			}
 			

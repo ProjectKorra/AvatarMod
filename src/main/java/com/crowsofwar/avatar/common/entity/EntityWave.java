@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformance;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -85,6 +86,7 @@ public class EntityWave extends AvatarEntity {
 				motion = motion.withY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
 				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), STATS_CONFIG.waveSettings.damage * damageMult);
+				BattlePerformance.addLargeScore(getOwner());
 
 				if (createExplosion) {
 					world.createExplosion(null, posX, posY, posZ, 2, false);

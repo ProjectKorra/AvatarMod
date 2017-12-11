@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformance;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -129,6 +130,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
 				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
 						6 * entity.getDamageMult());
+				BattlePerformance.addMediumScore(entity.getOwner());
 				
 				if (!entity.world.isRemote && data != null) {
 					

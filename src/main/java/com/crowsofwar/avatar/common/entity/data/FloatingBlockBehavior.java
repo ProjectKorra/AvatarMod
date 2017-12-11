@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformance;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -191,6 +192,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			collided.attackEntityFrom(
 					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
 					(float) (speed * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()));
+			BattlePerformance.addMediumScore(entity.getOwner());
 			
 			// Push entity
 			Vector motion = new Vector(collided).minus(new Vector(entity));

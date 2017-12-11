@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformance;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -163,6 +164,7 @@ public class EntityRavine extends AvatarEntity {
 				for (Entity entity : collided) {
 					if (attackEntity(entity)) {
 						attacked++;
+						BattlePerformance.addMediumScore(getOwner());
 					}
 				}
 			}
