@@ -117,10 +117,10 @@ public class EntityAirblade extends AvatarEntity {
 			data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
 		}
 
+		BattlePerformanceScore.addMediumScore(getOwner());
+
 		if (chainAttack) {
 			if (successfulHit) {
-
-				BattlePerformanceScore.addMediumScore(getOwner());
 
 				AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
 				Predicate<EntityLivingBase> notFriendly =//
