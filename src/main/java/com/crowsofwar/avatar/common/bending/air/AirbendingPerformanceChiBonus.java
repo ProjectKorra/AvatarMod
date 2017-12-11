@@ -39,13 +39,16 @@ public class AirbendingPerformanceChiBonus {
 				if (performanceScore > 20) {
 
 					// Grant chi boost
-					double boostPercent = getChiMultiplier(performanceScore) - 1;
-					float chiBoost = (float) (CHI_CONFIG.availablePerSecond / 20f * boostPercent);
+					double boostPct = getChiMultiplier(performanceScore) - 1;
+					float availableChi = (float) (CHI_CONFIG.availablePerSecond / 20f * boostPct);
+					float totalChi = (float) (CHI_CONFIG.regenPerSecond / 20f * boostPct / 2);
 
 					Chi chi = data.chi();
 					if (chi.getAvailableChi() < chi.getAvailableMaxChi()) {
-						data.chi().changeAvailableChi(chiBoost);
+						chi.changeAvailableChi(availableChi);
+						chi.changeTotalChi(totalChi);
 					}
+
 
 				}
 
