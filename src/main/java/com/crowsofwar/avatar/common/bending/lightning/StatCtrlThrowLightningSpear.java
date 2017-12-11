@@ -4,9 +4,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
-import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,8 +22,6 @@ public class StatCtrlThrowLightningSpear extends StatusControl {
     public boolean execute(BendingContext ctx) {
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
-
-        double size = 6;
 
         EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, entity);
 
