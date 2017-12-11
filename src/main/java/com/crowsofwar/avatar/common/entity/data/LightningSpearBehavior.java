@@ -28,6 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -42,157 +43,178 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpear> {
 
-    public static final DataSerializer<LightningSpearBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
+	public static final DataSerializer<LightningSpearBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 
-    public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
+	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
 
-    public static void register() {
-        DataSerializers.registerSerializer(DATA_SERIALIZER);
-        ID_NOTHING = registerBehavior(Idle.class);
-        ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
-        ID_THROWN = registerBehavior(Thrown.class);
-    }
+	public static void register() {
+		DataSerializers.registerSerializer(DATA_SERIALIZER);
+		ID_NOTHING = registerBehavior(Idle.class);
+		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
+		ID_THROWN = registerBehavior(Thrown.class);
+	}
 
-    public static class Idle extends LightningSpearBehavior {
+	public static class Idle extends LightningSpearBehavior {
 
-        @Override
-        public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
-            return this;
-        }
+		@Override
+		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
+			return this;
+		}
 
-        @Override
-        public void fromBytes(PacketBuffer buf) {}
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
 
-        @Override
-        public void toBytes(PacketBuffer buf) {}
+		@Override
+		public void toBytes(PacketBuffer buf) {}
 
-        @Override
-        public void load(NBTTagCompound nbt) {}
+		@Override
+		public void load(NBTTagCompound nbt) {}
 
-        @Override
-        public void save(NBTTagCompound nbt) {}
+		@Override
+		public void save(NBTTagCompound nbt) {}
 
-    }
+	}
 
-    public static class Thrown extends LightningSpearBehavior {
+	public static class Thrown extends LightningSpearBehavior {
 
-        int time = 0;
+		int time = 0;
 
-        @Override
-        public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
+		@Override
+		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 
-            time++;
+			time++;
 
-            if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
-                entity.setDead();
-                entity.onCollideWithSolid();
-            }
+			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
+				entity.setDead();
+				entity.onCollideWithSolid();
+			}
 
-            entity.addVelocity(Vector.DOWN.times(1/12000));
+			entity.addVelocity(Vector.DOWN.times(1/12000));
 
-            Vector direction = entity.velocity().toSpherical();
-            entity.rotationYaw = (float) Math.toDegrees(direction.y());
-            entity.rotationPitch = (float) Math.toDegrees(direction.x());
+			Vector direction = entity.velocity().toSpherical();
+			entity.rotationYaw = (float) Math.toDegrees(direction.y());
+			entity.rotationPitch = (float) Math.toDegrees(direction.x());
 
-            World world = entity.world;
-            if (!entity.isDead) {
-                List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-                        entity.getExpandedHitbox());
-                if (!collidedList.isEmpty()) {
-                    Entity collided = collidedList.get(0);
-                    if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-                        collision((EntityLivingBase) collided, entity);
-                    } else if (collided != entity.getOwner()) {
-                        Vector motion = new Vector(collided).minus(new Vector(entity));
-                        motion = motion.times(0.7).withY(0.09);
-                        collided.addVelocity(motion.x(), motion.y(), motion.z());
-                    }
+			World world = entity.world;
+			if (!entity.isDead) {
+				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
+						entity.getExpandedHitbox());
+				if (!collidedList.isEmpty()) {
+					Entity collided = collidedList.get(0);
+					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
+						collision((EntityLivingBase) collided, entity, entity.isGroupAttack());
+					} else if (collided != entity.getOwner()) {
+						Vector motion = new Vector(collided).minus(new Vector(entity));
+						motion = motion.times(0.7).withY(0.09);
+						collided.addVelocity(motion.x(), motion.y(), motion.z());
+					}
 
-                }
-            }
+				}
+			}
 
-            return this;
+			return this;
 
-        }
+		}
 
-        private void collision(EntityLivingBase collided, EntityLightningSpear entity) {
-            double speed = entity.velocity().magnitude();
-            collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-                    entity.getDamage());
+		private void collision(EntityLivingBase collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
+			double speed = entity.velocity().magnitude();
+			collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+					entity.getDamage());
 
-            Vector motion = entity.velocity().dividedBy(5);
-            motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
-            collided.addVelocity(motion.x(), motion.y(), motion.z());
+			Vector motion = entity.velocity().dividedBy(5);
+			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
+			collided.addVelocity(motion.x(), motion.y(), motion.z());
 
-            BendingData data = Bender.get(entity.getOwner()).getData();
-            if (!collided.world.isRemote && data != null) {
-                float xp = SKILLS_CONFIG.lightningspearHit;
-                data.getAbilityData("lightning_spear").addXp(xp);
-            }
+			BendingData data = Bender.get(entity.getOwner()).getData();
+			if (!collided.world.isRemote && data != null) {
+				float xp = SKILLS_CONFIG.lightningspearHit;
+				data.getAbilityData("lightning_spear").addXp(xp);
+			}
 
-            // Remove the fireball & spawn particles
-            if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
-        }
+			// Remove the fireball & spawn particles
+			if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
 
-        @Override
-        public void fromBytes(PacketBuffer buf) {}
+			if (triggerGroupAttack) {
 
-        @Override
-        public void toBytes(PacketBuffer buf) {}
+				// Damage nearby entities in group
 
-        @Override
-        public void load(NBTTagCompound nbt) {}
+				double radius = 2;
+				AxisAlignedBB aabb = new AxisAlignedBB(
+						entity.posX - radius, entity.posY - radius, entity.posZ - radius,
+						entity.posX + radius, entity.posY + radius, entity.posZ + radius);
 
-        @Override
-        public void save(NBTTagCompound nbt) {}
+				List<EntityLivingBase> targets = entity.world.getEntitiesWithinAABB(
+						EntityLivingBase.class, aabb);
+				for (EntityLivingBase target : targets) {
+					if (target.getDistanceSqToEntity(entity) > radius * radius) {
+						continue;
+					}
+					collision(target, entity, false);
+				}
 
-    }
+			}
 
-    public static class PlayerControlled extends LightningSpearBehavior {
+		}
 
-        public PlayerControlled() {}
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
 
-        @Override
-        public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
-            EntityLivingBase owner = entity.getOwner();
+		@Override
+		public void toBytes(PacketBuffer buf) {}
 
-            if (owner == null) return this;
+		@Override
+		public void load(NBTTagCompound nbt) {}
 
-            BendingData data = Bender.get(owner).getData();
+		@Override
+		public void save(NBTTagCompound nbt) {}
 
-            double yaw = Math.toRadians(owner.rotationYaw);
-            double pitch = Math.toRadians(owner.rotationPitch);
-            Vector forward = Vector.toRectangular(yaw, pitch);
-            Vector eye = Vector.getEyePos(owner);
-            Vector target = forward.times(2).plus(eye);
-            Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
-            entity.setVelocity(motion);
+	}
 
-            Vector direction = entity.position().minus(Vector.getEyePos(owner)).toSpherical();
-            entity.rotationYaw = (float) Math.toDegrees(direction.y());
-            entity.rotationPitch = (float) Math.toDegrees(direction.x());
+	public static class PlayerControlled extends LightningSpearBehavior {
 
-            int size = entity.getSize();
-            if (size < 60 && entity.ticksExisted % 4 == 0) {
-                entity.setSize(size + 1);
-            }
+		public PlayerControlled() {}
+
+		@Override
+		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
+			EntityLivingBase owner = entity.getOwner();
+
+			if (owner == null) return this;
+
+			BendingData data = Bender.get(owner).getData();
+
+			double yaw = Math.toRadians(owner.rotationYaw);
+			double pitch = Math.toRadians(owner.rotationPitch);
+			Vector forward = Vector.toRectangular(yaw, pitch);
+			Vector eye = Vector.getEyePos(owner);
+			Vector target = forward.times(2).plus(eye);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
+			entity.setVelocity(motion);
+
+			Vector direction = entity.position().minus(Vector.getEyePos(owner)).toSpherical();
+			entity.rotationYaw = (float) Math.toDegrees(direction.y());
+			entity.rotationPitch = (float) Math.toDegrees(direction.x());
+
+			int size = entity.getSize();
+			if (size < 60 && entity.ticksExisted % 4 == 0) {
+				entity.setSize(size + 1);
+			}
 
 
-            return this;
-        }
+			return this;
+		}
 
-        @Override
-        public void fromBytes(PacketBuffer buf) {}
+		@Override
+		public void fromBytes(PacketBuffer buf) {}
 
-        @Override
-        public void toBytes(PacketBuffer buf) {}
+		@Override
+		public void toBytes(PacketBuffer buf) {}
 
-        @Override
-        public void load(NBTTagCompound nbt) {}
+		@Override
+		public void load(NBTTagCompound nbt) {}
 
-        @Override
-        public void save(NBTTagCompound nbt) {}
+		@Override
+		public void save(NBTTagCompound nbt) {}
 
-    }
+	}
 
 }

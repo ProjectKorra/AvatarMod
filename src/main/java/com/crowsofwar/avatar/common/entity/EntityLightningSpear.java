@@ -68,6 +68,11 @@ public class EntityLightningSpear extends AvatarEntity {
 	 */
 	private boolean piercing;
 
+    /**
+     * Upon hitting an enemy, whether to damage any additional enemies next to the hit target.
+     */
+    private boolean groupAttack;
+
 	/**
 	 * Handles electrocution of nearby entities when the lightning spear touches water
 	 */
@@ -180,6 +185,14 @@ public class EntityLightningSpear extends AvatarEntity {
 
     public void setPiercing(boolean piercing) {
         this.piercing = piercing;
+    }
+
+    public boolean isGroupAttack() {
+        return groupAttack;
+    }
+
+    public void setGroupAttack(boolean groupAttack) {
+        this.groupAttack = groupAttack;
     }
 
     @Override
