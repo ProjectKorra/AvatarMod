@@ -80,9 +80,14 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 			}
 			
 			// Read what changed
+
+			// For the scheduled task, can't continue to use this old bytebuf - it will be
+			// deallocated and trying to read it will throw an error
+			// So, just make a copy of the bytebuf, which will NOT be deallocated
+			ByteBuf copyBuf = buf.copy();
 			AvatarMod.proxy.getClientThreadListener().addScheduledTask(() -> {
 				for (DataCategory category : changed) {
-					category.read(buf, data);
+					category.read(copyBuf, data);
 				}
 			});
 
