@@ -32,7 +32,7 @@ public class AirbendingPerformanceChiBonus {
 			Bender bender = Bender.get(player);
 			BendingData data = bender.getData();
 
-			if (data.hasBendingId(Airbending.ID)) {
+			if (data.hasBendingId(Airbending.ID) && !player.isCreative()) {
 
 				double performanceScore = data.getPerformance().getScore();
 
