@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
@@ -31,6 +30,7 @@ import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import com.crowsofwar.avatar.common.entity.EntityIceShield;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -56,6 +56,7 @@ import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
+import static net.minecraft.client.renderer.GlStateManager.scale;
 
 /**
  * 
@@ -99,6 +100,8 @@ public class AvatarUiRenderer extends Gui {
 		renderAirBubbleHealth(resolution);
 		renderIceShieldHealth(resolution);
 		renderPrisonCracks(resolution);
+		renderBattleStatus(resolution);
+
 		applyVisionShader();
 
 	}
@@ -392,12 +395,15 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	/**
-	 * Returns whether the given buff ability is active
+	 * Displays current Battle Performance and Power Rating.
 	 */
-	private boolean testBuffAbilityActive(BendingData data, UUID uuid, Class<? extends
-			PowerRatingModifier> modifier) {
+	private void renderBattleStatus(ScaledResolution res) {
 
-		return data.hasBendingId(uuid) && data.getPowerRatingManager(uuid).hasModifier(modifier);
+		BendingData data = BendingData.get(mc.player);
+		String text = "Performance: " + ((int) data.getPerformance().getScore());
+		FontRenderer fr = mc.fontRenderer;
+
+		drawString(fr, text, res.getScaledWidth() - fr.getStringWidth(text) - 10, 10, 0xffffff);
 
 	}
 
