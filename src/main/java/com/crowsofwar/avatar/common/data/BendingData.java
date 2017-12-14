@@ -106,7 +106,7 @@ public class BendingData {
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
 		powerRatingManagers = new HashMap<>();
-		performance = new BattlePerformanceScore();
+		performance = new BattlePerformanceScore(this);
 	}
 
 	// ================================================================================

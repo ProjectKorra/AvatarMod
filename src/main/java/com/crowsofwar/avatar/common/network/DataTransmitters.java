@@ -214,7 +214,7 @@ public class DataTransmitters {
 
 		@Override
 		public BattlePerformanceScore read(ByteBuf buf, BendingData data) {
-			return new BattlePerformanceScore(buf.readDouble());
+			return new BattlePerformanceScore(data, buf.readDouble());
 		}
 
 		@Override

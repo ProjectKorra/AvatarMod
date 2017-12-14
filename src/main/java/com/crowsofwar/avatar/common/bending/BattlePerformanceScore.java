@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.DataCategory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
 
@@ -24,13 +25,15 @@ public class BattlePerformanceScore {
 	public static final double SCORE_MOD_MEDIUM = 22;
 	public static final double SCORE_MOD_LARGE = 35;
 
+	private final BendingData data;
 	private double score;
 
-	public BattlePerformanceScore() {
-		this(0);
+	public BattlePerformanceScore(BendingData data) {
+		this(data, 0);
 	}
 
-	public BattlePerformanceScore(double score) {
+	public BattlePerformanceScore(BendingData data, double score) {
+		this.data = data;
 		this.score = score;
 	}
 
@@ -79,8 +82,10 @@ public class BattlePerformanceScore {
 	}
 
 	public void setScore(double score) {
+		if (this.score != score) {
+			data.save(DataCategory.PERFORMANCE);
+		}
 		this.score = score;
-
 	}
 
 	/**
