@@ -8,6 +8,15 @@ adds content from [*Avatar: The Last Airbender*](https://en.wikipedia.org/wiki/A
 The mod already has all four major types of bending; many unique, multipurpose Abilities; and mobs
 and animals from the Avatar world. More information is available at the [wiki](http://projectkorra.wikia.com/wiki/Av2).
 
+Important: Looking for developer
+--------------------------------
+
+We are currently looking for a new lead developer to carry on the mod. More information is available here:
+
+[Looking for lead developer to take over Avatar Mod 2](http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/modification-development/2876693-looking-for-lead-developer-to-take-over-avatar-mod)
+
+Thank you! :)
+
 End Users
 ---------
 
