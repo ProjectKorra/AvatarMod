@@ -400,6 +400,11 @@ public class AvatarUiRenderer extends Gui {
 	private void renderBattleStatus(ScaledResolution res) {
 
 		BendingData data = BendingData.get(mc.player);
+
+		if (data.getAllBending().isEmpty()) {
+			return;
+		}
+
 		String text = "Performance: " + ((int) data.getPerformance().getScore());
 		FontRenderer fr = mc.fontRenderer;
 
