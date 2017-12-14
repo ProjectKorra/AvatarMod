@@ -80,7 +80,7 @@ public class BendingData {
 	private final Map<String, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
 	private final Map<TickHandler, Integer> tickHandlerDuration;
-	private final BattlePerformanceScore performance;
+	private BattlePerformanceScore performance;
 	private UUID activeBending;
 	private Chi chi;
 	private MiscData miscData;
@@ -475,7 +475,11 @@ public class BendingData {
 		return performance;
 	}
 
-	// ================================================================================
+	public void setPerformance(BattlePerformanceScore performance) {
+		this.performance = performance;
+	}
+
+// ================================================================================
 	// MISC
 	// ================================================================================
 

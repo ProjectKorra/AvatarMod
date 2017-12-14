@@ -12,6 +12,9 @@ import net.minecraft.util.math.MathHelper;
  * <p>
  * The actual battle performance score is obtained with {@link #getScore()} and is between -100 to
  * 100.
+ * <p>
+ * The BattlePerformanceScore is synced between server and client. Please note that client attempts
+ * to change the value don't do anything, and the score can only be changed by the server.
  *
  * @author CrowsOfWar
  */
@@ -22,6 +25,14 @@ public class BattlePerformanceScore {
 	public static final double SCORE_MOD_LARGE = 35;
 
 	private double score;
+
+	public BattlePerformanceScore() {
+		this(0);
+	}
+
+	public BattlePerformanceScore(double score) {
+		this.score = score;
+	}
 
 	/**
 	 * Updates the battle performance number, to be called every tick
@@ -69,6 +80,7 @@ public class BattlePerformanceScore {
 
 	public void setScore(double score) {
 		this.score = score;
+
 	}
 
 	/**
