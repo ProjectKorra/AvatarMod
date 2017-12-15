@@ -405,10 +405,19 @@ public class AvatarUiRenderer extends Gui {
 			return;
 		}
 
-		String text = "Performance: " + ((int) data.getPerformance().getScore());
-		FontRenderer fr = mc.fontRenderer;
+		{
+			String text = "Performance: " + ((int) data.getPerformance().getScore());
+			FontRenderer fr = mc.fontRenderer;
 
-		drawString(fr, text, res.getScaledWidth() - fr.getStringWidth(text) - 10, 10, 0xffffff);
+			drawString(fr, text, res.getScaledWidth() - fr.getStringWidth(text) - 10, 10, 0xffffff);
+		}
+		{
+			String text = "PowerRating: " + ((int) data.getPowerRatingManager(data.getActiveBendingId()).getRating(null));
+			FontRenderer fr = mc.fontRenderer;
+
+			drawString(fr, text, res.getScaledWidth() - fr.getStringWidth(text) - 10, 20, 0xffffff);
+		}
+
 
 	}
 
