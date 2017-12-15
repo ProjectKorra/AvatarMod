@@ -21,7 +21,7 @@ import net.minecraft.util.math.MathHelper;
  */
 public class BattlePerformanceScore {
 
-	public static final double SCORE_MOD_SMALL = 14;
+	public static final double SCORE_MOD_SMALL = 8;
 	public static final double SCORE_MOD_MEDIUM = 22;
 	public static final double SCORE_MOD_LARGE = 35;
 
@@ -55,21 +55,21 @@ public class BattlePerformanceScore {
 	public static void addSmallScore(EntityLivingBase entity) {
 		BendingData bendingData = BendingData.get(entity);
 		if (bendingData != null) {
-			bendingData.getPerformance().modifyScore(50);
+			bendingData.getPerformance().modifyScore(SCORE_MOD_SMALL);
 		}
 	}
 
 	public static void addMediumScore(EntityLivingBase entity) {
 		BendingData bendingData = BendingData.get(entity);
 		if (bendingData != null) {
-			bendingData.getPerformance().modifyScore(50);
+			bendingData.getPerformance().modifyScore(SCORE_MOD_MEDIUM);
 		}
 	}
 
 	public static void addLargeScore(EntityLivingBase entity) {
 		BendingData bendingData = BendingData.get(entity);
 		if (bendingData != null) {
-			bendingData.getPerformance().modifyScore(50);
+			bendingData.getPerformance().modifyScore(SCORE_MOD_LARGE);
 		}
 	}
 
