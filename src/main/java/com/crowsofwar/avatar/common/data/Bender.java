@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
@@ -24,14 +25,18 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
@@ -277,6 +282,10 @@ public abstract class Bender {
 
 		data.getPerformance().update();
 
+		if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 40 == 0) {
+			syncPowerRating();
+		}
+
 	}
 
 	public void onDeath() {
@@ -294,6 +303,20 @@ public abstract class Bender {
 		Chi chi = data.chi();
 		chi.setTotalChi(chi.getMaxChi());
 		chi.setAvailableChi(chi.getTotalChi() * CHI_CONFIG.availableThreshold);
+
+	}
+
+	private void syncPowerRating() {
+
+		BendingContext ctx = new BendingContext(getData(), getEntity(), new Raytrace.Result());
+		Map<UUID, Double> powerRatings = new HashMap<>();
+		List<PowerRatingManager> managers = getData().getPowerRatingManagers();
+
+		for (PowerRatingManager manager : managers) {
+			powerRatings.put(manager.getBendingType(), manager.getRating(ctx));
+		}
+
+		AvatarMod.network.sendTo(new PacketCPowerRating(powerRatings), (EntityPlayerMP) getEntity());
 
 	}
 

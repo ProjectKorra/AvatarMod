@@ -75,4 +75,7 @@ public class PowerRatingManager {
 		}
 	}
 
+	public UUID getBendingType() {
+		return bendingType;
+	}
 }
