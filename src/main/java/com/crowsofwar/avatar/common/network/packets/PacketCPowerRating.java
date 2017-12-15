@@ -51,4 +51,7 @@ public class PacketCPowerRating extends AvatarPacket<PacketCPowerRating> {
 		return PacketRedirector::redirectMessage;
 	}
 
+	public Map<UUID, Double> getPowerRatings() {
+		return powerRatings;
+	}
 }

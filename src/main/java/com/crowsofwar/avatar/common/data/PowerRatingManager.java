@@ -3,7 +3,10 @@ package com.crowsofwar.avatar.common.data;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Manages the power rating
@@ -15,12 +18,23 @@ public class PowerRatingManager {
 	private final UUID bendingType;
 	private Set<PowerRatingModifier> modifiers;
 
+	private double cachedValue;
+	private boolean useCache;
+
 	public PowerRatingManager(UUID bendingType) {
 		this.bendingType = bendingType;
 		modifiers = new HashSet<>();
+
+		cachedValue = 0;
+		useCache = false;
 	}
 
 	public double getRating(BendingContext ctx) {
+
+		if (useCache) {
+			return cachedValue;
+		}
+
 		double result = 0;
 		for (PowerRatingModifier modifier : modifiers) {
 			result += modifier.get(ctx);
@@ -78,4 +92,15 @@ public class PowerRatingManager {
 	public UUID getBendingType() {
 		return bendingType;
 	}
+
+	/**
+	 * Sets the cached rating value so that the manager ignores all modifiers, only returning this
+	 * desired value. Only to be used by the client, where it doesn't know anything about the
+	 * modifiers, only the final value (which is calculated by the server).
+	 */
+	public void setCachedRatingValue(double value) {
+		cachedValue = value;
+		useCache = true;
+	}
+
 }
