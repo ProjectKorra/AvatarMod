@@ -60,6 +60,7 @@ avatar.spec.locked=locked
 avatar.spec.lvl1=level I
 avatar.spec.lvl2=level II
 avatar.spec.lvl3=level III
+avatar.spec.lvl4=level IV
 avatar.spec.lvl4_1=level IV, first path
 avatar.spec.lvl4_2=level IV, second path
 avatar.cmd.xpset=Set [value]${player}[/value]'s [value]${ability}[/value] progress to [value][translate=avatar.spec.${spec}][/value]
@@ -78,6 +79,9 @@ avatar.skatingBendingDisabled=[error]You can't use bending while water skating u
 avatar.sandPrisonDisabled.sand=The target must be on sand to be imprisoned.
 avatar.sandPrisonDisabled.bendable=The target must be on an earth related block to be imprisoned.
 avatar.lightningRedirected=You redirected ${lightningbender}'s lightning!
+avatar.canUpgradeAbility=[bold]\[AvatarMod2] Did you know [aqua]you can upgrade your ability [translate=avatar.ability.${ability}] to [translate=avatar.spec.lvl${newLevel}]?[/aqua][/bold]
+avatar.canUpgradeAbility2=\[AvatarMod2] To do so, in the radial menu, just hover over the ability and right click!
+avatar.canUpgradeAbility3=\[AvatarMod2] You'll need a [yellow]Universal or [translate=avatar.${bendingType}] scroll[/yellow] to do so!
 
 avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.

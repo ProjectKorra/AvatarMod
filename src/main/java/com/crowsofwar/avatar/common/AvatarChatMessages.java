@@ -97,6 +97,13 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_LIGHTNING_REDIRECT_SUCCESS = newChatMessage(CFG,
 			"avatar.lightningRedirected", "lightningbender");
 
+	public static final FormattedMessage MSG_CAN_UPGRADE_ABILITY = newChatMessage(CFG,
+			"avatar.canUpgradeAbility", "ability", "newLevel");
+	public static final FormattedMessage MSG_CAN_UPGRADE_ABILITY_2 = newChatMessage(CFG,
+			"avatar.canUpgradeAbility2");
+	public static final FormattedMessage MSG_CAN_UPGRADE_ABILITY_3 = newChatMessage(CFG,
+			"avatar.canUpgradeAbility3", "bendingType");
+
 	/**
 	 * Call the static initializers
 	 */
