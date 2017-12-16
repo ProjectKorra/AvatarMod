@@ -26,8 +26,7 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
-import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
@@ -39,6 +38,8 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
+
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.AvatarMod.proxy;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
@@ -249,6 +250,13 @@ public class RadialMenu extends Gui {
 			}
 			
 		}
+		// Right-clicking on segment opens bending menu
+		if (AvatarControl.CONTROL_RIGHT_CLICK.isPressed() && currentMouseover != null) {
+			UUID activeBendingId = BendingData.get(mc.player).getActiveBendingId();
+			AvatarMod.network.sendToServer(new PacketSSkillsMenu(activeBendingId, currentMouseover.getAbility()));
+			closeGui = true;
+		}
+
 		return closeGui;
 	}
 	
