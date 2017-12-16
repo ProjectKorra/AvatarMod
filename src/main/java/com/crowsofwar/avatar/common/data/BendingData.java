@@ -448,6 +448,17 @@ public class BendingData {
 	 * power rating list
 	 */
 	public List<PowerRatingManager> getPowerRatingManagers() {
+		// Ensure that power rating managers are up-to-date - if a bending style was removed, remove
+		// that power rating manager
+		Iterator<Map.Entry<UUID, PowerRatingManager>> iterator = powerRatingManagers.entrySet()
+				.iterator();
+		while (iterator.hasNext()) {
+			UUID bendingId = iterator.next().getKey();
+			if (!hasBendingId(bendingId)) {
+				iterator.remove();
+			}
+		}
+
 		return new ArrayList<>(powerRatingManagers.values());
 	}
 
