@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.*;
 import io.netty.buffer.ByteBuf;
@@ -205,6 +206,20 @@ public class DataTransmitters {
 		public Vision read(ByteBuf buf, BendingData data) {
 			int id = buf.readInt();
 			return id == -1 ? null : Vision.values()[id];
+		}
+
+	};
+
+	public static final DataTransmitter<BattlePerformanceScore> PERFORMANCE = new DataTransmitter<BattlePerformanceScore>() {
+
+		@Override
+		public BattlePerformanceScore read(ByteBuf buf, BendingData data) {
+			return new BattlePerformanceScore(data, buf.readDouble());
+		}
+
+		@Override
+		public void write(ByteBuf buf, BattlePerformanceScore o) {
+			buf.writeDouble(o.getScore());
 		}
 
 	};

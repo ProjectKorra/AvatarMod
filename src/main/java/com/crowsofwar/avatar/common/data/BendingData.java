@@ -80,6 +80,7 @@ public class BendingData {
 	private final Map<String, AbilityData> abilityData;
 	private final Set<TickHandler> tickHandlers;
 	private final Map<TickHandler, Integer> tickHandlerDuration;
+	private BattlePerformanceScore performance;
 	private UUID activeBending;
 	private Chi chi;
 	private MiscData miscData;
@@ -105,6 +106,7 @@ public class BendingData {
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
 		powerRatingManagers = new HashMap<>();
+		performance = new BattlePerformanceScore(this);
 	}
 
 	// ================================================================================
@@ -446,6 +448,17 @@ public class BendingData {
 	 * power rating list
 	 */
 	public List<PowerRatingManager> getPowerRatingManagers() {
+		// Ensure that power rating managers are up-to-date - if a bending style was removed, remove
+		// that power rating manager
+		Iterator<Map.Entry<UUID, PowerRatingManager>> iterator = powerRatingManagers.entrySet()
+				.iterator();
+		while (iterator.hasNext()) {
+			UUID bendingId = iterator.next().getKey();
+			if (!hasBendingId(bendingId)) {
+				iterator.remove();
+			}
+		}
+
 		return new ArrayList<>(powerRatingManagers.values());
 	}
 
@@ -466,6 +479,18 @@ public class BendingData {
 	}
 
 	// ================================================================================
+	// BATTLE PERFORMANCE
+	// ================================================================================
+
+	public BattlePerformanceScore getPerformance() {
+		return performance;
+	}
+
+	public void setPerformance(BattlePerformanceScore performance) {
+		this.performance = performance;
+	}
+
+// ================================================================================
 	// MISC
 	// ================================================================================
 
@@ -511,6 +536,8 @@ public class BendingData {
 				writeTo,
 				"TickHandlers");
 
+		writeTo.setDouble("BattlePerformance", getPerformance().getScore());
+
 		// @formatter:on
 
 	}
@@ -551,6 +578,8 @@ public class BendingData {
 		for (TickHandler tickHandler : tickHandlers) {
 			tickHandlerDuration.putIfAbsent(tickHandler, 0);
 		}
+
+		getPerformance().setScore(readFrom.getDouble("BattlePerformance"));
 
 		// @formatter:on
 

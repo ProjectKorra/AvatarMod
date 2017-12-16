@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -290,6 +291,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				if (owner != null) {
 					BendingData data = BendingData.get(owner);
 					data.getAbilityData("wall").addXp(SKILLS_CONFIG.wallBlockedAttack);
+					BattlePerformanceScore.addLargeScore(getOwner());
 				}
 			}
 

@@ -17,21 +17,25 @@
 
 package com.crowsofwar.avatar.client;
 
-import java.util.Random;
-
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
-
+import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Handles packets addressed to the client. Packets like this have a C in their
@@ -54,6 +58,9 @@ public class PacketHandlerClient implements IPacketHandler {
 		
 		if (packet instanceof PacketCErrorMessage)
 			return handlePacketNotEnoughChi((PacketCErrorMessage) packet, ctx);
+
+		if (packet instanceof PacketCPowerRating)
+			return handlePacketPowerRating((PacketCPowerRating) packet, ctx);
 		
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 		
@@ -86,7 +93,22 @@ public class PacketHandlerClient implements IPacketHandler {
 		
 		return null;
 	}
-	
+
+	private IMessage handlePacketPowerRating(PacketCPowerRating packet, MessageContext ctx) {
+
+		Map<UUID, Double> powerRatings = packet.getPowerRatings();
+		BendingData data = BendingData.get(mc.player);
+
+		Set<Map.Entry<UUID, Double>> entrySet = powerRatings.entrySet();
+		for (Map.Entry<UUID, Double> entry : entrySet) {
+
+			data.getPowerRatingManager(entry.getKey()).setCachedRatingValue(entry.getValue());
+
+		}
+
+		return null;
+	}
+
 	private IMessage handlePacketNotEnoughChi(PacketCErrorMessage packet, MessageContext ctx) {
 		
 		AvatarUiRenderer.displayErrorMessage(packet.getMessage());

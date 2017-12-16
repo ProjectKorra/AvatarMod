@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -235,6 +236,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		DamageSource damageSource = createDamageSource(entity);
 		if (!wasRedirected && !redirected && entity.attackEntityFrom(damageSource, damage *
 				damageModifier)) {
+
+			BattlePerformanceScore.addLargeScore(getOwner());
 
 			entity.setFire(4);
 

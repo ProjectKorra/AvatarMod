@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -114,10 +115,14 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 		
 		private void collision(EntityLivingBase collided, EntityFireball entity) {
 			double speed = entity.velocity().magnitude();
-			collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-					entity.getDamage());
+
 			collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
-			
+
+			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+					entity.getDamage())) {
+				BattlePerformanceScore.addMediumScore(entity.getOwner());
+			}
+
 			Vector motion = entity.velocity().dividedBy(20);
 			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());

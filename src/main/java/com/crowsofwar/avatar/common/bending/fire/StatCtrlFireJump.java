@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -141,6 +142,7 @@ public class StatCtrlFireJump extends StatusControl {
 		for (EntityLivingBase target : nearby) {
 			if (target != entity) {
 				target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), 5);
+				BattlePerformanceScore.addSmallScore(entity);
 
 				Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
 				velocity = velocity.withY(1).times(speed / 20);

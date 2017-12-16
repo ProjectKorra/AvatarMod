@@ -126,6 +126,7 @@ public class AvatarMod {
 		registerPacket(PacketSUnlockBending.class, Side.SERVER);
 		registerPacket(PacketSConfirmTransfer.class, Side.SERVER);
 		registerPacket(PacketSCycleBending.class, Side.SERVER);
+		registerPacket(PacketCPowerRating.class, Side.CLIENT);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 		

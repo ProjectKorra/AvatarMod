@@ -1,10 +1,10 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -13,7 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -93,8 +92,11 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall>{
 
         private void collision(EntityLivingBase collided, EntityCloudBall entity) {
             double speed = entity.velocity().magnitude();
-            collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-                    entity.getDamage());
+
+            if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+                    entity.getDamage())) {
+                BattlePerformanceScore.addMediumScore(entity.getOwner());
+            }
 
 
             Vector motion = entity.velocity().dividedBy(20);

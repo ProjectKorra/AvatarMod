@@ -46,7 +46,8 @@ public enum DataCategory {
 	MISC_DATA(		BendingData::getMiscData,			BendingData::setMiscData,			DataTransmitters.MISC_DATA),
 	TICK_HANDLERS(	BendingData::getAllTickHandlers,	BendingData::setAllTickHandlers,	DataTransmitters.TICK_HANDLERS),
 	ACTIVE_BENDING(	BendingData::getActiveBendingId, 	BendingData::setActiveBendingId,	DataTransmitters.ACTIVE_BENDING),
-	VISION(			BendingData::getVision,				BendingData::setVision, 			DataTransmitters.VISION);
+	VISION(			BendingData::getVision,				BendingData::setVision, 			DataTransmitters.VISION),
+	PERFORMANCE(	BendingData::getPerformance,		BendingData::setPerformance,		DataTransmitters.PERFORMANCE);
 	//@formatter:on
 	
 	private final Function<BendingData, ?> getter;
