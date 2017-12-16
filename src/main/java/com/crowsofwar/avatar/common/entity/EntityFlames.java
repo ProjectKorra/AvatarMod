@@ -136,9 +136,10 @@ public class EntityFlames extends AvatarEntity {
 					additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
 				}
 				additionalDamage *= damageMult;
-				entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
-						additionalDamage);
-				BattlePerformanceScore.addSmallScore(owner);
+				if (entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
+						additionalDamage)) {
+					BattlePerformanceScore.addSmallScore(owner);
+				}
 				
 			}
 			

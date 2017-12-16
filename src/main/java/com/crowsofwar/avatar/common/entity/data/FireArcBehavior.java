@@ -106,11 +106,12 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				
 				double push = STATS_CONFIG.fireballSettings.push;
 				collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
-				collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
-						STATS_CONFIG.fireballSettings.damage * entity.getDamageMult());
 				collided.setFire(3);
 
-				BattlePerformanceScore.addMediumScore(entity.getOwner());
+				if (collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
+						STATS_CONFIG.fireballSettings.damage * entity.getDamageMult())) {
+					BattlePerformanceScore.addMediumScore(entity.getOwner());
+				}
 				
 				if (!entity.world.isRemote) {
 					BendingData data = Bender.get(entity.getOwner()).getData();

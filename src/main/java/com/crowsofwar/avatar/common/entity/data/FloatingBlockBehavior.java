@@ -189,10 +189,12 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		private FloatingBlockBehavior collision(EntityLivingBase collided, EntityFloatingBlock entity) {
 			// Add damage
 			double speed = entity.velocity().magnitude();
-			collided.attackEntityFrom(
+
+			if (collided.attackEntityFrom(
 					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-					(float) (speed * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()));
-			BattlePerformanceScore.addMediumScore(entity.getOwner());
+					(float) (speed * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
+				BattlePerformanceScore.addMediumScore(entity.getOwner());
+			}
 			
 			// Push entity
 			Vector motion = new Vector(collided).minus(new Vector(entity));

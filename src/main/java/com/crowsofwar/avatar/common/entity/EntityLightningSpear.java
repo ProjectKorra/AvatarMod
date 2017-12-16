@@ -147,9 +147,9 @@ public class EntityLightningSpear extends AvatarEntity {
 		// Uses same DamageSource as lightning arc; this is intentional
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
 
-		entity.attackEntityFrom(damageSource, damage / 2);
-
-		BattlePerformanceScore.addLargeScore(getOwner());
+		if (entity.attackEntityFrom(damageSource, damage / 2)) {
+			BattlePerformanceScore.addLargeScore(getOwner());
+		}
 
 	}
 

@@ -128,9 +128,10 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
 				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
-				collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
-						6 * entity.getDamageMult());
-				BattlePerformanceScore.addMediumScore(entity.getOwner());
+				if (collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
+						6 * entity.getDamageMult())) {
+					BattlePerformanceScore.addMediumScore(entity.getOwner());
+				}
 				
 				if (!entity.world.isRemote && data != null) {
 					

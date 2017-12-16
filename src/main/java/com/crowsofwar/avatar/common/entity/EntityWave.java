@@ -85,8 +85,13 @@ public class EntityWave extends AvatarEntity {
 				Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);
 				motion = motion.withY(0.4);
 				entity.addVelocity(motion.x(), motion.y(), motion.z());
-				entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner), STATS_CONFIG.waveSettings.damage * damageMult);
-				BattlePerformanceScore.addLargeScore(getOwner());
+
+				if (entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner),
+						STATS_CONFIG.waveSettings.damage * damageMult)) {
+
+					BattlePerformanceScore.addLargeScore(getOwner());
+
+				}
 
 				if (createExplosion) {
 					world.createExplosion(null, posX, posY, posZ, 2, false);
