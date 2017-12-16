@@ -227,6 +227,11 @@ public class PacketHandlerServer implements IPacketHandler {
 			if (data.hasBendingId(element)) {
 				int guiId = AvatarGuiHandler.getGuiId(element);
 				player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
+
+				if (packet.getAbility() != null) {
+					return new PacketCOpenSkillCard(packet.getAbility());
+				}
+
 			}
 		}
 		

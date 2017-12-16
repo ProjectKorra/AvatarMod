@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.client.uitools.*;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -257,6 +256,15 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		window = new WindowAbility(card.getAbility(), this);
 		inventory.setVisible(true);
 		hotbar.setVisible(true);
+	}
+
+	public void openWindow(Ability ability) {
+		for (AbilityCard card : cards) {
+			if (card.getAbility() == ability) {
+				openWindow(card);
+				break;
+			}
+		}
 	}
 	
 	public void closeWindow() {
