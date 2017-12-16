@@ -201,6 +201,13 @@ public class AbilityData {
 		return lastXp;
 	}
 
+	/**
+	 * Resets the previous XP value so it is the same as the current one.
+	 */
+	public void resetLastXp() {
+		lastXp = xp;
+	}
+
 	public boolean isMaxLevel() {
 		return level >= MAX_LEVEL;
 	}

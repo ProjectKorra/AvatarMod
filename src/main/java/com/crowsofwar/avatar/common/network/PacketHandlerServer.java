@@ -54,6 +54,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CAN_UPGRADE_ABILITY;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CAN_UPGRADE_ABILITY_2;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CAN_UPGRADE_ABILITY_3;
 import static com.crowsofwar.avatar.common.analytics.AnalyticEvents.getAbilityExecutionEvent;
 
 /**
@@ -122,12 +125,29 @@ public class PacketHandlerServer implements IPacketHandler {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		Bender bender = Bender.get(player);
 		if (bender != null) {
+
 			bender.executeAbility(packet.getAbility(), packet.getRaytrace());
 
 			// Send analytics
 			String abilityName = packet.getAbility().getName();
 			String level = AbilityData.get(player, abilityName).getLevelDesc();
 			AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(abilityName, level));
+
+			// If player just got to 100% XP so they can upgrade, send them a message
+			AbilityData abilityData = AbilityData.get(player, abilityName);
+			boolean notLevel4 = abilityData.getLevel() < 3;
+			if (abilityData.getXp() == 100 && abilityData.getLastXp() < 100 && notLevel4) {
+
+				UUID bendingId = packet.getAbility().getBendingId();
+
+				MSG_CAN_UPGRADE_ABILITY.send(player, abilityName, abilityData.getLevel() + 1);
+				MSG_CAN_UPGRADE_ABILITY_2.send(player);
+				MSG_CAN_UPGRADE_ABILITY_3.send(player, BendingStyles.getName(bendingId));
+
+				// Prevent this message from appearing again by updating lastXp to show current Xp
+				abilityData.resetLastXp();
+
+			}
 
 		}
 
