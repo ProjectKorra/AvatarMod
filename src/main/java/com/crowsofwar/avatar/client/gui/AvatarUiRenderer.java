@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.client.AvatarShaderUtils;
+import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -118,7 +119,13 @@ public class AvatarUiRenderer extends Gui {
 		if (currentBendingMenu != null) {
 			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {
 				currentBendingMenu = null;
-				mc.setIngameFocus();
+
+				// If skills menu was opened via radial menu, don't call setIngameFocus because that
+				// would close the skills menu
+				if (!(mc.currentScreen instanceof SkillsGui)) {
+					mc.setIngameFocus();
+				}
+
 			} else {
 				currentBendingMenu.drawScreen(mouseX, mouseY, resolution);
 				mc.setIngameNotInFocus();
