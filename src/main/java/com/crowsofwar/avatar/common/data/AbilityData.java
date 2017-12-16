@@ -40,6 +40,7 @@ public class AbilityData {
 	
 	private final BendingData data;
 	private final String abilityName;
+	private float lastXp;
 	private float xp;
 	/**
 	 * The current level. -1 for locked
@@ -167,7 +168,8 @@ public class AbilityData {
 	 */
 	public void setXp(float xp) {
 		if (xp == this.xp) return;
-		
+		this.lastXp = this.xp;
+
 		if (xp < 0) xp = 0;
 		if (xp > 100) {
 			xp = 100;
@@ -190,7 +192,15 @@ public class AbilityData {
 		setXp(this.xp + xp);
 		
 	}
-	
+
+	/**
+	 * Gets the previous XP value before the last time {@link #setXp(float)} or {@link #addXp(float)}
+	 * was called. Not synced to client.
+	 */
+	public float getLastXp() {
+		return lastXp;
+	}
+
 	public boolean isMaxLevel() {
 		return level >= MAX_LEVEL;
 	}
@@ -232,12 +242,14 @@ public class AbilityData {
 	
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
+		lastXp = nbt.getFloat("lastXp");
 		level = nbt.getInteger("Level");
 		path = AbilityTreePath.get(nbt.getInteger("Path"));
 	}
 	
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("Xp", xp);
+		nbt.setFloat("LastXp", lastXp);
 		nbt.setInteger("Level", level);
 		nbt.setInteger("Path", path.id());
 	}
