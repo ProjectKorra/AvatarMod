@@ -17,16 +17,15 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import static com.crowsofwar.avatar.client.gui.RadialMenu.*;
-import static net.minecraft.client.renderer.GlStateManager.*;
-
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+
+import static com.crowsofwar.avatar.client.gui.RadialMenu.*;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
  * Holds information for the RadialMenu about a segment. Contains information on
@@ -158,5 +157,8 @@ public class RadialSegment extends Gui {
 		
 	}
 	//@formatter:on
-	
+
+	public Ability getAbility() {
+		return ability;
+	}
 }

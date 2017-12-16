@@ -16,11 +16,14 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -31,21 +34,33 @@ import java.util.UUID;
 public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 	
 	private byte element;
-	
+	private int abilityId;
+
 	public PacketSSkillsMenu() {}
-	
+
 	public PacketSSkillsMenu(UUID element) {
+		this(element, null);
+	}
+
+	public PacketSSkillsMenu(UUID element, @Nullable Ability ability) {
 		this.element = BendingStyles.getNetworkId(element);
+		if (ability == null) {
+			abilityId = -1;
+		} else {
+			abilityId = Abilities.all().indexOf(ability);
+		}
 	}
 	
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		element = buf.readByte();
+		abilityId = buf.readInt();
 	}
 	
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		buf.writeByte(element);
+		buf.writeInt(abilityId);
 	}
 	
 	@Override
@@ -61,5 +76,13 @@ public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 	public UUID getElement() {
 		return BendingStyles.get(element).getId();
 	}
-	
+
+	@Nullable
+	public Ability getAbility() {
+		if (abilityId == -1) {
+			return null;
+		}
+		return Abilities.all().get(abilityId);
+	}
+
 }
