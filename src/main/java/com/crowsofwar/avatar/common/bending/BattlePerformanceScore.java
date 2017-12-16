@@ -21,9 +21,9 @@ import net.minecraft.util.math.MathHelper;
  */
 public class BattlePerformanceScore {
 
-	public static final double SCORE_MOD_SMALL = 8;
-	public static final double SCORE_MOD_MEDIUM = 22;
-	public static final double SCORE_MOD_LARGE = 35;
+	public static final double SCORE_MOD_SMALL = 16;
+	public static final double SCORE_MOD_MEDIUM = 30;
+	public static final double SCORE_MOD_LARGE = 50;
 
 	private final BendingData data;
 	private double score;
