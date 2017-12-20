@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
@@ -251,7 +250,7 @@ public class EntityIcePrison extends AvatarEntity {
 		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
 
-		Bender bender = Bender.get(entity);
+		Bender bender = Bender.get(owner);
 		prison.setStats(bender.getData().getAbilityData("ice_prison"), bender.calcPowerRating(Icebending.ID));
 
 		world.spawnEntity(prison);
