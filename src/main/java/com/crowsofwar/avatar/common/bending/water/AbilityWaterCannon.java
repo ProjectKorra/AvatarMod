@@ -27,7 +27,10 @@ public class AbilityWaterCannon extends Ability{
 			if (hasChi && !hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 			}
+		} else {
+			bender.sendMessage("avatar.waterCannonFail");
 		}
+
 	}
 
 }
