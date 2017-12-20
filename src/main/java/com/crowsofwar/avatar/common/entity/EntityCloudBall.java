@@ -176,12 +176,16 @@ public class EntityCloudBall extends AvatarEntity {
 
     }
 
+	/**
+	 * Prevents the cloudburst from colliding with arrows and other projectiles and deflecting them,
+	 * which messes up the absorption mechanic.
+	 */
+	@Override
+	public boolean canBeCollidedWith() {
+		return false;
+	}
 
-
-
-
-
-    @Override
+	@Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         setDamage(nbt.getFloat("Damage"));
