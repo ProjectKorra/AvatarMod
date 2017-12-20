@@ -206,6 +206,11 @@ public class EntityIcePrison extends AvatarEntity {
 		dataManager.set(SYNC_MAX_IMPRISONED_TIME, maxImprisonedTime);
 	}
 
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+
 	/**
 	 * Sets the statistics of this prison based on that ability data
 	 */

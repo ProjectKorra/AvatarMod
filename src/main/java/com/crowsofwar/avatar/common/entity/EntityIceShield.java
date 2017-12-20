@@ -164,6 +164,11 @@ public class EntityIceShield extends EntityShield {
 	}
 
 	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+
+	@Override
 	protected float getChiDamageCost() {
 		return STATS_CONFIG.chiIceShieldProtect;
 	}
