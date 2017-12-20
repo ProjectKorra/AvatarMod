@@ -164,7 +164,6 @@ public class RadialMenu extends Gui {
 				}
 				if (abilityData.isLocked() && creative) {
 					secondKey = "avatar.radial.lockedCreative2";
-					nameKey = "avatar.radial.lockedCreative1";
 				}
 				
 			}
