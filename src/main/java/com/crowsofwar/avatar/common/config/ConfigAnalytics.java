@@ -42,4 +42,9 @@ public class ConfigAnalytics {
 
 	}
 
+	public void optOutAnalytics() {
+		analyticsEnabled = false;
+		ConfigLoader.save(this, "avatar/analytics.yml", true);
+	}
+
 }

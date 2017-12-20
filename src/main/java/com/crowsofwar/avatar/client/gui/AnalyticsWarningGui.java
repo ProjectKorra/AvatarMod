@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
+import com.crowsofwar.avatar.common.config.ConfigAnalytics;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -41,11 +42,13 @@ public class AnalyticsWarningGui extends GuiScreen {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
-			this.mc.displayGuiScreen(new GuiMainMenu());
-		} else if (button.id == 1) {
-			this.mc.shutdown();
+
+		if (button.id == 1) {
+			ConfigAnalytics.ANALYTICS_CONFIG.optOutAnalytics();
 		}
+
+		this.mc.displayGuiScreen(new GuiMainMenu());
+
 	}
 	
 	@Override
