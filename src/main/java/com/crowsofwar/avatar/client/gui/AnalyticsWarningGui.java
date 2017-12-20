@@ -24,6 +24,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class AnalyticsWarningGui extends GuiScreen {
@@ -49,24 +51,48 @@ public class AnalyticsWarningGui extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
-		
-		// @formatter:off
-		String[] lines = {
-			"Avatar Mod 2 - Analytics Notification",
-			"",
-			"Hello! We would like to notify you of a new feature of Avatar Mod 2.",
-			"We've introduced a statistic feature called " + TextFormatting.BOLD + "analytics"
-					+ TextFormatting.RESET + ",",
-			"which gathers anonymous statistics on what features of AV2 players are using.",
-			"This is completely anonymous and the statistics are only used to improve avatar mod.",
-			"(Not used for commercial purposes)",
-			"Detailed info is available here: http://bit.ly/2Bda6EY"
 
-		};
-		// @formatter:on
-		
+		String text = "Avatar Mod 2 - Analytics Notification \n \n " +
+				"Hello! We would like to notify you of a new feature of Avatar Mod 2. We've " +
+				"introduced a statistic feature called " + TextFormatting.BOLD + "analytics" +
+				TextFormatting.RESET + ", which gathers " +
+				"anonymous statistics on what features of AV2 players are using. " +
+				"This is completely anonymous and the statistics are only used to improve avatar mod. " +
+				"(Not used for commercial purposes) \n \n " +
+				"Detailed info is available here: http://bit.ly/2Bda6EY";
+
+		// Split into lines, such that each line isn't too long and stretches off the screen
+		List<String> lineList = new ArrayList<>();
+		String[] words = text.split(" ");
+		int currentLineLength = 0;
+		StringBuilder currentLine = new StringBuilder();
+
+		for (String word : words) {
+
+			// Want to check if this the same last word instance
+			//noinspection StringEquality
+			boolean lastWord = word == words[words.length - 1];
+			if (lastWord) {
+				currentLine.append(word);
+			}
+
+			int newLineLength = currentLineLength + fontRenderer.getStringWidth(word);
+			if (newLineLength > width * 0.8 || word.equals("\n") || lastWord) {
+				lineList.add(currentLine.toString());
+				currentLine = new StringBuilder();
+				currentLineLength = 0;
+			}
+
+			if (!word.equals("\n")) {
+				currentLine.append(word).append(' ');
+				currentLineLength += fontRenderer.getStringWidth(word);
+			}
+
+
+		}
+
 		int y = height / 6;
-		for (String ln : lines) {
+		for (String ln : lineList) {
 			drawString(fontRenderer, ln, (width - fontRenderer.getStringWidth(ln)) / 2, y, 0xffffff);
 			y += fontRenderer.FONT_HEIGHT + 2;
 		}

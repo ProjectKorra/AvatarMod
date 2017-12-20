@@ -212,11 +212,10 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@SubscribeEvent
 	public void onMainMenu(GuiOpenEvent e) {
 
-		GuiScreen analyticsScreen = new AnalyticsWarningGui();
-		mc.displayGuiScreen(analyticsScreen);
-		e.setGui(analyticsScreen);
-
-		if (true) {
+		if (e.getGui() instanceof GuiMainMenu) {
+			GuiScreen analyticsScreen = new AnalyticsWarningGui();
+			mc.displayGuiScreen(analyticsScreen);
+			e.setGui(analyticsScreen);
 			return;
 		}
 
