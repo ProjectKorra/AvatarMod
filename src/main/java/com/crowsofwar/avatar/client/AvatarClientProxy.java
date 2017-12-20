@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.crowsofwar.avatar.common.config.ConfigAnalytics.ANALYTICS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
@@ -212,7 +213,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@SubscribeEvent
 	public void onMainMenu(GuiOpenEvent e) {
 
-		if (e.getGui() instanceof GuiMainMenu) {
+		if (e.getGui() instanceof GuiMainMenu && ANALYTICS_CONFIG.displayAnalyticsWarning) {
 			GuiScreen analyticsScreen = new AnalyticsWarningGui();
 			mc.displayGuiScreen(analyticsScreen);
 			e.setGui(analyticsScreen);

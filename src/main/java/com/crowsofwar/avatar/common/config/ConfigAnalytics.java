@@ -19,6 +19,9 @@ public class ConfigAnalytics {
 	@Load
 	public boolean analyticsEnabled = true;
 
+	@Load
+	public boolean displayAnalyticsWarning = true;
+
 	public static void load() {
 		ConfigLoader.load(ANALYTICS_CONFIG, "avatar/analytics.yml", true);
 		ANALYTICS_CONFIG.setupAnalyticsId();
@@ -44,6 +47,11 @@ public class ConfigAnalytics {
 
 	public void optOutAnalytics() {
 		analyticsEnabled = false;
+		ConfigLoader.save(this, "avatar/analytics.yml", true);
+	}
+
+	public void dontShowAnalyticsWarning() {
+		displayAnalyticsWarning = false;
 		ConfigLoader.save(this, "avatar/analytics.yml", true);
 	}
 

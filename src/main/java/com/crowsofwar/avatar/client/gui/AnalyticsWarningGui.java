@@ -1,16 +1,16 @@
-/* 
+/*
   This file is part of AvatarMod.
-    
+
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   AvatarMod is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -30,27 +30,28 @@ import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class AnalyticsWarningGui extends GuiScreen {
-	
+
 	@Override
 	public void initGui() {
 		buttonList.clear();
-		
+
 		buttonList.add(new GuiButton(0, (width - 200) / 2 - 110, height - height / 3, 200, 20, "Enable analytics (recommended)"));
 		buttonList.add(new GuiButton(1, (width - 200) / 2 + 110, height - height / 3, 200, 20, "Disable analytics, don't help out"));
 
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 
 		if (button.id == 1) {
 			ConfigAnalytics.ANALYTICS_CONFIG.optOutAnalytics();
 		}
+		ConfigAnalytics.ANALYTICS_CONFIG.dontShowAnalyticsWarning();
 
 		this.mc.displayGuiScreen(new GuiMainMenu());
 
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
@@ -99,7 +100,7 @@ public class AnalyticsWarningGui extends GuiScreen {
 			drawString(fontRenderer, ln, (width - fontRenderer.getStringWidth(ln)) / 2, y, 0xffffff);
 			y += fontRenderer.FONT_HEIGHT + 2;
 		}
-		
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }
