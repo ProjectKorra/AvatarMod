@@ -166,4 +166,14 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_watercannon", hit, owner);
 	}
 
+	/**
+	 * Create a DamageSource for damage caused by a cloudburst.
+	 *
+	 * @param hit   Who was hit by the cloudburst
+	 * @param owner Who created the cloudburst
+	 */
+	public static DamageSource causeCloudburstDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_cloudburst", hit, owner).setProjectile();
+	}
+
 }

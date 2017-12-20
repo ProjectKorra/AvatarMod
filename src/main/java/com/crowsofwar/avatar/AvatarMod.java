@@ -101,6 +101,7 @@ public class AvatarMod {
 		ConfigClient.load();
 		ConfigChi.load();
 		ConfigMobs.load();
+		ConfigAnalytics.load();
 		
 		AvatarControl.initControls();
 		registerAbilities();

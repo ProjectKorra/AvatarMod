@@ -93,7 +93,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall>{
         private void collision(EntityLivingBase collided, EntityCloudBall entity) {
             double speed = entity.velocity().magnitude();
 
-            if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+            if (collided.attackEntityFrom(AvatarDamageSource.causeCloudburstDamage(collided, entity.getOwner()),
                     entity.getDamage())) {
                 BattlePerformanceScore.addMediumScore(entity.getOwner());
             }

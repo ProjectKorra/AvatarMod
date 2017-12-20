@@ -17,25 +17,14 @@
 
 package com.crowsofwar.avatar.common.command;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import com.crowsofwar.avatar.common.config.*;
+import com.crowsofwar.gorecore.config.ConfigurationException;
+import com.crowsofwar.gorecore.tree.*;
+import net.minecraft.command.ICommandSender;
 
 import java.util.List;
 
-import com.crowsofwar.avatar.common.config.ConfigChi;
-import com.crowsofwar.avatar.common.config.ConfigClient;
-import com.crowsofwar.avatar.common.config.ConfigMobs;
-import com.crowsofwar.avatar.common.config.ConfigSkills;
-import com.crowsofwar.avatar.common.config.ConfigStats;
-import com.crowsofwar.gorecore.config.ConfigurationException;
-import com.crowsofwar.gorecore.tree.ArgumentDirect;
-import com.crowsofwar.gorecore.tree.ArgumentList;
-import com.crowsofwar.gorecore.tree.CommandCall;
-import com.crowsofwar.gorecore.tree.IArgument;
-import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.ITypeConverter;
-import com.crowsofwar.gorecore.tree.NodeFunctional;
-
-import net.minecraft.command.ICommandSender;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
 /**
  * 
@@ -72,6 +61,7 @@ public class NodeConfig extends NodeFunctional {
 				ConfigChi.load();
 				ConfigMobs.load();
 				ConfigStats.STATS_CONFIG.loadBlocks();
+				ConfigAnalytics.load();
 				
 			} catch (ConfigurationException e) {
 				
