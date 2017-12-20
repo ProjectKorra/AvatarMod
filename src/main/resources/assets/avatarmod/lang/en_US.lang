@@ -342,6 +342,7 @@ death.attack.avatar_groundSmash=%2$s smashed %1$s to a pulp
 death.attack.avatar_lightningBending=%2$s electrocuted %1$s
 death.attack.avatar_lightningBendingRedirected=%2$s redirected lightning to electrocute %1$s
 death.attack.avatar_watercannon=%1$s was killed by %2$s's water cannon
+death.attack.avatar_cloudburst=%1$s was killed by %2$s's cloudburst
 
 entity.Airbender.name=Airbender
 entity.Firebender.name=Firebender
