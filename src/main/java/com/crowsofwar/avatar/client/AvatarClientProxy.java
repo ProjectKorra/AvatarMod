@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AnalyticsWarningGui;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.GuiBisonChest;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
@@ -65,6 +66,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.crowsofwar.avatar.common.config.ConfigAnalytics.ANALYTICS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
@@ -210,6 +212,14 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@SubscribeEvent
 	public void onMainMenu(GuiOpenEvent e) {
+
+		if (e.getGui() instanceof GuiMainMenu && ANALYTICS_CONFIG.displayAnalyticsWarning) {
+			GuiScreen analyticsScreen = new AnalyticsWarningGui();
+			mc.displayGuiScreen(analyticsScreen);
+			e.setGui(analyticsScreen);
+			return;
+		}
+
 		if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
 			GuiScreen screen = new PreviewWarningGui();
 			mc.displayGuiScreen(screen);

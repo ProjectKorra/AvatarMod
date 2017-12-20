@@ -481,8 +481,12 @@ public class ConfigLoader {
 		loader.load();
 		loader.save();
 	}
-	
+
 	public static void save(Object obj, String path) {
+		save(obj, path, false);
+	}
+
+	public static void save(Object obj, String path, boolean neverIgnoreConfig) {
 		try {
 			
 			Map<String, Object> map = new HashMap<>();
@@ -494,7 +498,7 @@ public class ConfigLoader {
 				}
 			}
 			
-			ConfigLoader loader = new ConfigLoader(path, obj, map, false, false);
+			ConfigLoader loader = new ConfigLoader(path, obj, map, false, neverIgnoreConfig);
 			loader.usedValues.putAll(map);
 			loader.save();
 			
