@@ -37,7 +37,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -269,8 +272,8 @@ public abstract class AvatarEntity extends Entity {
 
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
-		List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(),
-				EntitySelectors.<Entity>getTeamCollisionPredicate(this));
+		List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this,
+				this.getEntityBoundingBox());
 		
 		if (!list.isEmpty()) {
 			int i = this.world.getGameRules().getInt("maxEntityCramming");
