@@ -1075,7 +1075,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			}
 
 			float f1 = 0.16277136F / (f * f * f);
-			this.moveRelative(strafe, jump, forward, this.onGround ? 0.1F * f1 : 0.02F);
+			this.moveRelative(strafe, jump, forward, this.onGround ? 0.1F * f1 : 0.06F);
 			f = 0.91F;
 
 			if (this.onGround) {
