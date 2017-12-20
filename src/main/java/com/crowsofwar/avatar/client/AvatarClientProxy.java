@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AnalyticsWarningGui;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.GuiBisonChest;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
@@ -210,6 +211,15 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	
 	@SubscribeEvent
 	public void onMainMenu(GuiOpenEvent e) {
+
+		GuiScreen analyticsScreen = new AnalyticsWarningGui();
+		mc.displayGuiScreen(analyticsScreen);
+		e.setGui(analyticsScreen);
+
+		if (true) {
+			return;
+		}
+
 		if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
 			GuiScreen screen = new PreviewWarningGui();
 			mc.displayGuiScreen(screen);
