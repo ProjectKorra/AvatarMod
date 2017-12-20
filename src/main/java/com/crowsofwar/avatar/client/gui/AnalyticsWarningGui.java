@@ -32,11 +32,11 @@ public class AnalyticsWarningGui extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		this.buttonList.clear();
+		buttonList.clear();
 		
-		this.buttonList
-				.add(new GuiButton(0, (width - 200) / 2, height - height / 5, 200, 20, "To Main Menu"));
-		
+		buttonList.add(new GuiButton(0, (width - 200) / 2 - 110, height - height / 3, 200, 20, "Enable analytics (recommended)"));
+		buttonList.add(new GuiButton(1, (width - 200) / 2 + 110, height - height / 3, 200, 20, "Disable analytics, don't help out"));
+
 	}
 	
 	@Override
