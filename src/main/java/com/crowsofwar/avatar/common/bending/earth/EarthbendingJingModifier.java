@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -64,11 +65,11 @@ public class EarthbendingJingModifier extends PowerRatingModifier {
 	}
 
 	/**
-	 * Looks around for other benders and finds their health percentage. Gets the average of the
-	 * nearby benders' health (0-1).
+	 * Looks around for other benders/mobs and finds their health percentage. Gets the average of
+	 * the nearby opponents' health (0-1).
 	 * <p>
 	 * This is used to simulate "jing" or whether it is a good opportunity for the
-	 * earthbender to strike. Low health of nearby benders means it is a good time for the
+	 * earthbender to strike. Low health of nearby opponents means it is a good time for the
 	 * earthbender to attack.
 	 */
 	private float getNearbyHealth(BendingContext ctx) {
@@ -81,21 +82,23 @@ public class EarthbendingJingModifier extends PowerRatingModifier {
 				entity.posX - size, entity.posY - size, entity.posZ - size,
 				entity.posX + size, entity.posY + size, entity.posZ + size);
 
-		List<EntityLivingBase> benders = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb,
-				candidate -> candidate != ctx.getBenderEntity() && Bender.isBenderSupported
-						(candidate));
+		List<EntityLivingBase> opponents = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb,
+				candidate -> candidate != ctx.getBenderEntity() && (Bender.isBenderSupported
+						(candidate) || candidate instanceof EntityMob));
 
 		float average = 0;
-		for (EntityLivingBase benderEntity : benders) {
+		for (EntityLivingBase opponent : opponents) {
 
 			// Ignore players on creative mode
-			Bender bender = Bender.get(benderEntity);
-			if (bender.isCreativeMode()) {
-				continue;
+			if (Bender.isBenderSupported(opponent)) {
+				Bender bender = Bender.get(opponent);
+				if (bender.isCreativeMode()) {
+					continue;
+				}
 			}
 
-			float healthPercent = benderEntity.getHealth() / benderEntity.getMaxHealth();
-			average += healthPercent / benders.size();
+			float healthPercent = opponent.getHealth() / opponent.getMaxHealth();
+			average += healthPercent / opponents.size();
 		}
 
 		return average;
