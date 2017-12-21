@@ -37,22 +37,22 @@ public class SmashGroundHandler extends TickHandler {
 	@Override
 	public boolean tick(BendingContext ctx) {
 
-		EntityLivingBase target = ctx.getBenderEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		
-		if (target.isInWater() || target.onGround || bender.isFlying()) {
+		if (entity.isInWater() || entity.onGround || bender.isFlying()) {
 			
-			if (target.onGround) {
+			if (entity.onGround) {
 				
 				double range = getRange();
 
-				World world = target.world;
-				AxisAlignedBB box = new AxisAlignedBB(target.posX - range, target.posY - range,
-						target.posZ - range, target.posX + range, target.posY + range, target.posZ + range);
-				
+				World world = entity.world;
+				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
+						entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
+
 				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
-				for (EntityLivingBase entity : nearby) {
-					if (entity != target) {
+				for (EntityLivingBase target : nearby) {
+					if (target != entity) {
 						smashEntity(target, entity);
 					}
 				}
@@ -66,7 +66,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		if (entity.attackEntityFrom(AvatarDamageSource.causeSmashDamage(entity, target), 5)) {
+		if (target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), 5)) {
 			BattlePerformanceScore.addLargeScore(entity);
 		}
 
