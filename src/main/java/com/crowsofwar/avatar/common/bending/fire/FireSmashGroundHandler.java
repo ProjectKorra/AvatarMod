@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.SmashGroundHandler;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 
 /**
  *
@@ -29,6 +31,8 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	@Override
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
 		super.smashEntity(target, entity);
+		entity.world.playSound(null, target.posX, target.posY, target.posZ,
+				SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1, 1);
 	}
 
 	@Override
