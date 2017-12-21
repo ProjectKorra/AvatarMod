@@ -29,7 +29,6 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	@Override
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
 		super.smashEntity(target, entity);
-		target.setFire(4);
 	}
 
 	@Override
