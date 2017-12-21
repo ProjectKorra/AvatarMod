@@ -298,6 +298,13 @@ avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they
 avatar.ability.sandstorm.lvl4_1=Strong gusts ;; Sandstorm moves much faster and isn't disrupted by airbending
 avatar.ability.sandstorm.lvl4_2=Harsh grains ;; Whirling sand grains cause continuous minor damage to targets
 
+avatar.ability.cloudburst=Cloudburst
+avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies
+avatar.ability.cloudburst.lvl1=Basic cloud ball
+avatar.ability.cloudburst.lvl2=Faster speed when thrown
+avatar.ability.cloudburst.lvl3=Much more damage
+avatar.ability.cloudburst.lvl4_1=Chi Smash ;; Temporarily applies severe debuffs to targets' bending power
+avatar.ability.cloudburst.lvl4_2=Absorption ;; Cloudburst can absorb incoming projectiles, which increases its damage
 
 avatar.ability.undefined=???
 
