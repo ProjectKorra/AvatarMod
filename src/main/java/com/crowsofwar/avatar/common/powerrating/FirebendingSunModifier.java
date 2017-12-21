@@ -29,7 +29,7 @@ public class FirebendingSunModifier extends PowerRatingModifier {
 			reduce += 2;
 		}
 
-		return 50 - reduce * (50 / 7.0);
+		return 20 - reduce * (70 / 11.0);
 
 	}
 

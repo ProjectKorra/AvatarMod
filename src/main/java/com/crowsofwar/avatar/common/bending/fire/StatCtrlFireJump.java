@@ -81,8 +81,12 @@ public class StatCtrlFireJump extends StatusControl {
 				currentYaw = Math.toRadians(entity.rotationYaw);
 			}
 
-			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
-					currentYaw, 0);
+			float pitch = entity.rotationPitch;
+			if (pitch < -45) {
+				pitch = -45;
+			}
+
+			Vector rotations = new Vector(Math.toRadians(pitch), currentYaw, 0);
 
 			// Calculate velocity to move bender
 
