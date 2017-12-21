@@ -322,6 +322,14 @@ avatar.ability.fire_jump.lvl3=Attack more targets upon landing, light them on fi
 avatar.ability.fire_jump.lvl4_1=Combustion launch ;; Also attack nearby targets when jumping off
 avatar.ability.fire_jump.lvl4_2=Wall jumping ;; Gain the ability to wall jump once after fire jumping
 
+avatar.ability.lightning_redirect=Lightning Redirection
+avatar.ability.lightning_redirect.desc=Represents your ability to redirect lightning, doesn't appear in the radial menu
+avatar.ability.lightning_redirect.lvl1=60% chance to redirect lightning, be careful!
+avatar.ability.lightning_redirect.lvl2=70% chance to redirect
+avatar.ability.lightning_redirect.lvl3=80% chance to redirect
+avatar.ability.lightning_redirect.lvl4_1=90% chance to redirect lightning
+avatar.ability.lightning_redirect.lvl4_2=90% chance to redirect lightning
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
