@@ -330,6 +330,14 @@ avatar.ability.lightning_redirect.lvl3=80% chance to redirect
 avatar.ability.lightning_redirect.lvl4_1=90% chance to redirect lightning
 avatar.ability.lightning_redirect.lvl4_2=90% chance to redirect lightning
 
+avatar.ability.lightning_spear=Lightning Spear
+avatar.ability.lightning_spear.desc=Create a throwable bolt of lightning
+avatar.ability.lightning_spear.lvl1=Basic lightning spear, electrocutes targets in water
+avatar.ability.lightning_spear.lvl2=Faster when thrown
+avatar.ability.lightning_spear.lvl3=Deals much more damag
+avatar.ability.lightning_spear.lvl4_1=Piercing bolt ;; Goes through enemies instead of stopping on the first one, so it can hurt many targets
+avatar.ability.lightning_spear.lvl4_2=Electric cloud ;; When hitting a target, nearby targets within 2 blocks are also hurt
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
