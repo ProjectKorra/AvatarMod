@@ -314,6 +314,14 @@ avatar.ability.earthspike.lvl3=Faster earth spikes
 avatar.ability.earthspike.lvl4_1=Octopus fissure ;; Creates eight spikes in all directions
 avatar.ability.earthspike.lvl4_2=Flash fissure ;; Travels much faster and deals twice the damage
 
+avatar.ability.fire_jump=Fire Jump
+avatar.ability.fire_jump.desc=Use fire propulsion to jump a short distance
+avatar.ability.fire_jump.lvl1=Jump in a small range, damaging enemies upon impact
+avatar.ability.fire_jump.lvl2=Jump slightly farther
+avatar.ability.fire_jump.lvl3=Attack more targets upon landing, light them on fire
+avatar.ability.fire_jump.lvl4_1=Combustion launch ;; Also attack nearby targets when jumping off
+avatar.ability.fire_jump.lvl4_2=Wall jumping ;; Gain the ability to wall jump once after fire jumping
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
