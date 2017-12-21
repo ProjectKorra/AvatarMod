@@ -120,13 +120,13 @@ avatar.ability.ravine.lvl3=Ravine travels farther unless there is an obstacle
 avatar.ability.ravine.lvl4_1=Fissure ;; Destroys blocks under it, hit multiple enemies, but costs 1.5x chi
 avatar.ability.ravine.lvl4_2=Shaking earth ;; Chance to knock armor and weapons off hit enemies
 
-avatar.ability.earth_wall=Wall
-avatar.ability.earth_wall.desc=Raise a protective barrier in front of yourself. It can block incoming projectiles and mobs.
-avatar.ability.earth_wall.lvl1=Summon a small wall
-avatar.ability.earth_wall.lvl2=Create a larger wall
-avatar.ability.earth_wall.lvl3=Create a larger wall
-avatar.ability.earth_wall.lvl4_1=Shoot projectiles through the wall
-avatar.ability.earth_wall.lvl4_2=Wall stays up for longer, but uses up chi
+avatar.ability.wall=Wall
+avatar.ability.wall.desc=Raise a protective barrier in front of yourself. It can block incoming projectiles and mobs.
+avatar.ability.wall.lvl1=Summon a small wall
+avatar.ability.wall.lvl2=Create a larger wall
+avatar.ability.wall.lvl3=Create a larger wall
+avatar.ability.wall.lvl4_1=Shoot projectiles through the wall
+avatar.ability.wall.lvl4_2=Wall stays up for longer, but uses up chi
 
 avatar.ability.mine_blocks=Mine Blocks
 avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels
