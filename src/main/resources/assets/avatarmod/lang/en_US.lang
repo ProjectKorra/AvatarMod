@@ -279,8 +279,8 @@ avatar.ability.sand_prison.desc=Create a snare out of sand to temporarily captur
 avatar.ability.sand_prison.lvl1=Delay your attackers.
 avatar.ability.sand_prison.lvl2=You can catch targets in any earth block by manipulating the small sediments
 avatar.ability.sand_prison.lvl3=The prisoner receives a slowness effect after being freed
-avatar.ability.sand_prison.lvl4_1=The prisoner takes damage after being freed
-avatar.ability.sand_prison.lvl4_2=The sand can't be blown away by airbending
+avatar.ability.sand_prison.lvl4_1=Coarse grains ;; The prisoner takes damage after being freed
+avatar.ability.sand_prison.lvl4_2=Solid sands ;; The sand can't be blown away by airbending
 
 avatar.ability.ice_burst=Ice Burst
 avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.  When broken, it shoots powerful shards in all directions.
