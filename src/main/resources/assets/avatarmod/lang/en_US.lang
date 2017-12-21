@@ -346,6 +346,14 @@ avatar.ability.water_cannon.lvl3=Deals even more damage
 avatar.ability.water_cannon.lvl4_1=Powerful cannon ;; Water is much larger and deals much more damage
 avatar.ability.water_cannon.lvl4_2=Rapidfire ;; Rapidly create many smaller streams of water
 
+avatar.ability.cleanse=Cleanse
+avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs
+avatar.ability.cleanse.lvl1=Give a temporary regeneration effect
+avatar.ability.cleanse.lvl2=Share regeneration with nearby players
+avatar.ability.cleanse.lvl3=Give yourself saturation
+avatar.ability.cleanse.lvl4_1=Invigoration ;; Also receive instant health boost
+avatar.ability.cleanse.lvl4_2=Focus ;; Deal much more damage in combat and move much more quickly
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
