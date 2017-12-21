@@ -306,6 +306,14 @@ avatar.ability.cloudburst.lvl3=Much more damage
 avatar.ability.cloudburst.lvl4_1=Chi Smash ;; Temporarily applies severe debuffs to targets' bending power
 avatar.ability.cloudburst.lvl4_2=Absorption ;; Cloudburst can absorb incoming projectiles, which increases its damage
 
+avatar.ability.earthspike=Earthspike
+avatar.ability.earthspike.desc=Disrupt the ground and create a line of spikes that damage anything in its path
+avatar.ability.earthspike.lvl1=Create smoother, less dangerous spikes
+avatar.ability.earthspike.lvl2=More earth spikes, more damage
+avatar.ability.earthspike.lvl3=Faster earth spikes
+avatar.ability.earthspike.lvl4_1=Octopus fissure ;; Creates eight spikes in all directions
+avatar.ability.earthspike.lvl4_2=Flash fissure ;; Travels much faster and deals twice the damage
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
