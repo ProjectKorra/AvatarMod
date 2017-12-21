@@ -41,20 +41,22 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
     public void setDamageMult(float mult) {
         this.damageMult = mult;
     }
-    public void isUnstoppable (boolean isUnstoppable) {
+
+    public void setUnstoppable(boolean isUnstoppable) {
         this.unstoppable = isUnstoppable;
     }
-    public void maxTicks (float ticks) {this.maxTicksAlive = ticks;}
+
+    public void setDuration(float ticks) {this.maxTicksAlive = ticks;}
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
+        setDead();
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        setDead();
     }
 
     @Override

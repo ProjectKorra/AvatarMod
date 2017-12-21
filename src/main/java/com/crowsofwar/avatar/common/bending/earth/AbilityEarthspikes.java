@@ -21,59 +21,55 @@ public class AbilityEarthspikes extends Ability {
 
 	@Override
 	public void execute(AbilityContext ctx) {
-        AbilityData abilityData = ctx.getData().getAbilityData(this);
-        float damage = 0.90F;
-        float xp = abilityData.getTotalXp();
-        float ticks = 100;
+
+        AbilityData abilityData = ctx.getAbilityData();
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
         Bender bender = ctx.getBender();
 
+		float damage = 0.90f;
+		float xp = abilityData.getTotalXp();
+		float ticks = 20;
+		double speed = 8;
         float chi = STATS_CONFIG.chiEarthspike;
+
+        if (ctx.getLevel() >= 1) {
+            chi *= 1.5f;
+            damage = 1f;
+            ticks = 40;
+        }
+        if (ctx.getLevel() >= 2) {
+        	speed = 14;
+		}
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
             chi *= 2.5f;
-            damage = 1f;
-            ticks = 150;
-        }
-        if (ctx.getLevel() == 1 || ctx.getLevel() == 2) {
-            chi *= 1.5f;
-            damage = 1F;
-            ticks = 150;
+            damage = 0.75f;
+            ticks = 30;
+            speed = 12;
         }
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
             chi *= 2f;
-            damage = 1.5F;
-            ticks = 200;
-
+            damage = 2f;
+            ticks = 60;
+            speed = 20;
         }
 
         if (bender.consumeChi(chi)) {
-            EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
-            Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-            double mult = ctx.getLevel() >= 1 ? 14 : 8;
-            double speed = 4;
 
-            if (abilityData.getLevel() == 1) {
-                earthspike.setVelocity(look.times(mult * 5));
+            if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 
-            }
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                earthspike.setVelocity(look.times(mult * 10));
+				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
-            }
-            if (abilityData.getLevel() <= 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-
-
+				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
                 earthspike.setOwner(entity);
                 earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-                earthspike.setVelocity(look.times(mult));
+                earthspike.setVelocity(look.times(speed));
                 earthspike.setDamageMult((float) (damage * ctx.getPowerRatingDamageMod()));
-                earthspike.maxTicks(ticks);
-                earthspike.isUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+                earthspike.setDuration(ticks);
+                earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
                 world.spawnEntity(earthspike);
-            }
 
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+            } else {
 
                 for (int i = 0; i < 8; i++) {
 
@@ -81,13 +77,13 @@ public class AbilityEarthspikes extends Ability {
                             i * 45), 0);
                     Vector velocity = direction1.times(speed);
 
-					EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
-                    spawner.setVelocity(velocity);
-                    spawner.maxTicks(ticks);
-                    spawner.setOwner(entity);
-                    spawner.setPosition(entity.posX, entity.posY, entity.posZ);
-                    spawner.setDamageMult(damage + xp / 100);
-                    world.spawnEntity(spawner);
+					EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
+                    earthspike.setVelocity(velocity);
+                    earthspike.setDuration(ticks);
+                    earthspike.setOwner(entity);
+                    earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
+                    earthspike.setDamageMult(damage + xp / 100);
+                    world.spawnEntity(earthspike);
                 }
             }
 
