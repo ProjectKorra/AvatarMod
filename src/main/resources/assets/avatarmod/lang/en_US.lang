@@ -23,8 +23,11 @@ avatar.waterbending=Waterbending
 avatar.waterbending.demonym=Waterbender
 avatar.airbending=Airbending
 avatar.airbending.demonym=Airbender
+avatar.lightningbending=Lightningbending
 avatar.lightningbending.demonym=Lightningbender
+avatar.icebending=Icebending
 avatar.icebending.demonym=Icebender
+avatar.sandbending=Icebending
 avatar.sandbending.demonym=Sandbending
 
 avatar.all=Universal
