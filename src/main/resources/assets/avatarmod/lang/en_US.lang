@@ -287,7 +287,7 @@ avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.
 avatar.ability.ice_burst.lvl1=Protect yourself from damage
 avatar.ability.ice_burst.lvl2=The shards deal slightly more damage.
 avatar.ability.ice_burst.lvl3=The shield has a little more health.
-avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically target monsters; awesome for getting rid of annoying friends.
+avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically target monsters, invaluable when there are many mobs attacking
 avatar.ability.ice_burst.lvl4_2=Hardened ice ;; The ice shield has much more health
 
 avatar.ability.sandstorm=Sandstorm
