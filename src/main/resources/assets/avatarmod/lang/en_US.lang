@@ -139,6 +139,14 @@ avatar.ability.mine_blocks.lvl3=Fortune level I when mining
 avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
 avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
 
+avatar.ability.earthspike=Earthspike
+avatar.ability.earthspike.desc=Disrupt the ground and create a line of spikes that damage anything in its path
+avatar.ability.earthspike.lvl1=Create smoother, less dangerous spikes
+avatar.ability.earthspike.lvl2=More earth spikes, more damage
+avatar.ability.earthspike.lvl3=Faster earth spikes
+avatar.ability.earthspike.lvl4_1=Octopus fissure ;; Creates eight spikes in all directions
+avatar.ability.earthspike.lvl4_2=Flash fissure ;; Travels much faster and deals twice the damage
+
 avatar.ability.restore=Restore
 avatar.ability.restore.desc= Use the energy of the earth to aid you in combat, increasing your toughness.
 avatar.ability.restore.lvl1= Gain Resistance, but at the cost of your speed.
@@ -180,6 +188,14 @@ avatar.ability.fireball.lvl3=Tons more damage upon direct hit
 avatar.ability.fireball.lvl4_1=Focused explosion ;; Can sometimes destroy obsidian
 avatar.ability.fireball.lvl4_2=Charged explosion ;; Takes a few seconds to charge, larger explosion when charged
 
+avatar.ability.fire_jump=Fire Jump
+avatar.ability.fire_jump.desc=Use fire propulsion to jump a short distance
+avatar.ability.fire_jump.lvl1=Jump in a small range, damaging enemies upon impact
+avatar.ability.fire_jump.lvl2=Jump slightly farther
+avatar.ability.fire_jump.lvl3=Attack more targets upon landing, light them on fire
+avatar.ability.fire_jump.lvl4_1=Combustion launch ;; Also attack nearby targets when jumping off
+avatar.ability.fire_jump.lvl4_2=Wall jumping ;; Gain the ability to wall jump once after fire jumping
+
 avatar.ability.purify=Immolate
 avatar.ability.purify.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process
 avatar.ability.purify.lvl1=You have minor buffs, but are apt to hurt yourself
@@ -220,6 +236,22 @@ avatar.ability.water_skate.lvl3=Much faster
 avatar.ability.water_skate.lvl4_1=Balanced skating ;; Can skate even on flowing water
 avatar.ability.water_skate.lvl4_2=Watery impact ;; Smash the ground after jumping
 
+avatar.ability.water_cannon=Water Cannon
+avatar.ability.water_cannon.desc=Make a continuous stream of water that tracks a target. It takes a while to charge up, and takes 3 water charges out of water pouches.
+avatar.ability.water_cannon.lvl1=Basic water cannon
+avatar.ability.water_cannon.lvl2=Deals more damage, slightly larger
+avatar.ability.water_cannon.lvl3=Deals even more damage
+avatar.ability.water_cannon.lvl4_1=Powerful cannon ;; Water is much larger and deals much more damage
+avatar.ability.water_cannon.lvl4_2=Rapidfire ;; Rapidly create many smaller streams of water
+
+avatar.ability.cleanse=Cleanse
+avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs
+avatar.ability.cleanse.lvl1=Give a temporary regeneration effect
+avatar.ability.cleanse.lvl2=Share regeneration with nearby players
+avatar.ability.cleanse.lvl3=Give yourself saturation
+avatar.ability.cleanse.lvl4_1=Invigoration ;; Also receive instant health boost
+avatar.ability.cleanse.lvl4_2=Focus ;; Deal much more damage in combat and move much more quickly
+
 
 avatar.ability.air_gust=Air Gust
 avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
@@ -253,6 +285,14 @@ avatar.ability.air_bubble.lvl3=More knockback
 avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
 avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by sneak
 
+avatar.ability.cloudburst=Cloudburst
+avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies
+avatar.ability.cloudburst.lvl1=Basic cloud ball
+avatar.ability.cloudburst.lvl2=Faster speed when thrown
+avatar.ability.cloudburst.lvl3=Much more damage
+avatar.ability.cloudburst.lvl4_1=Chi Smash ;; Temporarily applies severe debuffs to targets' bending power
+avatar.ability.cloudburst.lvl4_2=Absorption ;; Cloudburst can absorb incoming projectiles, which increases its damage
+
 avatar.ability.slipstream=Slipstream
 avatar.ability.slipstream.desc=Surround yourself in a veil of air, increasing your movement speed.
 avatar.ability.slipstream.lvl1=Basic speed boost
@@ -269,62 +309,6 @@ avatar.ability.lightning_arc.lvl3=Lightning does more damage
 avatar.ability.lightning_arc.lvl4_1=Furious lightning ;; Does more damage, slightly smaller, another bolt
 avatar.ability.lightning_arc.lvl4_2=Large thunderbolts ;; Has a larger hitbox, making it easier to capture enemies
 
-avatar.ability.ice_prison=Ice Prison
-avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from following you for a short time.
-avatar.ability.ice_prison.lvl1=Delay your attackers.
-avatar.ability.ice_prison.lvl2=The prison lasts slightly longer.
-avatar.ability.ice_prison.lvl3=The prisoner takes damage when the ice shatters.
-avatar.ability.ice_prison.lvl4_1=Frostbite ;; The prisoner continually takes damage throughout the imprisonment.
-avatar.ability.ice_prison.lvl4_2=Glacier ice ;; The ice cannot be melted by the sun or firebending.
-
-avatar.ability.sand_prison=Sand Prison
-avatar.ability.sand_prison.desc=Create a snare out of sand to temporarily capture your enemies
-avatar.ability.sand_prison.lvl1=Delay your attackers.
-avatar.ability.sand_prison.lvl2=You can catch targets in any earth block by manipulating the small sediments
-avatar.ability.sand_prison.lvl3=The prisoner receives a slowness effect after being freed
-avatar.ability.sand_prison.lvl4_1=Coarse grains ;; The prisoner takes damage after being freed
-avatar.ability.sand_prison.lvl4_2=Solid sands ;; The sand can't be blown away by airbending
-
-avatar.ability.ice_burst=Ice Burst
-avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.  When broken, it shoots powerful shards in all directions.
-avatar.ability.ice_burst.lvl1=Protect yourself from damage
-avatar.ability.ice_burst.lvl2=The shards deal slightly more damage.
-avatar.ability.ice_burst.lvl3=The shield has a little more health.
-avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically target monsters, invaluable when there are many mobs attacking
-avatar.ability.ice_burst.lvl4_2=Hardened ice ;; The ice shield has much more health
-
-avatar.ability.sandstorm=Sandstorm
-avatar.ability.sandstorm.desc=Create a whirling dust devil that picks up enemies and carries them away
-avatar.ability.sandstorm.lvl1=Pick up entities and throw them off, vulnerable to airbending moves
-avatar.ability.sandstorm.lvl2=Moves slightly faster and travels slightly farther
-avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they are flung away
-avatar.ability.sandstorm.lvl4_1=Strong gusts ;; Sandstorm moves much faster and isn't disrupted by airbending
-avatar.ability.sandstorm.lvl4_2=Harsh grains ;; Whirling sand grains cause continuous minor damage to targets
-
-avatar.ability.cloudburst=Cloudburst
-avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies
-avatar.ability.cloudburst.lvl1=Basic cloud ball
-avatar.ability.cloudburst.lvl2=Faster speed when thrown
-avatar.ability.cloudburst.lvl3=Much more damage
-avatar.ability.cloudburst.lvl4_1=Chi Smash ;; Temporarily applies severe debuffs to targets' bending power
-avatar.ability.cloudburst.lvl4_2=Absorption ;; Cloudburst can absorb incoming projectiles, which increases its damage
-
-avatar.ability.earthspike=Earthspike
-avatar.ability.earthspike.desc=Disrupt the ground and create a line of spikes that damage anything in its path
-avatar.ability.earthspike.lvl1=Create smoother, less dangerous spikes
-avatar.ability.earthspike.lvl2=More earth spikes, more damage
-avatar.ability.earthspike.lvl3=Faster earth spikes
-avatar.ability.earthspike.lvl4_1=Octopus fissure ;; Creates eight spikes in all directions
-avatar.ability.earthspike.lvl4_2=Flash fissure ;; Travels much faster and deals twice the damage
-
-avatar.ability.fire_jump=Fire Jump
-avatar.ability.fire_jump.desc=Use fire propulsion to jump a short distance
-avatar.ability.fire_jump.lvl1=Jump in a small range, damaging enemies upon impact
-avatar.ability.fire_jump.lvl2=Jump slightly farther
-avatar.ability.fire_jump.lvl3=Attack more targets upon landing, light them on fire
-avatar.ability.fire_jump.lvl4_1=Combustion launch ;; Also attack nearby targets when jumping off
-avatar.ability.fire_jump.lvl4_2=Wall jumping ;; Gain the ability to wall jump once after fire jumping
-
 avatar.ability.lightning_redirect=Lightning Redirection
 avatar.ability.lightning_redirect.desc=Represents your ability to redirect lightning, doesn't appear in the radial menu
 avatar.ability.lightning_redirect.lvl1=60% chance to redirect lightning, be careful!
@@ -337,25 +321,43 @@ avatar.ability.lightning_spear=Lightning Spear
 avatar.ability.lightning_spear.desc=Create a throwable bolt of lightning
 avatar.ability.lightning_spear.lvl1=Basic lightning spear, electrocutes targets in water
 avatar.ability.lightning_spear.lvl2=Faster when thrown
-avatar.ability.lightning_spear.lvl3=Deals much more damag
+avatar.ability.lightning_spear.lvl3=Deals much more damage
 avatar.ability.lightning_spear.lvl4_1=Piercing bolt ;; Goes through enemies instead of stopping on the first one, so it can hurt many targets
 avatar.ability.lightning_spear.lvl4_2=Electric cloud ;; When hitting a target, nearby targets within 2 blocks are also hurt
 
-avatar.ability.water_cannon=Water Cannon
-avatar.ability.water_cannon.desc=Make a continuous stream of water that tracks a target
-avatar.ability.water_cannon.lvl1=Basic water cannon
-avatar.ability.water_cannon.lvl2=Deals more damage, slightly larger
-avatar.ability.water_cannon.lvl3=Deals even more damage
-avatar.ability.water_cannon.lvl4_1=Powerful cannon ;; Water is much larger and deals much more damage
-avatar.ability.water_cannon.lvl4_2=Rapidfire ;; Rapidly create many smaller streams of water
+avatar.ability.ice_prison=Ice Prison
+avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from following you for a short time.
+avatar.ability.ice_prison.lvl1=Delay your attackers.
+avatar.ability.ice_prison.lvl2=The prison lasts slightly longer.
+avatar.ability.ice_prison.lvl3=The prisoner takes damage when the ice shatters.
+avatar.ability.ice_prison.lvl4_1=Frostbite ;; The prisoner continually takes damage throughout the imprisonment.
+avatar.ability.ice_prison.lvl4_2=Glacier ice ;; The ice cannot be melted by the sun or firebending.
 
-avatar.ability.cleanse=Cleanse
-avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs
-avatar.ability.cleanse.lvl1=Give a temporary regeneration effect
-avatar.ability.cleanse.lvl2=Share regeneration with nearby players
-avatar.ability.cleanse.lvl3=Give yourself saturation
-avatar.ability.cleanse.lvl4_1=Invigoration ;; Also receive instant health boost
-avatar.ability.cleanse.lvl4_2=Focus ;; Deal much more damage in combat and move much more quickly
+avatar.ability.ice_burst=Ice Burst
+avatar.ability.ice_burst.desc=Encase yourself in a sphere of ice to stop damage.  When broken, it shoots powerful shards in all directions.
+avatar.ability.ice_burst.lvl1=Protect yourself from damage
+avatar.ability.ice_burst.lvl2=The shards deal slightly more damage.
+avatar.ability.ice_burst.lvl3=The shield has a little more health.
+avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically target monsters, invaluable when there are many mobs attacking
+avatar.ability.ice_burst.lvl4_2=Hardened ice ;; The ice shield has much more health
+
+avatar.ability.sand_prison=Sand Prison
+avatar.ability.sand_prison.desc=Create a snare out of sand to temporarily capture your enemies
+avatar.ability.sand_prison.lvl1=Delay your attackers.
+avatar.ability.sand_prison.lvl2=You can catch targets in any earth block by manipulating the small sediments
+avatar.ability.sand_prison.lvl3=The prisoner receives a slowness effect after being freed
+avatar.ability.sand_prison.lvl4_1=Coarse grains ;; The prisoner takes damage after being freed
+avatar.ability.sand_prison.lvl4_2=Solid sands ;; The sand can't be blown away by airbending
+
+avatar.ability.sandstorm=Sandstorm
+avatar.ability.sandstorm.desc=Create a whirling dust devil that picks up enemies and carries them away
+avatar.ability.sandstorm.lvl1=Pick up entities and throw them off, vulnerable to airbending moves
+avatar.ability.sandstorm.lvl2=Moves slightly faster and travels slightly farther
+avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they are flung away
+avatar.ability.sandstorm.lvl4_1=Strong gusts ;; Sandstorm moves much faster and isn't disrupted by airbending
+avatar.ability.sandstorm.lvl4_2=Harsh grains ;; Whirling sand grains cause continuous minor damage to targets
+
+
 
 avatar.ability.undefined=???
 
