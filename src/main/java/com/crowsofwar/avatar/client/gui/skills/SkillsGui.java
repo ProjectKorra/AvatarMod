@@ -59,6 +59,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private static final FormattedMessage MSG_TITLE = FormattedMessage.newChatMessage("avatar.ui.skillsMenu",
 			"bending");
 
+	private final UUID bendingId;
+
 	private AbilityCard[] cards;
 	private ComponentBendingTab[] tabs;
 	private int scroll;
@@ -73,6 +75,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	public SkillsGui(UUID guiBending) {
 		super(new ContainerSkillsGui(getMinecraft().player, guiBending));
+		this.bendingId = guiBending;
 
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		BendingData data = BendingData.get(getMinecraft().player);
@@ -185,8 +188,11 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		BendingData data = BendingData.get(mc.player);
 
 		// Update background to have the correct scaling based on screen dimensions
-		float scaleX = width / 1600f, scaleY = height / 900f;
+		float imageWidth = AvatarUiTextures.getBendingBackgroundWidth(bendingId);
+		float imageHeight = AvatarUiTextures.getBendingBackgroundHeight(bendingId);
+		float scaleX = width / imageWidth, scaleY = height / imageHeight;
 		background.setScale(Math.max(scaleX, scaleY));
+
 		// Offset image so it is still centered
 		ScaledResolution res = new ScaledResolution(mc);
 		float offsetX = (width * res.getScaleFactor() - background.width()) / 2;

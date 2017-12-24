@@ -21,6 +21,9 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import net.minecraft.util.ResourceLocation;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -92,6 +95,48 @@ public class AvatarUiTextures {
 		String location = "textures/gui/background/" + bendingName + ".png";
 		bendingBackgrounds.clear();
 		return getCachedImage(bendingBackgrounds, bendingId, location);
+	}
+
+	/**
+	 * The {@link #getBendingBackgroundTexture(UUID) bending backgrounds} have different dimensions,
+	 * so this returns the width in pixels of the specified background image.
+	 */
+	public static float getBendingBackgroundWidth(UUID bendingId) {
+
+		String bendingName = BendingStyles.getName(bendingId);
+		InputStream instr = null;
+		try {
+
+			String path = "assets/avatarmod/textures/gui/background/";
+			String file = path + bendingName + ".png";
+			instr = ClassLoader.getSystemClassLoader().getResourceAsStream(file);
+
+			BufferedImage image = ImageIO.read(instr);
+			return image.getWidth();
+
+		} catch (Exception ex) {
+
+			throw new RuntimeException("Problem getting width of " + bendingName + " background image", ex);
+
+		} finally {
+
+			if (instr != null) {
+				try {
+					instr.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * The {@link #getBendingBackgroundTexture(UUID) bending backgrounds} have different dimensions,
+	 * so this returns the height in pixels of the specified background image.
+	 */
+	public static float getBendingBackgroundHeight(UUID bendingId) {
+		return getBendingBackgroundWidth(bendingId) * 9f / 16;
 	}
 
 	private static ResourceLocation[] getBlockBreakTextures() {
