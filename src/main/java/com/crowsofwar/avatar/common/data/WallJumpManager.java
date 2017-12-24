@@ -21,6 +21,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * Contains all wall jump related logic for a Bender. These methods would normally be in the
  * Bender class itself, but there is a lot of logic so they have been moved here. Wall jump
  * decisions can be accessed like <code>bender.getWallJumpManager.canWallJump()</code>.
+ *
+ * TODO: Nuke this sad excuse for actual working code
  */
 public class WallJumpManager {
 
@@ -60,7 +62,9 @@ public class WallJumpManager {
 					SoundCategory.PLAYERS, 1, 0.6f);
 
 			bender.getData().getMiscData().addFallAbsorption(3);
-			bender.getData().getMiscData().setWallJumping(true);
+			if (particles == EnumParticleTypes.CLOUD) {
+				bender.getData().getMiscData().setWallJumping(true);
+			}
 
 		}
 
