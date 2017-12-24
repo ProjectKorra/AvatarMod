@@ -187,6 +187,11 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		// Update background to have the correct scaling based on screen dimensions
 		float scaleX = width / 1600f, scaleY = height / 900f;
 		background.setScale(Math.max(scaleX, scaleY));
+		// Offset image so it is still centered
+		ScaledResolution res = new ScaledResolution(mc);
+		float offsetX = (width * res.getScaleFactor() - background.width()) / 2;
+		float offsetY = (height * res.getScaleFactor() - background.height()) / 2;
+		background.setOffset(Measurement.fromPixels(offsetX, offsetY));
 
 		handler.draw(partialTicks, mouseX, mouseY);
 		
