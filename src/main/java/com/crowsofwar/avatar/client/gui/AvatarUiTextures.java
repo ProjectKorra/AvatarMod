@@ -18,10 +18,12 @@
 package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 
@@ -55,12 +57,13 @@ public class AvatarUiTextures {
 	
 	public static final ResourceLocation ICE = new ResourceLocation("minecraft", "textures/blocks/ice.png");
 	public static final ResourceLocation[] BLOCK_BREAK = getBlockBreakTextures();
-	
+
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
-	
+
 	private static final Map<Ability, ResourceLocation> abilityTextures = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCards = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCardsPlain = new HashMap<>();
+	private static final Map<UUID, ResourceLocation> bendingBackgrounds = new HashMap<>();
 	
 	private static <T> ResourceLocation getCachedImage(Map<T, ResourceLocation> map, T obj, String loc) {
 		if (!map.containsKey(obj)) {
@@ -83,7 +86,14 @@ public class AvatarUiTextures {
 		return getCachedImage(abilityCardsPlain, ability,
 				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");
 	}
-	
+
+	public static ResourceLocation getBendingBackgroundTexture(UUID bendingId) {
+		String bendingName = BendingStyles.getName(bendingId);
+		String location = "textures/gui/background/" + bendingName + ".png";
+		bendingBackgrounds.clear();
+		return getCachedImage(bendingBackgrounds, bendingId, location);
+	}
+
 	private static ResourceLocation[] getBlockBreakTextures() {
 		ResourceLocation[] array = new ResourceLocation[10];
 		for (int i = 0; i < array.length; i++) {
@@ -91,5 +101,5 @@ public class AvatarUiTextures {
 		}
 		return array;
 	}
-	
+
 }

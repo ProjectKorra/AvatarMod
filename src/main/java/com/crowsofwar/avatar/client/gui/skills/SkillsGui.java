@@ -58,7 +58,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	private static final FormattedMessage MSG_TITLE = FormattedMessage.newChatMessage("avatar.ui.skillsMenu",
 			"bending");
-	
+
 	private AbilityCard[] cards;
 	private ComponentBendingTab[] tabs;
 	private int scroll;
@@ -68,6 +68,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	private ComponentInventorySlots inventory, hotbar;
 	private ComponentText title;
+	private ComponentImage background;
 	private UiComponentHandler handler;
 	
 	public SkillsGui(UUID guiBending) {
@@ -129,6 +130,11 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);
+
+		background = new ComponentImage(AvatarUiTextures.getBendingBackgroundTexture(guiBending),
+				0, 0, 1920, 1080);
+		background.setZLevel(-1);
+		handler.add(background);
 		
 	}
 	
@@ -176,10 +182,12 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 
-		drawDefaultBackground();
-
 		BendingData data = BendingData.get(mc.player);
-		
+
+		// Update background to have the correct scaling based on screen dimensions
+		float scaleX = width / 1600f, scaleY = height / 900f;
+		background.setScale(Math.max(scaleX, scaleY));
+
 		handler.draw(partialTicks, mouseX, mouseY);
 		
 		if (isWindowOpen()) {

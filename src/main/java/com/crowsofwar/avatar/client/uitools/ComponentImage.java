@@ -16,10 +16,10 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import net.minecraft.util.ResourceLocation;
+
 import static net.minecraft.client.renderer.GlStateManager.disableBlend;
 import static net.minecraft.client.renderer.GlStateManager.enableBlend;
-
-import net.minecraft.util.ResourceLocation;
 
 /**
  * 
@@ -53,7 +53,7 @@ public class ComponentImage extends UiComponent {
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		enableBlend();
 		mc.renderEngine.bindTexture(texture);
-		drawTexturedModalRect(0, 0, u, v, texWidth, texHeight);
+		drawModalRectWithCustomSizedTexture(0, 0, u, v, texWidth, texHeight, texWidth, texHeight);
 		disableBlend();
 	}
 	
