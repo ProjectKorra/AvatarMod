@@ -357,7 +357,7 @@ avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they
 avatar.ability.sandstorm.lvl4_1=Strong gusts ;; Sandstorm moves much faster and isn't disrupted by airbending
 avatar.ability.sandstorm.lvl4_2=Harsh grains ;; Whirling sand grains cause continuous minor damage to targets
 
-avatar.ability.explosion= Explosion
+avatar.ability.explosion=Explosion
 avatar.ability.explosion.desc=Blow up pesky enemies with explosions! Be careful, though, as you can damage yourself!
 avatar.ability.explosion.lvl1=Create an explosion at the BLOCK where you're looking; maximum range of 20 blocks. It can send enemies sky-high!
 avatar.ability.explosion.lvl2=Slightly bigger explosion! More satisfying when blowing up people!
@@ -365,7 +365,13 @@ avatar.ability.explosion.lvl3=A maximum range of 30 blocks! Bigger explosion!
 avatar.ability.explosion.lvl4_1=Sniper Rifle ;; Ridiculous explosion range, a small explosion.
 avatar.ability.explosion.lvl4_2=BOOOOOOOOOOOOOOOOOOM ;; HUGE explosion where you're looking, does ridiculous damage on a direct hit. Only a 30 block range, though.
 
-avatar
+avatar.ability.explosive_pillar=Explosive Pillar
+avatar.ability.explosive_pillar.desc=Create a line of explosions that appear one after the other in the direction you're looking.
+avatar.ability.explosive_pillar.lvl1=As the common person says, BOOM-BOOM-BOOM-BOOM BOOOOOOOOOM!
+avatar.ability.explosive_pillar.lvl2=Explosions are bigger, occur more frequently, and travel further.
+avatar.ability.explosive_pillar.lvl3=I'd say the same thing as above, but that'd be boring. SUPER-POWERED EXPLOSIONS BABY!
+avatar.ability.explosive_pillar.lvl4_1=EXPLOSION MACHINE GUN ;; Creates 3 explosive pillars that have small explosions and don't travel too far, but occur rapid-fire and are fun to use.
+avatar.ability.explosive_pillar.lvl4_2=BOOOOOM ;; Ridiculously big explosion that travels far, but doesn't occur frequently. Devastating.
 
 
 
