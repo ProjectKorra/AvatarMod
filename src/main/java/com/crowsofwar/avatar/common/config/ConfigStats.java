@@ -115,6 +115,9 @@ public class ConfigStats {
 	public float cleanseChiGroupBonus = 2f;
 
 	@Load
+	public boolean allowMultiAirbendingWalljump = false;
+
+	@Load
 	public List<String> sandBlocksNames = Arrays.asList(
 			"minecraft:sand",
 			"minecraft:gravel");

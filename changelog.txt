@@ -18,6 +18,7 @@
 * Right clicking on ability in radial menu shows upgrade area
 * Using locked ability in creative mode no longer displays "Creative Mode" as ability name
 * Make flying bison 3x faster
+* Add option to allow multiple airbending walljumps
 
 > Fix sky bison landing zone detection false negatives
 > Fix sky bison getting "stuck" when it can't find a place to land

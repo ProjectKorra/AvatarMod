@@ -62,7 +62,7 @@ public class WallJumpManager {
 					SoundCategory.PLAYERS, 1, 0.6f);
 
 			bender.getData().getMiscData().addFallAbsorption(3);
-			if (particles == EnumParticleTypes.CLOUD) {
+			if (particles == EnumParticleTypes.CLOUD && STATS_CONFIG.allowMultiAirbendingWalljump) {
 				bender.getData().getMiscData().setWallJumping(true);
 			}
 
