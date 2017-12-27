@@ -101,7 +101,6 @@ public class AvatarUiTextures {
 	public static ResourceLocation getBendingBackgroundTexture(UUID bendingId) {
 		String bendingName = BendingStyles.getName(bendingId);
 		String location = "textures/gui/background/" + bendingName + ".png";
-		bendingBackgrounds.clear();
 		return getCachedImage(bendingBackgrounds, bendingId, location);
 	}
 
