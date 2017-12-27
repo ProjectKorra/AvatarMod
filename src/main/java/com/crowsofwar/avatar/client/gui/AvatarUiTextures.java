@@ -67,7 +67,8 @@ public class AvatarUiTextures {
 	private static final Map<Ability, ResourceLocation> abilityCards = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCardsPlain = new HashMap<>();
 	private static final Map<UUID, ResourceLocation> bendingBackgrounds = new HashMap<>();
-	
+	private static final Map<UUID, Integer> bendingBackgroundWidth = new HashMap<>();
+
 	private static <T> ResourceLocation getCachedImage(Map<T, ResourceLocation> map, T obj, String loc) {
 		if (!map.containsKey(obj)) {
 			ResourceLocation location = new ResourceLocation("avatarmod", loc);
@@ -103,6 +104,10 @@ public class AvatarUiTextures {
 	 */
 	public static float getBendingBackgroundWidth(UUID bendingId) {
 
+		if (bendingBackgroundWidth.containsKey(bendingId)) {
+			return bendingBackgroundWidth.get(bendingId);
+		}
+
 		String bendingName = BendingStyles.getName(bendingId);
 		InputStream instr = null;
 		try {
@@ -112,7 +117,9 @@ public class AvatarUiTextures {
 			instr = ClassLoader.getSystemClassLoader().getResourceAsStream(file);
 
 			BufferedImage image = ImageIO.read(instr);
-			return image.getWidth();
+			int width = image.getWidth();
+			bendingBackgroundWidth.put(bendingId, width);
+			return width;
 
 		} catch (Exception ex) {
 
