@@ -94,7 +94,7 @@ avatar.bisonWhistle.tooltipUnbound=No esta ligado
 avatar.bisonWhistle.transferAway=Tu bisonte volador ${bison} ha sido transferido a ${newOwner}.
 avatar.bisonWhistle.transferTo=Ahora te pertenece el bisonte volador de ${oldOwner}, ${bison}!
 avatar.bisonWhistle.noTransfer=[error]Nadie ha pedido una transferencia de bisonte.[/error]
-avatar.bisonWhistle.transferAway.start=${newOwner} quiere ser dueÒo de ${bison}. Presiona [keybinding=avatar.TransferBison] para confirmar, ignora para declinar.
+avatar.bisonWhistle.transferAway.start=${newOwner} quiere ser due√±o de ${bison}. Presiona [keybinding=avatar.TransferBison] para confirmar, ignora para declinar.
 avatar.bisonWhistle.transferTo.start=Un mensaje le fue enviado a ${oldOwner} para confirmar la transferencia de ${bison}.
 avatar.bisonWhistle.transferAway.ignore=La transferencia con ${newOwner} ha sido ignorada.
 avatar.bisonWhistle.transferTo.ignore=${oldOwner} ha decidido no responder a la transferencia.
@@ -136,11 +136,11 @@ avatar.ability.mine_blocks.lvl4_2=Minero de venas ;; Rompe venas de menas, con n
 
 avatar.ability.earthspike=Picos de Tierra
 avatar.ability.earthspike.desc=Crea un linea de picos de tierra que lastiman cualquier entidad a su paso.
-avatar.ability.earthspike.lvl1=Los picos son picos y hacen daÒo promedio
+avatar.ability.earthspike.lvl1=Los picos son picos y hacen da√±o promedio
 avatar.ability.earthspike.lvl2=Se generan mas picos y duelen mas
 avatar.ability.earthspike.lvl3=Los picos son mas rapidos al viajar
 avatar.ability.earthspike.lvl4_1=Picos de pulpo ;; Forma 8 picos en todas las direcciones
-avatar.ability.earthspike.lvl4_2=Picos letales ;; Viajan mucho mas rapido y el daÒo es el doble
+avatar.ability.earthspike.lvl4_2=Picos letales ;; Viajan mucho mas rapido y el da√±o es el doble
 
 avatar.ability.restore=Restaurar
 avatar.ability.restore.desc= Usa la energia de la Tierra para que te ayude en combate, haciendote mas fuerte.
@@ -186,7 +186,7 @@ avatar.ability.fireball.lvl4_2=Explosion cargada ;; Toma un par de segundos para
 
 avatar.ability.fire_jump=Salto igneo
 avatar.ability.fire_jump.desc=Usa la propulsion del fuego para realizar un salto corto.
-avatar.ability.fire_jump.lvl1=Salta un espacio pequeÒo, haciendo daÒo al aterrizar
+avatar.ability.fire_jump.lvl1=Salta un espacio peque√±o, haciendo da√±o al aterrizar
 avatar.ability.fire_jump.lvl2=El rango del salto se incrementa
 avatar.ability.fire_jump.lvl3=Lastimas mas enemigos al aterrizar y los prendes en fuego
 avatar.ability.fire_jump.lvl4_1=Lanzamiento ardiente ;; Ahora puedes lastimar enemigos cercanos al despegar
@@ -194,15 +194,15 @@ avatar.ability.fire_jump.lvl4_2=Salto de pared ;; Obten la capacidad de saltar m
 
 avatar.ability.purify=Immolar
 avatar.ability.purify.desc=Potencia tus habilidades de Fuego Control temporalmente, pero puede ser que te quemes en el proceso
-avatar.ability.purify.lvl1=Obtienes pequeÒas mejoras, pero te puedes quemar
+avatar.ability.purify.lvl1=Obtienes peque√±as mejoras, pero te puedes quemar
 avatar.ability.purify.lvl2=Incremento mas alto para Fuego Control y velocidad de movimiento
-avatar.ability.purify.lvl3=Efectos de mejora mas fuertes y te haces menos daÒo con el fuego
+avatar.ability.purify.lvl3=Efectos de mejora mas fuertes y te haces menos da√±o con el fuego
 avatar.ability.purify.lvl4_1=Tolerancia Ignea ;; El potenciamiento dura mas tiempo y recibes una mejora de salud por igual
 avatar.ability.purify.lvl4_2=Infierno ;; Mejoras super incrementadas a lo maximo
 
 
 avatar.ability.water_arc=Arco de agua
-avatar.ability.water_arc.desc=Uno de los ataques m·s comunes del Agua Control. Dispara un arco de agua a tu enemigo, pero sÛlo cuando el agua est· cerca.
+avatar.ability.water_arc.desc=Uno de los ataques m√°s comunes del Agua Control. Dispara un arco de agua a tu enemigo, pero s√≥lo cuando el agua est√° cerca.
 avatar.ability.water_arc.lvl1=Arco de agua basico
 avatar.ability.water_arc.lvl2=Rango de obtencion mas amplio
 avatar.ability.water_arc.lvl3=Mas rapido
@@ -233,13 +233,13 @@ avatar.ability.water_skate.lvl3=Patinas mas rapido
 avatar.ability.water_skate.lvl4_1=Patinaje Equilibrado ;; Puede patinar en agua en movimiento (corriente)
 avatar.ability.water_skate.lvl4_2=Impacto Acuoso ;; Golpea el suelo despues de saltar
 
-avatar.ability.water_cannon=CaÒon de agua
+avatar.ability.water_cannon=Ca√±on de agua
 avatar.ability.water_cannon.desc=Genera un chorro continuo de agua que rastrea a su objetivo. Cuesta 3 cargas de la bolsa de agua.
 avatar.ability.water_cannon.lvl1=Chorro de agua basico
-avatar.ability.water_cannon.lvl2=El caÒon hace mas daÒo y es mas grande
-avatar.ability.water_cannon.lvl3=El chorro hace aun mas daÒo
-avatar.ability.water_cannon.lvl4_1=CaÒon potente ;; El chorro es enorme lo cual hace que provoque mucho daÒo
-avatar.ability.water_cannon.lvl4_2=Disparo continuo ;; Genera gran cantidad de pequeÒos chorros que salen disparados rapidamente
+avatar.ability.water_cannon.lvl2=El ca√±on hace mas da√±o y es mas grande
+avatar.ability.water_cannon.lvl3=El chorro hace aun mas da√±o
+avatar.ability.water_cannon.lvl4_1=Ca√±on potente ;; El chorro es enorme lo cual hace que provoque mucho da√±o
+avatar.ability.water_cannon.lvl4_2=Disparo continuo ;; Genera gran cantidad de peque√±os chorros que salen disparados rapidamente
 
 avatar.ability.cleanse=Purificacion
 avatar.ability.cleanse.desc=Otorga mejoras de regeneracion y de Arte de Control a ti y a tus aliados.
@@ -285,9 +285,9 @@ avatar.ability.cloudburst=Explosion de nube
 avatar.ability.cloudburst.desc=Crea una bola de aire giratoria que puede ser lanzada a los enemigos.
 avatar.ability.cloudburst.lvl1=Bola de aire basica
 avatar.ability.cloudburst.lvl2=La bola es mas rapida al lanzarse
-avatar.ability.cloudburst.lvl3=El daÒo de la bola es aumentado
+avatar.ability.cloudburst.lvl3=El da√±o de la bola es aumentado
 avatar.ability.cloudburst.lvl4_1=Golpe de chi ;; Temporalmente aplica una desventaja para realizar Arte de Control
-avatar.ability.cloudburst.lvl4_2=Absorcion ;; La bola de aire puede absorber proyectiles que tenga al frente lo cual incrementa el daÒo
+avatar.ability.cloudburst.lvl4_2=Absorcion ;; La bola de aire puede absorber proyectiles que tenga al frente lo cual incrementa el da√±o
 
 avatar.ability.slipstream=Corriente de viento
 avatar.ability.slipstream.desc=Envuelvete en un velo de aire, incrementando tu velocidad de movimiento.
@@ -302,8 +302,8 @@ avatar.ability.lightning_arc=Rayo
 avatar.ability.lightning_arc.desc=Crea potentes arcos de electricidad para electrocutar a tus enemigos!
 avatar.ability.lightning_arc.lvl1=Rayo estandar para asustar a tus enemigos
 avatar.ability.lightning_arc.lvl2=El rayo viaja mas rapido
-avatar.ability.lightning_arc.lvl3=El rayo hace mucho mas daÒo
-avatar.ability.lightning_arc.lvl4_1=Rayo Furioso ;; Hace mas daÒo, pero es mas pequeÒo.
+avatar.ability.lightning_arc.lvl3=El rayo hace mucho mas da√±o
+avatar.ability.lightning_arc.lvl4_1=Rayo Furioso ;; Hace mas da√±o, pero es mas peque√±o.
 avatar.ability.lightning_arc.lvl4_2=Rayos Largos ;; Tiene una area de efecto mayor (AdE), haciendo que sea mas facil herir a los enemigos
 
 avatar.ability.lightning_redirect=Redireccion de rayo
@@ -315,12 +315,12 @@ avatar.ability.lightning_redirect.lvl4_1=90% de probabilidad de redireccionar un
 avatar.ability.lightning_redirect.lvl4_2=90% de probabilidad de redireccionar un rayo
 
 avatar.ability.lightning_spear=Lanza de relampago
-avatar.ability.lightning_spear.desc=Crea una lanza pequeÒa de relampago que puede ser lanzada.
+avatar.ability.lightning_spear.desc=Crea una lanza peque√±a de relampago que puede ser lanzada.
 avatar.ability.lightning_spear.lvl1=Lanza basica, electrocta al objetivo si esta en agua
 avatar.ability.lightning_spear.lvl2=Se puede lanzar mas rapido
-avatar.ability.lightning_spear.lvl3=La lanza hace mas daÒo
-avatar.ability.lightning_spear.lvl4_1=Lanza penetrante ;; Atraviesa a los enemigos, puede hacer daÒo a varios a la vez
-avatar.ability.lightning_spear.lvl4_2=Red electrificada ;; Cuando golpeas a un objetivo, los objetivos cercanos (2 u) a este reciben daÒo
+avatar.ability.lightning_spear.lvl3=La lanza hace mas da√±o
+avatar.ability.lightning_spear.lvl4_1=Lanza penetrante ;; Atraviesa a los enemigos, puede hacer da√±o a varios a la vez
+avatar.ability.lightning_spear.lvl4_2=Red electrificada ;; Cuando golpeas a un objetivo, los objetivos cercanos (2 u) a este reciben da√±o
 
 
 avatar.ability.ice_prison=Carcel de hielo
@@ -345,16 +345,16 @@ avatar.ability.sand_prison.desc=Crea una trampa de arena que atrapa a tus enemig
 avatar.ability.sand_prison.lvl1=Deten a tus enemigos
 avatar.ability.sand_prison.lvl2=Puedes atrapar enemigos en cualquier bloque de tierra al hacer uso de los sedimentos internos (no solo en arena)
 avatar.ability.sand_prison.lvl3=El prisionero recibe un efecto de lentitud una vez libre
-avatar.ability.sand_prison.lvl4_1=Trampa DaÒina ;; El prisionero recibe dano una vez se libere
+avatar.ability.sand_prison.lvl4_1=Trampa Da√±ina ;; El prisionero recibe dano una vez se libere
 avatar.ability.sand_prison.lvl4_2=Trampa Pesada ;; La trampa no puede ser eliminada con Aire Control
 
 avatar.ability.sandstorm=Tormenta de Arena
 avatar.ability.sandstorm.desc=Crea un diablo de polvo  (torbellino de arena) giratorio que levanta a los enemigos y se los lleva.
 avatar.ability.sandstorm.lvl1=Levanta entidades y los lanza. Es suceptible a tecnicas de Aire Control
 avatar.ability.sandstorm.lvl2=Se mueve un poco mas rapido y llega mas lejos
-avatar.ability.sandstorm.lvl3=El latigazo intenso hace que las entidades reciban daÒo al ser lanzadas
+avatar.ability.sandstorm.lvl3=El latigazo intenso hace que las entidades reciban da√±o al ser lanzadas
 avatar.ability.sandstorm.lvl4_1=Polvos fuertes ;; La tormenta de arena se mueve mucho mas rapido y es inmune a los efectos del Aire Control
-avatar.ability.sandstorm.lvl4_2=Granos violentos ;; Los granos de arena giratorios causan daÒo continuo sobre las entidades
+avatar.ability.sandstorm.lvl4_2=Granos violentos ;; Los granos de arena giratorios causan da√±o continuo sobre las entidades
 
 avatar.ability.explosion=Explosion
 avatar.ability.explosion.desc=Haz volar a tus enemigos con grandes explosiones. Ten cuidado, las explosiones pueden herirte.
@@ -416,7 +416,7 @@ death.attack.avatar_flamethrower=%1$s fue calcinado por %2$s!!
 death.attack.avatar_groundSmash=%2$s volvio pulpa a %1$s
 death.attack.avatar_lightningBending=%2$s electrocuto a %1$s
 death.attack.avatar_lightningBendingRedirected=%2$s redirigio un rayo y electrocuto a %1$s
-death.attack.avatar_watercannon=%1$s murio por el CaÒon de Agua de %2$s
+death.attack.avatar_watercannon=%1$s murio por el Ca√±on de Agua de %2$s
 
 entity.Airbender.name=Maestro de Aire
 entity.Firebender.name=Maestro de Fuego

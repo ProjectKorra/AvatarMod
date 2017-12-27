@@ -16,18 +16,15 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getCardTexture;
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.*;
+import com.crowsofwar.avatar.common.bending.Ability;
+
+import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
-
-import com.crowsofwar.avatar.client.uitools.ComponentImage;
-import com.crowsofwar.avatar.client.uitools.Frame;
-import com.crowsofwar.avatar.client.uitools.Measurement;
-import com.crowsofwar.avatar.client.uitools.StartingPosition;
-import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.common.bending.Ability;
 
 /**
  * 
@@ -39,7 +36,7 @@ public class AbilityCard {
 	private final Ability ability;
 	private final int index;
 	private Frame frame;
-	private UiComponent icon;
+	private UiComponent icon, iconBg;
 	
 	public AbilityCard(Ability ability, int index) {
 		
@@ -54,13 +51,16 @@ public class AbilityCard {
 		frame = new Frame();
 		frame.setDimensions(fromPixels(192, 256).times(scaleFactor() / 2));
 		
-		icon = new ComponentImage(getCardTexture(ability), 32, 0, 192, 256);
+		icon = new ComponentImage(getAbilityTexture(ability), 32, 0, 192, 256);
 		icon.setFrame(frame);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
-		// icon.setOffset(fromPixels(frame, 0, -text.height() - icon.height() *
-		// 50 / 256));
-		icon.setScale(0.5f);
-		
+
+		iconBg = new ComponentImage(AvatarUiTextures.skillsGui, 200, 137, 50, 50);
+		iconBg.setFrame(frame);
+		iconBg.setPosition(StartingPosition.MIDDLE_BOTTOM);
+		iconBg.setScale(2);
+		iconBg.setOffset(Measurement.fromPixels(0, 85));
+
 		updateFramePos(0);
 		
 	}
@@ -70,8 +70,8 @@ public class AbilityCard {
 		updateFramePos(scroll);
 		
 		icon.draw(partialTicks, mouseX, mouseY);
-		// frame.draw(partialTicks);
-		
+		iconBg.draw(partialTicks, mouseX, mouseY);
+
 	}
 	
 	/**

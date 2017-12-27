@@ -281,10 +281,12 @@ public class AvatarUiRenderer extends Gui {
 	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller) {
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
-		int u = 50 * (BendingStyles.getNetworkId(controller.getId()) - 1); // TODO use individual texture for each bending
-		int v = 137;
-		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
-		drawTexturedModalRect(x, y, u, v, 50, 50);
+		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.scale(50.0 / 256, 50.0/ 256, 1);
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		GlStateManager.popMatrix();
 	}
 
 	private void renderAirBubbleHealth(ScaledResolution res) {

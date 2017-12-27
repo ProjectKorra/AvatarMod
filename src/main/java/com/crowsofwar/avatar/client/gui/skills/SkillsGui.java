@@ -35,6 +35,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -58,7 +59,9 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	private static final FormattedMessage MSG_TITLE = FormattedMessage.newChatMessage("avatar.ui.skillsMenu",
 			"bending");
-	
+
+	private final UUID bendingId;
+
 	private AbilityCard[] cards;
 	private ComponentBendingTab[] tabs;
 	private int scroll;
@@ -68,10 +71,12 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	private ComponentInventorySlots inventory, hotbar;
 	private ComponentText title;
+	private ComponentImageNonSquare background;
 	private UiComponentHandler handler;
 	
 	public SkillsGui(UUID guiBending) {
 		super(new ContainerSkillsGui(getMinecraft().player, guiBending));
+		this.bendingId = guiBending;
 
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		BendingData data = BendingData.get(getMinecraft().player);
@@ -129,6 +134,13 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);
+
+		ResourceLocation bgTexture = AvatarUiTextures.getBendingBackgroundTexture(guiBending);
+		int bgWidth = (int) AvatarUiTextures.getBendingBackgroundWidth(guiBending);
+		int bgHeight = (int) AvatarUiTextures.getBendingBackgroundHeight(guiBending);
+		background = new ComponentImageNonSquare(bgTexture, bgWidth, bgHeight);
+		background.setZLevel(-1);
+		handler.add(background);
 		
 	}
 	
@@ -176,10 +188,20 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 
-		drawDefaultBackground();
-
 		BendingData data = BendingData.get(mc.player);
-		
+
+		// Update background to have the correct scaling based on screen dimensions
+		float imageWidth = AvatarUiTextures.getBendingBackgroundWidth(bendingId);
+		float imageHeight = AvatarUiTextures.getBendingBackgroundHeight(bendingId);
+		float scaleX = width / imageWidth, scaleY = height / imageHeight;
+		background.setScale(Math.max(scaleX, scaleY));
+
+		// Offset image so it is still centered
+		ScaledResolution res = new ScaledResolution(mc);
+		float offsetX = (width * res.getScaleFactor() - background.width()) / 2;
+		float offsetY = (height * res.getScaleFactor() - background.height()) / 2;
+		background.setOffset(Measurement.fromPixels(offsetX, offsetY));
+
 		handler.draw(partialTicks, mouseX, mouseY);
 		
 		if (isWindowOpen()) {
