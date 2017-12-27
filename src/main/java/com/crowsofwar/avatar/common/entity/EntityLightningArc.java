@@ -62,13 +62,22 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	/**
 	 * Whether the lightning was <b>attempted to be redirected</b> by stuckTo (ie, the targeted
-	 * player). Redirected lightning will no longer attempt to damage the target; this prevents issues where target
-	 * redirects lightning multiple times.
+	 * player).
 	 * <p>
-	 * It is possible stuckTo failed to redirect the lightning; in this case wasRedirected will
-	 * remain true, and stuckTo will not attempt to redirect lightning again (only gets one chance).
+	 * Even if stuckTo failed to redirect the lightning, wasRedirected will remain true, and stuckTo
+	 * will not attempt to redirect lightning again (only gets one chance).
+	 *
+	 * @see #wasSuccessfullyRedirected
 	 */
 	private boolean wasRedirected;
+
+	/**
+	 * Whether the lightning was successfully redirected by the target mob. In this case, the
+	 * lightning will no longer damage the target.
+	 *
+	 * @see #wasRedirected
+	 */
+	private boolean wasSuccessfullyRedirected;
 
 	/**
 	 * Whether the lightning was created through redirecting a first lightning. Not to be
@@ -127,7 +136,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (stuckTo != null) {
 			setPosition(Vector.getEyePos(stuckTo));
 			setVelocity(Vector.ZERO);
-			if (!wasRedirected) {
+			if (!wasSuccessfullyRedirected) {
 				damageEntity(stuckTo, 0.333f);
 			}
 		}
@@ -226,15 +235,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		}
 
 		// Handle lightning redirection
-		boolean redirected = false;
 		if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported
 				(entity)) {
-			redirected = Bender.get(entity).redirectLightning(this);
+			wasSuccessfullyRedirected = Bender.get(entity).redirectLightning(this);
 			wasRedirected = true;
 		}
 
 		DamageSource damageSource = createDamageSource(entity);
-		if (!wasRedirected && !redirected && entity.attackEntityFrom(damageSource, damage *
+		if (!wasSuccessfullyRedirected && entity.attackEntityFrom(damageSource, damage *
 				damageModifier)) {
 
 			BattlePerformanceScore.addLargeScore(getOwner());
