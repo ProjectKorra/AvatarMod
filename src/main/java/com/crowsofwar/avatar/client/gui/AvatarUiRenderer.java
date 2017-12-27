@@ -282,7 +282,11 @@ public class AvatarUiRenderer extends Gui {
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
 		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
-		drawTexturedModalRect(x, y, 0, 0, 64, 64);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.scale(50.0 / 256, 50.0/ 256, 1);
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		GlStateManager.popMatrix();
 	}
 
 	private void renderAirBubbleHealth(ScaledResolution res) {
