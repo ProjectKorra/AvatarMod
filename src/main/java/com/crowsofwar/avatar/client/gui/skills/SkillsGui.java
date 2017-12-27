@@ -35,6 +35,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -70,7 +71,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	
 	private ComponentInventorySlots inventory, hotbar;
 	private ComponentText title;
-	private ComponentImage background;
+	private ComponentImageNonSquare background;
 	private UiComponentHandler handler;
 	
 	public SkillsGui(UUID guiBending) {
@@ -134,8 +135,10 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);
 
-		background = new ComponentImage(AvatarUiTextures.getBendingBackgroundTexture(guiBending),
-				0, 0, 1920, 1080);
+		ResourceLocation bgTexture = AvatarUiTextures.getBendingBackgroundTexture(guiBending);
+		int bgWidth = (int) AvatarUiTextures.getBendingBackgroundWidth(guiBending);
+		int bgHeight = (int) AvatarUiTextures.getBendingBackgroundHeight(guiBending);
+		background = new ComponentImageNonSquare(bgTexture, bgWidth, bgHeight);
 		background.setZLevel(-1);
 		handler.add(background);
 		
