@@ -67,6 +67,7 @@ public class AvatarUiTextures {
 	private static final Map<Ability, ResourceLocation> abilityCards = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCardsPlain = new HashMap<>();
 	private static final Map<UUID, ResourceLocation> bendingBackgrounds = new HashMap<>();
+	private static final Map<UUID, ResourceLocation> bendingIcons = new HashMap<>();
 	private static final Map<UUID, Integer> bendingBackgroundWidth = new HashMap<>();
 
 	private static <T> ResourceLocation getCachedImage(Map<T, ResourceLocation> map, T obj, String loc) {
@@ -89,6 +90,12 @@ public class AvatarUiTextures {
 	public static ResourceLocation getPlainCardTexture(Ability ability) {
 		return getCachedImage(abilityCardsPlain, ability,
 				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");
+	}
+
+	public static ResourceLocation getBendingIconTexture(UUID bendingId) {
+		String bendingName = BendingStyles.getName(bendingId);
+		String location = "textures/gui/icon/" + bendingName + ".png";
+		return getCachedImage(bendingIcons, bendingId, location);
 	}
 
 	public static ResourceLocation getBendingBackgroundTexture(UUID bendingId) {
