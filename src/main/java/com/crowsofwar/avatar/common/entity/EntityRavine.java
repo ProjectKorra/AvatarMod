@@ -97,7 +97,12 @@ public class EntityRavine extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		setDead();
 	}
-	
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
 	@Override
 	public void onEntityUpdate() {
 		

@@ -139,4 +139,8 @@ public class EntityEarthspike extends AvatarEntity {
 		entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
 }
