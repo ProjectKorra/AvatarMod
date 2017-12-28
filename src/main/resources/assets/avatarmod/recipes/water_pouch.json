@@ -12,10 +12,10 @@
     "s": {
       "item": "avatarmod:scroll",
       "data": 3
-    },
+    }
+  },
     "result": {
       "item": "avatarmod:water_pouch",
       "data": 0
-    }
   }
 }
