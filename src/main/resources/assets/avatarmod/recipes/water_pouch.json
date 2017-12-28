@@ -2,22 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " l ",
-    "lbl",
+    "lsl",
     " l "
   ],
   "key": {
     "l": {
       "item": "minecraft:leather"
     },
-    "b": {
-      "item": "minecraft:bucket"
-    },
     "s": {
-      "item": "minecraft:string"
+      "item": "avatarmod:scroll",
+      "data": 3
+    },
+    "result": {
+      "item": "avatarmod:water_pouch",
+      "data": 0
     }
-  },
-  "result": {
-    "item": "avatarmod:water_pouch",
-    "data": 0
   }
 }
