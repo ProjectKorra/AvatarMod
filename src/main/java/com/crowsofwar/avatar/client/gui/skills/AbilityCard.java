@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.client.uitools.*;
 import com.crowsofwar.avatar.common.bending.Ability;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTexture;
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
@@ -39,30 +38,27 @@ public class AbilityCard {
 	private UiComponent icon, iconBg;
 	
 	public AbilityCard(Ability ability, int index) {
-		
-		fromPixels(0, 0);
-		fromPercent(0, 0);
-		
+
 		this.ability = ability;
 		this.index = index;
-		
-		float width = 256 / 256 * 0.4f * 100, height = 256f / 256 * 0.4f * 100;
-		
+
+		// Init cards and icons
+
+		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
+
 		frame = new Frame();
-		frame.setDimensions(fromPixels(192, 256).times(scaleFactor() / 2));
-		
-		icon = new ComponentImage(getAbilityTexture(ability), 32, 0, 192, 256);
+		frame.setDimensions(fromPixels(256, 256).times(scaleFactor()));
+
 		icon.setFrame(frame);
-		icon.setPosition(StartingPosition.MIDDLE_TOP);
 
 		iconBg = new ComponentImage(AvatarUiTextures.skillsGui, 200, 137, 51, 50);
 		iconBg.setFrame(frame);
-		iconBg.setPosition(StartingPosition.MIDDLE_BOTTOM);
-		iconBg.setScale(2);
-		iconBg.setOffset(Measurement.fromPixels(0, 85));
+		iconBg.setPosition(StartingPosition.TOP_LEFT);
+		iconBg.setScale(2.5f);
+		iconBg.setOffset(Measurement.fromPixels(64, 64).times(scaleFactor()));
 
 		updateFramePos(0);
-		
+
 	}
 	
 	public void draw(float partialTicks, float scroll, float mouseX, float mouseY) {
@@ -86,10 +82,12 @@ public class AbilityCard {
 	}
 	
 	public boolean isMouseHover(float mouseX, float mouseY, float scroll) {
-		
+
+		// Returns whether mouse within iconBg
+
 		updateFramePos(scroll);
-		Measurement min = frame.getCoordsMin();
-		Measurement max = frame.getCoordsMax();
+		Measurement min = iconBg.coordinates();
+		Measurement max = min.plus(Measurement.fromPixels(iconBg.width(), iconBg.height()));
 		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
 				&& mouseY < max.yInPixels();
 		
