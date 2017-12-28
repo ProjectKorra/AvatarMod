@@ -55,7 +55,7 @@ public class AbilityCard {
 		icon.setFrame(frame);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 
-		iconBg = new ComponentImage(AvatarUiTextures.skillsGui, 200, 137, 50, 50);
+		iconBg = new ComponentImage(AvatarUiTextures.skillsGui, 200, 137, 51, 50);
 		iconBg.setFrame(frame);
 		iconBg.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		iconBg.setScale(2);
