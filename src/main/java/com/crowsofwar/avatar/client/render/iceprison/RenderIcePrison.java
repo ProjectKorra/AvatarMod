@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 public class RenderIcePrison extends Render<EntityIcePrison> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/IcePrison.png");
+			"textures/entity/ice-prison.png");
 
 	private final ModelBase[] prisonModels;
 
