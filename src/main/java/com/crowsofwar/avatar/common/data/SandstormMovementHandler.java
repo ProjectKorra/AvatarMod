@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.entity.EntitySandstorm;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nullable;
 
@@ -65,6 +66,11 @@ public class SandstormMovementHandler {
 			Vector newVelocity = sandstorm.velocity().normalize().times(desiredSpeed);
 			sandstorm.setVelocity(newVelocity);
 
+		}
+
+		if (Minecraft.getMinecraft().gameSettings.hideGUI) {
+			sandstorm.setVelocity(Vector.ZERO);
+			sandstorm.setStrength(1);
 		}
 
 	}

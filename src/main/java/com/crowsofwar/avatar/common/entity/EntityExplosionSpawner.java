@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -99,10 +100,23 @@ public class EntityExplosionSpawner extends AvatarEntity {
                 }
             }
 
-            // amount of entities which were successfully attacked
-            int attacked = 0;
+            for (int i = 0; i < 2; i++) {
+                double x = posX + rand.nextGaussian() * 0.15;
+                double z = posZ + rand.nextGaussian() * 0.15;
+                world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, posY, z, 0, 0, 0);
+            }
+            if (rand.nextDouble() < 0.08) {
+                double smokeX = posX + rand.nextGaussian() * 0.15;
+                double smokeZ = posZ + rand.nextGaussian() * 0.15;
+                world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, smokeX, posY, smokeZ, 0, 0, 0);
+                for (int i = 0; i < 3; i++) {
+                    double fireX = posX + rand.nextGaussian() * 0.4;
+                    double fireY = posY + rand.nextDouble() * 0.4;
+                    double fireZ = posZ + rand.nextGaussian() * 0.4;
+                    world.spawnParticle(EnumParticleTypes.FLAME, fireX, fireY, fireZ, 0, 0, 0);
+                }
+            }
 
-            // Push collided entities back
         }
 
         @Override
