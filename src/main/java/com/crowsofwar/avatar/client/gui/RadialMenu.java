@@ -206,8 +206,7 @@ public class RadialMenu extends Gui {
 		
 		ticksExisted++;
 		
-		boolean closeGui = !Keyboard
-				.isKeyDown(proxy.getKeyHandler().getKeyCode(AvatarControl.KEY_USE_BENDING))
+		boolean closeGui = !AvatarControl.KEY_USE_BENDING.isPressed()
 				|| AvatarControl.CONTROL_LEFT_CLICK.isPressed();
 		
 		// Find current mouse over
