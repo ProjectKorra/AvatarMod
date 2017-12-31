@@ -17,12 +17,11 @@
 
 package com.crowsofwar.avatar.common.controls;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.crowsofwar.avatar.AvatarMod;
 
 import javax.annotation.Nullable;
-
-import com.crowsofwar.avatar.AvatarMod;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents all controls needed to access by AvatarMod. This includes:
@@ -118,9 +117,22 @@ public class AvatarControl {
 	public boolean isKeybinding() {
 		return getKeybinding() != null;
 	}
-	
+
+	/**
+	 * Whether the control was just pressed. Contrary to {@link #isDown()} - which returns true for
+	 * the entire time the key is held down - isPressed only returns true for the first moment the
+	 * key has been pressed.
+	 */
 	public boolean isPressed() {
 		return isKeybinding() ? getKeybinding().isPressed() : AvatarMod.proxy.getKeyHandler().isControlPressed(this);
+	}
+
+	/**
+	 * Whether the control is currently held down. Unlike {@link #isPressed()}, this stays true for
+	 * the entire duration of the keypress.
+	 */
+	public boolean isDown() {
+		return isKeybinding() ? getKeybinding().isDown() : AvatarMod.proxy.getKeyHandler().isControlDown(this);
 	}
 	
 }

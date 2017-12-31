@@ -36,7 +36,6 @@ public class AbilityExplosivePillar extends Ability {
                 spawner.setPosition(entity.posX, entity.posY, entity.posZ);
                 spawner.setVelocity(look.times(mult));
                 spawner.maxTicks(ticks);
-                spawner.isUnstoppable(true);
                 data.getAbilityData("explosive_pillar").addXp(xp);
 
             }

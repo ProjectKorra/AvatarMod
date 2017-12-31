@@ -34,7 +34,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return "ostrich_equip_" + EquipmentTier.getTierName(stack.getMetadata());
+		return super.getUnlocalizedName(stack) + "." + EquipmentTier.getTierName(stack.getMetadata());
 	}
 
 	@Override

@@ -140,7 +140,7 @@ public class PacketHandlerServer implements IPacketHandler {
 
 				UUID bendingId = packet.getAbility().getBendingId();
 
-				MSG_CAN_UPGRADE_ABILITY.send(player, abilityName, abilityData.getLevel() + 1);
+				MSG_CAN_UPGRADE_ABILITY.send(player, abilityName, abilityData.getLevel() + 2);
 				MSG_CAN_UPGRADE_ABILITY_2.send(player);
 				MSG_CAN_UPGRADE_ABILITY_3.send(player, BendingStyles.getName(bendingId));
 

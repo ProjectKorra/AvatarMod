@@ -91,11 +91,30 @@ public class AvatarAnalytics {
 	 * Sends all currently queued events to the server
 	 */
 	public void uploadEvents() {
+
+		// If the whole method was in a synchronized block, then the server thread would have to
+		// wait for the whole method to complete before using queuedEvents again.
+		//
+		// However, putting ALL the statements into synchronized isn't necessary- only statements
+		// getting queuedEventsArray and clearing queuedEvents need synchronized block
+		//
+		// sendEvents doesn't need synchronized block, and it's also very slow. If it was in
+		// synchronized block, it could cause some serious hold-ups for other threads waiting for
+		// access.
+		// (This actually caused lagspikes while sending analytics, because the sendEvents method
+		// was taking a while and held up the server thread)
+		//
+		// This is why sendEvents hasn't been synchronized like the other methods
+
+		AnalyticEvent[] queuedEventsArray;
 		synchronized (queuedEvents) {
-			AnalyticEvent[] queuedEventsArray = queuedEvents.toArray(new AnalyticEvent[0]);
-			sendEvents(queuedEventsArray);
+			queuedEventsArray = queuedEvents.toArray(new AnalyticEvent[0]);
+		}
+		sendEvents(queuedEventsArray);
+		synchronized (queuedEvents) {
 			queuedEvents.clear();
 		}
+		
 	}
 
 	/**

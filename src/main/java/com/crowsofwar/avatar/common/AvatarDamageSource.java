@@ -176,4 +176,44 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_cloudburst", hit, owner).setProjectile();
 	}
 
+	/**
+	 * Create a DamageSource for damage caused by an ice prison.
+	 *
+	 * @param hit   Who was hurt by the ice prison
+	 * @param owner Who created the ice prison
+	 */
+	public static DamageSource causeIcePrisonDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_icePrison", hit, owner).setDamageBypassesArmor();
+	}
+
+	/**
+	 * Create a DamageSource for damage caused by an ice shard.
+	 *
+	 * @param hit   Who was hit by the ice shard
+	 * @param owner Who created the ice shard
+	 */
+	public static DamageSource causeIceShardDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_iceShard", hit, owner).setDamageBypassesArmor().setProjectile();
+	}
+
+	/**
+	 * Create a DamageSource for damage caused by a sand prison.
+	 *
+	 * @param hit   Who was hurt by the sand prison
+	 * @param owner Who created the sand prison
+	 */
+	public static DamageSource causeSandPrisonDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_sandPrison", hit, owner);
+	}
+
+	/**
+	 * Create a DamageSource for damage caused by a sandstorm.
+	 *
+	 * @param hit   Who was hit by the sandstorm
+	 * @param owner Who created the sandstorm
+	 */
+	public static DamageSource causeSandstormDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_sandstorm", hit, owner);
+	}
+
 }

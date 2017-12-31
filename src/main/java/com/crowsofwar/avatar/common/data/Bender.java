@@ -246,7 +246,7 @@ public abstract class Bender {
 				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
 			}
 
-			if (chi.getAvailableChi() < chi.getMaxChi() * CHI_CONFIG.availableThreshold) {
+			if (chi.getAvailableChi() < CHI_CONFIG.maxAvailableChi) {
 				chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);
 			}
 
@@ -302,7 +302,7 @@ public abstract class Bender {
 
 		Chi chi = data.chi();
 		chi.setTotalChi(chi.getMaxChi());
-		chi.setAvailableChi(chi.getTotalChi() * CHI_CONFIG.availableThreshold);
+		chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
 
 	}
 

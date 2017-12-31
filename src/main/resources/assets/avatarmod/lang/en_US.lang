@@ -419,12 +419,17 @@ death.attack.avatar_lightningBending=%2$s electrocuted %1$s
 death.attack.avatar_lightningBendingRedirected=%2$s redirected lightning to electrocute %1$s
 death.attack.avatar_watercannon=%1$s was killed by %2$s's water cannon
 death.attack.avatar_cloudburst=%1$s was killed by %2$s's cloudburst
+death.attack.avatar_icePrison=The intense frost of %2$s's ice prison froze %1$s
+death.attack.avatar_iceShard=%2$s was pierced by %1$s's ice shard
+death.attack.avatar_sandPrison=%1$s was killed by %1$s's sand prison
+death.attack.avatar_sandstorm=%2$s was flung by %1$s's sandstorm
 
 entity.Airbender.name=Airbender
 entity.Firebender.name=Firebender
 entity.Waterbender.name=Waterbender
 entity.SkyBison.name=Flying Bison
 entity.OtterPenguin.name=Otter Penguin
+entity.OstrichHorse.name=Ostrich Horse
 
 itemGroup.avatar.items=Avatar Items
 
@@ -445,6 +450,10 @@ item.avatarmod:bison_armor.woven.name=Woven Bison Armor
 item.avatarmod:bison_armor.chain.name=Chainmail Bison Armor
 item.avatarmod:bison_armor.wrought.name=Wrought Bison Armor
 item.avatarmod:bison_armor.legendary.name=Legendary Bison Armor
+
+item.avatarmod:ostrich_equip.woven.name=Woven Ostrich Armor
+item.avatarmod:ostrich_equip.chain.name=Chainmail Ostrich Armor
+item.avatarmod:ostrich_equip.plate.name=Golden Ostrich Armor
 
 avatar.tooltip.water_pouch=%d/5 Water
 avatar.tooltip.water_pouch.empty=Empty

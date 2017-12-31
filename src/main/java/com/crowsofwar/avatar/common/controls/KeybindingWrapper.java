@@ -30,5 +30,9 @@ public class KeybindingWrapper {
 	public boolean isPressed() {
 		return false;
 	}
-	
+
+	public boolean isDown() {
+		return false;
+	}
+
 }

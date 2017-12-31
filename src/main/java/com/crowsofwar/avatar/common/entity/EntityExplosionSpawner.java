@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.config.ConfigStats;
-import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -14,11 +12,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityExplosionSpawner extends AvatarEntity {
-        private boolean unstoppable;
 
         private double maxTicksAlive;
         private float explosionStrength;
@@ -35,9 +31,6 @@ public class EntityExplosionSpawner extends AvatarEntity {
 
         }
 
-        public void isUnstoppable (boolean isUnstoppable) {
-            this.unstoppable = isUnstoppable;
-        }
         public void maxTicks (float ticks) {this.maxTicksAlive = ticks;}
         public void setExplosionStrength (float explosionStrength) {this.explosionStrength = explosionStrength;}
         public void setExplosionFrequency (float explosionFrequency) {this.frequency = explosionFrequency;}
@@ -74,10 +67,6 @@ public class EntityExplosionSpawner extends AvatarEntity {
                     }
 
             if (!world.getBlockState(below).isNormalCube()) {
-                setDead();
-            }
-
-            if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
                 setDead();
             }
 
