@@ -1,6 +1,11 @@
 + Notify player when ability can be upgraded to next level
++ Added recipe for Water Pouch
 
 * Added particle effects for fireball
+* Added Icebending
+* Added Lightningbending
+* Added Combustionbending
+* Added Sandbending
 * Added a model for wave
 * Added Purify
 * Added Cleanse

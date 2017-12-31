@@ -250,7 +250,7 @@ public class EntityAirBubble extends EntityShield {
 
 			}
 		}
-	
+
 	
 	@Override
 	public void setDead() {
