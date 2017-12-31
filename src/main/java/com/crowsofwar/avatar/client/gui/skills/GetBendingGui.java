@@ -128,7 +128,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
 		handler.add(instructions);
 		
-		List<UUID> bendingIds = BendingStyles.allIds();
+		List<UUID> bendingIds = BendingStyles.allMainIds();
 		bendingButtons = new UiComponent[bendingIds.size() - 1];
 		for (int i = 0; i < bendingButtons.length; i++) {
 			
@@ -168,7 +168,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		int visibleBtns = 0;
 		for (int i = 0; i < bendingButtons.length; i++) {
 			UiComponent btn = bendingButtons[i];
-			UUID btnBendingId = BendingStyles.allIds().get(i);
+			UUID btnBendingId = BendingStyles.allMainIds().get(i);
 
 			if (allowedTypes.contains(btnBendingId)) {
 				btn.setVisible(true);

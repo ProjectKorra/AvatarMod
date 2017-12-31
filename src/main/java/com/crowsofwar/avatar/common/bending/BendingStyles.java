@@ -84,6 +84,13 @@ public class BendingStyles {
         return bendingStyles.stream().map(BendingStyle::getId).collect(Collectors.toList());
     }
 
+    public static List<UUID> allMainIds() {
+        return bendingStyles.stream()
+                .filter(style -> !style.isSpecialtyBending())
+                .map(BendingStyle::getId)
+                .collect(Collectors.toList());
+    }
+
     public static void register(BendingStyle bendingStyle) {
         bendingStyles.add(bendingStyle);
         bendingStylesById.put(bendingStyle.getId(), bendingStyle);
