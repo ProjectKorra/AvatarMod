@@ -19,6 +19,7 @@
 * Using locked ability in creative mode no longer displays "Creative Mode" as ability name
 * Make flying bison 3x faster
 * Add option to allow multiple airbending walljumps
+* Value of new max available chi (maxAvailableChi) is given in amount, instead of % of total
 
 > Fix sky bison landing zone detection false negatives
 > Fix sky bison getting "stuck" when it can't find a place to land
