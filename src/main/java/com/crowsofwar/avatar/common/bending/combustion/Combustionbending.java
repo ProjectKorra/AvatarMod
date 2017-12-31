@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.combustion;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +16,9 @@ public class Combustionbending extends BendingStyle {
     private final BendingMenuInfo menu;
 
     public Combustionbending(){
+
+        super(Firebending.ID);
+
         addAbility("explosion");
         addAbility("explosive_pillar");
 

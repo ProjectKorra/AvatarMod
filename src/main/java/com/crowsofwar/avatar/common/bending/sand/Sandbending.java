@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.sand;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 
@@ -17,6 +18,8 @@ public class Sandbending extends BendingStyle {
 	private final BendingMenuInfo radialMenu;
 
 	public Sandbending() {
+
+		super(Earthbending.ID);
 
 		addAbility("sand_prison");
 		addAbility("sandstorm");

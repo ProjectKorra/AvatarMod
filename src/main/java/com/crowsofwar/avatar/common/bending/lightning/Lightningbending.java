@@ -16,8 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
-
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -36,7 +36,9 @@ public class Lightningbending extends BendingStyle {
 	private final BendingMenuInfo menu;
 	
 	public Lightningbending() {
-		
+
+		super(Firebending.ID);
+
 		addAbility("lightning_arc");
 		addAbility("lightning_redirect");
 		addAbility("lightning_spear");
