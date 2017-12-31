@@ -101,6 +101,10 @@ public class ItemScroll extends Item implements AvatarItem {
 	 */
 	private void handleSpecialtyScrollUse(World world, EntityPlayer player, ItemStack stack) {
 
+		if (world.isRemote) {
+			return;
+		}
+
 		ScrollType type = ScrollType.get(stack.getMetadata());
 		BendingData data = BendingData.get(player);
 		BendingStyle specialtyStyle = BendingStyles.get(type.getBendingId());
