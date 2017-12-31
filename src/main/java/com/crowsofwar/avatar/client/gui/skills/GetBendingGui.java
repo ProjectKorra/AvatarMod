@@ -129,7 +129,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		handler.add(instructions);
 		
 		List<UUID> bendingIds = BendingStyles.allMainIds();
-		bendingButtons = new UiComponent[bendingIds.size() - 1];
+		bendingButtons = new UiComponent[bendingIds.size()];
 		for (int i = 0; i < bendingButtons.length; i++) {
 			
 			UUID bendingId = bendingIds.get(i);
