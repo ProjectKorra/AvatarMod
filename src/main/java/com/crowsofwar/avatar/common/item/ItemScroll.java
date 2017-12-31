@@ -67,6 +67,23 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+
+		ScrollType type = ScrollType.get(player.getHeldItem(hand).getMetadata());
+		if (type.isSpecialtyType()) {
+			handleSpecialtyScrollUse(world, player);
+		} else {
+			handleMainScrollUse(world, player);
+		}
+		
+		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+
+	}
+
+	/**
+	 * Fired for right-clicking on a main bending style scroll (e.g. firebending scroll)
+	 */
+	private void handleMainScrollUse(World world, EntityPlayer player) {
+
 		BendingData data = BendingData.get(player);
 		if (data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
@@ -75,10 +92,16 @@ public class ItemScroll extends Item implements AvatarItem {
 			int guiId = AvatarGuiHandler.getGuiId(controller.getId());
 			player.openGui(AvatarMod.instance, guiId, world, 0, 0, 0);
 		}
-		
-		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+
 	}
-	
+
+	/**
+	 * Fired for right-clicking on a specialty bending scroll (e.g. lightningbending scroll)
+	 */
+	private void handleSpecialtyScrollUse(World world, EntityPlayer player) {
+
+	}
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
@@ -215,6 +238,22 @@ public class ItemScroll extends Item implements AvatarItem {
 		@Nullable
 		public UUID getBendingId() {
 			return bendingId;
+		}
+
+		/**
+		 * Returns whether this scroll is for a specialty bending type, like lightningbending. For
+		 * universal scrolls, returns false.
+		 */
+		public boolean isSpecialtyType() {
+
+			BendingStyle style = BendingStyles.get(bendingId);
+
+			if (style == null) {
+				return false;
+			}
+
+			return style.isSpecialtyBending();
+
 		}
 
 		@Nullable
