@@ -109,6 +109,7 @@ avatar.bisonWhistle.nearby=[error]Your bison is already nearby![/error]
 
 avatar.specialtyScroll.success=You have now unlocked [translate=avatar.${specialtyBending}]!
 avatar.specialtyScroll.fail=[error]Sorry, you need to learn [translate=avatar.${mainBending}] before you learn [translate=avatar.${specialtyBending}].[/error]
+avatar.specialtyScroll.alreadyHave=[error]You have already unlocked [translate=avatar.${specialtyBending}].[/error]
 
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.

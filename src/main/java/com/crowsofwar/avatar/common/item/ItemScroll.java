@@ -109,6 +109,15 @@ public class ItemScroll extends Item implements AvatarItem {
 		BendingData data = BendingData.get(player);
 		BendingStyle specialtyStyle = BendingStyles.get(type.getBendingId());
 
+		// Fail if player already has the scroll
+		if (data.hasBending(specialtyStyle)) {
+
+			String specialtyName = specialtyStyle.getName();
+			AvatarChatMessages.MSG_SPECIALTY_SCROLL_ALREADY_HAVE.send(player, specialtyName);
+			return;
+
+		}
+
 		//noinspection ConstantConditions - we already know this is a specialty bending style
 		UUID requiredMainBending = specialtyStyle.getParentBendingId();
 
