@@ -82,11 +82,11 @@ public class ClientInput implements IControlsHandler {
 		keybindings = new HashMap();
 		
 		keyboardBending = new ArrayList<>();
-		addKeybinding("Bend", Keyboard.KEY_X, "main");
+		addKeybinding("Bend", Keyboard.KEY_LMENU, "main");
 		addKeybinding("BendingCycleLeft", Keyboard.KEY_Z, "main");
-		addKeybinding("BendingCycleRight", Keyboard.KEY_C, "main");
+		addKeybinding("BendingCycleRight", Keyboard.KEY_V, "main");
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
-		addKeybinding("TransferBison", Keyboard.KEY_L, "main");
+		addKeybinding("TransferBison", Keyboard.KEY_O, "main");
 		
 		this.wasAbilityDown = new boolean[Abilities.all().size()];
 		
