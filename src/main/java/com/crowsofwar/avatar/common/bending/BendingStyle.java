@@ -24,6 +24,7 @@ import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -77,9 +78,29 @@ public abstract class BendingStyle implements ReadableWritable {
 	public static final Random random = new Random();
 	
 	private final List<Ability> abilities;
-	
+
+	/**
+	 * @see #getParentBendingId()
+	 */
+	@Nullable
+	private UUID parentBendingId;
+
+	/**
+	 * Constructor used for main bending styles (i.e. non-specialty), like firebending
+	 */
 	public BendingStyle() {
+		this(null);
+	}
+
+	/**
+	 * Constructor used for specialty bending styles, like lightningbending.
+	 *
+	 * @param parentBendingId The ID of the main bending style which this specialty bending is based
+	 *                        off of, e.g. firebending
+	 */
+	public BendingStyle(UUID parentBendingId) {
 		this.abilities = new ArrayList<>();
+		this.parentBendingId = parentBendingId;
 	}
 	
 	protected void addAbility(String abilityName) {
@@ -105,7 +126,23 @@ public abstract class BendingStyle implements ReadableWritable {
 	public List<Ability> getAllAbilities() {
 		return this.abilities;
 	}
-	
+
+	public boolean isSpecialtyBending() {
+		return parentBendingId != null;
+	}
+
+	/**
+	 * If this bending style is a specialty bending (e.g. lightningbending), then this points to the
+	 * ID of its main/"parent" bending style (e.g. firebending). If the bending style is already a
+	 * main bending style, then this will be null.
+	 *
+	 * @see #isSpecialtyBending()
+	 */
+	@Nullable
+	public UUID getParentBendingId() {
+		return parentBendingId;
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {}
 	
