@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -67,8 +68,7 @@ public class EntityIceShard extends Entity {
 			
 			Entity collided = collidedEntities.get(0);
 
-			// TODO DamageSource for IceShard
-			DamageSource source = DamageSource.ANVIL;
+			DamageSource source = AvatarDamageSource.causeIceShardDamage(collided, null);
 			collided.attackEntityFrom(source, 5 * (float) damageMult);
 			
 			shatter();
