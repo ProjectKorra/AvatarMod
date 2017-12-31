@@ -107,6 +107,11 @@ avatar.bisonWhistle.followOn=Your bison will now begin following you.
 avatar.bisonWhistle.followOff=Your bison have stopped following you.
 avatar.bisonWhistle.nearby=[error]Your bison is already nearby![/error]
 
+avatar.specialtyScroll.success=You have now unlocked [translate=avatar.${specialtyBending}]!
+avatar.specialtyScroll.fail=[error]Sorry, you need to learn [translate=avatar.${mainBending}] before you learn [translate=avatar.${specialtyBending}].[/error]
+avatar.specialtyScroll.alreadyHave=[error]You have already unlocked [translate=avatar.${specialtyBending}].[/error]
+avatar.specialtyScroll.tooltip=[aqua]Can be used to unlock or upgrade [translate=avatar.${bending}].[/aqua]
+
 avatar.ability.pickup_block=Pick Up Block
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
 avatar.ability.pickup_block.lvl1=Move and throw bendable blocks
@@ -438,6 +443,11 @@ item.avatarmod:scroll.air.name=Airbending Scroll
 item.avatarmod:scroll.fire.name=Firebending Scroll
 item.avatarmod:scroll.earth.name=Earthbending Scroll
 item.avatarmod:scroll.water.name=Waterbending Scroll
+item.avatarmod:scroll.lightning.name=Lightningbending Scroll
+item.avatarmod:scroll.ice.name=Icebending Scroll
+item.avatarmod:scroll.sand.name=Sandbending Scroll
+item.avatarmod:scroll.combustion.name=Combustionbending Scroll
+
 item.avatarmod:water_pouch.name=Water Skin
 item.avatarmod:bison_whistle.name=Bison Whistle
 

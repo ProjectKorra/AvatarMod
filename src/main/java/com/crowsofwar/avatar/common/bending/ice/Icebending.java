@@ -16,8 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
-
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
@@ -36,7 +36,9 @@ public class Icebending extends BendingStyle {
 	private final BendingMenuInfo menu;
 	
 	public Icebending() {
-		
+
+		super(Waterbending.ID);
+
 		addAbility("ice_burst");
 		addAbility("ice_prison");
 		

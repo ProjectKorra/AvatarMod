@@ -26,7 +26,6 @@ import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraft.world.storage.loot.functions.SetNBT;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -107,7 +106,21 @@ public class AvatarDungeonLoot {
 			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1));
 			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1));
 		}
-		
+
+		if (isLootTable(e, CHESTS_NETHER_BRIDGE)) {
+			addLoot(e, 20, new LootItem(AvatarItems.itemScroll, 80).withMetadata(8)); // combustion
+		}
+		if (isLootTable(e, CHESTS_DESERT_PYRAMID)) {
+			addLoot(e, 70, new LootItem(AvatarItems.itemScroll, 30).withMetadata(7)); // sand
+		}
+		if (isLootTable(e, CHESTS_IGLOO_CHEST)) {
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 100).withMetadata(6)); // ice
+			addLoot(e, 60, new LootItem(AvatarItems.itemScroll, 40).withMetadata(6));
+		}
+		if (isLootTable(e, CHESTS_STRONGHOLD_LIBRARY)) {
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 100).withMetadata(5)); // lightning
+		}
+
 	}
 	
 	private static boolean isLootTable(LootTableLoadEvent e, ResourceLocation... names) {

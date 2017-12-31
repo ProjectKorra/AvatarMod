@@ -17,15 +17,21 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.ice.Icebending;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -46,6 +52,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCROLL_TOOLTIP;
+
 /**
  * 
  * 
@@ -63,6 +71,23 @@ public class ItemScroll extends Item implements AvatarItem {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+
+		ScrollType type = ScrollType.get(player.getHeldItem(hand).getMetadata());
+		if (type.isSpecialtyType()) {
+			handleSpecialtyScrollUse(world, player, player.getHeldItem(hand));
+		} else {
+			handleMainScrollUse(world, player);
+		}
+		
+		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+
+	}
+
+	/**
+	 * Fired for right-clicking on a main bending style scroll (e.g. firebending scroll)
+	 */
+	private void handleMainScrollUse(World world, EntityPlayer player) {
+
 		BendingData data = BendingData.get(player);
 		if (data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
@@ -71,10 +96,54 @@ public class ItemScroll extends Item implements AvatarItem {
 			int guiId = AvatarGuiHandler.getGuiId(controller.getId());
 			player.openGui(AvatarMod.instance, guiId, world, 0, 0, 0);
 		}
-		
-		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+
 	}
-	
+
+	/**
+	 * Fired for right-clicking on a specialty bending scroll (e.g. lightningbending scroll)
+	 */
+	private void handleSpecialtyScrollUse(World world, EntityPlayer player, ItemStack stack) {
+
+		if (world.isRemote) {
+			return;
+		}
+
+		ScrollType type = ScrollType.get(stack.getMetadata());
+		BendingData data = BendingData.get(player);
+		BendingStyle specialtyStyle = BendingStyles.get(type.getBendingId());
+
+		// Fail if player already has the scroll
+		if (data.hasBending(specialtyStyle)) {
+
+			String specialtyName = specialtyStyle.getName();
+			AvatarChatMessages.MSG_SPECIALTY_SCROLL_ALREADY_HAVE.send(player, specialtyName);
+			return;
+
+		}
+
+		//noinspection ConstantConditions - we already know this is a specialty bending style
+		UUID requiredMainBending = specialtyStyle.getParentBendingId();
+
+		if (data.hasBendingId(requiredMainBending)) {
+
+			data.addBending(specialtyStyle);
+			if (!player.isCreative()) {
+				stack.shrink(1);
+			}
+
+			String specialtyName = specialtyStyle.getName();
+			AvatarChatMessages.MSG_SPECIALTY_SCROLL_SUCCESS.send(player, specialtyName);
+
+		} else {
+
+			String specialtyName = specialtyStyle.getName();
+			String mainName = BendingStyles.getName(requiredMainBending);
+			AvatarChatMessages.MSG_SPECIALTY_SCROLL_FAIL.send(player, specialtyName, mainName);
+
+		}
+
+	}
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
@@ -109,7 +178,17 @@ public class ItemScroll extends Item implements AvatarItem {
 		
 		String tooltip = I18n.format("avatar." + getScrollType(stack).getBendingName());
 		tooltips.add(tooltip);
-		
+
+		if (getScrollType(stack).isSpecialtyType()) {
+
+			String translated = I18n.format("avatar.specialtyScroll.tooltip");
+			String bendingName = getScrollType(stack).getBendingName();
+			String formatted = FormattedMessageProcessor.formatText(MSG_SPECIALTY_SCROLL_TOOLTIP,
+					translated, bendingName);
+			tooltips.add(formatted);
+
+		}
+
 	}
 	
 	@Override
@@ -155,7 +234,11 @@ public class ItemScroll extends Item implements AvatarItem {
 		EARTH(Earthbending.ID),
 		FIRE(Firebending.ID),
 		WATER(Waterbending.ID),
-		AIR(Airbending.ID);
+		AIR(Airbending.ID),
+		LIGHTNING(Lightningbending.ID),
+		ICE(Icebending.ID),
+		SAND(Sandbending.ID),
+		COMBUSTION(Combustionbending.ID);
 
 		private final UUID bendingId;
 
@@ -176,7 +259,24 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 		
 		public boolean accepts(UUID bendingId) {
-			return getBendingId() == null || getBendingId() == bendingId;
+
+			// Universal scroll
+			if (this.bendingId == null) {
+				return true;
+			}
+
+			// Same type
+			if (this.bendingId == bendingId) {
+				return true;
+			}
+
+			// Trying to use parent-type bending scroll on specialty bending style
+			if (BendingStyles.get(bendingId).getParentBendingId() == this.bendingId) {
+				return true;
+			}
+
+			return false;
+
 		}
 
 		public String getBendingName() {
@@ -190,6 +290,22 @@ public class ItemScroll extends Item implements AvatarItem {
 		@Nullable
 		public UUID getBendingId() {
 			return bendingId;
+		}
+
+		/**
+		 * Returns whether this scroll is for a specialty bending type, like lightningbending. For
+		 * universal scrolls, returns false.
+		 */
+		public boolean isSpecialtyType() {
+
+			BendingStyle style = BendingStyles.get(bendingId);
+
+			if (style == null) {
+				return false;
+			}
+
+			return style.isSpecialtyBending();
+
 		}
 
 		@Nullable
