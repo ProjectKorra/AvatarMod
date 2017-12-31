@@ -115,8 +115,8 @@ public class EntityAirBubble extends EntityShield {
 			dissipateSmall();
 			return;
 		}
-
 		setPosition(owner.posX, owner.posY, owner.posZ);
+
 
 		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
 			owner.setAir(Math.min(airLeft, 300));
@@ -208,47 +208,49 @@ public class EntityAirBubble extends EntityShield {
 		double x = owner.posX;
 		double y = owner.posY;
 		double z = owner.posZ;
-		AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
-		hitbox = hitbox.grow(0.2, 0, 0.2);
-		hitbox = hitbox.expand(0, -maxFloatHeight, 0);
+			AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
+			hitbox = hitbox.grow(0.2, 0, 0.2);
+			hitbox = hitbox.expand(0, -maxFloatHeight, 0);
 
-		List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
 
-		if (!blockCollisions.isEmpty()) {
+			List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
 
-			// Calculate the top-of-ground ground y position
-			// Performed by finding the maximum ypos of each collided block
-			double groundPosition = Double.MIN_VALUE;
-			for (AxisAlignedBB blockHitbox : blockCollisions) {
-				if (blockHitbox.maxY > groundPosition) {
-					groundPosition = blockHitbox.maxY;
+
+			if (!blockCollisions.isEmpty()) {
+
+				// Calculate the top-of-ground ground y position
+				// Performed by finding the maximum ypos of each collided block
+				double groundPosition = Double.MIN_VALUE;
+				for (AxisAlignedBB blockHitbox : blockCollisions) {
+					if (blockHitbox.maxY > groundPosition) {
+						groundPosition = blockHitbox.maxY;
+					}
 				}
-			}
-			// Now calculate the distance from ground
-			// and use that to determine whether owner should float
-			double distanceFromGround = owner.posY - groundPosition;
+				// Now calculate the distance from ground
+				// and use that to determine whether owner should float
+				double distanceFromGround = owner.posY - groundPosition;
 
-			// Tweak motion based on distance to ground, and target distance
-			// Minecraft gravity is 0.08 blocks/tick
+				// Tweak motion based on distance to ground, and target distance
+				// Minecraft gravity is 0.08 blocks/tick
 
-			if (distanceFromGround < minFloatHeight) {
-				owner.motionY += 0.11;
-			}
-			if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
-				owner.motionY *= 0.7;
-			}
-			if (distanceFromGround >= maxFloatHeight) {
-				owner.motionY += 0.07;
-
-				// Avoid falling at over 3 m/s
-				if (owner.motionY < -3.0 / 20) {
-					owner.motionY = 0;
+				if (distanceFromGround < minFloatHeight) {
+					owner.motionY += 0.11;
 				}
-			}
+				if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
+					owner.motionY *= 0.7;
+				}
+				if (distanceFromGround >= maxFloatHeight) {
+					owner.motionY += 0.07;
 
+					// Avoid falling at over 3 m/s
+					if (owner.motionY < -3.0 / 20) {
+						owner.motionY = 0;
+					}
+				}
+
+			}
 		}
-
-	}
+	
 	
 	@Override
 	public void setDead() {
