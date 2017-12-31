@@ -31,7 +31,7 @@ public class ConfigChi {
 	private ConfigChi() {}
 	
 	@Load
-	public float regenPerSecond = .05f, availablePerSecond = 2f, maxAvailableChi = 6f, regenInBed = 1f;
+	public float regenPerSecond = 0.5f, availablePerSecond = 2f, maxAvailableChi = 6f, regenInBed = 1f;
 	
 	@Load
 	public float bonusLearnedBending = 16, bonusAbility = 6, bonusAbilityLevel = 3;
