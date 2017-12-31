@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
@@ -114,9 +115,14 @@ public class ItemScroll extends Item implements AvatarItem {
 				stack.shrink(1);
 			}
 
+			String specialtyName = specialtyStyle.getName();
+			AvatarChatMessages.MSG_SPECIALTY_SCROLL_SUCCESS.send(player, specialtyName);
+
 		} else {
 
-			System.out.println("Need main style first");
+			String specialtyName = specialtyStyle.getName();
+			String mainName = BendingStyles.getName(requiredMainBending);
+			AvatarChatMessages.MSG_SPECIALTY_SCROLL_FAIL.send(player, specialtyName, mainName);
 
 		}
 

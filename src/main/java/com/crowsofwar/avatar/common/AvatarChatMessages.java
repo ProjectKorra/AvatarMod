@@ -104,6 +104,9 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_CAN_UPGRADE_ABILITY_3 = newChatMessage(CFG,
 			"avatar.canUpgradeAbility3", "bendingType");
 
+	public static final FormattedMessage MSG_SPECIALTY_SCROLL_SUCCESS = newChatMessage(CFG, "avatar.specialtyScroll.success", "specialtyBending");
+	public static final FormattedMessage MSG_SPECIALTY_SCROLL_FAIL = newChatMessage(CFG, "avatar.specialtyScroll.fail", "specialtyBending", "mainBending");
+
 	/**
 	 * Call the static initializers
 	 */
