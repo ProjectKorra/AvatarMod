@@ -115,11 +115,31 @@ public class ClientInput implements IControlsHandler {
 		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
 		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
 		if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-		AvatarLog.warn("ClientInput- Unknown control: " + control);
+		AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "ClientInput- Unknown control: " + control);
 		return false;
 		
 	}
-	
+
+	@Override
+	public boolean isControlDown(AvatarControl control) {
+
+		if (control == CONTROL_LEFT_CLICK) return mouseLeft;
+		if (control == CONTROL_RIGHT_CLICK) return mouseRight;
+		if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
+		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft;
+		if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight;
+		if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle;
+		if (control == CONTROL_SPACE) return space;
+		if (control == CONTROL_SPACE_DOWN) return space;
+		if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft;
+		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight;
+		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle;
+		if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "ClientInput- Unknown control: " + control);
+		return false;
+
+	}
+
 	@Override
 	public int getKeyCode(AvatarControl control) {
 		String keyName = control.getName().substring("avatar.".length());

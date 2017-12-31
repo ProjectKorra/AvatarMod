@@ -17,11 +17,11 @@
 
 package com.crowsofwar.avatar.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AvatarKeybindingServer implements IControlsHandler {
 	
@@ -29,7 +29,12 @@ public class AvatarKeybindingServer implements IControlsHandler {
 	public boolean isControlPressed(AvatarControl control) {
 		return false;
 	}
-	
+
+	@Override
+	public boolean isControlDown(AvatarControl control) {
+		return false;
+	}
+
 	@Override
 	public int getKeyCode(AvatarControl control) {
 		return -1;

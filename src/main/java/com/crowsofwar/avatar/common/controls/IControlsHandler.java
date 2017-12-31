@@ -33,7 +33,16 @@ public interface IControlsHandler {
 	 * controls
 	 */
 	boolean isControlPressed(AvatarControl control);
-	
+
+	/**
+	 * <strong>For internal use only. To check if a control is pressed, you
+	 * should use {@link AvatarControl#isDown()}.</strong>
+	 * <p>
+	 * Get whether that control is held, only used for non-keybinding
+	 * controls
+	 */
+	boolean isControlDown(AvatarControl control);
+
 	/**
 	 * Get the key code for that control. It must be a keybinding.
 	 */
