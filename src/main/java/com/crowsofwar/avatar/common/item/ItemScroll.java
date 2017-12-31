@@ -184,7 +184,24 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 		
 		public boolean accepts(UUID bendingId) {
-			return getBendingId() == null || getBendingId() == bendingId;
+
+			// Universal scroll
+			if (this.bendingId == null) {
+				return true;
+			}
+
+			// Same type
+			if (this.bendingId == bendingId) {
+				return true;
+			}
+
+			// Trying to use parent-type bending scroll on specialty bending style
+			if (BendingStyles.get(bendingId).getParentBendingId() == this.bendingId) {
+				return true;
+			}
+
+			return false;
+
 		}
 
 		public String getBendingName() {
