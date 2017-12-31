@@ -20,8 +20,12 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.ice.Icebending;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
@@ -155,7 +159,11 @@ public class ItemScroll extends Item implements AvatarItem {
 		EARTH(Earthbending.ID),
 		FIRE(Firebending.ID),
 		WATER(Waterbending.ID),
-		AIR(Airbending.ID);
+		AIR(Airbending.ID),
+		LIGHTNING(Lightningbending.ID),
+		ICE(Icebending.ID),
+		SAND(Sandbending.ID),
+		COMBUSTION(Combustionbending.ID);
 
 		private final UUID bendingId;
 
