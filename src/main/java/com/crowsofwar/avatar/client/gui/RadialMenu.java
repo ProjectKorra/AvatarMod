@@ -206,7 +206,7 @@ public class RadialMenu extends Gui {
 		
 		ticksExisted++;
 		
-		boolean closeGui = !AvatarControl.KEY_USE_BENDING.isPressed()
+		boolean closeGui = !AvatarControl.KEY_USE_BENDING.isDown()
 				|| AvatarControl.CONTROL_LEFT_CLICK.isPressed();
 		
 		// Find current mouse over
