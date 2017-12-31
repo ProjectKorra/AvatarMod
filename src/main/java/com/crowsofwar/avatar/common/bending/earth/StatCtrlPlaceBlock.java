@@ -61,7 +61,6 @@ public class StatCtrlPlaceBlock extends StatusControl {
 						&& fb.getOwner() == ctx.getBenderEntity());
 		
 		if (floating != null) {
-			// TODO Verify look at block
 			VectorI looking = ctx.getLookPosI();
 			EnumFacing lookingSide = ctx.getLookSide();
 			if (looking != null && lookingSide != null) {

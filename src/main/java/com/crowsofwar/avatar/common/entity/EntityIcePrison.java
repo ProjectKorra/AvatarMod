@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -147,8 +148,8 @@ public class EntityIcePrison extends AvatarEntity {
 
 	private void attackPrisoner(float damageMultiplier) {
 		EntityLivingBase imprisoned = getImprisoned();
-		// TODO Custom IcePrison DamageSource
-		imprisoned.attackEntityFrom(DamageSource.ANVIL, STATS_CONFIG.icePrisonDamage * damageMultiplier);
+		DamageSource ds = AvatarDamageSource.causeIcePrisonDamage(imprisoned, getOwner());
+		imprisoned.attackEntityFrom(ds, STATS_CONFIG.icePrisonDamage * damageMultiplier);
 	}
 
 	@Override

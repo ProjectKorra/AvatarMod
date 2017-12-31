@@ -178,7 +178,7 @@ public class AvatarMod {
 		registerEntity(EntityIceShield.class, "iceshield");
 		registerEntity(EntityIceShard.class, "iceshard");
 		registerEntity(EntityIcePrison.class, "iceprison");
-		registerEntity(EntityOstrichHorse.class, "OstrichHorse");
+		registerEntity(EntityOstrichHorse.class, "OstrichHorse", 0x5c5b46, 0x0f1108);
 		registerEntity(EntitySandPrison.class, "sandprison");
 		registerEntity(EntityLightningArc.class, "lightningarc");
 		registerEntity(EntityCloudBall.class, "cloudburst");

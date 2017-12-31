@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -116,8 +117,8 @@ public class EntitySandPrison extends AvatarEntity {
 						SoundEvents.BLOCK_SAND_BREAK, SoundCategory.PLAYERS, 1, 1);
 
 				if (damageEntity) {
-					// TODO SandPrison DamageSource
-					imprisoned.attackEntityFrom(DamageSource.ANVIL, 8);
+					DamageSource ds = AvatarDamageSource.causeSandPrisonDamage(imprisoned, getOwner());
+					imprisoned.attackEntityFrom(ds, 8);
 				}
 
 				if (applySlowness) {

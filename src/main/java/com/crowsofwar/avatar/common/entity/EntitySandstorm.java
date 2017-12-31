@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -245,7 +246,7 @@ public class EntitySandstorm extends AvatarEntity {
 	 */
 	private void onFlingEntity(Entity entity) {
 		if (!world.isRemote && damageFlungTargets) {
-			// TODO Custom sandstorm DamageSource
+			DamageSource ds = AvatarDamageSource.causeSandstormDamage(entity, getOwner());
 			entity.attackEntityFrom(DamageSource.ANVIL, 5);
 		}
 	}
@@ -255,7 +256,7 @@ public class EntitySandstorm extends AvatarEntity {
 	 */
 	private void onContact(Entity entity) {
 		if (!world.isRemote && damageContactingTargets) {
-			// TODO Custom sandstorm DamageSource
+			DamageSource ds = AvatarDamageSource.causeSandstormDamage(entity, getOwner());
 			entity.attackEntityFrom(DamageSource.ANVIL, 1);
 		}
 	}

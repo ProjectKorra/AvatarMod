@@ -41,7 +41,7 @@ public class SleepChiRegenHandler {
 		World world = player.world;
 		
 		if (world.getWorldTime() % 24000 <= 2) {
-			chi.setAvailableChi(chi.getMaxChi() * CHI_CONFIG.availableThreshold);
+			chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
 			chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
 			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onSleepRestoration());
 		}

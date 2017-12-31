@@ -42,5 +42,10 @@ public class ClientKeybindWrapper extends KeybindingWrapper {
 	public boolean isPressed() {
 		return kb.isPressed();
 	}
-	
+
+	@Override
+	public boolean isDown() {
+		return kb.isKeyDown();
+	}
+
 }
