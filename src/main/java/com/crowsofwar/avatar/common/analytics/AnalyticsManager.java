@@ -42,8 +42,8 @@ public class AnalyticsManager {
 
 	private static void uploadEvents() {
 		lastSendTime = System.currentTimeMillis();
-		AvatarAnalytics.INSTANCE.uploadEvents();
-		System.out.println("uploaded");
+		Runnable runnable = () -> AvatarAnalytics.INSTANCE.uploadEvents();
+		new Thread(runnable).start();
 	}
 
 }
