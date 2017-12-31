@@ -70,7 +70,7 @@ public class ItemScroll extends Item implements AvatarItem {
 
 		ScrollType type = ScrollType.get(player.getHeldItem(hand).getMetadata());
 		if (type.isSpecialtyType()) {
-			handleSpecialtyScrollUse(world, player);
+			handleSpecialtyScrollUse(world, player, player.getHeldItem(hand));
 		} else {
 			handleMainScrollUse(world, player);
 		}
@@ -98,7 +98,27 @@ public class ItemScroll extends Item implements AvatarItem {
 	/**
 	 * Fired for right-clicking on a specialty bending scroll (e.g. lightningbending scroll)
 	 */
-	private void handleSpecialtyScrollUse(World world, EntityPlayer player) {
+	private void handleSpecialtyScrollUse(World world, EntityPlayer player, ItemStack stack) {
+
+		ScrollType type = ScrollType.get(stack.getMetadata());
+		BendingData data = BendingData.get(player);
+		BendingStyle specialtyStyle = BendingStyles.get(type.getBendingId());
+
+		//noinspection ConstantConditions - we already know this is a specialty bending style
+		UUID requiredMainBending = specialtyStyle.getParentBendingId();
+
+		if (data.hasBendingId(requiredMainBending)) {
+
+			data.addBending(specialtyStyle);
+			if (!player.isCreative()) {
+				stack.shrink(1);
+			}
+
+		} else {
+
+			System.out.println("Need main style first");
+
+		}
 
 	}
 
