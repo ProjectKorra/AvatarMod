@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -50,6 +51,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCROLL_TOOLTIP;
 
 /**
  * 
@@ -175,7 +178,17 @@ public class ItemScroll extends Item implements AvatarItem {
 		
 		String tooltip = I18n.format("avatar." + getScrollType(stack).getBendingName());
 		tooltips.add(tooltip);
-		
+
+		if (getScrollType(stack).isSpecialtyType()) {
+
+			String translated = I18n.format("avatar.specialtyScroll.tooltip");
+			String bendingName = getScrollType(stack).getBendingName();
+			String formatted = FormattedMessageProcessor.formatText(MSG_SPECIALTY_SCROLL_TOOLTIP,
+					translated, bendingName);
+			tooltips.add(formatted);
+
+		}
+
 	}
 	
 	@Override

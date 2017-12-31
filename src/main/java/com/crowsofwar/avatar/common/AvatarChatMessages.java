@@ -107,6 +107,7 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_SPECIALTY_SCROLL_SUCCESS = newChatMessage(CFG, "avatar.specialtyScroll.success", "specialtyBending");
 	public static final FormattedMessage MSG_SPECIALTY_SCROLL_FAIL = newChatMessage(CFG, "avatar.specialtyScroll.fail", "specialtyBending", "mainBending");
 	public static final FormattedMessage MSG_SPECIALTY_SCROLL_ALREADY_HAVE = newChatMessage(CFG, "avatar.specialtyScroll.alreadyHave", "specialtyBending");
+	public static final FormattedMessage MSG_SPECIALTY_SCROLL_TOOLTIP = newChatMessage(CFG, "avatar.specialtyScroll.tooltip", "bending");
 
 	/**
 	 * Call the static initializers
