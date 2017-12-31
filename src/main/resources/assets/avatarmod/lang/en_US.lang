@@ -429,6 +429,7 @@ entity.Firebender.name=Firebender
 entity.Waterbender.name=Waterbender
 entity.SkyBison.name=Flying Bison
 entity.OtterPenguin.name=Otter Penguin
+entity.OstrichHorse.name=Ostrich Horse
 
 itemGroup.avatar.items=Avatar Items
 
