@@ -15,7 +15,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 
 public class StatCtrlThrowCloudBall extends StatusControl {
     public StatCtrlThrowCloudBall() {
-        super(10, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
+        super(16, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
     }
 
     @Override
