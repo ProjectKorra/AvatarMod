@@ -29,7 +29,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class StatCtrlFireJump extends StatusControl {
 	public StatCtrlFireJump() {
-		super(0, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
+		super(15, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
 	}
 
 	@Override
