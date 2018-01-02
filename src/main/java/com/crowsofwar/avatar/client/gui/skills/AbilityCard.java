@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.*;
 import com.crowsofwar.avatar.common.bending.Ability;
+import net.minecraft.client.renderer.GlStateManager;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
@@ -45,6 +46,7 @@ public class AbilityCard {
 		// Init cards and icons
 
 		icon = new ComponentImage(getAbilityTexture(ability), 0, 0, 256, 256);
+		icon.setZLevel(2);
 
 		frame = new Frame();
 		frame.setDimensions(fromPixels(256, 256).times(scaleFactor()));
@@ -64,9 +66,11 @@ public class AbilityCard {
 	public void draw(float partialTicks, float scroll, float mouseX, float mouseY) {
 		
 		updateFramePos(scroll);
-		
-		icon.draw(partialTicks, mouseX, mouseY);
+
+		GlStateManager.enableBlend();
+
 		iconBg.draw(partialTicks, mouseX, mouseY);
+		icon.draw(partialTicks, mouseX, mouseY);
 
 	}
 	
