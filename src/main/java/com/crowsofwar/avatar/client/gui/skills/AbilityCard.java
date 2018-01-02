@@ -96,7 +96,7 @@ public class AbilityCard {
 	private void updateFramePos(float scroll) {
 		
 		Measurement base = fromPixels(50, (screenHeight() - icon.height()) / 2);
-		Measurement offset = fromPixels(scroll + index * icon.width() * 1.2f, 0);
+		Measurement offset = fromPixels(scroll + index * iconBg.width() * 1.4f, 0);
 		frame.setPosition(base.plus(offset));
 		
 	}
