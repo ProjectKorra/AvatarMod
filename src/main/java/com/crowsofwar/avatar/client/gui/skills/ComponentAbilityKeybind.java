@@ -97,7 +97,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 			key = keymapping != null ? "set" : "none";
 		}
 		
-		String keymappingStr = keymapping == null ? "no key" : GameSettings.getKeyDisplayString(keymapping);
+		String keymappingStr = keymapping == null ? "" : GameSettings.getKeyDisplayString(keymapping);
 		String conflictStr = conflict == null ? "no conflict" : conflict.getName();
 		
 		text1 = I18n.format("avatar.key." + key + "1", keymappingStr);
@@ -115,16 +115,12 @@ public class ComponentAbilityKeybind extends UiComponent {
 		if (editing) {
 			// Stop editing
 			
-			if (button == 0) {
-				// Store on LMB
-				editing = false;
-				storeKey(editContents);
-			} else if (button == 1) {
-				// Discard on RMB
+			if (button == 0 || button == 1) {
+				// Discard edit
 				editing = false;
 			} else {
-				// Accept MMB and extra mouse buttons
-				editContents = button - 100;
+				editing = false;
+				storeKey(button - 100);
 			}
 			
 		} else {
@@ -145,7 +141,9 @@ public class ComponentAbilityKeybind extends UiComponent {
 			storeKey(null);
 			updateText();
 		} else if (editing) {
-			editContents = keyCode;
+//			editContents = keyCode;
+			editing = false;
+			storeKey(keyCode);
 			updateText();
 		}
 	}
