@@ -40,8 +40,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	private boolean editing;
 	private Conflictable conflict;
-	private Integer editContents;
-	
+
 	public ComponentAbilityKeybind(Ability ability) {
 		this.ability = ability;
 		this.text1 = this.text2 = "";
@@ -82,7 +81,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 	private void updateText() {
 		
 		// Keycode mapped to this ability - may be null!
-		Integer keymapping = editing ? editContents : currentKey();
+		Integer keymapping = currentKey();
 		
 		String key;
 		
@@ -111,14 +110,15 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	@Override
 	protected void click(int button) {
-		
+
 		if (editing) {
-			// Stop editing
 			
 			if (button == 0 || button == 1) {
-				// Discard edit
+				// Stop & discard edit
 				editing = false;
 			} else {
+				// For MMB, extra mouse buttons
+				// Maps this mouse button to the key
 				editing = false;
 				storeKey(button - 100);
 			}
@@ -126,7 +126,6 @@ public class ComponentAbilityKeybind extends UiComponent {
 		} else {
 			// Start editing
 			editing = true;
-			editContents = hasKeybinding() ? currentKey() : null;
 		}
 		
 		updateText();
@@ -135,17 +134,21 @@ public class ComponentAbilityKeybind extends UiComponent {
 	
 	@Override
 	public void keyPressed(int keyCode) {
-		
-		if (keyCode == Keyboard.KEY_ESCAPE) {
-			editing = false;
-			storeKey(null);
-			updateText();
-		} else if (editing) {
-//			editContents = keyCode;
-			editing = false;
-			storeKey(keyCode);
-			updateText();
+
+		if (editing) {
+
+			if (keyCode == Keyboard.KEY_ESCAPE) {
+				editing = false;
+				storeKey(null);
+				updateText();
+			} else {
+				editing = false;
+				storeKey(keyCode);
+				updateText();
+			}
+
 		}
+
 	}
 	
 	private Integer currentKey() {
