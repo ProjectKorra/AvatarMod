@@ -32,6 +32,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Mouse;
 
+import java.util.UUID;
+
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getPlainCardTexture;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
@@ -46,6 +48,8 @@ public class WindowAbility {
 	
 	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage
 			.newChatMessage("avatar.ui.unlockDesc", "bending");
+	private static final FormattedMessage MSG_UNLOCK_SPECIAL_TEXT = FormattedMessage
+			.newChatMessage("avatar.ui.unlockDesc", "bendingMain", "bendingSpecialty");
 
 	private final Minecraft mc;
 
@@ -155,8 +159,18 @@ public class WindowAbility {
 		handler.add(unlockTitle);
 		
 		String bendingName = BendingStyles.get(ability.getBendingId()).getName().toLowerCase();
-		String text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT,
-				I18n.format("avatar.ui.unlockDesc"), bendingName);
+
+		// Apply special text if specialty bending
+		String text;
+		UUID parentBending = BendingStyles.get(ability.getBendingId()).getParentBendingId();
+		if (parentBending != null) {
+			String specialtyName = BendingStyles.get(parentBending).getName();
+			text = FormattedMessageProcessor.formatText(MSG_UNLOCK_SPECIAL_TEXT,
+					I18n.format("avatar.ui.unlockDescSpecialty"), bendingName, specialtyName);
+		} else {
+			 text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT,
+					I18n.format("avatar.ui.unlockDesc"), bendingName);
+		}
 
 		unlockText = new ComponentLongText(text, frameRight.getDimensions());
 		unlockText.setFrame(frameRight);

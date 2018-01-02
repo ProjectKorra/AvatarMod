@@ -390,6 +390,7 @@ avatar.ui.path_first=First Path
 avatar.ui.path_second=Second Path
 avatar.ui.unlock=Ability Locked
 avatar.ui.unlockDesc=Spend a [translate=avatar.${bending}] or Universal scroll to unlock
+avatar.ui.unlockDescSpecialty=Spend a [translate=avatar.${bendingMain}], [translate=avatar.${bendingSpecialty}], or Universal scroll to unlock
 avatar.ui.skillsMenu=[translate=avatar.${bending}] Ability Experience
 
 avatar.radial.undefined=Coming soon!
