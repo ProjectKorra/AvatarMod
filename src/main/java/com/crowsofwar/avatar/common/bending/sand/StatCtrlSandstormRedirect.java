@@ -18,7 +18,7 @@ import java.util.List;
 public class StatCtrlSandstormRedirect extends StatusControl {
 
 	public StatCtrlSandstormRedirect() {
-		super(0, AvatarControl.CONTROL_RIGHT_CLICK_DOWN, CrosshairPosition.RIGHT_OF_CROSSHAIR);
+		super(17, AvatarControl.CONTROL_RIGHT_CLICK_DOWN, CrosshairPosition.RIGHT_OF_CROSSHAIR);
 	}
 
 	@Override
