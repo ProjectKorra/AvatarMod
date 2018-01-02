@@ -128,7 +128,11 @@ public class StatCtrlAirJump extends StatusControl {
 			
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
-			
+
+
+			//noinspection ConstantConditions
+			data.getPowerRatingManager(Airbending.ID).addModifier(new AirJumpPowerModifier(), ctx);
+
 			return true;
 			
 		}

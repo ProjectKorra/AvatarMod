@@ -55,7 +55,6 @@ public class AbilityAirJump extends Ability {
 			
 			data.addStatusControl(AIR_JUMP);
 			if (data.hasTickHandler(TickHandler.AIR_PARTICLE_SPAWNER)) {
-				StatusControl sc = AIR_JUMP;
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
 				if (AIR_JUMP.execute(
 						new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
@@ -64,9 +63,6 @@ public class AbilityAirJump extends Ability {
 			}
 
 		}
-
-		//noinspection ConstantConditions
-		data.getPowerRatingManager(getBendingId()).addModifier(new AirJumpPowerModifier(), ctx);
 
 	}
 	
