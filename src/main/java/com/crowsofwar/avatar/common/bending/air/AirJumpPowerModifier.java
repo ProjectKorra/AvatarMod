@@ -8,9 +8,15 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
  */
 public class AirJumpPowerModifier extends PowerRatingModifier {
 
+	private final double amount;
+
+	public AirJumpPowerModifier(double amount) {
+		this.amount = amount;
+	}
+
 	@Override
 	public double get(BendingContext ctx) {
-		return 10;
+		return amount;
 	}
 
 }

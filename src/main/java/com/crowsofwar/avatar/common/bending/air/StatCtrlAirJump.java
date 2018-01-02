@@ -20,11 +20,8 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -76,14 +73,22 @@ public class StatCtrlAirJump extends StatusControl {
 			
 			int lvl = abilityData.getLevel();
 			double multiplier = 0.65;
+			double powerModifier = 10;
+			double powerDuration = 3;
 			if (lvl >= 1) {
 				multiplier = 1;
+				powerModifier = 15;
+				powerDuration = 4;
 			}
 			if (lvl >= 2) {
 				multiplier = 1.2;
+				powerModifier = 20;
+				powerDuration = 5;
 			}
 			if (lvl >= 3) {
 				multiplier = 1.4;
+				powerModifier = 25;
+				powerDuration = 6;
 			}
 			
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
@@ -130,8 +135,10 @@ public class StatCtrlAirJump extends StatusControl {
 					SoundCategory.PLAYERS, 1, .7f);
 
 
+			PowerRatingModifier powerRatingModifier = new AirJumpPowerModifier(powerModifier);
+			powerRatingModifier.setTicks((int) (powerDuration * 20));
 			//noinspection ConstantConditions
-			data.getPowerRatingManager(Airbending.ID).addModifier(new AirJumpPowerModifier(), ctx);
+			data.getPowerRatingManager(Airbending.ID).addModifier(powerRatingModifier, ctx);
 
 			return true;
 			
